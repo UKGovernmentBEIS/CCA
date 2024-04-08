@@ -1,0 +1,17 @@
+@if (!isEmailSent) {
+  <form (ngSubmit)="onSubmit()" [formGroup]="form">
+    <h1 class="govuk-heading-l">Reset my password</h1>
+    <p class="govuk-body">We'll send you a link to reset your password. The link will expire after 20 minutes.</p>
+    <div
+      autoComplete="submit-email"
+      formControlName="email"
+      govuk-text-input
+      inputType="email"
+      label="Email address"
+    ></div>
+    <button govukButton type="submit">Confirm</button>
+  </form>
+  <cca-back-to-top></cca-back-to-top>
+} @else {
+  <cca-email-sent [email]="form.get('email').value" (retry)="retryResetPassword()"> </cca-email-sent>
+}

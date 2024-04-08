@@ -1,0 +1,50 @@
+@if (vm$ | async; as vm) {
+  <cca-page-heading size="xl">Tasks</cca-page-heading>
+  <govuk-tabs (selectedTab)="selectTab($event)">
+    <ng-template govukTab id="assigned-to-me" label="Assigned to me">
+      <ng-container
+        *ngTemplateOutlet="
+          tabTemplate;
+          context: { unassigned: 'Regulator', tab: 'assigned-to-me', header: 'Assigned to me' }
+        "
+      ></ng-container>
+    </ng-template>
+    <ng-template govukTab id="assigned-to-others" label="Assigned to others">
+      <ng-container
+        *ngTemplateOutlet="tabTemplate; context: { tab: 'assigned-to-others', header: 'Assigned to others' }"
+      ></ng-container>
+    </ng-template>
+    <ng-template govukTab id="unassigned" label="Unassigned">
+      <ng-container
+        *ngTemplateOutlet="tabTemplate; context: { unassigned: 'Unassigned', tab: 'unassigned', header: 'Unassigned' }"
+      ></ng-container>
+    </ng-template>
+  </govuk-tabs>
+  <ng-template #tabTemplate let-unassigned="unassigned" let-tab="tab" let-header="header">
+    <h2 class="govuk-heading-m">{{ header }}</h2>
+    @if (vm.activeTab === tab) {
+      <div>
+        <cca-dashboard-items-list
+          [items]="vm.items"
+          [tableColumns]="vm.tableColumns"
+          [unassignedLabel]="unassigned"
+        ></cca-dashboard-items-list>
+      </div>
+    }
+    @if (vm.total > vm.pageSize) {
+      @if (vm.activeTab === tab) {
+        <cca-pagination
+          (currentPageChange)="changePage($event)"
+          [count]="vm.total"
+          [pageSize]="vm.pageSize"
+        ></cca-pagination>
+      }
+    }
+  </ng-template>
+  @if (vm.role === 'OPERATOR') {
+    <div>
+      <h2 class="govuk-heading-m">Actions</h2>
+      <a govukLink routerLink="/" (click)="addAnotherInstallation()"> Add another organisation account </a>
+    </div>
+  }
+}

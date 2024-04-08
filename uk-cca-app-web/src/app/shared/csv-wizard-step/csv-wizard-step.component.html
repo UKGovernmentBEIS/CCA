@@ -1,0 +1,14 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+  <cca-csv-error-summary *ngIf="isSummaryDisplayedSubject | async" [form]="formGroup"></cca-csv-error-summary>
+
+  <cca-page-heading [caption]="caption">{{ heading }}</cca-page-heading>
+
+  <ng-content></ng-content>
+  <button ccaPendingButton govukButton type="submit" *ngIf="!hideSubmit">{{ submitText }}</button>
+  <div *ngIf="showReturnLink">
+    <cca-return-to-task-or-action-page />
+  </div>
+  <div *ngIf="showCancelLink">
+    <a govukLink [routerLink]="cancelLinkPath">Cancel</a>
+  </div>
+</form>

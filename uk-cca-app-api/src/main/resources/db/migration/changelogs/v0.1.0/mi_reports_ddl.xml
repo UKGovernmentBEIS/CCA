@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/changelog_mi_reports.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+
+    <changeSet id="0_1_0_CREATE_MI_REPORT_TABLE" author="P70453">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="mi_report"/>
+            </not>
+        </preConditions>
+        <comment>Stores mi report type, competent authority combinations</comment>
+        <createTable tableName="mi_report" remarks="Represents a mi report">
+            <column name="id" type="integer" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="mi_report_pkey" nullable="false"/>
+            </column>
+            <column name="competent_authority" type="varchar(255)" remarks="The Competent authority name">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(255)" remarks="The report type">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS mi_report CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNIQUE_INDEX_ON_MI_REPORT" author="P70453">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="mi_report" indexName="mi_report_uq"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="mi_report_uq" tableName="mi_report" unique="true">
+            <column name="competent_authority"/>
+            <column name="type"/>
+        </createIndex>
+        <rollback>
+            <dropIndex indexName="mi_report_uq" tableName="mi_report"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

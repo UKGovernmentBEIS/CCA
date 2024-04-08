@@ -1,0 +1,36 @@
+package uk.gov.cca.api.workflow.request.application.verificationbodyappointed;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.cca.api.account.domain.event.AccountsVerificationBodyUnappointedEvent;
+import uk.gov.cca.api.workflow.request.application.verificationbodyappointed.AccountsVerificationBodyUnappointedEventListener;
+import uk.gov.cca.api.workflow.request.application.verificationbodyappointed.RequestVerificationBodyService;
+
+import java.util.Set;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+@ExtendWith(MockitoExtension.class)
+class AccountsVerificationBodyUnappointedEventListenerTest {
+
+    @InjectMocks
+    private AccountsVerificationBodyUnappointedEventListener listener;
+
+    @Mock
+    private RequestVerificationBodyService requestVerificationBodyService;
+
+    @Test
+    void onAccountsVerificationBodyUnappointedEvent() {
+        Set<Long> accountIds = Set.of(1L, 2L);
+        AccountsVerificationBodyUnappointedEvent event =
+            AccountsVerificationBodyUnappointedEvent.builder().accountIds(accountIds).build();
+
+        listener.onAccountsVerificationBodyUnappointedEvent(event);
+
+        verify(requestVerificationBodyService, times(1)).unappointVerificationBodyFromRequestsOfAccounts(accountIds);
+    }
+}

@@ -1,0 +1,14 @@
+<div class="govuk-grid-row" *ngIf="vm() as vm">
+  <div class="govuk-grid-column-full">
+    <cca-page-heading size="l">{{ vm.header }}</cca-page-heading>
+    <p class="govuk-caption-m govuk-!-margin-bottom-8">{{ vm.requestAction.creationDate | govukDate: 'datetime' }}</p>
+
+    <ng-container *ngIf="vm.component as component; else sectionsTpl">
+      <ng-container *ngComponentOutlet="component"></ng-container>
+    </ng-container>
+
+    <ng-template #sectionsTpl>
+      <cca-task-list [sections]="vm.sections"></cca-task-list>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+package uk.gov.cca.api.workflow.request.flow.common.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import uk.gov.cca.api.account.domain.enumeration.AccountContactType;
+import uk.gov.cca.api.account.service.AccountContactQueryService;
+import uk.gov.cca.api.user.core.domain.dto.UserInfoDTO;
+import uk.gov.cca.api.user.core.service.auth.UserAuthService;
+import uk.gov.cca.api.workflow.request.core.domain.Request;
+
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class RequestAccountContactQueryService {
+
+    private final AccountContactQueryService accountContactQueryService;
+    private final UserAuthService userAuthService;
+    
+    public Optional<UserInfoDTO> getRequestAccountContact(Request request, AccountContactType contactType) {
+        return accountContactQueryService
+            .findContactByAccountAndContactType(request.getAccountId(), contactType)
+            .map(userAuthService::getUserByUserId);
+    }
+
+    public Optional<UserInfoDTO> getRequestAccountPrimaryContact(Request request) {
+        return getRequestAccountContact(request, AccountContactType.PRIMARY);
+    }
+
+    public Optional<UserInfoDTO> getRequestAccountServiceContact(Request request) {
+        return getRequestAccountContact(request, AccountContactType.SERVICE);
+    }
+
+}

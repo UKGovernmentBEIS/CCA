@@ -1,0 +1,51 @@
+<div class="govuk-grid-row" *ngIf="vm() as vm">
+  <div [class]="vm.hasRelatedActions ? 'govuk-grid-column-two-thirds' : 'govuk-grid-column-full'">
+    <cca-page-heading size="l">
+      {{ vm.header }}
+
+      <cca-task-header-info
+        *ngIf="vm.requestTask as rt"
+        [assignee]="rt.assigneeFullName"
+        [daysRemaining]="rt.daysRemaining"
+      ></cca-task-header-info>
+    </cca-page-heading>
+
+    <ng-container *ngIf="vm.preContentComponent as preContentComponent">
+      <ng-container *ngComponentOutlet="preContentComponent" />
+    </ng-container>
+
+    <ng-container *ngIf="vm.contentComponent as component; else sectionsTpl">
+      <ng-container *ngComponentOutlet="component" />
+    </ng-container>
+
+    <ng-container *ngIf="vm.postContentComponent as postContentComponent">
+      <ng-container *ngComponentOutlet="postContentComponent" />
+    </ng-container>
+
+    <ng-template #sectionsTpl>
+      <cca-task-list [sections]="vm.sections" />
+    </ng-template>
+
+    <ng-container *ngIf="vm.hasRelatedTasks">
+      <cca-related-tasks [items]="vm.relatedTasks" />
+    </ng-container>
+
+    <ng-container *ngIf="vm.hasTimeline">
+      <cca-timeline>
+        <cca-timeline-item
+          *ngFor="let timelineEntry of vm.timeline"
+          [action]="timelineEntry"
+          [link]="['timeline', timelineEntry.id]"
+        ></cca-timeline-item>
+      </cca-timeline>
+    </ng-container>
+  </div>
+
+  <div *ngIf="vm.hasRelatedActions" class="govuk-grid-column-one-third">
+    <cca-related-actions
+      [allowedRequestTaskActions]="vm.relatedActions"
+      [showReassignAction]="vm.showAssignAction"
+      [taskId]="vm.requestTask.id"
+    />
+  </div>
+</div>

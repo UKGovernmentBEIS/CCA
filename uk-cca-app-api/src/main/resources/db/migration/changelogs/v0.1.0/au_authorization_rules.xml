@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/changelog_authorization_rules.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_initialize_authorization_rules" author="P70453">
+        <sql>
+            truncate table au_resource_scope_permission cascade;
+            truncate table au_rule cascade;
+            truncate table au_service cascade;
+
+            ALTER SEQUENCE au_rule_seq RESTART WITH 1;
+            ALTER SEQUENCE au_service_seq RESTART WITH 1;
+            ALTER SEQUENCE au_resource_scope_permission_seq RESTART WITH 1;
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_au_rule" author="P70453">
+        <sql>
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'ACCOUNT', null, 'accountAccessHandler', 'OPERATOR', null);
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'ACCOUNT', null, 'accountAccessHandler', 'REGULATOR', null);
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'ACCOUNT', null, 'accountAccessHandler', 'REGULATOR', 'EDIT_USER');
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'ACCOUNT', null, 'accountAccessHandler', 'OPERATOR', 'EDIT_USER');
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'ACCOUNT', null, 'accountAccessHandler', 'VERIFIER', null);
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'CA', null, 'caAccessHandler', 'REGULATOR', 'EDIT_USER');
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'CA', null, 'caAccessHandler', 'REGULATOR', 'MANAGE_VB');
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'VERIFICATION_BODY', null, 'verificationBodyAccessHandler', 'VERIFIER', 'EDIT_USER');
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'NOTIFICATION_TEMPLATE', null, 'notificationTemplateAccessHandler', 'REGULATOR', null);
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_NOTE', null, 'requestNoteAccessHandler', 'REGULATOR', null);
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'ACCOUNT_NOTE', null, 'accountNoteAccessHandler', 'REGULATOR', null);
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'DOCUMENT_TEMPLATE', null, 'documentTemplateAccessHandler', 'REGULATOR', null);
+
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST', null, 'requestAccessHandler', 'REGULATOR', null);
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST', null, 'requestAccountBasedAccessHandler', 'VERIFIER', null);
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST', null, 'requestAccessHandler', 'OPERATOR', null);
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_TASK', null, 'requestTaskAssignAccessHandler', 'OPERATOR', 'REQUEST_TASK_ASSIGN');
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_TASK', null, 'requestTaskAssignAccessHandler', 'REGULATOR', 'REQUEST_TASK_ASSIGN');
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_TASK', null, 'requestTaskAssignAccountBasedAccessHandler', 'VERIFIER', 'REQUEST_TASK_ASSIGN');
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'REQUEST_TERMINATED', 'requestActionViewHandler', 'OPERATOR', null);
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'REQUEST_TERMINATED', 'requestActionViewHandler', 'REGULATOR', null);
+            INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'REQUEST_TERMINATED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+
+            -- Choose the applicable ones
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_SUBMITTED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_SUBMITTED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_SUBMITTED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_EXPIRED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_EXPIRED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_EXPIRED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_ACCEPTED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_ACCEPTED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_ACCEPTED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_REJECTED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_REJECTED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_REJECTED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_FORCE_ACCEPTED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_FORCE_ACCEPTED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_FORCE_ACCEPTED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_CANCELLED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_CANCELLED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_CANCELLED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_FORCE_REJECTED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_FORCE_REJECTED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RDE_FORCE_REJECTED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RFI_SUBMITTED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RFI_SUBMITTED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RFI_SUBMITTED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RFI_RESPONSE_SUBMITTED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RFI_RESPONSE_SUBMITTED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RFI_RESPONSE_SUBMITTED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RFI_EXPIRED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RFI_EXPIRED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RFI_EXPIRED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RFI_CANCELLED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RFI_CANCELLED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'RFI_CANCELLED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'VERIFICATION_STATEMENT_CANCELLED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'VERIFICATION_STATEMENT_CANCELLED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'VERIFICATION_STATEMENT_CANCELLED', 'requestActionViewHandler', 'OPERATOR', null);
+
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PAYMENT_MARKED_AS_PAID', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PAYMENT_MARKED_AS_PAID', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PAYMENT_MARKED_AS_PAID', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PAYMENT_MARKED_AS_RECEIVED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PAYMENT_MARKED_AS_RECEIVED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PAYMENT_MARKED_AS_RECEIVED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PAYMENT_CANCELLED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PAYMENT_CANCELLED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PAYMENT_CANCELLED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PAYMENT_COMPLETED', 'requestActionViewHandler', 'OPERATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PAYMENT_COMPLETED', 'requestActionViewHandler', 'REGULATOR', null);
+            --INSERT INTO public.au_rule (id, resource_type, resource_sub_type, handler, role_type, scope) VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'PAYMENT_COMPLETED', 'requestActionAccountBasedViewHandler', 'VERIFIER', null);
+
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_au_service" author="P70453">
+        <sql>
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getRequestActionsByRequestId');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'processRequestTaskAction');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateRegulatorUserByCaAndId');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateAccountOperatorAuthorities');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getAccountOperatorAuthorities');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getOperatorUserById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateOperatorUserById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getRegulatorUserByCaAndId');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateCompetentAuthorityRegulatorUsersStatus');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'deleteRegulatorUserByCompetentAuthority');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'deleteCurrentRegulatorUserByCompetentAuthority');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'inviteOperatorUserToAccount');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'inviteRegulatorUserToCA');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'assignTask');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getCandidateAssigneesByTaskId');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'releaseTask');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getRegulatorUserPermissionsByCaAndId');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'deleteAccountOperatorAuthority');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'deleteCurrentUserAccountOperatorAuthority');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateVerifierAuthorities');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getVerifierUserById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getRegulatorPermissionGroupLevels');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateVerifierUserById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'inviteVerifierUser');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getTaskItemInfoById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getRegulatorRoles');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getOperatorRoleCodes');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getVerifierRoleCodes');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'deleteCaExternalContactById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'createCaExternalContact');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'editCaExternalContact');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getCaExternalContactById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateCaSiteContacts');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateVbSiteContacts');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getVerificationBodyOfAccount');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getActiveVerificationBodies');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'appointVerificationBodyToAccount');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'createVerificationBody');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getVerifierAuthoritiesByVerificationBodyId');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'inviteVerifierAdminUserByVerificationBodyId');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'deleteVerifierAuthority');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'deleteCurrentVerifierAuthority');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getVerificationBodyById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateVerificationBody');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateVerificationBodiesStatus');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'deleteVerificationBodyById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'replaceVerificationBodyToAccount');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'uploadRequestTaskAttachment');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'generateRequestActionGetFileAttachmentToken');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getRequestActionById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'generateRequestTaskGetFileAttachmentToken');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateVerifierAuthoritiesByVerificationBodyId');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getCandidateAssigneesByTaskType');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getRequestDetailsByAccountId');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'processRequestCreateAction');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getNotificationTemplateById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateNotificationTemplate');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateDocumentTemplate');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getDocumentTemplateById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'generateGetDocumentTemplateFileToken');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getItemsByRequest');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getRequestDetailsById');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getAvailableAccountWorkflows');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'generateGetRegulatorSignatureToken');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'generateRequestActionGetFileDocumentToken');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'createCardPayment');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'processExistingCardPayment');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getNotesByAccountId');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'createAccountNote');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'uploadAccountNoteFile');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateAccountNote');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'deleteAccountNote');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'generateGetAccountFileNoteToken');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getAccountNote');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getNotesByRequestId');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'createRequestNote');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'uploadRequestNoteFile');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'updateRequestNote');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'deleteRequestNote');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getRequestNote');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'generateGetRequestFileNoteToken');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'getAvailableAerWorkflows');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'resetRegulator2Fa');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'resetOperator2Fa');
+            INSERT INTO public.au_service (id, name) VALUES (nextval('au_service_seq'), 'resetVerifier2Fa');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+    <changeSet id="0_1_0_POPULATE_au_resource_scope_permission" author="P70453">
+        <sql>
+            INSERT INTO public.au_resource_scope_permission (id, resource_type, resource_sub_type, scope, permission, role_type) VALUES (nextval('au_resource_scope_permission_seq'), 'ACCOUNT', null, 'EDIT_USER', 'PERM_ACCOUNT_USERS_EDIT', 'OPERATOR');
+            INSERT INTO public.au_resource_scope_permission (id, resource_type, resource_sub_type, scope, permission, role_type) VALUES (nextval('au_resource_scope_permission_seq'), 'ACCOUNT', null, 'EDIT_USER', 'PERM_ACCOUNT_USERS_EDIT', 'REGULATOR');
+
+            INSERT INTO public.au_resource_scope_permission (id, resource_type, resource_sub_type, scope, permission, role_type) VALUES (nextval('au_resource_scope_permission_seq'), 'CA', null, 'EDIT_USER', 'PERM_CA_USERS_EDIT', 'REGULATOR');
+            INSERT INTO public.au_resource_scope_permission (id, resource_type, resource_sub_type, scope, permission, role_type) VALUES (nextval('au_resource_scope_permission_seq'), 'CA', null, 'MANAGE_VB', 'PERM_VB_MANAGE', 'REGULATOR');
+
+            INSERT INTO public.au_resource_scope_permission (id, resource_type, resource_sub_type, scope, permission, role_type) VALUES (nextval('au_resource_scope_permission_seq'), 'VERIFICATION_BODY', null, 'EDIT_USER', 'PERM_VB_USERS_EDIT', 'VERIFIER');
+
+            INSERT INTO public.au_resource_scope_permission (id, resource_type, resource_sub_type, scope, permission, role_type) VALUES (nextval('au_resource_scope_permission_seq'), 'REQUEST_TASK', null, 'REQUEST_TASK_ASSIGN', 'PERM_TASK_ASSIGNMENT', 'OPERATOR');
+            INSERT INTO public.au_resource_scope_permission (id, resource_type, resource_sub_type, scope, permission, role_type) VALUES (nextval('au_resource_scope_permission_seq'), 'REQUEST_TASK', null, 'REQUEST_TASK_ASSIGN', 'PERM_TASK_ASSIGNMENT', 'REGULATOR');
+            INSERT INTO public.au_resource_scope_permission (id, resource_type, resource_sub_type, scope, permission, role_type) VALUES (nextval('au_resource_scope_permission_seq'), 'REQUEST_TASK', null, 'REQUEST_TASK_ASSIGN', 'PERM_TASK_ASSIGNMENT', 'VERIFIER');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_au_service_rule" author="P70453">
+        <sql>
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionsByRequestId' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionsByRequestId' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionsByRequestId' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccountBasedAccessHandler';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateRegulatorUserByCaAndId' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateAccountOperatorAuthorities' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateAccountOperatorAuthorities' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getOperatorUserById' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getOperatorUserById' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateOperatorUserById' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateOperatorUserById' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRegulatorUserByCaAndId' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateCompetentAuthorityRegulatorUsersStatus' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler'and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='deleteRegulatorUserByCompetentAuthority' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='deleteCurrentRegulatorUserByCompetentAuthority' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='inviteOperatorUserToAccount' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='inviteOperatorUserToAccount' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='inviteRegulatorUserToCA' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='assignTask' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_TASK' and aur.resource_sub_type is null and aur.handler='requestTaskAssignAccessHandler' and scope='REQUEST_TASK_ASSIGN';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='assignTask' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_TASK' and aur.resource_sub_type is null and aur.handler='requestTaskAssignAccessHandler' and scope='REQUEST_TASK_ASSIGN';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='assignTask' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_TASK' and aur.resource_sub_type is null and aur.handler='requestTaskAssignAccountBasedAccessHandler';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='releaseTask' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_TASK' and aur.resource_sub_type is null and aur.handler='requestTaskAssignAccessHandler' and scope='REQUEST_TASK_ASSIGN';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='releaseTask' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_TASK' and aur.resource_sub_type is null and aur.handler='requestTaskAssignAccessHandler' and scope='REQUEST_TASK_ASSIGN';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='releaseTask' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_TASK' and aur.resource_sub_type is null and aur.handler='requestTaskAssignAccountBasedAccessHandler' and scope='REQUEST_TASK_ASSIGN';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRegulatorUserPermissionsByCaAndId' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='deleteAccountOperatorAuthority' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='deleteAccountOperatorAuthority' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='deleteCurrentUserAccountOperatorAuthority' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateVerifierAuthorities' and aur.role_type='VERIFIER' and aur.resource_type='VERIFICATION_BODY' and aur.resource_sub_type is null and aur.handler='verificationBodyAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getVerifierUserById' and aur.role_type='VERIFIER' and aur.resource_type='VERIFICATION_BODY' and aur.resource_sub_type is null and aur.handler='verificationBodyAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getVerifierUserById' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRegulatorPermissionGroupLevels' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateVerifierUserById' and aur.role_type='VERIFIER' and aur.resource_type='VERIFICATION_BODY' and aur.resource_sub_type is null and aur.handler='verificationBodyAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateVerifierUserById' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='inviteVerifierUser' and aur.role_type='VERIFIER' and aur.resource_type='VERIFICATION_BODY' and aur.resource_sub_type is null and aur.handler='verificationBodyAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRegulatorRoles' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getOperatorRoleCodes' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getOperatorRoleCodes' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getVerifierRoleCodes' and aur.role_type='VERIFIER' and aur.resource_type='VERIFICATION_BODY' and aur.resource_sub_type is null and aur.handler='verificationBodyAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getVerifierRoleCodes' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='deleteCaExternalContactById' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='createCaExternalContact' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='editCaExternalContact' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getCaExternalContactById' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateCaSiteContacts' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getAccountOperatorAuthorities' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getAccountOperatorAuthorities' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateVbSiteContacts' and aur.role_type='VERIFIER' and aur.resource_type='VERIFICATION_BODY' and aur.resource_sub_type is null and aur.handler='verificationBodyAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getVerificationBodyOfAccount' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getVerificationBodyOfAccount' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getActiveVerificationBodies' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='appointVerificationBodyToAccount' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler'  and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='createVerificationBody' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getVerifierAuthoritiesByVerificationBodyId' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='inviteVerifierAdminUserByVerificationBodyId' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='deleteVerifierAuthority' and aur.role_type='VERIFIER' and aur.resource_type='VERIFICATION_BODY' and aur.resource_sub_type is null and aur.handler='verificationBodyAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='deleteVerifierAuthority' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='deleteCurrentVerifierAuthority' and aur.role_type='VERIFIER' and aur.resource_type='VERIFICATION_BODY' and aur.resource_sub_type is null and aur.handler='verificationBodyAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getVerificationBodyById' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateVerificationBody' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateVerificationBodiesStatus' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='deleteVerificationBodyById' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='replaceVerificationBodyToAccount' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateVerifierAuthoritiesByVerificationBodyId' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestDetailsByAccountId' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestDetailsByAccountId' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestDetailsByAccountId' and aur.role_type='VERIFIER' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getNotificationTemplateById' and aur.role_type='REGULATOR' and aur.resource_type='NOTIFICATION_TEMPLATE' and aur.resource_sub_type is null and aur.handler='notificationTemplateAccessHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateNotificationTemplate' and aur.role_type='REGULATOR' and aur.resource_type='NOTIFICATION_TEMPLATE' and aur.resource_sub_type is null and aur.handler='notificationTemplateAccessHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getItemsByRequest' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getItemsByRequest' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getItemsByRequest' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccountBasedAccessHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestDetailsById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestDetailsById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestDetailsById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccountBasedAccessHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getAvailableAccountWorkflows' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getAvailableAccountWorkflows' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateGetRegulatorSignatureToken' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getNotesByAccountId' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='createAccountNote' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='uploadAccountNoteFile' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateAccountNote' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT_NOTE' and aur.resource_sub_type is null and aur.handler='accountNoteAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='deleteAccountNote' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT_NOTE' and aur.resource_sub_type is null and aur.handler='accountNoteAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getAccountNote' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT_NOTE' and aur.resource_sub_type is null and aur.handler='accountNoteAccessHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getNotesByRequestId' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='createRequestNote' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='uploadRequestNoteFile' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateRequestNote' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_NOTE' and aur.resource_sub_type is null and aur.handler='requestNoteAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='deleteRequestNote' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_NOTE' and aur.resource_sub_type is null and aur.handler='requestNoteAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestNote' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_NOTE' and aur.resource_sub_type is null and aur.handler='requestNoteAccessHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateGetAccountFileNoteToken' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateGetRequestFileNoteToken' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccessHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getAvailableAerWorkflows' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST' and aur.resource_sub_type is null and aur.handler='requestAccessHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='resetRegulator2Fa' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='resetOperator2Fa' and aur.role_type='REGULATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='resetOperator2Fa' and aur.role_type='OPERATOR' and aur.resource_type='ACCOUNT' and aur.resource_sub_type is null and aur.handler='accountAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='resetVerifier2Fa' and aur.role_type='VERIFIER' and aur.resource_type='VERIFICATION_BODY' and aur.resource_sub_type is null and aur.handler='verificationBodyAccessHandler' and scope='EDIT_USER';
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='resetVerifier2Fa' and aur.role_type='REGULATOR' and aur.resource_type='CA' and aur.resource_sub_type is null and aur.handler='caAccessHandler' and scope='MANAGE_VB';
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='REQUEST_TERMINATED' and aur.handler='requestActionViewHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='REQUEST_TERMINATED' and aur.handler='requestActionViewHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='REQUEST_TERMINATED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='updateDocumentTemplate' and aur.role_type='REGULATOR' and aur.resource_type='DOCUMENT_TEMPLATE' and aur.resource_sub_type is null and aur.handler='documentTemplateAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getDocumentTemplateById' and aur.role_type='REGULATOR' and aur.resource_type='DOCUMENT_TEMPLATE' and aur.resource_sub_type is null and aur.handler='documentTemplateAccessHandler' and scope is null;
+            insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateGetDocumentTemplateFileToken' and aur.role_type='REGULATOR' and aur.resource_type='DOCUMENT_TEMPLATE' and aur.resource_sub_type is null and aur.handler='documentTemplateAccessHandler' and scope is null;
+
+            -- Choose the applicable ones
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileAttachmentToken' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileAttachmentToken' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileAttachmentToken' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_SUBMITTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileAttachmentToken' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_RESPONSE_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileAttachmentToken' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_RESPONSE_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileAttachmentToken' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_RESPONSE_SUBMITTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileAttachmentToken' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_FORCE_ACCEPTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileAttachmentToken' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_FORCE_ACCEPTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileAttachmentToken' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_FORCE_ACCEPTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileAttachmentToken' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_FORCE_REJECTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileAttachmentToken' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_FORCE_REJECTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileAttachmentToken' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_FORCE_REJECTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileDocumentToken' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileDocumentToken' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileDocumentToken' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_SUBMITTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileDocumentToken' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileDocumentToken' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='generateRequestActionGetFileDocumentToken' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_SUBMITTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_SUBMITTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_CANCELLED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_CANCELLED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_CANCELLED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_RESPONSE_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_RESPONSE_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_RESPONSE_SUBMITTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_EXPIRED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_EXPIRED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RFI_EXPIRED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_SUBMITTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_SUBMITTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_ACCEPTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_ACCEPTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_ACCEPTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_REJECTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_REJECTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_REJECTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_FORCE_ACCEPTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_FORCE_ACCEPTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_FORCE_ACCEPTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_FORCE_REJECTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_FORCE_REJECTED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_FORCE_REJECTED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_EXPIRED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_EXPIRED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_EXPIRED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_CANCELLED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_CANCELLED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='RDE_CANCELLED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='PAYMENT_MARKED_AS_PAID' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='PAYMENT_MARKED_AS_PAID' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='PAYMENT_MARKED_AS_PAID' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='PAYMENT_MARKED_AS_RECEIVED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='PAYMENT_MARKED_AS_RECEIVED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='PAYMENT_MARKED_AS_RECEIVED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='PAYMENT_CANCELLED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='PAYMENT_CANCELLED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='PAYMENT_CANCELLED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='PAYMENT_COMPLETED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='PAYMENT_COMPLETED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='PAYMENT_COMPLETED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='REGULATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='VERIFICATION_STATEMENT_CANCELLED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='OPERATOR' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='VERIFICATION_STATEMENT_CANCELLED' and aur.handler='requestActionViewHandler' and scope is null;
+            --insert into au_service_rule(service_id, rule_id) select aus.id, aur.id from au_service aus, au_rule aur where aus.name='getRequestActionById' and aur.role_type='VERIFIER' and aur.resource_type='REQUEST_ACTION' and aur.resource_sub_type='VERIFICATION_STATEMENT_CANCELLED' and aur.handler='requestActionAccountBasedViewHandler' and scope is null;
+
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

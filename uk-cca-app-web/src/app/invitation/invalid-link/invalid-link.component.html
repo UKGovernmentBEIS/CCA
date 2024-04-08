@@ -1,0 +1,20 @@
+@switch (errorCode$ | async) {
+  @case ('EMAIL1001') {
+    <cca-page-heading>This link has expired</cca-page-heading>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body">
+          Please contact the admin of your organisation and request that they add you once again as a new user.
+        </p>
+        <p class="govuk-body">
+          When the admin user has done this you will receive a new email with a link enabling you to activate your
+          account.
+        </p>
+      </div>
+    </div>
+  }
+  @default {
+    <cca-page-heading>This link is invalid</cca-page-heading>
+    <p class="govuk-body">Please contact your admin for access.</p>
+  }
+}

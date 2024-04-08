@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/changelog_notification_template_cca.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_INSERT_INVITATION_TO_REGULATOR_NOTIFICATION_TEMPLATE" author="P70628">
+        <comment>Insert record in notification_template for Invitation To Regulator</comment>
+        <sql>
+            <![CDATA[
+            INSERT INTO notification_template (id, name, subject, text)
+            VALUES (nextval('notification_template_seq'),
+                    'InvitationToRegulatorAccount',
+                    'Confirm your account - Manage your CCA Reporting',
+                    'An account has been created for you in the CCA reporting service.
+
+         [Confirm your account](${regulatorInvitationConfirmationLink})
+
+         This link will expire in 72 hours.
+
+         You will be asked to create a password and set up two-factor authentication.
+
+         If you think you should not have received this email, you must [contact the CCA Helpdesk](mailto:${ccaHelpdesk}).
+
+         This is an automatic email - please do not reply to this address.')]]>;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM notification_template WHERE name = 'InvitationToRegulatorAccount';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_INSERT_INVITEE_INVITATION_ACCEPTED_NOTIFICATION_TEMPLATE" author="pafilisa@unisystems.gr">
+
+        <comment>Add InviteeInvitationAccepted template</comment>
+        <sql>
+            <![CDATA[
+            INSERT INTO notification_template (
+                id,
+                name,
+                subject,
+                text)
+            VALUES (
+           nextval('notification_template_seq'),
+           'InviteeInvitationAccepted',
+           'Your account has been accepted - Manage your CCA Reporting',
+           'You have successfully accepted your account on the CCA reporting service.
+
+You can now [sign in to your account](${homeUrl}).
+
+If you think you should not have received this email, you must [contact the CCA Helpdesk](mailto:${ccaHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+                   )]]>;
+        </sql>
+
+        <rollback>
+            <sql>
+                DELETE FROM notification_template WHERE name = 'InviteeInvitationAccepted';
+            </sql>
+        </rollback>
+
+    </changeSet>
+
+    <changeSet id="0_1_0_INSERT_INVITER_INVITATION_ACCEPTED_NOTIFICATION_TEMPLATE" author="pafilisa@unisystems.gr">
+
+        <comment>Add InviterInvitationAccepted template</comment>
+        <sql>
+            <![CDATA[
+            INSERT INTO notification_template (
+                id,
+                name,
+                subject,
+                text)
+            VALUES (
+           nextval('notification_template_seq'),
+           'InviterInvitationAccepted',
+           'User account activation',
+           'Dear ${userFirstName} ${userLastName},
+
+This is to notify you that ${userInviteeFirstName} ${userInviteeLastName} has accepted the invitation.
+
+If you think you should not have received this email, you must [contact the CCA Helpdesk](mailto:${ccaHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+       )]]>;
+        </sql>
+
+        <rollback>
+            <sql>
+                DELETE FROM notification_template WHERE name = 'InviterInvitationAccepted';
+            </sql>
+        </rollback>
+
+    </changeSet>
+
+    <changeSet id="0_1_0_INSERT_USER_ACCOUNT_ACTIVATION_NOTIFICATION_TEMPLATE" author="pafilisa@unisystems.gr">
+
+        <comment>Add UserAccountActivation template</comment>
+        <sql>
+            <![CDATA[
+            INSERT INTO notification_template (
+                id,
+                name,
+                subject,
+                text)
+            VALUES (
+           nextval('notification_template_seq'),
+           'UserAccountActivation',
+           'Your account has been activated - Manage your CCA Reporting',
+           'Your ${userRoleType} account has been activated in the CCA reporting service.
+
+You can now [sign in to your account](${homeUrl}).
+
+If you think you should not have received this email, you must [contact the CCA Helpdesk](mailto:${ccaHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+       )]]>;
+        </sql>
+
+        <rollback>
+            <sql>
+                DELETE FROM notification_template WHERE name = 'UserAccountActivation';
+            </sql>
+        </rollback>
+
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_INVITATION_TO_REGULATOR_NOTIFICATION_TEMPLATE_TEXT_FORMAT" author="pafilisa@unisystems.gr">
+        <sql>
+            UPDATE notification_template
+            SET text = 'An account has been created for you in the CCA reporting service.
+
+[Confirm your account](${regulatorInvitationConfirmationLink})
+
+This link will expire in 72 hours.
+
+You will be asked to create a password and set up two-factor authentication.
+
+If you think you should not have received this email, you must [contact the CCA Helpdesk](mailto:${ccaHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+            WHERE name = 'InvitationToRegulatorAccount';
+        </sql>
+
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_INSERT_CHANGE_2FA_MESSAGE_NOTIFICATION_TEMPLATE" author="konstantinos.kavvalakis@trasys.gr">
+
+        <comment>Add RequestTwoFactorAuthChange template</comment>
+        <sql>
+            <![CDATA[
+            INSERT INTO notification_template (
+                id,
+                name,
+                subject,
+                text)
+            VALUES (
+                       nextval('notification_template_seq'),
+                       'Change2FA',
+                       'Two factor authentication device update request - Manage your CCA reporting',
+                       'Use this link to sign in to the CCA service and update your authenticator app:
+
+[Sign in and set up new two factor authentication](${change2FALink})
+
+This link will expire in ${expirationMinutes} minutes.
+
+If you think you should not have received this email, you must [contact the CCA Helpdesk](mailto:${ccaHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+                   )]]>;
+        </sql>
+
+        <rollback>
+            <sql>
+                DELETE FROM notification_template WHERE name = 'Change2FA';
+            </sql>
+        </rollback>
+
+    </changeSet>
+    <changeSet id="0_1_0_INSERT_RESET_2FA_CONFIRMATION_MESSAGE_NOTIFICATION_TEMPLATE" author="konstantinos.kavvalakis@trasys.gr">
+
+        <comment>Add RequestTwoFactorAuthReset template</comment>
+        <sql>
+            <![CDATA[
+            INSERT INTO notification_template (
+                id,
+                name,
+                subject,
+                text)
+            VALUES (
+                       nextval('notification_template_seq'),
+                       'Reset2FaConfirmation',
+                       'Two-factor authentication reset - Manage your CCA reporting',
+                       'We received your request to reset your two-factor authentication for the CCA service.
+
+Sign in to the [CCA service](${homeUrl}) to set up a new authenticator and access your account.
+
+If you think you should not have received this email, you must [contact the CCA Helpdesk](mailto:${ccaHelpdesk}).
+
+This is an automatic email - please do not reply to this address.'
+                   )]]>;
+        </sql>
+
+        <rollback>
+            <sql>
+                DELETE FROM notification_template WHERE name = 'Reset2FaConfirmation';
+            </sql>
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>

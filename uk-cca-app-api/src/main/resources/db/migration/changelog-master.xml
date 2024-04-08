@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <include file="classpath:/db/migration/changelogs/terms.xml" />
+
+    <include file="classpath:/db/migration/changelogs/competent_authority_ddl.xml" />
+
+    <include file="classpath:/db/migration/changelogs/file_attachment_ddl.xml" />
+    <include file="classpath:/db/migration/changelogs/file_document_ddl.xml" />
+    <include file="classpath:/db/migration/changelogs/file_document_template_ddl.xml" />
+    <include file="classpath:/db/migration/changelogs/file_note_ddl.xml" />
+
+    <include file="changelogs/v0.1.0/main.xml" relativeToChangelogFile="true" />
+</databaseChangeLog>
