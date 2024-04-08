@@ -1,0 +1,10 @@
+<ng-container *ngIf="emailTemplate$ | async as emailTemplate">
+  <govuk-error-summary *ngIf="displayErrorSummary$ | async" [form]="form$ | async"></govuk-error-summary>
+  <cca-page-heading>Edit {{ emailTemplate.name }}</cca-page-heading>
+  <form (ngSubmit)="onSubmit()" *ngIf="form$ | async as form" [formGroup]="form">
+    <div formControlName="subject" govuk-text-input label="Email subject"></div>
+    <div formControlName="message" govuk-textarea [maxLength]="10000" label="Email message"></div>
+    <button ccaPendingButton govukButton type="submit">Confirm and complete</button>
+  </form>
+  <cca-email-template-details-template [emailTemplate]="emailTemplate"></cca-email-template-details-template>
+</ng-container>

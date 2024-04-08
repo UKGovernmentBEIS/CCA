@@ -1,0 +1,29 @@
+@import 'settings/media-queries';
+@import 'helpers/media-queries';
+
+/**
+Override display on Menu button and Navigation list
+to compensate for behaviour applicable through javascript in GDS
+*/
+
+:host {
+  .govuk-header__menu-button {
+    .js-enabled & {
+      @include govuk-media-query($from: desktop) {
+        display: none;
+      }
+    }
+  }
+
+  .govuk-header__navigation-list {
+    @include govuk-media-query($until: desktop) {
+      display: none;
+    }
+
+    &.govuk-header__navigation--open {
+      @include govuk-media-query($until: desktop) {
+        display: block;
+      }
+    }
+  }
+}

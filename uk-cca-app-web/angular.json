@@ -1,0 +1,203 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "uk-cca-app-web": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:application": {
+          "strict": true
+        },
+        "@schematics/angular:component": {
+          "style": "none",
+          "changeDetection": "OnPush",
+          "inlineStyle": false,
+          "standalone": true
+        },
+        "@schematics/angular:pipe": {
+          "standalone": true
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "cca",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/uk-cca-app-web",
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "polyfills": ["src/polyfills.ts"],
+            "tsConfig": "tsconfig.app.json",
+            "sourceMap": {
+              "styles": true,
+              "scripts": true,
+              "vendor": true
+            },
+            "assets": [
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/govuk-frontend/dist/govuk/assets",
+                "output": "/assets/"
+              }
+            ],
+            "styles": ["src/styles.scss", "node_modules/dialog-polyfill/dialog-polyfill.css"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules/govuk-frontend/dist/govuk/"]
+            },
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "keycloak-js",
+              "clean-deep",
+              "crypto-js",
+              "base64-js",
+              "js-sha256",
+              "google-libphonenumber"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "4mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "10kb",
+                  "maximumError": "20kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "options": {
+            "port": 4202
+          },
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "uk-cca-app-web:build:production"
+            },
+            "development": {
+              "proxyConfig": "proxy.conf.json",
+              "buildTarget": "uk-cca-app-web:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "uk-cca-app-web:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {}
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
+        }
+      }
+    },
+    "govuk-components": {
+      "projectType": "library",
+      "root": "projects/govuk-components",
+      "sourceRoot": "projects/govuk-components/src",
+      "prefix": "govuk",
+      "schematics": {
+        "@schematics/angular:component": {
+          "inlineStyle": true,
+          "inlineTemplate": true,
+          "changeDetection": "OnPush"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/govuk-components/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/govuk-components/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/govuk-components/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "projects/govuk-components/tsconfig.spec.json",
+            "polyfills": ["zone.js", "zone.js/testing"]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/govuk-components/**/*.ts", "projects/govuk-components/**/*.html"]
+          }
+        }
+      }
+    },
+    "cca-api": {
+      "projectType": "library",
+      "root": "projects/cca-api",
+      "sourceRoot": "projects/cca-api/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/cca-api/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/cca-api/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/cca-api/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/cca-api/**/*.ts"]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "schematicCollections": ["@angular-eslint/schematics"],
+    "analytics": false
+  }
+}

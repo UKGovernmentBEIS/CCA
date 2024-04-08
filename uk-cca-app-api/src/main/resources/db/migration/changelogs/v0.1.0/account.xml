@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+		logicalFilePath="v0.1.0/changelog_account.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+	
+	<changeSet id="0_1_0_ACCOUNT_CREATE_TABLE" author="kliropog">
+        <validCheckSum>1:any</validCheckSum>
+		<createTable tableName="account" 
+        		remarks="Represents an operator account">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="account_pk" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)" remarks="The name of the account">
+                <constraints nullable="false" />
+            </column>
+            <column name="emitter_id" type="varchar(255)" remarks="The emitter id">
+                <constraints unique="true" uniqueConstraintName="emitter_id_uq" nullable="true" />
+            </column>
+            <column name="competent_authority" type="varchar(255)" remarks="The competent authority">
+            	<constraints nullable="false" />
+            </column>
+            <column name="accepted_date" type="timestamp" remarks="The date the account was accepted">
+                <constraints nullable="true" />
+            </column>
+            <column name="verification_body_id" type="bigint" remarks="The verification body id">
+                <constraints nullable="true" />
+            </column>
+            <column name="emission_trading_scheme" type="varchar(255)" remarks="The emission trading scheme the installation account">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <rollback>
+        	<sql>
+        		DROP TABLE IF EXISTS account CASCADE;
+        	</sql>
+        </rollback>
+	</changeSet>
+
+
+    <changeSet id="0_1_0_ACCOUNT_IDENTIFIER_CREATE_TABLE" author="P70383">
+        <comment>Create account identifier table</comment>
+        <createTable tableName="account_identifier" remarks="Represents the latest account id value">
+            <column name="id" type="integer" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="account_identifier_pk" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint" remarks="The latest account id value">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS account_identifier CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_INITIALIZE_ACCOUNT_IDENTIFIER_TABLE" author="P70383">
+        <comment>Initialize account identifier table with max emitter id from account table</comment>
+        <sql>
+            INSERT INTO account_identifier(id, account_id)
+            VALUES (1, (SELECT CASE WHEN EXISTS (SELECT * FROM account LIMIT 1) THEN (SELECT MAX(id) FROM account) ELSE 0 END));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM account_identifier WHERE id = 1;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_CREATE_INDEXES_FOR_ACCOUNT_SEARCHABLE_COLUMNS" author="P35066">
+        <validCheckSum>1:any</validCheckSum>
+        <sql>
+            CREATE INDEX trgm_gin_idx_account_name ON account USING gin (name gin_trgm_ops);
+        </sql>
+        <rollback>
+            <sql>
+                DROP INDEX trgm_gin_idx_account_name;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ACCOUNT_SEARCH_ADDITIONAL_KEYWORD_SEQUENCE" author="P62629">
+        <createSequence sequenceName="account_search_additional_keyword_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS account_search_additional_keyword_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ACCOUNT_SEARCH_ADDITIONAL_KEYWORD" author="P62629">
+        <createTable tableName="account_search_additional_keyword" remarks="Represents an account-related additional keyword for search purposes">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="account_search_additional_keyword_pk" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint" remarks="The account id related to the keyword">
+                <constraints foreignKeyName="account_search_additional_keywordacc_fk" references="account(id)" nullable="false" />
+            </column>
+            <column name="value" type="varchar(255)" remarks="The value of the keyword (e.g. permit_id)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS account_search_additional_keyword CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_CREATE_INDEXES_FOR_ACCOUNT_SEARCH_ADDITIONAL_KEYWORD_SEARCHABLE_COLUMN" author="P62629">
+        <sql>
+            CREATE INDEX trgm_gin_idx_account_search_additional_keyword_value
+                ON account_search_additional_keyword USING gin (value gin_trgm_ops);
+        </sql>
+        <rollback>
+            <sql>
+                DROP INDEX trgm_gin_idx_account_search_additional_keyword_value;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ACCOUNT_ADD_CA_IDX" author="P70453">
+        <comment>Add CA index in account table</comment>
+        <createIndex indexName="account_ca_idx" tableName="account">
+            <column name="competent_authority" />
+        </createIndex>
+        <rollback>
+            <sql>
+                DROP INDEX IF EXISTS account_ca_idx CASCADE
+            </sql>
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="0_1_0_CREATE_TABLE_ACCOUNT_NOTE" author="P70605">
+        <createSequence sequenceName="account_note_seq"/>
+        <createTable tableName="account_note">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="account_note_pk" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint">
+                <constraints foreignKeyName="account_id_fk" references="account(id)" nullable="false"/>
+            </column>
+            <column name="payload" type="jsonb">
+                <constraints nullable="false"/>
+            </column>
+            <column name="submitter" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="submitter_id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_updated_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS account_note CASCADE;
+                DROP SEQUENCE IF EXISTS account_note_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

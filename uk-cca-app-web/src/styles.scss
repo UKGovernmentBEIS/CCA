@@ -1,0 +1,31 @@
+@use 'sass:string';
+@use 'sass:list';
+
+// Flags for support of IE8
+$govuk-if-ie8: false;
+$govuk-suppressed-warnings: ie8;
+
+// Workaround for wrong assets relative url resolution
+// @TODO :: Check this
+@function image-url($filename) {
+  $filePaths: string.split($filename, '/');
+  $filePath: list.nth($filePaths, list.length($filePaths));
+  @return url('/assets/images/' + $filePath);
+}
+
+@function font-url($filename) {
+  $filePaths: string.split($filename, '/');
+  $filePath: list.nth($filePaths, list.length($filePaths));
+  @return url('/assets/fonts/#{$filePath}');
+}
+
+$govuk-image-url-function: 'image-url';
+$govuk-font-url-function: 'font-url';
+
+@import 'all';
+@import 'theming/tables';
+@import 'theming/shared';
+@import 'theming/task-list';
+@import 'theming/lists';
+@import 'theming/helpers';
+@import 'theming/panels';

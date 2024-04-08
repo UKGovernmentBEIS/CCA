@@ -1,0 +1,58 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
+    "strictPropertyInitialization": false,
+    "strictNullChecks": false,
+    "paths": {
+      "govuk-components": [
+        "./dist/govuk-components"
+      ],
+      "cca-api": [
+        "./dist/cca-api"
+      ],
+      "@core/*": [
+        "src/app/core/*"
+      ],
+      "@common/*": [
+        "src/app/common/*"
+      ],
+      "@shared/*": [
+        "src/app/shared/*"
+      ],
+      "@testing": [
+        "src/testing"
+      ],
+      "@error/*": [
+        "src/app/error/*"
+      ]
+    },
+    "useDefineForClassFields": false
+  },
+  "exclude": [
+    "**/node_modules/*",
+    "**/coverage/*",
+    "**/dist/*",
+    "**/node/*"
+  ],
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": false,
+    "strictTemplates": true
+  }
+}

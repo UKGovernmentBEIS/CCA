@@ -1,0 +1,58 @@
+<div class="govuk-grid-row">
+  <div [class]="(hasRelatedActions$ | async) === true ? 'govuk-grid-column-two-thirds' : 'govuk-grid-column-full'">
+    <ng-container *ngIf="requestTaskItem$ | async as requestTaskItem">
+      <cca-page-heading size="xl">
+        {{ type$ | async | i18nSelect: (headingMap$ | async) }}
+        <cca-task-header-info
+          [assignee]="requestTaskItem.requestTask.assigneeFullName"
+          [daysRemaining]="requestTaskItem.requestTask.daysRemaining"
+        ></cca-task-header-info>
+      </cca-page-heading>
+
+      <ng-container *ngIf="type$ | async | i18nSelect: paymentHintInfo; let val">
+        <p class="govuk-body">{{ val }}.</p>
+      </ng-container>
+
+      <cca-payment-summary [details]="details$ | async" [shouldDisplayAmount]="shouldDisplayAmount$ | async">
+        <h2 cca-summary-header class="govuk-heading-m">Payment Details</h2>
+      </cca-payment-summary>
+
+      <ng-container *ngIf="(store | async).requestTaskItem.allowedRequestTaskActions as actions">
+        <div *ngIf="actions?.length > 0" class="govuk-button-group">
+          <button type="button" *ngIf="actions.includes('PAYMENT_MARK_AS_RECEIVED')" govukButton (click)="received()">
+            Mark payment as received
+          </button>
+          <button
+            type="button"
+            *ngIf="actions.includes('PAYMENT_CANCEL')"
+            govukButton
+            govukSecondaryButton
+            (click)="cancel()"
+          >
+            Cancel payment task
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="relatedTasks$ | async as relatedTasks">
+        <cca-related-tasks *ngIf="relatedTasks.length > 0" [items]="relatedTasks"></cca-related-tasks>
+      </ng-container>
+
+      <cca-timeline>
+        <cca-timeline-item
+          *ngFor="let action of actions$ | async"
+          [action]="action"
+          [link]="action | timelineItemLink"
+          [state]="navigationState"
+        ></cca-timeline-item>
+      </cca-timeline>
+    </ng-container>
+  </div>
+  <div class="govuk-grid-column-one-third" *ngIf="(hasRelatedActions$ | async) === true">
+    <cca-related-actions
+      [showReassignAction]="isAssignableAndCapableToAssign$ | async"
+      [taskId]="taskId$ | async"
+      [allowedRequestTaskActions]="allowedRequestTaskActions$ | async"
+    ></cca-related-actions>
+  </div>
+</div>

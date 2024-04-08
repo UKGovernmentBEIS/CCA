@@ -1,0 +1,14 @@
+<cca-page-heading size="xl">Terms And Conditions</cca-page-heading>
+<ng-container *ngIf="terms$ | async as terms">
+  <p class="govuk-body">ADD CONTENT HERE</p>
+</ng-container>
+
+<form (ngSubmit)="submitTerms()" [formGroup]="form">
+  <div formControlName="terms" govuk-checkboxes>
+    <ng-container govukLegend>
+      <span class="govuk-visually-hidden">Accept terms and conditions</span>
+    </ng-container>
+    <govuk-checkbox [value]="true" label="I have read, understood and accept the terms and conditions"></govuk-checkbox>
+  </div>
+  <button ccaPendingButton govukButton type="submit">Accept and continue</button>
+</form>

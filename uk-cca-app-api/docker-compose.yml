@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  postgres-cca:
+    image: postgres
+    volumes:
+      - postgres-data-cca:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: cca
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5438:5432
+
+volumes:
+  postgres-data-cca:
+    driver: local

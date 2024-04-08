@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/changelog_mi_reports.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_drop_ca_reporting_schemas" author="P70453">
+        <sql>
+            DROP SCHEMA IF EXISTS sch_report_ea CASCADE;
+            DROP SCHEMA IF EXISTS sch_report_niea CASCADE;
+            DROP SCHEMA IF EXISTS sch_report_opred CASCADE;
+            DROP SCHEMA IF EXISTS sch_report_sepa CASCADE;
+            DROP SCHEMA IF EXISTS sch_report_nrw CASCADE;
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_ca_reporting_schemas_for_mi_reports" author="P70453">
+        <sql>
+            CREATE SCHEMA IF NOT EXISTS sch_report_sepa;
+            CREATE SCHEMA IF NOT EXISTS sch_report_opred;
+            CREATE SCHEMA IF NOT EXISTS sch_report_nrw;
+            CREATE SCHEMA IF NOT EXISTS sch_report_niea;
+            CREATE SCHEMA IF NOT EXISTS sch_report_ea;
+        </sql>
+        <rollback>
+            <sql>
+                DROP SCHEMA sch_report_ea CASCADE;
+                DROP SCHEMA sch_report_niea CASCADE;
+                DROP SCHEMA sch_report_opred CASCADE;
+                DROP SCHEMA sch_report_sepa CASCADE;
+                DROP SCHEMA sch_report_nrw CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_ca_reporting_users_and_permissions" author="P70453">
+        <validCheckSum>ANY</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) FROM pg_catalog.pg_user where usename='usr_report_sepa';
+            </sqlCheck>
+            <sqlCheck expectedResult="0">
+                select count(1) FROM pg_catalog.pg_user where usename='usr_report_opred';
+            </sqlCheck>
+            <sqlCheck expectedResult="0">
+                select count(1) FROM pg_catalog.pg_user where usename='usr_report_nrw';
+            </sqlCheck>
+            <sqlCheck expectedResult="0">
+                select count(1) FROM pg_catalog.pg_user where usename='usr_report_niea';
+            </sqlCheck>
+            <sqlCheck expectedResult="0">
+                select count(1) FROM pg_catalog.pg_user where usename='usr_report_ea';
+            </sqlCheck>
+        </preConditions>
+        <sql>
+            CREATE USER usr_report_sepa WITH PASSWORD '${report_user_password_sepa}';
+            CREATE USER usr_report_opred WITH PASSWORD '${report_user_password_opred}';
+            CREATE USER usr_report_nrw WITH PASSWORD '${report_user_password_nrw}';
+            CREATE USER usr_report_niea WITH PASSWORD '${report_user_password_niea}';
+            CREATE USER usr_report_ea WITH PASSWORD '${report_user_password_ea}';
+
+            GRANT CONNECT ON DATABASE ${report_datasource_name} TO usr_report_sepa;
+            GRANT CONNECT ON DATABASE ${report_datasource_name} TO usr_report_opred;
+            GRANT CONNECT ON DATABASE ${report_datasource_name} TO usr_report_nrw;
+            GRANT CONNECT ON DATABASE ${report_datasource_name} TO usr_report_niea;
+            GRANT CONNECT ON DATABASE ${report_datasource_name} TO usr_report_ea;
+
+            GRANT USAGE ON SCHEMA sch_report_sepa TO usr_report_sepa;
+            GRANT USAGE ON SCHEMA sch_report_opred TO usr_report_opred;
+            GRANT USAGE ON SCHEMA sch_report_nrw TO usr_report_nrw;
+            GRANT USAGE ON SCHEMA sch_report_niea TO usr_report_niea;
+            GRANT USAGE ON SCHEMA sch_report_ea TO usr_report_ea;
+
+            GRANT SELECT ON ALL TABLES IN SCHEMA sch_report_sepa TO usr_report_sepa;
+            GRANT SELECT ON ALL TABLES IN SCHEMA sch_report_opred TO usr_report_opred;
+            GRANT SELECT ON ALL TABLES IN SCHEMA sch_report_nrw TO usr_report_nrw;
+            GRANT SELECT ON ALL TABLES IN SCHEMA sch_report_niea TO usr_report_niea;
+            GRANT SELECT ON ALL TABLES IN SCHEMA sch_report_ea TO usr_report_ea;
+
+            ALTER DEFAULT PRIVILEGES IN SCHEMA sch_report_sepa GRANT SELECT ON TABLES TO usr_report_sepa;
+            ALTER DEFAULT PRIVILEGES IN SCHEMA sch_report_opred GRANT SELECT ON TABLES TO usr_report_opred;
+            ALTER DEFAULT PRIVILEGES IN SCHEMA sch_report_nrw GRANT SELECT ON TABLES TO usr_report_nrw;
+            ALTER DEFAULT PRIVILEGES IN SCHEMA sch_report_niea GRANT SELECT ON TABLES TO usr_report_niea;
+            ALTER DEFAULT PRIVILEGES IN SCHEMA sch_report_ea GRANT SELECT ON TABLES TO usr_report_ea;
+        </sql>
+        <rollback>
+            <sql>
+                REVOKE CONNECT ON DATABASE ${report_datasource_name} FROM usr_report_sepa;
+                REVOKE CONNECT ON DATABASE ${report_datasource_name} FROM usr_report_opred;
+                REVOKE CONNECT ON DATABASE ${report_datasource_name} FROM usr_report_nrw;
+                REVOKE CONNECT ON DATABASE ${report_datasource_name} FROM usr_report_niea;
+                REVOKE CONNECT ON DATABASE ${report_datasource_name} FROM usr_report_ea;
+
+                REVOKE ALL ON ALL TABLES IN SCHEMA sch_report_ea FROM usr_report_ea;
+                REVOKE ALL ON ALL TABLES IN SCHEMA sch_report_niea FROM usr_report_niea;
+                REVOKE ALL ON ALL TABLES IN SCHEMA sch_report_opred FROM usr_report_opred;
+                REVOKE ALL ON ALL TABLES IN SCHEMA sch_report_sepa FROM usr_report_sepa;
+                REVOKE ALL ON ALL TABLES IN SCHEMA sch_report_nrw FROM usr_report_nrw;
+
+                DROP OWNED BY usr_report_sepa;
+                DROP OWNED BY usr_report_opred;
+                DROP OWNED BY usr_report_nrw;
+                DROP OWNED BY usr_report_niea;
+                DROP OWNED BY usr_report_ea;
+
+                DROP USER usr_report_sepa;
+                DROP USER usr_report_opred;
+                DROP USER usr_report_nrw;
+                DROP USER usr_report_niea;
+                DROP USER usr_report_ea;
+
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_reporting_user_password" author="P70453" runAlways="true">
+        <validCheckSum>ANY</validCheckSum>
+        <sql>
+            ALTER USER usr_report_ea WITH PASSWORD '${report_user_password_ea}';
+            ALTER USER usr_report_sepa WITH PASSWORD '${report_user_password_sepa}';
+            ALTER USER usr_report_niea WITH PASSWORD '${report_user_password_niea}';
+            ALTER USER usr_report_opred WITH PASSWORD '${report_user_password_opred}';
+            ALTER USER usr_report_nrw WITH PASSWORD '${report_user_password_nrw}';
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

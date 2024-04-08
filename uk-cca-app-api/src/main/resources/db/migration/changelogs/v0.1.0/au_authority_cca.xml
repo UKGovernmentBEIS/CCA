@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/changelog_user_cca_authority.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_DELETE_cca_au_role_and_role_permission" author="P70628">
+        <sql>
+            DELETE FROM public.au_role_permission WHERE role_id IN (SELECT id FROM au_role
+                WHERE code IN ('regulator_admin_team', 'regulator_technical_officer', 'regulator_team_leader', 'ca_super_user', 'service_super_user'));
+
+            DELETE FROM public.au_role WHERE code IN ('regulator_admin_team', 'regulator_technical_officer', 'regulator_team_leader', 'ca_super_user', 'service_super_user');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_cca_au_role" author="P70628">
+        <sql>
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Administrator', 'regulator_administrator', 'REGULATOR');
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Technical Consultant', 'regulator_technical_consultant', 'REGULATOR');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_cca_au_role_permission" author="P70628">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='regulator_administrator'), 'PERM_CA_USERS_EDIT');
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='regulator_administrator'), 'PERM_TASK_ASSIGNMENT');
+
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='regulator_technical_consultant'), 'PERM_TASK_ASSIGNMENT');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

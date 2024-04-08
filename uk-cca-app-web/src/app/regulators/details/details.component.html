@@ -1,0 +1,160 @@
+@if ((confirmedAddedRegulator$ | async) === null) {
+  @if (isSummaryDisplayed$ | async) {
+    <govuk-error-summary [form]="form"></govuk-error-summary>
+  }
+  <cca-page-heading>{{ (userId$ | async) ? 'User details' : 'Add a new user' }}</cca-page-heading>
+  <form (ngSubmit)="submitForm()" [formGroup]="form">
+    <div formGroupName="user">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <fieldset govukFieldset id="name">
+            <legend govukLegend>Name</legend>
+            <div
+              autoComplete="given-name"
+              formControlName="firstName"
+              govuk-text-input
+              label="First name"
+              widthClass="govuk-!-width-one-half"
+            ></div>
+            <div
+              class="govuk-!-margin-bottom-8"
+              autoComplete="family-name"
+              formControlName="lastName"
+              govuk-text-input
+              label="Last name"
+              widthClass="govuk-!-width-one-half"
+            ></div>
+            <div
+              autoComplete="organisation-title"
+              formControlName="jobTitle"
+              govuk-text-input
+              label="Job title"
+              widthClass="govuk-!-width-one-half"
+            ></div>
+            <div
+              autoComplete="email"
+              formControlName="email"
+              govuk-text-input
+              label="Email address"
+              hint="All system alerts, notices and official communications will always be sent by email."
+              widthClass="govuk-!-width-one-half"
+            ></div>
+          </fieldset>
+          <fieldset govukFieldset id="phoneNumber">
+            <legend govukLegend>Phone number</legend>
+            <div
+              autoComplete="tel-national"
+              formControlName="phoneNumber"
+              govuk-text-input
+              label="Phone number 1"
+              widthClass="govuk-!-width-one-half"
+            ></div>
+            <div
+              class="govuk-!-margin-bottom-8"
+              autoComplete="mobile tel-national"
+              formControlName="mobileNumber"
+              govuk-text-input
+              label="Phone number 2 (optional)"
+              widthClass="govuk-!-width-one-half"
+            ></div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <div class="govuk-grid-column-full">
+      <h2 class="govuk-heading-s">Files uploaded</h2>
+      <span class="govuk-hint"
+        >The file must be:
+        <ul>
+          <li>a BMP file</li>
+          <li>no more than 240 x 140 pixels</li>
+          <li>no more than 200KB</li>
+        </ul>
+      </span>
+      <cca-file-input
+        [downloadUrl]="(isLoggedUser$ | async) === true ? getCurrentUserDownloadUrl : getDownloadUrl"
+        formControlName="signature"
+        hint="Upload a file"
+        label="Signature"
+        [showFilesizeHint]="false"
+      ></cca-file-input>
+    </div>
+    @if (allowEditPermissions$ | async; as permissions) {
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-s">Set base permissions</h2>
+          <div class="govuk-button-group">
+            <button
+              (click)="setBasePermissions('regulator_administrator')"
+              govukSecondaryButton
+              id="regulator_administrator"
+              type="button"
+              [attr.aria-pressed]="basePermissionSelected === 'regulator_administrator'"
+            >
+              Admin team
+            </button>
+            <button
+              (click)="setBasePermissions('regulator_technical_consultant')"
+              govukSecondaryButton
+              id="regulator_technical_consultant"
+              type="button"
+              [attr.aria-pressed]="basePermissionSelected === 'regulator_technical_consultant'"
+            >
+              Technical consultant
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-s">Customise Permissions</h2>
+
+        <div [formGroupName]="'permissions'">
+          <govuk-table [columns]="tableColumns" [data]="tableRows">
+            <ng-template let-column="column" let-row="row">
+              @if (column.field === 'task' || column.field === 'type') {
+                {{ row[column.field] }}
+              } @else if ((allowEditPermissions$ | async) && (permissionGroups$ | async)) {
+                <div [formControlName]="row.permission" [index]="column.field" [value]="column.field" cca-radio-option>
+                  <ng-container label>
+                    <span class="govuk-visually-hidden">{{ column.header }}</span>
+                  </ng-container>
+                </div>
+              } @else if ((userPermissions$ | async)?.[row.permission] === column.field) {
+                <div [id]="'check-' + row.permission + '-' + column.field">
+                  <strong>&#10004;</strong>
+                </div>
+              }
+            </ng-template>
+          </govuk-table>
+        </div>
+      </div>
+    </div>
+
+    @if (isLoggedUser$ | async) {
+      <cca-two-fa-link [title]="'Change two factor authentication'" [link]="'/2fa/change'"> </cca-two-fa-link>
+    } @else if ((allowEditPermissions$ | async) && (userId$ | async)) {
+      <cca-two-fa-link
+        [title]="'Reset two-factor authentication'"
+        [link]="'2fa/reset-2fa'"
+        [userId]="userId$ | async"
+        [userName]="userFullName"
+        [role]="'REGULATOR'"
+      >
+      </cca-two-fa-link>
+    }
+
+    <button ccaPendingButton govukButton type="submit">
+      {{ userId$ | async | submitIfEmpty }}
+    </button>
+  </form>
+} @else {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <govuk-panel>An account confirmation email has been sent to {{ confirmedAddedRegulator$ | async }}</govuk-panel>
+      <h2 class="govuk-heading-m">What happens next</h2>
+      <p class="govuk-body">The new user will be able to log in once they confirm their account</p>
+    </div>
+  </div>
+}

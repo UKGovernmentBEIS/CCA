@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/changelog_user_authority.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_initialize_user_authority" author="P70453">
+        <sql>
+            truncate table au_role cascade;
+            truncate table au_role_permission cascade;
+
+            ALTER SEQUENCE au_role_seq RESTART WITH 1;
+            ALTER SEQUENCE au_role_permission_seq RESTART WITH 1;
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_au_role" author="P70453">
+        <sql>
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Operator admin', 'operator_admin', 'OPERATOR');
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Operator', 'operator', 'OPERATOR');
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Consultant / Agent', 'consultant_agent', 'OPERATOR');
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Emitter Contact', 'emitter_contact', 'OPERATOR');
+
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Regulator admin team', 'regulator_admin_team', 'REGULATOR');
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Regulator technical officer', 'regulator_technical_officer', 'REGULATOR');
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Regulator team leader', 'regulator_team_leader', 'REGULATOR');
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'CA super user', 'ca_super_user', 'REGULATOR');
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Service super user', 'service_super_user', 'REGULATOR');
+
+            --INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Verifier', 'verifier', 'VERIFIER');
+            --INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Verifier admin', 'verifier_admin', 'VERIFIER');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_au_role_permission" author="P70453">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='consultant_agent'), 'PERM_TASK_ASSIGNMENT');
+
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='operator'), 'PERM_TASK_ASSIGNMENT');
+
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='operator_admin'), 'PERM_TASK_ASSIGNMENT');
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='operator_admin'), 'PERM_ACCOUNT_USERS_EDIT');
+
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='regulator_admin_team'), 'PERM_TASK_ASSIGNMENT');
+
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='regulator_team_leader'), 'PERM_TASK_ASSIGNMENT');
+
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='ca_super_user'), 'PERM_TASK_ASSIGNMENT');
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='ca_super_user'), 'PERM_CA_USERS_EDIT');
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='ca_super_user'), 'PERM_ACCOUNT_USERS_EDIT');
+
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='service_super_user'), 'PERM_TASK_ASSIGNMENT');
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='service_super_user'), 'PERM_CA_USERS_EDIT');
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='service_super_user'), 'PERM_ACCOUNT_USERS_EDIT');
+
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='regulator_technical_officer'), 'PERM_TASK_ASSIGNMENT');
+
+            --INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='verifier_admin'), 'PERM_TASK_ASSIGNMENT');
+            --INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='verifier_admin'), 'PERM_VB_ACCESS_ALL_ACCOUNTS');
+
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
