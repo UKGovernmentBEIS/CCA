@@ -22,23 +22,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.Authorized;
-import uk.gov.cca.api.web.security.AuthorizedRole;
-import uk.gov.cca.api.web.util.FileDtoMapper;
-import uk.gov.netz.api.common.domain.PagingRequest;
-import uk.gov.netz.api.files.common.domain.dto.FileDTO;
-import uk.gov.cca.api.notification.template.domain.dto.DocumentTemplateDTO;
-import uk.gov.cca.api.notification.template.domain.dto.DocumentTemplateSearchCriteria;
-import uk.gov.cca.api.notification.template.domain.dto.TemplateSearchResults;
-import uk.gov.cca.api.notification.template.service.DocumentTemplateQueryService;
-import uk.gov.cca.api.notification.template.service.DocumentTemplateUpdateService;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.cca.api.web.util.FileDtoMapper;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.common.domain.PagingRequest;
+import uk.gov.netz.api.documenttemplate.domain.dto.DocumentTemplateDTO;
+import uk.gov.netz.api.documenttemplate.domain.dto.DocumentTemplateSearchCriteria;
+import uk.gov.netz.api.documenttemplate.domain.dto.DocumentTemplateSearchResults;
+import uk.gov.netz.api.documenttemplate.service.DocumentTemplateQueryService;
+import uk.gov.netz.api.documenttemplate.service.DocumentTemplateUpdateService;
+import uk.gov.netz.api.files.common.domain.dto.FileDTO;
+import uk.gov.netz.api.security.Authorized;
+import uk.gov.netz.api.security.AuthorizedRole;
 
 import java.io.IOException;
 
-import static uk.gov.netz.api.common.domain.RoleType.REGULATOR;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 @RestController
 @Validated
@@ -53,13 +53,13 @@ public class DocumentTemplateController {
     @GetMapping(path = "/v1.0/document-templates")
     @Operation(summary = "Retrieves the document templates associated with current user")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
-            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = TemplateSearchResults.class))})
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = DocumentTemplateSearchResults.class))})
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @AuthorizedRole(roleType = REGULATOR)
-    public ResponseEntity<TemplateSearchResults> getCurrentUserDocumentTemplates(
+    public ResponseEntity<DocumentTemplateSearchResults> getCurrentUserDocumentTemplates(
             @Parameter(hidden = true) AppUser appUser,
             @RequestParam(value = "term", required = false) @Size(min = 3, max = 256) @Parameter(name = "term", description = "The term to search") String term,
             @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Long page,

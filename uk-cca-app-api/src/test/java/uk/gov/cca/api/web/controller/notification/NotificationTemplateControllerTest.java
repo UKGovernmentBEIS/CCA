@@ -16,29 +16,28 @@ import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.authorization.core.domain.AppAuthority;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.cca.api.web.controller.notification.NotificationTemplateController;
+import uk.gov.cca.api.web.config.AppUserArgumentResolver;
+import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.authorization.core.domain.AppAuthority;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
 import uk.gov.netz.api.common.domain.PagingRequest;
-import uk.gov.netz.api.common.domain.RoleType;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
-import uk.gov.cca.api.notification.template.domain.dto.NotificationTemplateDTO;
-import uk.gov.cca.api.notification.template.domain.dto.NotificationTemplateSearchCriteria;
-import uk.gov.cca.api.notification.template.domain.dto.NotificationTemplateUpdateDTO;
-import uk.gov.cca.api.notification.template.domain.dto.TemplateInfoDTO;
-import uk.gov.cca.api.notification.template.domain.dto.TemplateSearchResults;
-import uk.gov.cca.api.notification.template.service.NotificationTemplateQueryService;
-import uk.gov.cca.api.notification.template.service.NotificationTemplateUpdateService;
-import uk.gov.cca.api.web.config.AppUserArgumentResolver;
-import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateDTO;
+import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateInfoDTO;
+import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateSearchCriteria;
+import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateSearchResults;
+import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateUpdateDTO;
+import uk.gov.netz.api.notification.template.service.NotificationTemplateQueryService;
+import uk.gov.netz.api.notification.template.service.NotificationTemplateUpdateService;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -51,8 +50,8 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.netz.api.common.domain.RoleType.OPERATOR;
-import static uk.gov.netz.api.common.domain.RoleType.REGULATOR;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 @ExtendWith(MockitoExtension.class)
 class NotificationTemplateControllerTest {
@@ -112,21 +111,21 @@ class NotificationTemplateControllerTest {
         AppAuthority appAuthority = AppAuthority.builder().competentAuthority(ca).build();
         AppUser appUser = AppUser.builder()
             .userId("userId")
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .authorities(List.of(appAuthority))
             .build();
         NotificationTemplateSearchCriteria searchCriteria = NotificationTemplateSearchCriteria.builder()
             .competentAuthority(ca)
             .term("term")
-            .roleType(RoleType.OPERATOR)
+            .roleType(RoleTypeConstants.OPERATOR)
             .paging(PagingRequest.builder().pageNumber(0L).pageSize(30L).build())
             .build();
 
-        List<TemplateInfoDTO> notificationTemplates = List.of(
-                new TemplateInfoDTO(1L, "template1", "Workflow Name", LocalDateTime.now()),
-                new TemplateInfoDTO(2L, "template2", "Workflow Name", LocalDateTime.now())
+        List<NotificationTemplateInfoDTO> notificationTemplates = List.of(
+                new NotificationTemplateInfoDTO(1L, "template1", "Workflow Name", LocalDateTime.now()),
+                new NotificationTemplateInfoDTO(2L, "template2", "Workflow Name", LocalDateTime.now())
         );
-        TemplateSearchResults results = TemplateSearchResults.builder()
+        NotificationTemplateSearchResults results = NotificationTemplateSearchResults.builder()
             .templates(notificationTemplates)
             .total(2L)
             .build();
@@ -137,7 +136,7 @@ class NotificationTemplateControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/v1.0/notification-templates")
                 .param("term", searchCriteria.getTerm())
-                .param("role", searchCriteria.getRoleType().name())
+                .param("role", searchCriteria.getRoleType())
                 .param("page", String.valueOf(searchCriteria.getPaging().getPageNumber()))
                 .param("size", String.valueOf(searchCriteria.getPaging().getPageSize()))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -160,19 +159,19 @@ class NotificationTemplateControllerTest {
         NotificationTemplateSearchCriteria searchCriteria = NotificationTemplateSearchCriteria.builder()
             .competentAuthority(CompetentAuthorityEnum.WALES)
             .term("term")
-            .roleType(RoleType.OPERATOR)
+            .roleType(RoleTypeConstants.OPERATOR)
             .paging(PagingRequest.builder().pageNumber(0L).pageSize(30L).build())
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(appUser, new RoleType[]{REGULATOR});
+            .evaluate(appUser, new String[]{REGULATOR});
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/v1.0/notification-templates")
                 .param("term", searchCriteria.getTerm())
-                .param("role", searchCriteria.getRoleType().name())
+                .param("role", searchCriteria.getRoleType())
                 .param("page", String.valueOf(searchCriteria.getPaging().getPageNumber()))
                 .param("size", String.valueOf(searchCriteria.getPaging().getPageSize()))
                 .contentType(MediaType.APPLICATION_JSON))

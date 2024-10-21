@@ -10,19 +10,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.web.controller.authorization.AuthorityController;
-import uk.gov.netz.api.common.domain.RoleType;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.authorization.orchestrator.UserAuthorityQueryOrchestrator;
 import uk.gov.cca.api.web.controller.authorization.orchestrator.dto.LoginStatus;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.netz.api.common.domain.RoleType.OPERATOR;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
 
 @ExtendWith(MockitoExtension.class)
 class AuthorityControllerTest {
@@ -52,7 +50,7 @@ class AuthorityControllerTest {
 	@Test
 	void getCurrentUserStatus() throws Exception {
 		String userId = "userId";
-		RoleType roleType = OPERATOR;
+		String roleType = OPERATOR;
 		AppUser currentUser = AppUser.builder().userId(userId).roleType(roleType).build();
 
 		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);

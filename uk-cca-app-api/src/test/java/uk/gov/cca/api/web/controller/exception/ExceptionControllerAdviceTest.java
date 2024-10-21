@@ -19,12 +19,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.netz.api.common.validation.Violation;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.cca.api.user.core.domain.dto.EmailDTO;
+import uk.gov.netz.api.common.validation.Violation;
+import uk.gov.netz.api.user.core.domain.dto.EmailDTO;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

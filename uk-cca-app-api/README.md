@@ -85,6 +85,9 @@ Documentation can be found at
   - TestApprovedAccountQueryService
   - TestItemResponseService
   - TestDocumentTemplateCommonParamsAbstractProvider
+  - all the test payload classes (prefixed with *Test) that reside under uk.gov.netz.api.workflow.request.flow package should be removed. They are here to demonstrate how to provide them in their respective jackson types provider class and swagger scheme provider.
+- The project-specific concrete payload classes (subclasses of RequestPayload, RequestTaskPayload, RequestTaskActionPayload, RequestCreateActionPayload, RequestActionPayload, RequestMetadata) should be defined in their respective *TypesProvider class. For example, the classes that extend the RequestPayload class, should be added in the RequestPayloadTypesProvider class.
+- The project-specific concrete payload classes (subclasses of RequestPayload, RequestTaskPayload, RequestTaskActionPayload, RequestCreateActionPayload, RequestActionPayload, RequestMetadata) should be added in their respective swagger scheme *SchemesProvider class. For example, the classes that extend the RequestPayload class, should be added in the RequestPayloadSchemasProvider class.
 - Dockerfile
 - Jenkinsfile
 - docker-compose.yml

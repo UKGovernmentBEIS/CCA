@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.user.core.domain.dto.OneTimePasswordDTO;
-import uk.gov.cca.api.user.core.domain.dto.TokenDTO;
-import uk.gov.cca.api.user.core.service.UserSecuritySetupService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.security.AppSecurityComponentProvider;
+import uk.gov.netz.api.user.core.domain.dto.OneTimePasswordDTO;
+import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
+import uk.gov.netz.api.user.core.service.UserSecuritySetupService;
 
 @RestController
 @RequestMapping(path = "/v1.0/users/security-setup")
@@ -32,7 +32,7 @@ import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 public class UserSecuritySetupController {
 
     private final UserSecuritySetupService userSecuritySetupService;
-    private final AppSecurityComponent appSecurityComponent;
+    private final AppSecurityComponentProvider appSecurityComponent;
 
     @PostMapping(path = "/2fa/request-change")
     @Operation(summary = "Requests the update of the two factor authentication")

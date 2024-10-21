@@ -6,13 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.authorization.core.domain.AuthorityStatus;
-import uk.gov.cca.api.authorization.operator.domain.AccountOperatorAuthorityUpdateDTO;
 import uk.gov.cca.api.web.orchestrator.authorization.dto.AccountOperatorAuthorityUpdateWrapperDTO;
-import uk.gov.cca.api.web.orchestrator.authorization.validate.AccountOperatorAuthorityUpdateValidator;
+import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
+import uk.gov.netz.api.authorization.operator.domain.AccountOperatorAuthorityUpdateDTO;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,7 +30,6 @@ class AccountOperatorAuthorityUpdateValidatorTest {
                     .accountOperatorAuthorityUpdateList(List.of(
                             AccountOperatorAuthorityUpdateDTO.builder().authorityStatus(AuthorityStatus.ACTIVE).userId("user").build()
                             ))
-                    .contactTypes(Map.of())
                     .build();
         
         boolean result = validator.isValid(dto, constraintValidatorContext);
@@ -44,7 +41,6 @@ class AccountOperatorAuthorityUpdateValidatorTest {
         AccountOperatorAuthorityUpdateWrapperDTO dto = 
                 AccountOperatorAuthorityUpdateWrapperDTO.builder()
                     .accountOperatorAuthorityUpdateList(List.of())
-                    .contactTypes(Map.of())
                     .build();
         
         boolean result = validator.isValid(dto, constraintValidatorContext);

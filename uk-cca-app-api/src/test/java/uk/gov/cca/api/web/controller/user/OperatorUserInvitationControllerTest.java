@@ -16,24 +16,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.web.controller.user.OperatorUserInvitationController;
-import uk.gov.netz.api.common.domain.RoleType;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.cca.api.user.operator.domain.OperatorUserInvitationDTO;
-import uk.gov.cca.api.user.operator.service.OperatorUserInvitationService;
+import uk.gov.cca.api.user.operator.domain.CcaOperatorUserInvitationDTO;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
+import uk.gov.cca.api.web.orchestrator.user.service.OperatorInvitationOrchestratorService;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,13 +41,12 @@ class OperatorUserInvitationControllerTest {
     private static final String OPERATOR_USER_EMAIL = "operator_user_email";
     private static final String OPERATOR_USER_FNAME = "operator_user_fname";
     private static final String OPERATOR_USER_LNAME = "operator_user_lname";
-    private static final String OPERATOR = "operator";
 
     @InjectMocks
     private OperatorUserInvitationController operatorUserInvitationController;
 
     @Mock
-    private OperatorUserInvitationService operatorUserInvitationService;
+    private OperatorInvitationOrchestratorService operatorInvitationOrchestratorService;
 
     @Mock
     private AppUserAuthorizationService appUserAuthorizationService;
@@ -80,54 +76,53 @@ class OperatorUserInvitationControllerTest {
         validator = Mockito.mock(Validator.class);
 
         mockMvc = MockMvcBuilders.standaloneSetup(operatorUserInvitationController)
-            .setControllerAdvice(new ExceptionControllerAdvice())
-            .setCustomArgumentResolvers(appUserArgumentResolver)
-            .setValidator(validator)
-            .build();
+                .setControllerAdvice(new ExceptionControllerAdvice())
+                .setCustomArgumentResolvers(appUserArgumentResolver)
+                .setValidator(validator)
+                .build();
     }
 
     @Test
     void inviteOperatorUserToAccount() throws Exception {
-        AppUser currentUser = AppUser.builder().userId("user_id").roleType(RoleType.OPERATOR).build();
-        OperatorUserInvitationDTO operatorUserInvitationDTO = buildMockOperatorUserInvitationDTO();
+        AppUser currentUser = AppUser.builder().userId("user_id").roleType(RoleTypeConstants.OPERATOR).build();
+        CcaOperatorUserInvitationDTO operatorUserInvitationDTO = buildMockOperatorUserInvitationDTO();
         Long accountId = 1L;
 
         when(appUserArgumentResolver.supportsParameter(any())).thenReturn(true);
         when(appUserArgumentResolver.resolveArgument(any(), any(), any(), any())).thenReturn(currentUser);
-        doNothing().when(operatorUserInvitationService).inviteUserToAccount(accountId, operatorUserInvitationDTO, currentUser);
+        doNothing().when(operatorInvitationOrchestratorService).inviteUserToAccount(accountId, operatorUserInvitationDTO, currentUser);
 
         mockMvc.perform(MockMvcRequestBuilders.post(OPERATOR_USER_CONTROLLER_REGISTRATION_BASE_PATH + ADD_TO_ACCOUNT_PATH + "/" + accountId)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(operatorUserInvitationDTO)))
-            .andExpect(status().isNoContent());
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(operatorUserInvitationDTO)))
+                .andExpect(status().isNoContent());
 
     }
 
     @Test
     void inviteOperatorUserToAccount_forbidden() throws Exception {
-        AppUser currentUser = AppUser.builder().userId("user_id").roleType(RoleType.OPERATOR).build();
-        OperatorUserInvitationDTO operatorUserInvitationDTO = buildMockOperatorUserInvitationDTO();
+        AppUser currentUser = AppUser.builder().userId("user_id").roleType(RoleTypeConstants.OPERATOR).build();
+        CcaOperatorUserInvitationDTO operatorUserInvitationDTO = buildMockOperatorUserInvitationDTO();
         Long accountId = 1L;
 
         when(appUserArgumentResolver.supportsParameter(any())).thenReturn(true);
         when(appUserArgumentResolver.resolveArgument(any(), any(), any(), any())).thenReturn(currentUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
-            .when(appUserAuthorizationService)
-            .authorize(currentUser, "inviteOperatorUserToAccount", accountId.toString());
+                .when(appUserAuthorizationService)
+                .authorize(currentUser, "inviteOperatorUserToAccount", accountId.toString());
 
         mockMvc.perform(MockMvcRequestBuilders.post(OPERATOR_USER_CONTROLLER_REGISTRATION_BASE_PATH + ADD_TO_ACCOUNT_PATH + "/" + accountId)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(operatorUserInvitationDTO)))
-            .andExpect(status().isForbidden());
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(operatorUserInvitationDTO)))
+                .andExpect(status().isForbidden());
 
     }
 
-    private OperatorUserInvitationDTO buildMockOperatorUserInvitationDTO() {
-        return OperatorUserInvitationDTO.builder()
-            .email(OPERATOR_USER_EMAIL)
-            .firstName(OPERATOR_USER_FNAME)
-            .lastName(OPERATOR_USER_LNAME)
-            .roleCode(OPERATOR)
-            .build();
+    private CcaOperatorUserInvitationDTO buildMockOperatorUserInvitationDTO() {
+        return CcaOperatorUserInvitationDTO.builder()
+                .email(OPERATOR_USER_EMAIL)
+                .firstName(OPERATOR_USER_FNAME)
+                .lastName(OPERATOR_USER_LNAME)
+                .build();
     }
 }

@@ -1,5 +1,21 @@
 package uk.gov.cca.api.web.controller.workflow.item;
 
+import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,28 +25,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.AuthorizedRole;
-import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
-import uk.gov.cca.api.workflow.request.application.item.service.ItemAssignedToOthersService;
-
-import java.util.List;
-import java.util.Optional;
-
-import static uk.gov.netz.api.common.domain.RoleType.OPERATOR;
-import static uk.gov.netz.api.common.domain.RoleType.REGULATOR;
-import static uk.gov.netz.api.common.domain.RoleType.VERIFIER;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.common.domain.PagingRequest;
+import uk.gov.netz.api.security.AuthorizedRole;
+import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
+import uk.gov.netz.api.workflow.request.application.item.service.ItemAssignedToOthersService;
 
 @RestController
 @RequestMapping(path = "/v1.0/items/assigned-to-others")
@@ -44,8 +45,9 @@ public class ItemAssignedToOthersController {
     @GetMapping
     @Operation(summary = "Retrieves the items assigned to users different than the logged-in user of the same role type who participate in the same accounts")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ItemDTOResponse.class))})
+    @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @AuthorizedRole(roleType = {OPERATOR, REGULATOR, VERIFIER})
+    @AuthorizedRole(roleType = {OPERATOR, REGULATOR, SECTOR_USER})
     public ResponseEntity<ItemDTOResponse> getAssignedToOthersItems(
             @Parameter(hidden = true) AppUser user,
             @RequestParam("page") @Parameter(name = "page", description = "The page number starting from zero")

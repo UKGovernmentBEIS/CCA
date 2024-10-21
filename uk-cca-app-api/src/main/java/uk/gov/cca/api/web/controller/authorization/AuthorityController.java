@@ -13,10 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
 import uk.gov.cca.api.web.controller.authorization.orchestrator.UserAuthorityQueryOrchestrator;
 import uk.gov.cca.api.web.controller.authorization.orchestrator.dto.UserStateDTO;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 
 import static uk.gov.cca.api.web.constants.SwaggerApiInfo.INTERNAL_SERVER_ERROR;
 import static uk.gov.cca.api.web.constants.SwaggerApiInfo.OK;

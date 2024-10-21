@@ -5,17 +5,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.authorization.core.domain.AppAuthority;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.core.domain.AuthorityStatus;
-import uk.gov.cca.api.authorization.core.domain.dto.UserAuthoritiesDTO;
-import uk.gov.cca.api.authorization.core.domain.dto.UserAuthorityDTO;
-import uk.gov.cca.api.authorization.verifier.service.VerifierAuthorityQueryService;
-import uk.gov.cca.api.user.core.domain.dto.UserInfoDTO;
-import uk.gov.cca.api.user.verifier.service.VerifierUserInfoService;
 import uk.gov.cca.api.web.orchestrator.authorization.dto.UserAuthorityInfoDTO;
 import uk.gov.cca.api.web.orchestrator.authorization.dto.UsersAuthoritiesInfoDTO;
-import uk.gov.cca.api.web.orchestrator.authorization.service.VerifierUserAuthorityQueryOrchestrator;
+import uk.gov.netz.api.authorization.core.domain.AppAuthority;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
+import uk.gov.netz.api.authorization.core.domain.dto.UserAuthoritiesDTO;
+import uk.gov.netz.api.authorization.core.domain.dto.UserAuthorityDTO;
+import uk.gov.netz.api.authorization.verifier.service.VerifierAuthorityQueryService;
+import uk.gov.netz.api.user.verifier.service.VerifierUserInfoService;
+import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.cca.api.authorization.core.domain.AuthorityStatus.ACTIVE;
+import static uk.gov.netz.api.authorization.core.domain.AuthorityStatus.ACTIVE;
 
 @ExtendWith(MockitoExtension.class)
 class VerifierUserAuthorityQueryOrchestratorTest {
@@ -57,13 +56,13 @@ class VerifierUserAuthorityQueryOrchestratorTest {
             .authorities(List.of(userAuthority))
             .editable(true)
             .build();
-        UserInfoDTO userInfo = UserInfoDTO.builder().userId(userId).locked(false).build();
+        UserInfoDTO userInfo = UserInfoDTO.builder().userId(userId).build();
 
         UserAuthorityInfoDTO expectedUserAuthInfo =
-            UserAuthorityInfoDTO.builder().userId(userId).authorityStatus(status).locked(false).build();
+            UserAuthorityInfoDTO.builder().userId(userId).authorityStatus(status).build();
 
         when(verifierAuthorityQueryService.getVerifierAuthorities(authUser)).thenReturn(userAuthorities);
-        when(verifierUserInfoService.getVerifierUsersInfo(authUser, vbId, List.of(userId))).thenReturn(List.of(userInfo));
+        when(verifierUserInfoService.getVerifierUsersInfo(List.of(userId))).thenReturn(List.of(userInfo));
 
         UsersAuthoritiesInfoDTO actualUserAuthInfo = verifierUserAuthorityQueryOrchestrator.getVerifierUsersAuthoritiesInfo(authUser);
 
@@ -72,7 +71,7 @@ class VerifierUserAuthorityQueryOrchestratorTest {
         assertEquals(expectedUserAuthInfo, actualUserAuthInfo.getAuthorities().get(0));
 
         verify(verifierAuthorityQueryService, times(1)).getVerifierAuthorities(authUser);
-        verify(verifierUserInfoService, times(1)).getVerifierUsersInfo(authUser, vbId, List.of(userId));
+        verify(verifierUserInfoService, times(1)).getVerifierUsersInfo(List.of(userId));
     }
 
     @Test
@@ -88,13 +87,13 @@ class VerifierUserAuthorityQueryOrchestratorTest {
             .authorities(List.of(userAuthority))
             .editable(true)
             .build();
-        UserInfoDTO userInfo = UserInfoDTO.builder().userId(userId).locked(false).build();
+        UserInfoDTO userInfo = UserInfoDTO.builder().userId(userId).build();
 
         UserAuthorityInfoDTO expectedUserAuthInfo =
-            UserAuthorityInfoDTO.builder().userId(userId).authorityStatus(status).locked(false).build();
+            UserAuthorityInfoDTO.builder().userId(userId).authorityStatus(status).build();
 
         when(verifierAuthorityQueryService.getVerificationBodyAuthorities(vbId, true)).thenReturn(userAuthorities);
-        when(verifierUserInfoService.getVerifierUserInfo(List.of(userId))).thenReturn(List.of(userInfo));
+        when(verifierUserInfoService.getVerifierUsersInfo(List.of(userId))).thenReturn(List.of(userInfo));
 
         UsersAuthoritiesInfoDTO actualUserAuthInfo = verifierUserAuthorityQueryOrchestrator.getVerifierAuthoritiesByVerificationBodyId(vbId);
 
@@ -103,6 +102,6 @@ class VerifierUserAuthorityQueryOrchestratorTest {
         assertEquals(expectedUserAuthInfo, actualUserAuthInfo.getAuthorities().get(0));
 
         verify(verifierAuthorityQueryService, times(1)).getVerificationBodyAuthorities(vbId, true);
-        verify(verifierUserInfoService, times(1)).getVerifierUserInfo(List.of(userId));
+        verify(verifierUserInfoService, times(1)).getVerifierUsersInfo(List.of(userId));
     }
 }

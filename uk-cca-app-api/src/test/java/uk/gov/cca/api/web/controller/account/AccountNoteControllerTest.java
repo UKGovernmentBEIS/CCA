@@ -17,15 +17,20 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.account.domain.dto.AccountNoteDto;
-import uk.gov.cca.api.account.domain.dto.AccountNoteRequest;
-import uk.gov.cca.api.account.domain.dto.AccountNoteResponse;
-import uk.gov.cca.api.account.service.AccountNoteService;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.cca.api.web.controller.account.AccountNoteController;
-import uk.gov.netz.api.common.domain.RoleType;
+import uk.gov.cca.api.web.config.AppUserArgumentResolver;
+import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.account.domain.dto.AccountNoteDto;
+import uk.gov.netz.api.account.domain.dto.AccountNoteRequest;
+import uk.gov.netz.api.account.domain.dto.AccountNoteResponse;
+import uk.gov.netz.api.account.service.AccountNoteService;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.common.note.NotePayload;
@@ -34,12 +39,6 @@ import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.files.common.domain.dto.FileUuidDTO;
 import uk.gov.netz.api.files.notes.service.FileNoteService;
 import uk.gov.netz.api.token.FileToken;
-import uk.gov.cca.api.web.config.AppUserArgumentResolver;
-import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
 
 import java.util.List;
 import java.util.Set;
@@ -112,7 +111,7 @@ class AccountNoteControllerTest {
     void getAccountNotes() throws Exception {
         
         final long accountId = 1L;
-        final AppUser user = AppUser.builder().roleType(RoleType.REGULATOR).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
 
         final AccountNoteResponse response = AccountNoteResponse.builder()
             .totalItems(10L)
@@ -144,7 +143,7 @@ class AccountNoteControllerTest {
     void getAccountNoteById() throws Exception {
 
         final long noteId = 1L;
-        final AppUser user = AppUser.builder().roleType(RoleType.REGULATOR).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
         
         final AccountNoteDto accountNoteDto = AccountNoteDto.builder().accountId(2L).payload(NotePayload.builder().note("the note").build()).build();
         
@@ -185,7 +184,7 @@ class AccountNoteControllerTest {
     void createAccountNote() throws Exception {
         
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
@@ -208,7 +207,7 @@ class AccountNoteControllerTest {
     void createAccountNote_bad_request() throws Exception {
         
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
@@ -288,7 +287,7 @@ class AccountNoteControllerTest {
     void updateAccountNote() throws Exception {
 
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
@@ -310,7 +309,7 @@ class AccountNoteControllerTest {
     void updateAccountNote_forbidden() throws Exception {
 
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         final NoteRequest noteRequest = NoteRequest.builder()
@@ -336,7 +335,7 @@ class AccountNoteControllerTest {
     void deleteAccountNote() throws Exception {
 
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);

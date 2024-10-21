@@ -1,40 +1,5 @@
 package uk.gov.cca.api.web.controller.workflow;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
-import org.springframework.aop.framework.AopProxy;
-import org.springframework.aop.framework.DefaultAopProxyFactory;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.web.controller.workflow.RequestTaskAssignmentController;
-import uk.gov.netz.api.common.domain.RoleType;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.cca.api.web.config.AppUserArgumentResolver;
-import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.workflow.request.core.assignment.taskassign.dto.AssigneeUserInfoDTO;
-import uk.gov.cca.api.workflow.request.core.assignment.taskassign.dto.RequestTaskAssignmentDTO;
-import uk.gov.cca.api.workflow.request.core.assignment.taskassign.service.RequestTaskAssignmentQueryService;
-import uk.gov.cca.api.workflow.request.core.assignment.taskassign.service.UserRequestTaskAssignmentService;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskType;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,7 +13,41 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskType.DUMMY_REQUEST_TYPE_APPLICATION_REVIEW;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
+import org.springframework.aop.framework.AopProxy;
+import org.springframework.aop.framework.DefaultAopProxyFactory;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import uk.gov.cca.api.web.config.AppUserArgumentResolver;
+import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.workflow.request.core.assignment.taskassign.dto.AssigneeUserInfoDTO;
+import uk.gov.netz.api.workflow.request.core.assignment.taskassign.dto.RequestTaskAssignmentDTO;
+import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.RequestTaskAssignmentQueryService;
+import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.UserRequestTaskAssignmentService;
 
 @ExtendWith(MockitoExtension.class)
 class RequestTaskAssignmentControllerTest {
@@ -173,7 +172,7 @@ class RequestTaskAssignmentControllerTest {
 
     @Test
     void getCandidateAssigneesByTaskType() throws Exception {
-        RequestTaskType taskType = DUMMY_REQUEST_TYPE_APPLICATION_REVIEW;
+        String taskType = "DUMMY_REQUEST_TYPE_APPLICATION_REVIEW";
         AppUser appUser = buildAppUser();
         String userId1 = "userId1";
         String userId2 = "userId2";
@@ -183,7 +182,7 @@ class RequestTaskAssignmentControllerTest {
         when(requestTaskAssignmentQueryService.getCandidateAssigneesByTaskType(TASK_ID, taskType, appUser))
             .thenReturn(candidateAssigneesInfo);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + TASK_ID + CANDIDATE_ASSIGNEES + "/" + taskType.name())
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + TASK_ID + CANDIDATE_ASSIGNEES + "/" + taskType)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(candidateAssigneesInfo.size())))
@@ -195,7 +194,7 @@ class RequestTaskAssignmentControllerTest {
 
     @Test
     void getCandidateAssigneesByTaskType_forbidden() throws Exception {
-        RequestTaskType taskType = DUMMY_REQUEST_TYPE_APPLICATION_REVIEW;
+    	String taskType = "DUMMY_REQUEST_TYPE_APPLICATION_REVIEW";
         AppUser appUser = buildAppUser();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
@@ -203,7 +202,7 @@ class RequestTaskAssignmentControllerTest {
             .when(appUserAuthorizationService)
             .authorize(appUser, "getCandidateAssigneesByTaskType", "1");
 
-        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + TASK_ID + CANDIDATE_ASSIGNEES + "/" + taskType.name())
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + TASK_ID + CANDIDATE_ASSIGNEES + "/" + taskType)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
@@ -211,7 +210,7 @@ class RequestTaskAssignmentControllerTest {
     }
 
     private AppUser buildAppUser() {
-        return AppUser.builder().userId(USER_ID).roleType(RoleType.REGULATOR).build();
+        return AppUser.builder().userId(USER_ID).roleType(RoleTypeConstants.REGULATOR).build();
     }
 
     private List<AssigneeUserInfoDTO> buildMockUserInfoList(List<String> userIds) {

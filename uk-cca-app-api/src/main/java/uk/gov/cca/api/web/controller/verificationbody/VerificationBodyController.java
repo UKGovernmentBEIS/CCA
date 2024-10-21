@@ -21,25 +21,25 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyDTO;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyInfoDTO;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyInfoResponseDTO;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyUpdateDTO;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyUpdateStatusDTO;
-import uk.gov.cca.api.verificationbody.service.VerificationBodyDeletionService;
-import uk.gov.cca.api.verificationbody.service.VerificationBodyQueryService;
-import uk.gov.cca.api.verificationbody.service.VerificationBodyUpdateService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.cca.api.web.orchestrator.verificationbody.dto.VerificationBodyCreationDTO;
 import uk.gov.cca.api.web.orchestrator.verificationbody.service.VerificationBodyAndUserOrchestrator;
-import uk.gov.cca.api.web.security.Authorized;
-import uk.gov.cca.api.web.security.AuthorizedRole;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyDTO;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyInfoDTO;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyInfoResponseDTO;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyUpdateDTO;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyUpdateStatusDTO;
+import uk.gov.netz.api.verificationbody.service.VerificationBodyDeletionService;
+import uk.gov.netz.api.verificationbody.service.VerificationBodyQueryService;
+import uk.gov.netz.api.verificationbody.service.VerificationBodyUpdateService;
+import uk.gov.netz.api.security.Authorized;
+import uk.gov.netz.api.security.AuthorizedRole;
 
 import java.util.List;
 
-import static uk.gov.netz.api.common.domain.RoleType.REGULATOR;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 @RestController
 @RequestMapping(path = "/v1.0/verification-bodies")
@@ -141,7 +141,7 @@ public class VerificationBodyController {
     @Authorized
     public ResponseEntity<Void> updateVerificationBody(
             @RequestBody @Valid @Parameter(description = "The verification body dto to update", required = true)
-                    VerificationBodyUpdateDTO verificationBodyUpdateDTO) {
+            VerificationBodyUpdateDTO verificationBodyUpdateDTO) {
         verificationBodyUpdateService.updateVerificationBody(verificationBodyUpdateDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -1,7 +1,6 @@
 package uk.gov.cca.api.web.controller.authorization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,30 +16,27 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
-import uk.gov.cca.api.account.domain.enumeration.AccountContactType;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.core.domain.AuthorityStatus;
-import uk.gov.cca.api.authorization.operator.domain.AccountOperatorAuthorityUpdateDTO;
-import uk.gov.cca.api.authorization.operator.service.OperatorAuthorityDeletionService;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.web.controller.authorization.OperatorAuthorityController;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType;
+import uk.gov.cca.api.authorization.ccaauth.operator.service.CcaOperatorAuthorityService;
+import uk.gov.cca.api.user.operator.domain.OperatorAuthoritiesInfoDTO;
+import uk.gov.cca.api.user.operator.domain.OperatorAuthorityInfoDTO;
+import uk.gov.cca.api.user.operator.service.OperatorUserAuthorityInfoService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.cca.api.web.orchestrator.authorization.dto.AccountOperatorAuthorityUpdateWrapperDTO;
-import uk.gov.cca.api.web.orchestrator.authorization.dto.AccountOperatorsUsersAuthoritiesInfoDTO;
-import uk.gov.cca.api.web.orchestrator.authorization.dto.UserAuthorityInfoDTO;
-import uk.gov.cca.api.web.orchestrator.authorization.service.AccountOperatorUserAuthorityQueryOrchestrator;
 import uk.gov.cca.api.web.orchestrator.authorization.service.AccountOperatorUserAuthorityUpdateOrchestrator;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
+import uk.gov.netz.api.authorization.operator.domain.AccountOperatorAuthorityUpdateDTO;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
 
 import java.util.List;
-import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
@@ -66,13 +62,13 @@ class OperatorAuthorityControllerTest {
     private AppUserAuthorizationService appUserAuthorizationService;
 
     @Mock
-    private OperatorAuthorityDeletionService operatorAuthorityDeletionService;
-
-    @Mock
-    private AccountOperatorUserAuthorityQueryOrchestrator accountOperatorUserAuthorityQueryOrchestrator;
+    private OperatorUserAuthorityInfoService operatorUserAuthorityInfoService;
 
     @Mock
     private AccountOperatorUserAuthorityUpdateOrchestrator accountOperatorUserAuthorityUpdateOrchestrator;
+
+    @Mock
+    private CcaOperatorAuthorityService ccaOperatorAuthorityService;
 
     @Mock
     private Validator validator;
@@ -104,24 +100,20 @@ class OperatorAuthorityControllerTest {
     
     @Test
     void getAccountOperatorAuthorities() throws Exception {
-    	AppUser user = AppUser.builder().userId("currentuser").build();
-        UserAuthorityInfoDTO accountOperatorAuthorityUserInfo = UserAuthorityInfoDTO.builder()
+    	AppUser user = AppUser.builder().userId("current_user").build();
+        OperatorAuthorityInfoDTO operatorAuthorityInfoDTO = OperatorAuthorityInfoDTO.builder()
+                .contactType(ContactType.OPERATOR.getName())
     			.userId("user")
     			.firstName("fn")
     			.lastName("ln")
-    			.roleName("Operator admin")
+    			.roleName("Operator")
     			.build();
-    	Map<AccountContactType, String> contactTypes = Map.of(
-                AccountContactType.PRIMARY, "primary",
-                AccountContactType.SERVICE, "service"
-                );
     	
     	when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(accountOperatorUserAuthorityQueryOrchestrator.getAccountOperatorsUsersAuthoritiesInfo(user, 1L))
-        	.thenReturn(AccountOperatorsUsersAuthoritiesInfoDTO.builder()
-        			.authorities(List.of(accountOperatorAuthorityUserInfo))
+        when(operatorUserAuthorityInfoService.getOperatorAuthoritiesInfo(user, 1L))
+        	.thenReturn(OperatorAuthoritiesInfoDTO.builder()
+        			.authorities(List.of(operatorAuthorityInfoDTO))
         			.editable(true)
-        			.contactTypes(contactTypes)
         			.build());
         
         //invoke
@@ -130,11 +122,9 @@ class OperatorAuthorityControllerTest {
         							.contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.editable").value(Boolean.TRUE))
-            .andExpect(jsonPath("$.authorities[0].userId").value(accountOperatorAuthorityUserInfo.getUserId()))
-            .andExpect(jsonPath("$.contactTypes", Matchers.hasEntry(AccountContactType.PRIMARY.name(), "primary")))
-            .andExpect(jsonPath("$.contactTypes", Matchers.hasEntry(AccountContactType.SERVICE.name(), "service")));
+            .andExpect(jsonPath("$.authorities[0].userId").value(operatorAuthorityInfoDTO.getUserId()));
     
-	    verify(accountOperatorUserAuthorityQueryOrchestrator, times(1)).getAccountOperatorsUsersAuthoritiesInfo(user, 1L);
+	    verify(operatorUserAuthorityInfoService, times(1)).getOperatorAuthoritiesInfo(user, 1L);
     }
     
     @Test
@@ -153,7 +143,6 @@ class OperatorAuthorityControllerTest {
 	            .andExpect(status().isForbidden());
           
 	    verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-	    verify(accountOperatorUserAuthorityQueryOrchestrator, never()).getAccountOperatorsUsersAuthoritiesInfo(any(), anyLong());
     }
 
     @Test
@@ -164,25 +153,24 @@ class OperatorAuthorityControllerTest {
             AccountOperatorAuthorityUpdateDTO.builder().userId("1").roleCode("role1").authorityStatus(AuthorityStatus.ACTIVE).build(),
             AccountOperatorAuthorityUpdateDTO.builder().userId("2").roleCode("invalid_role").authorityStatus(AuthorityStatus.ACTIVE).build()
         );
-        Map<AccountContactType, String> contactTypes = Map.of(AccountContactType.FINANCIAL, "user");
-        AccountOperatorAuthorityUpdateWrapperDTO wrapper = 
+
+        AccountOperatorAuthorityUpdateWrapperDTO wrapper =
                 AccountOperatorAuthorityUpdateWrapperDTO.builder()
                     .accountOperatorAuthorityUpdateList(accountUsers)
-                    .contactTypes(contactTypes)
                     .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
 
         //invoke
         mockMvc.perform(
-            MockMvcRequestBuilders.post(BASE_PATH + ACCOUNT_OPERATOR_USERS_PATH + "/" + 1L)
+            MockMvcRequestBuilders.patch(BASE_PATH + ACCOUNT_OPERATOR_USERS_PATH + "/" + 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(wrapper))
         )
             .andExpect(status().isNoContent());
 
         verify(accountOperatorUserAuthorityUpdateOrchestrator, times(1))
-                .updateAccountOperatorAuthorities(accountUsers, contactTypes, 1L);
+                .updateAccountOperatorAuthorities(accountUsers, 1L);
     }
 
     @Test
@@ -194,11 +182,9 @@ class OperatorAuthorityControllerTest {
             AccountOperatorAuthorityUpdateDTO.builder().userId("1").roleCode("role1").authorityStatus(AuthorityStatus.ACTIVE).build(),
             AccountOperatorAuthorityUpdateDTO.builder().userId("2").roleCode("invalid_role").authorityStatus(AuthorityStatus.ACTIVE).build()
         );
-        Map<AccountContactType, String> contactTypes = Map.of(AccountContactType.FINANCIAL, "user");
-        AccountOperatorAuthorityUpdateWrapperDTO wrapper = 
+        AccountOperatorAuthorityUpdateWrapperDTO wrapper =
                 AccountOperatorAuthorityUpdateWrapperDTO.builder()
                     .accountOperatorAuthorityUpdateList(accountUsers)
-                    .contactTypes(contactTypes)
                     .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
@@ -209,14 +195,14 @@ class OperatorAuthorityControllerTest {
 
         //invoke
         mockMvc.perform(
-            MockMvcRequestBuilders.post(BASE_PATH + ACCOUNT_OPERATOR_USERS_PATH + "/" + accountId)
+            MockMvcRequestBuilders.patch(BASE_PATH + ACCOUNT_OPERATOR_USERS_PATH + "/" + accountId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(wrapper))
         )
             .andExpect(status().isForbidden());
 
         verify(accountOperatorUserAuthorityUpdateOrchestrator, never())
-                .updateAccountOperatorAuthorities(Mockito.anyList(), Mockito.anyMap(), anyLong());
+                .updateAccountOperatorAuthorities(Mockito.anyList(), anyLong());
     }
 
     @Test
@@ -233,7 +219,7 @@ class OperatorAuthorityControllerTest {
                 BASE_PATH + ACCOUNT_OPERATOR_USERS_PATH  + "/" + accountId + "/" + userId))
             .andExpect(status().isNoContent());
 
-        verify(operatorAuthorityDeletionService, times(1))
+        verify(ccaOperatorAuthorityService, times(1))
                 .deleteAccountOperatorAuthority(userId, accountId);
     }
 
@@ -255,39 +241,7 @@ class OperatorAuthorityControllerTest {
                 BASE_PATH + ACCOUNT_OPERATOR_USERS_PATH  + "/" + accountId + "/" + userId))
             .andExpect(status().isForbidden());
 
-        verify(operatorAuthorityDeletionService, never())
+        verify(ccaOperatorAuthorityService, never())
                 .deleteAccountOperatorAuthority(anyString(), anyLong());
-    }
-
-    @Test
-    void deleteCurrentUserAccountOperatorAuthority() throws Exception {
-        AppUser currentUser = AppUser.builder().userId("currentuser").build();
-        long accountId = 1L;
-
-        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
-
-        //invoke
-        mockMvc.perform(
-            MockMvcRequestBuilders.delete(
-                BASE_PATH + ACCOUNT_OPERATOR_USERS_PATH  + "/" + accountId))
-            .andExpect(status().isNoContent());
-    }
-
-    @Test
-    void deleteCurrentUserAccountOperatorAuthority_forbidden() throws Exception {
-        AppUser currentUser = AppUser.builder().userId("currentuser").build();
-        long accountId = 1L;
-
-        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
-
-        doThrow(new BusinessException(ErrorCode.FORBIDDEN))
-            .when(appUserAuthorizationService)
-            .authorize(currentUser, "deleteCurrentUserAccountOperatorAuthority", String.valueOf(accountId));
-
-        //invoke
-        mockMvc.perform(
-            MockMvcRequestBuilders.delete(
-                BASE_PATH + ACCOUNT_OPERATOR_USERS_PATH  + "/" + accountId))
-            .andExpect(status().isForbidden());
     }
 }

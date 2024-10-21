@@ -1,6 +1,16 @@
 package uk.gov.cca.api.web.controller.workflow;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,35 +27,25 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.web.controller.workflow.RequestTaskAttachmentController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import uk.gov.cca.api.web.config.AppUserArgumentResolver;
+import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.files.common.domain.dto.FileUuidDTO;
 import uk.gov.netz.api.token.FileToken;
-import uk.gov.cca.api.web.config.AppUserArgumentResolver;
-import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.workflow.request.application.attachment.task.RequestTaskAttachmentActionProcessDTO;
-import uk.gov.cca.api.workflow.request.application.attachment.task.RequestTaskAttachmentService;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskActionType;
-import uk.gov.cca.api.workflow.request.flow.common.service.RequestTaskAttachmentUploadService;
-
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import uk.gov.netz.api.workflow.request.application.attachment.task.RequestTaskAttachmentActionProcessDTO;
+import uk.gov.netz.api.workflow.request.application.attachment.task.RequestTaskAttachmentService;
+import uk.gov.netz.api.workflow.request.core.domain.constants.RequestTaskActionTypes;
+import uk.gov.netz.api.workflow.request.flow.common.service.RequestTaskAttachmentUploadService;
 
 @ExtendWith(MockitoExtension.class)
 class RequestTaskAttachmentControllerTest {
@@ -96,7 +96,7 @@ class RequestTaskAttachmentControllerTest {
     void uploadRequestTaskAttachment() throws Exception {
         AppUser authUser = AppUser.builder().userId("id").build();
         Long requestTaskId = 1L;
-        RequestTaskActionType requestTaskActionType = RequestTaskActionType.RDE_UPLOAD_ATTACHMENT;
+        String requestTaskActionType = RequestTaskActionTypes.RDE_UPLOAD_ATTACHMENT;
         String attachmentName = "attachment";
         String attachmentOriginalFileName = "filename.txt";
         String attachmentContentType = "text/plain";
@@ -138,7 +138,7 @@ class RequestTaskAttachmentControllerTest {
     void uploadRequestTaskAttachment_forbidden() throws Exception {
         AppUser authUser = AppUser.builder().userId("id").build();
         Long requestTaskId = 1L;
-        RequestTaskActionType requestTaskActionType = mock(RequestTaskActionType.class);
+        String requestTaskActionType = "requestTaskActionType";
         RequestTaskAttachmentActionProcessDTO requestTaskAttachmentActionProcessDTO = RequestTaskAttachmentActionProcessDTO.builder()
                 .requestTaskId(requestTaskId)
                 .requestTaskActionType(requestTaskActionType)

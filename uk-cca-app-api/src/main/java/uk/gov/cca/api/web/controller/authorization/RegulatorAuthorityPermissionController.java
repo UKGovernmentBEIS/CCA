@@ -14,17 +14,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.regulator.domain.AuthorityManagePermissionDTO;
-import uk.gov.cca.api.authorization.regulator.domain.RegulatorPermissionGroup;
-import uk.gov.cca.api.authorization.regulator.domain.RegulatorPermissionLevel;
-import uk.gov.cca.api.authorization.regulator.service.RegulatorAuthorityQueryService;
-import uk.gov.cca.api.authorization.regulator.transform.RegulatorPermissionsAdapter;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.Authorized;
-import uk.gov.cca.api.web.security.AuthorizedRole;
-import uk.gov.netz.api.common.domain.RoleType;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.regulator.domain.AuthorityManagePermissionDTO;
+import uk.gov.netz.api.authorization.regulator.domain.RegulatorPermissionLevel;
+import uk.gov.netz.api.authorization.regulator.service.RegulatorAuthorityQueryService;
+import uk.gov.netz.api.authorization.regulator.transform.RegulatorPermissionsAdapter;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.security.Authorized;
+import uk.gov.netz.api.security.AuthorizedRole;
 
 import java.util.List;
 import java.util.Map;
@@ -36,6 +35,7 @@ import java.util.Map;
 public class RegulatorAuthorityPermissionController {
 
     private final RegulatorAuthorityQueryService regulatorAuthorityQueryService;
+    private final RegulatorPermissionsAdapter regulatorPermissionsAdapter;
 
     @GetMapping
     @Operation(summary = "Retrieves the current regulator user's permissions")
@@ -45,7 +45,7 @@ public class RegulatorAuthorityPermissionController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @AuthorizedRole(roleType = RoleType.REGULATOR)
+    @AuthorizedRole(roleType = RoleTypeConstants.REGULATOR)
     public ResponseEntity<AuthorityManagePermissionDTO> getCurrentRegulatorUserPermissionsByCa(@Parameter(hidden = true) AppUser currentUser) {
         return new ResponseEntity<>(regulatorAuthorityQueryService.getCurrentRegulatorUserPermissions(currentUser),
                 HttpStatus.OK);
@@ -72,14 +72,13 @@ public class RegulatorAuthorityPermissionController {
 
     @GetMapping(path = "/group-levels")
     @Operation(summary = "Retrieves the regulator permissions group levels")
-    @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
-            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuthorityManagePermissionDTO.class))})
+    @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, useReturnTypeSchema = true)
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized
     public ResponseEntity<Map<String, List<RegulatorPermissionLevel>>> getRegulatorPermissionGroupLevels() {
-        return new ResponseEntity<>(RegulatorPermissionsAdapter.getPermissionGroupLevels(), HttpStatus.OK);
+        return new ResponseEntity<>(regulatorPermissionsAdapter.getPermissionGroupLevels(), HttpStatus.OK);
     }
 }

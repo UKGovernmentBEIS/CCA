@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.account.domain.dto.AppointVerificationBodyDTO;
-import uk.gov.cca.api.account.service.AccountVerificationBodyAppointService;
-import uk.gov.cca.api.account.service.AccountVerificationBodyService;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyNameInfoDTO;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.Authorized;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.account.domain.dto.AppointVerificationBodyDTO;
+import uk.gov.netz.api.account.service.AccountVerificationBodyAppointService;
+import uk.gov.netz.api.account.service.AccountVerificationBodyService;
+import uk.gov.netz.api.security.Authorized;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyNameInfoDTO;
 
 import java.util.List;
 
@@ -89,7 +89,7 @@ public class AccountVerificationBodyController {
             @PathVariable("id") @Parameter(description = "The account id", required = true)
                     Long accountId,
             @RequestBody @Valid @Parameter(description = "The verification body id to appoint to account", required = true)
-                    AppointVerificationBodyDTO appointVerificationBodyDTO) {
+            AppointVerificationBodyDTO appointVerificationBodyDTO) {
         accountVerificationBodyAppointService.appointVerificationBodyToAccount(appointVerificationBodyDTO.getVerificationBodyId(), accountId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

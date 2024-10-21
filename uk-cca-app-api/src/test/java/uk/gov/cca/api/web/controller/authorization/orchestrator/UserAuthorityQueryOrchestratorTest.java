@@ -5,15 +5,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.authorization.core.domain.AuthorityStatus;
-import uk.gov.cca.api.authorization.core.domain.dto.AuthorityDTO;
-import uk.gov.cca.api.authorization.core.service.AuthorityService;
-import uk.gov.cca.api.web.controller.authorization.orchestrator.UserAuthorityQueryOrchestrator;
-import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
-import uk.gov.cca.api.user.core.domain.dto.UserInfoDTO;
-import uk.gov.cca.api.user.core.domain.enumeration.AuthenticationStatus;
-import uk.gov.cca.api.user.core.service.auth.UserAuthService;
 import uk.gov.cca.api.web.controller.authorization.orchestrator.dto.LoginStatus;
+import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
+import uk.gov.netz.api.authorization.core.domain.dto.AuthorityDTO;
+import uk.gov.netz.api.authorization.core.service.AuthorityService;
+import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
+import uk.gov.netz.api.user.core.service.auth.UserAuthService;
+import uk.gov.netz.api.userinfoapi.AuthenticationStatus;
+import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +23,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.cca.api.authorization.core.domain.Permission.PERM_TASK_ASSIGNMENT;
+import static uk.gov.netz.api.authorization.core.domain.Permission.PERM_TASK_ASSIGNMENT;
 
 @ExtendWith(MockitoExtension.class)
 class UserAuthorityQueryOrchestratorTest {
@@ -144,40 +143,6 @@ class UserAuthorityQueryOrchestratorTest {
         assertThat(actual).isEqualTo(LoginStatus.ACCEPTED);
         verify(authorityService, times(1)).getAuthoritiesByUserId(userId);
         verify(userAuthService, never()).getUserByUserId(anyString());
-    }
-
-    @Test
-    void getUserLoginStatusInfo_when_no_authorities_and_auth_status_not_deleted_then_no_authority() {
-        final String userId = "userId";
-        final UserInfoDTO userInfoDTO = UserInfoDTO.builder().status(AuthenticationStatus.REGISTERED).build();
-
-        when(authorityService.getAuthoritiesByUserId(userId)).thenReturn(Collections.emptyList());
-        when(userAuthService.getUserByUserId(userId)).thenReturn(userInfoDTO);
-
-        // Invoke
-        LoginStatus actual = orchestrator.getUserLoginStatusInfo(userId);
-
-        // Verify
-        assertThat(actual).isEqualTo(LoginStatus.NO_AUTHORITY);
-        verify(authorityService, times(1)).getAuthoritiesByUserId(userId);
-        verify(userAuthService, times(1)).getUserByUserId(userId);
-    }
-
-    @Test
-    void getUserLoginStatusInfo_when_no_authorities_and_auth_status_is_deleted_then_deleted() {
-        final String userId = "userId";
-        final UserInfoDTO userInfoDTO = UserInfoDTO.builder().status(AuthenticationStatus.DELETED).build();
-
-        when(authorityService.getAuthoritiesByUserId(userId)).thenReturn(Collections.emptyList());
-        when(userAuthService.getUserByUserId(userId)).thenReturn(userInfoDTO);
-
-        // Invoke
-        LoginStatus actual = orchestrator.getUserLoginStatusInfo(userId);
-
-        // Verify
-        assertThat(actual).isEqualTo(LoginStatus.DELETED);
-        verify(authorityService, times(1)).getAuthoritiesByUserId(userId);
-        verify(userAuthService, times(1)).getUserByUserId(userId);
     }
 
     private AuthorityDTO createAuthority(Long accountId, AuthorityStatus status) {

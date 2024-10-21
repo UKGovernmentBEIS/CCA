@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +29,13 @@ import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 @RequestMapping(path = "/v1.0/terms")
 @Tag(name = "Terms and conditions")
 @RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "ui.features", name = "terms", havingValue = "true")
 public class TermsController {
 
     private final TermsService termsService;
 
     private final TermsMapper termsMapper;
 
-    /**
-     * Retrieves the latest version of terms and conditions
-     */
     @GetMapping
     @Operation(summary = "Retrieves the latest version of terms and conditions")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = TermsDTO.class))})
@@ -53,7 +52,5 @@ public class TermsController {
         TermsDTO termsDTO = termsMapper.transformToTermsDTO(latestTerms);
 
         return new ResponseEntity<>(termsDTO, HttpStatus.OK);
-
     }
-
 }

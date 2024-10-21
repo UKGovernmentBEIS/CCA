@@ -1,6 +1,18 @@
 package uk.gov.cca.api.web.controller.workflow;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,44 +23,37 @@ import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.aop.framework.AopProxy;
 import org.springframework.aop.framework.DefaultAopProxyFactory;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.web.controller.workflow.RequestTaskController;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+
+import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
+import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.workflow.request.application.taskview.RequestTaskDTO;
-import uk.gov.cca.api.workflow.request.application.taskview.RequestTaskItemDTO;
-import uk.gov.cca.api.workflow.request.application.taskview.RequestTaskViewService;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestTaskActionProcessDTO;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskActionPayloadType;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskActionType;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskType;
-import uk.gov.cca.api.workflow.request.flow.common.actionhandler.RequestTaskActionHandler;
-import uk.gov.cca.api.workflow.request.flow.common.actionhandler.RequestTaskActionHandlerMapper;
-import uk.gov.cca.api.workflow.request.flow.common.domain.RequestTaskActionEmptyPayload;
-
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskActionType.RDE_UPLOAD_ATTACHMENT;
-import static uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskType.DUMMY_REQUEST_TYPE_APPLICATION_REVIEW;
+import uk.gov.cca.api.workflow.request.application.task.CcaRequestTaskViewService;
+import uk.gov.cca.api.workflow.request.application.task.RequestTaskRecipientsService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.workflow.request.application.taskview.RequestTaskDTO;
+import uk.gov.netz.api.workflow.request.application.taskview.RequestTaskItemDTO;
+import uk.gov.netz.api.workflow.request.core.domain.constants.RequestCreateActionPayloadTypes;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestTaskActionProcessDTO;
+import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestTaskActionHandler;
+import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestTaskActionHandlerMapper;
+import uk.gov.netz.api.workflow.request.flow.common.domain.RequestTaskActionEmptyPayload;
+import uk.gov.netz.api.workflow.request.flow.common.jsonprovider.RequestTaskActionPayloadCommonTypesProvider;
 
 @ExtendWith(MockitoExtension.class)
 class RequestTaskControllerTest {
@@ -64,13 +69,16 @@ class RequestTaskControllerTest {
     private AppSecurityComponent appSecurityComponent;
 
     @Mock
-    private RequestTaskViewService requestTaskViewService;
+    private CcaRequestTaskViewService ccaRequestTaskViewService;
 
     @Mock
     private AppUserAuthorizationService appUserAuthorizationService;
 
     @Mock
     private RequestTaskActionHandlerMapper requestTaskActionHandlerMapper;
+
+    @Mock
+    private RequestTaskRecipientsService requestTaskRecipientsService;
 
     @Mock
     private RequestTaskActionHandler<RequestTaskActionEmptyPayload> requestTaskActionHandler;
@@ -80,6 +88,10 @@ class RequestTaskControllerTest {
     @BeforeEach
     public void setUp() {
         mapper = new ObjectMapper();
+        mapper.registerSubtypes(new RequestTaskActionPayloadCommonTypesProvider().getTypes().toArray(NamedType[]::new));
+        
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+		mappingJackson2HttpMessageConverter.setObjectMapper(mapper);
 
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
@@ -95,27 +107,28 @@ class RequestTaskControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(requestTaskController)
                 .setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))
                 .setControllerAdvice(new ExceptionControllerAdvice())
+                .setMessageConverters(mappingJackson2HttpMessageConverter)
                 .build();
     }
 
     @Test
     void getTaskItemInfoById() throws Exception {
         AppUser user = AppUser.builder().firstName("fn").lastName("ln").build();
-        RequestTaskType requestTaskType = DUMMY_REQUEST_TYPE_APPLICATION_REVIEW;
+        String requestTaskType = "DUMMY_REQUEST_TYPE_APPLICATION_REVIEW";
         Long requestTaskId = 1L;
         RequestTaskItemDTO taskItem = createTaskItem(requestTaskId, requestTaskType);
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(requestTaskViewService.getTaskItemInfo(requestTaskId, user)).thenReturn(taskItem);
+        when(ccaRequestTaskViewService.getTaskItemInfo(requestTaskId, user)).thenReturn(taskItem);
         mockMvc.perform(
                         MockMvcRequestBuilders.get(BASE_PATH + "/" + requestTaskId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.requestTask.type").value(requestTaskType.name()))
+                .andExpect(jsonPath("$.requestTask.type").value(requestTaskType))
                 .andExpect(jsonPath("$.requestTask.id").value(requestTaskId));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(requestTaskViewService, times(1)).getTaskItemInfo(requestTaskId, user);
+        verify(ccaRequestTaskViewService, times(1)).getTaskItemInfo(requestTaskId, user);
     }
 
     @Test
@@ -134,23 +147,72 @@ class RequestTaskControllerTest {
                 .andExpect(status().isForbidden());
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(requestTaskViewService, never()).getTaskItemInfo(anyLong(), any());
+        verify(ccaRequestTaskViewService, never()).getTaskItemInfo(anyLong(), any());
+    }
+
+    @Test
+    void getDefaultNoticeRecipients() throws Exception {
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
+        final long requestTaskId = 1L;
+
+        List<NoticeRecipientDTO> list = Collections.singletonList(
+                NoticeRecipientDTO.builder()
+                        .firstName("fn")
+                        .lastName("ln")
+                        .email("email")
+                        .type(NoticeRecipientType.ADMINISTRATIVE_CONTACT)
+                        .build());
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+        when(requestTaskRecipientsService.getDefaultNoticeRecipients(requestTaskId))
+                .thenReturn(list);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + requestTaskId + "/default-recipients/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(jsonPath("$[0].email").value("email"))
+                .andExpect(jsonPath("$[0].firstName").value("fn"))
+                .andExpect(jsonPath("$[0].lastName").value("ln"))
+                .andExpect(jsonPath("$[0].type").value(NoticeRecipientType.ADMINISTRATIVE_CONTACT.name()));
+
+        verify(appSecurityComponent, times(1)).getAuthenticatedUser();
+        verify(requestTaskRecipientsService, times(1))
+                .getDefaultNoticeRecipients(requestTaskId);
+    }
+
+    @Test
+    void getDefaultNoticeRecipients_forbidden() throws Exception {
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.OPERATOR).build();
+        final long requestTaskId = 1L;
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+        doThrow(new BusinessException(ErrorCode.FORBIDDEN))
+                .when(appUserAuthorizationService)
+                .authorize(user, "getDefaultNoticeRecipients", String.valueOf(requestTaskId));
+
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + requestTaskId + "/default-recipients/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+
+        verify(appSecurityComponent, times(1)).getAuthenticatedUser();
+        verify(requestTaskRecipientsService, never()).getDefaultNoticeRecipients(anyLong());
     }
 
     @Test
     void processRequestTaskAction() throws Exception {
         AppUser appUser = AppUser.builder().userId("id").build();
         RequestTaskActionEmptyPayload dismissPayload = RequestTaskActionEmptyPayload.builder()
-                .payloadType(RequestTaskActionPayloadType.EMPTY_PAYLOAD)
+                .payloadType(RequestCreateActionPayloadTypes.EMPTY_PAYLOAD)
                 .build();
         RequestTaskActionProcessDTO requestTaskActionProcessDTO = RequestTaskActionProcessDTO.builder()
                 .requestTaskId(1L)
-                .requestTaskActionType(RDE_UPLOAD_ATTACHMENT)
+                .requestTaskActionType("RDE_UPLOAD_ATTACHMENT")
                 .requestTaskActionPayload(dismissPayload)
                 .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        when(requestTaskActionHandlerMapper.get(RDE_UPLOAD_ATTACHMENT)).thenReturn(requestTaskActionHandler);
+        when(requestTaskActionHandlerMapper.get("RDE_UPLOAD_ATTACHMENT")).thenReturn(requestTaskActionHandler);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(BASE_PATH + "/actions")
@@ -159,7 +221,7 @@ class RequestTaskControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(requestTaskActionHandler, times(1)).process(requestTaskActionProcessDTO.getRequestTaskId(),
-                RDE_UPLOAD_ATTACHMENT,
+                "RDE_UPLOAD_ATTACHMENT",
                 appUser,
                 (RequestTaskActionEmptyPayload) requestTaskActionProcessDTO.getRequestTaskActionPayload());
     }
@@ -168,11 +230,11 @@ class RequestTaskControllerTest {
     void processRequestTaskAction_forbidden() throws Exception {
         AppUser appUser = AppUser.builder().userId("id").build();
         RequestTaskActionEmptyPayload dismissPayload = RequestTaskActionEmptyPayload.builder()
-                .payloadType(RequestTaskActionPayloadType.EMPTY_PAYLOAD)
+                .payloadType(RequestCreateActionPayloadTypes.EMPTY_PAYLOAD)
                 .build();
         RequestTaskActionProcessDTO requestTaskActionProcessDTO = RequestTaskActionProcessDTO.builder()
                 .requestTaskId(1L)
-                .requestTaskActionType(mock(RequestTaskActionType.class))
+                .requestTaskActionType("rtat")
                 .requestTaskActionPayload(dismissPayload)
                 .build();
 
@@ -190,7 +252,7 @@ class RequestTaskControllerTest {
         verify(requestTaskActionHandler, never()).process(anyLong(), any(), any(), any());
     }
 
-    private RequestTaskItemDTO createTaskItem(Long taskid, RequestTaskType type) {
+    private RequestTaskItemDTO createTaskItem(Long taskid, String type) {
         return RequestTaskItemDTO.builder()
                 .requestTask(RequestTaskDTO.builder()
                         .type(type)

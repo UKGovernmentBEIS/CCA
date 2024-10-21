@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.notification.template.service.DocumentTemplateFileService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.Authorized;
-import uk.gov.netz.api.token.FileToken;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.documenttemplate.service.DocumentTemplateFileService;
+import uk.gov.netz.api.security.Authorized;
+import uk.gov.netz.api.token.FileToken;
 
 import java.util.UUID;
 

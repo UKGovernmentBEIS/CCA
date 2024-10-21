@@ -15,21 +15,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.cca.api.web.controller.user.OperatorUserManagementController;
-import uk.gov.netz.api.common.domain.RoleType;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.cca.api.user.operator.domain.OperatorUserDTO;
-import uk.gov.cca.api.user.operator.service.OperatorUserManagementService;
+import uk.gov.cca.api.user.operator.domain.CcaOperatorUserDetailsDTO;
+import uk.gov.cca.api.user.operator.service.CcaOperatorUserManagementService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
+ import uk.gov.netz.api.user.operator.service.OperatorUserManagementService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -59,6 +59,9 @@ class OperatorUserManagementControllerTest {
     private OperatorUserManagementService operatorUserManagementService;
 
     @Mock
+	private CcaOperatorUserManagementService ccaOperatorUserManagementService ;
+
+	@Mock
     private AppUserAuthorizationService appUserAuthorizationService;
 
     @Mock
@@ -95,14 +98,14 @@ class OperatorUserManagementControllerTest {
 	void getOperatorUserById() throws Exception {
 		AppUser user = AppUser.builder().userId("authId").build();
 		String userId = "userId";
-		OperatorUserDTO operatorUserDTO = OperatorUserDTO.builder()
+		CcaOperatorUserDetailsDTO operatorUserDTO = CcaOperatorUserDetailsDTO.builder()
 				.firstName("fn")
 				.lastName("ln")
 				.email("email")
 				.build();
 
 		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-		when(operatorUserManagementService.getOperatorUserByAccountAndId(1L, userId))
+		when(ccaOperatorUserManagementService.getOperatorUserByAccountIdAndUserId(userId, 1L))
 				.thenReturn(operatorUserDTO);
 
 		//invoke
@@ -113,8 +116,8 @@ class OperatorUserManagementControllerTest {
 				.andExpect(jsonPath("$.firstName").value(operatorUserDTO.getFirstName()))
 				.andExpect(jsonPath("$.lastName").value(operatorUserDTO.getLastName()))
 				.andExpect(jsonPath("$.email").value(operatorUserDTO.getEmail()));
+		verify(ccaOperatorUserManagementService, times(1)).getOperatorUserByAccountIdAndUserId(userId, 1L);
 
-		verify(operatorUserManagementService, times(1)).getOperatorUserByAccountAndId(1L, userId);
 	}
 
 	@Test
@@ -132,14 +135,31 @@ class OperatorUserManagementControllerTest {
 				MockMvcRequestBuilders.get(BASE_PATH + "/account/" + accountId + "/" + userId)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isForbidden());
+		verify(ccaOperatorUserManagementService, never()).getOperatorUserByAccountIdAndUserId(anyString(),anyLong());
+	}
 
-		verify(operatorUserManagementService, never()).getOperatorUserByAccountAndId(anyLong(), anyString());
+	@Test
+	void getCurrentOperatorUser() throws Exception {
+		final AppUser currentUser = AppUser.builder().userId("currentuser").build();
+		final long accountId = 1L;
+
+		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
+
+		//invoke
+		mockMvc.perform(
+				MockMvcRequestBuilders.get(BASE_PATH + "/account/" + accountId)
+		)
+				.andExpect(status().isOk());
+
+		verify(ccaOperatorUserManagementService, times(1))
+				.getOperatorUserByAccountIdAndUserId(currentUser.getUserId(), accountId);
 	}
 
     @Test
 	void updateCurrentOperatorUser() throws Exception {
-		AppUser user = AppUser.builder().userId("authId").roleType(RoleType.OPERATOR).build();
-		OperatorUserDTO operatorUserDTO = OperatorUserDTO.builder()
+		AppUser user = AppUser.builder().userId("authId").roleType(RoleTypeConstants.OPERATOR).build();
+		long accountId = 1L;
+		CcaOperatorUserDetailsDTO ccaOperatorUserDetailsDTO = CcaOperatorUserDetailsDTO.builder()
 				.firstName("fn")
 				.lastName("ln")
 				.email("email")
@@ -149,45 +169,46 @@ class OperatorUserManagementControllerTest {
 
 		//invoke
 		mockMvc.perform(
-				MockMvcRequestBuilders.patch(BASE_PATH + "/operator")
+				MockMvcRequestBuilders.patch(BASE_PATH + "/account/" + accountId)
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(operatorUserDTO)))
+						.content(objectMapper.writeValueAsString(ccaOperatorUserDetailsDTO)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.firstName").value(operatorUserDTO.getFirstName()))
-				.andExpect(jsonPath("$.lastName").value(operatorUserDTO.getLastName()))
-				.andExpect(jsonPath("$.email").value(operatorUserDTO.getEmail()));
+				.andExpect(jsonPath("$.firstName").value(ccaOperatorUserDetailsDTO.getFirstName()))
+				.andExpect(jsonPath("$.lastName").value(ccaOperatorUserDetailsDTO.getLastName()))
+				.andExpect(jsonPath("$.email").value(ccaOperatorUserDetailsDTO.getEmail()));
 
-		verify(operatorUserManagementService, times(1)).updateOperatorUser(user, operatorUserDTO);
+		verify(ccaOperatorUserManagementService, times(1)).updateCurrentOperatorUser(user, accountId, ccaOperatorUserDetailsDTO);
 	}
 
 	@Test
 	void updateCurrentOperatorUser_forbidden() throws Exception {
-		AppUser user = AppUser.builder().userId("authId").roleType(RoleType.REGULATOR).build();
-		OperatorUserDTO operatorUserDTO = OperatorUserDTO.builder()
+		AppUser user = AppUser.builder().userId("authId").roleType(RoleTypeConstants.REGULATOR).build();
+		CcaOperatorUserDetailsDTO ccaOperatorUserDetailsDTO = CcaOperatorUserDetailsDTO.builder()
 				.firstName("fn")
 				.lastName("ln")
 				.email("email")
 				.build();
+		long accountId = 1L;
 
 		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
 		doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(user, new RoleType[] {RoleType.OPERATOR});
+            .evaluate(user, new String[] {RoleTypeConstants.OPERATOR});
 
 		mockMvc.perform(
-				MockMvcRequestBuilders.patch(BASE_PATH + "/operator")
+				MockMvcRequestBuilders.patch(BASE_PATH + "/account/" + accountId)
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(operatorUserDTO)))
+						.content(objectMapper.writeValueAsString(ccaOperatorUserDetailsDTO)))
 				.andExpect(status().isForbidden());
 
-		verify(operatorUserManagementService, never()).updateOperatorUser(any(), any());
+		verify(ccaOperatorUserManagementService, never()).updateCurrentOperatorUser(any(AppUser.class), anyLong(), any(CcaOperatorUserDetailsDTO.class));
 	}
 
 	@Test
 	void updateOperatorUserById() throws Exception {
 		AppUser user = AppUser.builder().userId("authId").build();
 		String userId = "userId";
-		OperatorUserDTO operatorUserDTO = OperatorUserDTO.builder()
+		CcaOperatorUserDetailsDTO ccaOperatorUserDetailsDTO = CcaOperatorUserDetailsDTO.builder()
 				.firstName("fn")
 				.lastName("ln")
 				.email("email")
@@ -199,31 +220,31 @@ class OperatorUserManagementControllerTest {
 		mockMvc.perform(
 				MockMvcRequestBuilders.patch(BASE_PATH + "/account/" + 1L + "/" + userId)
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(objectMapper.writeValueAsString(operatorUserDTO)))
+						.content(objectMapper.writeValueAsString(ccaOperatorUserDetailsDTO)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.firstName").value(operatorUserDTO.getFirstName()))
-				.andExpect(jsonPath("$.lastName").value(operatorUserDTO.getLastName()))
-				.andExpect(jsonPath("$.email").value(operatorUserDTO.getEmail()));
+				.andExpect(jsonPath("$.firstName").value(ccaOperatorUserDetailsDTO.getFirstName()))
+				.andExpect(jsonPath("$.lastName").value(ccaOperatorUserDetailsDTO.getLastName()))
+				.andExpect(jsonPath("$.email").value(ccaOperatorUserDetailsDTO.getEmail()));
 
-		verify(operatorUserManagementService, times(1))
-				.updateOperatorUserByAccountAndId(1L, userId, operatorUserDTO);
+		verify(ccaOperatorUserManagementService, times(1))
+				.updateOperatorUserByAccountAndUserId(1L, userId, ccaOperatorUserDetailsDTO);
 	}
 
 	@Test
 	void updateOperatorUserById_forbidden() throws Exception {
 		AppUser user = AppUser.builder().userId("authId").build();
 		String userId = "userId";
-		OperatorUserDTO operatorUserDTO = OperatorUserDTO.builder()
+		CcaOperatorUserDetailsDTO operatorUserDTO = CcaOperatorUserDetailsDTO.builder()
 				.firstName("fn")
 				.lastName("ln")
 				.email("email")
 				.build();
-		Long accountId = 1L;
+		long accountId = 1L;
 
 		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(user, "updateOperatorUserById", accountId.toString());
+            .authorize(user, "updateOperatorUserById", Long.toString(accountId));
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.patch(BASE_PATH + "/account/" + accountId + "/" + userId)
@@ -231,10 +252,10 @@ class OperatorUserManagementControllerTest {
 						.content(objectMapper.writeValueAsString(operatorUserDTO)))
 				.andExpect(status().isForbidden());
 
-		verify(operatorUserManagementService, never())
-				.updateOperatorUserByAccountAndId( anyLong(), anyString(), any());
+		verify(ccaOperatorUserManagementService, never())
+				.updateOperatorUserByAccountAndUserId( anyLong(), anyString(), any());
 	}
-	
+
 	@Test
 	void resetOperator2Fa() throws Exception {
 		AppUser user = AppUser.builder().userId("authId").build();

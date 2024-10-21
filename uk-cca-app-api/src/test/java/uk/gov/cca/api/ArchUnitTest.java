@@ -24,17 +24,22 @@ public class ArchUnitTest {
     static final String TERMS_PACKAGE = COMMON_BASE_PACKAGE + ".terms..";
 
     static final String COMMON_PACKAGE = COMMON_BASE_PACKAGE + ".common..";
-    static final String REFERENCE_DATA_PACKAGE = BASE_PACKAGE + ".referencedata..";
+    static final String REFERENCE_DATA_PACKAGE = COMMON_BASE_PACKAGE + ".referencedata..";
     static final String FILES_PACKAGE = COMMON_BASE_PACKAGE + ".files..";
+    static final String DOCUMENT_TEMPLATE_PACKAGE = COMMON_BASE_PACKAGE + ".documenttemplate..";
     static final String NOTIFICATION_PACKAGE = BASE_PACKAGE + ".notification..";
     static final String TOKEN_PACKAGE = COMMON_BASE_PACKAGE + ".token..";
     static final String AUTHORIZATION_PACKAGE = BASE_PACKAGE + ".authorization..";
     static final String CA_PACKAGE = COMMON_BASE_PACKAGE + ".competentauthority..";
-    static final String VERIFICATION_BODY_PACKAGE = BASE_PACKAGE + ".verificationbody..";
+    static final String VERIFICATION_BODY_PACKAGE = COMMON_BASE_PACKAGE + ".verificationbody..";
     static final String USER_PACKAGE = BASE_PACKAGE + ".user..";
-    static final String ACCOUNT_PACKAGE = BASE_PACKAGE + ".account..";
 
-    static final String WORKFLOW_PACKAGE = BASE_PACKAGE + ".workflow..";
+    static final String USER_INFO_API_PACKAGE = COMMON_BASE_PACKAGE + ".userinfoapi..";
+    static final String ACCOUNT_PACKAGE = COMMON_BASE_PACKAGE + ".account..";
+
+    static final String WORKFLOW_PACKAGE = COMMON_BASE_PACKAGE + ".workflow..";
+    
+    static final String SECTOR_ASSOCIATION_PACKAGE = BASE_PACKAGE + ".sectorassociation..";
 
     static final String WEB_PACKAGE = BASE_PACKAGE + ".web..";
 
@@ -51,6 +56,7 @@ public class ArchUnitTest {
             USER_PACKAGE,
             ACCOUNT_PACKAGE,
             WORKFLOW_PACKAGE,
+            SECTOR_ASSOCIATION_PACKAGE,
 
             WEB_PACKAGE
     );
@@ -68,7 +74,8 @@ public class ArchUnitTest {
                     .should().dependOnClassesThat()
                     .resideInAnyPackage(except(
                             TERMS_PACKAGE,
-                            COMMON_PACKAGE));
+                            COMMON_PACKAGE,
+                            AUTHORIZATION_PACKAGE));
 
     @ArchTest
     public static final ArchRule commonPackageChecks =
@@ -96,6 +103,19 @@ public class ArchUnitTest {
                             FILES_PACKAGE,
                             COMMON_PACKAGE,
                             TOKEN_PACKAGE));
+    
+    @ArchTest
+    public static final ArchRule documentTemplatePackageChecks =
+            noClasses().that()
+                    .resideInAPackage(DOCUMENT_TEMPLATE_PACKAGE)
+                    .should().dependOnClassesThat()
+                    .resideInAnyPackage(except(
+                            DOCUMENT_TEMPLATE_PACKAGE,
+                            FILES_PACKAGE,
+                            COMMON_PACKAGE,
+                            AUTHORIZATION_PACKAGE,
+                            CA_PACKAGE,
+                            TOKEN_PACKAGE));
 
     @ArchTest
     public static final ArchRule notificationPackageChecks =
@@ -106,9 +126,7 @@ public class ArchUnitTest {
                             NOTIFICATION_PACKAGE,
                             COMMON_PACKAGE,
                             AUTHORIZATION_PACKAGE,
-                            CA_PACKAGE,
-                            FILES_PACKAGE,
-                            TOKEN_PACKAGE));
+                            CA_PACKAGE));
 
     @ArchTest
     public static final ArchRule tokenPackageChecks =
@@ -157,11 +175,13 @@ public class ArchUnitTest {
                     .should().dependOnClassesThat()
                     .resideInAnyPackage(except(
                             USER_PACKAGE,
+                            USER_INFO_API_PACKAGE,
                             COMMON_PACKAGE,
                             TOKEN_PACKAGE,
                             AUTHORIZATION_PACKAGE,
                             NOTIFICATION_PACKAGE,
                             ACCOUNT_PACKAGE /* CYCLIC3: to get installation name for notification */,
+                            CA_PACKAGE, /* for regulator invitation */
                             VERIFICATION_BODY_PACKAGE /* for verifier invitation */,
                             FILES_PACKAGE /* for signatures */));
     @ArchTest
@@ -176,12 +196,8 @@ public class ArchUnitTest {
                             CA_PACKAGE,
                             FILES_PACKAGE, /* for notes */
                             TOKEN_PACKAGE,
-                            USER_PACKAGE, /* CYCLIC3:  getServiceContactDetails */
-                            VERIFICATION_BODY_PACKAGE,
-                            NOTIFICATION_PACKAGE,
-                            REFERENCE_DATA_PACKAGE));
-
-
+                            VERIFICATION_BODY_PACKAGE));
+    
     @ArchTest
     public static final ArchRule workflowPackageChecks =
             noClasses().that()
@@ -197,8 +213,22 @@ public class ArchUnitTest {
                             ACCOUNT_PACKAGE,
                             FILES_PACKAGE,
                             USER_PACKAGE,
-                            REFERENCE_DATA_PACKAGE,
+                            DOCUMENT_TEMPLATE_PACKAGE,
                             VERIFICATION_BODY_PACKAGE));
+    
+    @ArchTest
+    public static final ArchRule sectorAssociationPackageChecks =
+            noClasses().that()
+                    .resideInAPackage(SECTOR_ASSOCIATION_PACKAGE)
+                    .should().dependOnClassesThat()
+                    .resideInAnyPackage(except(
+                    		SECTOR_ASSOCIATION_PACKAGE,
+                            COMMON_PACKAGE,
+                            AUTHORIZATION_PACKAGE,
+                            REFERENCE_DATA_PACKAGE,
+                            TOKEN_PACKAGE,
+                            CA_PACKAGE,
+                            FILES_PACKAGE /* for sector scheme files */));
 
 
 

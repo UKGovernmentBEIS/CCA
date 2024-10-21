@@ -5,10 +5,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.authorization.verifier.domain.VerifierAuthorityUpdateDTO;
-import uk.gov.cca.api.authorization.verifier.service.VerifierAuthorityUpdateService;
-import uk.gov.cca.api.user.verifier.service.VerifierUserNotificationGateway;
-import uk.gov.cca.api.web.orchestrator.authorization.service.VerifierUserAuthorityUpdateOrchestrator;
+import uk.gov.netz.api.authorization.verifier.domain.VerifierAuthorityUpdateDTO;
+import uk.gov.netz.api.authorization.verifier.service.VerifierAuthorityUpdateService;
+import uk.gov.netz.api.user.verifier.service.VerifierUserNotificationGateway;
 
 import java.util.List;
 

@@ -1,6 +1,15 @@
 package uk.gov.cca.api.web.controller.workflow;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,31 +26,23 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.web.controller.workflow.RequestTaskPaymentController;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskActionType;
-import uk.gov.cca.api.workflow.request.flow.payment.domain.CardPaymentCreateResponseDTO;
-import uk.gov.cca.api.workflow.request.flow.payment.domain.CardPaymentProcessResponseDTO;
-import uk.gov.cca.api.workflow.request.flow.payment.domain.CardPaymentStateDTO;
-import uk.gov.cca.api.workflow.request.flow.payment.service.CardPaymentService;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.workflow.request.core.domain.constants.RequestTaskActionTypes;
+import uk.gov.netz.api.workflow.request.flow.payment.domain.CardPaymentCreateResponseDTO;
+import uk.gov.netz.api.workflow.request.flow.payment.domain.CardPaymentProcessResponseDTO;
+import uk.gov.netz.api.workflow.request.flow.payment.domain.CardPaymentStateDTO;
+import uk.gov.netz.api.workflow.request.flow.payment.service.CardPaymentService;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -89,7 +90,7 @@ class RequestTaskPaymentControllerTest {
     @Test
     void createCardPayment() throws Exception {
         Long requestTaskId =  1L;
-        RequestTaskActionType requestTaskActionType = RequestTaskActionType.PAYMENT_PAY_BY_CARD;
+        String requestTaskActionType = RequestTaskActionTypes.PAYMENT_PAY_BY_CARD;
         AppUser appUser = AppUser.builder().userId("id").build();
         CardPaymentCreateResponseDTO cardPaymentCreateResponseDTO = CardPaymentCreateResponseDTO.builder()
             .nextUrl("response_url")
@@ -135,7 +136,7 @@ class RequestTaskPaymentControllerTest {
     @Test
     void processExistingCardPayment() throws Exception {
         Long requestTaskId =  1L;
-        RequestTaskActionType requestTaskActionType = RequestTaskActionType.PAYMENT_PAY_BY_CARD;
+        String requestTaskActionType = RequestTaskActionTypes.PAYMENT_PAY_BY_CARD;
         AppUser appUser = AppUser.builder().userId("id").build();
         String paymentId = "n4brhul26f2hn1lt992ejj10ht";
         CardPaymentStateDTO cardPaymentStateDTO = CardPaymentStateDTO.builder()

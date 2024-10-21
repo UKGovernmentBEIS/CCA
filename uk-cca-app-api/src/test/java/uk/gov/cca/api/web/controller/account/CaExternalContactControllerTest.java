@@ -14,23 +14,22 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.account.domain.dto.CaExternalContactDTO;
-import uk.gov.cca.api.account.domain.dto.CaExternalContactRegistrationDTO;
-import uk.gov.cca.api.account.domain.dto.CaExternalContactsDTO;
-import uk.gov.cca.api.account.service.CaExternalContactService;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.cca.api.web.controller.account.CaExternalContactController;
-import uk.gov.netz.api.common.domain.RoleType;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.account.domain.dto.CaExternalContactDTO;
+import uk.gov.netz.api.account.domain.dto.CaExternalContactRegistrationDTO;
+import uk.gov.netz.api.account.domain.dto.CaExternalContactsDTO;
+import uk.gov.netz.api.account.service.CaExternalContactService;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
 
 import java.util.List;
 
@@ -89,7 +88,7 @@ class CaExternalContactControllerTest {
     @Test
     void getCaExternalContacts() throws Exception {
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         CaExternalContactsDTO caExternalContactsDTO =
@@ -115,13 +114,13 @@ class CaExternalContactControllerTest {
     @Test
     void getCaExternalContacts_forbidden() throws Exception {
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.OPERATOR)
+            .roleType(RoleTypeConstants.OPERATOR)
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(user, new RoleType[] {RoleType.REGULATOR});
+            .evaluate(user, new String[] {RoleTypeConstants.REGULATOR});
 
         mockMvc.perform(MockMvcRequestBuilders.get(CA_EXTERNAL_CONTACT_CONTROLLER_PATH)
             .contentType(MediaType.APPLICATION_JSON))
@@ -133,7 +132,7 @@ class CaExternalContactControllerTest {
     @Test
     void getCaExternalContactById() throws Exception {
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
         long id = 1L;
 
@@ -158,7 +157,7 @@ class CaExternalContactControllerTest {
     @Test
     void getCaExternalContactById_forbidden() throws Exception {
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
         long id = 1L;
 
@@ -177,7 +176,7 @@ class CaExternalContactControllerTest {
     @Test
     void deleteCaExternalContactById() throws Exception {
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
         long id = 1L;
 
@@ -192,7 +191,7 @@ class CaExternalContactControllerTest {
     @Test
     void deleteCaExternalContactById_forbidden() throws Exception {
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
         Long id = 1L;
 
@@ -210,7 +209,7 @@ class CaExternalContactControllerTest {
     @Test
     void createCaExternalContact() throws Exception {
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
@@ -233,7 +232,7 @@ class CaExternalContactControllerTest {
     @Test
     void createCaExternalContact_bad_request() throws Exception {
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
@@ -255,7 +254,7 @@ class CaExternalContactControllerTest {
     @Test
     void createCaExternalContact_forbidden() throws Exception {
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
@@ -281,7 +280,7 @@ class CaExternalContactControllerTest {
     @Test
     void editCaExternalContact() throws Exception {
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
         long id = 1L;
 
@@ -305,7 +304,7 @@ class CaExternalContactControllerTest {
     @Test
     void editCaExternalContact_bad_request() throws Exception {
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
         long id = 1L;
 
@@ -328,7 +327,7 @@ class CaExternalContactControllerTest {
     @Test
     void editCaExternalContact_forbidden() throws Exception {
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
         long id = 1L;
 

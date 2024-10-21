@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import uk.gov.cca.api.web.util.ErrorUtil;
 import uk.gov.netz.api.common.validation.Violation;
 import uk.gov.netz.api.common.exception.BusinessException;
@@ -172,6 +173,14 @@ public class ExceptionControllerAdvice {
         return HttpStatus.UNAUTHORIZED.equals(e.getStatusCode())
                 ? ErrorUtil.getErrorResponse(new Object[] {}, ErrorCode.UNAUTHORIZED)
                 : ErrorUtil.getErrorResponse(new Object[]{}, ErrorCode.INTERNAL_SERVER);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException e) {
+        log.error("No Resource Found Exception:", ExceptionUtils.getRootCause(e));
+
+        return ErrorUtil.getErrorResponse(new Object[]{}, ErrorCode.RESOURCE_NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)

@@ -1,5 +1,16 @@
 package uk.gov.cca.api.web.controller.workflow.item;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,32 +23,21 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.web.controller.workflow.item.ItemController;
-import uk.gov.netz.api.common.domain.RoleType;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
+
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
-import uk.gov.cca.api.workflow.request.application.item.service.ItemOperatorService;
-import uk.gov.cca.api.workflow.request.application.item.service.ItemRegulatorService;
-import uk.gov.cca.api.workflow.request.application.item.service.ItemService;
-
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
+import uk.gov.netz.api.workflow.request.application.item.service.ItemOperatorService;
+import uk.gov.netz.api.workflow.request.application.item.service.ItemRegulatorService;
+import uk.gov.netz.api.workflow.request.application.item.service.ItemService;
 
 @ExtendWith(MockitoExtension.class)
 class ItemControllerTest {
@@ -82,12 +82,12 @@ class ItemControllerTest {
     @Test
     void getItemsByRequest_operator() throws Exception {
         final String requestId = "1";
-        AppUser appUser = AppUser.builder().roleType(RoleType.OPERATOR).build();
+        AppUser appUser = AppUser.builder().roleType(RoleTypeConstants.OPERATOR).build();
         ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().totalItems(1L).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         when(itemOperatorService.getItemsByRequest(appUser, requestId)).thenReturn(itemDTOResponse);
-        when(itemOperatorService.getRoleType()).thenReturn(RoleType.OPERATOR);
+        when(itemOperatorService.getRoleType()).thenReturn(RoleTypeConstants.OPERATOR);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(BASE_PATH + "/" + requestId)
@@ -103,13 +103,13 @@ class ItemControllerTest {
     @Test
     void getItemsByRequest_regulator() throws Exception {
         final String requestId = "1";
-        AppUser appUser = AppUser.builder().roleType(RoleType.REGULATOR).build();
+        AppUser appUser = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
         ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().totalItems(1L).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         when(itemRegulatorService.getItemsByRequest(appUser, requestId)).thenReturn(itemDTOResponse);
-        when(itemOperatorService.getRoleType()).thenReturn(RoleType.OPERATOR);
-        when(itemRegulatorService.getRoleType()).thenReturn(RoleType.REGULATOR);
+        when(itemOperatorService.getRoleType()).thenReturn(RoleTypeConstants.OPERATOR);
+        when(itemRegulatorService.getRoleType()).thenReturn(RoleTypeConstants.REGULATOR);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(BASE_PATH + "/" + requestId)

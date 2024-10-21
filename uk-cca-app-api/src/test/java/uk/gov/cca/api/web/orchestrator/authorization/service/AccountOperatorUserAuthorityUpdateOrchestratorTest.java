@@ -5,17 +5,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.account.domain.enumeration.AccountContactType;
-import uk.gov.cca.api.account.service.AccountContactUpdateService;
-import uk.gov.cca.api.authorization.core.domain.AuthorityStatus;
-import uk.gov.cca.api.authorization.operator.domain.AccountOperatorAuthorityUpdateDTO;
-import uk.gov.cca.api.authorization.operator.domain.NewUserActivated;
-import uk.gov.cca.api.authorization.operator.service.OperatorAuthorityUpdateService;
-import uk.gov.cca.api.user.operator.service.OperatorUserNotificationGateway;
-import uk.gov.cca.api.web.orchestrator.authorization.service.AccountOperatorUserAuthorityUpdateOrchestrator;
+
+import uk.gov.cca.api.authorization.ccaauth.operator.service.CcaOperatorAuthorityUpdateService;
+import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
+import uk.gov.netz.api.authorization.operator.domain.AccountOperatorAuthorityUpdateDTO;
+import uk.gov.netz.api.authorization.operator.domain.NewUserActivated;
+import uk.gov.netz.api.user.operator.service.OperatorUserNotificationGateway;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.never;
@@ -30,13 +27,10 @@ class AccountOperatorUserAuthorityUpdateOrchestratorTest {
     private AccountOperatorUserAuthorityUpdateOrchestrator service;
 
     @Mock
-    private OperatorAuthorityUpdateService operatorAuthorityUpdateService;
+    private CcaOperatorAuthorityUpdateService operatorAuthorityUpdateService;
 
     @Mock
     private OperatorUserNotificationGateway operatorUserNotificationGateway;
-
-    @Mock
-    private AccountContactUpdateService accountContactUpdateService;
 
     @Test
     void updateAccountOperatorAuthorities() {
@@ -45,17 +39,15 @@ class AccountOperatorUserAuthorityUpdateOrchestratorTest {
                 AccountOperatorAuthorityUpdateDTO.builder().userId("user").roleCode("newRole").authorityStatus(AuthorityStatus.ACTIVE).build()
         );
 
-        Map<AccountContactType, String> updatedContactTypes = Map.of(AccountContactType.SECONDARY, "user");
         List<NewUserActivated> activatedOperators = List.of(NewUserActivated.builder().userId("user").build());
 
         when(operatorAuthorityUpdateService.updateAccountOperatorAuthorities(accountOperatorAuthorities, accountId))
                 .thenReturn(activatedOperators);
 
-        service.updateAccountOperatorAuthorities(accountOperatorAuthorities, updatedContactTypes, accountId);
+        service.updateAccountOperatorAuthorities(accountOperatorAuthorities, accountId);
 
         verify(operatorAuthorityUpdateService, times(1))
                 .updateAccountOperatorAuthorities(accountOperatorAuthorities, accountId);
-        verify(accountContactUpdateService, times(1)).updateAccountContacts(updatedContactTypes, accountId);
         verify(operatorUserNotificationGateway, times(1)).notifyUsersUpdateStatus(activatedOperators);
     }
 
@@ -65,16 +57,14 @@ class AccountOperatorUserAuthorityUpdateOrchestratorTest {
         List<AccountOperatorAuthorityUpdateDTO> accountOperatorAuthorities = List.of(
                 AccountOperatorAuthorityUpdateDTO.builder().userId("user").roleCode("newRole").authorityStatus(AuthorityStatus.ACTIVE).build()
         );
-        Map<AccountContactType, String> updatedContactTypes = Map.of(AccountContactType.SECONDARY, "user");
 
         when(operatorAuthorityUpdateService.updateAccountOperatorAuthorities(accountOperatorAuthorities, accountId))
                 .thenReturn(List.of());
 
-        service.updateAccountOperatorAuthorities(accountOperatorAuthorities, updatedContactTypes, accountId);
+        service.updateAccountOperatorAuthorities(accountOperatorAuthorities, accountId);
 
         verify(operatorAuthorityUpdateService, times(1))
                 .updateAccountOperatorAuthorities(accountOperatorAuthorities, accountId);
-        verify(accountContactUpdateService, times(1)).updateAccountContacts(updatedContactTypes, accountId);
         verify(operatorUserNotificationGateway, never()).notifyUsersUpdateStatus(anyList());
     }
 }

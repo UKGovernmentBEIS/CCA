@@ -3,13 +3,13 @@ package uk.gov.cca.api.web.orchestrator.authorization.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.regulator.domain.RegulatorUserUpdateStatusDTO;
-import uk.gov.cca.api.authorization.regulator.service.RegulatorAuthorityUpdateService;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.regulator.domain.RegulatorUserUpdateStatusDTO;
+import uk.gov.netz.api.authorization.regulator.service.RegulatorAuthorityUpdateService;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
-import uk.gov.cca.api.user.regulator.domain.RegulatorUserUpdateDTO;
-import uk.gov.cca.api.user.regulator.service.RegulatorUserManagementService;
-import uk.gov.cca.api.user.regulator.service.RegulatorUserNotificationGateway;
+import uk.gov.netz.api.user.regulator.domain.RegulatorUserUpdateDTO;
+import uk.gov.netz.api.user.regulator.service.RegulatorUserManagementService;
+import uk.gov.netz.api.user.regulator.service.RegulatorUserNotificationGateway;
 
 import java.util.List;
 

@@ -35,4 +35,210 @@
         <rollback>
         </rollback>
     </changeSet>
+    <changeSet id="0_1_0_UPDATE_cca_au_role" author="P70311">
+        <sql>
+            UPDATE public.au_role set name = 'Administrator User' WHERE code = 'regulator_administrator';
+            UPDATE public.au_role set (name, code) = ('Basic User', 'regulator_basic_user') WHERE code = 'regulator_technical_consultant';
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+    <changeSet id="0_1_0_AND_SECTOR_ASSOCIATION_EDIT_PERMISSION_TO_REGULATOR_ADMIN_cca_au_role_permission" author="P70311">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='regulator_administrator'), 'PERM_SECTOR_ASSOCIATION_EDIT');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_INSERT_SECTOR_USER_Roles_cca_au_role" author="P70628">
+        <sql>
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Sector Administrator User', 'sector_user_administrator', 'SECTOR_USER');
+            INSERT INTO public.au_role (id, name, code, type) VALUES (nextval('au_role_seq'), 'Sector Basic User', 'sector_user_basic_user', 'SECTOR_USER');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERMISSIONS_TO_SECTOR_USER_ADMINISTRATOR_ROLE_cca_au_role_permission" author="P70311">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='sector_user_administrator'), 'PERM_SECTOR_ASSOCIATION_EDIT');
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='sector_user_administrator'), 'PERM_SECTOR_USERS_EDIT');
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='sector_user_administrator'), 'PERM_TASK_ASSIGNMENT');
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='sector_user_administrator'), 'PERM_UNDERLYING_AGREEMENT_APPLICATION_SUBMIT');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERMISSIONS_TO_SECTOR_USER_BASIC_USER_ROLE_cca_au_role_permission" author="P70311">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='sector_user_basic_user'), 'PERM_TASK_ASSIGNMENT');
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='sector_user_basic_user'), 'PERM_UNDERLYING_AGREEMENT_APPLICATION_SUBMIT');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_SECTOR_USERS_EDIT_PERMISSION_TO_REGULATOR_ADMIN_cca_au_role_permission" author="P63979">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='regulator_administrator'), 'PERM_SECTOR_USERS_EDIT');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_NAMES_cca_au_role" author="P70628">
+        <sql>
+            UPDATE public.au_role set name = 'Administrator User' WHERE code = 'sector_user_administrator' AND type = 'SECTOR_USER';
+            UPDATE public.au_role set name = 'Basic User' WHERE code = 'sector_user_basic_user' AND type = 'SECTOR_USER';
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_OPERATOR_USERS_EDIT_PERMISSION_TO_REGULATOR_ADMIN_cca_au_role_permission" author="P63979">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='regulator_administrator'), 'PERM_OPERATOR_USERS_EDIT');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_DELETE_PERMISSIONS_TO_OPERATOR_cca_au_role_permission" author="P63979">
+        <sql>
+            DELETE FROM au_role_permission WHERE role_id IN (SELECT id FROM au_role WHERE type = 'OPERATOR');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_DELETE_UNNECESSARLY_OPERATOR_roles_cca_au_role" author="P63979">
+        <sql>
+            DELETE FROM au_role WHERE type = 'OPERATOR' AND code != 'operator';
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_RENAME_OPERATOR_ROLE_cca_au_role" author="P63979">
+        <sql>
+            UPDATE au_role SET code = 'operator_basic_user' WHERE type = 'OPERATOR' AND code = 'operator';
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_READONLY_PERMISSION_TO_OPERATOR_POPULATE_cca_au_role_permission" author="P70311">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission) VALUES (nextval('au_role_permission_seq'), (select id from au_role where code='operator_basic_user'), 'PERM_USER_READONLY');
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_PERM_ADMIN_TERMINATION_SUBMISSION_cca_au_role_permission" author="P70311">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission)
+            SELECT nextval('au_role_permission_seq'), id, 'PERM_ADMIN_TERMINATION_SUBMISSION'
+            FROM au_role
+            WHERE code IN ('regulator_administrator', 'regulator_basic_user');
+        </sql>
+        <rollback>
+            delete from au_role_permission
+            where permission = 'PERM_ADMIN_TERMINATION_SUBMISSION'
+            and role_id in
+            ( select id
+            from au_role
+            where code in ( 'regulator_administrator', 'regulator_basic_user'));
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW_cca_au_role_permission" author="vourdoukasd@unisystems.gr">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission)
+            SELECT nextval('au_role_permission_seq'), id, 'PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW'
+            FROM au_role
+            WHERE code IN ('regulator_administrator', 'regulator_basic_user');
+        </sql>
+        <rollback>
+            delete from au_role_permission
+            where permission = 'PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW'
+            and role_id in
+            ( select id
+            from au_role
+            where code in ( 'regulator_administrator', 'regulator_basic_user'));
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_PERM_VARIATION_TO_UNDERLYING_AGREEMENT_REVIEW_cca_au_role_permission" author="bountasp@unisystems.gr">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission)
+            SELECT nextval('au_role_permission_seq'), id, 'PERM_VARIATION_TO_UNDERLYING_AGREEMENT_REVIEW'
+            FROM au_role
+            WHERE code IN ('regulator_administrator', 'regulator_basic_user');
+        </sql>
+        <rollback>
+            delete from au_role_permission
+            where permission = 'PERM_VARIATION_TO_UNDERLYING_AGREEMENT_REVIEW'
+            and role_id in
+            ( select id
+            from au_role
+            where code in ( 'regulator_administrator', 'regulator_basic_user'));
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_RENAME_PERM_VARIATION_TO_UNDERLYING_AGREEMENT_REVIEW_to_PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW" author="apostolouk@unisystems.gr">
+        <sql>
+	        update au_role_permission
+	        set permission = 'PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW'
+	        where permission = 'PERM_VARIATION_TO_UNDERLYING_AGREEMENT_REVIEW';
+        </sql>
+        <rollback>
+            update au_role_permission
+	        set permission = 'PERM_VARIATION_TO_UNDERLYING_AGREEMENT_REVIEW'
+	        where permission = 'PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW';
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_add_permission_PERM_UNDERLYING_AGREEMENT_VARIATION_SUBMIT_to_sector_users" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_UNDERLYING_AGREEMENT_VARIATION_SUBMIT'
+            from au_role
+            where code in ('sector_user_administrator', 'sector_user_basic_user');
+        </sql>
+
+        <rollback>
+            <sql>
+                delete
+                from au_role_permission
+                where role_id in (select id from au_role where code in('sector_user_administrator', 'sector_user_basic_user'))
+                and permission = 'PERM_UNDERLYING_AGREEMENT_VARIATION_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_populate_sector_users_with_permission_PERM_UNDERLYING_AGREEMENT_VARIATION_SUBMIT" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+            join au_role r on au.code = r.code
+            join au_role_permission rp on r.id = rp.role_id
+            where r.code in ('sector_user_administrator', 'sector_user_basic_user')
+            and rp.permission = 'PERM_UNDERLYING_AGREEMENT_VARIATION_SUBMIT';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission
+                where authority_id in (select au.id
+	                from au_authority au
+	                join au_role r on au.code = r.code
+	                where r.code in('sector_user_administrator', 'sector_user_basic_user'))
+	                and permission = 'PERM_UNDERLYING_AGREEMENT_VARIATION_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

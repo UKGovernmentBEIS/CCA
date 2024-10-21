@@ -1,0 +1,41 @@
+package uk.gov.cca.api.migration.account;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.springframework.util.ObjectUtils;
+
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public class TargetUnitAccountHelper {
+
+    public String constructQuery(String query, String ids) {
+        return ObjectUtils.isEmpty(ids) ? query
+                : String.format(query + " and tu_id IN (%s)", 
+                        Arrays.stream(ids.split(","))
+                        .filter(Objects::nonNull)
+                        .map(id -> "'" + id.trim() + "'")
+                        .collect(Collectors.joining(",")));
+    }
+    
+    public String constructSuccessMessage(TargetUnitAccountVO targetUnit) {
+        return "tu_id: " + targetUnit.getTuId()
+        + " | operator_name: " + targetUnit.getOperatorName()
+        + " | company_registration_number: " + targetUnit.getCompanyRegistrationNumber()
+        + " | sector_acronym: " + targetUnit.getSectorAcronym()
+        + " | sub_sector_name: " + targetUnit.getSubsectorName();
+    }
+
+    public String constructErrorMessage(TargetUnitAccountVO targetUnit, String errorMessage, String data) {
+        return "tu_id: " + targetUnit.getTuId()
+        + " | operator_name: " + targetUnit.getOperatorName()
+        + " | company_registration_number: " + targetUnit.getCompanyRegistrationNumber()
+        + " | sector_acronym: " + targetUnit.getSectorAcronym()
+        + " | sub_sector_name: " + targetUnit.getSubsectorName()
+        + " | Error: " + errorMessage
+        + " | data: " + data;
+    }
+
+}

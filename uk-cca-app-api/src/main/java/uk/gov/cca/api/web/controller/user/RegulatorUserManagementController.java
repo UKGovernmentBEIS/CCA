@@ -21,20 +21,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
+import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.cca.api.web.orchestrator.authorization.service.RegulatorUserAuthorityUpdateOrchestrator;
-import uk.gov.cca.api.web.security.Authorized;
-import uk.gov.cca.api.web.security.AuthorizedRole;
 import uk.gov.cca.api.web.util.FileDtoMapper;
-import uk.gov.netz.api.common.domain.RoleType;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.token.FileToken;
-import uk.gov.cca.api.user.core.service.UserSignatureService;
-import uk.gov.cca.api.user.regulator.domain.RegulatorUserDTO;
-import uk.gov.cca.api.user.regulator.domain.RegulatorUserUpdateDTO;
-import uk.gov.cca.api.user.regulator.service.RegulatorUserManagementService;
-import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.user.core.service.UserSignatureService;
+import uk.gov.netz.api.user.regulator.domain.RegulatorUserDTO;
+import uk.gov.netz.api.user.regulator.domain.RegulatorUserUpdateDTO;
+import uk.gov.netz.api.user.regulator.service.RegulatorUserManagementService;
+import uk.gov.netz.api.security.Authorized;
+import uk.gov.netz.api.security.AuthorizedRole;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -83,7 +83,7 @@ public class RegulatorUserManagementController {
             @Parameter(hidden = true) AppUser currentUser,
             @PathVariable("userId") @Parameter(description = "The regulator user id to update") String userId,
             @RequestPart @Valid @Parameter(description = "The regulator user to update", required = true) RegulatorUserUpdateDTO regulatorUserUpdateDTO,
-            @RequestPart(name = "signature", required = false) @Valid @Parameter(description = "The signature file") MultipartFile signature
+            @RequestPart(name = "signature", required = false) @Parameter(description = "The signature file") MultipartFile signature
     ) throws IOException {
         FileDTO signatureDTO = fileDtoMapper.toFileDTO(signature);
         regulatorUserAuthorityUpdateOrchestrator.updateRegulatorUserByUserId(currentUser, userId, regulatorUserUpdateDTO, signatureDTO);
@@ -98,11 +98,11 @@ public class RegulatorUserManagementController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @AuthorizedRole(roleType = RoleType.REGULATOR)
+    @AuthorizedRole(roleType = RoleTypeConstants.REGULATOR)
     public ResponseEntity<RegulatorUserUpdateDTO> updateCurrentRegulatorUser(
             @Parameter(hidden = true) AppUser currentUser,
             @RequestPart @Valid @Parameter(description = "The regulator user to update", required = true) RegulatorUserUpdateDTO regulatorUserUpdateDTO,
-            @RequestPart(name = "signature", required = false) @Valid @Parameter(description = "The signature file", required = false) MultipartFile signature
+            @RequestPart(name = "signature", required = false) @Parameter(description = "The signature file") MultipartFile signature
     ) throws IOException {
         FileDTO signatureDTO = fileDtoMapper.toFileDTO(signature);
         regulatorUserAuthorityUpdateOrchestrator

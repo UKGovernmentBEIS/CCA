@@ -1,6 +1,9 @@
 package uk.gov.cca.api.web.controller.mireport;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,33 +18,35 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.authorization.core.domain.AppAuthority;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.core.domain.AuthorityStatus;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.cca.api.web.controller.mireport.MiReportController;
-import uk.gov.netz.api.common.domain.RoleType;
+import uk.gov.cca.api.web.config.AppUserArgumentResolver;
+import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.authorization.core.domain.AppAuthority;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
-import uk.gov.cca.api.mireport.common.MiReportService;
-import uk.gov.cca.api.mireport.common.MiReportType;
-import uk.gov.cca.api.mireport.common.accountuserscontacts.AccountUserContact;
-import uk.gov.cca.api.mireport.common.accountuserscontacts.AccountsUsersContactsMiReportResult;
-import uk.gov.cca.api.mireport.common.domain.MiReportEntity;
-import uk.gov.cca.api.mireport.common.domain.dto.EmptyMiReportParams;
-import uk.gov.cca.api.mireport.common.domain.dto.MiReportResult;
-import uk.gov.cca.api.mireport.common.domain.dto.MiReportSearchResult;
-import uk.gov.cca.api.mireport.common.outstandingrequesttasks.OutstandingRequestTasksReportService;
-import uk.gov.cca.api.web.config.AppUserArgumentResolver;
-import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.mireport.MiReportService;
+import uk.gov.netz.api.mireport.MiReportType;
+import uk.gov.netz.api.mireport.accountuserscontacts.AccountUserContact;
+import uk.gov.netz.api.mireport.accountuserscontacts.AccountsUsersContactsMiReportResult;
+import uk.gov.netz.api.mireport.domain.EmptyMiReportParams;
+import uk.gov.netz.api.mireport.domain.MiReportEntity;
+import uk.gov.netz.api.mireport.domain.MiReportResult;
+import uk.gov.netz.api.mireport.domain.MiReportSearchResult;
+import uk.gov.netz.api.mireport.jsonprovider.MiReportParamsTypesProvider;
+import uk.gov.netz.api.mireport.jsonprovider.MiReportResultTypesProvider;
+import uk.gov.netz.api.mireport.outstandingrequesttasks.OutstandingRequestTasksReportService;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,8 +61,6 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskType.DUMMY_REQUEST_TYPE_APPLICATION_REVIEW;
-import static uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskType.DUMMY_REQUEST_TASK_TYPE2;
 
 @ExtendWith(MockitoExtension.class)
 class MiReportControllerTest {
@@ -89,6 +92,14 @@ class MiReportControllerTest {
 
     @BeforeEach
     public void setUp() {
+    	objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.registerSubtypes(new MiReportParamsTypesProvider().getTypes().toArray(NamedType[]::new));
+        objectMapper.registerSubtypes(new MiReportResultTypesProvider().getTypes().toArray(NamedType[]::new));
+        
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+        mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
+        
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedRoleAspect
             authorizedRoleAspect = new AuthorizedRoleAspect(roleAuthorizationService, authorizationAspectUserResolver);
@@ -103,6 +114,7 @@ class MiReportControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(miReportController)
             .setControllerAdvice(new ExceptionControllerAdvice())
             .setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))
+            .setMessageConverters(mappingJackson2HttpMessageConverter)
             .addFilters(new FilterChainProxy(Collections.emptyList()))
             .setConversionService(conversionService)
             .build();
@@ -123,7 +135,7 @@ class MiReportControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(searchResults.size()))
-            .andExpect(jsonPath("$.[0].miReportType").value(MiReportType.LIST_OF_ACCOUNTS_USERS_CONTACTS.name()))
+            .andExpect(jsonPath("$.[0].miReportType").value(searchResults.getFirst().getMiReportType()))
         ;
 
         verify(miReportService, times(1))
@@ -132,12 +144,12 @@ class MiReportControllerTest {
 
     @Test
     void getCurrentUserReports_forbidden() throws Exception {
-        AppUser appUser = AppUser.builder().roleType(RoleType.VERIFIER).build();
+        AppUser appUser = AppUser.builder().roleType(RoleTypeConstants.VERIFIER).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(appUser, new RoleType[]{RoleType.REGULATOR});
+            .evaluate(appUser, new String[]{RoleTypeConstants.REGULATOR});
 
         mockMvc.perform(MockMvcRequestBuilders.get(MI_REPORT_BASE_CONTROLLER_PATH + "/types")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -151,9 +163,9 @@ class MiReportControllerTest {
         MiReportResult miReportResult = buildMockMiAccountsUsersContactsReport();
         AccountsUsersContactsMiReportResult
             accountsUsersContactsMiReport = (AccountsUsersContactsMiReportResult) miReportResult;
-        AccountUserContact accountUserContact = accountsUsersContactsMiReport.getResults().get(0);
+        AccountUserContact accountUserContact = (AccountUserContact) accountsUsersContactsMiReport.getResults().get(0);
         AppUser appUser = buildMockAuthenticatedUser();
-        MiReportType reportType = MiReportType.LIST_OF_ACCOUNTS_USERS_CONTACTS;
+        String reportType = MiReportType.LIST_OF_ACCOUNTS_USERS_CONTACTS;
         EmptyMiReportParams reportParams = EmptyMiReportParams.builder().reportType(reportType).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
@@ -165,7 +177,7 @@ class MiReportControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reportParams)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.reportType").value(MiReportType.LIST_OF_ACCOUNTS_USERS_CONTACTS.name()))
+            .andExpect(jsonPath("$.reportType").value(MiReportType.LIST_OF_ACCOUNTS_USERS_CONTACTS))
             .andExpect(jsonPath("$.results[0].Name").value(accountUserContact.getName()))
             .andExpect(jsonPath("$.results[0].Telephone").value(accountUserContact.getTelephone()))
             .andExpect(jsonPath("$.results[0].['Last logon']").value(accountUserContact.getLastLogon()))
@@ -173,13 +185,9 @@ class MiReportControllerTest {
             .andExpect(jsonPath("$.results[0].['User role']").value(accountUserContact.getRole()))
             .andExpect(jsonPath("$.results[0].['Account ID']").value(accountUserContact.getAccountId()))
             .andExpect(jsonPath("$.results[0].['Account name']").value(accountUserContact.getAccountName()))
-            .andExpect(jsonPath("$.results[0].['Account status']").value(accountUserContact.getAccountStatus().toString()))
-            .andExpect(jsonPath("$.results[0].['User status']").value(accountUserContact.getAuthorityStatus().toString()))
-            .andExpect(jsonPath("$.results[0].['Is User Financial contact?']").value(accountUserContact.getFinancialContact()))
-            .andExpect(jsonPath("$.results[0].['Is User Primary contact?']").value(accountUserContact.getPrimaryContact()))
-            .andExpect(jsonPath("$.results[0].['Is User Secondary contact?']").value(accountUserContact.getSecondaryContact()))
-            .andExpect(jsonPath("$.results[0].['Is User Service contact?']").value(accountUserContact.getServiceContact()))
-            .andExpect(jsonPath("$.results[0].['Permit ID']").value(accountUserContact.getPermitId()));
+            .andExpect(jsonPath("$.results[0].['Account status']").value(accountUserContact.getAccountStatus()))
+            .andExpect(jsonPath("$.results[0].['User status']").value(accountUserContact.getAuthorityStatus()))
+            .andExpect(jsonPath("$.results[0].['Is User Primary contact?']").value(accountUserContact.getPrimaryContact()));
         verify(miReportService, times(1))
             .generateReport(appUser.getCompetentAuthority(), reportParams);
     }
@@ -187,7 +195,7 @@ class MiReportControllerTest {
     @Test
     void getReport_not_found() throws Exception {
         AppUser appUser = buildMockAuthenticatedUser();
-        MiReportType reportType = MiReportType.LIST_OF_ACCOUNTS_USERS_CONTACTS;
+        String reportType = MiReportType.LIST_OF_ACCOUNTS_USERS_CONTACTS;
         EmptyMiReportParams reportParams = EmptyMiReportParams.builder().reportType(reportType).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
@@ -207,13 +215,13 @@ class MiReportControllerTest {
     @Test
     void getReport_forbidden() throws Exception {
         AppUser appUser = buildMockAuthenticatedUser();
-        MiReportType reportType = MiReportType.LIST_OF_ACCOUNTS_USERS_CONTACTS;
+        String reportType = MiReportType.LIST_OF_ACCOUNTS_USERS_CONTACTS;
         EmptyMiReportParams reportParams = EmptyMiReportParams.builder().reportType(reportType).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(appUser, new RoleType[]{RoleType.REGULATOR});
+            .evaluate(appUser, new String[]{RoleTypeConstants.REGULATOR});
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post(MI_REPORT_BASE_CONTROLLER_PATH)
@@ -229,7 +237,7 @@ class MiReportControllerTest {
         AppUser appUser = buildMockAuthenticatedUser();
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         when(outstandingRequestTasksReportService.getRequestTaskTypesByRoleType(appUser.getRoleType()))
-            .thenReturn(Set.of(DUMMY_REQUEST_TYPE_APPLICATION_REVIEW, DUMMY_REQUEST_TASK_TYPE2));
+            .thenReturn(Set.of("DUMMY_REQUEST_TYPE_APPLICATION_REVIEW", "DUMMY_REQUEST_TASK_TYPE2"));
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(MI_REPORT_BASE_CONTROLLER_PATH + REQUEST_TASK_TYPES_CONTROLLER_PATH))
@@ -247,7 +255,7 @@ class MiReportControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(appUser, new RoleType[]{RoleType.REGULATOR});
+            .evaluate(appUser, new String[]{RoleTypeConstants.REGULATOR});
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(MI_REPORT_BASE_CONTROLLER_PATH + REQUEST_TASK_TYPES_CONTROLLER_PATH))
@@ -257,6 +265,7 @@ class MiReportControllerTest {
     }
 
     private MiReportResult buildMockMiAccountsUsersContactsReport() {
+    	String reportType = MiReportType.LIST_OF_ACCOUNTS_USERS_CONTACTS;
         AccountUserContact accountUserContact = AccountUserContact.builder()
             .name("Foo Bar")
             .telephone("")
@@ -267,15 +276,11 @@ class MiReportControllerTest {
             .accountName("account name")
             .accountStatus("accountStatus")
             .authorityStatus(AuthorityStatus.ACTIVE.name())
-            .financialContact(Boolean.TRUE)
             .primaryContact(Boolean.TRUE)
-            .secondaryContact(Boolean.FALSE)
-            .serviceContact(Boolean.FALSE)
-            .permitId("Permit id 1")
             .build();
 
         return AccountsUsersContactsMiReportResult.builder()
-            .reportType(MiReportType.LIST_OF_ACCOUNTS_USERS_CONTACTS)
+            .reportType(reportType)
             .results(List.of(accountUserContact))
             .build();
     }
@@ -287,17 +292,22 @@ class MiReportControllerTest {
                     AppAuthority.builder().competentAuthority(CompetentAuthorityEnum.ENGLAND).build()
                 )
             )
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .userId(USER_ID)
             .build();
     }
 
     private List<MiReportSearchResult> buildMockMiReports() {
         ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
-        return Arrays.stream(MiReportType.values())
-            .map(t -> MiReportEntity.builder().miReportType(t).competentAuthority(CompetentAuthorityEnum.ENGLAND))
-            .map(e -> factory.createProjection(MiReportSearchResult.class, e))
-            .collect(Collectors.toList());
+        return Set.of(MiReportType.LIST_OF_ACCOUNTS_ASSIGNED_REGULATOR_SITE_CONTACTS,
+                MiReportType.REGULATOR_OUTSTANDING_REQUEST_TASKS,
+                MiReportType.COMPLETED_WORK,
+                MiReportType.LIST_OF_ACCOUNTS_USERS_CONTACTS,
+                MiReportType.CUSTOM)
+        		.stream()
+        		.map(type -> MiReportEntity.builder().miReportType(type).competentAuthority(CompetentAuthorityEnum.ENGLAND))
+        		.map(e -> factory.createProjection(MiReportSearchResult.class, e))
+        		.collect(Collectors.toList());
     }
 
 }

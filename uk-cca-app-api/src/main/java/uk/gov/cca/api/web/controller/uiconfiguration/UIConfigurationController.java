@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
+import uk.gov.netz.api.alert.service.NotificationAlertService;
 
 @RestController
 @RequestMapping(path = "/ui-configuration")
@@ -22,6 +23,7 @@ import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 public class UIConfigurationController {
 
     private final UIProperties uiProperties;
+    private final NotificationAlertService notificationAlertService;
 
     @GetMapping
     @Operation(summary = "Retrieves configuration for UI features")
@@ -31,6 +33,7 @@ public class UIConfigurationController {
                 .features(uiProperties.getFeatures())
                 .analytics(uiProperties.getAnalytics())
                 .keycloakServerUrl(uiProperties.getKeycloakServerUrl())
+                .notificationAlerts(notificationAlertService.getNotificationAlerts())
                 .build());
     }
 }

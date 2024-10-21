@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.cca.api.user.verifier.domain.AdminVerifierUserInvitationDTO;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyEditDTO;
+import uk.gov.netz.api.user.verifier.domain.AdminVerifierUserInvitationDTO;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyEditDTO;
 
 @Builder
 @AllArgsConstructor

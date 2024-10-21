@@ -12,26 +12,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
-import uk.gov.cca.api.web.controller.user.OperatorUserRegistrationController;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.cca.api.user.core.domain.dto.EmailDTO;
-import uk.gov.cca.api.user.core.domain.dto.InvitedUserEnableDTO;
-import uk.gov.cca.api.user.core.domain.dto.TokenDTO;
-import uk.gov.cca.api.user.core.domain.enumeration.UserInvitationStatus;
-import uk.gov.cca.api.user.operator.domain.OperatorInvitedUserInfoDTO;
-import uk.gov.cca.api.user.operator.domain.OperatorUserDTO;
-import uk.gov.cca.api.user.operator.domain.OperatorUserRegistrationDTO;
-import uk.gov.cca.api.user.operator.domain.OperatorUserRegistrationWithCredentialsDTO;
-import uk.gov.cca.api.user.operator.service.OperatorUserAcceptInvitationService;
-import uk.gov.cca.api.user.operator.service.OperatorUserActivationService;
-import uk.gov.cca.api.user.operator.service.OperatorUserRegistrationService;
-import uk.gov.cca.api.user.operator.service.OperatorUserTokenVerificationService;
+import uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType;
+import uk.gov.cca.api.user.operator.domain.CcaOperatorInvitedUserInfoDTO;
+import uk.gov.cca.api.user.operator.domain.CcaOperatorUserDTO;
+import uk.gov.cca.api.user.operator.domain.CcaOperatorUserRegistrationWithCredentialsDTO;
+import uk.gov.cca.api.user.operator.service.CcaOperatorUserAcceptInvitationService;
+import uk.gov.cca.api.user.operator.service.CcaOperatorUserActivationService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
+import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
+import uk.gov.netz.api.user.core.domain.enumeration.UserInvitationStatus;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,13 +36,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class OperatorUserRegistrationControllerTest {
 
-	private static final String USER_CONTROLLER_PATH = "/v1.0/operator-users/registration";
-	private static final String SEND_VERIFICATION_EMAIL_PATH = "/verification-email";
-	private static final String VERIFY_TOKEN_PATH = "/token-verification";
-	private static final String REGISTER_PATH = "/register";
-	private static final String ACCEPT_INVITATION_PATH = "/accept-invitation";
-	private static final String REGISTER_FROM_INVITATION_NO_CREDENTIALS = "/register-from-invitation-no-credentials";
-    private static final String ENABLE_FROM_INVITATION = "/enable-from-invitation";
+    private static final String USER_CONTROLLER_PATH = "/v1.0/operator-users/registration";
+    private static final String ACCEPT_INVITATION_PATH = "/accept-invitation";
+    private static final String ENABLE_WITH_CREDENTIALS_FROM_INVITATION = "/accept-authority-and-enable-invited-operator-with-credentials";
+    private static final String ACCEPT_AUTHORITY_AND_SET_CREDENTIALS_TO_USER = "/accept-authority-and-set-credentials-to-operator-user";
 
     private MockMvc mockMvc;
 
@@ -56,19 +48,13 @@ class OperatorUserRegistrationControllerTest {
 
     @Mock
     private AppSecurityComponent appSecurityComponent;
-    
-    @Mock
-    private OperatorUserTokenVerificationService operatorUserTokenVerificationService;
 
     @Mock
-    private OperatorUserRegistrationService operatorUserRegistrationService;
+    private CcaOperatorUserActivationService ccaOperatorUserActivationService;
 
-	@Mock
-	private OperatorUserActivationService operatorUserActivationService;
-    
     @Mock
-    private OperatorUserAcceptInvitationService operatorUserAcceptInvitationService;
-    
+    private CcaOperatorUserAcceptInvitationService operatorUserAcceptInvitationService;
+
     @Mock
     private Validator validator;
 
@@ -85,186 +71,78 @@ class OperatorUserRegistrationControllerTest {
     }
 
     @Test
-    void sendVerificationEmail() throws Exception {
-    	final String email = "email";
-        mockMvc.perform(
-        		MockMvcRequestBuilders.post(USER_CONTROLLER_PATH + SEND_VERIFICATION_EMAIL_PATH)
-						            .contentType(MediaType.APPLICATION_JSON)
-						            .content(mapper.writeValueAsString(new EmailDTO(email))))
-            	.andExpect(status().isNoContent());
-        
-        verify(operatorUserRegistrationService, times(1)).sendVerificationEmail(email);
-    }
-
-    @Test
-    void verifyUserRegistrationToken() throws Exception {
-    	final String email = "email";
-    	final String token = "token";
-        when(operatorUserTokenVerificationService.verifyRegistrationToken(anyString())).thenReturn(email);
-
-        mockMvc.perform(
-        		MockMvcRequestBuilders.post(USER_CONTROLLER_PATH + VERIFY_TOKEN_PATH)
-				            .contentType(MediaType.APPLICATION_JSON)
-				            .content(mapper.writeValueAsString(new TokenDTO(token))))
-	            .andExpect(status().isOk())
-	            .andExpect(jsonPath("$.email").value(email));
-        
-        verify(operatorUserTokenVerificationService, times(1)).verifyRegistrationToken(token);
-    }
-
-    @Test
-    void verifyUserRegistrationToken_throwBusinessException() throws Exception {
-    	final String token = "token";
-        when(operatorUserTokenVerificationService.verifyRegistrationToken(token))
-        	.thenThrow(new BusinessException(ErrorCode.USER_ALREADY_REGISTERED));
-
-        mockMvc.perform(
-        		MockMvcRequestBuilders.post(USER_CONTROLLER_PATH + VERIFY_TOKEN_PATH)
-				            .contentType(MediaType.APPLICATION_JSON)
-				            .content(mapper.writeValueAsString(new TokenDTO(token))))
-            	.andExpect(status().isBadRequest());
-        
-        verify(operatorUserTokenVerificationService, times(1)).verifyRegistrationToken(token);
-    }
-    
-    @Test
-    void registerUser() throws Exception {
-    	final String email = "email";
-    	final String token = "token";
-    	OperatorUserRegistrationWithCredentialsDTO userRegistrationDTO =
-    			OperatorUserRegistrationWithCredentialsDTO.builder().emailToken(token).firstName("fn").lastName("ln").build();
-    	OperatorUserDTO userDTO = 
-    			OperatorUserDTO.builder().email(email).firstName("fn").lastName("ln").build();
-    	
-        when(operatorUserRegistrationService.registerUser(userRegistrationDTO)).thenReturn(userDTO);
-
-        mockMvc.perform(
-        		MockMvcRequestBuilders.post(USER_CONTROLLER_PATH + REGISTER_PATH)
-				            .contentType(MediaType.APPLICATION_JSON)
-				            .content(mapper.writeValueAsString(userRegistrationDTO)))
-	            .andExpect(status().isOk())
-	            .andExpect(jsonPath("$.email").value(email));
-        
-        verify(operatorUserRegistrationService, times(1)).registerUser(userRegistrationDTO);
-    }
-    
-    @Test
-    void registerUser_throw_internal_server_error() throws Exception {
-    	final String token = "token";
-    	OperatorUserRegistrationWithCredentialsDTO userRegistrationDTO =
-    			OperatorUserRegistrationWithCredentialsDTO.builder().emailToken(token).firstName("fn").lastName("ln").build();
-    	
-        when(operatorUserRegistrationService.registerUser(userRegistrationDTO))
-        	.thenThrow(new BusinessException(ErrorCode.USER_REGISTRATION_FAILED_500));
-
-        mockMvc.perform(
-        		MockMvcRequestBuilders.post(USER_CONTROLLER_PATH + REGISTER_PATH)
-				            .contentType(MediaType.APPLICATION_JSON)
-				            .content(mapper.writeValueAsString(userRegistrationDTO)))
-            	.andExpect(status().isInternalServerError());
-        
-        verify(operatorUserRegistrationService, times(1)).registerUser(userRegistrationDTO);
-    }
-    
-    @Test
     void acceptInvitation() throws Exception {
-    	TokenDTO tokenDTO = new TokenDTO();
-    	tokenDTO.setToken("token");
+        TokenDTO tokenDTO = new TokenDTO();
+        tokenDTO.setToken("token");
 
-        OperatorInvitedUserInfoDTO operatorInvitedUserInfo = OperatorInvitedUserInfoDTO.builder()
-            .email("email")
-            .firstName("firstName")
-            .lastName("lastName")
-            .roleCode("code")
-            .invitationStatus(UserInvitationStatus.ACCEPTED)
-            .build();
+        CcaOperatorInvitedUserInfoDTO operatorInvitedUserInfo = CcaOperatorInvitedUserInfoDTO.builder()
+                .firstName("firstName")
+                .lastName("lastName")
+                .roleCode("code")
+                .invitationStatus(UserInvitationStatus.ACCEPTED)
+                .contactType(ContactType.OPERATOR.getName())
+                .build();
 
-    	when(operatorUserAcceptInvitationService.acceptInvitation(tokenDTO.getToken()))
-    		.thenReturn(operatorInvitedUserInfo);
+        when(operatorUserAcceptInvitationService.acceptInvitation(tokenDTO.getToken()))
+                .thenReturn(operatorInvitedUserInfo);
 
         mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_PATH + ACCEPT_INVITATION_PATH)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(tokenDTO)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.email").value(operatorInvitedUserInfo.getEmail()))
-            .andExpect(jsonPath("$.firstName").value(operatorInvitedUserInfo.getFirstName()))
-            .andExpect(jsonPath("$.lastName").value(operatorInvitedUserInfo.getLastName()))
-            .andExpect(jsonPath("$.roleCode").value(operatorInvitedUserInfo.getRoleCode()))
-            .andExpect(jsonPath("$.invitationStatus").value(operatorInvitedUserInfo.getInvitationStatus().name()));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(tokenDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value(operatorInvitedUserInfo.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(operatorInvitedUserInfo.getLastName()))
+                .andExpect(jsonPath("$.roleCode").value(operatorInvitedUserInfo.getRoleCode()))
+                .andExpect(jsonPath("$.contactType").value(operatorInvitedUserInfo.getContactType()))
+                .andExpect(jsonPath("$.invitationStatus").value(operatorInvitedUserInfo.getInvitationStatus().name()));
 
         verify(operatorUserAcceptInvitationService, times(1)).acceptInvitation(tokenDTO.getToken());
     }
 
     @Test
-    void acceptInvitation_throw_business_exception() throws Exception {
-    	TokenDTO tokenDTO = new TokenDTO();
-    	tokenDTO.setToken("token");
+    void acceptAuthorityAndEnableInvitedUserWithCredentials() throws Exception {
+        CcaOperatorUserRegistrationWithCredentialsDTO user = CcaOperatorUserRegistrationWithCredentialsDTO.builder()
+                .emailToken("token")
+                .firstName("fn")
+                .lastName("ln")
+                .organisationName("test_organization")
+                .contactType(ContactType.CONSULTANT)
+                .build();
+        CcaOperatorUserDTO userDTO = CcaOperatorUserDTO
+                .builder()
+                .email("email")
+                .firstName("fn")
+                .jobTitle("Engineer")
+                .lastName("ln").build();
 
-    	when(operatorUserAcceptInvitationService.acceptInvitation(tokenDTO.getToken()))
-    		.thenThrow(new BusinessException(ErrorCode.AUTHORITY_USER_IS_NOT_OPERATOR));
-
-    	 mockMvc.perform(
-         		MockMvcRequestBuilders.post(USER_CONTROLLER_PATH + ACCEPT_INVITATION_PATH)
- 				            .contentType(MediaType.APPLICATION_JSON)
- 				            .content(mapper.writeValueAsString(tokenDTO)))
-             	.andExpect(status().isBadRequest());
-
-         verify(operatorUserAcceptInvitationService, times(1)).acceptInvitation(tokenDTO.getToken());
-    }
-
-    @Test
-    void registerNewUserFromInvitation() throws Exception {
-        OperatorUserRegistrationWithCredentialsDTO user = OperatorUserRegistrationWithCredentialsDTO.builder()
-                .emailToken("token").firstName("fn").lastName("ln").build();
-        OperatorUserDTO userDTO = OperatorUserDTO.builder().email("email").firstName("fn").lastName("ln").build();
-
-        when(operatorUserActivationService.activateAndEnableOperatorInvitedUser(user)).thenReturn(userDTO);
+        when(ccaOperatorUserActivationService.acceptAuthorityAndEnableInvitedUserWithCredentials(user)).thenReturn(userDTO);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.put(USER_CONTROLLER_PATH + "/register-from-invitation")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(user)))
+                        MockMvcRequestBuilders.put(USER_CONTROLLER_PATH + ENABLE_WITH_CREDENTIALS_FROM_INVITATION)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(user)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value("fn"))
                 .andExpect(jsonPath("$.lastName").value("ln"))
+                .andExpect(jsonPath("$.jobTitle").value("Engineer"))
                 .andExpect(jsonPath("$.email").value("email"));
 
-        verify(operatorUserActivationService, times(1)).activateAndEnableOperatorInvitedUser(user);
+        verify(ccaOperatorUserActivationService, times(1)).acceptAuthorityAndEnableInvitedUserWithCredentials(user);
     }
 
     @Test
-    void registerNewUserFromInvitationWithoutCredentials() throws Exception {
-        OperatorUserRegistrationDTO user = OperatorUserRegistrationDTO.builder()
-            .emailToken("token").firstName("fn").lastName("ln").build();
-        OperatorUserDTO userDTO = OperatorUserDTO.builder().email("email").firstName("fn").lastName("ln").build();
-
-        when(operatorUserActivationService.activateOperatorInvitedUser(user)).thenReturn(userDTO);
-
-        mockMvc.perform(
-            MockMvcRequestBuilders.put(USER_CONTROLLER_PATH + REGISTER_FROM_INVITATION_NO_CREDENTIALS)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.firstName").value("fn"))
-            .andExpect(jsonPath("$.lastName").value("ln"))
-            .andExpect(jsonPath("$.email").value("email"));
-
-        verify(operatorUserActivationService, times(1)).activateOperatorInvitedUser(user);
-    }
-
-    @Test
-    void enableOperatorInvitedUser() throws Exception {
-        InvitedUserEnableDTO operatorUser = InvitedUserEnableDTO.builder()
-            .invitationToken("token")
-            .password("password")
-            .build();
+    void acceptAuthorityAndSetCredentialsToUser() throws Exception {
+        InvitedUserCredentialsDTO operatorUser = InvitedUserCredentialsDTO.builder()
+                .invitationToken("token")
+                .password("password")
+                .build();
 
         mockMvc.perform(
-            MockMvcRequestBuilders.put(USER_CONTROLLER_PATH + ENABLE_FROM_INVITATION)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(operatorUser)))
-            .andExpect(status().isNoContent());
+                        MockMvcRequestBuilders.put(USER_CONTROLLER_PATH + ACCEPT_AUTHORITY_AND_SET_CREDENTIALS_TO_USER)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(operatorUser)))
+                .andExpect(status().isNoContent());
 
-        verify(operatorUserActivationService, times(1)).enableOperatorInvitedUser(operatorUser);
+        verify(ccaOperatorUserActivationService, times(1)).acceptAuthorityAndSetCredentialsToUser(operatorUser);
     }
 }

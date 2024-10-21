@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.referencedata.domain.dto.ReferenceDataDTO;
-import uk.gov.cca.api.referencedata.domain.enumeration.ReferenceDataType;
-import uk.gov.cca.api.referencedata.service.ReferenceDataService;
-import uk.gov.cca.api.referencedata.service.ReferenceDataTypeServiceEnum;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.referencedata.domain.dto.ReferenceDataDTO;
+import uk.gov.netz.api.referencedata.domain.enumeration.ReferenceDataType;
+import uk.gov.netz.api.referencedata.service.ReferenceDataService;
+import uk.gov.netz.api.referencedata.service.ReferenceDataTypeServiceEnum;
 
 import java.util.EnumMap;
 import java.util.List;

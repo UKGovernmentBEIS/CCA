@@ -17,31 +17,30 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.cca.api.web.controller.verificationbody.VerificationBodyController;
-import uk.gov.netz.api.common.domain.RoleType;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyDTO;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyEditDTO;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyInfoDTO;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyInfoResponseDTO;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyUpdateDTO;
-import uk.gov.cca.api.verificationbody.domain.dto.VerificationBodyUpdateStatusDTO;
-import uk.gov.cca.api.verificationbody.enumeration.VerificationBodyStatus;
-import uk.gov.cca.api.verificationbody.service.VerificationBodyDeletionService;
-import uk.gov.cca.api.verificationbody.service.VerificationBodyQueryService;
-import uk.gov.cca.api.verificationbody.service.VerificationBodyUpdateService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.cca.api.web.orchestrator.verificationbody.dto.VerificationBodyCreationDTO;
 import uk.gov.cca.api.web.orchestrator.verificationbody.service.VerificationBodyAndUserOrchestrator;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyDTO;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyEditDTO;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyInfoDTO;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyInfoResponseDTO;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyUpdateDTO;
+import uk.gov.netz.api.verificationbody.domain.dto.VerificationBodyUpdateStatusDTO;
+import uk.gov.netz.api.verificationbody.enumeration.VerificationBodyStatus;
+import uk.gov.netz.api.verificationbody.service.VerificationBodyDeletionService;
+import uk.gov.netz.api.verificationbody.service.VerificationBodyQueryService;
+import uk.gov.netz.api.verificationbody.service.VerificationBodyUpdateService;
 
 import java.util.List;
 
@@ -114,7 +113,7 @@ class VerificationBodyControllerTest {
 
     @Test
     void getVerificationBodies() throws Exception {
-        final AppUser user = AppUser.builder().roleType(RoleType.REGULATOR).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
 
         VerificationBodyInfoResponseDTO verificationBodyInfoResponse = VerificationBodyInfoResponseDTO.builder()
                 .verificationBodies(List.of(VerificationBodyInfoDTO.builder().id(1L).name("name").status(VerificationBodyStatus.ACTIVE).build(),
@@ -138,12 +137,12 @@ class VerificationBodyControllerTest {
 
     @Test
     void getVerificationBodies_forbidden() throws Exception {
-        final AppUser user = AppUser.builder().roleType(RoleType.OPERATOR).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.OPERATOR).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(roleAuthorizationService)
-                .evaluate(user, new RoleType[] {RoleType.REGULATOR});
+                .evaluate(user, new String[] {RoleTypeConstants.REGULATOR});
 
         mockMvc.perform(MockMvcRequestBuilders.get(CONTROLLER_PATH)
                 .contentType(MediaType.APPLICATION_JSON))

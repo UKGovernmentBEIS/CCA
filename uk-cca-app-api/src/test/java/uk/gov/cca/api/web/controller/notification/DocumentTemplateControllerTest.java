@@ -19,29 +19,28 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
-import uk.gov.cca.api.authorization.core.domain.AppAuthority;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.cca.api.web.controller.notification.DocumentTemplateController;
+import uk.gov.cca.api.web.config.AppUserArgumentResolver;
+import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.authorization.core.domain.AppAuthority;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
 import uk.gov.netz.api.common.domain.PagingRequest;
-import uk.gov.netz.api.common.domain.RoleType;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
+import uk.gov.netz.api.documenttemplate.domain.dto.DocumentTemplateDTO;
+import uk.gov.netz.api.documenttemplate.domain.dto.DocumentTemplateInfoDTO;
+import uk.gov.netz.api.documenttemplate.domain.dto.DocumentTemplateSearchCriteria;
+import uk.gov.netz.api.documenttemplate.domain.dto.DocumentTemplateSearchResults;
+import uk.gov.netz.api.documenttemplate.service.DocumentTemplateQueryService;
+import uk.gov.netz.api.documenttemplate.service.DocumentTemplateUpdateService;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
-import uk.gov.cca.api.notification.template.domain.dto.DocumentTemplateDTO;
-import uk.gov.cca.api.notification.template.domain.dto.DocumentTemplateSearchCriteria;
-import uk.gov.cca.api.notification.template.domain.dto.TemplateInfoDTO;
-import uk.gov.cca.api.notification.template.domain.dto.TemplateSearchResults;
-import uk.gov.cca.api.notification.template.service.DocumentTemplateQueryService;
-import uk.gov.cca.api.notification.template.service.DocumentTemplateUpdateService;
-import uk.gov.cca.api.web.config.AppUserArgumentResolver;
-import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -54,8 +53,8 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.netz.api.common.domain.RoleType.OPERATOR;
-import static uk.gov.netz.api.common.domain.RoleType.REGULATOR;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 @ExtendWith(MockitoExtension.class)
 class DocumentTemplateControllerTest {
@@ -112,7 +111,7 @@ class DocumentTemplateControllerTest {
         AppAuthority appAuthority = AppAuthority.builder().competentAuthority(ca).build();
         AppUser appUser = AppUser.builder()
             .userId("userId")
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .authorities(List.of(appAuthority))
             .build();
         DocumentTemplateSearchCriteria searchCriteria = DocumentTemplateSearchCriteria.builder()
@@ -121,11 +120,11 @@ class DocumentTemplateControllerTest {
             .paging(PagingRequest.builder().pageNumber(0L).pageSize(30L).build())
             .build();
 
-        List<TemplateInfoDTO> documentTemplates = List.of(
-            new TemplateInfoDTO(1L, "template1", "Workflow Name", LocalDateTime.now()),
-            new TemplateInfoDTO(2L, "template2", "Workflow Name", LocalDateTime.now())
+        List<DocumentTemplateInfoDTO> documentTemplates = List.of(
+            new DocumentTemplateInfoDTO(1L, "template1", "Workflow Name", LocalDateTime.now()),
+            new DocumentTemplateInfoDTO(2L, "template2", "Workflow Name", LocalDateTime.now())
         );
-        TemplateSearchResults results = TemplateSearchResults.builder()
+        DocumentTemplateSearchResults results = DocumentTemplateSearchResults.builder()
             .templates(documentTemplates)
             .total(2L)
             .build();
@@ -162,7 +161,7 @@ class DocumentTemplateControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(appUser, new RoleType[]{REGULATOR});
+            .evaluate(appUser, new String[]{REGULATOR});
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/v1.0/document-templates")
@@ -222,7 +221,7 @@ class DocumentTemplateControllerTest {
     void updateDocumentTemplate() throws Exception {
         Long documentTemplateId = 1L;
         String userId = "userId";
-        AppUser authUser = AppUser.builder().userId(userId).roleType(RoleType.REGULATOR).build();
+        AppUser authUser = AppUser.builder().userId(userId).roleType(RoleTypeConstants.REGULATOR).build();
         String originalFilename = "filename.txt";
         String contentType = "text/plain";
         byte[] fileContent = "content".getBytes();
@@ -247,7 +246,7 @@ class DocumentTemplateControllerTest {
     void updateDocumentTemplate_forbidden() throws Exception {
         Long documentTemplateId = 1L;
         String userId = "userId";
-        AppUser authUser = AppUser.builder().userId(userId).roleType(RoleType.REGULATOR).build();
+        AppUser authUser = AppUser.builder().userId(userId).roleType(RoleTypeConstants.REGULATOR).build();
         String originalFilename = "filename.txt";
         String contentType = "text/plain";
         byte[] fileContent = "content".getBytes();
@@ -267,7 +266,7 @@ class DocumentTemplateControllerTest {
     @Test
     @DisplayName("Should throw BAD REQUEST (400) when no attachment is provided")
     void updateDocumentTemplate_noDocumentTemplateFileProvided() throws Exception {
-        AppUser authUser = AppUser.builder().userId("userId").roleType(RoleType.REGULATOR).build();
+        AppUser authUser = AppUser.builder().userId("userId").roleType(RoleTypeConstants.REGULATOR).build();
         long documentTemplateId = 1L;
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);

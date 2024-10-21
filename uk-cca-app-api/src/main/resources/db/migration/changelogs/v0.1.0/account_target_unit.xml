@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/changelog_account_target_unit.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_TARGET_UNIT_ACCOUNT_CREATE_TABLE" author="pafilisa@unisystems.gr">
+        <createTable tableName="account_target_unit">
+            <column name="id" type="bigint" remarks="The account id">
+                <constraints foreignKeyName="account_target_unit_account_fk" references="account(id)" nullable="false"
+                             primaryKey="true" primaryKeyName="account_target_unit_pk" />
+            </column>
+            <column name="status" type="varchar(255)" remarks="The target unit account status">
+                <constraints nullable="false" />
+            </column>
+            <column name="emission_trading_scheme" type="varchar(255)" remarks="The emission trading scheme of the target unit account">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS account_target_unit CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="0_1_0_ACCOUNT_ADDRESS_SEQUENCE" author="P70628">
+        <createSequence sequenceName="account_address_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS account_address_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ACCOUNT_ADDRESS_CREATE_TABLE" author="P70628">
+        <createTable tableName="account_address">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="account_address_pk" nullable="false"/>
+            </column>
+            <column name="line1" type="varchar(255)" remarks="The line1">
+                <constraints nullable="false" />
+            </column>
+            <column name="line2" type="varchar(255)" remarks="The line2">
+                <constraints nullable="true" />
+            </column>
+            <column name="city" type="varchar(255)" remarks="The city">
+                <constraints nullable="false" />
+            </column>
+            <column name="postcode" type="varchar(255)" remarks="The postcode">
+                <constraints nullable="false" />
+            </column>
+            <column name="county" type="varchar(255)" remarks="The county">
+                <constraints nullable="true" />
+            </column>
+            <column name="country" type="varchar(255)" remarks="The country">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS account_address CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TARGET_UNIT_ACCOUNT_CONTACT_SEQUENCE" author="P70628">
+        <createSequence sequenceName="account_target_unit_contact_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS account_target_unit_contact_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TARGET_UNIT_ACCOUNT_CONTACT_CREATE_TABLE" author="P70628">
+        <createTable tableName="account_target_unit_contact">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="account_target_unit_contact_pk" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)" remarks="The email">
+                <constraints nullable="false" />
+            </column>
+            <column name="firstname" type="varchar(255)" remarks="The first name">
+                <constraints nullable="false" />
+            </column>
+            <column name="lastname" type="varchar(255)" remarks="The last name">
+                <constraints nullable="false" />
+            </column>
+            <column name="job_title" type="varchar(255)" remarks="The job title">
+                <constraints nullable="true" />
+            </column>
+            <column name="contact_type" type="varchar(255)" remarks="The contact type">
+                <constraints nullable="false" />
+            </column>
+            <column name="account_target_unit_id" type="bigint" remarks="The account target unit id">
+                <constraints foreignKeyName="account_target_unit_contact_account_target_unit_fk" references="account_target_unit(id)" nullable="false"/>
+            </column>
+            <column name="address_id" type="bigint" remarks="The account address id">
+                <constraints foreignKeyName="account_target_unit_contact_account_address_fk" references="account_address(id)" nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS account_target_unit_contact CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TARGET_UNIT_ACCOUNT_ADD_COLUMNS" author="P70628">
+        <addColumn tableName="account_target_unit">
+            <column name="sector_association_id" type="bigint" remarks="The sector association id">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <addColumn tableName="account_target_unit">
+            <column name="subsector_association_id" type="bigint" remarks="The subsector association id">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <addColumn tableName="account_target_unit">
+            <column name="company_registration_number" type="varchar(255)" remarks="The company registration number">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="account_target_unit">
+            <column name="sic_code" type="varchar(255)" remarks="The Standard Industrial Classification (SIC) code">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="account_target_unit">
+            <column name="created_by" type="varchar(255)" remarks="The user id">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="account_target_unit">
+            <column name="creation_date" type="timestamp" remarks="The creation date">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <addColumn tableName="account_target_unit">
+            <column name="address_id" type="bigint" remarks="The account address id">
+                <constraints foreignKeyName="account_target_unit_account_address_fk" references="account_address(id)" nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="account_target_unit">
+            <column name="registration_number_missing_reason" type="varchar(255)" remarks="The registration number missing reason">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <addColumn tableName="account_target_unit">
+            <column name="operator_type" type="varchar(255)" remarks="The operator type of the account target unit">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="account_target_unit">
+                <column name="sector_association_id"/>
+            </dropColumn>
+            <dropColumn tableName="account_target_unit">
+                <column name="subsector_association_id"/>
+            </dropColumn>
+            <dropColumn tableName="account_target_unit">
+                <column name="company_registration_number"/>
+            </dropColumn>
+            <dropColumn tableName="account_target_unit">
+                <column name="sic_code"/>
+            </dropColumn>
+            <dropColumn tableName="account_target_unit">
+                <column name="created_by"/>
+            </dropColumn>
+            <dropColumn tableName="account_target_unit">
+                <column name="creation_date"/>
+            </dropColumn>
+            <dropColumn tableName="account_target_unit">
+                <column name="address_id"/>
+            </dropColumn>
+            <dropColumn tableName="account_target_unit">
+                <column name="registration_number_missing_reason"/>
+            </dropColumn>
+            <dropColumn tableName="account_target_unit">
+                <column name="operator_type"/>
+            </dropColumn>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_MAKE_TARGET_UNIT_SUBSECTOR_COLUMN_NULLABLE" author="P70628">
+        <sql>
+            ALTER TABLE account_target_unit ALTER COLUMN subsector_association_id DROP NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_ACCOUNT_TARGET_UNIT_IDENTIFIER_SEQUENCE" author="P70628">
+        <createSequence sequenceName="account_target_unit_identifier_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS account_target_unit_identifier_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ACCOUNT_TARGET_UNIT_IDENTIFIER_CREATE_TABLE" author="P70628">
+        <comment>Create target unit account identifier table</comment>
+        <createTable tableName="account_target_unit_identifier" remarks="Represents the latest tager unit account id value">
+            <column name="id" type="integer" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="account_target_unit_identifier_pk" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint" remarks="The latest account id value">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sector_association_id" type="bigint" remarks="The latest sector association id value">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS account_target_unit_identifier CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNIQUE_CONSTRAINT_ACCOUNT_TARGET_UNIT_IDENTIFIER_TABLE" author="P70628">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="account_target_unit_identifier" constraintName="account_target_unit_identifier_uc"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint tableName="account_target_unit_identifier" columnNames="sector_association_id,account_id" constraintName="account_target_unit_identifier_uc"/>
+        <rollback>
+            <dropUniqueConstraint tableName="account_target_unit_identifier" constraintName="account_target_unit_identifier_uc"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_INITIALIZE_ACCOUNT_TARGET_UNIT_IDENTIFIER_TABLE" author="P70628">
+        <comment>Initialize target unit account identifier table with max emitter id from sector_association table</comment>
+        <sql>
+            INSERT INTO account_target_unit_identifier(id, account_id, sector_association_id)
+            SELECT nextval('account_target_unit_identifier_seq'),
+                   count(atu.id) as account_id, sa.id as sector_association_id FROM sector_association sa
+                       LEFT JOIN account_target_unit atu ON sa.id = atu.sector_association_id GROUP BY sa.id;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_TARGET_UNIT_ACCOUNT_ADD_COLUMN_FINANCIALLY_INDEPENDENT_STATUS" author="P70628">
+        <addColumn tableName="account_target_unit">
+            <column name="financial_independence_status" type="varchar(255)" remarks="The financial independence status">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="account_target_unit">
+                <column name="financial_independence_status"/>
+            </dropColumn>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TARGET_UNIT_ACCOUNT_CONTACT_ADD_COLUMN_PHONE_NUMBER" author="P70628">
+        <addColumn tableName="account_target_unit_contact">
+            <column name="phone_number" type="varchar(255)" remarks="The phone number">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="account_target_unit_contact">
+                <column name="phone_number"/>
+            </dropColumn>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TARGET_UNIT_ACCOUNT_CONTACT_ADD_COLUMN_PHONE_CODE" author="P70628">
+        <addColumn tableName="account_target_unit_contact">
+            <column name="phone_code" type="varchar(255)" remarks="The phone code">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="account_target_unit_contact">
+                <column name="phone_code"/>
+            </dropColumn>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

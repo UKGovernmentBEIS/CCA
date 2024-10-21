@@ -5,30 +5,27 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.authorization.regulator.event.RegulatorAuthorityDeletionEvent;
-import uk.gov.cca.api.workflow.request.application.userdeleted.RegulatorAuthorityDeletionEventListener;
-import uk.gov.cca.api.workflow.request.core.assignment.taskassign.service.regulator.RegulatorRequestTaskAssignmentService;
+import uk.gov.cca.api.workflow.request.core.assignment.taskassign.service.regulator.CcaRegulatorRequestTaskAssignmentService;
+import uk.gov.netz.api.authorization.regulator.event.RegulatorAuthorityDeletionEvent;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class RegulatorAuthorityDeletionEventListenerTest {
+public class RegulatorAuthorityDeletionEventListenerTest {
 
     @InjectMocks
     private RegulatorAuthorityDeletionEventListener listener;
 
     @Mock
-    private RegulatorRequestTaskAssignmentService regulatorRequestTaskAssignmentService;
-
+    private CcaRegulatorRequestTaskAssignmentService ccaRegulatorRequestTaskAssignmentService;
 
     @Test
-    void onRegulatorUserDeletedEvent() {
-        final String userId = "user";
+    void onSectorUserDisabledEvent() {
+        String userId = "user";
         RegulatorAuthorityDeletionEvent event = RegulatorAuthorityDeletionEvent.builder().userId(userId).build();
-
         listener.onRegulatorUserDeletedEvent(event);
-
-        verify(regulatorRequestTaskAssignmentService, times(1)).assignTasksOfDeletedRegulatorToCaSiteContactOrRelease(userId);
+        verify(ccaRegulatorRequestTaskAssignmentService, times(1)).assignTasksToSiteContactOrRelease(event.getUserId());
     }
+
 }

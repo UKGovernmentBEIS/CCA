@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.user.core.domain.dto.InvitedUserEnableDTO;
-import uk.gov.cca.api.user.core.domain.dto.InvitedUserInfoDTO;
-import uk.gov.cca.api.user.core.domain.dto.TokenDTO;
-import uk.gov.cca.api.user.regulator.service.RegulatorUserAcceptInvitationService;
-import uk.gov.cca.api.user.regulator.service.RegulatorUserInvitationService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
+import uk.gov.netz.api.user.core.domain.dto.InvitedUserInfoDTO;
+import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
+import uk.gov.netz.api.user.regulator.service.RegulatorUserActivateService;
+import uk.gov.netz.api.user.regulator.service.RegulatorUserInvitationService;
 
 @RestController
 @RequestMapping(path = "/v1.0/regulator-users/registration")
@@ -35,7 +35,7 @@ import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 public class RegulatorUserRegistrationController {
 
     private final RegulatorUserInvitationService regulatorUserInvitationService;
-    private final RegulatorUserAcceptInvitationService regulatorUserAcceptInvitationService;
+    private final RegulatorUserActivateService regulatorUserActivateService;
 
     @PostMapping(path = "/accept-invitation")
     @Operation(summary = "Accept invitation for regulator user")
@@ -51,20 +51,20 @@ public class RegulatorUserRegistrationController {
         return new ResponseEntity<>(regulatorUserInvitationService.acceptInvitation(invitationTokenDTO.getToken()), HttpStatus.OK);
     }
 
-    @PutMapping(path = "/enable-from-invitation")
-    @Operation(summary = "Enable a new regulator user from invitation")
+    @PutMapping(path = "/accept-authority-and-activate-user-from-invitation")
+    @Operation(summary = "Accept authority and activate regulator user from invitation")
     @ApiResponse(responseCode = "204", description = SwaggerApiInfo.NO_CONTENT)
-    @ApiResponse(responseCode = "400", description = SwaggerApiInfo.ENABLE_REGULATOR_USER_FROM_INVITATION_BAD_REQUEST,
+    @ApiResponse(responseCode = "400", description = SwaggerApiInfo.ACCEPT_AUTHORITY_AND_ENABLE_REGULATOR_USER_FROM_INVITATION_BAD_REQUEST,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    public ResponseEntity<Void> enableRegulatorInvitedUser(
+    public ResponseEntity<Void> acceptAuthorityAndActivateRegulatorUserFromInvite(
             @RequestBody @Valid @Parameter(description = "The regulator user credentials", required = true)
-                    InvitedUserEnableDTO invitedUserEnableDTO) {
-        log.debug("Call to enableRegulatorInvitedUser: {}", invitedUserEnableDTO);
-        regulatorUserAcceptInvitationService.acceptAndEnableRegulatorInvitedUser(invitedUserEnableDTO);
+            InvitedUserCredentialsDTO invitedUserCredentialsDTO) {
+        log.debug("Call to acceptAuthorityAndActivateRegulatorUserFromInvite: {}", invitedUserCredentialsDTO);
+        regulatorUserActivateService.acceptAuthorityAndActivateInvitedUser(invitedUserCredentialsDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

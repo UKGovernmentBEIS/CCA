@@ -16,23 +16,22 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.account.domain.dto.AccountContactDTO;
-import uk.gov.cca.api.account.domain.dto.AccountContactInfoDTO;
-import uk.gov.cca.api.account.domain.dto.AccountContactInfoResponse;
-import uk.gov.cca.api.account.service.AccountCaSiteContactService;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.cca.api.web.controller.account.CaSiteContactController;
-import uk.gov.netz.api.common.domain.RoleType;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.account.domain.dto.AccountContactDTO;
+import uk.gov.netz.api.account.domain.dto.AccountContactInfoDTO;
+import uk.gov.netz.api.account.domain.dto.AccountContactInfoResponse;
+import uk.gov.netz.api.account.service.AccountCaSiteContactService;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
 
 import java.util.List;
 
@@ -98,7 +97,7 @@ class CaSiteContactControllerTest {
 
     @Test
     void getCaSiteContacts() throws Exception {
-        final AppUser user = AppUser.builder().roleType(RoleType.REGULATOR).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
 
         AccountContactInfoResponse accountCASiteContactInfoResponse = AccountContactInfoResponse.builder()
                 .contacts(List.of(
@@ -128,12 +127,12 @@ class CaSiteContactControllerTest {
 
     @Test
     void getCaSiteContacts_forbidden() throws Exception {
-        final AppUser user = AppUser.builder().roleType(RoleType.OPERATOR).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.OPERATOR).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(roleAuthorizationService)
-                .evaluate(user,new RoleType[] {RoleType.REGULATOR});
+                .evaluate(user,new String[] {RoleTypeConstants.REGULATOR});
 
         mockMvc.perform(MockMvcRequestBuilders.get(CA_SITE_CONTACT_CONTROLLER_PATH + "?page=0&size=2")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -145,7 +144,7 @@ class CaSiteContactControllerTest {
 
     @Test
     void updateCaSiteContacts() throws Exception {
-        final AppUser user = AppUser.builder().roleType(RoleType.REGULATOR).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
         List<AccountContactDTO> accountCASiteContacts = List.of(
                 AccountContactDTO.builder().accountId(1L).userId("userId1").build(),
                 AccountContactDTO.builder().accountId(2L).userId("userId2").build()
@@ -164,7 +163,7 @@ class CaSiteContactControllerTest {
 
     @Test
     void updateCaSiteContacts_forbidden() throws Exception {
-        final AppUser user = AppUser.builder().roleType(RoleType.REGULATOR).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
         List<AccountContactDTO> accountCASiteContacts = List.of(
                 AccountContactDTO.builder().accountId(1L).userId("userId1").build(),
                 AccountContactDTO.builder().accountId(2L).userId("userId2").build()

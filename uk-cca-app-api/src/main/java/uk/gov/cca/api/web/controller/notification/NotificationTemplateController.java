@@ -21,21 +21,20 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.Authorized;
-import uk.gov.cca.api.web.security.AuthorizedRole;
-import uk.gov.netz.api.common.domain.PagingRequest;
-import uk.gov.netz.api.common.domain.RoleType;
-import uk.gov.cca.api.notification.template.domain.dto.NotificationTemplateDTO;
-import uk.gov.cca.api.notification.template.domain.dto.NotificationTemplateSearchCriteria;
-import uk.gov.cca.api.notification.template.domain.dto.NotificationTemplateUpdateDTO;
-import uk.gov.cca.api.notification.template.domain.dto.TemplateSearchResults;
-import uk.gov.cca.api.notification.template.service.NotificationTemplateQueryService;
-import uk.gov.cca.api.notification.template.service.NotificationTemplateUpdateService;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.common.domain.PagingRequest;
+import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateDTO;
+import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateSearchCriteria;
+import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateSearchResults;
+import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateUpdateDTO;
+import uk.gov.netz.api.notification.template.service.NotificationTemplateQueryService;
+import uk.gov.netz.api.notification.template.service.NotificationTemplateUpdateService;
+import uk.gov.netz.api.security.Authorized;
+import uk.gov.netz.api.security.AuthorizedRole;
 
-import static uk.gov.netz.api.common.domain.RoleType.REGULATOR;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 @RestController
 @Validated
@@ -49,15 +48,15 @@ public class NotificationTemplateController {
     @GetMapping(path = "/v1.0/notification-templates")
     @Operation(summary = "Retrieves the notification templates associated with current user")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
-            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = TemplateSearchResults.class))})
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = NotificationTemplateSearchResults.class))})
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @AuthorizedRole(roleType = REGULATOR)
-    public ResponseEntity<TemplateSearchResults> getCurrentUserNotificationTemplates(
+    public ResponseEntity<NotificationTemplateSearchResults> getCurrentUserNotificationTemplates(
             @Parameter(hidden = true) AppUser appUser,
-            @RequestParam(value = "role")  @NotNull @Parameter(name = "role", description = "The role type") RoleType roleType,
+            @RequestParam(value = "role")  @NotNull @Parameter(name = "role", description = "The role type") String roleType,
             @RequestParam(value = "term", required = false) @Size(min = 3, max = 256) @Parameter(name = "term", description = "The term to search") String term,
             @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Long page,
             @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}")  Long pageSize
@@ -103,7 +102,7 @@ public class NotificationTemplateController {
     public ResponseEntity<Void> updateNotificationTemplate(
             @PathVariable("id") @Parameter(description = "The notification template id") Long id,
             @RequestBody @Valid @Parameter(description = "The data to update the notification template", required = true)
-                    NotificationTemplateUpdateDTO templateUpdateDTO) {
+            NotificationTemplateUpdateDTO templateUpdateDTO) {
         notificationTemplateUpdateService.updateNotificationTemplate(id, templateUpdateDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -1,5 +1,13 @@
 package uk.gov.cca.api.web.controller.workflow;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,25 +20,16 @@ import org.springframework.aop.framework.DefaultAopProxyFactory;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
+
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.controller.workflow.AvailableRequestController;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestCreateActionType;
-import uk.gov.cca.api.workflow.request.core.service.AvailableRequestService;
-import uk.gov.cca.api.workflow.request.flow.common.domain.dto.RequestCreateValidationResult;
-
-import java.util.Map;
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.workflow.request.core.service.AvailableRequestService;
+import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestCreateValidationResult;
 
 @ExtendWith(MockitoExtension.class)
 class AvailableRequestControllerTest {
@@ -75,8 +74,8 @@ class AvailableRequestControllerTest {
     void getAvailableAccountWorkflows() throws Exception {
         final Long accountId = 1L;
         final AppUser appUser = AppUser.builder().userId("id").build();
-        final Map<RequestCreateActionType, RequestCreateValidationResult> results =
-                Map.of(RequestCreateActionType.DUMMY_REQUEST_CREATE_ACTION_TYPE,
+        final Map<String, RequestCreateValidationResult> results =
+                Map.of("DUMMY_REQUEST_CREATE_ACTION_TYPE",
                         RequestCreateValidationResult.builder().valid(true).build());
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);

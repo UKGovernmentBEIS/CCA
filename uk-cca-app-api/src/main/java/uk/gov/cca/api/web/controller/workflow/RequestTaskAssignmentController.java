@@ -1,14 +1,7 @@
 package uk.gov.cca.api.web.controller.workflow;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +11,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.user.core.domain.model.UserInfo;
-import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.Authorized;
-import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.workflow.request.core.assignment.taskassign.dto.AssigneeUserInfoDTO;
-import uk.gov.cca.api.workflow.request.core.assignment.taskassign.dto.RequestTaskAssignmentDTO;
-import uk.gov.cca.api.workflow.request.core.assignment.taskassign.service.RequestTaskAssignmentQueryService;
-import uk.gov.cca.api.workflow.request.core.assignment.taskassign.service.UserRequestTaskAssignmentService;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskType;
 
-import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import uk.gov.cca.api.web.constants.SwaggerApiInfo;
+import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.security.Authorized;
+import uk.gov.netz.api.workflow.request.core.assignment.taskassign.dto.AssigneeUserInfoDTO;
+import uk.gov.netz.api.workflow.request.core.assignment.taskassign.dto.RequestTaskAssignmentDTO;
+import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.RequestTaskAssignmentQueryService;
+import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.UserRequestTaskAssignmentService;
 
 @RestController
 @RequestMapping(path = "/v1.0/tasks-assignment")
@@ -66,7 +65,7 @@ public class RequestTaskAssignmentController {
     /**
      * Retrieves a list of users that can be assigned to the provided task id.
      * @param taskId the task id
-     * @return {@link List} of {@link UserInfo}
+     * @return {@link List} of {@link AssigneeUserInfoDTO}
      */
     @GetMapping(path = "/{taskId}/candidate-assignees")
     @Operation(summary = "Returns all users to whom can be assigned the provided task ")
@@ -104,7 +103,7 @@ public class RequestTaskAssignmentController {
             @Parameter(description = "The current task id that user works on. Not related to the task type for which we search candidate assignees")
             @PathVariable("taskId") Long taskId,
             @Parameter(description = "The task type for which you need to retrieve candidate assignees")
-            @PathVariable("taskType") RequestTaskType taskType) {
+            @PathVariable("taskType") String  taskType) {
         return new ResponseEntity<>(
                 requestTaskAssignmentQueryService.getCandidateAssigneesByTaskType(taskId, taskType, user), HttpStatus.OK);
     }
