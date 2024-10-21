@@ -8,9 +8,11 @@ export function maxFileSizeValidator(maxSizeInMB: number, message: string): Vali
 
   return (control: FormControl): { [key: string]: any } | null => {
     const file = control.value;
+
     if (file && file.size > maxSizeInBytes) {
       return { fileTooLarge: { message } };
     }
+
     return null;
   };
 }

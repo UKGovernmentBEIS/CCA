@@ -3,7 +3,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { map, timer } from 'rxjs';
 
-import { PendingRequestService } from '../guards/pending-request.service';
+import { PendingRequestService } from '@netz/common/services';
+
 import { PendingRequestInterceptor } from './pending-request.interceptor';
 
 describe('PendingRequestInterceptor', () => {

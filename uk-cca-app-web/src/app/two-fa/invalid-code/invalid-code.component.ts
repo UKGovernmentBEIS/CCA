@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { PageHeadingComponent } from '../../shared/components/page-heading/page-heading.component';
+
 @Component({
   selector: 'cca-invalid-code',
   template: `
@@ -11,5 +13,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [PageHeadingComponent],
 })
 export class InvalidCodeComponent {}

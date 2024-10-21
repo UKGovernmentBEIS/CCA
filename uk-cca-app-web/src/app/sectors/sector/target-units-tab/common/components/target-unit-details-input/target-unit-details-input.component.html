@@ -1,0 +1,69 @@
+<div class="govuk-!-width-two-thirds">
+  <div formControlName="operatorType" govuk-radio legend="Operator type" legendSize="medium" hint="Select one option">
+    @for (option of operatorTypeOptions; track option.value) {
+      <govuk-radio-option [label]="option.text" [value]="option.value"></govuk-radio-option>
+    }
+  </div>
+
+  <div
+    formControlName="name"
+    govuk-text-input
+    label="Operator name"
+    labelSize="medium"
+    hint="For limited companies, limited partnerships or limited liability partnerships this should be the name which currently appears on Companies House"
+  ></div>
+
+  <div
+    formControlName="isCompanyRegistrationNumber"
+    govuk-radio
+    legend="Does your company have a registration number?"
+    legendSize="medium"
+    hint="The company registration number or equivalent, for example the company number shows on the certificate of incorporations."
+  >
+    <govuk-radio-option [value]="true" label="Yes">
+      <ng-container govukConditionalContent>
+        <div
+          widthClass="govuk-input--width-10"
+          formControlName="companyRegistrationNumber"
+          govuk-text-input
+          label="Company registration number"
+        ></div>
+      </ng-container>
+    </govuk-radio-option>
+
+    <govuk-radio-option [value]="false" label="No">
+      <ng-container govukConditionalContent>
+        <div
+          formControlName="registrationNumberMissingReason"
+          govuk-text-input
+          label="Tell us why you do not have a registration number, for example your installation is a hospital or military site."
+        ></div>
+      </ng-container>
+    </govuk-radio-option>
+  </div>
+
+  <div class="govuk-!-margin-bottom-6">
+    <div
+      formControlName="sicCode"
+      widthClass="govuk-input--width-10"
+      class="govuk-!-margin-bottom-1"
+      govuk-text-input
+      label="Standard Industrial Classification (SIC) code (optional)"
+      labelSize="medium"
+      hint="In case of multiple SIC codes, you should provide the most relevant to the activity that's eligible for inclusion in the agreement."
+    ></div>
+
+    <a
+      govukLink
+      rel="noreferrer noopener"
+      href="https://www.gov.uk/government/publications/standard-industrial-classification-of-economic-activities-sic"
+      target="_blank"
+    >
+      View all SIC codes
+    </a>
+  </div>
+
+  @if (subSectorOptions.length > 0) {
+    <div [options]="subSectorOptions" formControlName="subsectorAssociationId" govuk-select label="Subsector"></div>
+  }
+</div>

@@ -1,16 +1,15 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
-import { BehaviorSubject, combineLatest, EMPTY, first, switchMap } from 'rxjs';
+import { EMPTY } from 'rxjs';
 
 import { AuthService } from '@core/services/auth.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
-import { BackToTopComponent } from '@shared/back-to-top/back-to-top.component';
-import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
-
-import { ErrorSummaryComponent, GovukValidators, LinkDirective, TextInputComponent } from 'govuk-components';
+import { ErrorSummaryComponent, GovukValidators, LinkDirective, TextInputComponent } from '@netz/govuk-components';
+import { BackToTopComponent } from '@shared/components';
+import { WizardStepComponent } from '@shared/components';
 
 import { ForgotPasswordService } from 'cca-api';
 
@@ -33,8 +32,8 @@ import { ResetPasswordStore } from '../store/reset-password.store';
   ],
 })
 export class SubmitOtpComponent {
-  isSummaryDisplayed$ = new BehaviorSubject<boolean>(false);
-  email$ = this.store.select('email');
+  isSummaryDisplayed = signal<boolean>(false);
+  email = this.store.state.email;
   isPasswordReset = false;
 
   form = this.fb.group({
@@ -58,16 +57,13 @@ export class SubmitOtpComponent {
   ) {}
 
   onSubmit(): void {
-    combineLatest([this.store.select('token'), this.store.select('password')])
+    this.forgotPasswordService
+      .resetPassword({
+        token: this.store.state.token,
+        otp: this.form.value.otp,
+        password: this.store.state.password,
+      })
       .pipe(
-        first(),
-        switchMap(([token, password]) =>
-          this.forgotPasswordService.resetPassword({
-            token: token,
-            otp: this.form.value.otp,
-            password: password,
-          }),
-        ),
         catchBadRequest([ErrorCodes.OTP1001, ErrorCodes.USER1004, ErrorCodes.USER1005], (res) => {
           switch (res.error.code) {
             case ErrorCodes.OTP1001:
@@ -77,7 +73,7 @@ export class SubmitOtpComponent {
             case ErrorCodes.USER1005:
               this.router.navigate(['error', '404']);
           }
-          this.isSummaryDisplayed$.next(true);
+          this.isSummaryDisplayed.set(true);
           return EMPTY;
         }),
       )

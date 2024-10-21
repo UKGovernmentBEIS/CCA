@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OverallDecisionComponent should match snapshot 1`] = `
+<cca-timeline-review-overall-decision
+  requestActionStore={[Function _RequestActionStore]}
+  summaryData={[Function Function]}
+>
+  <div>
+    <netz-page-heading>
+      <h1
+        class="govuk-heading-l"
+      >
+        Overall decision
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      <h2
+        class="govuk-heading-m"
+      >
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Decision
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             Reject 
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Rejection reason
+          </dt>
+          <dd
+            class="pre-wrap govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             cx 
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Additional information
+          </dt>
+          <dd
+            class="pre-wrap govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             dd 
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Uploaded files
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              No files provided
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </cca-summary>
+    <netz-return-to-task-or-action-page>
+      <a
+        class="govuk-link"
+        govuklink=""
+        href="/undefined"
+      >
+         Return to: Underlying agreement application rejected 
+      </a>
+    </netz-return-to-task-or-action-page>
+  </div>
+</cca-timeline-review-overall-decision>
+`;

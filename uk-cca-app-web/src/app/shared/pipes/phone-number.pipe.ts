@@ -12,6 +12,7 @@ export class PhoneNumberPipe implements PipeTransform {
     if (callingCode == null) {
       return null;
     }
+
     const countryCode = PhoneNumberUtil.getInstance().getRegionCodeForCountryCode(Number(callingCode));
     return `${UKCountryCodes.GB === countryCode ? UKCountryCodes.UK : countryCode} (${callingCode})`;
   }

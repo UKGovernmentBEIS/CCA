@@ -1,0 +1,19 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+  @if (isSummaryDisplayedSubject | async) {
+    <govuk-error-summary [form]="formGroup"></govuk-error-summary>
+  }
+
+  <cca-page-heading [caption]="caption">{{ heading }}</cca-page-heading>
+
+  <ng-content></ng-content>
+
+  @if (!hideSubmit) {
+    <button ccaPendingButton govukButton type="submit">{{ submitText }}</button>
+  }
+
+  @if (showCancelLink) {
+    <div>
+      <a govukLink [routerLink]="cancelLinkPath">Cancel</a>
+    </div>
+  }
+</form>

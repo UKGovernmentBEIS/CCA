@@ -2,9 +2,8 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit, TemplateRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { BreadcrumbService } from '@core/navigation';
-
-import { LinkDirective, PanelComponent } from 'govuk-components';
+import { BreadcrumbService } from '@netz/common/navigation';
+import { LinkDirective, PanelComponent } from '@netz/govuk-components';
 
 @Component({
   selector: 'cca-confirmation-shared',
@@ -15,10 +14,12 @@ import { LinkDirective, PanelComponent } from 'govuk-components';
           {{ titleReferenceText }}
           <div style="font-weight: bold;">{{ titleReferenceId }}</div>
         </govuk-panel>
+
         <ng-container
           *ngTemplateOutlet="whatHappensNextTemplate ? whatHappensNextTemplate : defaultWhatHappensNextTemplate"
         >
         </ng-container>
+
         <ng-template #defaultWhatHappensNextTemplate></ng-template>
         <a govukLink [routerLink]="returnToLink"> Return to dashboard </a>
       </div>

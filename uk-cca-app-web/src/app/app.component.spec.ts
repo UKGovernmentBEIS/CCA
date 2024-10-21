@@ -1,36 +1,27 @@
-import { WritableSignal } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
 
-import { BackLinkComponent } from '@core/navigation';
-import { BREADCRUMB_ITEMS, BreadcrumbItem, BreadcrumbsComponent } from '@core/navigation/breadcrumbs';
-import { AuthStore } from '@core/store/auth';
-import { SharedModule } from '@shared/shared.module';
-import { BasePage } from '@testing';
+import { BehaviorSubject } from 'rxjs';
+
+import { AuthStore } from '@netz/common/auth';
+import { BREADCRUMB_ITEMS, BreadcrumbItem } from '@netz/common/navigation';
+import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
 import { KeycloakService } from 'keycloak-angular';
 
 import { UserStateDTO } from 'cca-api';
 
 import { AppComponent } from './app.component';
-import { TimeoutModule } from './timeout/timeout.module';
 
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let page: Page;
-  let breadcrumbItem: WritableSignal<BreadcrumbItem[]>;
+  let breadcrumbItem: BehaviorSubject<BreadcrumbItem[]>;
   let authStore: AuthStore;
 
-  const setUser: (roleType: UserStateDTO['roleType'], loginStatus?: UserStateDTO['status']) => void = (
-    roleType,
-    loginStatus?,
-  ) => {
-    authStore.setUserState({
-      ...authStore.getState().userState,
-      status: loginStatus,
-      roleType,
-    });
-
+  const setUser = (roleType: UserStateDTO['roleType'], loginStatus?: UserStateDTO['status']) => {
+    authStore.setUserState({ roleType, status: loginStatus });
     fixture.detectChanges();
   };
 
@@ -41,6 +32,14 @@ describe('AppComponent', () => {
 
     get dashboardLink() {
       return this.query<HTMLAnchorElement>('a[href="/dashboard"]');
+    }
+
+    get targetUnitAccountsLink() {
+      return this.query<HTMLAnchorElement>('a[href="/target-unit-accounts"]');
+    }
+
+    get sectorsLink() {
+      return this.query<HTMLAnchorElement>('a[href="/sectors"]');
     }
 
     get regulatorsLink() {
@@ -66,9 +65,15 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, BreadcrumbsComponent, BackLinkComponent, SharedModule, TimeoutModule],
-      declarations: [AppComponent],
-      providers: [KeycloakService],
+      imports: [AppComponent],
+      providers: [
+        KeycloakService,
+        provideHttpClient(),
+        {
+          provide: ActivatedRoute,
+          useValue: new ActivatedRouteStub(),
+        },
+      ],
     }).compileComponents();
 
     authStore = TestBed.inject(AuthStore);
@@ -89,61 +94,33 @@ describe('AppComponent', () => {
     expect(page.footer).toBeTruthy();
   });
 
-  it('should not render the dashboard link for disabled users or an operator with no authority', () => {
-    setUser('OPERATOR', 'NO_AUTHORITY');
-
+  it('should not render the dashboard link for disabled users or a sector user with no authority', () => {
+    setUser('SECTOR_USER', 'NO_AUTHORITY');
     expect(page.dashboardLink).toBeFalsy();
 
-    setUser('OPERATOR', 'ENABLED');
-
+    setUser('SECTOR_USER', 'ENABLED');
     expect(page.dashboardLink).toBeTruthy();
+    expect(page.targetUnitAccountsLink).toBeTruthy();
+    expect(page.sectorsLink).toBeTruthy();
 
     setUser('REGULATOR', 'ENABLED');
-
     expect(page.dashboardLink).toBeTruthy();
+    expect(page.targetUnitAccountsLink).toBeTruthy();
+    expect(page.sectorsLink).toBeTruthy();
 
     setUser('REGULATOR', 'DISABLED');
-
     expect(page.dashboardLink).toBeFalsy();
+    expect(page.targetUnitAccountsLink).toBeFalsy();
+    expect(page.sectorsLink).toBeFalsy();
   });
 
   it('should render the regulators link only if the user is regulator', () => {
     setUser('OPERATOR', 'NO_AUTHORITY');
-
     expect(page.regulatorsLink).toBeFalsy();
 
-    setUser('REGULATOR');
-
+    setUser('REGULATOR', 'ENABLED');
     expect(page.regulatorsLink).toBeTruthy();
   });
-
-  // it('should render the accounts link only if the user is regulator, verifier or authorized operator', () => {
-  //   setUser('OPERATOR', 'NO_AUTHORITY');
-  //
-  //   expect(page.accountsLink).toBeFalsy();
-  //
-  //   setUser('REGULATOR');
-  //
-  //   expect(page.accountsLink).toBeTruthy();
-  //
-  //   setUser('OPERATOR', 'ENABLED');
-  //
-  //   expect(page.accountsLink).toBeTruthy();
-  // });
-
-  // it('should render the templates link only if the user is a regulator', () => {
-  //   setUser('OPERATOR');
-
-  //   expect(page.templatesLink).toBeFalsy();
-
-  //   setUser('VERIFIER');
-
-  //   expect(page.templatesLink).toBeFalsy();
-
-  //   setUser('REGULATOR');
-
-  //   expect(page.templatesLink).toBeTruthy();
-  // });
 
   it('should not render the nav list if user is disabled', () => {
     setUser('REGULATOR', 'ENABLED');
@@ -153,34 +130,22 @@ describe('AppComponent', () => {
     fixture.detectChanges();
 
     expect(page.navList).toBeFalsy();
-
-    setUser('VERIFIER', 'TEMP_DISABLED');
-    fixture.detectChanges();
-
-    expect(page.navList).toBeFalsy();
   });
 
   it('should not render the nav list if user is not logged in', () => {
-    authStore.setIsLoggedIn(false);
-    setUser('OPERATOR', 'NO_AUTHORITY');
-
-    expect(page.navList).toBeFalsy();
-
     authStore.setIsLoggedIn(true);
-    setUser('OPERATOR', 'ENABLED');
-
+    setUser('SECTOR_USER', 'ENABLED');
     expect(page.navList).toBeTruthy();
 
     authStore.setIsLoggedIn(false);
-    fixture.detectChanges();
-
+    setUser('SECTOR_USER', 'NO_AUTHORITY');
     expect(page.navList).toBeFalsy();
   });
 
   it('should display breadcrumbs', () => {
     expect(page.breadcrumbs).toEqual([]);
 
-    breadcrumbItem.set([{ text: 'Dashboard', link: ['/dashboard'] }, { text: 'Apply for a GHGE permit' }]);
+    breadcrumbItem.next([{ text: 'Dashboard', link: ['/dashboard'] }, { text: 'Apply for a GHGE permit' }]);
     fixture.detectChanges();
     expect(Array.from(page.breadcrumbs).map((breacrumb) => breacrumb.textContent)).toEqual([
       'Dashboard',
@@ -190,7 +155,7 @@ describe('AppComponent', () => {
     expect(page.breadcrumbs[0].querySelector<HTMLAnchorElement>('a').href).toContain('/dashboard');
     expect(page.breadcrumbs[1].querySelector<HTMLAnchorElement>('a')).toBeFalsy();
 
-    breadcrumbItem.set(null);
+    breadcrumbItem.next(null);
     fixture.detectChanges();
 
     expect(page.breadcrumbs).toEqual([]);

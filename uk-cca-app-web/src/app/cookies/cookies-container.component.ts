@@ -2,8 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { toggleAnalytics } from '@core/analytics';
-
-import { CookiesPopUpComponent } from 'govuk-components';
+import { CookiesPopUpComponent } from '@netz/govuk-components';
 
 import { CookiesService } from './cookies.service';
 

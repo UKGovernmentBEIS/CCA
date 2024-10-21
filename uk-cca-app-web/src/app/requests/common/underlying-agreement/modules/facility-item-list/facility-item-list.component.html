@@ -1,0 +1,39 @@
+<govuk-table [columns]="tableColumns" [data]="sortedFacilityItems()" (sort)="sorting.set($event)">
+  <ng-template let-column="column" let-row="row">
+    @switch (column.field) {
+      @case ('status') {
+        {{ row[column.field] | facilityStatus }}
+      }
+
+      @case ('links') {
+        @if (isEditable()) {
+          <div class="govuk-!-text-align-right">
+            <a govukLink [routerLink]="['../', row.facilityId, 'edit']">Edit</a>
+
+            @switch (row[statusColumn]) {
+              @case ('NEW') {
+                <a class="govuk-!-padding-left-3" govukLink [routerLink]="['../', row.facilityId, 'delete']">
+                  Delete
+                </a>
+              }
+
+              @case ('LIVE') {
+                <a class="govuk-!-padding-left-3" govukLink [routerLink]="['../', row.facilityId, 'exclude']">
+                  Exclude
+                </a>
+              }
+
+              @case ('EXCLUDED') {
+                <a class="govuk-!-padding-left-3" govukLink [routerLink]="['../', row.facilityId, 'undo']"> Undo </a>
+              }
+            }
+          </div>
+        }
+      }
+
+      @default {
+        {{ row[column.field] }}
+      }
+    }
+  </ng-template>
+</govuk-table>

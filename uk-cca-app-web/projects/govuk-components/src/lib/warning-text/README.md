@@ -13,7 +13,5 @@ Any content can be projected within the component, and will be displayed as the 
 ### Example
 
 ```html
-<govuk-warning-text assistiveText="Warning">
-  Warning component example content
-</govuk-warning-text>
+<govuk-warning-text assistiveText="Warning"> Warning component example content </govuk-warning-text>
 ```

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { LinkDirective } from 'govuk-components';
+import { LinkDirective } from '@netz/govuk-components';
 
 @Component({
   selector: 'cca-email-sent',

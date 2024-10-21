@@ -1,0 +1,13 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Change"
+  heading="Responsible person"
+  submitText="Submit"
+  data-testid="edit-target-unit-responsible-person-form"
+>
+  <cca-responsible-person-input [sameAddressExists]="false"></cca-responsible-person-input>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a govukLink [routerLink]="'../..'">Return to: {{ accountDetails.targetUnitAccountDetails.name }}</a>

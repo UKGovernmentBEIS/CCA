@@ -3,12 +3,12 @@ import { ChangeDetectorRef, Directive, OnInit } from '@angular/core';
 import { distinctUntilChanged, takeUntil } from 'rxjs';
 
 import { DestroySubject } from '@core/services/destroy-subject.service';
-
-import { TextInputComponent } from 'govuk-components';
+import { TextInputComponent } from '@netz/govuk-components';
 
 @Directive({
   selector: 'govuk-text-input[ccaAsyncValidationField],[govuk-text-input][ccaAsyncValidationField]',
   providers: [DestroySubject],
+  standalone: true,
 })
 export class AsyncValidationFieldDirective implements OnInit {
   constructor(

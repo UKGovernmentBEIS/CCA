@@ -1,0 +1,19 @@
+<cca-page-heading size="l">{{ title }}</cca-page-heading>
+
+<govuk-tabs>
+  <ng-template govukTabLazy id="details" label="Details">
+    <cca-sector-details-tab />
+  </ng-template>
+
+  <ng-template govukTabLazy id="scheme" label="Scheme">
+    <cca-sector-scheme-tab />
+  </ng-template>
+
+  <ng-template govukTabLazy id="contacts" label="Contacts">
+    <cca-sector-contacts-tab />
+  </ng-template>
+
+  <ng-template govukTabLazy id="target-units" label="Target units">
+    <cca-sector-target-units-tab />
+  </ng-template>
+</govuk-tabs>

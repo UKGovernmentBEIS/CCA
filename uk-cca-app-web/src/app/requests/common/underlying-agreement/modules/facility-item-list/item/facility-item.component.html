@@ -1,0 +1,13 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  [caption]="facilityId !== null ? 'Edit facility' : 'Add facility'"
+  [heading]="facilityId !== null ? 'Edit facility site name' : 'Add facility site name'"
+  data-testid="add-facility-form"
+  submitText="Save and continue"
+>
+  <div govuk-text-input formControlName="name" label="Site name" widthClass="govuk-!-width-two-thirds"></div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a govukLink [routerLink]="facilityId !== null ? ['../../'] : ['../']"> Return to: Manage facilities list </a>

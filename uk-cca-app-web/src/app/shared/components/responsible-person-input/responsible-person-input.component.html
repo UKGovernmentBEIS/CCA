@@ -1,0 +1,30 @@
+<div
+  formControlName="email"
+  cca-text-input
+  label="Email address"
+  widthClass="govuk-!-width-one-half"
+  hint="All system alerts, notices and official communications will always be sent by email"
+></div>
+
+<div formControlName="firstName" cca-text-input label="First name" widthClass="govuk-!-width-one-half"></div>
+
+<div formControlName="lastName" cca-text-input label="Last name" widthClass="govuk-!-width-one-half"></div>
+
+<div formControlName="jobTitle" cca-text-input label="Job title (optional)" widthClass="govuk-!-width-one-half"></div>
+
+<div cca-phone-input formControlName="phoneNumber" label="Phone number"></div>
+
+<h2 class="govuk-heading-m">Responsible person address</h2>
+
+@if (sameAddressExists()) {
+  <div formControlName="sameAddress" govuk-checkboxes>
+    <govuk-checkbox
+      [value]="true"
+      label="The responsible person address is the same as the operator address"
+    ></govuk-checkbox>
+  </div>
+}
+
+<div formGroupName="address">
+  <cca-account-address-input></cca-account-address-input>
+</div>

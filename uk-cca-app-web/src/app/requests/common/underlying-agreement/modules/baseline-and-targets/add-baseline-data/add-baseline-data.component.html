@@ -1,0 +1,130 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  [caption]="isTargetPeriod5 ? 'TP5 (2021-2022)' : 'TP6 (2024)'"
+  heading="Add details of baseline data"
+  data-testid="add-baseline-data-form"
+>
+  <div class="govuk-body">
+    <div
+      class="govuk-!-width-two-thirds"
+      formControlName="isTwelveMonths"
+      [isInline]="true"
+      govuk-radio
+      legend="Is at least 12 months of consecutive baseline data available?"
+    >
+      <govuk-radio-option [value]="true" [label]="'Yes'"></govuk-radio-option>
+      <govuk-radio-option [value]="false" [label]="'No'"></govuk-radio-option>
+    </div>
+
+    @if (twelveMonthsSelected()) {
+      <div
+        formControlName="baselineDate"
+        govuk-date-input
+        [label]="
+          isTwelveMonthsValue()
+            ? 'Start date of the baseline'
+            : 'Enter the date that 12 months of data will be available.'
+        "
+        size="normal"
+        [hint]="isTwelveMonthsValue() ? 'The period should be from 2018 or the nearest available year to this.' : null"
+      ></div>
+
+      @if (!isTwelveMonthsValue()) {
+        <h2>Greenfield site evidence</h2>
+
+        <div
+          class="govuk-!-width-two-thirds"
+          formControlName="explanation"
+          label="Explain how the target unit fits the greenfield criteria"
+          hint="You must meet the greenfield criteria to continue with this application."
+          govuk-textarea
+          [rows]="'5'"
+          [maxLength]="10000"
+        ></div>
+
+        <div class="govuk-!-width-two-thirds">
+          <cca-multiple-file-input
+            [baseDownloadUrl]=""
+            label="Upload evidence (optional)"
+            hint="Upload any evidence supporting the target unit's greenfield status."
+            formControlName="greenfieldEvidences"
+          ></cca-multiple-file-input>
+        </div>
+      } @else if (baselineDateValue() && !dateIsStartof2018()) {
+        <div
+          class="govuk-!-width-two-thirds"
+          formControlName="explanation"
+          label="Explain why you are using a different baseline year."
+          govuk-textarea
+          [rows]="'5'"
+          [maxLength]="10000"
+        ></div>
+      }
+
+      <h2>
+        {{
+          isTwelveMonthsValue()
+            ? 'Representative and consecutive 12 month period'
+            : 'Estimated baseline for representative and consecutive 12 month period'
+        }}
+      </h2>
+
+      <div
+        widthClass="govuk-!-width-one-quarter"
+        formControlName="energy"
+        [suffix]="targetComposition.measurementType | measurementTypeToUnit"
+        [label]="
+          'Enter the baseline ' +
+          (targetComposition.measurementType | measurementTypeToUnit) +
+          ' for the target facility'
+        "
+        inputType="number"
+        govuk-text-input
+      ></div>
+
+      <div
+        class="govuk-!-width-three-quarters"
+        formControlName="usedReportingMechanism"
+        [isInline]="true"
+        govuk-radio
+        legend="Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities
+       in the target unit using combined heat and power (CHP)?"
+        hint="If yes, the adjusted throughput should be entered and used in calculating targets."
+      >
+        <govuk-radio-option [value]="true" [label]="'Yes'"></govuk-radio-option>
+        <govuk-radio-option [value]="false" [label]="'No'"></govuk-radio-option>
+      </div>
+
+      <div
+        widthClass="govuk-!-width-one-quarter"
+        formControlName="throughput"
+        [suffix]="targetComposition?.throughputUnit"
+        [label]="'Enter the baseline throughput ' + (targetComposition?.throughputUnit ?? sectorThroughputUnit)"
+        hint="Not applicable for novem targets"
+        inputType="number"
+        govuk-text-input
+      ></div>
+
+      @if (targetComposition?.agreementCompositionType === 'RELATIVE') {
+        <p class="govuk-label" data-testid="performance-label">Performance ({{ performanceSuffix }})</p>
+
+        @if (calculatedPerformance()) {
+          <p class="govuk-body">{{ performance() }}</p>
+        }
+      }
+
+      <div
+        widthClass="govuk-!-width-one-quarter"
+        formControlName="energyCarbonFactor"
+        suffix="kgC/kWh"
+        label="Baseline energy to carbon factor (kgC/kWh)"
+        inputType="number"
+        govuk-text-input
+      ></div>
+    }
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

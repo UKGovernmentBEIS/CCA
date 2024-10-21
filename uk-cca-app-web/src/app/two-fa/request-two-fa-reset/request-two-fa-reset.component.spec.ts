@@ -1,9 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { BackToTopComponent } from '@shared/back-to-top/back-to-top.component';
-import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
-import { BasePage } from '@testing';
+import { BasePage } from '@netz/common/testing';
 
 import { RequestTwoFaResetComponent } from './request-two-fa-reset.component';
 
@@ -20,8 +18,7 @@ describe('RequestTwoFaResetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [RequestTwoFaResetComponent],
-      imports: [RouterTestingModule, PageHeadingComponent, BackToTopComponent],
+      imports: [RequestTwoFaResetComponent, RouterTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RequestTwoFaResetComponent);

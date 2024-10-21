@@ -4,9 +4,8 @@ import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular
 import { BehaviorSubject, combineLatest, map, Observable, shareReplay, takeUntil, tap } from 'rxjs';
 
 import { DestroySubject } from '@core/services/destroy-subject.service';
-import { UserFullNamePipe } from '@shared/pipes/user-full-name.pipe';
-
-import { SortEvent, TableComponent } from 'govuk-components';
+import { UserFullNamePipe } from '@netz/common/pipes';
+import { SortEvent, TableComponent } from '@netz/govuk-components';
 
 import { UsersTableItem } from './users-table-item';
 
@@ -48,7 +47,6 @@ export class UsersTableDirective implements OnInit {
                 firstName: [userAuthority.firstName],
                 lastName: [userAuthority.lastName],
                 authorityStatus: [userAuthority.authorityStatus],
-                locked: [userAuthority.locked],
                 roleCode: [userAuthority.roleCode],
                 roleName: [userAuthority.roleName],
                 jobTitle: [userAuthority.jobTitle],
@@ -77,11 +75,12 @@ export class UsersTableDirective implements OnInit {
       switch (column) {
         case 'name':
           return (
-            this.userFullNamePipe
-              .transform(a.value)
-              .localeCompare(this.userFullNamePipe.transform(b.value), 'en-GB', { sensitivity: 'base' }) *
-            (direction === 'ascending' ? 1 : -1)
+            this.userFullNamePipe.transform(a.value).localeCompare(this.userFullNamePipe.transform(b.value), 'en-GB', {
+              numeric: true,
+              sensitivity: 'base',
+            }) * (direction === 'ascending' ? 1 : -1)
           );
+
         case 'createdDate':
           return !a.value.authorityCreationDate
             ? 1

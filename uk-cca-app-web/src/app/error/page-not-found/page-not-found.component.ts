@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
-
-import { LinkDirective } from 'govuk-components';
+import { LinkDirective } from '@netz/govuk-components';
+import { PageHeadingComponent } from '@shared/components';
 
 @Component({
   selector: 'cca-page-not-found',
@@ -19,6 +18,6 @@ import { LinkDirective } from 'govuk-components';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PageHeadingComponent, RouterModule, LinkDirective]
+  imports: [PageHeadingComponent, RouterModule, LinkDirective],
 })
-export class PageNotFoundComponent { }
+export class PageNotFoundComponent {}

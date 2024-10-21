@@ -7,7 +7,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   imports: [NgIf],
   templateUrl: './phase-banner.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./phase-banner.component.scss'],
+  styleUrl: './phase-banner.component.scss',
 })
 export class PhaseBannerComponent {
   @Input() phase: string;

@@ -1,0 +1,11 @@
+<div>
+  <cca-page-heading>Target unit details</cca-page-heading>
+
+  <cca-summary [data]="summaryData" />
+  <cca-wizard-step [formGroup]="form" (formSubmit)="submit()">
+    <cca-decision></cca-decision>
+  </cca-wizard-step>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

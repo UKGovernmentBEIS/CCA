@@ -4,14 +4,12 @@ import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angu
 
 import { BehaviorSubject, takeUntil } from 'rxjs';
 
-import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
-import { PendingButtonDirective } from '@shared/pending-button.directive';
-
-import { GovukComponentsModule, GovukValidators } from 'govuk-components';
+import { DestroySubject } from '@core/services/destroy-subject.service';
+import { GovukComponentsModule, GovukValidators } from '@netz/govuk-components';
+import { PageHeadingComponent } from '@shared/components';
+import { PendingButtonDirective } from '@shared/directives';
 
 import { UserFeedbackDto, UsersService } from 'cca-api';
-
-import { DestroySubject } from '../core/services/destroy-subject.service';
 
 type Rate = UserFeedbackDto['creatingAccountRate'];
 type RateWithoutNotApplicable = Exclude<Rate, 'NOT_APPLICABLE_NOT_USED_YET'>;

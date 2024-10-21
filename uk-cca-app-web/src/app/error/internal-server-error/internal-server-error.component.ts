@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
+import { PageHeadingComponent } from '@shared/components';
 
 @Component({
   selector: 'cca-internal-server-error',
@@ -18,6 +18,6 @@ import { PageHeadingComponent } from '@shared/page-heading/page-heading.componen
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PageHeadingComponent]
+  imports: [PageHeadingComponent],
 })
-export class InternalServerErrorComponent { }
+export class InternalServerErrorComponent {}

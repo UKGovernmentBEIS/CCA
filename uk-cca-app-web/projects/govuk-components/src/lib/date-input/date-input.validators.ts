@@ -1,5 +1,7 @@
 import { AbstractControl, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 
+type DateInput = Partial<{ year: number; month: number; day: number }>;
+
 // @dynamic
 export class DateInputValidators {
   static dateFieldValidator(identifier: string, min: number, max: number): ValidatorFn {
@@ -12,8 +14,8 @@ export class DateInputValidators {
       control.value && min && control.value < min
         ? { minDate: true }
         : control.value && max && control.value > max
-        ? { maxDate: true }
-        : null;
+          ? { maxDate: true }
+          : null;
   }
 
   static dateIncompleteValidator: ValidatorFn = (fg: UntypedFormGroup) => {
@@ -43,7 +45,7 @@ export class DateInputValidators {
     return month === 2 || month === 4 || month === 6 || month === 9 || month === 11;
   }
 
-  static buildDate({ year, month, day }): Date | null {
+  static buildDate({ year, month, day }: DateInput): Date | null {
     return !year || !month || !day ? null : new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
   }
 
@@ -57,10 +59,10 @@ export class DateInputValidators {
     return isRequired && this.isEmpty(fg)
       ? { isEmpty: true }
       : this.isIncomplete(fg)
-      ? { isIncomplete: true }
-      : this.isUnrealDate(fg) && !this.isEmpty(fg)
-      ? { isUnrealDate: true }
-      : null;
+        ? { isIncomplete: true }
+        : this.isUnrealDate(fg) && !this.isEmpty(fg)
+          ? { isUnrealDate: true }
+          : null;
   }
 
   static isEmpty(fg: UntypedFormGroup): boolean {

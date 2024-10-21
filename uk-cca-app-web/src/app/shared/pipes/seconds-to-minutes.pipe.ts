@@ -12,8 +12,10 @@ export class SecondsToMinutesPipe implements PipeTransform {
       switch (minutes) {
         case 0:
           return 'less than a minute';
+
         case 1:
           return '1 minute';
+
         default:
           return `${minutes} minutes`;
       }

@@ -1,0 +1,49 @@
+@if (status() === 'INVALID' && form.touched) {
+  <govuk-error-summary [form]="form"></govuk-error-summary>
+}
+
+<div class="govuk-grid-row" data-testid="add-sector-user-form">
+  <cca-page-heading size="l" caption="Add new user">{{ title }}</cca-page-heading>
+
+  <p class="govuk-body">This user will have permission to:</p>
+  @if (isAdmin) {
+    <ul class="govuk-list govuk-list--bullet">
+      <li>add and remove other users</li>
+      <li>perform all tasks related to target units and facilities</li>
+      <li>submit target period reporting</li>
+    </ul>
+    <p class="govuk-body">
+      You should only add a user who has been authorised to perform these actions by the sector association.
+    </p>
+  } @else {
+    <ul class="govuk-list govuk-list--bullet">
+      <li>view account details</li>
+      <li>perform all tasks related to target units and facilities</li>
+      <li>submit target period reports</li>
+    </ul>
+    <p class="govuk-body">They will not be able to add and remove other users from your account.</p>
+  }
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form">
+    <div widthClass="govuk-!-width-one-half" formControlName="firstName" govuk-text-input label="First name"></div>
+    <div widthClass="govuk-!-width-one-half" formControlName="lastName" govuk-text-input label="Last name"></div>
+    <div
+      widthClass="govuk-!-width-one-half"
+      formControlName="email"
+      inputType="email"
+      govuk-text-input
+      label="Email address"
+    >
+      <p govukHint>
+        This should be their work email.<br />All system alerts, notices and official communications will always be sent
+        by email.
+      </p>
+    </div>
+    <div formControlName="contactType" govuk-radio legend="Contact type" [isInline]="true">
+      @for (option of contactTypeOptions; track option.value) {
+        <govuk-radio-option [label]="option.text" [value]="option.value"></govuk-radio-option>
+      }
+    </div>
+    <button ccaPendingButton govukButton type="submit">Submit</button>
+  </form>
+</div>

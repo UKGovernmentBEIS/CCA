@@ -1,0 +1,72 @@
+@if (facility(); as facility) {
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    [caption]="facility.name"
+    heading="Add CCA eligibility details and authorisation"
+    data-testid="add-facility-eligibility-details-form"
+  >
+    <div formControlName="name" cca-text-input label="Site name"></div>
+
+    <div
+      formControlName="isConnectedToExistingFacility"
+      govuk-radio
+      legend="Is the facility adjacent to or connected to an existing CCA facility?"
+    >
+      <govuk-radio-option [value]="true" [label]="'Yes'">
+        <ng-container govukConditionalContent>
+          <div
+            widthClass="govuk-!-width-one-third"
+            formControlName="adjacentFacilityId"
+            cca-text-input
+            label="Specify facility ID of adjacent facility"
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+      <govuk-radio-option [value]="false" [label]="'No'"></govuk-radio-option>
+    </div>
+
+    <div
+      [options]="agreementTypeOptions"
+      formControlName="agreementType"
+      label="Agreement type - eligible under"
+      govuk-select
+    ></div>
+
+    @if (isEnvironmental()) {
+      <div
+        formControlName="erpAuthorisationExists"
+        [isInline]="true"
+        govuk-radio
+        legend="Do you hold a current Environmental Permitting Regulations (EPR) authorisation for any activity being carried out in the facility?"
+      >
+        <govuk-radio-option [value]="true" [label]="'Yes'"></govuk-radio-option>
+        <govuk-radio-option [value]="false" [label]="'No'"></govuk-radio-option>
+      </div>
+
+      @if (isAuthorisation()) {
+        <div
+          widthClass="govuk-!-width-one-third"
+          formControlName="authorisationNumber"
+          cca-text-input
+          label="Authorisation number"
+        ></div>
+
+        <div [options]="caOptions" formControlName="regulatorName" label="Regulator name" govuk-select></div>
+
+        <div class="govuk-!-width-one-third">
+          <cca-file-input
+            [downloadUrl]="getDownloadUrl"
+            formControlName="permitFile"
+            hint="Upload a file"
+            label="Attach a copy of the permit"
+            [showFilesizeHint]="false"
+          ></cca-file-input>
+        </div>
+      }
+    }
+  </cca-wizard-step>
+}
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

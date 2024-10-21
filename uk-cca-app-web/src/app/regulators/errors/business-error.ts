@@ -3,7 +3,7 @@ import {
   buildSavePartiallyNotFoundError,
   buildViewNotFoundError,
   BusinessError,
-} from '../../error/business-error/business-error';
+} from '@error/business-error/business-error';
 
 const regulatorBusinessLink: Pick<BusinessError, 'link' | 'linkText' | 'fragment'> = {
   link: ['/user/regulators'],

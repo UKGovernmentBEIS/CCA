@@ -1,34 +1,11 @@
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, UntypedFormArray, UntypedFormBuilder } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { BehaviorSubject, map, merge, Observable, shareReplay, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { TabLazyDirective, TabsComponent } from '@netz/govuk-components';
+import { PageHeadingComponent } from '@shared/components';
 
-import { DestroySubject } from '@core/services/destroy-subject.service';
-import { AuthStore, selectUserId } from '@core/store/auth';
-import { BusinessErrorService } from '@error/business-error/business-error.service';
-import { catchBadRequest, ErrorCodes } from '@error/business-errors';
-import { UsersTableDirective } from '@shared/directives/users-table.directive';
-import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
-import { UserFullNamePipe } from '@shared/pipes/user-full-name.pipe';
-import { UserLockedComponent } from '@shared/user-locked/user-locked.component';
-
-import {
-  ButtonDirective,
-  ErrorSummaryComponent,
-  GovukSelectOption,
-  GovukTableColumn,
-  SelectComponent,
-  TabDirective,
-  TableComponent,
-  TabsComponent,
-} from 'govuk-components';
-
-import { RegulatorAuthoritiesService, RegulatorUserAuthorityInfoDTO, RegulatorUsersAuthoritiesInfoDTO } from 'cca-api';
-
-import { savePartiallyNotFoundRegulatorError } from './errors/business-error';
-import { ExternalContactsComponent } from './external-contacts/external-contacts.component';
+import { ExternalContactsComponent } from './external-contacts-tab/external-contacts.component';
+import { RegulatorsUsersComponent } from './regulators-users-tab/regulators-users.component';
+import { SiteContactsComponent } from './site-contacts-tab/site-contacts.component';
 
 @Component({
   selector: 'cca-regulators',
@@ -36,91 +13,12 @@ import { ExternalContactsComponent } from './external-contacts/external-contacts
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    AsyncPipe,
-    ReactiveFormsModule,
-    RouterLink,
     PageHeadingComponent,
-    ErrorSummaryComponent,
     TabsComponent,
-    TabDirective,
-    ButtonDirective,
-    SelectComponent,
-    UsersTableDirective,
-    TableComponent,
-    UserFullNamePipe,
+    TabLazyDirective,
+    RegulatorsUsersComponent,
     ExternalContactsComponent,
-    UserLockedComponent,
+    SiteContactsComponent,
   ],
-  providers: [DestroySubject],
 })
-export class RegulatorsComponent implements OnInit {
-  regulators$: Observable<RegulatorUserAuthorityInfoDTO[]>;
-  isEditable$: Observable<boolean>;
-  isSummaryDisplayed$ = new BehaviorSubject<boolean>(false);
-  authorityStatuses: GovukSelectOption<string>[] = [
-    { text: 'Active', value: 'ACTIVE' },
-    { text: 'Disabled', value: 'DISABLED' },
-  ];
-  authorityStatusesAccepted: GovukSelectOption<string>[] = [
-    { text: 'Accepted', value: 'ACCEPTED' },
-    { text: 'Active', value: 'ACTIVE' },
-  ];
-  editableCols: GovukTableColumn[] = [
-    { field: 'name', header: 'Name', isSortable: true },
-    { field: 'jobTitle', header: 'Job title' },
-    { field: 'authorityStatus', header: 'Account status' },
-    { field: 'deleteBtn', header: undefined },
-  ];
-  nonEditableCols: GovukTableColumn[] = this.editableCols.slice(0, 2);
-  regulatorsForm = this.fb.group({ regulatorsArray: this.fb.array([]) });
-  userId$ = this.authStore.pipe(selectUserId);
-  refresh$ = new Subject<void>();
-
-  constructor(
-    readonly authStore: AuthStore,
-    private readonly fb: UntypedFormBuilder,
-    private readonly regulatorAuthoritiesService: RegulatorAuthoritiesService,
-    private readonly route: ActivatedRoute,
-    private readonly destroy$: DestroySubject,
-    private readonly businessErrorService: BusinessErrorService,
-  ) {}
-
-  get regulatorsArray(): UntypedFormArray {
-    return this.regulatorsForm.get('regulatorsArray') as UntypedFormArray;
-  }
-
-  ngOnInit(): void {
-    const regulatorsManagement$ = merge(
-      this.route.data.pipe(map((data: { regulators: RegulatorUsersAuthoritiesInfoDTO }) => data.regulators)),
-      this.refresh$.pipe(switchMap(() => this.regulatorAuthoritiesService.getCaRegulators())),
-    ).pipe(takeUntil(this.destroy$), shareReplay({ bufferSize: 1, refCount: false }));
-    this.regulators$ = regulatorsManagement$.pipe(map((authoritiesInfoDTO) => authoritiesInfoDTO?.caUsers));
-    this.isEditable$ = regulatorsManagement$.pipe(map((authoritiesInfoDTO) => authoritiesInfoDTO?.editable));
-  }
-
-  saveRegulators(): void {
-    if (!this.regulatorsForm.dirty) {
-      return;
-    }
-    if (!this.regulatorsForm.valid) {
-      this.isSummaryDisplayed$.next(true);
-    } else {
-      this.regulatorAuthoritiesService
-        .updateCompetentAuthorityRegulatorUsersStatus(
-          this.regulatorsArray.controls
-            .filter((control) => control.dirty)
-            .map((control) => ({
-              authorityStatus: control.value.authorityStatus,
-              userId: control.value.userId,
-            })),
-        )
-        .pipe(
-          catchBadRequest(ErrorCodes.AUTHORITY1003, () =>
-            this.businessErrorService.showError(savePartiallyNotFoundRegulatorError),
-          ),
-          tap(() => this.regulatorsForm.markAsPristine()),
-        )
-        .subscribe(() => this.refresh$.next());
-    }
-  }
-}
+export class RegulatorsComponent {}

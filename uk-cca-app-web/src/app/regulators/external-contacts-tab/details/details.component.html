@@ -1,0 +1,31 @@
+@if (form.invalid && form.touched) {
+  <govuk-error-summary [form]="form"></govuk-error-summary>
+}
+
+<cca-page-heading size="xl">
+  {{ isAdd ? 'External contact details' : 'Add an external contact' }}
+</cca-page-heading>
+
+<form (ngSubmit)="addExternalContact()" [formGroup]="form" id="add-external-contact">
+  <div
+    autoComplete="name"
+    formControlName="name"
+    govuk-text-input
+    label="Displayed name"
+    widthClass="govuk-!-width-one-third"
+  ></div>
+
+  <div
+    autoComplete="email"
+    formControlName="email"
+    govuk-text-input
+    inputType="email"
+    label="Email address"
+    widthClass="govuk-!-width-one-third"
+  ></div>
+  <div formControlName="description" govuk-text-input label="Description" widthClass="govuk-!-width-one-third"></div>
+
+  <button ccaPendingButton govukButton type="submit">
+    {{ isAdd | submitIfEmpty }}
+  </button>
+</form>

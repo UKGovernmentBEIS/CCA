@@ -1,0 +1,26 @@
+@if (isConfirmationDisplayed()) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <govuk-panel title="{{ sectorUser | userFullName }} has been removed from the sector account"></govuk-panel>
+
+      <a fragment="contacts" govukLink [routerLink]="['/user/sectors', sectorId]"> Return to: Contacts page </a>
+    </div>
+  </div>
+} @else {
+  <h2 class="govuk-heading-l">
+    Confirm that the user account of {{ sectorUser | userFullName }} will be removed from this sector
+  </h2>
+
+  <govuk-warning-text assistiveText="">You will not be able to undo this action.</govuk-warning-text>
+
+  <p class="govuk-body govuk-!-width-two-thirds">
+    All tasks currently assigned to this user will be automatically unassigned after you select 'Confirm removal'.
+  </p>
+
+  <p class="govuk-body">If you need to reassign any of these tasks before removing this user, select 'Cancel'.</p>
+
+  <div class="govuk-button-group">
+    <button type="button" (click)="onDeleteSectorUser()" ccaPendingButton govukWarnButton>Confirm removal</button>
+    <a govukLink fragment="contacts" [routerLink]="['/sectors', sectorId]">Cancel</a>
+  </div>
+}

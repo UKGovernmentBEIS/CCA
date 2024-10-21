@@ -1,6 +1,6 @@
 import { UserStateDTO } from 'cca-api';
 
-export function shouldShowAccepted(userState: UserStateDTO): boolean {
+export function statusAccepted(userState: UserStateDTO): boolean {
   return userState?.status === 'ACCEPTED';
 }
 

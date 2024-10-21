@@ -1,11 +1,13 @@
-import { map, OperatorFunction, pipe } from 'rxjs';
-
 import { ConfigState, FeatureName } from '@core/config/config.state';
+import { createSelector, StateSelector } from '@netz/common/store';
 
-export const selectIsFeatureEnabled = (feature: FeatureName): OperatorFunction<ConfigState, boolean> =>
-  pipe(map((state) => state.features[feature]));
+export const selectIsFeatureEnabled = (feature: FeatureName): StateSelector<ConfigState, boolean> =>
+  createSelector((state) => state.features[feature]);
 
-export const selectMeasurementId: OperatorFunction<ConfigState, string> = pipe(
-  map((state) => state.analytics.measurementId),
+export const selectMeasurementId: StateSelector<ConfigState, string> = createSelector(
+  (state) => state.analytics.measurementId,
 );
-export const selectPropertyId: OperatorFunction<ConfigState, string> = pipe(map((state) => state.analytics.propertyId));
+
+export const selectPropertyId: StateSelector<ConfigState, string> = createSelector(
+  (state) => state.analytics.propertyId,
+);

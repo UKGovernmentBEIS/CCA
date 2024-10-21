@@ -1,23 +1,25 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { GovukValidators } from 'govuk-components';
+import { catchBadRequest, ErrorCodes } from '@error/business-errors';
+import { PendingRequestService } from '@netz/common/services';
+import { GovukValidators, PanelComponent, TextInputComponent } from '@netz/govuk-components';
 
 import { UsersSecuritySetupService } from 'cca-api';
 
-import { PendingRequestService } from '../../core/guards/pending-request.service';
-import { PendingRequest } from '../../core/interfaces/pending-request.interface';
-import { catchBadRequest, ErrorCodes } from '../../error/business-errors';
+import { WizardStepComponent } from '../../shared/components/wizard/wizard-step.component';
 
 @Component({
   selector: 'cca-change-2fa',
   templateUrl: './change-2fa.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [WizardStepComponent, ReactiveFormsModule, TextInputComponent, PanelComponent],
 })
-export class Change2faComponent implements PendingRequest {
+export class Change2faComponent {
   is2FaChanged = false;
 
   form = this.fb.group({

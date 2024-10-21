@@ -1,0 +1,14 @@
+<div>
+  <cca-page-heading>Are you sure you want to delete the {{ facilityName }}?</cca-page-heading>
+
+  <govuk-warning-text assistiveText="">You will not be able to undo this action.</govuk-warning-text>
+
+  <p class="govuk-body">Your facility and all its data will be deleted permanently.</p>
+
+  <div class="govuk-button-group">
+    <button type="button" ccaPendingButton (click)="onDelete()" govukWarnButton>Yes, delete the facility</button>
+  </div>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a govukLink [routerLink]="['../../']"> Return to: Manage facilities list </a>

@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
 
-import { FormErrorDirective } from '../directives';
 import { ErrorMessageComponent } from '../error-message';
 import { GovukValidators } from '../error-message';
 import { TextareaComponent } from './textarea.component';
@@ -25,14 +24,7 @@ describe('TextareaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        BrowserModule,
-        TextareaComponent,
-        TestComponent,
-        ErrorMessageComponent,
-        FormErrorDirective,
-      ],
+      imports: [ReactiveFormsModule, BrowserModule, TextareaComponent, TestComponent, ErrorMessageComponent],
     }).compileComponents();
   });
 

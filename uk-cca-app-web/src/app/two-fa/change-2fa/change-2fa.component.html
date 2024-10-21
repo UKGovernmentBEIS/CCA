@@ -1,4 +1,4 @@
-<ng-container *ngIf="!is2FaChanged; else twoFaChanged">
+@if (!is2FaChanged) {
   <cca-wizard-step
     (formSubmit)="onSubmit()"
     [formGroup]="form"
@@ -13,9 +13,7 @@
       widthClass="govuk-!-width-one-third"
     ></div>
   </cca-wizard-step>
-</ng-container>
-
-<ng-template #twoFaChanged>
+} @else {
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <govuk-panel>Two factor authentication update request successfully submitted.</govuk-panel>
@@ -26,4 +24,4 @@
       </p>
     </div>
   </div>
-</ng-template>
+}

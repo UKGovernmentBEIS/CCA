@@ -2,17 +2,14 @@ import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/cor
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { map, of, take } from 'rxjs';
+import { map, of } from 'rxjs';
 
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
-
-import { ButtonDirective, ErrorSummaryComponent, LinkDirective } from 'govuk-components';
+import { ButtonDirective, ErrorSummaryComponent, LinkDirective } from '@netz/govuk-components';
+import { PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/components';
 
 import { ForgotPasswordService } from 'cca-api';
 
-import { PasswordComponent } from 'src/app/shared-user/password/password.component';
-
-import { PASSWORD_FORM, passwordFormFactory } from '../../shared-user/password/password-form.factory';
 import { ResetPasswordStore } from '../store/reset-password.store';
 
 @Component({
@@ -34,7 +31,7 @@ export class ResetPasswordComponent implements OnInit {
     @Inject(PASSWORD_FORM) readonly form: UntypedFormGroup,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly store: ResetPasswordStore,
+    private readonly resetPasswordStore: ResetPasswordStore,
     private readonly forgotPasswordService: ForgotPasswordService,
   ) {}
 
@@ -44,7 +41,7 @@ export class ResetPasswordComponent implements OnInit {
       .verifyToken({ token: this.token })
       .pipe(
         map((emailDTO) => {
-          this.store.setState({ ...this.store.getState(), email: emailDTO.email });
+          this.resetPasswordStore.setState({ ...this.resetPasswordStore.state, email: emailDTO.email });
         }),
         map(() => ({ url: 'success' })),
         catchBadRequest([ErrorCodes.EMAIL1001, ErrorCodes.TOKEN1001], (res) =>
@@ -59,18 +56,17 @@ export class ResetPasswordComponent implements OnInit {
         }
       });
 
-    this.store
-      .select('password')
-      .pipe(
-        map((password) => this.form.patchValue({ password, validatePassword: password })),
-        take(1),
-      )
-      .subscribe();
+    const password = this.resetPasswordStore.state.password;
+    this.form.patchValue({ password, validatePassword: password });
   }
 
   submitPassword(): void {
     if (this.form.valid) {
-      this.store.setState({ ...this.store.getState(), password: this.form.get('password').value, token: this.token });
+      this.resetPasswordStore.setState({
+        ...this.resetPasswordStore.state,
+        password: this.form.get('password').value,
+        token: this.token,
+      });
 
       this.router.navigate(['../otp'], {
         relativeTo: this.route,

@@ -1,0 +1,59 @@
+@if (facility(); as facility) {
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    [caption]="facility.name"
+    heading="Apply the 70% rule"
+    data-testid="facility-extend-form"
+  >
+    <div
+      formControlName="energyConsumed"
+      govuk-text-input
+      inputType="number"
+      label="Energy consumed in the installation"
+      hint="Enter the amount of energy consumed by the eligible activities and any directly associated activities (the installation) over a recent 12 month period as a percentage of the total energy used by the site over the same period. Enter a number between 0% and 100%."
+      suffix="%"
+      widthClass="govuk-input--width-5"
+    ></div>
+
+    @if (isLessThan70()) {
+      <div
+        formControlName="energyConsumedProvision"
+        govuk-text-input
+        inputType="number"
+        label="Energy consumed in relation to 3/7ths provision"
+        hint="Enter the amount of sub-metered energy consumed by ineligible activities over a recent 12 month period as a percentage of the installation energy use over the same period. Enter a number between 0% and 42.9%."
+        suffix="%"
+        widthClass="govuk-input--width-5"
+      ></div>
+    }
+
+    <p class="govuk-body">Energy consumed in eligible facility</p>
+
+    @if (energyConsumedEligible(); as consumed) {
+      <p class="govuk-body">{{ consumed | number: '1.0-2' }} %</p>
+    }
+
+    @if (isLessThan70()) {
+      <div
+        formControlName="startDate"
+        govuk-date-input
+        label="Sub-metered start date (optional)"
+        size="normal"
+        hint="Enter the start date for the 12 months of sub-metered data you have used to calculate the energy used in the installation and in the ineligible activities you have chosen to include under the 3/7th rule"
+      ></div>
+    }
+
+    <cca-file-input
+      [downloadUrl]="getDownloadUrl"
+      formControlName="evidenceFile"
+      hint="Upload data that supports any estimations and shows any formulas used"
+      label="Evidence"
+      [showFilesizeHint]="false"
+      [accepted]="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+    ></cca-file-input>
+  </cca-wizard-step>
+}
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

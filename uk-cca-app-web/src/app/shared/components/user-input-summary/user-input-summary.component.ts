@@ -1,26 +1,38 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 
-import { PipesModule } from '@shared/pipes/pipes.module';
+import {
+  LinkDirective,
+  SummaryListRowActionsDirective,
+  SummaryListRowDirective,
+  SummaryListRowKeyDirective,
+  SummaryListRowValueDirective,
+} from '@netz/govuk-components';
+import { PhoneNumberPipe } from '@shared/pipes';
 
-import { GovukComponentsModule } from 'govuk-components';
-
-import { OperatorUserRegistrationDTO } from 'cca-api';
+import { CcaOperatorUserRegistrationWithCredentialsDTO } from 'cca-api';
 
 @Component({
   selector: 'cca-user-input-summary-template',
   standalone: true,
-  imports: [GovukComponentsModule, NgIf, PipesModule, RouterLink],
   templateUrl: './user-input-summary.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    RouterLink,
+    PhoneNumberPipe,
+    LinkDirective,
+    SummaryListRowDirective,
+    SummaryListRowKeyDirective,
+    SummaryListRowValueDirective,
+    SummaryListRowActionsDirective,
+  ],
 })
 export class UserInputSummaryTemplateComponent implements OnInit {
-  @Input() userInfo: Partial<Omit<OperatorUserRegistrationDTO, 'emailToken'>>;
+  @Input() userInfo: Partial<Omit<CcaOperatorUserRegistrationWithCredentialsDTO, 'emailToken'>>;
   @Input() changeLink: string;
 
   changeQueryParams: Params = { change: true };
-  modifiedUserInfo: Partial<Omit<OperatorUserRegistrationDTO, 'emailToken'>>;
+  modifiedUserInfo: Partial<Omit<CcaOperatorUserRegistrationWithCredentialsDTO, 'emailToken'>>;
 
   constructor(readonly route: ActivatedRoute) {}
 

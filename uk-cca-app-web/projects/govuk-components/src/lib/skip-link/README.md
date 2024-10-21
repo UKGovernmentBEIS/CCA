@@ -11,5 +11,5 @@ Design details can be found at [GOV.UK Design System](https://design-system.serv
 ### Example
 
 ```html
-<govuk-skip-link anchor=target-id></govuk-skip-link>
+<govuk-skip-link anchor="target-id"></govuk-skip-link>
 ```

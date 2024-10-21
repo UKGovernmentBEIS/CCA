@@ -1,4 +1,4 @@
-export const FEATURES = [] as const;
+export const FEATURES = ['terms'] as const;
 export type FeatureName = (typeof FEATURES)[number];
 export type FeaturesConfig = { [key in FeatureName]?: boolean };
 

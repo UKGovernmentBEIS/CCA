@@ -1,10 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { TaskHeaderInfoComponent } from '@shared/components/task-header-info/task-header-info.component';
-import { BasePage } from '@testing';
-
-import { SharedModule } from '../../shared.module';
+import { BasePage } from '@netz/common/testing';
+import { TaskHeaderInfoComponent } from '@shared/components';
 
 describe('TaskHeaderInfoComponent', () => {
   let component: TaskHeaderInfoComponent;
@@ -19,7 +17,7 @@ describe('TaskHeaderInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, SharedModule],
+      imports: [RouterTestingModule],
     }).compileComponents();
   });
 

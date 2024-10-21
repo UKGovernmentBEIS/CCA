@@ -49,6 +49,7 @@ yarn build:govuk-components
 ```
 
 After the project builds successfully, you can either:
+
 - Import each individual component, if you are using standalone components
 
 or
@@ -65,6 +66,7 @@ export class SomeModule {}
 ```
 
 Include necessary assets and scss in angular.json, under `build` > `options`
+
 ```json
 {
   "assets": [
@@ -76,10 +78,10 @@ Include necessary assets and scss in angular.json, under `build` > `options`
   ],
   "stylePreprocessorOptions": {
     "includePaths": ["./dist/govuk-components/styles"]
-  }  
+  }
 }
-
 ```
+
 ## Development
 
 To develop new features for the library you can run:

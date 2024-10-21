@@ -1,0 +1,27 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  [caption]="finalDecisionType | finalDecisionType"
+  heading="Explain the reason for your decision"
+  data-testid="admin-termination-final-decision-details-reason-form"
+>
+  <div class="govuk-!-width-two-thirds">
+    <div
+      formControlName="explanation"
+      govuk-textarea
+      label="Explain the reason why of your decision"
+      labelSize="small"
+    ></div>
+
+    <cca-multiple-file-input
+      [baseDownloadUrl]="downloadUrl"
+      [listTitle]="'Uploaded files'"
+      label="Upload relevant files (optional)"
+      hint="Upload relevant documents to support your explanation."
+      formControlName="relevantFiles"
+    ></cca-multiple-file-input>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

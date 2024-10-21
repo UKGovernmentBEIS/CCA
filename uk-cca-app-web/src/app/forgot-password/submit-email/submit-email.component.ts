@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 
-import { BackToTopComponent } from '@shared/back-to-top/back-to-top.component';
-
-import { ButtonDirective, GovukValidators, TextInputComponent } from 'govuk-components';
+import { ButtonDirective, GovukValidators, TextInputComponent } from '@netz/govuk-components';
+import { BackToTopComponent } from '@shared/components';
 
 import { ForgotPasswordService } from 'cca-api';
 

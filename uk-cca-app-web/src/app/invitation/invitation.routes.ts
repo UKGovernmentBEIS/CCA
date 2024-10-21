@@ -1,63 +1,11 @@
 import { Routes } from '@angular/router';
 
-import { PendingRequestGuard } from '../core/guards/pending-request.guard';
-import { InvalidLinkComponent } from './invalid-link/invalid-link.component';
-import { InvitationConfirmationComponent } from './invitation-confirmation/invitation-confirmation.component';
-import { RegulatorInvitationComponent } from './regulator-invitation/regulator-invitation.component';
-import {
-  invitedUser as InvitedUserStore,
-  RegulatorInvitationGuard,
-} from './regulator-invitation/regulator-invitation.guard';
-import { VerifierInvitationComponent } from './verifier-invitation/verifier-invitation.component';
-import { VerifierInvitationGuard } from './verifier-invitation/verifier-invitation.guard';
+import { OPERATOR_INVITATION_USER_ROUTES } from './operator-user-invitation/routes';
+import { REGULATOR_INVITATION_ROUTES } from './regulator-invitation/routes';
+import { SECTOR_USER_INVITATION_ROUTES } from './sector-user-invitation/routes';
 
-export const invitationRoutes: Routes = [
-  {
-    path: 'regulator',
-    data: { blockSignInRedirect: true },
-    children: [
-      {
-        path: '',
-        data: { pageTitle: 'Activate your account' },
-        component: RegulatorInvitationComponent,
-        canActivate: [RegulatorInvitationGuard],
-        resolve: { invitedUser: InvitedUserStore },
-        canDeactivate: [PendingRequestGuard],
-      },
-      {
-        path: 'confirmed',
-        data: { pageTitle: "You've successfully activated your user account" },
-        component: InvitationConfirmationComponent,
-      },
-      {
-        path: 'invalid-link',
-        data: { pageTitle: 'This link is invalid' },
-        component: InvalidLinkComponent,
-      },
-    ],
-  },
-  {
-    path: 'verifier',
-    data: { blockSignInRedirect: true },
-    children: [
-      {
-        path: '',
-        data: { pageTitle: 'Activate your account' },
-        component: VerifierInvitationComponent,
-        canActivate: [VerifierInvitationGuard],
-        resolve: { invitedUser: VerifierInvitationGuard },
-        canDeactivate: [PendingRequestGuard],
-      },
-      {
-        path: 'confirmed',
-        data: { pageTitle: "You've successfully activated your user account" },
-        component: InvitationConfirmationComponent,
-      },
-      {
-        path: 'invalid-link',
-        data: { pageTitle: 'This link is invalid' },
-        component: InvalidLinkComponent,
-      },
-    ],
-  },
+export const INVITATION_ROUTES: Routes = [
+  ...REGULATOR_INVITATION_ROUTES,
+  ...SECTOR_USER_INVITATION_ROUTES,
+  ...OPERATOR_INVITATION_USER_ROUTES,
 ];

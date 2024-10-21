@@ -5,7 +5,7 @@ import { FieldsetHintDirective } from './fieldset-hint.directive';
 @Directive({ selector: 'fieldset[govukFieldset]', standalone: true })
 export class FieldsetDirective implements AfterContentInit {
   @Input() id = 'fieldset';
-  @ContentChild(FieldsetHintDirective, { read: ElementRef, static: true }) hint: ElementRef<HTMLSpanElement>;
+  @ContentChild(FieldsetHintDirective, { read: ElementRef, static: false }) hint: ElementRef<HTMLDivElement>;
   @HostBinding('class.govuk-fieldset') readonly fieldsetClass = true;
 
   @HostBinding('attr.id') get identifier() {

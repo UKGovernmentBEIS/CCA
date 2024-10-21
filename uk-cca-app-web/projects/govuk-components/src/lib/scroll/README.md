@@ -10,7 +10,7 @@ Inject the service and use the state parameter
 
 ```typescript
 class MyComponent {
-  constructor(private readonly _a: ScrollService) {}  
+  constructor(private readonly _a: ScrollService) {}
 }
 ```
 
@@ -19,5 +19,5 @@ this.router.navigate([targetRoute], { fragment: targetFragment, state: { scrollS
 ```
 
 ```html
-<a [routerLink]="targetRoute" [fragment]="targetFragment" [state]="{ scrollSkip: true }">
+<a [routerLink]="targetRoute" [fragment]="targetFragment" [state]="{ scrollSkip: true }"></a>
 ```

@@ -1,31 +1,32 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { combineLatest, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
-import { AuthStore } from '@core/store/auth/auth.store';
+import { selectIsFeatureEnabled } from '@core/config/config.selectors';
+import { ConfigStore } from '@core/config/config.store';
+import { AuthStore } from '@netz/common/auth';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakLoginOptions, KeycloakProfile } from 'keycloak-js';
 
 import {
-  ApplicationUserDTO,
   AuthoritiesService,
   TermsAndConditionsService,
-  TermsDTO,
+  UserDTO,
   UsersService,
   UserStateDTO,
+  UserTermsVersionDTO,
 } from 'cca-api';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(
-    private readonly store: AuthStore,
-    private readonly keycloakService: KeycloakService,
-    private readonly usersService: UsersService,
-    private readonly authorityService: AuthoritiesService,
-    private readonly termsAndConditionsService: TermsAndConditionsService,
-    private readonly route: ActivatedRoute,
-  ) {}
+  authStore = inject(AuthStore);
+  configStore = inject(ConfigStore);
+  keycloakService = inject(KeycloakService);
+  usersService = inject(UsersService);
+  authorityService = inject(AuthoritiesService);
+  termsAndConditionsService = inject(TermsAndConditionsService);
+  route = inject(ActivatedRoute);
 
   login(options?: KeycloakLoginOptions): Promise<void> {
     let leaf = this.route.snapshot;
@@ -41,41 +42,41 @@ export class AuthService {
   }
 
   logout(redirectPath = ''): Promise<void> {
-    this.store.setIsLoggedIn(false);
+    this.authStore.setIsLoggedIn(false);
     return this.keycloakService.logout(location.origin + redirectPath);
   }
 
-  loadUser(): Observable<ApplicationUserDTO> {
-    return this.usersService.getCurrentUser().pipe(tap((user) => this.store.setUser(user)));
+  loadUser(): Observable<UserDTO> {
+    return this.usersService.getCurrentUser().pipe(tap((user) => this.authStore.setUser(user)));
   }
 
   loadUserState(): Observable<UserStateDTO> {
-    return this.authorityService.getCurrentUserState().pipe(tap((userState) => this.store.setUserState(userState)));
+    return this.authorityService.getCurrentUserState().pipe(tap((userState) => this.authStore.setUserState(userState)));
   }
 
-  checkUser(): Observable<void> {
-    return this.store.getState().isLoggedIn === null
-      ? this.loadIsLoggedIn().pipe(
-          switchMap((res: boolean) =>
-            res
-              ? combineLatest([this.loadUserState(), this.loadTerms(), this.loadUser(), this.loadUserProfile()]).pipe(
-                  map(() => undefined),
-                )
-              : of(undefined),
-          ),
-        )
-      : of(undefined);
+  checkUser(): Observable<null> {
+    if (this.authStore.state.isLoggedIn !== null) return of(null);
+    return this.loadIsLoggedIn().pipe(
+      switchMap((res) =>
+        !res
+          ? of(null)
+          : combineLatest([this.loadUserState(), this.loadUserTerms(), this.loadUser(), this.loadUserProfile()]),
+      ),
+      map(() => null),
+    );
   }
 
   loadUserProfile(): Observable<KeycloakProfile> {
-    return from(this.keycloakService.loadUserProfile()).pipe(tap((profile) => this.store.setUserProfile(profile)));
+    return from(this.keycloakService.loadUserProfile()).pipe(tap((profile) => this.authStore.setUserProfile(profile)));
   }
 
-  loadTerms(): Observable<TermsDTO> {
-    return this.termsAndConditionsService.getLatestTerms().pipe(tap((terms) => this.store.setTerms(terms)));
+  loadUserTerms(): Observable<UserTermsVersionDTO | null> {
+    const termsEnabled = this.configStore.select(selectIsFeatureEnabled('terms'));
+    if (!termsEnabled()) return of(null);
+    return this.termsAndConditionsService.getUserTerms().pipe(tap((terms) => this.authStore.setUserTerms(terms)));
   }
 
   loadIsLoggedIn(): Observable<boolean> {
-    return of(this.keycloakService.isLoggedIn()).pipe(tap((isLoggedIn) => this.store.setIsLoggedIn(isLoggedIn)));
+    return of(this.keycloakService.isLoggedIn()).pipe(tap((isLoggedIn) => this.authStore.setIsLoggedIn(isLoggedIn)));
   }
 }

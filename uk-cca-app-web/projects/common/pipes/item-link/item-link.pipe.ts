@@ -1,0 +1,22 @@
+import { Pipe, PipeTransform } from '@angular/core';
+
+import { ItemDTO } from 'cca-api';
+
+@Pipe({ name: 'itemLink', pure: true, standalone: true })
+export class ItemLinkPipe implements PipeTransform {
+  transform(value: ItemDTO, path: string = '/'): any[] {
+    return this.transformWorkflowUrl(value, path);
+  }
+
+  private transformWorkflowUrl(value: ItemDTO, routerLooks: string) {
+    switch (value?.requestType) {
+      case 'UNDERLYING_AGREEMENT':
+      case 'ADMIN_TERMINATION':
+      case 'UNDERLYING_AGREEMENT_VARIATION':
+        return [routerLooks + 'tasks', value.taskId];
+
+      default:
+        return ['.'];
+    }
+  }
+}

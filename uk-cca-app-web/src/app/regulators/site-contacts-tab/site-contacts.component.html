@@ -1,0 +1,58 @@
+@if (editable()) {
+  <form (ngSubmit)="onSave()" [formGroup]="form()" data-testid="site-contacts-form">
+    <govuk-table
+      data-testid="site-contacts-table"
+      [columns]="columns"
+      [data]="siteContacts()"
+      formArrayName="siteContacts"
+    >
+      <ng-template let-column="column" let-index="index" let-row="row">
+        <ng-container [formGroupName]="index">
+          @switch (column.field) {
+            @case ('sectorAssociationId') {
+              <div
+                [options]="assigneeOptions()"
+                formControlName="userId"
+                govuk-select
+                widthClass="govuk-!-width-full"
+              ></div>
+            }
+
+            @default {
+              {{ row[column.field] }}
+            }
+          }
+        </ng-container>
+      </ng-template>
+    </govuk-table>
+
+    <ng-container *ngTemplateOutlet="pagination"></ng-container>
+
+    <div class="govuk-button-group">
+      <button ccaPendingButton govukButton type="submit" class="govuk-!-margin-top-3">Save</button>
+      <button govukSecondaryButton type="button" (click)="refreshSectorAssociationSiteContacts()">
+        Discard changes
+      </button>
+    </div>
+  </form>
+} @else {
+  <govuk-table [columns]="columns" [data]="siteContacts()">
+    <ng-template let-column="column" let-row="row">
+      @if (column.field === 'sectorAssociationId') {
+        {{ regulatorNames().get(row.userId) || 'Unassigned' }}
+      } @else {
+        {{ row[column.field] }}
+      }
+    </ng-template>
+  </govuk-table>
+
+  <ng-container *ngTemplateOutlet="pagination"></ng-container>
+}
+
+<ng-template #pagination>
+  <cca-pagination
+    [count]="count()"
+    (currentPageChange)="handlePageChange($event)"
+    [pageSize]="pageSize"
+  ></cca-pagination>
+</ng-template>

@@ -5,7 +5,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { SubmitEmailComponent } from './submit-email/submit-email.component';
 import { SubmitOtpComponent } from './submit-otp/submit-otp.component';
 
-export const forgotPasswordRoutes: Routes = [
+export const FORGOT_PASSWORD_ROUTES: Routes = [
   {
     path: '',
     data: { pageTitle: 'Forgot password', breadcrumb: true },

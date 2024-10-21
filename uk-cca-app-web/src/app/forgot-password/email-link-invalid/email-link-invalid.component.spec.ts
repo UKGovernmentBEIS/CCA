@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
-import { BasePage } from '@testing';
+import { BasePage } from '@netz/common/testing';
 
 import { EmailLinkInvalidComponent } from './email-link-invalid.component';
 
@@ -22,7 +22,8 @@ describe('EmailLinkInvalidComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmailLinkInvalidComponent, RouterTestingModule],
+      imports: [EmailLinkInvalidComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EmailLinkInvalidComponent);

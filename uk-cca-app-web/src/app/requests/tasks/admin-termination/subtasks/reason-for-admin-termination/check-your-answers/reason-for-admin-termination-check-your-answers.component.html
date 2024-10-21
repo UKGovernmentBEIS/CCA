@@ -1,0 +1,12 @@
+<div>
+  <cca-page-heading caption="Admin termination">Check your answers</cca-page-heading>
+
+  <cca-summary [data]="summaryData" />
+
+  <button ccaPendingButton govukButton type="button" (click)="onSaveReasonForAdminTermination()">
+    Confirm and complete
+  </button>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

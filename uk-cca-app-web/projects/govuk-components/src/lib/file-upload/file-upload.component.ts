@@ -36,7 +36,10 @@ export class FileUploadComponent implements ControlValueAccessor {
   isLabelHidden = true;
   currentLabel = 'Legend';
 
-  constructor(@Self() @Optional() public ngControl: NgControl, private formService: FormService) {
+  constructor(
+    @Self() @Optional() public ngControl: NgControl,
+    private formService: FormService,
+  ) {
     ngControl.valueAccessor = this;
   }
 

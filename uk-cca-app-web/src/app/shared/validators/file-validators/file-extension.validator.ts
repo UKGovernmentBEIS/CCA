@@ -12,13 +12,16 @@ export function fileExtensionValidator(
 ): ValidatorFn {
   return (control: FormControl): { [key: string]: any } | null => {
     const file = control.value;
+
     if (file) {
       const extension = file.name.split('.').pop().toLowerCase();
       const mimeType = file.type;
+
       if (!allowedExtensions.includes(extension) || !allowedMimeTypes.includes(mimeType)) {
         return { extensionNotAllowed: { message } };
       }
     }
+
     return null;
   };
 }

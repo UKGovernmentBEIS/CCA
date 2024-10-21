@@ -5,13 +5,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { of, throwError } from 'rxjs';
 
+import { AuthService } from '@core/services/auth.service';
+import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
 import { KeycloakService } from 'keycloak-angular';
 
 import { UsersSecuritySetupService } from 'cca-api';
 
-import { ActivatedRouteStub, mockClass } from '../../../testing';
-import { AuthService } from '../../core/services/auth.service';
-import { SharedModule } from '../../shared/shared.module';
 import { Delete2faComponent } from './delete-2fa.component';
 
 describe('Delete2faComponent', () => {
@@ -25,14 +24,14 @@ describe('Delete2faComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, SharedModule],
+      imports: [RouterTestingModule, Delete2faComponent],
       providers: [
         KeycloakService,
         { provide: AuthService, useValue: authService },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: UsersSecuritySetupService, useValue: usersSecuritySetupService },
       ],
-      declarations: [Delete2faComponent],
+      declarations: [],
     }).compileComponents();
   });
 

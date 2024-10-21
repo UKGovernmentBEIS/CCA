@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CanEditUsersGuard should correctly populate state if a user has EXECUTE perms 1`] = `true`;
+
+exports[`CanEditUsersGuard should correctly populate state if a user has EXECUTE perms 2`] = `
+{
+  "isAdd": false,
+  "isEditable": true,
+  "permissionGroupLevels": {
+    "ADMIN_TERMINATION_SUBMISSION": [
+      "NONE",
+      "EXECUTE",
+    ],
+    "ASSIGN_REASSIGN_TASKS": [
+      "NONE",
+      "EXECUTE",
+    ],
+    "MANAGE_SECTOR_ASSOCIATIONS": [
+      "NONE",
+      "EXECUTE",
+    ],
+    "MANAGE_SECTOR_USERS": [
+      "NONE",
+      "EXECUTE",
+    ],
+    "MANAGE_USERS_AND_CONTACTS": [
+      "NONE",
+      "EXECUTE",
+    ],
+  },
+  "regulatorRoles": [
+    {
+      "code": "regulator_administrator",
+      "name": "Administrator User",
+      "rolePermissions": {
+        "ADMIN_TERMINATION_SUBMISSION": "EXECUTE",
+        "ASSIGN_REASSIGN_TASKS": "EXECUTE",
+        "MANAGE_SECTOR_ASSOCIATIONS": "EXECUTE",
+        "MANAGE_SECTOR_USERS": "EXECUTE",
+        "MANAGE_USERS_AND_CONTACTS": "EXECUTE",
+      },
+    },
+    {
+      "code": "regulator_basic_user",
+      "name": "Basic User",
+      "rolePermissions": {
+        "ADMIN_TERMINATION_SUBMISSION": "NONE",
+        "ASSIGN_REASSIGN_TASKS": "EXECUTE",
+        "MANAGE_SECTOR_ASSOCIATIONS": "NONE",
+        "MANAGE_SECTOR_USERS": "NONE",
+        "MANAGE_USERS_AND_CONTACTS": "NONE",
+      },
+    },
+  ],
+  "user": {
+    "email": "regulator_user_2@cca.uk",
+    "firstName": "Regulator3",
+    "jobTitle": "some job title 3",
+    "lastName": "User3",
+    "phoneNumber": "123",
+    "signature": {
+      "name": "SampleSignature.bmp",
+      "uuid": "9e53c099-9165-4967-beb5-0076e1fc5505",
+    },
+    "status": "REGISTERED",
+  },
+  "userPermissions": {
+    "ADMIN_TERMINATION_SUBMISSION": "NONE",
+    "ASSIGN_REASSIGN_TASKS": "EXECUTE",
+    "MANAGE_SECTOR_ASSOCIATIONS": "NONE",
+    "MANAGE_SECTOR_USERS": "NONE",
+    "MANAGE_USERS_AND_CONTACTS": "EXECUTE",
+  },
+}
+`;

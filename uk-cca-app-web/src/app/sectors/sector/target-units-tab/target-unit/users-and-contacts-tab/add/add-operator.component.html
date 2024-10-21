@@ -1,0 +1,57 @@
+@if (formInvalid()) {
+  <govuk-error-summary [form]="form"></govuk-error-summary>
+}
+
+<cca-page-heading caption="Add new user">Add an operator user</cca-page-heading>
+
+<section class="govuk-body">
+  <p>This user will have permission to:</p>
+  <ul>
+    <li>view other operator users</li>
+    <li>view all tasks related to this target unit and its facilities</li>
+    <li>view target period reports</li>
+  </ul>
+  <p>You should only add a user authorised to perform these actions.</p>
+</section>
+<div class="govuk-body">
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" data-testid="add-operator-form">
+    <div class="govuk-!-margin-bottom-9">
+      <div
+        class="govuk-!-width-one-half"
+        formControlName="firstName"
+        govuk-text-input
+        label="First name"
+        labelSize="small"
+      ></div>
+
+      <div
+        class="govuk-!-width-one-half"
+        formControlName="lastName"
+        govuk-text-input
+        label="Last name"
+        labelSize="small"
+      ></div>
+
+      <div
+        widthClass="govuk-!-width-one-half"
+        formControlName="email"
+        govuk-text-input
+        label="Email address"
+        labelSize="small"
+      >
+        <p govukHint>
+          This should be their work email.<br />
+          All system alerts, notices and official communications will always be sent by email.
+        </p>
+      </div>
+
+      <div formControlName="contactType" govuk-radio legend="Contact type" [isInline]="true">
+        @for (option of contactTypeOptions; track option.value) {
+          <govuk-radio-option [label]="option.text" [value]="option.value" isDisabled="true"></govuk-radio-option>
+        }
+      </div>
+    </div>
+
+    <button ccaPendingButton govukButton type="submit">Submit</button>
+  </form>
+</div>

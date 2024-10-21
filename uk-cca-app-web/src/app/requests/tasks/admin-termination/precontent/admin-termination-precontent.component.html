@@ -1,0 +1,18 @@
+@if (isRegulatoryReasonSelected) {
+  <govuk-notification-banner heading="Important">
+    <h3>Admin termination details updated</h3>
+
+    <p id="notification-content">
+      Once you notify the operator, you must allow at least 28 days for the operator to appeal the decision to
+      terminating their agreement. After this time window you may start the final decision for the termination workflow.
+    </p>
+  </govuk-notification-banner>
+}
+
+@if (isReasonForAdminTerminationCompleted && isEditable) {
+  <div class="govuk-body">
+    <button ccaPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
+      Notify operator of decision
+    </button>
+  </div>
+}

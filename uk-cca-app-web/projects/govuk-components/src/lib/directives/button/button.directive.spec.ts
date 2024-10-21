@@ -16,6 +16,7 @@ describe('ButtonDirective', () => {
       <button #warn govukWarnButton>Warn button</button>
       <button #secondary govukSecondaryButton>Secondary button</button>
       <button #disabled govukButton disabled>Disabled button</button>
+      <button #inverse govukButton govukInverseButton>Inverse button</button>
     `,
   })
   class TestComponent {
@@ -23,6 +24,7 @@ describe('ButtonDirective', () => {
     @ViewChild('warn', { read: ElementRef }) warnButton: ElementRef;
     @ViewChild('secondary', { read: ElementRef }) secondaryButton: ElementRef;
     @ViewChild('disabled', { read: ElementRef }) disabledButton: ElementRef;
+    @ViewChild('inverse', { read: ElementRef }) inverseButton: ElementRef;
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     onClick(): void {}
@@ -73,6 +75,11 @@ describe('ButtonDirective', () => {
   it('should have secondary attribute (secondary button)', () => {
     const element: HTMLButtonElement = fixture.componentInstance.secondaryButton.nativeElement;
     expect(element.hasAttribute('govuksecondarybutton')).toBeTruthy();
+  });
+
+  it('should have inverse attribute (inverse button)', () => {
+    const element: HTMLButtonElement = fixture.componentInstance.inverseButton.nativeElement;
+    expect(element.hasAttribute('govukinversebutton')).toBeTruthy();
   });
 
   it('should not get clicked if keydown is not space', fakeAsync(() => {

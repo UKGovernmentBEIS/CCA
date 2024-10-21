@@ -1,67 +1,15 @@
-@if (isSummaryDisplayed$ | async) {
-  <govuk-error-summary [form]="regulatorsForm"></govuk-error-summary>
-}
 <cca-page-heading size="xl">Regulator users and contacts</cca-page-heading>
+
 <govuk-tabs>
-  <ng-template govukTab id="regulator-users" label="Regulator users">
-    @if (isEditable$ | async) {
-      <button govukButton id="add-regulator" routerLink="add" type="button">Add a new user</button>
-    }
-    <form (ngSubmit)="saveRegulators()" [formGroup]="regulatorsForm" id="regulators-form">
-      <govuk-table
-        [columns]="(isEditable$ | async) ? editableCols : nonEditableCols"
-        [form]="regulatorsForm"
-        [users]="regulators$"
-        ccaUsersTable
-      >
-        <ng-template let-column="column" let-index="index" let-row="row">
-          <ng-container formArrayName="regulatorsArray">
-            <div [formGroupName]="index" class="cell-container">
-              @switch (column.field) {
-                @case ('name') {
-                  @if ((isEditable$ | async) || row.userId === (userId$ | async)) {
-                    <a [routerLink]="row.userId" govukLink>{{ row | userFullName }}</a>
-                  } @else {
-                    {{ row | userFullName }}
-                  }
-                }
-                @case ('authorityStatus') {
-                  @if (regulatorsArray.at(index).value.authorityStatus; as authorityStatus) {
-                    @if (authorityStatus !== 'PENDING') {
-                      @if (row.locked) {
-                        <cca-user-locked />
-                      }
-                      <div
-                        [options]="authorityStatus === 'ACCEPTED' ? authorityStatusesAccepted : authorityStatuses"
-                        formControlName="authorityStatus"
-                        govuk-select
-                        widthClass="govuk-!-width-full"
-                      ></div>
-                    } @else {
-                      Awaiting confirmation
-                    }
-                  }
-                }
-                @case ('deleteBtn') {
-                  <a [routerLink]="[row.userId, 'delete']" govukLink>Delete</a>
-                }
-                @default {
-                  {{ row[column.field] }}
-                }
-              }
-            </div>
-          </ng-container>
-        </ng-template>
-      </govuk-table>
-      @if ((isEditable$ | async) && (regulators$ | async)?.length > 0) {
-        <div class="govuk-button-group">
-          <button ccaPendingButton govukButton type="submit">Save</button>
-          <button (click)="refresh$.next()" govukSecondaryButton type="button">Discard changes</button>
-        </div>
-      }
-    </form>
+  <ng-template govukTabLazy id="regulator-users" label="Regulator users">
+    <cca-regulators-users></cca-regulators-users>
   </ng-template>
-  <ng-template govukTab id="external-contacts" label="External contacts">
+
+  <ng-template govukTabLazy id="site-contacts" label="Site contacts">
+    <cca-site-contacts></cca-site-contacts>
+  </ng-template>
+
+  <ng-template govukTabLazy id="external-contacts" label="External contacts">
     <cca-external-contacts></cca-external-contacts>
   </ng-template>
 </govuk-tabs>

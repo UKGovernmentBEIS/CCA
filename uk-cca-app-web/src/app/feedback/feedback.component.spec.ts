@@ -3,10 +3,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { of } from 'rxjs';
 
+import { BasePage, MockType } from '@netz/common/testing';
+
 import { UsersService } from 'cca-api';
 
-import { BasePage, MockType } from '../../testing';
-import { SharedModule } from '../shared/shared.module';
 import { FeedbackComponent } from './feedback.component';
 
 describe('FeedbackComponent', () => {
@@ -104,7 +104,7 @@ describe('FeedbackComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, SharedModule, FeedbackComponent],
+      imports: [RouterTestingModule, FeedbackComponent],
       providers: [{ provide: UsersService, useValue: usersService }],
     }).compileComponents();
   });

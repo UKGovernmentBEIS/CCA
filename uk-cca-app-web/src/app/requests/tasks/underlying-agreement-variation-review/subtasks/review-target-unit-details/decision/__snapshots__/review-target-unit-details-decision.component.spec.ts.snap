@@ -1,0 +1,641 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
+<div
+  id="root0"
+>
+  <div>
+    <cca-page-heading>
+      
+      <h1
+        class="govuk-heading-l"
+      >
+        Target unit details
+      </h1>
+    </cca-page-heading>
+    <cca-summary>
+      <h2
+        class="govuk-heading-m"
+      >
+        Target unit details
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Operator name
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             operator name 
+            
+            
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/target-unit-details?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Operator type
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             Limited company 
+            
+            
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/target-unit-details?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Company registration number
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             1111 
+            
+            
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/target-unit-details?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        
+        
+        
+      </dl>
+      <h2
+        class="govuk-heading-m"
+      >
+        Operator address
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Address
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             una operator addr line 1 
+            
+            
+            <br />
+            
+             una operator addr city 
+            
+            
+            <br />
+            
+             una operator addr postcode 
+            
+            
+            <br />
+            
+             una operator addr country 
+            
+            
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/operator-address?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        
+        
+        
+      </dl>
+      <h2
+        class="govuk-heading-m"
+      >
+        Responsible Person
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            First name
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             test 1 
+            
+            
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/responsible-person?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Last name
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             test 2 
+            
+            
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/responsible-person?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Email address
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             test@test.com 
+            
+            
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/responsible-person?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Address
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             una resp addr line 1 
+            
+            
+            <br />
+            
+             una resp addr line 2 
+            
+            
+            <br />
+            
+             una resp addr line city 
+            
+            
+            <br />
+            
+             una resp addr county 
+            
+            
+            <br />
+            
+             una resp addr line postcode 
+            
+            
+            <br />
+            
+             una resp addr country 
+            
+            
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/responsible-person?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        
+        
+        
+      </dl>
+      
+    </cca-summary>
+    <cca-wizard-step
+      class="ng-untouched ng-pristine ng-valid"
+    >
+      <form
+        class="ng-untouched ng-pristine ng-valid"
+        novalidate=""
+      >
+        
+        <cca-page-heading>
+          
+          <h1
+            class="govuk-heading-l"
+          >
+            
+          </h1>
+        </cca-page-heading>
+        <cca-decision>
+          <h2
+            class="govuk-heading-m"
+          >
+            What is your decision on the information submitted?
+          </h2>
+          <span
+            class="govuk-hint"
+          >
+            Use your judgement to make minor changes within the details if needed
+          </span>
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="type"
+            govuk-radio=""
+          >
+            <div
+              class="govuk-form-group"
+            >
+              <fieldset
+                class="govuk-fieldset"
+                govukfieldset=""
+                id="type"
+              >
+                <legend
+                  class="govuk-fieldset__legend"
+                  govuklegend=""
+                  id="l.type"
+                >
+                  
+                  
+                </legend>
+                
+                
+                <div
+                  class="govuk-radios"
+                >
+                  
+                  <div
+                    class="govuk-radios__item"
+                  >
+                    <input
+                      class="govuk-radios__input"
+                      id="type-option0"
+                      name="type"
+                      type="radio"
+                      value="ACCEPTED"
+                    />
+                    <label
+                      class="govuk-label govuk-radios__label"
+                      for="type-option0"
+                    >
+                      Accepted
+                      
+                      
+                      
+                    </label>
+                    
+                  </div>
+                  
+                  
+                  
+                  
+                  
+                  <div
+                    class="govuk-radios__item"
+                  >
+                    <input
+                      class="govuk-radios__input"
+                      id="type-option1"
+                      name="type"
+                      type="radio"
+                      value="REJECTED"
+                    />
+                    <label
+                      class="govuk-label govuk-radios__label"
+                      for="type-option1"
+                    >
+                      Rejected
+                      
+                      
+                      
+                    </label>
+                    
+                  </div>
+                  
+                  
+                  
+                  
+                  
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="notes"
+            govuk-textarea=""
+            hint="The operator cannot view this"
+            label="Notes"
+          >
+            <label
+              class="govuk-label"
+              for="notes"
+              id="l.notes"
+            >
+               Notes
+
+            </label>
+            <div
+              class="govuk-hint"
+              id="notes-hint"
+            >
+               The operator cannot view this
+
+            </div>
+            
+            
+            <textarea
+              aria-describedby="notes-hint"
+              class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-valid"
+              id="notes"
+              name="notes"
+              rows="5"
+            />
+            
+          </div>
+          <cca-multiple-file-input
+            class="ng-untouched ng-pristine ng-valid"
+            formcontrolname="files"
+            label="Upload evidence (optional)"
+          >
+            <div
+              class="moj-multi-file-upload moj-multi-file-upload--enhanced"
+            >
+              <div
+                class="moj-multi-file-upload__upload"
+              >
+                <div
+                  class="govuk-form-group"
+                >
+                  <label
+                    class="govuk-label govuk-label--null"
+                    for="files"
+                    id="l.files"
+                  >
+                    Upload evidence (optional)
+                  </label>
+                  <span
+                    class="govuk-hint"
+                    id="files-hint-file-size"
+                  >
+                     Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
+                  </span>
+                  
+                  
+                  
+                  <div
+                    class="moj-multi-file-upload__dropzone govuk-!-margin-top-4"
+                  >
+                    <input
+                      accept="*/*"
+                      aria-labelledby="l.files ld.files"
+                      class="govuk-file-upload moj-multi-file-upload__input"
+                      id="files"
+                      multiple=""
+                      name="files"
+                      type="file"
+                    />
+                    <p
+                      class="govuk-body"
+                    >
+                      Drag and drop files here or
+                    </p>
+                    <label
+                      class="govuk-button govuk-button--secondary"
+                      for="files"
+                      id="ld.files"
+                    >
+                       Choose files 
+                    </label>
+                    <div
+                      aria-live="polite"
+                      class="govuk-visually-hidden"
+                      role="status"
+                    >
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <cca-file-upload-list>
+                <div
+                  class="moj-multi-file__uploaded-files moj-hidden"
+                >
+                  
+                  <dl
+                    class="govuk-summary-list moj-multi-file-upload__list"
+                  >
+                    
+                  </dl>
+                  
+                  
+                  
+                  
+                  
+                  
+                </div>
+                
+              </cca-file-upload-list>
+            </div>
+          </cca-multiple-file-input>
+        </cca-decision>
+        <button
+          ccapendingbutton=""
+          class="govuk-button"
+          govukbutton=""
+          type="submit"
+        >
+          Continue
+        </button>
+        
+        
+      </form>
+    </cca-wizard-step>
+  </div>
+  <hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  />
+  <netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      govuklink=""
+      href="/undefined"
+    >
+       Return to: Review underlying agreement variation 
+    </a>
+  </netz-return-to-task-or-action-page>
+</div>
+`;

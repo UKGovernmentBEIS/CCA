@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { SharedModule } from '../../shared.module';
 import { TimelineItemComponent } from './timeline-item.component';
 
 describe('TimelineItemComponent', () => {
@@ -10,7 +9,7 @@ describe('TimelineItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, SharedModule],
+      imports: [RouterTestingModule],
     }).compileComponents();
   });
 
@@ -18,7 +17,7 @@ describe('TimelineItemComponent', () => {
     fixture = TestBed.createComponent(TimelineItemComponent);
     component = fixture.componentInstance;
     component.action = {
-      type: 'ORGANISATION_ACCOUNT_OPENING_APPLICATION_SUBMITTED',
+      type: 'RDE_ACCEPTED',
       creationDate: '2020-08-25 10:36:15.189643',
       submitter: 'asd',
     };

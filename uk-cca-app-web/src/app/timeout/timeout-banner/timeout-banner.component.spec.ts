@@ -3,7 +3,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { SharedModule } from '../../shared/shared.module';
 import { TimeoutBannerComponent } from './timeout-banner.component';
 import { TimeoutBannerService } from './timeout-banner.service';
 
@@ -22,7 +21,7 @@ describe('TimeoutBannerComponent', () => {
     console.error = jest.fn();
     console.warn = jest.fn();
     await TestBed.configureTestingModule({
-      imports: [TimeoutBannerComponent, RouterTestingModule, SharedModule],
+      imports: [TimeoutBannerComponent, RouterTestingModule],
       providers: [{ provide: TimeoutBannerService, useValue: timeoutBannerService }],
     }).compileComponents();
   });

@@ -1,0 +1,7 @@
+import {
+  UnderlyingAgreementActivationRequestTaskPayload,
+  UnderlyingAgreementActivationSaveRequestTaskActionPayload,
+} from 'cca-api';
+
+export type UNAActivationRequestTaskPayload = UnderlyingAgreementActivationRequestTaskPayload;
+export type UNAActivationSaveRequestTaskPayload = UnderlyingAgreementActivationSaveRequestTaskActionPayload;

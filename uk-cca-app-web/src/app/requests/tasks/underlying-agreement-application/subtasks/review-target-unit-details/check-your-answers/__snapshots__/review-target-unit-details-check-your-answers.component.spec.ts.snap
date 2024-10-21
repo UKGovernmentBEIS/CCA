@@ -1,0 +1,317 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckYourAnswersComponent should render the summary sections and rows 1`] = `
+<cca-check-your-answers
+  activatedRoute={[Function ActivatedRouteStub]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  summaryData={[Function Array]}
+  taskService={[Function Object]}
+>
+  <div>
+    <cca-page-heading
+      caption="Change"
+    >
+      <span
+        class="govuk-caption-l"
+      >
+        Change
+      </span>
+      <h1
+        class="govuk-heading-l"
+      >
+        Check your answers
+      </h1>
+    </cca-page-heading>
+    <cca-summary>
+      <h2
+        class="govuk-heading-m"
+      >
+        Target unit details
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Operator name
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             operator name 
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/?change=true"
+            >
+              Change
+            </a>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Operator type
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             Limited company 
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Company registration number
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             test 
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Subsector
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             SUBSECTOR_2 
+          </dd>
+        </div>
+      </dl>
+      <h2
+        class="govuk-heading-m"
+      >
+        Operator address
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Address
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             una operator addr line 1 
+            <br />
+             una operator addr city 
+            <br />
+             una operator addr postcode 
+            <br />
+             una operator addr country 
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/?change=true"
+            >
+              Change
+            </a>
+          </dd>
+        </div>
+      </dl>
+      <h2
+        class="govuk-heading-m"
+      >
+        Responsible Person
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            First name
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             test 1 
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/?change=true"
+            >
+              Change
+            </a>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Last name
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             test 2 
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/?change=true"
+            >
+              Change
+            </a>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Email address
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             test@test.com 
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/?change=true"
+            >
+              Change
+            </a>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Address
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             una resp addr line 1 
+            <br />
+             una resp addr line 2 
+            <br />
+             una resp addr line city 
+            <br />
+             una resp addr county 
+            <br />
+             una resp addr line postcode 
+            <br />
+             una resp addr country 
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/?change=true"
+            >
+              Change
+            </a>
+          </dd>
+        </div>
+      </dl>
+    </cca-summary>
+    <button
+      ccapendingbutton=""
+      class="govuk-button"
+      govukbutton=""
+      type="button"
+    >
+      Confirm and complete
+    </button>
+  </div><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      govuklink=""
+      href="/undefined"
+    >
+       Return to: Apply for underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-check-your-answers>
+`;

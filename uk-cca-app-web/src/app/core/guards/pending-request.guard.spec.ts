@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { lastValueFrom, timer } from 'rxjs';
 
-import { PendingRequest } from '../interfaces/pending-request.interface';
-import { PendingRequestGuard } from './pending-request.guard';
-import { PendingRequestService } from './pending-request.service';
+import { PendingRequestService } from '@netz/common/services';
+
+import { PendingRequest, PendingRequestGuard } from './pending-request.guard';
 
 describe('PendingRequestGuard', () => {
   let testComponent: TestComponent;
@@ -15,20 +14,19 @@ describe('PendingRequestGuard', () => {
   let router: Router;
   let windowAlert: jest.SpyInstance;
 
-  @Component({ selector: 'cca-test-1', template: '', providers: [PendingRequestService] })
+  @Component({ standalone: true, selector: 'cca-test-1', template: '', providers: [PendingRequestService] })
   class TestComponent implements PendingRequest {
     someRequest = timer(3000).pipe(this.pendingRequest.trackRequest());
 
-    constructor(readonly pendingRequest: PendingRequestService) { }
+    constructor(readonly pendingRequest: PendingRequestService) {}
   }
 
-  @Component({ selector: 'cca-test-2', template: '' })
-  class EmptyTestComponent { }
+  @Component({ standalone: true, selector: 'cca-test-2', template: '' })
+  class EmptyTestComponent {}
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [TestComponent, EmptyTestComponent],
+      imports: [TestComponent, EmptyTestComponent],
     });
     fixture = TestBed.createComponent(TestComponent);
     testComponent = fixture.componentInstance;

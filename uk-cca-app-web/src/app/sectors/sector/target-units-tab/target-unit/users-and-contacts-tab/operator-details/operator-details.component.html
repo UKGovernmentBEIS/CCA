@@ -1,0 +1,7 @@
+@if (operatorUserDetails) {
+  <cca-page-heading>{{ operatorUserDetails.firstName }} {{ operatorUserDetails.lastName }}</cca-page-heading>
+
+  <cca-summary [data]="summaryData" />
+
+  <a govukLink routerLink="/2fa/change" fragment="target-units"> Reset two factor authentication </a>
+}

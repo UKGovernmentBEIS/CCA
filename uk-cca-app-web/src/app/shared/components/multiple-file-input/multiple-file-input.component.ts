@@ -1,0 +1,197 @@
+import { AsyncPipe } from '@angular/common';
+import { Component, ElementRef, inject, input, OnInit, viewChild } from '@angular/core';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
+
+import {
+  BehaviorSubject,
+  combineLatest,
+  filter,
+  map,
+  Observable,
+  scan,
+  startWith,
+  Subject,
+  tap,
+  withLatestFrom,
+} from 'rxjs';
+
+import { ErrorMessageComponent, FormService, MessageValidationErrors } from '@netz/govuk-components';
+
+import { FileUploadService } from '../file-input/file-upload.service';
+import { FileUpload, FileUploadEvent } from '../file-input/file-upload-event';
+import { FileUploadListComponent } from '../file-upload-list/file-upload-list.component';
+
+/*
+  eslint-disable
+  @typescript-eslint/no-empty-function
+ */
+// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+@Component({
+  selector: 'cca-multiple-file-input[baseDownloadUrl]',
+  templateUrl: './multiple-file-input.component.html',
+  styleUrl: './multiple-file-input.component.scss',
+  imports: [FileUploadListComponent, AsyncPipe, ErrorMessageComponent],
+  standalone: true,
+})
+export class MultipleFileInputComponent implements ControlValueAccessor, OnInit {
+  private readonly ngControl = inject(NgControl, { self: true, optional: true });
+  private readonly formService = inject(FormService);
+  private readonly fileUploadService = inject(FileUploadService);
+  private readonly root = inject(FormGroupDirective, { optional: true });
+  private readonly rootNgForm = inject(NgForm, { optional: true });
+
+  headerSize = input<'m' | 's'>(null);
+  listTitle = input<string>();
+  label = input<string>('Upload a file');
+  hint = input<string>();
+  accepted = input<string>('*/*');
+  uploadStatusText = input<string>('Uploading files, please wait');
+  dropzoneHintText = input<string>('Drag and drop files here or');
+  dropzoneButtonText = input<string>('Choose files');
+  baseDownloadUrl = input<string>();
+
+  fileInput = viewChild<ElementRef<HTMLInputElement>>('input');
+
+  uploadStatusText$ = new Subject<string>();
+  uploadedFiles$: Observable<FileUploadEvent[]>;
+  isFocused = false;
+  isDraggedOver = false;
+  isDisabled: boolean;
+
+  private onChange: (value: FileUpload[]) => any;
+  private onBlur: () => any;
+  private value$ = new BehaviorSubject<FileUpload[]>([]);
+
+  constructor() {
+    this.ngControl.valueAccessor = this;
+  }
+
+  get id(): string {
+    return this.formService.getControlIdentifier(this.ngControl);
+  }
+
+  get control(): UntypedFormControl {
+    return this.ngControl.control as UntypedFormControl;
+  }
+  get shouldDisplayErrors(): boolean {
+    return this.control?.invalid && (!this.form || this.form.submitted);
+  }
+
+  private get form(): FormGroupDirective | NgForm | null {
+    return this.root ?? this.rootNgForm;
+  }
+  ngOnInit(): void {
+    this.uploadedFiles$ = combineLatest([
+      this.value$,
+      this.control.statusChanges.pipe(
+        startWith(this.control.status),
+        //as we now have async validators we should update errors on final statuses (VALID, INVALID)
+        filter((status) => status !== 'PENDING'),
+        map(() => this.control.errors),
+        startWith(this.control.errors),
+      ),
+      this.fileUploadService.uploadProgress$.pipe(
+        withLatestFrom(this.value$),
+        filter(([uploadEvent, value]) => value?.some(({ file }) => file === uploadEvent.file)),
+        tap(([{ progress, ...uploadEvent }, value]) => {
+          if (uploadEvent.uuid) {
+            value.splice(
+              value.findIndex((upload) => upload.file === uploadEvent.file),
+              1,
+              uploadEvent,
+            );
+          }
+        }),
+        map(([uploadEvent]) => uploadEvent),
+        startWith(undefined),
+      ),
+    ]).pipe(
+      scan(
+        (acc, [existing, errors, uploadEvent]) =>
+          (existing ?? []).map((existingFile, index) => {
+            return {
+              ...existingFile,
+              ...acc.find(({ file, uuid }) => (uuid && uuid === existingFile.uuid) || file === existingFile.file),
+              ...(uploadEvent?.file === existingFile.file ? uploadEvent : {}),
+              ...(existingFile.uuid && { downloadUrl: this.baseDownloadUrl() + `${existingFile.uuid}` }),
+              errors: this.applyRowErrors(errors, index),
+            };
+          }),
+        [],
+      ),
+    );
+  }
+
+  registerOnChange(onChange: (value: FileUpload[]) => any): void {
+    this.onChange = (value) => {
+      this.value$.next(value);
+      onChange(value);
+    };
+  }
+
+  registerOnTouched(onBlur: () => any): void {
+    this.onBlur = onBlur;
+  }
+
+  writeValue(value: FileUploadEvent[]): void {
+    this.value$.next(value ?? []);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
+
+  onFileChange(event: Event): void {
+    const files = (event?.target as HTMLInputElement)?.files;
+    this.uploadFiles(files);
+    this.fileInput().nativeElement.value = null;
+    this.fileInput().nativeElement.focus();
+  }
+
+  onFileFocus(): void {
+    this.isFocused = true;
+  }
+
+  onFileBlur(): void {
+    this.isFocused = false;
+    this.onBlur();
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+
+    if (!this.isDisabled) {
+      this.isDraggedOver = true;
+    }
+  }
+
+  onDragLeave(): void {
+    this.isDraggedOver = false;
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.isDraggedOver = false;
+
+    if (!this.isDisabled) {
+      this.uploadStatusText$.next(this.uploadStatusText());
+      this.uploadFiles(event.dataTransfer.files);
+    }
+  }
+
+  onFileDeleteClick(deletedIndex: number): void {
+    this.onChange(this.value$.getValue().filter((_, index) => index !== deletedIndex));
+  }
+
+  private uploadFiles(files: FileList): void {
+    this.onChange(this.value$.getValue().concat(Array.from(files).map((file) => ({ file }))));
+  }
+
+  private applyRowErrors(errors: MessageValidationErrors, index: number): MessageValidationErrors {
+    const rowErrors = Object.entries(errors ?? {}).filter(([key]) => key.endsWith(`-${index}`));
+
+    return rowErrors.length === 0
+      ? null
+      : rowErrors.reduce((acc, [key, value]) => ({ ...(acc ? acc : {}), [key]: value }) as any, null);
+  }
+}

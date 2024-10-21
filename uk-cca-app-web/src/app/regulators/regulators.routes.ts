@@ -1,62 +1,72 @@
+import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
-import { PendingRequestGuard } from '../core/guards/pending-request.guard';
-import { DeleteComponent } from './delete/delete.component';
-import { deleteResolver } from './delete/delete.resolver';
-import { DetailsComponent } from './details/details.component';
-import { DetailsResolver } from './details/details.resolver';
-import { PermissionsResolver } from './details/permissions.resolver';
-import { DeleteGuard } from './external-contacts/delete/delete.guard';
-import { ExternalContactsDetailsComponent } from './external-contacts/details/details.component';
-import { DetailsGuard } from './external-contacts/details/details.guard';
-import { SignatureFileDownloadComponent } from './file-download/signature-file-download.component';
-import { RegulatorsComponent } from './regulators.component';
-import { RegulatorsGuard } from './regulators.guard';
+import { PendingRequestGuard } from '@core/guards/pending-request.guard';
 
-export const regulatorRoutes: Routes = [
+import { ActiveExternalContactStore } from './external-contacts-tab/active-external-contact.store';
+import { DeleteComponent as DeleteExternalContactComponent } from './external-contacts-tab/delete/delete.component';
+import { ExternalContactsDetailsComponent } from './external-contacts-tab/details/details.component';
+import { ExternalContactDetailsGuard } from './external-contacts-tab/details/details.guard';
+import { RegulatorsComponent } from './regulators.component';
+import { AddConfirmationComponent } from './regulators-users-tab/add-confirmation/add-confirmation.component';
+import { DeleteComponent as DeleteRegulatorComponent } from './regulators-users-tab/delete/delete.component';
+import { CanAddUsers } from './regulators-users-tab/details/can-add-users.guard';
+import { CanEditUserGuard, ResetRegulatorDetails } from './regulators-users-tab/details/can-edit-user.guard';
+import { DetailsComponent } from './regulators-users-tab/details/details.component';
+import { DetailsStore } from './regulators-users-tab/details/details.store';
+import { SignatureFileDownloadComponent } from './regulators-users-tab/file-download/signature-file-download.component';
+import { SiteContactsComponent } from './site-contacts-tab/site-contacts.component';
+
+export const REGULATOR_ROUTES: Routes = [
   {
     path: '',
     data: { pageTitle: 'Regulator users' },
     component: RegulatorsComponent,
-    resolve: { regulators: RegulatorsGuard },
     canDeactivate: [PendingRequestGuard],
+  },
+  {
+    path: 'add-confirmation',
+    component: AddConfirmationComponent,
   },
   {
     path: 'add',
-    data: { pageTitle: 'Add a new user', breadcrumb: true },
+    data: { pageTitle: 'Add a new user', breadcrumb: false, backlink: '../' },
+    providers: [DetailsStore],
     component: DetailsComponent,
-    canDeactivate: [PendingRequestGuard],
+    canActivate: [CanAddUsers],
+    canDeactivate: [PendingRequestGuard, ResetRegulatorDetails],
   },
   {
     path: ':userId',
+    canActivate: [CanEditUserGuard],
+    providers: [DetailsStore],
+    resolve: { user: () => inject(DetailsStore).state.user },
+    canDeactivate: [ResetRegulatorDetails],
     children: [
       {
         path: '',
         data: {
+          breadcrumb: false,
+          backlink: '../',
           pageTitle: 'User details',
-          breadcrumb: ({ user }) => `${user.firstName} ${user.lastName}`,
         },
         pathMatch: 'full',
         component: DetailsComponent,
-        resolve: {
-          user: DetailsResolver,
-          permissions: PermissionsResolver,
-        },
         canDeactivate: [PendingRequestGuard],
       },
       {
         path: 'delete',
         data: {
           pageTitle: 'Confirm that this user account will be deleted',
-          breadcrumb: ({ user }) => `Delete ${user.firstName} ${user.lastName}`,
+          backlink: '../..',
+          breadcrumb: false,
         },
-        component: DeleteComponent,
-        resolve: { user: deleteResolver },
+        component: DeleteRegulatorComponent,
         canDeactivate: [PendingRequestGuard],
       },
       {
         path: '2fa',
-        loadChildren: () => import('../two-fa/two-fa.module').then((m) => m.TwoFaModule),
+        loadChildren: () => import('../two-fa/two-fa.routes').then((m) => m.TWO_FA_ROUTES),
       },
       {
         path: 'file-download/:uuid',
@@ -70,38 +80,46 @@ export const regulatorRoutes: Routes = [
   },
   {
     path: 'external-contacts',
+    providers: [ActiveExternalContactStore],
     children: [
       {
         path: 'add',
-        data: { pageTitle: 'Add an external contact', breadcrumb: true },
+        data: { pageTitle: 'Add an external contact', breadcrumb: false, backlink: '../..' },
         component: ExternalContactsDetailsComponent,
         canDeactivate: [PendingRequestGuard],
       },
       {
         path: ':userId',
+        canActivate: [ExternalContactDetailsGuard],
+        canDeactivate: [() => inject(ActiveExternalContactStore).reset()],
         children: [
           {
             path: '',
             pathMatch: 'full',
-            data: { pageTitle: 'External contact details', breadcrumb: true },
+            data: {
+              pageTitle: 'External contact details',
+              breadcrumb: false,
+              backlink: '../..',
+            },
             component: ExternalContactsDetailsComponent,
-            canActivate: [DetailsGuard],
-            resolve: { contact: DetailsGuard },
             canDeactivate: [PendingRequestGuard],
           },
           {
             path: 'delete',
             data: {
               pageTitle: 'Confirm that this external contact will be deleted',
-              breadcrumb: 'Delete external contact',
+              breadcrumb: false,
+              backlink: '../../..',
             },
-            component: DeleteComponent,
-            canActivate: [DeleteGuard],
-            resolve: { contact: DeleteGuard },
+            component: DeleteExternalContactComponent,
             canDeactivate: [PendingRequestGuard],
           },
         ],
       },
     ],
+  },
+  {
+    path: 'site-contacts',
+    component: SiteContactsComponent,
   },
 ];

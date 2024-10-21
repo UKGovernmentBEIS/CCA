@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
+import { PageHeadingComponent } from '@shared/components';
 
 @Component({
   selector: 'cca-email-link-invalid',

@@ -1,0 +1,52 @@
+import { provideHttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+
+import { AccountAddressInputComponent, createAccountAddressForm } from '@shared/components';
+
+describe('AccountAddressInputComponent', () => {
+  let component: AccountAddressInputComponent;
+  let fixture: ComponentFixture<TestComponent>;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let hostComponent: TestComponent;
+
+  @Component({
+    standalone: true,
+    template: `
+      <form [formGroup]="form">
+        <fieldset govukFieldset>
+          <legend govukLegend>What is your address?</legend>
+          <div formGroupName="address">
+            <cca-account-address-input></cca-account-address-input>
+          </div>
+        </fieldset>
+      </form>
+    `,
+    imports: [AccountAddressInputComponent, ReactiveFormsModule],
+  })
+  class TestComponent {
+    form = new FormGroup({
+      address: createAccountAddressForm(null),
+    });
+  }
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [AccountAddressInputComponent, ReactiveFormsModule],
+      providers: [provideHttpClient()],
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TestComponent);
+    hostComponent = fixture.componentInstance;
+    component = fixture.debugElement.query(By.directive(AccountAddressInputComponent)).componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

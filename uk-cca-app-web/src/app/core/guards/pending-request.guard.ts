@@ -3,8 +3,11 @@ import { Router } from '@angular/router';
 
 import { combineLatest, first, map, tap } from 'rxjs';
 
-import { PendingRequest } from '../interfaces/pending-request.interface';
-import { PendingRequestService } from './pending-request.service';
+import { PendingRequestService } from '@netz/common/services';
+
+export type PendingRequest = {
+  pendingRequest: PendingRequestService;
+};
 
 export function PendingRequestGuard(component: PendingRequest | any) {
   const router = inject(Router);

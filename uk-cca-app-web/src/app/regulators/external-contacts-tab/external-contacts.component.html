@@ -1,0 +1,33 @@
+@if (isEditable()) {
+  <button [routerLink]="['external-contacts', 'add']" govukButton type="button">Add an external contact</button>
+}
+<govuk-table
+  (sort)="sorting.set($event)"
+  [columns]="isEditable ? editableColumns : nonEditableColumns"
+  [data]="contacts()"
+>
+  <ng-template let-column="column" let-row="row">
+    @switch (column.field) {
+      @case ('name') {
+        @if (isEditable()) {
+          <a [routerLink]="['external-contacts', row.id]" govukLink>
+            {{ row[column.field] }}
+          </a>
+        } @else {
+          {{ row[column.field] }}
+        }
+      }
+      @case ('email') {
+        <a govukLink href="mailto:{{ row[column.field] }}">{{ row[column.field] }}</a>
+      }
+      @case (null) {
+        @if (isEditable()) {
+          <a [routerLink]="['external-contacts', row.id, 'delete']" govukLink>Delete</a>
+        }
+      }
+      @default {
+        {{ row[column.field] }}
+      }
+    }
+  </ng-template>
+</govuk-table>

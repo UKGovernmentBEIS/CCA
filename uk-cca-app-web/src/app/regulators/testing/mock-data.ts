@@ -1,9 +1,12 @@
-import {
-  AuthorityManagePermissionDTO,
-  RegulatorUserDTO,
-  RegulatorUsersAuthoritiesInfoDTO,
-  UserStateDTO,
-} from 'cca-api';
+import { RegulatorUsersAuthoritiesInfoDTO, SectorUsersAuthoritiesInfoDTO, UserStateDTO } from 'cca-api';
+
+export const mockRegulatorPermissionGroups = {
+  MANAGE_SECTOR_ASSOCIATIONS: ['NONE', 'EXECUTE'],
+  MANAGE_USERS_AND_CONTACTS: ['NONE', 'EXECUTE'],
+  ASSIGN_REASSIGN_TASKS: ['NONE', 'EXECUTE'],
+  MANAGE_SECTOR_USERS: ['NONE', 'EXECUTE'],
+  ADMIN_TERMINATION_SUBMISSION: ['NONE', 'EXECUTE'],
+};
 
 export const mockRegulatorsRouteData: { regulators: RegulatorUsersAuthoritiesInfoDTO } = {
   regulators: {
@@ -13,7 +16,6 @@ export const mockRegulatorsRouteData: { regulators: RegulatorUsersAuthoritiesInf
         firstName: 'Alfyn',
         lastName: 'Octo',
         authorityStatus: 'DISABLED',
-        locked: false,
         authorityCreationDate: '2020-12-14T12:38:12.846716Z',
       },
       {
@@ -21,7 +23,6 @@ export const mockRegulatorsRouteData: { regulators: RegulatorUsersAuthoritiesInf
         firstName: 'Therion',
         lastName: 'Path',
         authorityStatus: 'ACTIVE',
-        locked: true,
         authorityCreationDate: '2020-12-15T12:38:12.846716Z',
       },
       {
@@ -29,7 +30,6 @@ export const mockRegulatorsRouteData: { regulators: RegulatorUsersAuthoritiesInf
         firstName: 'Olberik',
         lastName: 'Traveler',
         authorityStatus: 'ACTIVE',
-        locked: true,
         authorityCreationDate: '2020-11-10T12:38:12.846716Z',
       },
       {
@@ -37,7 +37,6 @@ export const mockRegulatorsRouteData: { regulators: RegulatorUsersAuthoritiesInf
         firstName: 'andrew',
         lastName: 'webber',
         authorityStatus: 'ACTIVE',
-        locked: false,
         authorityCreationDate: '2021-01-10T12:38:12.846716Z',
       },
       {
@@ -45,7 +44,6 @@ export const mockRegulatorsRouteData: { regulators: RegulatorUsersAuthoritiesInf
         firstName: 'William',
         lastName: 'Walker',
         authorityStatus: 'PENDING',
-        locked: true,
         authorityCreationDate: '2021-02-8T12:38:12.846716Z',
       },
     ],
@@ -53,16 +51,13 @@ export const mockRegulatorsRouteData: { regulators: RegulatorUsersAuthoritiesInf
   },
 };
 
-export const mockRegulatorUserStatus: UserStateDTO = {
+export const mockRegulatorUserState: UserStateDTO = {
   status: 'ENABLED',
   roleType: 'REGULATOR',
   userId: '111',
 };
 
-export const mockRegulatorUser: {
-  user: RegulatorUserDTO;
-  permissions: AuthorityManagePermissionDTO;
-} = {
+export const mockDetailsRouteDataEdit = {
   user: {
     email: 'test@host.com',
     firstName: 'John',
@@ -76,71 +71,113 @@ export const mockRegulatorUser: {
     },
   },
   permissions: {
-    editable: true,
-    permissions: {
-      ASSIGN_REASSIGN_TASKS: 'NONE',
-      MANAGE_USERS_AND_CONTACTS: 'NONE',
-      // REVIEW_ORGANISATION_ACCOUNT: 'VIEW_ONLY',
+    userPermissions: {
+      editable: true,
+      permissions: {
+        MANAGE_SECTOR_ASSOCIATIONS: 'EXECUTE',
+        ASSIGN_REASSIGN_TASKS: 'EXECUTE',
+        MANAGE_USERS_AND_CONTACTS: 'EXECUTE',
+        MANAGE_SECTOR_USERS: 'EXECUTE',
+        ADMIN_TERMINATION_SUBMISSION: 'EXECUTE',
+      },
     },
+    permissionGroupLevels: mockRegulatorPermissionGroups,
+  },
+};
+export const mockDetailsRouteDataView = {
+  user: {
+    email: 'test@host.com',
+    firstName: 'John',
+    lastName: 'Doe',
+    jobTitle: 'developer',
+    phoneNumber: '23456',
+    mobileNumber: '55444',
+    signature: {
+      name: 'mySignature.bmp',
+      uuid: '60fe9548-ac65-492a-b057-60033b0fbbed',
+    },
+  },
+  permissions: {
+    userPermissions: {
+      editable: false,
+      permissions: {
+        MANAGE_SECTOR_ASSOCIATIONS: 'NONE',
+        ASSIGN_REASSIGN_TASKS: 'NONE',
+        MANAGE_USERS_AND_CONTACTS: 'NONE',
+        MANAGE_SECTOR_USERS: 'NONE',
+        ADMIN_TERMINATION_SUBMISSION: 'NONE',
+      },
+    },
+  },
+};
+export const mockDetailsRouteDataAdd = {
+  permissions: {
+    userPermissions: {
+      editable: true,
+    },
+    permissionGroupLevels: mockRegulatorPermissionGroups,
   },
 };
 
 export const mockRegulatorRolePermissions = [
-  // 'REVIEW_ORGANISATION_ACCOUNT',
+  'MANAGE_SECTOR_ASSOCIATIONS',
   'MANAGE_USERS_AND_CONTACTS',
   'ASSIGN_REASSIGN_TASKS',
+  'MANAGE_SECTOR_USERS',
+  'ADMIN_TERMINATION_SUBMISSION',
+  'UNDERLYING_AGREEMENT_VARIATION_REVIEW',
+  'UNDERLYING_AGREEMENT_APPLICATION_REVIEW',
 ];
 
 export const mockRegulatorBasePermissions = [
   {
-    name: 'Regulator Administrator',
+    name: 'Administrator User',
     code: 'regulator_administrator',
     rolePermissions: {
-      // REVIEW_ORGANISATION_ACCOUNT: 'VIEW_ONLY',
-      MANAGE_USERS_AND_CONTACTS: 'NONE',
-      ASSIGN_REASSIGN_TASKS: 'EXECUTE',
-    },
-  },
-  {
-    name: 'Regulator technical consultant',
-    code: 'regulator_technical_consultant',
-    rolePermissions: {
-      // REVIEW_ORGANISATION_ACCOUNT: 'EXECUTE',
-      MANAGE_USERS_AND_CONTACTS: 'NONE',
-      ASSIGN_REASSIGN_TASKS: 'EXECUTE',
-    },
-  },
-  {
-    name: 'CA super user',
-    code: 'ca_super_user',
-    rolePermissions: {
-      // REVIEW_ORGANISATION_ACCOUNT: 'EXECUTE',
+      MANAGE_SECTOR_ASSOCIATIONS: 'EXECUTE',
       MANAGE_USERS_AND_CONTACTS: 'EXECUTE',
       ASSIGN_REASSIGN_TASKS: 'EXECUTE',
+      MANAGE_SECTOR_USERS: 'EXECUTE',
+      ADMIN_TERMINATION_SUBMISSION: 'EXECUTE',
+      UNDERLYING_AGREEMENT_VARIATION_REVIEW: 'EXECUTE',
+      UNDERLYING_AGREEMENT_APPLICATION_REVIEW: 'EXECUTE',
     },
   },
   {
-    name: 'Service super user',
-    code: 'service_super_user',
+    name: 'Regulator basic user',
+    code: 'regulator_basic_user',
     rolePermissions: {
-      // REVIEW_ORGANISATION_ACCOUNT: 'EXECUTE',
-      MANAGE_USERS_AND_CONTACTS: 'EXECUTE',
-      ASSIGN_REASSIGN_TASKS: 'EXECUTE',
-    },
-  },
-  {
-    name: 'Regulator technical officer',
-    code: 'regulator_technical_officer',
-    rolePermissions: {
-      // REVIEW_ORGANISATION_ACCOUNT: 'EXECUTE',
+      MANAGE_SECTOR_ASSOCIATIONS: 'NONE',
       MANAGE_USERS_AND_CONTACTS: 'NONE',
       ASSIGN_REASSIGN_TASKS: 'EXECUTE',
+      MANAGE_SECTOR_USERS: 'NONE',
+      ADMIN_TERMINATION_SUBMISSION: 'NONE',
+      UNDERLYING_AGREEMENT_VARIATION_REVIEW: 'NONE',
+      UNDERLYING_AGREEMENT_APPLICATION_REVIEW: 'NONE',
     },
   },
 ];
 
-export const mockRegulatorPermissionGroups = {
-  // REVIEW_ORGANISATION_ACCOUNT: ['NONE', 'VIEW_ONLY', 'EXECUTE'],
-  MANAGE_USERS_AND_CONTACTS: ['NONE', 'EXECUTE'],
-  ASSIGN_REASSIGN_TASKS: ['NONE', 'EXECUTE'],
+export const mockUserAuthorities: SectorUsersAuthoritiesInfoDTO = {
+  editable: true,
+  authorities: [
+    {
+      firstName: 'fn 1',
+      lastName: 'ln 1',
+      roleCode: 'sector_user_administrator',
+      roleName: 'Administrator User',
+      contactType: 'contact type 1',
+      status: 'ACTIVE',
+      userId: '1',
+    },
+    {
+      firstName: 'fn 2',
+      lastName: 'ln 2',
+      roleCode: 'sector_user_basic_user',
+      roleName: 'Basic User',
+      contactType: 'contact type 2',
+      status: 'ACTIVE',
+      userId: '2',
+    },
+  ],
 };

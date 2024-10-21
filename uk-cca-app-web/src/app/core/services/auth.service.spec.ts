@@ -1,22 +1,29 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { firstValueFrom, of } from 'rxjs';
 
+import { ConfigStore } from '@core/config/config.store';
 import {
   AuthStore,
   initialState,
   selectIsLoggedIn,
-  selectTerms,
   selectUser,
   selectUserProfile,
   selectUserState,
-} from '@core/store';
-import { ActivatedRouteSnapshotStub, mockClass } from '@testing';
+  selectUserTerms,
+} from '@netz/common/auth';
+import { ActivatedRouteSnapshotStub, ActivatedRouteStub, mockClass } from '@netz/common/testing';
 import { KeycloakService } from 'keycloak-angular';
 
-import { AuthoritiesService, TermsAndConditionsService, TermsDTO, UsersService, UserStateDTO } from 'cca-api';
+import {
+  AuthoritiesService,
+  TermsAndConditionsService,
+  TermsDTO,
+  UsersService,
+  UserStateDTO,
+  UserTermsVersionDTO,
+} from 'cca-api';
 
 import { AuthService } from './auth.service';
 
@@ -24,14 +31,16 @@ describe('AuthService', () => {
   let service: AuthService;
   let authStore: AuthStore;
   let activatedRoute: ActivatedRoute;
-
+  let configStore: ConfigStore;
   const keycloakService = mockClass(KeycloakService);
+
   const user = {
     email: 'test@test.com',
     firstName: 'test',
     lastName: 'test',
     termsVersion: 1,
   };
+
   const userState: UserStateDTO = {
     status: 'ENABLED',
     roleType: 'OPERATOR',
@@ -46,19 +55,22 @@ describe('AuthService', () => {
     getCurrentUserState: jest.fn().mockReturnValue(of(userState)),
   };
 
-  const terms: TermsDTO = { url: '/test', version: 1 };
+  const latestTerms: TermsDTO = { url: '/test', version: 1 };
+  const userTerms: UserTermsVersionDTO = { termsVersion: 1 };
+
   const termsService: Partial<jest.Mocked<TermsAndConditionsService>> = {
-    getLatestTerms: jest.fn().mockReturnValue(of(terms)),
+    getLatestTerms: jest.fn().mockReturnValue(of(latestTerms)),
+    getUserTerms: jest.fn().mockReturnValue(of(userTerms)),
   };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
       providers: [
         { provide: KeycloakService, useValue: keycloakService },
         { provide: UsersService, useValue: usersService },
         { provide: AuthoritiesService, useValue: authoritiesService },
         { provide: TermsAndConditionsService, useValue: termsService },
+        { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
       ],
     });
 
@@ -66,6 +78,8 @@ describe('AuthService', () => {
     service = TestBed.inject(AuthService);
     activatedRoute = TestBed.inject(ActivatedRoute);
     keycloakService.loadUserProfile.mockResolvedValue({ email: 'test@test.com' });
+    configStore = TestBed.inject(ConfigStore);
+    configStore.setState({ features: { terms: true } });
   });
 
   afterEach(() => {
@@ -78,7 +92,7 @@ describe('AuthService', () => {
 
   it('should login', async () => {
     await service.login();
-    await service.loadUser();
+    service.loadUser();
 
     expect(keycloakService.login).toHaveBeenCalledTimes(1);
     expect(keycloakService.login).toHaveBeenCalledWith({});
@@ -92,40 +106,40 @@ describe('AuthService', () => {
   });
 
   it('should load and update user status', async () => {
-    await expect(firstValueFrom(authStore.pipe(selectUserState))).resolves.toBeNull();
+    expect(authStore.select(selectUserState)()).toBeNull();
     await expect(firstValueFrom(service.loadUserState())).resolves.toEqual(userState);
-    await expect(firstValueFrom(authStore.pipe(selectUserState))).resolves.toEqual(userState);
+    expect(authStore.select(selectUserState)()).toEqual(userState);
   });
 
   it('should update all user info when checkUser is called', async () => {
-    await expect(firstValueFrom(authStore.asObservable())).resolves.toEqual(initialState);
+    expect(authStore.state).toEqual(initialState);
     keycloakService.isLoggedIn.mockReturnValueOnce(false);
 
-    await expect(firstValueFrom(service.checkUser())).resolves.toBeUndefined();
+    await expect(firstValueFrom(service.checkUser())).resolves.toBeNull();
 
-    await expect(firstValueFrom(authStore.pipe(selectIsLoggedIn))).resolves.toBeFalsy();
-    await expect(firstValueFrom(authStore.pipe(selectUserState))).resolves.toBeNull();
-    await expect(firstValueFrom(authStore.pipe(selectTerms))).resolves.toBeNull();
-    await expect(firstValueFrom(authStore.pipe(selectUser))).resolves.toBeNull();
-    await expect(firstValueFrom(authStore.pipe(selectUserProfile))).resolves.toBeNull();
+    expect(authStore.select(selectIsLoggedIn)()).toBeFalsy();
+    expect(authStore.select(selectUserState)()).toBeNull();
+    expect(authStore.select(selectUserTerms)()).toBeNull();
+    expect(authStore.select(selectUser)()).toBeNull();
+    expect(authStore.select(selectUserProfile)()).toBeNull();
 
     authStore.setIsLoggedIn(null);
     keycloakService.isLoggedIn.mockReturnValueOnce(true);
 
-    await expect(firstValueFrom(service.checkUser())).resolves.toBeUndefined();
+    await expect(firstValueFrom(service.checkUser())).resolves.toBeNull();
 
-    await expect(firstValueFrom(authStore.pipe(selectIsLoggedIn))).resolves.toBeTruthy();
-    await expect(firstValueFrom(authStore.pipe(selectUserState))).resolves.toEqual(userState);
-    await expect(firstValueFrom(authStore.pipe(selectTerms))).resolves.toEqual(terms);
-    await expect(firstValueFrom(authStore.pipe(selectUser))).resolves.toEqual(user);
-    await expect(firstValueFrom(authStore.pipe(selectUserProfile))).resolves.toEqual({ email: 'test@test.com' });
+    expect(authStore.select(selectIsLoggedIn)()).toBeTruthy();
+    expect(authStore.select(selectUserState)()).toEqual(userState);
+    expect(authStore.select(selectUserTerms)()).toEqual(userTerms);
+    expect(authStore.select(selectUser)()).toEqual(user);
+    expect(authStore.select(selectUserProfile)()).toEqual({ email: 'test@test.com' });
   });
 
   it('should not update user info if logged in is already determined', async () => {
     authStore.setIsLoggedIn(false);
     const spy = jest.spyOn(service, 'loadUserState');
 
-    await expect(firstValueFrom(service.checkUser())).resolves.toBeUndefined();
+    await expect(firstValueFrom(service.checkUser())).resolves.toBeNull();
     expect(spy).not.toHaveBeenCalled();
   });
 

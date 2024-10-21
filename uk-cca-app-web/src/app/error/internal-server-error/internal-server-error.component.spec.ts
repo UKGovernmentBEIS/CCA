@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GovukComponentsModule } from 'govuk-components';
+import { GovukComponentsModule } from '@netz/govuk-components';
 
 import { InternalServerErrorComponent } from './internal-server-error.component';
 

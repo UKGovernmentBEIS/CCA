@@ -1,0 +1,16 @@
+<cca-wizard-step
+  (formSubmit)="onSubmitOperatorAddress()"
+  [formGroup]="form"
+  caption="New target unit"
+  heading="Operator address"
+  data-testid="create-target-unit-operator-address-form"
+>
+  <p class="govuk-body">
+    Enter the address of the operator. Notices will be served to this address, and it will appear on the underlying
+    agreement for the target unit. <br />
+    For limited companies or limited liability partnerships this should be the registered office address currently
+    registered with Companies House or the correspondence address of a current officer.
+  </p>
+
+  <cca-account-address-input></cca-account-address-input>
+</cca-wizard-step>

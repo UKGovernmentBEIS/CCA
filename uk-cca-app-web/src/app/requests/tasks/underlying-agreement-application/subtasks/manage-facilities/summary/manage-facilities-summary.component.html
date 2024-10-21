@@ -1,0 +1,28 @@
+<div>
+  <cca-page-heading>Manage facilities list</cca-page-heading>
+
+  <h2 class="govuk-heading-m">Facilities</h2>
+  <p class="govuk-body">You must include at least one facility.</p>
+
+  @if (manageFacilities()?.facilityItems?.length > 0) {
+    <cca-facility-item-list
+      [facilityItems]="manageFacilities().facilityItems"
+      [isEditable]="isEditable()"
+    ></cca-facility-item-list>
+
+    @if (isEditable()) {
+      <button [routerLink]="['../', 'add']" govukSecondaryButton type="button">Add another facility</button>
+
+      @if (isCompleted() === false) {
+        <div class="govuk-button-group">
+          <button (click)="onSubmit()" ccaPendingButton govukButton type="button">Confirm and complete</button>
+        </div>
+      }
+    }
+  } @else {
+    <button [routerLink]="['../', 'add']" govukSecondaryButton type="button">Add facility</button>
+  }
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

@@ -1,0 +1,64 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Change"
+  heading="Target unit details"
+  data-testid="review-change-target-unit-details-form"
+>
+  <div class="govuk-!-width-two-thirds">
+    <div formControlName="operatorType" govuk-radio legend="Operator type" legendSize="medium" hint="Select one option">
+      @for (option of operatorTypeOptions; track option.value) {
+        <govuk-radio-option [label]="option.text" [value]="option.value"></govuk-radio-option>
+      }
+    </div>
+
+    <div
+      formControlName="operatorName"
+      govuk-text-input
+      label="Operator name"
+      labelSize="medium"
+      hint="For limited companies, limited partnerships or limited liability partnerships this should be the name which currently appears on Companies House"
+    ></div>
+
+    <div
+      formControlName="isCompanyRegistrationNumber"
+      govuk-radio
+      legend="Does your company have a registration number?"
+      legendSize="medium"
+      hint="The company registration number or equivalent, for example the company number shows on the certificate of incorporations."
+    >
+      <govuk-radio-option [value]="true" label="Yes">
+        <ng-container govukConditionalContent>
+          <div
+            widthClass="govuk-input--width-10"
+            formControlName="companyRegistrationNumber"
+            govuk-text-input
+            label="Company registration number"
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+
+      <govuk-radio-option [value]="false" label="No">
+        <ng-container govukConditionalContent>
+          <div
+            formControlName="registrationNumberMissingReason"
+            govuk-text-input
+            label="Tell us why you do not have a registration number, for example your installation is a hospital or military site."
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+    </div>
+
+    @if (subsectorsOptions().length > 0) {
+      <div
+        [options]="subsectorsOptions()"
+        formControlName="subsectorAssociationId"
+        govuk-select
+        label="Subsector"
+      ></div>
+    }
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

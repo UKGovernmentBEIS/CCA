@@ -1,0 +1,18 @@
+<cca-wizard-step
+  (formSubmit)="onSubmitFinancialIndependenceStatus()"
+  [formGroup]="form"
+  caption="Change"
+  heading="Financial independence"
+  submitText="Confirm and complete"
+  data-testid="financial-independence-form"
+>
+  <div
+    [options]="options"
+    formControlName="financialIndependenceStatus"
+    govuk-select
+    label="Select whether this target unit will be financially independent."
+  ></div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a govukLink [routerLink]="'../..'"> Return to: {{ targetUnitAccountDetails.name }} </a>

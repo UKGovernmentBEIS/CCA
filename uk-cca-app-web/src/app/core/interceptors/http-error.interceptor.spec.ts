@@ -3,7 +3,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { map, timer } from 'rxjs';
 
-import { mockClass } from '../../../testing';
+import { mockClass } from '@netz/common/testing';
+
 import { GlobalErrorHandlingService } from '../services/global-error-handling.service';
 import { HttpErrorInterceptor } from './http-error.interceptor';
 
@@ -15,9 +16,7 @@ describe(`HttpErrorInterceptor`, () => {
   }
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        { provide: GlobalErrorHandlingService, useValue: globalErrorHandlingService },
-      ],
+      providers: [{ provide: GlobalErrorHandlingService, useValue: globalErrorHandlingService }],
     });
   });
 

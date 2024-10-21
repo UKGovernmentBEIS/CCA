@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { SharedModule } from '@shared/shared.module';
-
 import { AccessibilityComponent } from './accessibility.component';
 
 describe('AccessibilityComponent', () => {
@@ -11,7 +9,7 @@ describe('AccessibilityComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AccessibilityComponent, RouterTestingModule, SharedModule],
+      imports: [AccessibilityComponent, RouterTestingModule],
     }).compileComponents();
   });
 

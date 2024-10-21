@@ -3,9 +3,9 @@ import { Component, DoCheck, Input, OnDestroy, OnInit, Optional, Self } from '@a
 import {
   ControlContainer,
   ControlValueAccessor,
+  FormBuilder,
   NgControl,
   ReactiveFormsModule,
-  UntypedFormBuilder,
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
@@ -45,11 +45,11 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
   @Input() max: Date;
   @Input() isRequired: boolean;
 
-  formGroup = this.formBuilder.group(
+  formGroup = this.fb.group(
     {
-      day: [null],
-      month: [null],
-      year: [null],
+      day: this.fb.control<number>(null),
+      month: this.fb.control<number>(null),
+      year: this.fb.control<number>(null),
     },
     { updateOn: 'change' },
   );
@@ -58,7 +58,7 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
   private touch$ = new BehaviorSubject(false);
   private min$ = new BehaviorSubject(null);
   private max$ = new BehaviorSubject(null);
-  private onChange: (value: { year: number; month: number; day: number }) => void;
+  private onChange: (value: Partial<{ year: number; month: number; day: number }>) => void;
   private onBlur: () => any;
 
   constructor(
@@ -66,7 +66,7 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
     formService: FormService,
     private readonly datePipe: DatePipe,
     @Optional() container: ControlContainer,
-    private readonly formBuilder: UntypedFormBuilder,
+    private readonly fb: FormBuilder,
   ) {
     super(ngControl, formService, container);
   }
@@ -146,6 +146,8 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
         month: value.getMonth() + 1,
         year: value.getFullYear(),
       });
+    } else {
+      this.formGroup.reset();
     }
   }
 
@@ -187,10 +189,10 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
     const errorMessage = validationResults?.isEmpty
       ? 'Enter a date'
       : validationResults?.isIncomplete
-      ? 'Enter a full date'
-      : validationResults?.isUnrealDate
-      ? 'Enter a real date'
-      : '';
+        ? 'Enter a full date'
+        : validationResults?.isUnrealDate
+          ? 'Enter a real date'
+          : '';
     return {
       ...GovukValidators.builder(
         errorMessage,
@@ -205,8 +207,8 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
       DateInputValidators.buildDate(this.formGroup.value) < this.min
         ? `This date must be the same as or after ${this.datePipe.transform(this.min, 'd MMMM y')}`
         : DateInputValidators.buildDate(this.formGroup.value) > this.max
-        ? `This date must be the same as or before ${this.datePipe.transform(this.max, 'd MMMM y')}`
-        : '';
+          ? `This date must be the same as or before ${this.datePipe.transform(this.max, 'd MMMM y')}`
+          : '';
     return {
       ...GovukValidators.builder(
         errorMessage,
