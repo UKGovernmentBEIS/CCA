@@ -3,15 +3,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { first, map, of, switchMap } from 'rxjs';
 
-import { UsersSecuritySetupService } from 'cca-api';
+import { AuthService } from '@core/services/auth.service';
+import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 
-import { AuthService } from '../../core/services/auth.service';
-import { catchBadRequest, ErrorCodes } from '../../error/business-errors';
+import { UsersSecuritySetupService } from 'cca-api';
 
 @Component({
   selector: 'cca-delete-2fa',
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
 })
 export class Delete2faComponent implements OnInit {
   constructor(

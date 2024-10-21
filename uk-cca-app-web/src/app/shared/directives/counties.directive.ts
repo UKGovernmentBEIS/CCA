@@ -4,8 +4,7 @@ import { map } from 'rxjs';
 
 import { County } from '@core/models/county';
 import { CountyService } from '@core/services/county.service';
-
-import { SelectComponent } from 'govuk-components';
+import { SelectComponent } from '@netz/govuk-components';
 
 @Directive({
   selector: 'govuk-select[ccaCounties],[govuk-select][ccaCounties]',

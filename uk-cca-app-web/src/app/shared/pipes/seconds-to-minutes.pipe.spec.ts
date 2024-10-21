@@ -3,7 +3,7 @@ import { SecondsToMinutesPipe } from './seconds-to-minutes.pipe';
 describe('SecondsToMinutesPipe', () => {
   const pipe = new SecondsToMinutesPipe();
 
-  it('create an instance', () => {
+  it('should create an instance', () => {
     expect(pipe).toBeTruthy();
   });
 

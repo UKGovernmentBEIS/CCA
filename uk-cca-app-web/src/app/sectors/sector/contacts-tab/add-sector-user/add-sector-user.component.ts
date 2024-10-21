@@ -1,0 +1,92 @@
+import { JsonPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { EMPTY, startWith } from 'rxjs';
+
+import { catchBadRequest, ErrorCodes } from '@error/business-errors';
+import {
+  ButtonDirective,
+  ErrorSummaryComponent,
+  RadioComponent,
+  RadioOptionComponent,
+  TextInputComponent,
+} from '@netz/govuk-components';
+import { PageHeadingComponent } from '@shared/components';
+import { PendingButtonDirective } from '@shared/directives';
+
+import { SectorUsersInvitationService } from 'cca-api';
+
+import { ContactType, isAdmin, RoleCode } from '../../types';
+import { ADD_SECTOR_FORM, AddSectorFormModel, AddSectorFormProvider } from './add-sector-user-form.provider';
+
+@Component({
+  selector: 'cca-add-sector-user',
+  templateUrl: './add-sector-user.component.html',
+  standalone: true,
+  imports: [
+    JsonPipe,
+    ButtonDirective,
+    TextInputComponent,
+    RadioComponent,
+    RadioOptionComponent,
+    PageHeadingComponent,
+    ErrorSummaryComponent,
+    ReactiveFormsModule,
+    PendingButtonDirective,
+  ],
+  providers: [AddSectorFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AddSectorUserComponent {
+  form = inject<AddSectorFormModel>(ADD_SECTOR_FORM);
+  route = inject(ActivatedRoute);
+  sectorUserInvitationService = inject(SectorUsersInvitationService);
+  router = inject(Router);
+
+  status = toSignal(this.form.statusChanges.pipe(startWith(this.form.status)));
+  role = this.route.snapshot.queryParamMap.get('role') as RoleCode;
+  sectorId = this.route.snapshot.paramMap.get('sectorId');
+  isAdmin = isAdmin(this.role);
+
+  title = this.isAdmin ? 'Add an administrator user' : 'Add a basic user';
+
+  contactTypeOptions: { text: string; value: ContactType }[] = [
+    {
+      text: 'Sector association',
+      value: 'SECTOR_ASSOCIATION',
+    },
+    { text: 'Consultant', value: 'CONSULTANT' },
+  ];
+
+  onSubmit() {
+    this.form.markAsTouched();
+    if (this.form.status === 'INVALID') return;
+    const email = this.form.value.email;
+    this.sectorUserInvitationService
+      .inviteUserToSectorAssociation(+this.sectorId, this.form.getRawValue())
+      .pipe(
+        catchBadRequest(ErrorCodes.AUTHORITY1005, () => {
+          this.form.controls.email.setErrors({
+            emailExists: 'This user email already exists in CCA for this Sector',
+          });
+          return EMPTY;
+        }),
+        catchBadRequest(ErrorCodes.CCAAUTHORITY1003, () => {
+          this.form.controls.email.setErrors({
+            emailExists: 'Authority already exists for a different role type than sector user',
+          });
+          return EMPTY;
+        }),
+      )
+      .subscribe(() => {
+        this.router.navigate(['../add-confirmation'], {
+          relativeTo: this.route,
+          queryParams: { email },
+          queryParamsHandling: 'merge',
+        });
+      });
+  }
+}

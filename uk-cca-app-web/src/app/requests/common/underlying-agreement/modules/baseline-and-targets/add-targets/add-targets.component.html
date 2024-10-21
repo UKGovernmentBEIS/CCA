@@ -1,0 +1,32 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  [caption]="isTargetPeriod5 ? 'TP5 (2021-2022)' : 'TP6 (2024)'"
+  heading="Add targets"
+  data-testid="add-targets-form"
+>
+  <div class="govuk-body">
+    <div
+      widthClass="govuk-!-width-one-quarter"
+      formControlName="improvement"
+      suffix="%"
+      label="Improvement (%)"
+      inputType="number"
+      cca-text-input
+    ></div>
+    <section data-testid="target">
+      @if (targetComposition.agreementCompositionType !== 'NOVEM') {
+        <p class="govuk-label">Target ({{ baselineUnitsSuffix }})</p>
+
+        @if (showTargets()) {
+          <p class="govuk-body">{{ (targets() | number: '1.0-3') + ' ' + baselineUnitsSuffix }}</p>
+        }
+      } @else {
+        <p class="govuk-label">Target: N/A</p>
+      }
+    </section>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

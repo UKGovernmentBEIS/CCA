@@ -1,0 +1,16 @@
+<cca-page-heading [caption]="'New target unit'">Check your answers</cca-page-heading>
+
+<cca-summary [data]="summaryData" />
+
+<button
+  class="govuk-!-margin-top-9"
+  ccaPendingButton
+  govukButton
+  type="button"
+  (click)="onSubmitTargetUnitAccountCreation()"
+>
+  Confirm
+</button>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a govukLink [routerLink]="'../../..'" fragment="target-units"> Return to: Sector target units </a>

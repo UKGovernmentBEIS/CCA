@@ -2,7 +2,7 @@ import { Directive, ElementRef, HostBinding, HostListener } from '@angular/core'
 
 @Directive({
   selector:
-    'a[govukButton], a[govukSecondaryButton], a[govukWarnButton], button[govukButton], button[govukWarnButton], button[govukSecondaryButton]',
+    'a[govukButton], a[govukSecondaryButton], a[govukWarnButton], a[govukInverseButton], button[govukButton], button[govukWarnButton], button[govukSecondaryButton], button[govukInverseButton]',
   standalone: true,
 })
 export class ButtonDirective {
@@ -27,6 +27,11 @@ export class ButtonDirective {
   @HostBinding('class.govuk-button--warning')
   get warningButton(): boolean {
     return this.nativeElement.hasAttribute('govukwarnbutton');
+  }
+
+  @HostBinding('class.govuk-button--inverse')
+  get inverseButton(): boolean {
+    return this.nativeElement.hasAttribute('govukinversebutton');
   }
 
   private get nativeElement(): HTMLButtonElement | HTMLAnchorElement {

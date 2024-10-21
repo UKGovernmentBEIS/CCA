@@ -1,0 +1,39 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
+
+import { RequestTaskStore } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
+import { screen } from '@testing-library/dom';
+
+import { mockReasonForAdminTerminationWithdrawPayload } from '../mocks/mock-withdraw-admin-termination-payload';
+import { WithdrawAdminTerminationPrecontentComponent } from './withdraw-admin-termination-precontent.component';
+
+describe('WithdrawAdminTerminationPrecontentComponent', () => {
+  let component: WithdrawAdminTerminationPrecontentComponent;
+  let fixture: ComponentFixture<WithdrawAdminTerminationPrecontentComponent>;
+  let store: RequestTaskStore;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [WithdrawAdminTerminationPrecontentComponent],
+      providers: [{ provide: ActivatedRoute, useValue: new ActivatedRouteStub() }],
+    }).compileComponents();
+
+    store = TestBed.inject(RequestTaskStore);
+    store.setRequestTaskItem({ requestTask: { type: 'TEST_TYPE' as any } });
+    store.setPayload(mockReasonForAdminTerminationWithdrawPayload);
+    store.setState({ ...store.state, isEditable: true });
+
+    fixture = TestBed.createComponent(WithdrawAdminTerminationPrecontentComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should display the notify button', () => {
+    expect(screen.getByText('Notify operator of decision')).toBeInTheDocument();
+  });
+});

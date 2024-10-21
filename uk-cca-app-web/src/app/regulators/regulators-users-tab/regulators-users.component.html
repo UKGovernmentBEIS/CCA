@@ -1,0 +1,62 @@
+@if (isErrorSummaryDisplayed()) {
+  <govuk-error-summary [form]="regulatorsForm"></govuk-error-summary>
+}
+
+@if (isEditable()) {
+  <button govukButton id="add-regulator" routerLink="add" type="button">Add a new user</button>
+}
+
+<form (ngSubmit)="saveRegulators()" [formGroup]="regulatorsForm" id="regulators-form">
+  <govuk-table
+    [columns]="isEditable() ? editableCols : nonEditableCols"
+    [form]="regulatorsForm"
+    [users]="regulators$"
+    ccaUsersTable
+  >
+    <ng-template let-column="column" let-index="index" let-row="row">
+      <ng-container formArrayName="regulatorsArray">
+        <div [formGroupName]="index" class="cell-container">
+          @switch (column.field) {
+            @case ('name') {
+              @if (isEditable() || row.userId === userId()) {
+                <a [routerLink]="row.userId" govukLink>{{ row | userFullName }}</a>
+              } @else {
+                {{ row | userFullName }}
+              }
+            }
+
+            @case ('authorityStatus') {
+              @if (regulatorsArray.at(index).value.authorityStatus; as authorityStatus) {
+                @if (authorityStatus !== 'PENDING') {
+                  <div
+                    [options]="authorityStatus === 'ACCEPTED' ? authorityStatusesAccepted : authorityStatuses"
+                    formControlName="authorityStatus"
+                    govuk-select
+                    widthClass="govuk-!-width-full"
+                  ></div>
+                } @else {
+                  Awaiting confirmation
+                }
+              }
+            }
+
+            @case ('deleteBtn') {
+              <a [routerLink]="[row.userId, 'delete']" govukLink>Delete</a>
+            }
+
+            @default {
+              {{ row[column.field] }}
+            }
+          }
+        </div>
+      </ng-container>
+    </ng-template>
+  </govuk-table>
+
+  @if (isEditable() && regulators()?.length > 0) {
+    <div class="govuk-button-group">
+      <button ccaPendingButton govukButton type="submit">Save</button>
+      <button (click)="refresh()" govukSecondaryButton type="button">Discard changes</button>
+    </div>
+  }
+</form>

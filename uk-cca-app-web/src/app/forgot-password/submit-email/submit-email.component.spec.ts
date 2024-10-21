@@ -1,81 +1,39 @@
-import { Component, Input } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { BasePage } from '@testing';
+import { render } from '@testing-library/angular';
+import { screen } from '@testing-library/dom';
+import UserEvent from '@testing-library/user-event';
 
 import { ForgotPasswordService } from 'cca-api';
 
-import { EmailSentComponent } from '../email-sent/email-sent.component';
 import { SubmitEmailComponent } from './submit-email.component';
 
 describe('SubmitEmailComponent', () => {
-  let component: SubmitEmailComponent;
-  let fixture: ComponentFixture<SubmitEmailComponent>;
-  let element: HTMLElement;
-  let page: Page;
-
-  @Component({
-    selector: 'cca-email-sent',
-    template: '<p>Mock template</p>',
-    standalone: true,
-  })
-  class MockEmailSentComponent {
-    @Input() email: string;
-  }
-
-  class Page extends BasePage<SubmitEmailComponent> {
-    get inputError(): string[] {
-      return this.queryAll<HTMLSpanElement>('.govuk-error-message').reduce(
-        (result, element) => [
-          ...result,
-          ...Array.from(element.querySelectorAll('.govuk-\\!-display-block')).map((block) => block.textContent.trim()),
-        ],
-        [],
-      );
-    }
-  }
-
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MockEmailSentComponent, SubmitEmailComponent, RouterTestingModule],
+    await render(SubmitEmailComponent, {
       providers: [
+        provideRouter([]),
         {
           provide: ForgotPasswordService,
           useValue: { sendResetPasswordEmail: jest.fn((email) => of(email)) },
         },
       ],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(SubmitEmailComponent);
-    component = fixture.componentInstance;
-    element = fixture.nativeElement;
-    page = new Page(fixture);
-    fixture.detectChanges();
+    });
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(screen.getByTestId('submit-email')).toBeTruthy();
   });
 
-  it('should accept valid email address', () => {
-    const emailInput = fixture.debugElement.query(By.css('input'));
-    const button = element.querySelector<HTMLButtonElement>('button');
-    const getEmailSent = () => fixture.debugElement.query(By.directive(EmailSentComponent));
-
-    const setValueAndSubmit = (value) => {
-      emailInput.triggerEventHandler('input', { target: { value } });
-      button.click();
-      fixture.detectChanges();
-    };
-
-    setValueAndSubmit('test');
-    expect(page.inputError).toEqual(['Error: Enter an email address in the correct format, like name@example.com']);
-
-    setValueAndSubmit('test@test.com');
-    expect(getEmailSent());
+  it('should accept valid email address', async () => {
+    const user = UserEvent.setup();
+    await user.type(document.querySelector('input'), 'test');
+    await user.click(screen.getByRole('button'));
+    expect(screen.getByText('Enter an email address in the correct format, like name@example.com')).toBeVisible();
+    await user.type(document.querySelector('input'), 'test@test.com');
+    await user.click(screen.getByRole('button'));
+    expect(screen.getByTestId('email-sent')).toBeVisible();
   });
 });

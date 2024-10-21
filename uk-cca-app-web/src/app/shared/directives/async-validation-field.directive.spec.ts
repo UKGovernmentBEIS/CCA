@@ -3,7 +3,7 @@ import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
-import { GovukComponentsModule } from 'govuk-components';
+import { TextInputComponent } from '@netz/govuk-components';
 
 import { AsyncValidationFieldDirective } from './async-validation-field.directive';
 
@@ -12,7 +12,9 @@ describe('AsyncValidationFieldDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
+    standalone: true,
     template: '<div govuk-text-input ccaAsyncValidationField [formControl]="name" label="Name"></div>',
+    imports: [ReactiveFormsModule, AsyncValidationFieldDirective, TextInputComponent],
   })
   class TestComponent {
     name = new FormControl();
@@ -20,8 +22,7 @@ describe('AsyncValidationFieldDirective', () => {
 
   beforeEach(() => {
     fixture = TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, GovukComponentsModule],
-      declarations: [AsyncValidationFieldDirective, TestComponent],
+      imports: [TestComponent],
     }).createComponent(TestComponent);
 
     fixture.detectChanges();

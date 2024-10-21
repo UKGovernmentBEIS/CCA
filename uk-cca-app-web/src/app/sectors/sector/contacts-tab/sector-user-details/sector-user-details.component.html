@@ -1,0 +1,113 @@
+@if (details) {
+  <cca-page-heading size="l">{{ userFullName }}</cca-page-heading>
+
+  <h2 class="govuk-heading-m">Name</h2>
+
+  <dl govuk-summary-list data-testid="sector-user-details-list">
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>First name</dt>
+      <dd govukSummaryListRowValue>{{ details.firstName }}</dd>
+
+      @if (changeLink) {
+        <dd govukSummaryListRowActions>
+          <a govukLink [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+        </dd>
+      }
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Last name</dt>
+      <dd govukSummaryListRowValue>{{ details.lastName }}</dd>
+
+      @if (changeLink) {
+        <dd govukSummaryListRowActions>
+          <a govukLink [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+        </dd>
+      }
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Job title</dt>
+      <dd govukSummaryListRowValue>{{ details.jobTitle }}</dd>
+
+      @if (changeLink) {
+        <dd govukSummaryListRowActions>
+          <a govukLink [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+        </dd>
+      }
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Email address</dt>
+      <dd govukSummaryListRowValue>{{ details.email }}</dd>
+    </div>
+  </dl>
+
+  <h2 class="govuk-heading-m">Organisation details</h2>
+
+  <dl govuk-summary-list data-testid="sector-user-organisation-details-list">
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Contact type</dt>
+      <dd govukSummaryListRowValue>{{ details?.contactType | contactType }}</dd>
+
+      @if (changeContactType) {
+        <dd govukSummaryListRowActions>
+          <a govukLink [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+        </dd>
+      }
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Organisation name</dt>
+      <dd govukSummaryListRowValue>{{ details?.organisationName }}</dd>
+
+      @if (changeLink) {
+        <dd govukSummaryListRowActions>
+          <a govukLink [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+        </dd>
+      }
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Phone number 1</dt>
+      <dd govukSummaryListRowValue>
+        {{ details?.phoneNumber?.countryCode | phoneNumber }} {{ details?.phoneNumber?.number }}
+      </dd>
+
+      @if (changeLink) {
+        <dd govukSummaryListRowActions>
+          <a govukLink [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+        </dd>
+      }
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Phone number 2</dt>
+      <dd govukSummaryListRowValue>
+        {{ details?.mobileNumber?.countryCode | phoneNumber }} {{ details?.mobileNumber?.number }}
+      </dd>
+
+      @if (changeLink) {
+        <dd govukSummaryListRowActions>
+          <a govukLink [routerLink]="'edit'" [queryParams]="queryParams">Change</a>
+        </dd>
+      }
+    </div>
+  </dl>
+
+  <h2 class="govuk-heading-m">Credentials</h2>
+
+  @if (isCurrentUser) {
+    <cca-two-fa-link [title]="'Change two factor authentication'" [link]="'/2fa/change'"> </cca-two-fa-link>
+  } @else if (isEditable && sectorUserId) {
+    <cca-two-fa-link
+      [title]="'Reset two-factor authentication'"
+      [link]="'/2fa/reset-2fa'"
+      [userId]="sectorUserId"
+      [userName]="userFullName"
+      [role]="'SECTOR_USER'"
+      [sectorAssociationId]="sectorAssociationId"
+    >
+    </cca-two-fa-link>
+  }
+}

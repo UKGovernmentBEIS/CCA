@@ -1,0 +1,1146 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckYourAnswersComponent should render the summary sections and rows 1`] = `
+<cca-check-your-answers
+  activatedRoute={[Function ActivatedRouteStub]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  summaryDataCurrent={[Function Array]}
+  summaryDataOriginal={[Function Array]}
+  taskService={[Function Object]}
+>
+  <div>
+    <cca-page-heading
+      caption="Change"
+    >
+      <span
+        class="govuk-caption-l"
+      >
+        Change
+      </span>
+      <h1
+        class="govuk-heading-l"
+      >
+        Check your answers
+      </h1>
+    </cca-page-heading>
+    <cca-highlight-diff>
+      <div
+        class="govuk-!-display-none"
+      >
+        <cca-summary>
+          <h2
+            class="govuk-heading-m"
+          >
+            Target unit details
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Operator name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 operator name 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Operator type
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 Limited company 
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Company registration number
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 test 
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Subsector
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 SUBSECTOR_2 
+              </dd>
+            </div>
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Operator address
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Address
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 una operator addr line 1 
+                <br />
+                 una operator addr city 
+                <br />
+                 una operator addr postcode 
+                <br />
+                 una operator addr country 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Responsible Person
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                First name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 test 1 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Last name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 test 2 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Email address
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 test@test.com 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Address
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 una resp addr line 1 
+                <br />
+                 una resp addr line 2 
+                <br />
+                 una resp addr line city 
+                <br />
+                 una resp addr county 
+                <br />
+                 una resp addr line postcode 
+                <br />
+                 una resp addr country 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+          </dl>
+        </cca-summary>
+      </div>
+      <div
+        class="govuk-!-display-none"
+      >
+        <cca-summary>
+          <h2
+            class="govuk-heading-m"
+          >
+            Target unit details
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Operator name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 test 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Operator type
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 Limited company 
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Company registration number
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 test 
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Subsector
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 SUBSECTOR_2 
+              </dd>
+            </div>
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Operator address
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Address
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 accountrefdata operator address line 1 
+                <br />
+                 accountrefdata operator address line 2 
+                <br />
+                 accountrefdata operator address city 
+                <br />
+                 accountrefdata operator address county 
+                <br />
+                 accountrefdata operator address postcode 
+                <br />
+                 accountrefdata operator address country 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Responsible Person
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                First name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 resp person firstname 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Last name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 resp person lastname 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Email address
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 test@test.com 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Address
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 accountrefdata resp pers line 1 
+                <br />
+                 accountrefdata resp pers line 2 
+                <br />
+                 accountrefdata resp pers city 
+                <br />
+                 accountrefdata resp pers county 
+                <br />
+                 accountrefdata resp postcode 
+                <br />
+                 accountrefdata resp pers country 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+          </dl>
+        </cca-summary>
+      </div>
+      <div
+        class="highlight"
+      >
+        <cca-summary>
+          <h2
+            class="govuk-heading-m"
+          >
+            Target unit details
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Operator name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <del
+                  class="diffmod"
+                >
+                  test
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  operator name
+                </ins>
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Operator type
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 Limited company 
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Company registration number
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 test 
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Subsector
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 SUBSECTOR_2 
+              </dd>
+            </div>
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Operator address
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Address
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 operator 
+                <del
+                  class="diffmod"
+                >
+                  address
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 line 1 
+                <br />
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 operator 
+                <del
+                  class="diffmod"
+                >
+                  address line 2 
+                </del>
+                <br />
+                <del
+                  class="diffmod"
+                >
+                   accountrefdata operator address
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 city 
+                <br />
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 operator 
+                <del
+                  class="diffmod"
+                >
+                  address county 
+                </del>
+                <br />
+                <del
+                  class="diffmod"
+                >
+                   accountrefdata operator address
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 postcode 
+                <br />
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 operator 
+                <del
+                  class="diffmod"
+                >
+                  address
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 country 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Responsible Person
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                First name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <del
+                  class="diffmod"
+                >
+                  resp
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  test
+                </ins>
+                <del
+                  class="diffmod"
+                >
+                  person firstname
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  1
+                </ins>
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Last name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <del
+                  class="diffmod"
+                >
+                  resp
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  test
+                </ins>
+                <del
+                  class="diffmod"
+                >
+                  person lastname
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  2
+                </ins>
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Email address
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 test@test.com 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Address
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 resp 
+                <del
+                  class="diffmod"
+                >
+                  pers
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 line 1 
+                <br />
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 resp 
+                <del
+                  class="diffmod"
+                >
+                  pers
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 line 2 
+                <br />
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 resp 
+                <del
+                  class="diffmod"
+                >
+                  pers
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr line
+                </ins>
+                 city 
+                <br />
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 resp 
+                <del
+                  class="diffmod"
+                >
+                  pers
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 county 
+                <br />
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 resp
+                <ins
+                  class="diffins"
+                >
+                   addr line
+                </ins>
+                 postcode 
+                <br />
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 resp 
+                <del
+                  class="diffmod"
+                >
+                  pers
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 country 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  govuklink=""
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+          </dl>
+        </cca-summary>
+      </div>
+    </cca-highlight-diff>
+    <button
+      ccapendingbutton=""
+      class="govuk-button"
+      govukbutton=""
+      type="button"
+    >
+      Confirm and complete
+    </button>
+  </div><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      govuklink=""
+      href="/undefined"
+    >
+       Return to: Apply to vary the underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-check-your-answers>
+`;

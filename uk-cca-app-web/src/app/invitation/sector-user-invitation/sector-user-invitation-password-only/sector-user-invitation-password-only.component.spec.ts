@@ -1,0 +1,88 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
+
+import { ActivatedRouteStub } from '@netz/common/testing';
+import { screen } from '@testing-library/dom';
+import UserEvent from '@testing-library/user-event';
+import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
+
+import { InvitedSectorUserExtended, SectorUserInvitationStore } from '../sector-user-invitation.store';
+import { SectorUserInvitationPasswordOnlyComponent } from './sector-user-invitation-password-only.component';
+
+describe('SectorUserInvitationPasswordOnlyComponent', () => {
+  let component: SectorUserInvitationPasswordOnlyComponent;
+  let fixture: ComponentFixture<SectorUserInvitationPasswordOnlyComponent>;
+  let sectorUserInvitationStore: SectorUserInvitationStore;
+
+  const route = new ActivatedRouteStub();
+
+  const sectorUserStoreState: InvitedSectorUserExtended = {
+    firstName: 'name',
+    lastName: 'surname',
+    jobTitle: 'job',
+    contactType: 'CONSULTANT',
+    roleCode: 'sector_user_basic_user',
+    email: 'test@example.com',
+    emailToken: 'aslfijmaslifhmsalf',
+    invitationStatus: 'PENDING_TO_REGISTERED_SET_REGISTER_FORM',
+    organisationName: 'organisation',
+    phoneNumber: {
+      countryCode: '44',
+      number: '1234567890',
+    },
+  };
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [SectorUserInvitationPasswordOnlyComponent],
+      providers: [
+        SectorUserInvitationStore,
+        provideZxvbnServiceForPSM(),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ActivatedRoute, useValue: route },
+      ],
+    }).compileComponents();
+
+    sectorUserInvitationStore = TestBed.inject(SectorUserInvitationStore);
+    sectorUserInvitationStore.setState(sectorUserStoreState);
+
+    fixture = TestBed.createComponent(SectorUserInvitationPasswordOnlyComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should display the form with no password information', () => {
+    expect(screen.getByLabelText('Create a password to activate your account')).toHaveValue('');
+    expect(screen.getByLabelText('Re-enter your password')).toHaveValue('');
+  });
+
+  it('should show form errors', async () => {
+    const user = UserEvent.setup();
+    await user.type(screen.getByLabelText('Create a password to activate your account'), '123');
+    await user.type(screen.getByLabelText('Re-enter your password'), '456');
+
+    await user.click(screen.getByText('Continue'));
+    fixture.detectChanges();
+    expect(document.querySelector('.govuk-error-summary')).toBeInTheDocument();
+
+    expect(
+      screen.getByText('Password and re-typed password do not match. Please enter both passwords again'),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        'Your password must be 12 characters or longer and can include letters, numbers and symbols or a combination of three random words.',
+      ),
+    ).toBeInTheDocument();
+
+    expect(screen.getAllByText('Password must be 12 characters or more')).toHaveLength(2);
+    expect(screen.getAllByText('Enter a strong password')).toHaveLength(2);
+  });
+});

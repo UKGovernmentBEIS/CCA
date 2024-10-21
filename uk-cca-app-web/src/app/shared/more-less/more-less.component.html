@@ -1,9 +1,0 @@
-<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
-<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
-
-<div [id]="'more-less-link-' + index" [class]="class()">
-  {{ text }}
-</div>
-<a class="govuk-link" (click)="moreLessClicked()" *ngIf="isTextOverflow('more-less-link-' + index)">
-  {{ this.moreIsClicked() ? 'less' : 'more' }}
-</a>

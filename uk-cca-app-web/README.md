@@ -23,8 +23,7 @@ The web application relies on two projects.
 
 is an Angular implementation of the [GDS components](https://design-system.service.gov.uk/components/)
 and can be found [here](projects/govuk-components/). It is an application agnostic approach, clean of business-specific implementations.
-Any custom components based on GDS are built on top of the `govuk-components` library and the `govuk-frontend` library's CSS,
-and usually placed in the main application's `SharedModule`.
+Any custom components based on GDS are built on top of the `govuk-components` library and the `govuk-frontend` library's CSS.
 
 ### The `cca-api` library
 
@@ -123,6 +122,37 @@ yarn test:frontend:coverage
 
 The coverage can the be found in the command line or in the `coverage/` folder which
 will be generated inside the parent folder of each project.
+
+## Functional Tests
+
+Typically, each Jira Story represents one Confluence Page.
+Confluence pages include the Scenarios that the app has to cover for a certain feature to be considered complete.
+
+In CCA, we create specific files that test the Confluence Scenarios exclusively. We use [RouterTestingHarness](https://angular.dev/api/router/testing/RouterTestingHarness) and [Testing Library](https://testing-library.com/), in order to approach the process
+from a black-box testing perspective and making sure that every Scenario is clearly covered in our tests.
+
+**Each functional test suite should cover one feature set, as described by the scenarios in the respective Confluence Page.**
+
+### Technical details
+
+We use the [RouterTestingHarness](https://angular.dev/api/router/testing/RouterTestingHarness) for implementing our functional tests. [Here are some examples for the RouterTestingHarness in Angular](https://dev.to/this-is-angular/testing-routed-components-with-routertestingharness-22dl).
+RouterTestingHarness, combined with TestingLibrary, allows us to test user-like
+behavior, in coordination with some real routing inside our testing environment.
+
+Here are some common caveats to keep in mind, while working with the RouterTestingHarness:
+
+- When navigating to a new page, make sure to run `await harness.fixture.whenStable()`. This code block give time to the Angular TestingLibrary
+  environment to run any pending change detection cycles as well as send any http requests so that the httpTestingController can catch them.
+- Use `httpTestingController` to mock requests and responses. It's extremely convenient and it does not mess with spies and mock implementations
+  of services.
+- In general, when your tests do not render the template you would expect, use `screen.debug()` and play with `harness.fixture.detectChanges()`
+  along with `await harness.fixture.whenStable()`.
+
+### Example
+
+The indicative example for a functional test suite is found under `src/app/sectors/specs/invite-sector.spec.ts`
+
+Note: For password related tests, take a look at `src/app/invitation/sector-user-invitation/specs/sector-user-invitation.spec.ts`
 
 ## Release plan and changelog generation
 

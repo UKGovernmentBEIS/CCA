@@ -7,7 +7,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [NgIf, RouterLink],
   templateUrl: './cookies-pop-up.component.html',
-  styleUrls: ['./cookies-pop-up.component.scss'],
+  styleUrl: './cookies-pop-up.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CookiesPopUpComponent {

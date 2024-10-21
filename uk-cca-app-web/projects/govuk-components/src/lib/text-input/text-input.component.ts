@@ -120,8 +120,8 @@ export class TextInputComponent extends FormInput implements ControlValueAccesso
         this.input.nativeElement === document.activeElement
           ? value
           : this.numberFormat && !Number.isNaN(Number(value))
-          ? this.decimalPipe.transform(value, this.numberFormat)
-          : value,
+            ? this.decimalPipe.transform(value, this.numberFormat)
+            : value,
       );
     }
   }

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { BasePage } from '@testing';
+import { BasePage } from '@netz/common/testing';
 
 import { EmailSentComponent } from './email-sent.component';
 

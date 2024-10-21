@@ -1,0 +1,38 @@
+@for (section of displayData(); track section.header) {
+  <h2 class="govuk-heading-m">{{ section.header }}</h2>
+  <dl govuk-summary-list [attr.data-testid]="section.opts?.testid">
+    @for (row of section.data; track row.value) {
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>{{ row.key }}</dt>
+        <dd govukSummaryListRowValue [ngClass]="{ 'pre-wrap': !!row.prewrap }">
+          @if (row.isFileList) {
+            @if (!row.value.length) {
+              <span>No files provided</span>
+            } @else {
+              <cca-summary-download-files [files]="$any(row.value)" />
+            }
+          } @else {
+            @for (value of row.value; track value; let last = $last) {
+              @if (row.link) {
+                <a govukLink [routerLink]="row.link">{{ value }}</a>
+              } @else {
+                {{ value }}
+              }
+              @if (!last) {
+                <br />
+              }
+            }
+          }
+        </dd>
+
+        @if (row.change) {
+          <dd govukSummaryListRowActions>
+            <a govukLink [routerLink]="row.changeLink || section.changeLink" [queryParams]="row | parseQueryParams"
+              >Change</a
+            >
+          </dd>
+        }
+      </div>
+    }
+  </dl>
+}

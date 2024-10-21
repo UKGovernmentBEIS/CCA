@@ -1,0 +1,67 @@
+@if (isEditable()) {
+  <button type="button" govukButton [routerLink]="['users', 'add']">Add a new operator</button>
+}
+@if (isEditable()) {
+  <govuk-details summary="Learn more about user types">
+    <h3 class="govuk-heading-s">User types</h3>
+
+    <h3 class="govuk-heading-s">Operator user</h3>
+    <p>An operator user can:</p>
+    <ul>
+      <li>view other operator users</li>
+      <li>view all tasks related to this target unit and its facilities</li>
+      <li>view target period reports</li>
+    </ul>
+  </govuk-details>
+}
+
+<form [formGroup]="usersForm" data-testid="target-unit-users-form" (ngSubmit)="onSave()">
+  <govuk-table [columns]="targetUnitUsersColumns" (sort)="sortBy($event)" [data]="users()" formArrayName="users">
+    <ng-template let-column="column" let-index="index" let-row="row">
+      <div [formGroupName]="index" class="cell-container">
+        @switch (column.field) {
+          @case ('name') {
+            @if (isEditable() || row.userId === currentUserId()) {
+              <a [routerLink]="['users', row.userId]" govukLink>{{ row | userFullName }}</a>
+            } @else {
+              {{ row | userFullName }}
+            }
+          }
+
+          @case ('status') {
+            @if (row[column.field] === 'PENDING') {
+              Awaiting Confirmation
+            } @else {
+              @if (isEditable()) {
+                <div
+                  [options]="row[column.field] === 'ACCEPTED' ? authorityStatusesAccepted : authorityStatuses"
+                  formControlName="status"
+                  govuk-select
+                ></div>
+              } @else {
+                {{ row[column.field] | titlecase }}
+              }
+            }
+          }
+
+          @case ('deleteBtn') {
+            @if (isEditable()) {
+              <a [routerLink]="['users', row.userId, 'delete']">Delete</a>
+            }
+          }
+
+          @default {
+            {{ row[column.field] }}
+          }
+        }
+      </div>
+    </ng-template>
+  </govuk-table>
+
+  @if (isEditable() && users()?.length > 0) {
+    <div class="govuk-button-group">
+      <button ccaPendingButton govukButton type="submit">Save</button>
+      <button (click)="refresh()" govukSecondaryButton type="button">Discard changes</button>
+    </div>
+  }
+</form>

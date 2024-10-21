@@ -1,12 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
 import { AuthService } from '@core/services/auth.service';
-import { BasePage, mockClass } from '@testing';
+import { BasePage, mockClass } from '@netz/common/testing';
 import { KeycloakService } from 'keycloak-angular';
 
 import { ForgotPasswordService } from 'cca-api';
@@ -48,8 +47,9 @@ describe('SubmitOtpComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SubmitOtpComponent, RouterTestingModule],
+      imports: [SubmitOtpComponent],
       providers: [
+        provideRouter([]),
         KeycloakService,
         { provide: AuthService, useValue: authService },
         { provide: ForgotPasswordService, useValue: forgotPasswordService },
@@ -65,7 +65,7 @@ describe('SubmitOtpComponent', () => {
     resetPasswordStore = TestBed.inject(ResetPasswordStore);
 
     resetPasswordStore.setState({
-      ...resetPasswordStore.getState(),
+      ...resetPasswordStore.state,
       password: 'password',
       token: 'token',
     });

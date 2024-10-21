@@ -2,7 +2,8 @@ import { ChangeDetectorRef } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { CountryService } from '@core/services/country.service';
-import { CountryServiceStub } from '@testing';
+
+import { CountryServiceStub } from 'src/testing/country.service.stub';
 
 import { PhoneNumberPipe } from './phone-number.pipe';
 

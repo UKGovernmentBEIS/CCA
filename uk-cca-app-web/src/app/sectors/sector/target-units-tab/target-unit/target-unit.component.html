@@ -1,0 +1,34 @@
+<div class="row-flex align-items-end">
+  <div class="col-flex-three-quarters">
+    <cca-page-heading size="l" [caption]="accountDetails.targetUnitAccountDetails.businessId">
+      {{ accountDetails.targetUnitAccountDetails.name }}
+      <span class="govuk-tag-heading-align">
+          <govuk-tag [color]="accountDetails.targetUnitAccountDetails.status | statusColorPipe">
+          {{ accountDetails.targetUnitAccountDetails.status | accountStatus }}
+        </govuk-tag>
+      </span>
+
+    </cca-page-heading>
+  </div>
+  <div class="col-flex-one-quarter">
+    <button govukButton type="button" routerLink="process-actions" class="float-right">Start a new task</button>
+  </div>
+</div>
+
+<section data-testid="target-unit">
+  <govuk-tabs>
+    <ng-template govukTabLazy id="details" label="Details">
+      <cca-summary [data]="summaryData" />
+    </ng-template>
+
+    <ng-template govukTabLazy id="workflow-history" label="Workflow history">
+      <cca-workflow-history-tab />
+    </ng-template>
+
+    <ng-template govukTabLazy id="reports" label="Reports"> Reports</ng-template>
+
+    <ng-template govukTabLazy id="users-and-contacts" label="Users and contacts">
+      <cca-users-and-contacts />
+    </ng-template>
+  </govuk-tabs>
+</section>

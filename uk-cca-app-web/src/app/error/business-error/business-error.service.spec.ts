@@ -4,7 +4,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { firstValueFrom } from 'rxjs';
 
-import { RouterStubComponent } from '../../../testing';
+import { RouterStubComponent } from '@netz/common/testing';
+
 import { buildSaveNotFoundError } from './business-error';
 import { BusinessErrorService } from './business-error.service';
 
@@ -13,8 +14,10 @@ describe('BusinessErrorService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([{ path: 'error/business', component: RouterStubComponent }])],
-      declarations: [RouterStubComponent],
+      imports: [
+        RouterTestingModule.withRoutes([{ path: 'error/business', component: RouterStubComponent }]),
+        RouterStubComponent,
+      ],
     });
     service = TestBed.inject(BusinessErrorService);
   });

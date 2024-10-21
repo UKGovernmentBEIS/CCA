@@ -1,0 +1,90 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
+
+import { of } from 'rxjs';
+
+import { TaskService } from '@netz/common/forms';
+import { RequestTaskStore } from '@netz/common/store';
+import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
+
+import { mockRequestTaskItemDTO } from '../../../testing/mock-data';
+import VariationDetailsCheckYourAnswersComponent from './variation-details-check-your-answers.component';
+
+describe('VariationDetailsCheckYourAnswersComponent', () => {
+  let component: VariationDetailsCheckYourAnswersComponent;
+  let fixture: ComponentFixture<VariationDetailsCheckYourAnswersComponent>;
+  let store: RequestTaskStore;
+  let page: Page;
+
+  const route = new ActivatedRouteStub();
+  const unaTaskService: Partial<jest.Mocked<TaskService>> = {
+    submitSubtask: jest.fn().mockReturnValue(of({})),
+  };
+
+  class Page extends BasePage<VariationDetailsCheckYourAnswersComponent> {
+    get header() {
+      return this.query<HTMLHeadingElement>('h1');
+    }
+    get summaryListValues() {
+      return this.queryAll<HTMLDivElement>('.govuk-summary-list__row')
+        .map((row) => [
+          ...(Array.from(row.querySelectorAll('dt')) ?? []),
+          ...(Array.from(row.querySelectorAll('dd')) ?? []),
+        ])
+        .map((pair) => pair.map((element) => element?.textContent?.trim()));
+    }
+    get submitButton() {
+      return this.query<HTMLButtonElement>('button[type="button"]');
+    }
+  }
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [VariationDetailsCheckYourAnswersComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        RequestTaskStore,
+        { provide: ActivatedRoute, useValue: route },
+        { provide: TaskService, useValue: unaTaskService },
+      ],
+    }).compileComponents();
+
+    store = TestBed.inject(RequestTaskStore);
+    store.setRequestTaskItem(mockRequestTaskItemDTO);
+
+    fixture = TestBed.createComponent(VariationDetailsCheckYourAnswersComponent);
+    component = fixture.componentInstance;
+    page = new Page(fixture);
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should show summary values', () => {
+    expect(page.header.textContent.trim()).toEqual('Check your answers');
+
+    expect(page.summaryListValues).toEqual([
+      ['Target Unit/Facility changes', 'Amend the 70% rule evaluation for one or more facilities'],
+      ['Amend the target currency to', 'change the throughput unit'],
+      ['Explain what you are changing and the reason for the changes', 'Variation reason'],
+    ]);
+  });
+
+  it('should submit', () => {
+    const taskServiceSpy = jest.spyOn(unaTaskService, 'submitSubtask');
+
+    page.submitButton.click();
+    fixture.detectChanges();
+
+    expect(taskServiceSpy).toHaveBeenCalledWith('underlyingAgreementVariationDetails');
+  });
+});

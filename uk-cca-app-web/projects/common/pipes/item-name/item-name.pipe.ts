@@ -1,0 +1,41 @@
+import { Pipe, PipeTransform } from '@angular/core';
+
+import { ItemDTO } from 'cca-api';
+
+@Pipe({ name: 'itemName', pure: true, standalone: true })
+export class ItemNamePipe implements PipeTransform {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  transform(value: ItemDTO['taskType'], year?: string | number): string {
+    switch (value) {
+      case 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT':
+        return 'Apply for underlying agreement';
+      case 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW':
+        return 'Review application for underlying agreement';
+      case 'UNDERLYING_AGREEMENT_WAIT_FOR_REVIEW':
+        return 'Application for underlying agreement sent for review';
+      case 'UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION':
+        return 'Upload target unit assent';
+      case 'UNDERLYING_AGREEMENT_WAIT_FOR_ACTIVATION':
+        return `Application for underlying agreement awaiting operator's assent/activation`;
+
+      case 'ADMIN_TERMINATION_APPLICATION_SUBMIT':
+        return 'Admin termination';
+      case 'ADMIN_TERMINATION_APPLICATION_WITHDRAW':
+        return 'Withdraw admin termination';
+      case 'ADMIN_TERMINATION_APPLICATION_FINAL_DECISION':
+        return 'Admin termination final decision';
+
+      case 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT':
+        return 'Apply to vary the underlying agreement';
+      case 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW':
+        return 'Review underlying agreement variation';
+      case 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_REVIEW':
+        return 'Application for underlying agreement variation sent for review';
+      case 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_ACTIVATION':
+        return 'Application to vary underlying agreement sent for review';
+
+      default:
+        return null;
+    }
+  }
+}

@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExplanationComponent should match snapshot for ExplanationComponent 1`] = `
+<div
+  id="root0"
+>
+  <cca-wizard-step
+    caption="Reject"
+    class="ng-untouched ng-pristine ng-invalid"
+    heading="Explain why you are rejecting the application"
+  >
+    <form
+      class="ng-untouched ng-pristine ng-invalid"
+      novalidate=""
+    >
+      
+      <cca-page-heading>
+        <span
+          class="govuk-caption-l"
+        >
+          Reject
+        </span>
+        
+        <h1
+          class="govuk-heading-l"
+        >
+          Explain why you are rejecting the application
+        </h1>
+      </cca-page-heading>
+      <div
+        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+        formcontrolname="reason"
+        govuk-textarea=""
+        hint="This will be included in the official notice."
+      >
+        <label
+          class="govuk-label govuk-visually-hidden"
+          for="reason"
+          id="l.reason"
+        >
+           Insert text details
+
+        </label>
+        <div
+          class="govuk-hint"
+          id="reason-hint"
+        >
+           This will be included in the official notice.
+
+        </div>
+        
+        
+        <textarea
+          aria-describedby="reason-hint"
+          class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-invalid"
+          id="reason"
+          name="reason"
+          rows="5"
+        />
+        
+      </div>
+      <button
+        ccapendingbutton=""
+        class="govuk-button"
+        govukbutton=""
+        type="submit"
+      >
+        Continue
+      </button>
+      
+      
+    </form>
+  </cca-wizard-step>
+  <hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  />
+  <netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      govuklink=""
+      href="/undefined"
+    >
+       Return to: Review application for underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</div>
+`;

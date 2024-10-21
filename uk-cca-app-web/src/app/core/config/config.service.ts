@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { map, Observable, tap } from 'rxjs';
 
@@ -10,26 +10,25 @@ import { UIConfigurationService } from 'cca-api';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
-  constructor(
-    private readonly store: ConfigStore,
-    private readonly configurationService: UIConfigurationService,
-  ) {}
+  private readonly configStore = inject(ConfigStore);
+  private readonly configurationService = inject(UIConfigurationService);
 
   initConfigState(): Observable<ConfigState> {
     return this.configurationService.getUIFlags().pipe(
-      tap((props) => this.store.setState({ ...props } as ConfigState)),
-      map(() => this.store.getState()),
+      tap((props) => this.configStore.setState({ ...props } as ConfigState)),
+      map(() => this.configStore.state),
     );
   }
 
-  isFeatureEnabled(feature: FeatureName): Observable<boolean> {
-    return this.store.pipe(selectIsFeatureEnabled(feature));
+  isFeatureEnabled(feature: FeatureName): boolean {
+    return this.configStore.select(selectIsFeatureEnabled(feature))();
   }
 
-  getMeasurementId(): Observable<string> {
-    return this.store.pipe(selectMeasurementId);
+  getMeasurementId(): string {
+    return this.configStore.select(selectMeasurementId)();
   }
-  getPropertyId(): Observable<string> {
-    return this.store.pipe(selectPropertyId);
+
+  getPropertyId(): string {
+    return this.configStore.select(selectPropertyId)();
   }
 }

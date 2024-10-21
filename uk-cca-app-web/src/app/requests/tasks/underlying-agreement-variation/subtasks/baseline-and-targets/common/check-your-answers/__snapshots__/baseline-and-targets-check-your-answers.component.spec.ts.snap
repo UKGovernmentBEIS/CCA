@@ -1,0 +1,167 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckYourAnswersComponent should match snapshot 1`] = `
+<div
+  id="root0"
+>
+  <div>
+    <cca-page-heading>
+      <span
+        class="govuk-caption-l"
+      >
+        TP5 (2021-2022)
+      </span>
+      
+      <h1
+        class="govuk-heading-l"
+      >
+        Check your answers
+      </h1>
+    </cca-page-heading>
+    
+    <cca-highlight-diff>
+      <div
+        class="govuk-!-display-none"
+      >
+        <cca-summary>
+          <h2
+            class="govuk-heading-m"
+          >
+            
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Are you providing baseline and target information for TP5 (2021 to 2022)?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 No 
+                
+                
+                
+                
+                
+                
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          
+        </cca-summary>
+        
+      </div>
+      <div
+        class="govuk-!-display-none"
+      >
+        <cca-summary>
+          <h2
+            class="govuk-heading-m"
+          >
+            
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Are you providing baseline and target information for TP5 (2021 to 2022)?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 No 
+                
+                
+                
+                
+                
+                
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          
+        </cca-summary>
+        
+      </div>
+      <div
+        class="highlight"
+      >
+        <cca-summary>
+          <h2
+            class="govuk-heading-m"
+          />
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Are you providing baseline and target information for TP5 (2021 to 2022)?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 No 
+              </dd>
+            </div>
+          </dl>
+        </cca-summary>
+      </div>
+    </cca-highlight-diff>
+    <button
+      ccapendingbutton=""
+      class="govuk-button"
+      govukbutton=""
+      type="button"
+    >
+      Confirm and complete
+    </button>
+  </div>
+  <hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  />
+  <netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      govuklink=""
+      href="/undefined"
+    >
+       Return to: Apply to vary the underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</div>
+`;

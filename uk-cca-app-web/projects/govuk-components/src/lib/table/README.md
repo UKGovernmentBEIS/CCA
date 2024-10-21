@@ -33,18 +33,20 @@ Its context consists of the current `row` and `column` variables.
 class MyComponent {
   columns: GovukTableColumn[] = [
     { header: 'Name', field: 'name', widthClass: 'govuk-!-width-one-quarter', isHeader: true },
-    { header: 'Surname', field: 'surname'},
-    { header: 'Age', field: 'age', isSortable: true }
-  ]
+    { header: 'Surname', field: 'surname' },
+    { header: 'Age', field: 'age', isSortable: true },
+  ];
 
   data: any[] = [
     { name: 'Name 1', surname: 'Surname 1', age: 23 },
     { name: 'Name 2', surname: 'Surname 2', age: 48 },
     { name: 'Name 3', surname: 'Surname 3', age: 32 },
-  ]
+  ];
 
   onSort({ column, direction }: SortEvent) {
-    this.data = this.data.slice().sort((a, b) => direction === 'ascending' ? a[column] - b[column] : b[column] - a[column]);
-  } 
+    this.data = this.data
+      .slice()
+      .sort((a, b) => (direction === 'ascending' ? a[column] - b[column] : b[column] - a[column]));
+  }
 }
 ```

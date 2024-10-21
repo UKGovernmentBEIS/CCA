@@ -1,0 +1,38 @@
+@if (availableWorkflows(); as availableWorkflows) {
+  <cca-page-heading>Start a new task</cca-page-heading>
+
+  @if (availableWorkflows?.length > 0) {
+    @for (workflow of availableWorkflows; track workflow) {
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds govuk-!-margin-top-5">
+          <h2 data-testid="h2-heading" class="govuk-heading-m">{{ workflow.title }}</h2>
+
+          @if (!workflow.errors.length) {
+            @if (workflow.hint) {
+              <p class="govuk-hint">{{ workflow.hint }}</p>
+            }
+
+            <button (click)="onRequestButtonClick(workflow.type)" ccaPendingButton govukButton type="button">
+              {{ workflow.button }}
+            </button>
+          } @else {
+            <ul class="govuk-list">
+              @for (error of workflow.errors; track error) {
+                <li>
+                  {{ error }}
+                </li>
+              }
+            </ul>
+          }
+
+          <hr />
+          <a govukLink routerLink="../"> Return to: {{ targetUnitName }} </a>
+        </div>
+      </div>
+    }
+  } @else {
+    <ul class="govuk-list">
+      <li data-testId="no-workflows">There are no available workflows to initiate.</li>
+    </ul>
+  }
+}

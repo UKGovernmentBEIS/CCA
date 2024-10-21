@@ -1,0 +1,203 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExplanationComponent should match snapshot for OverallDecisionCheckYourAnswersComponent 1`] = `
+<div
+  id="root0"
+>
+  <div>
+    <netz-page-heading>
+      <span
+        class="govuk-caption-l"
+      >
+        Reject
+      </span>
+      
+      <h1
+        class="govuk-heading-l"
+      >
+        Check your answers
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      <h2
+        class="govuk-heading-m"
+      >
+        
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Decision
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             Reject 
+            
+            
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/actions?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Rejection reason
+          </dt>
+          <dd
+            class="pre-wrap govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             reject reason 
+            
+            
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/explanation?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Additional information
+          </dt>
+          <dd
+            class="pre-wrap govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             some addition info 
+            
+            
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/additional-info?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Uploaded files
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              No files provided
+            </span>
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              govuklink=""
+              href="/additional-info?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        
+        
+        
+      </dl>
+      
+    </cca-summary>
+    <button
+      ccapendingbutton=""
+      class="govuk-button"
+      govukbutton=""
+      type="button"
+    >
+      Confirm and complete
+    </button>
+  </div>
+  <hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  />
+  <netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      govuklink=""
+      href="/undefined"
+    >
+       Return to: Review application for underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</div>
+`;

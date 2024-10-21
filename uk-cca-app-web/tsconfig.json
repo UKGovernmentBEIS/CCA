@@ -13,43 +13,23 @@
     "esModuleInterop": true,
     "target": "ES2022",
     "module": "ES2022",
-    "lib": [
-      "ES2022",
-      "dom"
-    ],
+    "lib": ["ES2022", "dom"],
     "strictPropertyInitialization": false,
     "strictNullChecks": false,
     "paths": {
-      "govuk-components": [
-        "./dist/govuk-components"
-      ],
-      "cca-api": [
-        "./dist/cca-api"
-      ],
-      "@core/*": [
-        "src/app/core/*"
-      ],
-      "@common/*": [
-        "src/app/common/*"
-      ],
-      "@shared/*": [
-        "src/app/shared/*"
-      ],
-      "@testing": [
-        "src/testing"
-      ],
-      "@error/*": [
-        "src/app/error/*"
-      ]
+      "@core/*": ["src/app/core/*"],
+      "@error/*": ["src/app/error/*"],
+      "@netz/common/*": ["./dist/common/*"],
+      "@netz/govuk-components": ["./dist/govuk-components"],
+      "@requests/timeline": ["src/app/requests/timeline/index.ts"],
+      "@requests/tasks": ["src/app/requests/tasks/index.ts"],
+      "@requests/common": ["src/app/requests/common/index.ts"],
+      "@shared/*": ["src/app/shared/*"],
+      "cca-api": ["./dist/cca-api"]
     },
     "useDefineForClassFields": false
   },
-  "exclude": [
-    "**/node_modules/*",
-    "**/coverage/*",
-    "**/dist/*",
-    "**/node/*"
-  ],
+  "exclude": ["**/node_modules/*", "**/coverage/*", "**/dist/*", "**/node/*"],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": false,

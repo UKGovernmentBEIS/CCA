@@ -1,10 +1,9 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
-import { ErrorPageComponent } from '@shared/error-page/error-page.component';
-
-import { LinkDirective } from 'govuk-components';
+import { LinkDirective } from '@netz/govuk-components';
+import { ErrorPageComponent } from '@shared/components';
 
 import { BusinessErrorService } from './business-error.service';
 
@@ -18,13 +17,13 @@ import { BusinessErrorService } from './business-error.service';
         </p>
       </cca-error-page>
     }
-    `,
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [ErrorPageComponent, LinkDirective, RouterModule, AsyncPipe]
+  imports: [ErrorPageComponent, LinkDirective, RouterLink, AsyncPipe],
 })
 export class BusinessErrorComponent implements OnDestroy {
-  constructor(readonly businessErrorService: BusinessErrorService) { }
+  constructor(readonly businessErrorService: BusinessErrorService) {}
 
   ngOnDestroy(): void {
     this.businessErrorService.clear();

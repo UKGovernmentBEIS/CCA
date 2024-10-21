@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 import { firstValueFrom } from 'rxjs';
 
-import { RouterStubComponent } from '../../../testing';
+import { RouterStubComponent } from '@netz/common/testing';
+
 import { BusinessError } from './business-error';
 import { BusinessErrorComponent } from './business-error.component';
 import { BusinessErrorService } from './business-error.service';
@@ -16,14 +17,13 @@ describe('BusinessErrorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        BusinessErrorComponent,
-        RouterTestingModule.withRoutes([
+      imports: [BusinessErrorComponent, RouterStubComponent],
+      providers: [
+        provideRouter([
           { path: 'dashboard', component: RouterStubComponent },
           { path: 'error/business', component: BusinessErrorComponent },
         ]),
       ],
-      declarations: [RouterStubComponent],
     }).compileComponents();
 
     TestBed.inject(BusinessErrorService).showError(error);

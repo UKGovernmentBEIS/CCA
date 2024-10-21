@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { SharedModule } from '@shared/shared.module';
-import { BasePage } from '@testing';
+import { BasePage } from '@netz/common/testing';
 
 import { ConfirmationSharedComponent } from './confirmation.component';
 
@@ -19,7 +18,7 @@ describe('ConfirmationSharedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, SharedModule],
+      imports: [RouterTestingModule],
     }).compileComponents();
   });
 

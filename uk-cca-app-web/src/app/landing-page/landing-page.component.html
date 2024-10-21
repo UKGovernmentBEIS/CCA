@@ -1,63 +1,77 @@
-<div *ngIf="vm$ | async as vm">
-  <div *ngIf="vm.isLoggedIn === false; else welcome">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <cca-page-heading>CCA</cca-page-heading>
+<cca-service-banner></cca-service-banner>
 
-        <div class="govuk-body">
-          <h2>ADD INTRO CONTENT HERE</h2>
-          <br />
+@if (vm(); as vm) {
+  @if (vm.isLoggedIn === false) {
+    <div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <cca-page-heading>Manage your Climate Change Agreements (CCA)</cca-page-heading>
 
-          <h2 class="govuk-heading-s">I already have a sign in</h2>
-          <p>You'll need your password and two-factor authentication app to sign in to the service.</p>
+          <div class="govuk-body">
+            <p>
+              Climate Change Agreements (CCA) are voluntary agreements between UK industry and the Environment Agency to
+              reduce energy use and carbon dioxide (CO2) emissions. CCA holders can claim a discount on the Climate
+              Change Levy (CCL).
+            </p>
 
-          <a class="govuk-button govuk-button--start" routerLink="." (click)="authService.login()" draggable="false">
-            Sign in
-            <img class="govuk-button__start-icon" src="/assets/images/start-button-arrow.svg" alt="" />
-          </a>
-          <br />
+            <br />
 
-          <h2 class="govuk-heading-s">I need to create a sign in</h2>
-          <p>You can apply online for a sign in if you qualify for CCA.</p>
+            <h2 class="govuk-heading-m">Who is eligible to apply for a CCA</h2>
+            <p>
+              CCAs are available for a wide range of industry sectors from major energy-intensive processes such as
+              chemicals and paper to supermarkets and agricultural businesses such as intensive pig and poultry farming.
+              A full list of eligible processes is available in Appendix A of the
+              <a
+                govukLink
+                rel="noreferrer noopener"
+                target="_blank"
+                href="https://assets.publishing.service.gov.uk/media/6216220cd3bf7f4f0399d084/Climate-Change-Agreements-Operations-Manual.pdf"
+              >
+                CCA operations manual.
+              </a>
+            </p>
 
-          <a class="govuk-button govuk-button--start" routerLink="/registration" draggable="false">
-            Create a sign in
-            <img class="govuk-button__start-icon" src="/assets/images/start-button-arrow.svg" alt="" />
-          </a>
+            <p>If you need an account to be created for you, contact your sector association.</p>
+
+            <br />
+
+            <h2 class="govuk-heading-s">I already have a sign in</h2>
+            <p>You’ll need your password and two-factor authentication app to sign in to the service</p>
+
+            <a class="govuk-button govuk-button--start" routerLink="." (click)="authService.login()" draggable="false">
+              Sign in
+              <img class="govuk-button__start-icon" src="/assets/images/start-button-arrow.svg" alt="" />
+            </a>
+          </div>
         </div>
       </div>
 
-      <div class="govuk-grid-column-one-third">
-        <cca-related-content>
-          <ul class="govuk-list govuk-!-font-size-16 govuk-list--spaced">
-            <li>
-              <a govukLink rel="noreferrer noopener" href=""> RELATED CONTENT PLACEHOLDER </a>
-            </li>
-          </ul>
-        </cca-related-content>
-      </div>
+      <div class="govuk-!-margin-bottom-9"></div>
+      <cca-back-to-top></cca-back-to-top>
     </div>
+  } @else {
+    @switch (vm.status) {
+      @case ('NO_AUTHORITY') {
+        <ng-container [ngTemplateOutlet]="userHasNoAuthority"></ng-container>
+      }
 
-    <div class="govuk-!-margin-bottom-9"></div>
-    <cca-back-to-top></cca-back-to-top>
-  </div>
+      @case ('ENABLED') {
+        <ng-container [ngTemplateOutlet]="userHasNoAuthority"></ng-container>
+      }
 
-  <ng-template #welcome>
-    <ng-container [ngSwitch]="vm.status">
-      <ng-container *ngSwitchCase="'NO_AUTHORITY'" [ngTemplateOutlet]="apply"></ng-container>
-      <ng-container *ngSwitchCase="'ENABLED'" [ngTemplateOutlet]="apply"></ng-container>
+      @case ('DISABLED') {
+        <ng-container [ngTemplateOutlet]="userDisabled"></ng-container>
+      }
 
-      <ng-container *ngSwitchCase="'DISABLED'">
-        <ng-container [ngSwitch]="vm.roleType">
-          <ng-container *ngSwitchCase="'OPERATOR'" [ngTemplateOutlet]="apply"></ng-container>
-          <ng-container *ngSwitchDefault [ngTemplateOutlet]="userDisabled"></ng-container>
-        </ng-container>
-      </ng-container>
+      @case ('ACCEPTED') {
+        <ng-container [ngTemplateOutlet]="userActivation"></ng-container>
+      }
 
-      <ng-container *ngSwitchCase="'ACCEPTED'" [ngTemplateOutlet]="userActivation"></ng-container>
-      <ng-container *ngSwitchCase="'TEMP_DISABLED'" [ngTemplateOutlet]="userTempDisabled"></ng-container>
-    </ng-container>
-  </ng-template>
+      @case ('TEMP_DISABLED') {
+        <ng-container [ngTemplateOutlet]="userTempDisabled"></ng-container>
+      }
+    }
+  }
 
   <ng-template #userDisabled>
     <cca-page-heading>
@@ -66,44 +80,15 @@
   </ng-template>
 
   <ng-template #userActivation>
-    <cca-page-heading> Your user account needs to be activated. </cca-page-heading>
-
-    <p class="govuk-body">
-      Your user account must be activated before you can sign in to the Manage your Energy Savings Opportunity Scheme
-      reporting service.
-    </p>
-
-    <p class="govuk-body">
-      If your account was created by your regulator, they will now activate your account. You'll receive an email once
-      your account has been activated. <a govukLink routerLink="/contact-us">Contact your regulator</a> if your account
-      has not been activated after 2 working days.
-    </p>
+    <cca-page-heading>Your user account needs activation.</cca-page-heading>
+    <p class="govuk-body">Contact your admin to gain access to your account.</p>
   </ng-template>
 
   <ng-template #userTempDisabled>
     <cca-page-heading>Lorem ipsum dolor sit amet. Cum molestiae numquam aut impedit quia non illo.</cca-page-heading>
   </ng-template>
 
-  <ng-template #apply>
-    <div class="govuk-body">
-      <h1 *ngIf="vm.userProfile as user">Welcome {{ user.firstName }} {{ user.lastName }}</h1>
-
-      <ng-container>
-        <div *ngIf="vm.installationEnabled === false" class="govuk-body">
-          To access the service you'll need to create a new organisation account
-        </div>
-
-        <a govukButton routerLink="/accounts/new">Apply for a new organisation account</a>
-
-        <div class="govuk-body govuk-!-font-weight-bold">
-          If you want to be added to an existing organisation account
-        </div>
-
-        <div class="govuk-body">
-          You can request to be added to an existing organisation account by contacting the relevant organisation
-          administrator.
-        </div>
-      </ng-container>
-    </div>
+  <ng-template #userHasNoAuthority>
+    <cca-page-heading>Contact your administrator to access your account.</cca-page-heading>
   </ng-template>
-</div>
+}

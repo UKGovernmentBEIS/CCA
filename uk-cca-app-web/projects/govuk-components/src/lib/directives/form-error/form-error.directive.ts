@@ -104,8 +104,7 @@ export class FormErrorDirective implements OnDestroy, OnInit, DoCheck {
           this.attachErrorComponent();
         }
 
-        this.errorComponent.instance.errors = this.formControl.errors;
-        this.errorComponent.changeDetectorRef.markForCheck();
+        this.errorComponent.setInput('errors', this.formControl.errors);
       }
 
       this.renderer.addClass(this.nativeElement, this.getErrorClass());

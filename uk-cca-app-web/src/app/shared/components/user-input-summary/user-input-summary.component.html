@@ -2,40 +2,61 @@
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>First name</dt>
     <dd govukSummaryListRowValue>{{ modifiedUserInfo.firstName }}</dd>
-    <dd *ngIf="changeLink" govukSummaryListRowActions>
-      <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
-    </dd>
+
+    @if (changeLink) {
+      <dd govukSummaryListRowActions>
+        <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+      </dd>
+    }
   </div>
+
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>Last name</dt>
     <dd govukSummaryListRowValue>{{ modifiedUserInfo.lastName }}</dd>
-    <dd *ngIf="changeLink" govukSummaryListRowActions>
-      <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
-    </dd>
+
+    @if (changeLink) {
+      <dd govukSummaryListRowActions>
+        <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+      </dd>
+    }
   </div>
-  <div govukSummaryListRow *ngIf="$any(modifiedUserInfo).email">
-    <dt govukSummaryListRowKey>Email address</dt>
-    <dd govukSummaryListRowValue>{{ $any(modifiedUserInfo).email }}</dd>
-    <dd *ngIf="changeLink" govukSummaryListRowActions>
-      <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
-    </dd>
-  </div>
+
+  @if ($any(modifiedUserInfo).email) {
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Email address</dt>
+      <dd govukSummaryListRowValue>{{ $any(modifiedUserInfo).email }}</dd>
+
+      @if (changeLink) {
+        <dd govukSummaryListRowActions>
+          <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+        </dd>
+      }
+    </div>
+  }
+
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>Phone number 1</dt>
     <dd govukSummaryListRowValue>
       {{ modifiedUserInfo.phoneNumber.countryCode | phoneNumber }} {{ modifiedUserInfo.phoneNumber.number }}
     </dd>
-    <dd *ngIf="changeLink" govukSummaryListRowActions>
-      <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
-    </dd>
+
+    @if (changeLink) {
+      <dd govukSummaryListRowActions>
+        <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+      </dd>
+    }
   </div>
+
   <div govukSummaryListRow>
     <dt govukSummaryListRowKey>Phone number 2</dt>
     <dd govukSummaryListRowValue>
       {{ modifiedUserInfo.mobileNumber?.countryCode | phoneNumber }} {{ modifiedUserInfo.mobileNumber?.number }}
     </dd>
-    <dd *ngIf="changeLink" govukSummaryListRowActions>
-      <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
-    </dd>
+
+    @if (changeLink) {
+      <dd govukSummaryListRowActions>
+        <a govukLink [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams">Change</a>
+      </dd>
+    }
   </div>
 </dl>

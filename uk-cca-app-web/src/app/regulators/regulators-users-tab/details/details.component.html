@@ -1,0 +1,173 @@
+@if (isSummaryDisplayed()) {
+  <govuk-error-summary [form]="form"></govuk-error-summary>
+}
+
+<cca-page-heading>{{ userId ? 'User details' : 'Add a new user' }}</cca-page-heading>
+
+<form (ngSubmit)="submitForm()" [formGroup]="form">
+  <div formGroupName="user">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <fieldset govukFieldset id="name">
+          <legend govukLegend>Name</legend>
+          <div
+            autoComplete="given-name"
+            formControlName="firstName"
+            govuk-text-input
+            label="First name"
+            widthClass="govuk-!-width-one-half"
+          ></div>
+
+          <div
+            class="govuk-!-margin-bottom-8"
+            autoComplete="family-name"
+            formControlName="lastName"
+            govuk-text-input
+            label="Last name"
+            widthClass="govuk-!-width-one-half"
+          ></div>
+
+          <div
+            autoComplete="job-title"
+            formControlName="jobTitle"
+            govuk-text-input
+            label="Job title"
+            widthClass="govuk-!-width-one-half"
+          ></div>
+
+          <div
+            autoComplete="email"
+            formControlName="email"
+            govuk-text-input
+            label="Email address"
+            hint="All system alerts, notices and official communications will always be sent by email."
+            widthClass="govuk-!-width-one-half"
+          ></div>
+        </fieldset>
+
+        <fieldset govukFieldset id="phoneNumber">
+          <legend govukLegend>Phone number</legend>
+          <div
+            autoComplete="tel-national"
+            formControlName="phoneNumber"
+            govuk-text-input
+            label="Phone number 1"
+            widthClass="govuk-!-width-one-half"
+          ></div>
+
+          <div
+            class="govuk-!-margin-bottom-8"
+            autoComplete="mobile tel-national"
+            formControlName="mobileNumber"
+            govuk-text-input
+            label="Phone number 2 (optional)"
+            widthClass="govuk-!-width-one-half"
+          ></div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-column-full">
+    <h2 class="govuk-heading-s">Files uploaded</h2>
+    <span class="govuk-hint">
+      The file must be:
+      <ul>
+        <li>a BMP file</li>
+        <li>no more than 240 x 140 pixels</li>
+        <li>no more than 200KB</li>
+      </ul>
+    </span>
+
+    <cca-file-input
+      [downloadUrl]="isCurrentUser ? getCurrentUserDownloadUrl : getDownloadUrl"
+      formControlName="signature"
+      hint="Upload a file"
+      label="Signature"
+      [showFilesizeHint]="false"
+    ></cca-file-input>
+  </div>
+
+  @if (isEditable) {
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-s">Set base permissions</h2>
+        <div class="govuk-button-group">
+          <button
+            (click)="setBasePermissions('regulator_administrator')"
+            govukSecondaryButton
+            id="regulator_administrator"
+            type="button"
+            [attr.aria-pressed]="basePermissionSelected === 'regulator_administrator'"
+          >
+            Administrator User
+          </button>
+
+          <button
+            (click)="setBasePermissions('regulator_basic_user')"
+            govukSecondaryButton
+            id="regulator_basic_user"
+            type="button"
+            [attr.aria-pressed]="basePermissionSelected === 'regulator_basic_user'"
+          >
+            Basic User
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <fieldset govukFieldset id="custom-permission">
+        <legend govukLegend>Customise Permissions</legend>
+        <div [formGroupName]="'permissions'">
+          <govuk-table [columns]="tableColumns" [data]="tableRows">
+            <ng-template let-column="column" let-row="row">
+              @if (column.field === 'task' || column.field === 'type') {
+                {{ row[column.field] }}
+              } @else {
+                @if (isEditable && permissionGroups) {
+                  @if (permissionGroups[row.permission] | includes: column.field) {
+                    <div
+                      [formControlName]="row.permission"
+                      [index]="column.field"
+                      [value]="column.field"
+                      cca-radio-option
+                    >
+                      <ng-container label>
+                        <span class="govuk-visually-hidden">{{ column.header }}</span>
+                      </ng-container>
+                    </div>
+                  }
+                } @else {
+                  @if (userPermissions?.[row.permission] === column.field) {
+                    <div [id]="'check-' + row.permission + '-' + column.field">
+                      <strong>&#10004;</strong>
+                    </div>
+                  }
+                }
+              }
+            </ng-template>
+          </govuk-table>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+  @if (isCurrentUser) {
+    <cca-two-fa-link [title]="'Change two factor authentication'" [link]="'/2fa/change'"> </cca-two-fa-link>
+  } @else if (isEditable && userId) {
+    <cca-two-fa-link
+      [title]="'Reset two-factor authentication'"
+      [link]="'2fa/reset-2fa'"
+      [userId]="userId"
+      [userName]="userFullName"
+      [role]="'REGULATOR'"
+    >
+    </cca-two-fa-link>
+  }
+
+  <button ccaPendingButton govukButton type="submit">
+    {{ userId | submitIfEmpty }}
+  </button>
+</form>

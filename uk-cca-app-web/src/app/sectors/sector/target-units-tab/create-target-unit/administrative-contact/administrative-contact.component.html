@@ -1,0 +1,14 @@
+<cca-wizard-step
+  (formSubmit)="onSubmitAdministrativeContact()"
+  [formGroup]="form"
+  caption="New target unit"
+  heading="Administrative contact details"
+  data-testid="create-target-unit-administrative-contact-form"
+>
+  <p class="govuk-body">
+    Please provide the details of the administrative contact for the target unit. This person will be contacted for day
+    to day queries and will receive communications from the CCA register for this purpose.
+  </p>
+
+  <cca-administrative-contact-input></cca-administrative-contact-input>
+</cca-wizard-step>

@@ -1,11 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { Router, UrlTree } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { lastValueFrom, Observable, of } from 'rxjs';
 
-import { AuthStore } from '@core/store/auth';
-import { MockType } from '@testing';
+import { AuthStore } from '@netz/common/auth';
+import { MockType } from '@netz/common/testing';
 
 import { AuthService } from '../services/auth.service';
 import { NonAuthGuard } from './non-auth.guard';
@@ -21,7 +20,6 @@ describe('NonAuthGuard', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
       providers: [{ provide: AuthService, useValue: authService }],
     });
 

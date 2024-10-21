@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormArray, FormGroup } from '@angular/forms';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { Observable, of } from 'rxjs';
 
-import { SharedModule } from '@shared/shared.module';
-import { BasePage } from '@testing';
+import { BasePage } from '@netz/common/testing';
+import { TableComponent } from '@netz/govuk-components';
 
 import { RegulatorUsersAuthoritiesInfoDTO } from 'cca-api';
 
@@ -26,7 +26,6 @@ describe('UsersTableDirective', () => {
           firstName: 'Alfyn',
           lastName: 'Octo',
           authorityStatus: 'DISABLED',
-          locked: false,
           authorityCreationDate: '2020-12-14T12:38:12.846716Z',
         },
         {
@@ -34,7 +33,6 @@ describe('UsersTableDirective', () => {
           firstName: 'Therion',
           lastName: 'Path',
           authorityStatus: 'ACTIVE',
-          locked: true,
           authorityCreationDate: '2020-12-15T12:38:12.846716Z',
         },
         {
@@ -42,7 +40,6 @@ describe('UsersTableDirective', () => {
           firstName: 'Olberik',
           lastName: 'Traveler',
           authorityStatus: 'ACTIVE',
-          locked: true,
           authorityCreationDate: '2020-11-10T12:38:12.846716Z',
         },
         {
@@ -50,7 +47,6 @@ describe('UsersTableDirective', () => {
           firstName: 'andrew',
           lastName: 'webber',
           authorityStatus: 'ACTIVE',
-          locked: false,
           authorityCreationDate: '2021-01-10T12:38:12.846716Z',
         },
         {
@@ -58,7 +54,6 @@ describe('UsersTableDirective', () => {
           firstName: 'William',
           lastName: 'Walker',
           authorityStatus: 'PENDING',
-          locked: false,
           authorityCreationDate: '2021-02-8T12:38:12.846716Z',
         },
       ],
@@ -90,6 +85,7 @@ describe('UsersTableDirective', () => {
     );
 
   @Component({
+    standalone: true,
     template: `
       <form [formGroup]="usersForm" id="users-form">
         <govuk-table
@@ -100,10 +96,12 @@ describe('UsersTableDirective', () => {
         >
           <ng-template let-column="column" let-index="index" let-row="row">
             <ng-container formArrayName="usersArray">
-              <div [formGroupName]="index" [ngSwitch]="column.field" class="cell-container">
-                <ng-container *ngSwitchCase="'name'">
-                  <input type="text" formControlName="firstName" />
-                </ng-container>
+              <div [formGroupName]="index" class="cell-container">
+                @switch (column.field) {
+                  @case ('name') {
+                    <input type="text" formControlName="firstName" />
+                  }
+                }
               </div>
               <ng-template #bareField>{{ row[column.field] | titlecase }}</ng-template>
             </ng-container>
@@ -111,6 +109,7 @@ describe('UsersTableDirective', () => {
         </govuk-table>
       </form>
     `,
+    imports: [TableComponent, ReactiveFormsModule, UsersTableDirective],
   })
   class TestComponent {
     users$: Observable<UsersTableItem[]> = of(mockRegulatorsRouteData.regulators.caUsers);
@@ -121,8 +120,7 @@ describe('UsersTableDirective', () => {
 
   beforeEach(() => {
     fixture = TestBed.configureTestingModule({
-      imports: [UsersTableDirective, SharedModule],
-      declarations: [TestComponent],
+      imports: [TestComponent],
     }).createComponent(TestComponent);
 
     page = new Page(fixture);

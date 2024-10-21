@@ -1,12 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { UrlTree } from '@angular/router';
 
-import { Observable } from 'rxjs';
-
 import { LoggedInGuard } from './logged-in.guard';
 
 describe('LoggedInGuard', () => {
-  let guard: Observable<boolean | UrlTree>;
+  let guard: boolean | UrlTree;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

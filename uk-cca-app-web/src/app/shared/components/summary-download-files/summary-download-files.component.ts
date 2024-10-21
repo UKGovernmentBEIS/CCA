@@ -1,16 +1,24 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+import { LinkDirective } from '@netz/govuk-components';
+import { DownloadableFile } from '@shared/utils';
 
 @Component({
   selector: 'cca-summary-download-files',
   template: `
-    <ng-container *ngFor="let file of files; let isLast = last">
+    @for (file of files(); track file; let isLast = $last) {
       <a [routerLink]="file.downloadUrl" govukLink target="_blank">{{ file.fileName }}</a>
-      <br *ngIf="!isLast && files.length !== 1" />
-    </ng-container>
+
+      @if (!isLast && files.length !== 1) {
+        <br />
+      }
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [LinkDirective, RouterLink],
 })
 export class SummaryDownloadFilesComponent {
-  @Input()
-  files: { downloadUrl: string; fileName: string }[];
+  files = input.required<DownloadableFile[]>();
 }

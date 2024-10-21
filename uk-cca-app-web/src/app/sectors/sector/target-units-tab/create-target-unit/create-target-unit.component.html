@@ -1,0 +1,12 @@
+<cca-wizard-step
+  (formSubmit)="onSubmitTargetUnit()"
+  [formGroup]="form"
+  caption="New target unit"
+  heading="Target unit details"
+  data-testid="create-target-unit-details-form"
+>
+  <cca-target-unit-details-input [subSectors]="subSectors"></cca-target-unit-details-input>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a govukLink [routerLink]="'../../..'" fragment="target-units"> Return to: Sector target units </a>

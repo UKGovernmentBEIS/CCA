@@ -1,0 +1,58 @@
+@if (canCreateTargetUnit()) {
+  <button type="button" govukButton (click)="onAddNewTargetUnit()">Add new target unit</button>
+}
+
+<form [formGroup]="targetUnitsForm" id="target-units-form" (ngSubmit)="onSubmit()">
+  <govuk-table
+    [columns]="targetUnitsColumns"
+    (sort)="sortBy($event)"
+    [data]="targetUnits()"
+    formArrayName="targetUnits"
+    data-testid="target-unit-list"
+  >
+    <ng-template let-column="column" let-index="index" let-row="row">
+      <div [formGroupName]="index" class="cell-container">
+        @switch (column.field) {
+          @case ('accountName') {
+            <a [routerLink]="['target-units', row.accountId]" govukLink>{{ row[column.field] }}</a>
+          }
+
+          @case ('businessId') {
+            {{ row[column.field] | uppercase }}
+          }
+
+          @case ('assignedTo') {
+            @if (editable()) {
+              <div [options]="sectorUserOptions()" formControlName="assignedTo" govuk-select></div>
+            } @else {
+              {{ sectorNames().get(row[column.field]) || 'Unassigned' }}
+            }
+          }
+
+          @case ('status') {
+            <govuk-tag [color]="row[column.field] | statusColorPipe">
+              {{ row[column.field] | lowercase }}
+            </govuk-tag>
+          }
+
+          @default {
+            {{ row[column.field] }}
+          }
+        }
+      </div>
+    </ng-template>
+  </govuk-table>
+
+  <cca-pagination
+    [count]="count()"
+    (currentPageChange)="handlePageChange($event)"
+    [pageSize]="pageSize"
+  ></cca-pagination>
+
+  @if (editable() && targetUnits()?.length > 0) {
+    <div class="govuk-button-group">
+      <button ccaPendingButton govukButton type="submit">Save</button>
+      <button (click)="refresh()" govukSecondaryButton type="button">Discard changes</button>
+    </div>
+  }
+</form>

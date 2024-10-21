@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   selector: 'govuk-header-nav-list',
   standalone: true,
   templateUrl: './nav-list.component.html',
-  styleUrls: ['./nav-list.component.scss'],
+  styleUrl: './nav-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderNavListComponent {

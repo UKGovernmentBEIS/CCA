@@ -3,13 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "peerDependencies": {
-    "@angular/common": "^12.0.4-",
-    "@angular/core": "^12.0.4-",
-    "@openapitools/openapi-generator-cli": "^2.1.7",
-    "barrelsby": "^2.2.0",
-    "rimraf": "^3.0.2"
+    "@angular/common": "^17.3.4",
+   "@angular/core": "^17.3.4",
+    "@openapitools/openapi-generator-cli": "^2.13.5",
+    "barrelsby": "^2.8.1",
+    "rimraf": "^6.0.1"
   },
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.6.2"
   }
 }

@@ -6,12 +6,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
 
 import { PageNotFoundComponent } from '@error/page-not-found/page-not-found.component';
-import { BasePage, mockClass, MockType } from '@testing';
+import { BasePage, mockClass, MockType } from '@netz/common/testing';
 import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { ForgotPasswordService } from 'cca-api';
 
-import { PasswordService } from '../../shared-user/password/password.service';
+import { PasswordService } from '../../shared/components/password/password.service';
 import { ResetPasswordStore } from '../store/reset-password.store';
 import { ResetPasswordComponent } from './reset-password.component';
 
@@ -79,7 +79,7 @@ describe('ResetPasswordComponent', () => {
     resetPasswordStore = TestBed.inject(ResetPasswordStore);
 
     resetPasswordStore.setState({
-      ...resetPasswordStore.getState(),
+      ...resetPasswordStore.state,
       password: 'password',
     });
 

@@ -1,0 +1,26 @@
+@if (isConfirmationDisplayed()) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <govuk-panel title="The user account for {{ operator | userFullName }} has been removed"></govuk-panel>
+
+      <a fragment="users-and-contacts" govukLink [routerLink]="['../../..']"> Return to: Users and contacts page </a>
+    </div>
+  </div>
+} @else {
+  <section data-testid="delete-operator-page">
+    <h2 class="govuk-heading-l">Confirm that the user account of {{ operator | userFullName }} will be removed</h2>
+
+    <govuk-warning-text assistiveText="">You will not be able to undo this action.</govuk-warning-text>
+
+    <p class="govuk-body govuk-!-width-two-thirds">
+      All tasks currently assigned to this user will be automatically unassigned after you select 'Confirm removal'.
+    </p>
+
+    <p class="govuk-body">If you need to reassign any of these tasks before removing this user, select 'Cancel'.</p>
+
+    <div class="govuk-button-group">
+      <button type="button" (click)="onDeleteOperator()" ccaPendingButton govukWarnButton>Confirm removal</button>
+      <a govukLink fragment="users-and-contacts" [routerLink]="['../../..']">Cancel</a>
+    </div>
+  </section>
+}

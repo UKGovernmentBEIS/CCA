@@ -1,0 +1,60 @@
+<form [formGroup]="searchForm" data-testid="workflow-history-form">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <div class="govuk-heading-m">Workflow History</div>
+          <div class="govuk-heading-s">Type</div>
+
+          <div formControlName="requestTypes" class="govuk-checkboxes govuk-checkboxes--small" govuk-checkboxes>
+            @for (type of workflowTypesMap | keyvalue: originalOrder; track type) {
+              <govuk-checkbox [value]="type.value" [label]="type.key"></govuk-checkbox>
+            }
+          </div>
+        </div>
+
+        <div class="govuk-grid-column-full">
+          <div class="govuk-heading-s">Status</div>
+          <div formControlName="requestStatuses" class="govuk-checkboxes govuk-checkboxes--small" govuk-checkboxes>
+            @for (status of workflowStatusesMap | keyvalue: originalOrder; track status) {
+              <govuk-checkbox [value]="status.value" [label]="status.key"></govuk-checkbox>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-!-margin-top-9">
+        <ul class="govuk-list">
+          @for (workflow of state().workflowsHistory?.requestDetails; track workflow.id) {
+            <li class="search-results-list_item govuk-!-margin-bottom-3">
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-three-quarters govuk-!-margin-bottom-3">
+                  <a [routerLink]="['workflow-details', workflow.id]" govukLink>{{ workflow.id }}</a>
+                  <div class="govuk-!-margin-bottom-0 govuk-body">Created {{ workflow.creationDate | date }}</div>
+                </div>
+
+                <div class="govuk-grid-column-one-quarter">
+                  <span
+                    class="search-results-list_item_status govuk-!-margin-top-2 govuk-tag govuk-tag--{{
+                      workflow.requestStatus | requestStatusTagColor
+                    }}"
+                  >
+                    <strong>{{ workflow.requestStatus | workflowStatus }}</strong>
+                  </span>
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <cca-pagination
+        [count]="count()"
+        (currentPageChange)="handlePageChange($event)"
+        [pageSize]="pageSize"
+      ></cca-pagination>
+    </div>
+  </div>
+</form>

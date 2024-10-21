@@ -1,4 +1,4 @@
-import { AsyncPipe, DOCUMENT, NgIf } from '@angular/common';
+import { AsyncPipe, DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -14,11 +14,10 @@ import {
 import { takeUntil } from 'rxjs';
 
 import { DestroySubject } from '@core/services/destroy-subject.service';
-import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
-import { SecondsToMinutesPipe } from '@shared/pipes/seconds-to-minutes.pipe';
+import { ButtonDirective } from '@netz/govuk-components';
+import { PageHeadingComponent } from '@shared/components';
+import { SecondsToMinutesPipe } from '@shared/pipes';
 import dialogPolyfill from 'dialog-polyfill';
-
-import { ButtonDirective } from 'govuk-components';
 
 import { TimeoutBannerService } from './timeout-banner.service';
 
@@ -26,10 +25,10 @@ import { TimeoutBannerService } from './timeout-banner.service';
   selector: 'cca-timeout-banner',
   standalone: true,
   templateUrl: './timeout-banner.component.html',
-  styleUrls: ['./timeout-banner.component.scss'],
+  styleUrl: './timeout-banner.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DestroySubject],
-  imports: [PageHeadingComponent, AsyncPipe, SecondsToMinutesPipe, ButtonDirective, NgIf],
+  imports: [PageHeadingComponent, AsyncPipe, SecondsToMinutesPipe, ButtonDirective],
 })
 export class TimeoutBannerComponent implements OnInit, AfterViewInit {
   @Input() timeOffsetSeconds: number;

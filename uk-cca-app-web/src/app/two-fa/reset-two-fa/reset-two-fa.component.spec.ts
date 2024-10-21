@@ -1,13 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
-import { SharedModule } from '@shared/shared.module';
-import { BasePage, mockClass } from '@testing';
+import { ActivatedRouteStub, BasePage, mockClass } from '@netz/common/testing';
 
-import { OperatorUsersService, RegulatorUsersService, VerifierUsersService } from 'cca-api';
+import { OperatorUsersService, RegulatorUsersService, SectorUsersService } from 'cca-api';
 
 import { ResetTwoFaComponent } from './reset-two-fa.component';
 
@@ -17,8 +15,8 @@ describe('ResetTwoFaComponent', () => {
   let page: Page;
 
   const regulatorUsersService = mockClass(RegulatorUsersService);
-  const verifierUsersService = mockClass(VerifierUsersService);
   const operatorUsersService = mockClass(OperatorUsersService);
+  const sectorUsersService = mockClass(SectorUsersService);
 
   class Page extends BasePage<ResetTwoFaComponent> {
     get heading() {
@@ -31,12 +29,12 @@ describe('ResetTwoFaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SharedModule, RouterTestingModule, SharedModule, PageHeadingComponent],
-      declarations: [ResetTwoFaComponent],
+      imports: [ResetTwoFaComponent],
       providers: [
         { provide: RegulatorUsersService, useValue: regulatorUsersService },
-        { provide: VerifierUsersService, useValue: verifierUsersService },
         { provide: OperatorUsersService, useValue: operatorUsersService },
+        { provide: SectorUsersService, useValue: sectorUsersService },
+        { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
       ],
     }).compileComponents();
 
@@ -53,7 +51,6 @@ describe('ResetTwoFaComponent', () => {
   it('should reset 2fa after clicking button', () => {
     jest.spyOn(fixture.componentInstance, 'reset');
     regulatorUsersService.resetRegulator2Fa.mockReturnValueOnce(of());
-    verifierUsersService.resetVerifier2Fa.mockReturnValueOnce(of());
     operatorUsersService.resetOperator2Fa.mockReturnValueOnce(of());
     window.history.pushState({ userId: '1234', accountId: '1234', role: 'REGULATOR' }, 'yes');
 
@@ -66,18 +63,11 @@ describe('ResetTwoFaComponent', () => {
     expect(component.reset).toHaveBeenCalledTimes(1);
     expect(regulatorUsersService.resetRegulator2Fa).toHaveBeenCalledTimes(1);
 
-    window.history.pushState({ role: 'VERIFIER' }, 'yes');
-    page.submitButton.click();
-    fixture.detectChanges();
-
-    expect(component.reset).toHaveBeenCalledTimes(2);
-    expect(verifierUsersService.resetVerifier2Fa).toHaveBeenCalledTimes(1);
-
     window.history.pushState({ role: 'OPERATOR' }, 'yes');
     page.submitButton.click();
     fixture.detectChanges();
 
-    expect(component.reset).toHaveBeenCalledTimes(3);
+    expect(component.reset).toHaveBeenCalledTimes(2);
     expect(operatorUsersService.resetOperator2Fa).toHaveBeenCalledTimes(1);
   });
 });

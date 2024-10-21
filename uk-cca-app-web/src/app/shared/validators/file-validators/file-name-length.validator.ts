@@ -9,6 +9,7 @@ export function fileNameLengthValidator(maxLength: number, message: string): Val
 
     if (file instanceof File) {
       const fileName = file.name;
+
       if (fileName.length > maxLength) {
         return { fileNameTooLong: { message } };
       }

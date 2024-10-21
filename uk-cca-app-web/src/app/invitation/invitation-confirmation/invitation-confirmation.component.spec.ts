@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 
-import { mockClass } from '../../../testing';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '@core/services/auth.service';
+import { mockClass } from '@netz/common/testing';
+
+import { SectorUserInvitationStore } from '../sector-user-invitation/sector-user-invitation.store';
 import { InvitationConfirmationComponent } from './invitation-confirmation.component';
 
 describe('InvitationConfirmationComponent', () => {
@@ -11,8 +12,8 @@ describe('InvitationConfirmationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InvitationConfirmationComponent, RouterTestingModule],
-      providers: [{ provide: AuthService, useValue: mockClass(AuthService) }],
+      imports: [InvitationConfirmationComponent],
+      providers: [SectorUserInvitationStore, { provide: AuthService, useValue: mockClass(AuthService) }],
     }).compileComponents();
   });
 

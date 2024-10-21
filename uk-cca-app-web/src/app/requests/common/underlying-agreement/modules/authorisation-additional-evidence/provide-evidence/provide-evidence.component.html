@@ -1,0 +1,31 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Authorisation and additional evidence"
+  heading="Provide evidence"
+  data-testid="provide-additional-evidence-form"
+>
+  <div class="govuk-!-width-two-thirds govuk-body">
+    <cca-multiple-file-input
+      [baseDownloadUrl]="downloadUrl"
+      [listTitle]="'Uploaded files'"
+      label="Authorisation"
+      hint="Upload evidence that the operator of all the facilities in the target unit has authorised the sector to
+      submit this application on their behalf."
+      formControlName="authorisationAttachmentIds"
+    ></cca-multiple-file-input>
+
+    <cca-multiple-file-input
+      [baseDownloadUrl]="downloadUrl"
+      [listTitle]="'Uploaded files'"
+      label="Additional evidence (optional)"
+      hint="Upload any additional evidence or correspondence not specifically requested
+      in other parts of the application that will assist the Environment Agency in
+      determining the application."
+      formControlName="additionalEvidenceAttachmentIds"
+    ></cca-multiple-file-input>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

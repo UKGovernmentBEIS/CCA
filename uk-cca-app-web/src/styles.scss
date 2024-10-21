@@ -1,6 +1,8 @@
 @use 'sass:string';
 @use 'sass:list';
 
+$govuk-page-width: 1200px;
+
 // Flags for support of IE8
 $govuk-if-ie8: false;
 $govuk-suppressed-warnings: ie8;

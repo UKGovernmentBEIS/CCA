@@ -1,0 +1,89 @@
+import { InjectionToken, Provider } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { GovukValidators } from '@netz/govuk-components';
+import { FileType, FileValidators, UuidFilePair } from '@shared/components';
+import { RequestTaskFileService } from '@shared/services';
+import { transformAttachmentToFileWithUUID, transformFilesToUUIDsList } from '@shared/utils';
+
+import { Apply70Rule } from 'cca-api';
+
+import { underlyingAgreementQuery } from '../../../+state';
+import { UPLOAD_SECTION_ATTACHMENT_TYPE } from '../../../underlying-agreement.types';
+
+export type FacilityApplyRuleFormModel = {
+  energyConsumed: FormControl<Apply70Rule['energyConsumed']>;
+  energyConsumedProvision: FormControl<Apply70Rule['energyConsumedProvision']>;
+  startDate: FormControl<Apply70Rule['startDate']>;
+  evidenceFile: FormControl<UuidFilePair>;
+};
+
+export const FACILITY_APPLY_RULE_FORM = new InjectionToken<FacilityApplyRuleFormModel>('Facility Apply Rule Form');
+
+export const FacilityApplyRuleFormProvider: Provider = {
+  provide: FACILITY_APPLY_RULE_FORM,
+  deps: [FormBuilder, ActivatedRoute, RequestTaskStore, RequestTaskFileService],
+  useFactory: (
+    fb: FormBuilder,
+    activatedRoute: ActivatedRoute,
+    requestTaskStore: RequestTaskStore,
+    requestTaskFileService: RequestTaskFileService,
+  ) => {
+    const requestTaskType = requestTaskStore.select(requestTaskQuery.selectRequestTaskType)();
+
+    const facilityId = activatedRoute.snapshot.params.facilityId;
+    const applyRule = requestTaskStore.select(underlyingAgreementQuery.selectFacility(facilityId))()?.apply70Rule;
+    const attachments = requestTaskStore.select(underlyingAgreementQuery.selectAttachments)();
+    const evidenceFile = transformAttachmentToFileWithUUID(applyRule?.evidenceFile, attachments);
+
+    const buildFileFormControl = requestTaskFileService.buildFormControl(
+      requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
+      transformFilesToUUIDsList(evidenceFile),
+      attachments,
+      UPLOAD_SECTION_ATTACHMENT_TYPE[requestTaskType],
+      true,
+      false,
+    );
+
+    buildFileFormControl.addValidators([
+      FileValidators.validContentTypes([FileType.XLSX, FileType.XLS], 'must be an Excel spreadsheet'),
+    ]);
+
+    const group = fb.group({
+      energyConsumed: fb.control(applyRule?.energyConsumed ?? null, [
+        GovukValidators.required('Enter the energy consumed in the installation'),
+        GovukValidators.min(0, 'Percentage of energy consumed in the installation must be between 0 and 100'),
+        GovukValidators.max(100, 'Percentage of energy consumed in the installation must be between 0 and 100'),
+        GovukValidators.maxDecimalsValidator(2),
+      ]),
+      energyConsumedProvision: fb.control(applyRule?.energyConsumedProvision ?? null, [
+        GovukValidators.required('Enter the energy consumed in relation to the 3/7ths provision'),
+        GovukValidators.min(0, 'Percentage of energy consumed in the installation must be between 0 and 42.9'),
+        GovukValidators.max(42.99, 'Percentage of energy consumed in the installation must be between 0 and 42.9'),
+        GovukValidators.maxDecimalsValidator(2),
+      ]),
+      startDate: fb.control(applyRule?.startDate ? (new Date(applyRule.startDate) as any) : null),
+      evidenceFile: buildFileFormControl,
+    });
+
+    group
+      .get('energyConsumed')
+      .valueChanges.pipe(takeUntilDestroyed())
+      .subscribe((energyConsumed) => {
+        if (energyConsumed < 70) {
+          group.get('energyConsumedProvision').enable();
+          group.get('startDate').enable();
+        } else {
+          group.get('energyConsumedProvision').disable();
+          group.get('startDate').disable();
+          group.get('energyConsumedProvision').reset();
+          group.get('startDate').reset();
+        }
+      });
+
+    return group;
+  },
+};

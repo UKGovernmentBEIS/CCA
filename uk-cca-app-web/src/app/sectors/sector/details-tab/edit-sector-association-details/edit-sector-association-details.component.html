@@ -1,0 +1,32 @@
+<govuk-error-summary [form]="form"></govuk-error-summary>
+
+<cca-page-heading size="l">Change sector details</cca-page-heading>
+<div class="govuk-!-width-one-half">
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" data-testid="details-form">
+    <div formControlName="commonName" govuk-text-input label="Sector name" labelSize="small"></div>
+
+    <p class="govuk-label govuk-label--s">Sector acronym</p>
+    <p class="govuk-body">{{ sectorAssociationDetails.acronym }}</p>
+
+    <div formControlName="legalName" govuk-text-input label="Sector / Trade association name" labelSize="small"></div>
+
+    <p class="govuk-label govuk-label--s">Sector facilitator</p>
+    <p class="govuk-body">
+      {{ sectorAssociationDetails?.facilitator?.firstName }} {{ sectorAssociationDetails?.facilitator?.lastName }}
+    </p>
+
+    <p class="govuk-label govuk-label--s">Energy intensive or EPR</p>
+    <p class="govuk-body">{{ sectorAssociationDetails.energyIntensiveOrEPR | sectorEnergyEprFactor }}</p>
+
+    <h2 class="govuk-heading-m">Address for service of notices</h2>
+
+    <div formGroupName="noticeServiceAddress">
+      <cca-county-address-input></cca-county-address-input>
+    </div>
+
+    <button ccaPendingButton govukButton type="submit">Submit</button>
+  </form>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a govukLink [routerLink]="'../'"> Return to: {{ returnText }} </a>

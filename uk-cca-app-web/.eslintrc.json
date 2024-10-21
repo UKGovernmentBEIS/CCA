@@ -23,6 +23,7 @@
       "plugins": ["simple-import-sort", "unused-imports"],
       "rules": {
         "@angular-eslint/use-component-view-encapsulation": ["warn"],
+        "@angular-eslint/prefer-standalone": ["warn"],
         "@angular-eslint/component-selector": [
           "error",
           {
@@ -51,7 +52,12 @@
         "@angular-eslint/prefer-standalone-component": "off",
         "@typescript-eslint/no-inferrable-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-unused-vars": ["error", { "ignoreRestSiblings": true }],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "ignoreRestSiblings": true
+          }
+        ],
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "simple-import-sort/imports": [
           "error",

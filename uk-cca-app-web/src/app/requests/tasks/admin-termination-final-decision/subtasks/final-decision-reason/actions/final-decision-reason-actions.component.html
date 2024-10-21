@@ -1,0 +1,16 @@
+<cca-page-heading>Admin termination final decision</cca-page-heading>
+<h3 class="govuk-heading-m">Available actions</h3>
+<div class="govuk-body">
+  <p>You must select the admin termination final decision.</p>
+
+  <div class="govuk-button-group">
+    <button (click)="onSelect('TERMINATE_AGREEMENT')" ccaPendingButton govukButton type="button">
+      Terminate agreement
+    </button>
+
+    <button (click)="onSelect('WITHDRAW_TERMINATION')" govukSecondaryButton type="button">Withdraw termination</button>
+  </div>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { BackToTopComponent } from '@shared/back-to-top/back-to-top.component';
-import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
+import { BackToTopComponent } from '@shared/components';
+import { PageHeadingComponent } from '@shared/components';
 
 @Component({
   selector: 'cca-legislation',

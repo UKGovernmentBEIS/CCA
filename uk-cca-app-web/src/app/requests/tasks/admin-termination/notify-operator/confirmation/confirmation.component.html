@@ -1,0 +1,24 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds govuk-body">
+    <govuk-panel>Admin termination notice sent to operator</govuk-panel>
+
+    @if (isRegulatoryReasonSelected) {
+      <p id="regulatory-reason-content">
+        You must allow at least 28 days for the operator to appeal before you can start the final decision for the
+        termination workflow.
+      </p>
+
+      <h3 class="govuk-heading-m">What happens next</h3>
+
+      <p>
+        A withdrawal task will now appear in your dashboard. You can withdraw the submission of this termination at any
+        time.
+      </p>
+    } @else {
+      <p>The agreement has been terminated.</p>
+      <p>The selected users will receive an email notification of your decision.</p>
+    }
+
+    <a govukLink routerLink="/dashboard" [replaceUrl]="true"> Return to: Dashboard </a>
+  </div>
+</div>

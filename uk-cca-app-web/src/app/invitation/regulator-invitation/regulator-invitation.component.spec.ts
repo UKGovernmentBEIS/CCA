@@ -2,20 +2,16 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { of, throwError } from 'rxjs';
 
-import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
-import { SharedModule } from '@shared/shared.module';
-import { ActivatedRouteStub, BasePage, mockClass } from '@testing';
+import { ActivatedRouteStub, BasePage, mockClass } from '@netz/common/testing';
+import { PageHeadingComponent, PasswordComponent, PasswordService } from '@shared/components';
 import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { RegulatorUsersRegistrationService } from 'cca-api';
 
-import { PasswordComponent } from 'src/app/shared-user/password/password.component';
-
-import { PasswordService } from '../../shared-user/password/password.service';
+import { InvitedRegulatorUserStore } from './invited-regulator-user.store';
 import { RegulatorInvitationComponent } from './regulator-invitation.component';
 
 describe('RegulatorInvitationComponent', () => {
@@ -26,7 +22,7 @@ describe('RegulatorInvitationComponent', () => {
   let route: ActivatedRoute;
   let regulatorUsersRegistrationService: jest.Mocked<RegulatorUsersRegistrationService>;
   let passwordService: Partial<jest.Mocked<PasswordService>>;
-
+  let store: InvitedRegulatorUserStore;
   class Page extends BasePage<RegulatorInvitationComponent> {
     get emailValue() {
       return this.getInputValue<string>('#email');
@@ -48,27 +44,15 @@ describe('RegulatorInvitationComponent', () => {
   beforeEach(async () => {
     regulatorUsersRegistrationService = mockClass(RegulatorUsersRegistrationService);
     passwordService = mockClass(PasswordService);
-    const activatedRoute = new ActivatedRouteStub(
-      undefined,
-      { token: 'token' },
-      {
-        invitedUser: { email: 'user@cca.uk' },
-      },
-    );
+    const activatedRoute = new ActivatedRouteStub(undefined, { token: 'token' });
 
     await TestBed.configureTestingModule({
-      imports: [
-        RegulatorInvitationComponent,
-        RouterTestingModule,
-        PasswordComponent,
-        SharedModule,
-        ReactiveFormsModule,
-        PageHeadingComponent,
-      ],
+      imports: [RegulatorInvitationComponent, PasswordComponent, ReactiveFormsModule, PageHeadingComponent],
       providers: [
         { provide: RegulatorUsersRegistrationService, useValue: regulatorUsersRegistrationService },
         { provide: PasswordService, useValue: passwordService },
         { provide: ActivatedRoute, useValue: activatedRoute },
+        InvitedRegulatorUserStore,
         provideZxvbnServiceForPSM(),
       ],
     }).compileComponents();
@@ -80,6 +64,8 @@ describe('RegulatorInvitationComponent', () => {
     page = new Page(fixture);
     router = TestBed.inject(Router);
     route = TestBed.inject(ActivatedRoute);
+    store = TestBed.inject(InvitedRegulatorUserStore);
+    store.setState({ email: 'user@cca.uk' });
     fixture.detectChanges();
   });
 
@@ -93,29 +79,27 @@ describe('RegulatorInvitationComponent', () => {
   });
 
   it('should navigate for link related error', () => {
-    regulatorUsersRegistrationService.enableRegulatorInvitedUser.mockReturnValue(
+    regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite.mockReturnValue(
       throwError(() => new HttpErrorResponse({ error: { code: 'EMAIL1001' }, status: 400 })),
     );
+
     const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
     passwordService.blacklisted.mockReturnValue(of(null));
     passwordService.strong.mockReturnValue(null);
-
-    component.form.get('password').setValue('ThisIsAStrongP@ssw0rd');
+    component.form.controls.password.setValue('ThisIsAStrongP@ssw0rd');
     component.form.get('validatePassword').setValue('ThisIsAStrongP@ssw0rd');
     page.submitButton.click();
     fixture.detectChanges();
 
-    // expect(navigateSpy).toHaveBeenCalledTimes(1);
     expect(navigateSpy).toHaveBeenCalledWith(['invalid-link'], {
       relativeTo: route,
       queryParams: { code: 'EMAIL1001' },
     });
 
-    regulatorUsersRegistrationService.enableRegulatorInvitedUser.mockReturnValue(
+    regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite.mockReturnValue(
       throwError(() => new HttpErrorResponse({ error: { code: 'TOKEN1001' }, status: 400 })),
     );
-
-    component.form.get('password').setValue('ThisIsAStrongP@ssw0rd');
+    component.form.controls.password.setValue('ThisIsAStrongP@ssw0rd');
     page.submitButton.click();
     fixture.detectChanges();
 
@@ -132,13 +116,13 @@ describe('RegulatorInvitationComponent', () => {
     page.submitButton.click();
     fixture.detectChanges();
 
-    expect(regulatorUsersRegistrationService.enableRegulatorInvitedUser).not.toHaveBeenCalled();
+    expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).not.toHaveBeenCalled();
 
     page.passwordValue = 'test';
     page.submitButton.click();
     fixture.detectChanges();
 
-    expect(regulatorUsersRegistrationService.enableRegulatorInvitedUser).not.toHaveBeenCalled();
+    expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).not.toHaveBeenCalled();
 
     passwordService.blacklisted.mockReturnValue(of(null));
     passwordService.strong.mockReturnValue(null);
@@ -148,8 +132,11 @@ describe('RegulatorInvitationComponent', () => {
 
     page.submitButton.click();
     fixture.detectChanges();
-    expect(regulatorUsersRegistrationService.enableRegulatorInvitedUser).toHaveBeenCalledTimes(1);
-    expect(regulatorUsersRegistrationService.enableRegulatorInvitedUser).toHaveBeenCalledWith({
+
+    expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).toHaveBeenCalledWith({
       invitationToken: 'token',
       password: 'ThisIsAStrongP@ssw0rd',
     });

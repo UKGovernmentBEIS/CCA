@@ -1,5 +1,5 @@
-@forward '../app/shared/add-another/add-another.directive';
-@forward '../app/shared/grouped-summary-list/grouped-summary-list.directive';
+@forward '../app/shared/components/add-another/add-another.directive';
+@forward '../app/shared/components/grouped-summary-list/grouped-summary-list.directive';
 
 .overflow-auto {
   overflow: auto;

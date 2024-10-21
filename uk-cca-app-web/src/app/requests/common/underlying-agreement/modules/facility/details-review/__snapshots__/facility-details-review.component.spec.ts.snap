@@ -1,0 +1,465 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FacilityDetailsReviewComponent should create 1`] = `
+<cca-facility-details-review
+  activatedRoute={[Function Object]}
+  facility={[Function Object]}
+  facilityId={[Function String]}
+  form={[Function FormGroup]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  taskService={[Function Object]}
+>
+  <cca-wizard-step
+    class="ng-untouched ng-pristine ng-valid"
+    data-testid="add-facility-details-form"
+    heading="Add facility details"
+  >
+    <form
+      class="ng-untouched ng-pristine ng-valid"
+      novalidate=""
+    >
+      <cca-page-heading>
+        <span
+          class="govuk-caption-l"
+        >
+          Facility 2
+        </span>
+        <h1
+          class="govuk-heading-l"
+        >
+          Add facility details
+        </h1>
+      </cca-page-heading>
+      <div
+        cca-text-input=""
+        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine"
+        formcontrolname="facilityId"
+        label="Facility code"
+      >
+        <label
+          class="govuk-label"
+          for="facilityId"
+          id="l.facilityId"
+        >
+          Facility code
+        </label>
+        <p
+          class="govuk-body"
+        >
+           ADS_53-F00007 
+        </p>
+      </div>
+      <div
+        cca-text-input=""
+        class="govuk-!-width-two-thirds govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+        formcontrolname="name"
+        label="Site name"
+      >
+        <label
+          class="govuk-label"
+          for="name"
+          id="l.name"
+        >
+          Site name
+        </label>
+        <input
+          autocomplete="on"
+          class="govuk-input govuk-!-width-full"
+          id="name"
+          name="name"
+          type="text"
+        />
+      </div>
+      <div
+        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+        formcontrolname="isCoveredByUkets"
+        govuk-radio=""
+        legend="Is this facility covered by UK ETS?"
+      >
+        <div
+          class="govuk-form-group"
+        >
+          <fieldset
+            class="govuk-fieldset"
+            govukfieldset=""
+            id="isCoveredByUkets"
+          >
+            <legend
+              class="govuk-fieldset__legend"
+              govuklegend=""
+              id="l.isCoveredByUkets"
+            >
+              Is this facility covered by UK ETS?
+            </legend>
+            <div
+              class="govuk-radios"
+            >
+              <div
+                class="govuk-radios__item"
+              >
+                <input
+                  aria-controls="isCoveredByUkets-option0-conditional"
+                  class="govuk-radios__input"
+                  id="isCoveredByUkets-option0"
+                  name="isCoveredByUkets"
+                  type="radio"
+                  value="true"
+                />
+                <label
+                  class="govuk-label govuk-radios__label"
+                  for="isCoveredByUkets-option0"
+                >
+                  Yes
+                </label>
+              </div>
+              <div
+                class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                id="isCoveredByUkets-option0-conditional"
+              >
+                <div
+                  cca-text-input=""
+                  class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine"
+                  formcontrolname="uketsId"
+                  label="UK ETS Installation Identifier"
+                  widthclass="govuk-!-width-one-third"
+                >
+                  <label
+                    class="govuk-label"
+                    for="uketsId"
+                    id="l.uketsId"
+                  >
+                    UK ETS Installation Identifier
+                  </label>
+                  <p
+                    class="govuk-body"
+                  >
+                  </p>
+                </div>
+              </div>
+              <div
+                class="govuk-radios__item"
+              >
+                <input
+                  class="govuk-radios__input"
+                  id="isCoveredByUkets-option1"
+                  name="isCoveredByUkets"
+                  type="radio"
+                  value="false"
+                />
+                <label
+                  class="govuk-label govuk-radios__label"
+                  for="isCoveredByUkets-option1"
+                >
+                  No
+                </label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+        formcontrolname="applicationReason"
+        govuk-radio=""
+        legend="Application reason"
+      >
+        <div
+          class="govuk-form-group"
+        >
+          <fieldset
+            class="govuk-fieldset"
+            govukfieldset=""
+            id="applicationReason"
+          >
+            <legend
+              class="govuk-fieldset__legend"
+              govuklegend=""
+              id="l.applicationReason"
+            >
+              Application reason
+            </legend>
+            <div
+              class="govuk-radios"
+            >
+              <div
+                class="govuk-radios__item"
+              >
+                <input
+                  class="govuk-radios__input"
+                  id="applicationReason-option0"
+                  name="applicationReason"
+                  type="radio"
+                  value="NEW_AGREEMENT"
+                />
+                <label
+                  class="govuk-label govuk-radios__label"
+                  for="applicationReason-option0"
+                >
+                  New agreement
+                </label>
+              </div>
+              <div
+                class="govuk-radios__item"
+              >
+                <input
+                  aria-controls="applicationReason-option1-conditional"
+                  class="govuk-radios__input"
+                  id="applicationReason-option1"
+                  name="applicationReason"
+                  type="radio"
+                  value="CHANGE_OF_OWNERSHIP"
+                />
+                <label
+                  class="govuk-label govuk-radios__label"
+                  for="applicationReason-option1"
+                >
+                  Change of ownership
+                </label>
+              </div>
+              <div
+                class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                id="applicationReason-option1-conditional"
+              >
+                <div
+                  cca-text-input=""
+                  class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine"
+                  formcontrolname="previousFacilityId"
+                  hint="The previous facility ID is mandatory if the facility is transferred from a previous target unit with a CCA agreement"
+                  label="Previous facility ID"
+                  widthclass="govuk-!-width-one-third"
+                >
+                  <label
+                    class="govuk-label"
+                    for="previousFacilityId"
+                    id="l.previousFacilityId"
+                  >
+                    Previous facility ID
+                  </label>
+                  <div
+                    class="govuk-hint"
+                    id="previousFacilityId-hint"
+                  >
+                     The previous facility ID is mandatory if the facility is transferred from a previous target unit with a CCA agreement
+                  </div>
+                  <p
+                    class="govuk-body"
+                  >
+                  </p>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <h2
+        class="govuk-heading-m"
+      >
+        Facility address
+      </h2>
+      <div
+        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+        formcontrolname="sameAddress"
+        govuk-checkboxes=""
+      >
+        <fieldset
+          class="govuk-fieldset"
+          govukfieldset=""
+          id="sameAddress"
+        >
+          <legend
+            class="govuk-fieldset__legend govuk-fieldset__legend--l"
+            govuklegend=""
+            id="l.sameAddress"
+          >
+          </legend>
+          <div
+            class="govuk-checkboxes"
+          >
+            <div
+              class="govuk-checkboxes__item"
+            >
+              <input
+                aria-describedby="sameAddress-0-item-hint"
+                class="govuk-checkboxes__input"
+                id="sameAddress-0"
+                name="sameAddress"
+                type="checkbox"
+                value="true"
+              />
+              <label
+                class="govuk-label govuk-checkboxes__label"
+                for="sameAddress-0"
+              >
+                The facility address is the same as target unit address
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        class="ng-untouched ng-pristine ng-valid"
+        formgroupname="facilityAddress"
+      >
+        <cca-account-address-input>
+          <div
+            autocomplete="address-line1"
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="line1"
+            govuk-text-input=""
+            label="Address line 1"
+            widthclass="govuk-!-width-two-thirds"
+          >
+            <label
+              class="govuk-label"
+              for="facilityAddress.line1"
+              id="l.facilityAddress.line1"
+            >
+              Address line 1
+            </label>
+            <input
+              autocomplete="address-line1"
+              class="govuk-input govuk-!-width-two-thirds"
+              id="facilityAddress.line1"
+              name="facilityAddress.line1"
+              type="text"
+            />
+          </div>
+          <div
+            autocomplete="address-line2"
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="line2"
+            govuk-text-input=""
+            label="Address line 2 (optional)"
+            widthclass="govuk-!-width-two-thirds"
+          >
+            <label
+              class="govuk-label"
+              for="facilityAddress.line2"
+              id="l.facilityAddress.line2"
+            >
+              Address line 2 (optional)
+            </label>
+            <input
+              autocomplete="address-line2"
+              class="govuk-input govuk-!-width-two-thirds"
+              id="facilityAddress.line2"
+              name="facilityAddress.line2"
+              type="text"
+            />
+          </div>
+          <div
+            autocomplete="address-level2"
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="city"
+            govuk-text-input=""
+            label="Town or city"
+            widthclass="govuk-!-width-one-third"
+          >
+            <label
+              class="govuk-label"
+              for="facilityAddress.city"
+              id="l.facilityAddress.city"
+            >
+              Town or city
+            </label>
+            <input
+              autocomplete="address-level2"
+              class="govuk-input govuk-!-width-one-third"
+              id="facilityAddress.city"
+              name="facilityAddress.city"
+              type="text"
+            />
+          </div>
+          <div
+            autocomplete="county"
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="county"
+            govuk-text-input=""
+            label="County (optional)"
+            widthclass="govuk-!-width-one-third"
+          >
+            <label
+              class="govuk-label"
+              for="facilityAddress.county"
+              id="l.facilityAddress.county"
+            >
+              County (optional)
+            </label>
+            <input
+              autocomplete="county"
+              class="govuk-input govuk-!-width-one-third"
+              id="facilityAddress.county"
+              name="facilityAddress.county"
+              type="text"
+            />
+          </div>
+          <div
+            autocomplete="postal-code"
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="postcode"
+            govuk-text-input=""
+            label="Postcode"
+            widthclass="govuk-!-width-one-third"
+          >
+            <label
+              class="govuk-label"
+              for="facilityAddress.postcode"
+              id="l.facilityAddress.postcode"
+            >
+              Postcode
+            </label>
+            <input
+              autocomplete="postal-code"
+              class="govuk-input govuk-!-width-one-third"
+              id="facilityAddress.postcode"
+              name="facilityAddress.postcode"
+              type="text"
+            />
+          </div>
+          <div
+            ccacountries=""
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="country"
+            govuk-select=""
+            label="Country"
+            labelsize="small"
+          >
+            <label
+              class="govuk-label"
+              for="facilityAddress.country"
+              id="l.facilityAddress.country"
+            >
+               Country
+            </label>
+            <select
+              class="govuk-select ng-untouched ng-pristine ng-valid"
+              govukformerror=""
+              id="facilityAddress.country"
+              name="facilityAddress.country"
+            >
+            </select>
+          </div>
+        </cca-account-address-input>
+      </div>
+      <button
+        ccapendingbutton=""
+        class="govuk-button"
+        govukbutton=""
+        type="submit"
+      >
+        Continue
+      </button>
+    </form>
+  </cca-wizard-step><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      govuklink=""
+      href="/undefined"
+    >
+       Return to: Review application for underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-facility-details-review>
+`;

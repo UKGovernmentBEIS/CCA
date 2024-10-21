@@ -1,14 +1,12 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { firstValueFrom, of } from 'rxjs';
 
-import { AuthStore } from '@core/store/auth';
-import { HttpStatuses } from '@error/http-status';
-import { mockClass } from '@testing';
+import { AuthStore } from '@netz/common/auth';
+import { mockClass } from '@netz/common/testing';
 
 import { AuthService } from '../services/auth.service';
 import { GlobalErrorHandlingService } from './global-error-handling.service';
@@ -21,7 +19,6 @@ describe(`GlobalErrorHandlingService`, () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
       providers: [
         { provide: AuthService, useValue: authService },
         { provide: ErrorHandler, useClass: GlobalErrorHandlingService },
@@ -84,7 +81,7 @@ describe(`GlobalErrorHandlingService`, () => {
       firstValueFrom(
         service.handleHttpError(
           new HttpErrorResponse({
-            status: HttpStatuses.Unauthorized,
+            status: HttpStatusCode.Unauthorized,
             statusText: 'test',
           }),
         ),
@@ -102,7 +99,7 @@ describe(`GlobalErrorHandlingService`, () => {
       firstValueFrom(
         service.handleHttpError(
           new HttpErrorResponse({
-            status: HttpStatuses.Forbidden,
+            status: HttpStatusCode.Forbidden,
             statusText: 'test',
           }),
         ),
@@ -113,20 +110,6 @@ describe(`GlobalErrorHandlingService`, () => {
     expect(navigateSpy).toHaveBeenCalledTimes(1);
     expect(navigateSpy).toHaveBeenCalledWith(['landing'], { state: { forceNavigation: true } });
     expect(authService.logout).not.toHaveBeenCalled();
-  });
-
-  it('should logout after a 403 with DELETED status', async () => {
-    authService.loadUserState.mockReturnValueOnce(of({ status: 'DELETED' }));
-    authService.logout.mockResolvedValueOnce();
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValueOnce(true);
-
-    await expect(
-      firstValueFrom(service.handleHttpError(new HttpErrorResponse({ status: 403, statusText: 'test' }))),
-    ).rejects.toBeTruthy();
-
-    expect(authService.loadUserState).toHaveBeenCalledTimes(1);
-    expect(navigateSpy).not.toHaveBeenCalled();
-    expect(authService.logout).toHaveBeenCalledTimes(1);
   });
 
   it('should forward not handled errors', () => {

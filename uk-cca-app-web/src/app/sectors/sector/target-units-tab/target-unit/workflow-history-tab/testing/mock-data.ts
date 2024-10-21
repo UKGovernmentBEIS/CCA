@@ -1,0 +1,151 @@
+import { RequestDetailsSearchResults } from 'cca-api';
+
+export const mockRequestDetailsSearchResultsData: RequestDetailsSearchResults = {
+  requestDetails: [
+    {
+      id: '1',
+      requestType: 'Underlying agreement',
+      requestStatus: 'IN_PROGRESS',
+      creationDate: '2024-03-11',
+      requestMetadata: {},
+    },
+    {
+      id: '2',
+      requestType: 'Account creation',
+      requestStatus: 'COMPLETED',
+      creationDate: '2024-03-10',
+      requestMetadata: {},
+    },
+    {
+      id: '3',
+      requestType: 'Variation',
+      requestStatus: 'APPROVED',
+      creationDate: '2024-03-09',
+      requestMetadata: {},
+    },
+    {
+      id: '4',
+      requestType: 'Voluntary termination',
+      requestStatus: 'REJECTED',
+      creationDate: '2024-03-08',
+      requestMetadata: {},
+    },
+    {
+      id: '5',
+      requestType: 'Admin termination',
+      requestStatus: 'CANCELLED',
+      creationDate: '2024-03-07',
+      requestMetadata: {},
+    },
+    {
+      id: '6',
+      requestType: 'Target unit account creation',
+      requestStatus: 'IN_PROGRESS',
+      creationDate: '2024-03-06',
+      requestMetadata: {},
+    },
+    {
+      id: '7',
+      requestType: 'Underlying agreement',
+      requestStatus: 'COMPLETED',
+      creationDate: '2024-03-05',
+      requestMetadata: {},
+    },
+    {
+      id: '8',
+      requestType: 'Account creation',
+      requestStatus: 'APPROVED',
+      creationDate: '2024-03-04',
+      requestMetadata: {},
+    },
+    {
+      id: '9',
+      requestType: 'Variation',
+      requestStatus: 'REJECTED',
+      creationDate: '2024-03-03',
+      requestMetadata: {},
+    },
+    {
+      id: '10',
+      requestType: 'Voluntary termination',
+      requestStatus: 'WITHDRAWN',
+      creationDate: '2024-03-02',
+      requestMetadata: {},
+    },
+    {
+      id: '11',
+      requestType: 'Underlying agreement',
+      requestStatus: 'IN_PROGRESS',
+      creationDate: '2024-03-01',
+      requestMetadata: {},
+    },
+    {
+      id: '12',
+      requestType: 'Account creation',
+      requestStatus: 'COMPLETED',
+      creationDate: '2024-02-28',
+      requestMetadata: {},
+    },
+    {
+      id: '13',
+      requestType: 'Variation',
+      requestStatus: 'APPROVED',
+      creationDate: '2024-02-27',
+      requestMetadata: {},
+    },
+    {
+      id: '14',
+      requestType: 'Voluntary termination',
+      requestStatus: 'REJECTED',
+      creationDate: '2024-02-26',
+      requestMetadata: {},
+    },
+    {
+      id: '15',
+      requestType: 'Admin termination',
+      requestStatus: 'CANCELLED',
+      creationDate: '2024-02-25',
+      requestMetadata: {},
+    },
+    {
+      id: '16',
+      requestType: 'Target unit account creation',
+      requestStatus: 'IN_PROGRESS',
+      creationDate: '2024-02-24',
+      requestMetadata: {},
+    },
+    {
+      id: '17',
+      requestType: 'Underlying agreement',
+      requestStatus: 'COMPLETED',
+      creationDate: '2024-02-23',
+      requestMetadata: {},
+    },
+    {
+      id: '18',
+      requestType: 'Account creation',
+      requestStatus: 'APPROVED',
+      creationDate: '2024-02-22',
+      requestMetadata: {},
+    },
+    {
+      id: '19',
+      requestType: 'Variation',
+      requestStatus: 'REJECTED',
+      creationDate: '2024-02-21',
+      requestMetadata: {},
+    },
+    {
+      id: '20',
+      requestType: 'Voluntary termination',
+      requestStatus: 'WITHDRAWN',
+      creationDate: '2024-02-20',
+      requestMetadata: {},
+    },
+  ],
+  total: 20,
+};
+export function filterByRequestType(requestType: string): RequestDetailsSearchResults {
+  const arr = mockRequestDetailsSearchResultsData.requestDetails.filter((rd) => rd.requestType === requestType);
+  return { total: arr.length, requestDetails: arr };
+}

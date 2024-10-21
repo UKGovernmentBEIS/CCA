@@ -1,0 +1,96 @@
+@if (facility(); as facility) {
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    [caption]="facility.name"
+    heading="Extent of the facility"
+    data-testid="facility-extent-form"
+  >
+    <p class="govuk-body">Provide information on the activities carried out and the energy used at the facility.</p>
+
+    <govuk-details summary="More information on the extent of the facility">
+      <p>To determine the improvement target for each facility included in an agreement, we need to know:</p>
+
+      <ul>
+        <li>the boundary which encloses the land used in connection with the operation of the installation</li>
+        <li>
+          the different categories of activities carried out on the site that consume energy, i.e.:
+          <ul>
+            <li>eligible</li>
+            <li>directly associated</li>
+            <li>ineligible</li>
+          </ul>
+        </li>
+        <li>how much of the energy used on site can be included in the eligible facility (the 70% rule)</li>
+        <li>
+          whether the eligible facility includes plant carrying out an activity listed in The Greenhouse Gas Emissions
+          Trading Scheme Order 2020
+        </li>
+      </ul>
+
+      <p>
+        The sections of the form below require you to upload the evidence we need to understand the extent of the
+        facility.
+      </p>
+      <p>The evidence you provide should be consistent between each of the relevant sections.</p>
+    </govuk-details>
+
+    <h2 class="govuk-heading-m">Manufacturing process</h2>
+    <cca-file-input
+      [downloadUrl]="getDownloadUrl"
+      formControlName="manufacturingProcessFile"
+      hint="Upload a description of the manufacturing processes that consume energy on the site, ensuring you include all eligible, ineligible and directly associated activities"
+      label="Manufacturing process description"
+      [showFilesizeHint]="false"
+    ></cca-file-input>
+
+    <cca-file-input
+      [downloadUrl]="getDownloadUrl"
+      formControlName="processFlowFile"
+      hint="Upload a process flow map identifying all the eligible, ineligible and directly associated activities that consume energy on the site and the interactions between these"
+      label="Process flow maps"
+      [showFilesizeHint]="false"
+    ></cca-file-input>
+
+    <cca-file-input
+      [downloadUrl]="getDownloadUrl"
+      formControlName="annotatedSitePlansFile"
+      hint="Upload a plan showing the extent of the entire site/eligible facility and highlight areas on the plan where eligible, ineligible and directly associated activities consuming energy are located"
+      label="Annotated site plans"
+      [showFilesizeHint]="false"
+    ></cca-file-input>
+
+    <h2 class="govuk-heading-m">Eligible process</h2>
+    <cca-file-input
+      [downloadUrl]="getDownloadUrl"
+      formControlName="eligibleProcessFile"
+      hint="Upload a description of the plant or processes in which you carry out one or more activities that are described in the schedule to the sector umbrella agreement. Your description should include any sub-sectors, where applicable"
+      label="Eligible process description"
+      [showFilesizeHint]="false"
+    ></cca-file-input>
+
+    <h2 class="govuk-heading-m">Directly associated activities</h2>
+    <div
+      formControlName="areActivitiesClaimed"
+      govuk-radio
+      legend="Are any directly associated activities claimed?"
+      [isInline]="true"
+    >
+      <govuk-radio-option [value]="true" [label]="'Yes'"></govuk-radio-option>
+      <govuk-radio-option [value]="false" [label]="'No'"></govuk-radio-option>
+    </div>
+
+    @if (isActivitiesDescriptionFileExist()) {
+      <cca-file-input
+        [downloadUrl]="getDownloadUrl"
+        formControlName="activitiesDescriptionFile"
+        hint="Upload a description of the activities consuming energy that have a technical connection with, and serve the eligible activities on the site"
+        label="Directly associated activities description"
+        [showFilesizeHint]="false"
+      ></cca-file-input>
+    }
+  </cca-wizard-step>
+}
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

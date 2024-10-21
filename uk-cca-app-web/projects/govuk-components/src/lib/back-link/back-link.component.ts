@@ -6,11 +6,21 @@ import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, Params, RouterLink }
   selector: 'govuk-back-link',
   standalone: true,
   imports: [RouterLink],
-  template: ` <a [routerLink]="routerLink" [queryParams]="queryParams" class="govuk-back-link"> Back </a> `,
+  template: `
+    <a
+      [routerLink]="routerLink"
+      [queryParams]="queryParams"
+      class="govuk-back-link"
+      [class.govuk-back-link--inverse]="inverse"
+    >
+      Back
+    </a>
+  `,
 })
 export class BackLinkComponent implements OnChanges {
   @Input() link: string;
   @Input() route: ActivatedRouteSnapshot;
+  @Input() inverse = false;
 
   routerLink: string[];
   queryParams: Params | null;

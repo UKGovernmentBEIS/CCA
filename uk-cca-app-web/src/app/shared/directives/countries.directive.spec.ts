@@ -4,9 +4,9 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { CountryService } from '@core/services/country.service';
-import { CountryServiceStub } from '@testing';
+import { SelectComponent } from '@netz/govuk-components';
 
-import { SelectComponent } from 'govuk-components';
+import { CountryServiceStub } from 'src/testing/country.service.stub';
 
 import { CountriesDirective } from './countries.directive';
 

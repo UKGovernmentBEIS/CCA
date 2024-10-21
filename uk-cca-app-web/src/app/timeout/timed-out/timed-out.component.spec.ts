@@ -3,9 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { AuthService } from '@core/services/auth.service';
-import { PageHeadingComponent } from '@shared/page-heading/page-heading.component';
-import { SharedModule } from '@shared/shared.module';
-import { ActivatedRouteStub, mockClass } from '@testing';
+import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
 
 import { TimedOutComponent } from './timed-out.component';
 
@@ -17,7 +15,7 @@ describe('TimedOutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TimedOutComponent, RouterTestingModule, SharedModule, PageHeadingComponent],
+      imports: [TimedOutComponent, RouterTestingModule],
       providers: [
         { provide: AuthService, useValue: authService },
         { provide: ActivatedRoute, useValue: activatedRoute },

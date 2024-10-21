@@ -5,12 +5,10 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { of, throwError } from 'rxjs';
 
-import { WizardStepComponent } from '@shared/wizard/wizard-step.component';
+import { BasePage, mockClass } from '@netz/common/testing';
 
 import { UsersSecuritySetupService } from 'cca-api';
 
-import { BasePage, mockClass } from '../../../testing';
-import { SharedModule } from '../../shared/shared.module';
 import { Change2faComponent } from './change-2fa.component';
 
 describe('Change2faComponent', () => {
@@ -43,9 +41,9 @@ describe('Change2faComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, SharedModule, WizardStepComponent],
+      imports: [RouterTestingModule, Change2faComponent],
       providers: [{ provide: UsersSecuritySetupService, useValue: usersSecuritySetupService }],
-      declarations: [Change2faComponent],
+      declarations: [],
     }).compileComponents();
   });
 

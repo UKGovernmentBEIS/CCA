@@ -14,7 +14,7 @@ import {
   SummaryListColumnDirective,
   SummaryListRowDirective,
   SummaryListRowKeyDirective,
-  SummaryListRowValueDirective
+  SummaryListRowValueDirective,
 } from './directives';
 import { SummaryItem } from './summary-list.interface';
 
