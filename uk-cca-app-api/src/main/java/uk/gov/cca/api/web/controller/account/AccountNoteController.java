@@ -8,13 +8,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,20 +26,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import uk.gov.cca.api.account.domain.dto.AccountNoteDto;
-import uk.gov.cca.api.account.domain.dto.AccountNoteRequest;
-import uk.gov.cca.api.account.domain.dto.AccountNoteResponse;
-import uk.gov.cca.api.account.service.AccountNoteService;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.Authorized;
+import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.cca.api.web.util.FileDtoMapper;
+import uk.gov.netz.api.account.domain.dto.AccountNoteDto;
+import uk.gov.netz.api.account.domain.dto.AccountNoteRequest;
+import uk.gov.netz.api.account.domain.dto.AccountNoteResponse;
+import uk.gov.netz.api.account.service.AccountNoteService;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.note.NoteRequest;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.files.common.domain.dto.FileUuidDTO;
 import uk.gov.netz.api.files.notes.service.FileNoteService;
+import uk.gov.netz.api.security.Authorized;
 import uk.gov.netz.api.token.FileToken;
-import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -48,6 +48,7 @@ import java.util.UUID;
 @RequestMapping(path = "/v1.0/account-notes")
 @Tag(name = "Account Notes")
 @RequiredArgsConstructor
+@Validated
 public class AccountNoteController {
 
     private final AccountNoteService accountNoteService;
@@ -99,7 +100,7 @@ public class AccountNoteController {
                                                   @RequestBody
                                                   @Valid
                                                   @Parameter(description = "The account note request", required = true)
-                                                          AccountNoteRequest accountNoteRequest) {
+                                                  AccountNoteRequest accountNoteRequest) {
 
         accountNoteService.createNote(authUser, accountNoteRequest);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -115,7 +116,7 @@ public class AccountNoteController {
     public ResponseEntity<FileUuidDTO> uploadAccountNoteFile(
             @Parameter(hidden = true) AppUser authUser,
             @PathVariable("accountId") @Parameter(description = "The account id") Long accountId,
-            @RequestPart("file") @Valid @NotBlank @Parameter(description = "The note file", required = true)
+            @RequestPart("file") @Parameter(description = "The note file", required = true)
                     MultipartFile file) throws IOException {
 
         final FileDTO fileDTO = fileDtoMapper.toFileDTO(file);

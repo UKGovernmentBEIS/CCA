@@ -15,19 +15,20 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.authorization.core.domain.AppAuthority;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.regulator.domain.AuthorityManagePermissionDTO;
-import uk.gov.cca.api.authorization.regulator.service.RegulatorAuthorityQueryService;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
-import uk.gov.netz.api.common.domain.RoleType;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.authorization.core.domain.AppAuthority;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.regulator.domain.AuthorityManagePermissionDTO;
+import uk.gov.netz.api.authorization.regulator.service.RegulatorAuthorityQueryService;
+import uk.gov.netz.api.authorization.regulator.transform.RegulatorPermissionsAdapter;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
@@ -44,8 +45,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.cca.api.authorization.regulator.domain.RegulatorPermissionGroup.MANAGE_USERS_AND_CONTACTS;
-import static uk.gov.cca.api.authorization.regulator.domain.RegulatorPermissionLevel.NONE;
+import static uk.gov.netz.api.authorization.regulator.domain.RegulatorPermissionGroup.MANAGE_USERS_AND_CONTACTS;
+import static uk.gov.netz.api.authorization.regulator.domain.RegulatorPermissionLevel.EXECUTE;
+import static uk.gov.netz.api.authorization.regulator.domain.RegulatorPermissionLevel.NONE;
 
 @ExtendWith(MockitoExtension.class)
 class RegulatorAuthorityPermissionControllerTest {
@@ -66,16 +68,19 @@ class RegulatorAuthorityPermissionControllerTest {
 
     @Mock
     private RegulatorAuthorityQueryService regulatorAuthorityQueryService;
-    
+
     @Mock
     private RoleAuthorizationService roleAuthorizationService;
 
+    @Mock
+    private RegulatorPermissionsAdapter regulatorPermissionsAdapter;
+    
     @BeforeEach
     public void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
         AuthorizedRoleAspect authorizedRoleAspect = new AuthorizedRoleAspect(roleAuthorizationService, authorizationAspectUserResolver);
-        
+
         AspectJProxyFactory aspectJProxyFactory = new AspectJProxyFactory(regulatorAuthorityPermissionController);
         aspectJProxyFactory.addAspect(aspect);
         aspectJProxyFactory.addAspect(authorizedRoleAspect);
@@ -86,9 +91,9 @@ class RegulatorAuthorityPermissionControllerTest {
         regulatorAuthorityPermissionController = (RegulatorAuthorityPermissionController) aopProxy.getProxy();
 
         mockMvc = MockMvcBuilders.standaloneSetup(regulatorAuthorityPermissionController)
-            .setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))
-            .setControllerAdvice(new ExceptionControllerAdvice())
-            .build();
+                .setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))
+                .setControllerAdvice(new ExceptionControllerAdvice())
+                .build();
     }
 
     @Test
@@ -97,18 +102,18 @@ class RegulatorAuthorityPermissionControllerTest {
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
         when(regulatorAuthorityQueryService.getCurrentRegulatorUserPermissions(currentUser))
-            .thenReturn(AuthorityManagePermissionDTO.builder()
-                .permissions(Map.of(MANAGE_USERS_AND_CONTACTS, NONE))
-                .editable(false)
-                .build());
+                .thenReturn(AuthorityManagePermissionDTO.builder()
+                        .permissions(Map.of(MANAGE_USERS_AND_CONTACTS, NONE))
+                        .editable(false)
+                        .build());
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("editable").value(false))
-            .andExpect(jsonPath("$.permissions", Matchers.hasKey(MANAGE_USERS_AND_CONTACTS)))
-            .andExpect(jsonPath("$.permissions", Matchers.hasValue(NONE.name())));
+                        .get(BASE_PATH)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("editable").value(false))
+                .andExpect(jsonPath("$.permissions", Matchers.hasKey(MANAGE_USERS_AND_CONTACTS)))
+                .andExpect(jsonPath("$.permissions", Matchers.hasValue(NONE.name())));
 
         verify(regulatorAuthorityQueryService, times(1)).getCurrentRegulatorUserPermissions(currentUser);
     }
@@ -119,13 +124,13 @@ class RegulatorAuthorityPermissionControllerTest {
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
-            .when(roleAuthorizationService)
-            .evaluate(currentUser, new RoleType[] {RoleType.REGULATOR});
+                .when(roleAuthorizationService)
+                .evaluate(currentUser, new String[] {RoleTypeConstants.REGULATOR});
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
+                        .get(BASE_PATH)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
 
         verify(regulatorAuthorityQueryService, never()).getCurrentRegulatorUserPermissions(any());
     }
@@ -136,22 +141,22 @@ class RegulatorAuthorityPermissionControllerTest {
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
         when(regulatorAuthorityQueryService.getRegulatorUserPermissionsByUserId(currentUser, USER_ID))
-            .thenReturn(AuthorityManagePermissionDTO.builder()
-                .permissions(Map.of(MANAGE_USERS_AND_CONTACTS, NONE))
-                .editable(true)
-                .build());
+                .thenReturn(AuthorityManagePermissionDTO.builder()
+                        .permissions(Map.of(MANAGE_USERS_AND_CONTACTS, NONE))
+                        .editable(true)
+                        .build());
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(BASE_PATH + "/" + USER_ID)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.editable").value(true))
-            .andExpect(jsonPath("$.permissions", Matchers.hasKey(MANAGE_USERS_AND_CONTACTS)))
-            .andExpect(jsonPath("$.permissions", Matchers.hasValue(NONE.name())));
+                        .get(BASE_PATH + "/" + USER_ID)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.editable").value(true))
+                .andExpect(jsonPath("$.permissions", Matchers.hasKey(MANAGE_USERS_AND_CONTACTS)))
+                .andExpect(jsonPath("$.permissions", Matchers.hasValue(NONE.name())));
 
         verify(regulatorAuthorityQueryService, times(1))
-            .getRegulatorUserPermissionsByUserId(currentUser, USER_ID);
+                .getRegulatorUserPermissionsByUserId(currentUser, USER_ID);
     }
 
     @Test
@@ -160,26 +165,30 @@ class RegulatorAuthorityPermissionControllerTest {
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
-            .when(appUserAuthorizationService)
-            .authorize(currentUser, "getRegulatorUserPermissionsByCaAndId");
+                .when(appUserAuthorizationService)
+                .authorize(currentUser, "getRegulatorUserPermissionsByCaAndId");
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(BASE_PATH + "/" + USER_ID)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
+                        .get(BASE_PATH + "/" + USER_ID)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
 
         verify(regulatorAuthorityQueryService, never()).getRegulatorUserPermissionsByUserId(any(), anyString());
     }
 
     @Test
     void getRegulatorPermissionGroupLevels() throws Exception {
+        when(regulatorPermissionsAdapter.getPermissionGroupLevels()).thenReturn(Map.of(MANAGE_USERS_AND_CONTACTS, List.of(NONE, EXECUTE)));
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(BASE_PATH + "/group-levels")
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.MANAGE_USERS_AND_CONTACTS.[0]").value("NONE"))
-            .andExpect(jsonPath("$.MANAGE_USERS_AND_CONTACTS.[1]").value("EXECUTE"));
+                        .get(BASE_PATH + "/group-levels")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.MANAGE_USERS_AND_CONTACTS.[0]").value("NONE"))
+                .andExpect(jsonPath("$.MANAGE_USERS_AND_CONTACTS.[1]").value("EXECUTE"));
+
+        verify(regulatorPermissionsAdapter, times(1)).getPermissionGroupLevels();
+
     }
 
     @Test
@@ -189,21 +198,21 @@ class RegulatorAuthorityPermissionControllerTest {
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
-            .when(appUserAuthorizationService)
-            .authorize(currentUser, "getRegulatorPermissionGroupLevels");
+                .when(appUserAuthorizationService)
+                .authorize(currentUser, "getRegulatorPermissionGroupLevels");
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(BASE_PATH + "/group-levels")
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
+                        .get(BASE_PATH + "/group-levels")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
     }
 
     private AppUser buildMockRegulatorUser() {
         return AppUser.builder()
-            .userId(USER_ID)
-            .roleType(RoleType.REGULATOR)
-            .authorities(List.of(AppAuthority.builder().competentAuthority(CompetentAuthorityEnum.ENGLAND).build()))
-            .build();
+                .userId(USER_ID)
+                .roleType(RoleTypeConstants.REGULATOR)
+                .authorities(List.of(AppAuthority.builder().competentAuthority(CompetentAuthorityEnum.ENGLAND).build()))
+                .build();
     }
 
 }

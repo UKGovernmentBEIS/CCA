@@ -2,11 +2,10 @@ package uk.gov.cca.api.web.orchestrator.authorization.transform;
 
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-import uk.gov.cca.api.authorization.core.domain.AuthorityStatus;
-import uk.gov.cca.api.authorization.core.domain.dto.UserAuthorityDTO;
-import uk.gov.cca.api.user.core.domain.dto.UserInfoDTO;
 import uk.gov.cca.api.web.orchestrator.authorization.dto.UserAuthorityInfoDTO;
-import uk.gov.cca.api.web.orchestrator.authorization.transform.UserAuthorityInfoMapper;
+import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
+import uk.gov.netz.api.authorization.core.domain.dto.UserAuthorityDTO;
+import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,7 +21,6 @@ class UserAuthorityInfoMapperTest {
         AuthorityStatus authorityStatus = AuthorityStatus.ACTIVE;
         String firstName = "firstName";
         String lastName = "lastName";
-        Boolean locked = false;
 
         UserAuthorityDTO userAuthority = UserAuthorityDTO.builder()
             .userId(userId)
@@ -34,7 +32,6 @@ class UserAuthorityInfoMapperTest {
             .userId(userId)
             .firstName(firstName)
             .lastName(lastName)
-            .locked(locked)
             .build();
 
         UserAuthorityInfoDTO expectedDTO = UserAuthorityInfoDTO.builder()
@@ -44,7 +41,6 @@ class UserAuthorityInfoMapperTest {
             .roleCode(roleCode)
             .roleName(roleName)
             .authorityStatus(authorityStatus)
-            .locked(locked)
             .build();
 
         UserAuthorityInfoDTO actualDTO =

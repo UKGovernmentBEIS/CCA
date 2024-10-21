@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/underlying_agreement.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_CREATE_UNDERLYING_AGREEMENT_SEQUENCE" author="P70383">
+        <createSequence sequenceName="underlying_agreement_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS underlying_agreement_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_CREATE_UNDERLYING_AGREEMENT_TABLE" author="P70383">
+        <comment>Create underlying agreement TABLE</comment>
+        <createTable tableName="underlying_agreement" remarks="Represents an underlying agreement">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="underlying_agreement_pk" nullable="false"/>
+            </column>
+            <column name="data" type="jsonb" remarks="underlying agreement representation as json">
+                <constraints nullable="false" />
+            </column>
+            <column name="account_id" type="bigint" remarks="The underlying agreement's account id">
+                <constraints unique="true" uniqueConstraintName="account_id_uq" nullable="false"/>
+            </column>
+            <column name="measurement_type" type="varchar(255)" remarks="The underlying agreement's measurement type">
+                <constraints nullable="false" />
+            </column>
+            <column name="file_document_uuid" type="varchar(255)" remarks="The underlying agreement's file document uuid"/>
+            <column name="consolidation_number" type="int" defaultValueNumeric="1" remarks="The underlying agreement version">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS underlying_agreement CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_ADD_ACCOUNT_IDX" author="P70383">
+        <comment>Add AccountId index in underlying agreement table</comment>
+        <createIndex indexName="underlying_agreement_accountId_idx" tableName="underlying_agreement">
+            <column name="account_id" />
+        </createIndex>
+        <rollback>
+            <sql>
+                DROP INDEX IF EXISTS underlying_agreement_accountId_idx CASCADE
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_ADD_ACTIVATION_DATE_COLUMN" author="apostolouk@unisystems.gr">
+        <addColumn tableName="underlying_agreement">
+            <column name="activation_date" type="timestamp" remarks="The date the underlying agreement was activated">
+            <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="underlying_agreement" columnName="activation_date"/>
+		</rollback>
+	</changeSet>
+
+</databaseChangeLog>

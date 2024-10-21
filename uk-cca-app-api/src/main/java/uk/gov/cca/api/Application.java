@@ -10,8 +10,8 @@ import org.springframework.retry.annotation.EnableRetry;
 /**
  * Used to initialize the Spring Boot application.
  */
-@SpringBootApplication(scanBasePackages = {"uk.gov.cca.api", "uk.gov.netz.api"}, exclude = ValidationAutoConfiguration.class)
-@ConfigurationPropertiesScan(basePackages = {"uk.gov.cca.api", "uk.gov.netz.api"})
+@SpringBootApplication(scanBasePackages = {"uk.gov"}, exclude = ValidationAutoConfiguration.class)
+@ConfigurationPropertiesScan(value = {"uk.gov"})
 @EnableJpaAuditing
 @EnableRetry
 public class Application {

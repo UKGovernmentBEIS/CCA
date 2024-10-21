@@ -19,17 +19,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.account.domain.dto.CaExternalContactDTO;
-import uk.gov.cca.api.account.domain.dto.CaExternalContactRegistrationDTO;
-import uk.gov.cca.api.account.domain.dto.CaExternalContactsDTO;
-import uk.gov.cca.api.account.service.CaExternalContactService;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.Authorized;
-import uk.gov.cca.api.web.security.AuthorizedRole;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.account.domain.dto.CaExternalContactDTO;
+import uk.gov.netz.api.account.domain.dto.CaExternalContactRegistrationDTO;
+import uk.gov.netz.api.account.domain.dto.CaExternalContactsDTO;
+import uk.gov.netz.api.account.service.CaExternalContactService;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.security.Authorized;
+import uk.gov.netz.api.security.AuthorizedRole;
 
-import static uk.gov.netz.api.common.domain.RoleType.REGULATOR;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 @RestController
 @RequestMapping(path = "/v1.0/ca-external-contacts")

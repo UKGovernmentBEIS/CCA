@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/facility_ddl.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_FACILITY_IDENTIFIER_SEQUENCE" author="P70628">
+        <createSequence sequenceName="facility_identifier_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS facility_identifier_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_FACILITY_IDENTIFIER_CREATE_TABLE" author="P70628">
+        <comment>Create facility identifier table</comment>
+        <createTable tableName="facility_identifier" remarks="Represents the latest facility id value">
+            <column name="id" type="integer" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="facility_identifier_pk" nullable="false"/>
+            </column>
+            <column name="facility_id" type="bigint" remarks="The latest facility id value">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sector_association_id" type="bigint" remarks="The sector association id">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS facility_identifier CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNIQUE_CONSTRAINT_FACILITY_IDENTIFIER_TABLE" author="P70628">
+        <addUniqueConstraint tableName="facility_identifier" columnNames="sector_association_id,facility_id" constraintName="facility_identifier_uc"/>
+        <rollback>
+            <dropUniqueConstraint tableName="facility_identifier" constraintName="facility_identifier_uc"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_FACILITY_DATA_SEQUENCE" author="apostolouk@unisystems.gr">
+        <createSequence sequenceName="facility_data_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS facility_data_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_FACILITY_DATA_CREATE_TABLE" author="apostolouk@unisystems.gr">
+        <comment>Create facility data table</comment>
+        <createTable tableName="facility_data" remarks="Represents the facility data stored in the system">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="facility_data_pk" nullable="false"/>
+            </column>
+            <column name="facility_id" type="varchar(20)" remarks="The facility id value">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint" remarks="The target unit account the facility belongs to">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_date" type="timestamp" remarks="The date the facility was created">
+                <constraints nullable="false" />
+            </column>
+            <column name="excluded_date" type="timestamp" remarks="The date the facility was excluded">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <createIndex indexName="idx_facility_data_facility_id" tableName="facility_data" unique="true">
+            <column name="facility_id"/>
+        </createIndex>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS facility_data CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_FACILITY_IDENTIFIER_CHANGE_ID_TO_BIGINT" author="apostolouk@unisystems.gr">
+        <sql>
+            ALTER TABLE facility_identifier ALTER COLUMN id TYPE bigint;
+        </sql>
+        <rollback>
+            ALTER TABLE facility_identifier ALTER COLUMN id TYPE int;
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_FACILITY_DATA_CHANGE_COLUMN_NAME_TO_CLOSED_DATE" author="vourdoukasd@unisystems.gr">
+        <renameColumn tableName="facility_data" oldColumnName="excluded_date" newColumnName="closed_date"/>
+        <rollback>
+            <renameColumn tableName="facility_data" oldColumnName="closed_date" newColumnName="excluded_date"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_FACILITY_DATA_ADD_START_DATE_SUBSISTENCE_FEE_COLUMN" author="vourdoukasd@unisystems.gr">
+        <addColumn tableName="facility_data"> <column name="charge_start_date" type="date" remarks="Start date of paying the subsistence fee"/> </addColumn>
+        <rollback>
+            <dropColumn columnName="charge_start_date" tableName="facility_data"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

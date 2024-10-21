@@ -1,0 +1,933 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/changelog_request_cca.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_POPULATE_REQUEST_TYPE_TABLE" author="P70628">
+        <sql>
+            INSERT INTO public.request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually)
+            VALUES(nextval('request_type_seq'), 'TARGET_UNIT_ACCOUNT_CREATION', 'Target unit account creation', 'PROCESS_TARGET_UNIT_ACCOUNT_CREATION', '', false, true, false, true);
+
+            INSERT INTO public.request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually)
+            VALUES(nextval('request_type_seq'), 'UNDERLYING_AGREEMENT', 'Underlying agreement', 'PROCESS_UNDERLYING_AGREEMENT', '', true, true, false, false);
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_REQUEST_TASK_TYPE_TABLE" author="P70628">
+        <validCheckSum>1:any</validCheckSum>
+        <sql>
+            INSERT INTO public.request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'APPLY_FOR_AN_UNDERLYING_AGREEMENT', true, '', null,
+                   (SELECT id FROM public.request_type WHERE code = 'UNDERLYING_AGREEMENT'));
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_REQUEST_HISTORY_CATEGORY" author="P70383">
+        <sql>
+            UPDATE request_type
+            SET history_category = 'UNA'
+            WHERE code = 'TARGET_UNIT_ACCOUNT_CREATION' or code = 'UNDERLYING_AGREEMENT';
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE request_type
+                SET history_category = ''
+                WHERE code = 'TARGET_UNIT_ACCOUNT_CREATION' or code = 'UNDERLYING_AGREEMENT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_ADMIN_TERMINATION_REQUEST_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually)
+            VALUES(nextval('request_type_seq'), 'ADMIN_TERMINATION', 'Admin termination', 'PROCESS_ADMIN_TERMINATION', 'UNA', false, true, false, true);
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'ADMIN_TERMINATION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_ADMIN_TERMINATION_SUBMIT_REQUEST_TASK_TYPE" author="apostolouk@unisystems.gr">
+        <validCheckSum>1:any</validCheckSum>
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'ADMIN_TERMINATION_APPLICATION_SUBMIT', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'ADMIN_TERMINATION'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'ADMIN_TERMINATION_APPLICATION_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR ADMIN_TERMINATION_SUBMIT_REQUEST_TASK_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+            (nextval('request_task_action_type_seq'), 'ADMIN_TERMINATION_SAVE_APPLICATION', false),
+            (nextval('request_task_action_type_seq'), 'ADMIN_TERMINATION_SUBMIT_APPLICATION', false),
+            (nextval('request_task_action_type_seq'), 'ADMIN_TERMINATION_CANCEL_APPLICATION', false);
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_action_type
+                WHERE code IN ('ADMIN_TERMINATION_SAVE_APPLICATION', 'ADMIN_TERMINATION_SUBMIT_APPLICATION', 'ADMIN_TERMINATION_CANCEL_APPLICATION');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ASSOCIATE_TASK_ACTION_TYPES_WITH_TASK_TYPE_FOR ADMIN_TERMINATION" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'ADMIN_TERMINATION_APPLICATION_SUBMIT'
+            AND rtat.code in ('ADMIN_TERMINATION_SAVE_APPLICATION', 'ADMIN_TERMINATION_SUBMIT_APPLICATION', 'ADMIN_TERMINATION_CANCEL_APPLICATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                    SELECT id from request_task_action_type where code in ('ADMIN_TERMINATION_SAVE_APPLICATION', 'ADMIN_TERMINATION_SUBMIT_APPLICATION', 'ADMIN_TERMINATION_CANCEL_APPLICATION')
+                );
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_RENAME_REQUEST_TASK_TYPE_APPLY_FOR_AN_UNDERLYING_AGREEMENT" author="P70383">
+        <sql>
+            UPDATE request_task_type
+            SET code = 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT'
+            WHERE code = 'APPLY_FOR_AN_UNDERLYING_AGREEMENT';
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE request_task_type
+                SET code = 'APPLY_FOR_AN_UNDERLYING_AGREEMENT'
+                WHERE code = 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_SUBMIT_ACTION_TYPES_for_UNDERLYING_AGREEMENT_APPLICATION_SUBMIT_REQUEST_TASK_TYPE" author="P70383">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_SAVE_APPLICATION', false),
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_SUBMIT_APPLICATION', false),
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_UPLOAD_SECTION_ATTACHMENT', false),
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_CANCEL_APPLICATION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT'
+              AND rtat.code in ('UNDERLYING_AGREEMENT_SAVE_APPLICATION', 'UNDERLYING_AGREEMENT_SUBMIT_APPLICATION', 'UNDERLYING_AGREEMENT_UPLOAD_SECTION_ATTACHMENT', 'UNDERLYING_AGREEMENT_CANCEL_APPLICATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                    SELECT id from request_task_action_type where code in ('UNDERLYING_AGREEMENT_SAVE_APPLICATION', 'UNDERLYING_AGREEMENT_SUBMIT_APPLICATION', 'UNDERLYING_AGREEMENT_UPLOAD_SECTION_ATTACHMENT', 'UNDERLYING_AGREEMENT_CANCEL_APPLICATION')
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('UNDERLYING_AGREEMENT_SAVE_APPLICATION', 'UNDERLYING_AGREEMENT_SUBMIT_APPLICATION', 'UNDERLYING_AGREEMENT_UPLOAD_SECTION_ATTACHMENT', 'UNDERLYING_AGREEMENT_CANCEL_APPLICATION');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_ADMIN_TERMINATION_UPLOAD_SECTION_ATTACHMENT_ACTION_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'ADMIN_TERMINATION_UPLOAD_SECTION_ATTACHMENT', false)
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_action_type
+                WHERE code = 'ADMIN_TERMINATION_UPLOAD_SECTION_ATTACHMENT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ASSOCIATE_ADMIN_TERMINATION_UPLOAD_SECTION_ATTACHMENT_WITH_TASK_TYPE_FOR_ADMIN_TERMINATION" author="P70311">
+        <sql>
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'ADMIN_TERMINATION_APPLICATION_SUBMIT'
+              AND rtat.code = 'ADMIN_TERMINATION_UPLOAD_SECTION_ATTACHMENT';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'ADMIN_TERMINATION_UPLOAD_SECTION_ATTACHMENT');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_ADMIN_TERMINATION_NOTIFY_OPERATOR_FOR_DECISION_FOR ADMIN_TERMINATION_SUBMIT_REQUEST_TASK_TYPE" author="P70383">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'ADMIN_TERMINATION_NOTIFY_OPERATOR_FOR_DECISION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'ADMIN_TERMINATION_APPLICATION_SUBMIT'
+              AND rtat.code = 'ADMIN_TERMINATION_NOTIFY_OPERATOR_FOR_DECISION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                    SELECT id from request_task_action_type where code = 'ADMIN_TERMINATION_NOTIFY_OPERATOR_FOR_DECISION'
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'ADMIN_TERMINATION_NOTIFY_OPERATOR_FOR_DECISION';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_WAIT_FOR_REVIEW_REQUEST_TASK_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_WAIT_FOR_REVIEW', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_WAIT_FOR_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_APPLICATION_REVIEW_REQUEST_TASK_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_APPLICATION_REVIEW_REQUEST_TASK_TYPE_CANCEL_ACTION_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_CANCEL_APPLICATION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id = (SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_CANCEL_APPLICATION')
+                AND request_task_type_id = (SELECT id from request_task_type where code = 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT'));
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_CANCEL_APPLICATION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id = (SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_CANCEL_APPLICATION')
+                AND request_task_type_id = (SELECT id from request_task_type where code = 'UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION');
+
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_ADMIN_TERMINATION_APPLICATION_WITHDRAW_REQUEST_TASK_TYPE" author="P70383">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'ADMIN_TERMINATION_APPLICATION_WITHDRAW', true, 'adminTermination', null,
+                   (SELECT id FROM request_type WHERE code = 'ADMIN_TERMINATION'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'ADMIN_TERMINATION_APPLICATION_WITHDRAW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_ADMIN_TERMINATION_APPLICATION_FINAL_DECISION_REQUEST_TASK_TYPE" author="P70383">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'ADMIN_TERMINATION_APPLICATION_FINAL_DECISION', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'ADMIN_TERMINATION'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'ADMIN_TERMINATION_APPLICATION_FINAL_DECISION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_ADMIN_TERMINATION_APPLICATION_FINAL_DECISION_REQUEST_TASK_TYPE" author="P70383">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+                (nextval('request_task_action_type_seq'), 'ADMIN_TERMINATION_FINAL_DECISION_SAVE_APPLICATION', false),
+                (nextval('request_task_action_type_seq'), 'ADMIN_TERMINATION_FINAL_DECISION_NOTIFY_OPERATOR_FOR_DECISION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'ADMIN_TERMINATION_APPLICATION_FINAL_DECISION'
+              AND rtat.code in ('ADMIN_TERMINATION_FINAL_DECISION_SAVE_APPLICATION', 'ADMIN_TERMINATION_FINAL_DECISION_NOTIFY_OPERATOR_FOR_DECISION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code in (
+                    'ADMIN_TERMINATION_FINAL_DECISION_SAVE_APPLICATION', 'ADMIN_TERMINATION_FINAL_DECISION_NOTIFY_OPERATOR_FOR_DECISION')
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('ADMIN_TERMINATION_FINAL_DECISION_SAVE_APPLICATION', 'ADMIN_TERMINATION_FINAL_DECISION_NOTIFY_OPERATOR_FOR_DECISION');
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_UNDERLYING_AGREEMENT_APPLICATION_REVIEW_TASK_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+        	INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+           	 VALUES
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_SAVE_APPLICATION_REVIEW', false),
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_SAVE_REVIEW_GROUP_DECISION', false),
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_SAVE_FACILITY_REVIEW_GROUP_DECISION', false),
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_UPLOAD_REVIEW_GROUP_DECISION_ATTACHMENT', false);
+                
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW'
+            AND rtat.code in ('UNDERLYING_AGREEMENT_SAVE_APPLICATION_REVIEW', 
+            				'UNDERLYING_AGREEMENT_SAVE_REVIEW_GROUP_DECISION', 
+            				'UNDERLYING_AGREEMENT_SAVE_FACILITY_REVIEW_GROUP_DECISION',
+            				'UNDERLYING_AGREEMENT_UPLOAD_REVIEW_GROUP_DECISION_ATTACHMENT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                    SELECT id from request_task_action_type where code in ('UNDERLYING_AGREEMENT_SAVE_APPLICATION_REVIEW', 
+                    'UNDERLYING_AGREEMENT_SAVE_REVIEW_GROUP_DECISION', 
+                    'UNDERLYING_AGREEMENT_SAVE_FACILITY_REVIEW_GROUP_DECISION',
+                    'UNDERLYING_AGREEMENT_UPLOAD_REVIEW_GROUP_DECISION_ATTACHMENT'));
+                
+                DELETE FROM request_task_action_type
+                WHERE code IN ('UNDERLYING_AGREEMENT_SAVE_APPLICATION_REVIEW', 
+                    'UNDERLYING_AGREEMENT_SAVE_REVIEW_GROUP_DECISION', 
+                    'UNDERLYING_AGREEMENT_SAVE_FACILITY_REVIEW_GROUP_DECISION',
+                    'UNDERLYING_AGREEMENT_UPLOAD_REVIEW_GROUP_DECISION_ATTACHMENT');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_ADMIN_TERMINATION_WITHDRAW_REQUEST_TASK_TYPE" author="bountasp@unisystems.gr">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+            (nextval('request_task_action_type_seq'), 'ADMIN_TERMINATION_WITHDRAW_SAVE_APPLICATION', false),
+            (nextval('request_task_action_type_seq'), 'ADMIN_TERMINATION_WITHDRAW_NOTIFY_OPERATOR_FOR_DECISION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'ADMIN_TERMINATION_APPLICATION_WITHDRAW'
+            AND rtat.code in ('ADMIN_TERMINATION_WITHDRAW_SAVE_APPLICATION', 'ADMIN_TERMINATION_WITHDRAW_NOTIFY_OPERATOR_FOR_DECISION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code in (
+                'ADMIN_TERMINATION_WITHDRAW_SAVE_APPLICATION', 'ADMIN_TERMINATION_WITHDRAW_NOTIFY_OPERATOR_FOR_DECISION')
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('ADMIN_TERMINATION_WITHDRAW_SAVE_APPLICATION', 'ADMIN_TERMINATION_WITHDRAW_NOTIFY_OPERATOR_FOR_DECISION');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_SAVE_REVIEW_DETERMINATION" author="P70628">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_SAVE_REVIEW_DETERMINATION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_SAVE_REVIEW_DETERMINATION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code code = 'UNDERLYING_AGREEMENT_SAVE_REVIEW_DETERMINATION';
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'UNDERLYING_AGREEMENT_SAVE_REVIEW_DETERMINATION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_REQUEST_TASK_TYPE_EXPIRATION_KEY_OF_UNA_APPLICATION_ACTIVATION_TO_UNDERLYING_AGREEMENT" author="vourdoukasd@unisystems.gr">
+        <update tableName="request_task_type">
+            <column name="expiration_key" value="underlyingAgreement" />
+            <where>code = 'UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION'</where>
+        </update>
+        <rollback>
+            <update tableName="request_task_type">
+                <column name="expiration_key" value="" />
+                <where>code = 'UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION'</where>
+            </update>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_UNDERLYING_AGREEMENT_NOTIFY_OPERATOR_FOR_DECISION_FOR UNDERLYING_AGREEMENT_REVIEW_REQUEST_TASK_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_NOTIFY_OPERATOR_FOR_DECISION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_NOTIFY_OPERATOR_FOR_DECISION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                    SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_NOTIFY_OPERATOR_FOR_DECISION'
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'UNDERLYING_AGREEMENT_NOTIFY_OPERATOR_FOR_DECISION';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION_REQUEST_TASK_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+            (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_ACTIVATION_SAVE_APPLICATION', false),
+            (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION'
+            AND rtat.code in ('UNDERLYING_AGREEMENT_ACTIVATION_SAVE_APPLICATION', 'UNDERLYING_AGREEMENT_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code in (
+                'UNDERLYING_AGREEMENT_ACTIVATION_SAVE_APPLICATION', 'UNDERLYING_AGREEMENT_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION')
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('UNDERLYING_AGREEMENT_ACTIVATION_SAVE_APPLICATION', 'UNDERLYING_AGREEMENT_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION');
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_WAIT_FOR_ACTIVATION_REQUEST_TASK_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_WAIT_FOR_ACTIVATION', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_WAIT_FOR_ACTIVATION';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_ASSOCIATE_UPLOAD_SECTION_ATTACHMENT_WITH_TASK_TYPES_FOR_ADMIN_TERMINATION_WITHDRAW_AND_FINAL_DECISION" author="loukerip">
+        <sql>
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code in ('ADMIN_TERMINATION_APPLICATION_WITHDRAW', 'ADMIN_TERMINATION_APPLICATION_FINAL_DECISION')
+              AND rtat.code = 'ADMIN_TERMINATION_UPLOAD_SECTION_ATTACHMENT';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id = (SELECT id from request_task_action_type where code = 'ADMIN_TERMINATION_UPLOAD_SECTION_ATTACHMENT') 
+                AND request_task_type_id in (SELECT id from request_task_type where code in ('ADMIN_TERMINATION_APPLICATION_WITHDRAW', 'ADMIN_TERMINATION_APPLICATION_FINAL_DECISION'));
+            </sql>
+        </rollback>
+    </changeSet>
+    
+        <changeSet id="0_1_0_RENAME_TASK_ACTION_TYPE_ADMIN_TERMINATION_UPLOAD_SECTION_ATTACHMENT" author="loukerip">
+        <sql>
+            UPDATE request_task_action_type
+            set code = 'ADMIN_TERMINATION_UPLOAD_ATTACHMENT'
+            WHERE code = 'ADMIN_TERMINATION_UPLOAD_SECTION_ATTACHMENT';
+        </sql>
+        <rollback>
+            <sql>
+	            UPDATE request_task_action_type
+	            set code= 'ADMIN_TERMINATION_UPLOAD_SECTION_ATTACHMENT'
+	            WHERE code = 'ADMIN_TERMINATION_UPLOAD_ATTACHMENT';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_VARIATION_REQUEST_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually)
+            VALUES(nextval('request_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION', 'Underlying agreement variation', 'PROCESS_UNDERLYING_AGREEMENT_VARIATION', 'UNA', false, true, false, true);
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_VARIATION_SUBMIT_REQUEST_TASK_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'ADMIN_TERMINATION'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_UPDATE_HOLD_HISTORY_OF_UNDERLYING_AGREEMENT_REQUEST_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+            UPDATE request_type
+            set hold_history = false
+            WHERE code = 'UNDERLYING_AGREEMENT';
+        </sql>
+        <rollback>
+            <sql>
+	            UPDATE request_type
+            	set hold_history = true
+            	WHERE code = 'UNDERLYING_AGREEMENT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_UPLOAD_SECTION_ATTACHMENT_FOR_UNDERLYING_AGREEMENT_APPLICATION_REVIEW_TASK_TYPE" author="P70383">
+        <sql>
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_UPLOAD_SECTION_ATTACHMENT';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                    SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_UPLOAD_SECTION_ATTACHMENT'
+                ) AND request_task_type_id IN (
+                    SELECT id from request_task_type where code = 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW'
+                );
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_ACTIVATION_UPLOAD_ATTACHMENT_FOR_UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION_TASK_TYPE" author="P70383">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_ACTIVATION_UPLOAD_ATTACHMENT', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_ACTIVATION_UPLOAD_ATTACHMENT';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_ACTIVATION_UPLOAD_ATTACHMENT');
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'UNDERLYING_AGREEMENT_ACTIVATION_UPLOAD_ATTACHMENT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_VARIATION_CANCEL_APPLICATION_REQUEST_TASK_ACTION_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_CANCEL_APPLICATION', false);
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_VARIATION_CANCEL_APPLICATION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW_REQUEST_TASK_TYPE_CANCEL_ACTION_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT_VARIATION'));
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_VARIATION_CANCEL_APPLICATION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id = (SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_VARIATION_CANCEL_APPLICATION')
+                AND request_task_type_id = (SELECT id from request_task_type where code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW');
+
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_REQUEST_TASK_TYPE_CANCEL_ACTION_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT_VARIATION'));
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_VARIATION_CANCEL_APPLICATION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id = (SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_VARIATION_CANCEL_APPLICATION')
+                AND request_task_type_id = (SELECT id from request_task_type where code = 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION');
+
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_VARIATION_SUBMIT_REQUEST_TASK_TYPE_CANCEL_ACTION_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_VARIATION_CANCEL_APPLICATION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id = (SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_VARIATION_CANCEL_APPLICATION')
+                AND request_task_type_id = (SELECT id from request_task_type where code = 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_UNDERLYING_AGREEMENT_VARIATION_SUBMIT_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            UPDATE request_task_type
+            SET request_type_id = (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT_VARIATION')
+            WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT';
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_SAVE_AND_UPLOAD_ACTION_TYPES_for_UNDERLYING_AGREEMENT_VARIATION_SUBMIT_REQUEST_TASK_TYPE" author="P70628">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_SAVE_APPLICATION', false),
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_SECTION_ATTACHMENT', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT'
+              AND rtat.code in ('UNDERLYING_AGREEMENT_VARIATION_SAVE_APPLICATION', 'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_SECTION_ATTACHMENT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code in ('UNDERLYING_AGREEMENT_VARIATION_SAVE_APPLICATION', 'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_SECTION_ATTACHMENT')
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('UNDERLYING_AGREEMENT_VARIATION_SAVE_APPLICATION', 'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_SECTION_ATTACHMENT');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_SUBMIT_ACTION_TYPE_for_UNDERLYING_AGREEMENT_VARIATION_SUBMIT_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT_APPLICATION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT_APPLICATION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT_APPLICATION');
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT_APPLICATION';
+            </sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_REVIEW_REQUEST_TASK_TYPE" author="P70628">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_REVIEW', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT_VARIATION'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW_TASK_TYPE" author="P70628">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_SAVE_APPLICATION_REVIEW', false),
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_GROUP_DECISION', false),
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_SAVE_FACILITY_REVIEW_GROUP_DECISION', false),
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_REVIEW_GROUP_DECISION_ATTACHMENT', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW'
+              AND rtat.code in ('UNDERLYING_AGREEMENT_VARIATION_SAVE_APPLICATION_REVIEW',
+                                'UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_GROUP_DECISION',
+                                'UNDERLYING_AGREEMENT_VARIATION_SAVE_FACILITY_REVIEW_GROUP_DECISION',
+                                'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_REVIEW_GROUP_DECISION_ATTACHMENT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code in ('UNDERLYING_AGREEMENT_VARIATION_SAVE_APPLICATION_REVIEW',
+                'UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_GROUP_DECISION',
+                'UNDERLYING_AGREEMENT_VARIATION_SAVE_FACILITY_REVIEW_GROUP_DECISION',
+                'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_REVIEW_GROUP_DECISION_ATTACHMENT'));
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('UNDERLYING_AGREEMENT_VARIATION_SAVE_APPLICATION_REVIEW',
+                'UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_GROUP_DECISION',
+                'UNDERLYING_AGREEMENT_VARIATION_SAVE_FACILITY_REVIEW_GROUP_DECISION',
+                'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_REVIEW_GROUP_DECISION_ATTACHMENT');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_DETERMINATION" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_DETERMINATION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_DETERMINATION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code code = 'UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_DETERMINATION';
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_DETERMINATION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_UNDERLYING_AGREEMENT_VARIATION_NOTIFY_OPERATOR_FOR_DECISION_FOR UNDERLYING_AGREEMENT_REVIEW_REQUEST_TASK_TYPE" author="P70628">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_NOTIFY_OPERATOR_FOR_DECISION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_VARIATION_NOTIFY_OPERATOR_FOR_DECISION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_VARIATION_NOTIFY_OPERATOR_FOR_DECISION'
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_NOTIFY_OPERATOR_FOR_DECISION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_UPLOAD_ATTACHMENT', false),
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_SAVE_APPLICATION', false),
+                (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION', false);
+
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION'
+              AND rtat.code in ('UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_SAVE_APPLICATION', 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_UPLOAD_ATTACHMENT', 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code in (
+                'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_UPLOAD_ATTACHMENT', 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_SAVE_APPLICATION', 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION')
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_UPLOAD_ATTACHMENT', 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_SAVE_APPLICATION', 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_ACTIVATION_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_ACTIVATION', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT_VARIATION'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_ACTIVATION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_VARIATION_UPLOAD_SECTION_ATTACHMENT_FOR_UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW_TASK_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_SECTION_ATTACHMENT';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                    SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_SECTION_ATTACHMENT'
+                ) AND request_task_type_id IN (
+                    SELECT id from request_task_type where code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW'
+                );
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_UPDATE_REQUEST_TASK_TYPE_EXPIRATION_KEY_OF_UNDERLYING_AGREEMENT_VARIATION_ACTIVATION" author="apostolouk@unisystems.gr">
+        <update tableName="request_task_type">
+            <column name="expiration_key" value="underlyingAgreementVariation" />
+            <where>code = 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION'</where>
+        </update>
+        <rollback>
+            <update tableName="request_task_type">
+                <column name="expiration_key" value="" />
+                <where>code = 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION'</where>
+            </update>
+        </rollback>
+    </changeSet>
+    
+</databaseChangeLog>

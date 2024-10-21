@@ -10,10 +10,7 @@ public class AccountOperatorAuthorityUpdateValidator
 
     @Override
     public boolean isValid(AccountOperatorAuthorityUpdateWrapperDTO dto, ConstraintValidatorContext context) {
-        return ! (
-                ObjectUtils.isEmpty(dto.getAccountOperatorAuthorityUpdateList()) &&
-                ObjectUtils.isEmpty(dto.getContactTypes())
-                );
+        return ! ObjectUtils.isEmpty(dto.getAccountOperatorAuthorityUpdateList());
     }
 
 }

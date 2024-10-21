@@ -14,11 +14,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.web.controller.user.UserSignatureController;
+import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.netz.api.files.common.FileType;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
-import uk.gov.cca.api.user.core.service.UserSignatureService;
-import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.user.core.service.UserSignatureService;
 
 import java.nio.charset.StandardCharsets;
 

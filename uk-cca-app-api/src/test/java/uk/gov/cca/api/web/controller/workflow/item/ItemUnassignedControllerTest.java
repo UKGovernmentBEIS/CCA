@@ -1,5 +1,19 @@
 package uk.gov.cca.api.web.controller.workflow.item;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
+import static uk.gov.netz.api.competentauthority.CompetentAuthorityEnum.ENGLAND;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,38 +27,24 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.authorization.core.domain.AppAuthority;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.cca.api.web.controller.workflow.item.ItemUnassignedController;
-import uk.gov.netz.api.common.domain.PagingRequest;
-import uk.gov.netz.api.common.domain.RoleType;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
+
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
-import uk.gov.cca.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
-import uk.gov.cca.api.workflow.request.application.item.service.ItemUnassignedRegulatorService;
-import uk.gov.cca.api.workflow.request.application.item.service.ItemUnassignedService;
-
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.netz.api.common.domain.RoleType.OPERATOR;
-import static uk.gov.netz.api.common.domain.RoleType.REGULATOR;
-import static uk.gov.netz.api.common.domain.RoleType.VERIFIER;
-import static uk.gov.netz.api.competentauthority.CompetentAuthorityEnum.ENGLAND;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.cca.api.workflow.request.application.item.service.ItemUnassignedSectorUserService;
+import uk.gov.netz.api.authorization.core.domain.AppAuthority;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.domain.PagingRequest;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
+import uk.gov.netz.api.workflow.request.application.item.service.ItemUnassignedRegulatorService;
+import uk.gov.netz.api.workflow.request.application.item.service.ItemUnassignedService;
 
 @ExtendWith(MockitoExtension.class)
 class ItemUnassignedControllerTest {
@@ -62,6 +62,9 @@ class ItemUnassignedControllerTest {
 
     @Mock
     private ItemUnassignedRegulatorService itemUnassignedRegulatorService;
+    
+    @Mock
+    private ItemUnassignedSectorUserService itemUnassignedSectorUserService;
 
     @Mock
     private AppUserAuthorizationService appUserAuthorizationService;
@@ -71,7 +74,7 @@ class ItemUnassignedControllerTest {
 
     @BeforeEach
     public void setUp() {
-        List<ItemUnassignedService> services = List.of(itemUnassignedRegulatorService);
+        List<ItemUnassignedService> services = List.of(itemUnassignedRegulatorService, itemUnassignedSectorUserService);
         ItemUnassignedController itemController = new ItemUnassignedController(services);
 
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
@@ -98,13 +101,13 @@ class ItemUnassignedControllerTest {
 
     @Test
     void getUnassignedItems_regulator() throws Exception {
-        AppUser appUser = buildMockappUser(RoleType.REGULATOR);
+        AppUser appUser = buildMockappUser(REGULATOR);
         ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().totalItems(1L).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         when(itemUnassignedRegulatorService.getUnassignedItems(appUser, PAGING))
                 .thenReturn(itemDTOResponse);
-        when(itemUnassignedRegulatorService.getRoleType()).thenReturn(RoleType.REGULATOR);
+        when(itemUnassignedRegulatorService.getRoleType()).thenReturn(REGULATOR);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(BASE_PATH + "/" + UNASSIGNED + "?page=0&size=10")
@@ -113,16 +116,40 @@ class ItemUnassignedControllerTest {
 
         verify(itemUnassignedRegulatorService, times(1))
                 .getUnassignedItems(appUser, PAGING);
+        verify(itemUnassignedSectorUserService, never())
+        		.getUnassignedItems(appUser, PAGING);
+    }
+    
+    @Test
+    void getUnassignedItems_sector_user() throws Exception {
+        AppUser appUser = buildMockappUser(SECTOR_USER);
+        ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().totalItems(1L).build();
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
+        when(itemUnassignedSectorUserService.getUnassignedItems(appUser, PAGING))
+                .thenReturn(itemDTOResponse);
+        when(itemUnassignedSectorUserService.getRoleType()).thenReturn(SECTOR_USER);
+        when(itemUnassignedRegulatorService.getRoleType()).thenReturn(REGULATOR);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(BASE_PATH + "/" + UNASSIGNED + "?page=0&size=10")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(itemUnassignedRegulatorService, never())
+                .getUnassignedItems(appUser, PAGING);
+        verify(itemUnassignedSectorUserService, times(1))
+        		.getUnassignedItems(appUser, PAGING);
     }
 
     @Test
     void getUnassignedItems_forbidden() throws Exception {
-        AppUser appUser = buildMockappUser(RoleType.REGULATOR);
+        AppUser appUser = buildMockappUser(REGULATOR);
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(appUser, new RoleType[]{OPERATOR, REGULATOR, VERIFIER});
+            .evaluate(appUser, new String[]{OPERATOR, REGULATOR, SECTOR_USER});
 
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -131,9 +158,10 @@ class ItemUnassignedControllerTest {
             .andExpect(status().isForbidden());
 
         verify(itemUnassignedRegulatorService, never()).getUnassignedItems(any(), any(PagingRequest.class));
+        verify(itemUnassignedSectorUserService, never()).getUnassignedItems(any(), any(PagingRequest.class));
     }
 
-    private AppUser buildMockappUser(RoleType roleType) {
+    private AppUser buildMockappUser(String roleType) {
         AppAuthority appAuthority = AppAuthority.builder()
             .competentAuthority(ENGLAND)
             .build();

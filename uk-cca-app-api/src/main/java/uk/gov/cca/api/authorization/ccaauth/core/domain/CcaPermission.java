@@ -1,0 +1,26 @@
+package uk.gov.cca.api.authorization.ccaauth.core.domain;
+
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public class CcaPermission {
+
+    public static final String PERM_SECTOR_ASSOCIATION_EDIT = "PERM_SECTOR_ASSOCIATION_EDIT";
+
+    public static final String PERM_SECTOR_USERS_EDIT = "PERM_SECTOR_USERS_EDIT";
+
+    public static final String PERM_OPERATOR_USERS_EDIT = "PERM_OPERATOR_USERS_EDIT";
+
+    public static final String PERM_USER_READONLY = "PERM_USER_READONLY";
+    
+    public static final String PERM_UNDERLYING_AGREEMENT_APPLICATION_SUBMIT = "PERM_UNDERLYING_AGREEMENT_APPLICATION_SUBMIT";
+    
+    public static final String PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW = "PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW";
+
+    public static final String PERM_ADMIN_TERMINATION_SUBMISSION = "PERM_ADMIN_TERMINATION_SUBMISSION";
+
+    public static final String PERM_UNDERLYING_AGREEMENT_VARIATION_SUBMIT = "PERM_UNDERLYING_AGREEMENT_VARIATION_SUBMIT";
+
+    public static final String PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW = "PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW";
+
+}

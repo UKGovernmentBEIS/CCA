@@ -5,18 +5,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.authorization.core.domain.AppAuthority;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.core.domain.AuthorityStatus;
-import uk.gov.cca.api.authorization.core.domain.dto.UserAuthoritiesDTO;
-import uk.gov.cca.api.authorization.core.domain.dto.UserAuthorityDTO;
-import uk.gov.cca.api.authorization.regulator.service.RegulatorAuthorityQueryService;
-import uk.gov.cca.api.web.orchestrator.authorization.service.RegulatorUserAuthorityQueryOrchestrator;
-import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
-import uk.gov.cca.api.user.regulator.domain.RegulatorUserInfoDTO;
-import uk.gov.cca.api.user.regulator.service.RegulatorUserInfoService;
 import uk.gov.cca.api.web.orchestrator.authorization.dto.RegulatorUserAuthorityInfoDTO;
 import uk.gov.cca.api.web.orchestrator.authorization.dto.RegulatorUsersAuthoritiesInfoDTO;
+import uk.gov.netz.api.authorization.core.domain.AppAuthority;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
+import uk.gov.netz.api.authorization.core.domain.dto.UserAuthoritiesDTO;
+import uk.gov.netz.api.authorization.core.domain.dto.UserAuthorityDTO;
+import uk.gov.netz.api.authorization.regulator.service.RegulatorAuthorityQueryService;
+import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
+import uk.gov.netz.api.user.regulator.domain.RegulatorUserInfoDTO;
+import uk.gov.netz.api.user.regulator.service.RegulatorUserInfoService;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.cca.api.authorization.core.domain.AuthorityStatus.ACTIVE;
+import static uk.gov.netz.api.authorization.core.domain.AuthorityStatus.ACTIVE;
 
 @ExtendWith(MockitoExtension.class)
 class RegulatorUserAuthorityQueryOrchestratorTest {
@@ -59,7 +58,7 @@ class RegulatorUserAuthorityQueryOrchestratorTest {
         RegulatorUserInfoDTO userInfo = RegulatorUserInfoDTO.builder().id(userId).enabled(true).build();
 
         RegulatorUserAuthorityInfoDTO expectedUserAuthInfo =
-                RegulatorUserAuthorityInfoDTO.builder().userId(userId).authorityStatus(status).locked(false).build();
+                RegulatorUserAuthorityInfoDTO.builder().userId(userId).authorityStatus(status).build();
 
         when(regulatorAuthorityQueryService.getCaAuthorities(authUser)).thenReturn(userAuthorities);
         when(regulatorUserInfoService.getRegulatorUsersInfo(authUser, List.of(userId))).thenReturn(List.of(userInfo));

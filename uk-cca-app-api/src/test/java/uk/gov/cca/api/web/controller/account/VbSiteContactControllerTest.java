@@ -16,24 +16,23 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.account.domain.dto.AccountContactDTO;
-import uk.gov.cca.api.account.domain.dto.AccountContactVbInfoDTO;
-import uk.gov.cca.api.account.domain.dto.AccountContactVbInfoResponse;
-import uk.gov.cca.api.account.service.AccountVbSiteContactService;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.cca.api.common.EmissionTradingScheme;
-import uk.gov.cca.api.web.controller.account.VbSiteContactController;
-import uk.gov.netz.api.common.domain.RoleType;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.account.domain.dto.AccountContactDTO;
+import uk.gov.netz.api.account.domain.dto.AccountContactVbInfoDTO;
+import uk.gov.netz.api.account.domain.dto.AccountContactVbInfoResponse;
+import uk.gov.netz.api.account.service.AccountVbSiteContactService;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.common.domain.TestEmissionTradingScheme;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
 
 import java.util.List;
 
@@ -99,12 +98,12 @@ class VbSiteContactControllerTest {
 
     @Test
     void getVbSiteContacts() throws Exception {
-        final AppUser user = AppUser.builder().roleType(RoleType.VERIFIER).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.VERIFIER).build();
 
         AccountContactVbInfoResponse accountVbSiteContactInfoResponse = AccountContactVbInfoResponse.builder()
                 .contacts(List.of(
-                        new AccountContactVbInfoDTO(1L, "accountName1", EmissionTradingScheme.DUMMY_EMISSION_TRADING_SCHEME, "userId1"),
-                        new AccountContactVbInfoDTO(2L, "accountName2", EmissionTradingScheme.DUMMY_EMISSION_TRADING_SCHEME_2, "userId2")
+                        new AccountContactVbInfoDTO(1L, "accountName1", TestEmissionTradingScheme.DUMMY_EMISSION_TRADING_SCHEME, "userId1"),
+                        new AccountContactVbInfoDTO(2L, "accountName2", TestEmissionTradingScheme.DUMMY_EMISSION_TRADING_SCHEME_2, "userId2")
                     ))
                 .editable(false).build();
 
@@ -130,12 +129,12 @@ class VbSiteContactControllerTest {
 
     @Test
     void getVbSiteContacts_forbidden() throws Exception {
-        final AppUser user = AppUser.builder().roleType(RoleType.VERIFIER).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.VERIFIER).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(roleAuthorizationService)
-                .evaluate(user, new RoleType[] {RoleType.VERIFIER});
+                .evaluate(user, new String[] {RoleTypeConstants.VERIFIER});
 
         mockMvc.perform(MockMvcRequestBuilders.get(VB_SITE_CONTACT_CONTROLLER_PATH + "?page=0&size=2")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -147,7 +146,7 @@ class VbSiteContactControllerTest {
 
     @Test
     void updateVbSiteContacts() throws Exception {
-        final AppUser user = AppUser.builder().roleType(RoleType.VERIFIER).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.VERIFIER).build();
         List<AccountContactDTO> accountVbSiteContacts = List.of(
                 AccountContactDTO.builder().accountId(1L).userId("userId1").build(),
                 AccountContactDTO.builder().accountId(2L).userId("userId2").build()
@@ -166,7 +165,7 @@ class VbSiteContactControllerTest {
 
     @Test
     void updateVbSiteContacts_forbidden() throws Exception {
-        final AppUser user = AppUser.builder().roleType(RoleType.VERIFIER).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.VERIFIER).build();
         List<AccountContactDTO> accountVbSiteContacts = List.of(
                 AccountContactDTO.builder().accountId(1L).userId("userId1").build(),
                 AccountContactDTO.builder().accountId(2L).userId("userId2").build()

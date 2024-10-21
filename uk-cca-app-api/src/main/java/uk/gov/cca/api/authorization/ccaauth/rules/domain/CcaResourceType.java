@@ -1,0 +1,9 @@
+package uk.gov.cca.api.authorization.ccaauth.rules.domain;
+
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public class CcaResourceType {
+	
+    public static final String SECTOR_ASSOCIATION = "SECTOR_ASSOCIATION";
+}

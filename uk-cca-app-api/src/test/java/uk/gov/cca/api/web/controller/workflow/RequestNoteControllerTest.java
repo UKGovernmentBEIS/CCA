@@ -1,6 +1,19 @@
 package uk.gov.cca.api.web.controller.workflow;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,11 +29,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.cca.api.web.controller.workflow.RequestNoteController;
-import uk.gov.netz.api.common.domain.RoleType;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import uk.gov.cca.api.web.config.AppUserArgumentResolver;
+import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.common.note.NotePayload;
@@ -29,30 +50,10 @@ import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.files.common.domain.dto.FileUuidDTO;
 import uk.gov.netz.api.files.notes.service.FileNoteService;
 import uk.gov.netz.api.token.FileToken;
-import uk.gov.cca.api.web.config.AppUserArgumentResolver;
-import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestNoteDto;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestNoteRequest;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestNoteResponse;
-import uk.gov.cca.api.workflow.request.core.service.RequestNoteService;
-
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestNoteDto;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestNoteRequest;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestNoteResponse;
+import uk.gov.netz.api.workflow.request.core.service.RequestNoteService;
 
 @ExtendWith(MockitoExtension.class)
 class RequestNoteControllerTest {
@@ -106,7 +107,7 @@ class RequestNoteControllerTest {
     void getRequestNotes() throws Exception {
         
         final String requestId = "requestId";
-        final AppUser user = AppUser.builder().roleType(RoleType.REGULATOR).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
 
         final RequestNoteResponse response = RequestNoteResponse.builder()
             .totalItems(10L)
@@ -138,7 +139,7 @@ class RequestNoteControllerTest {
     void getRequestNoteById() throws Exception {
 
         final long noteId = 1L;
-        final AppUser user = AppUser.builder().roleType(RoleType.REGULATOR).build();
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
 
         final RequestNoteDto
             requestNoteDto = RequestNoteDto.builder().requestId("reqId").payload(NotePayload.builder().note("the note").build()).build();
@@ -161,7 +162,7 @@ class RequestNoteControllerTest {
     void createRequestNote() throws Exception {
 
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
@@ -184,7 +185,7 @@ class RequestNoteControllerTest {
     void createRequestNote_bad_request() throws Exception {
 
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
@@ -264,7 +265,7 @@ class RequestNoteControllerTest {
     void updateRequestNote() throws Exception {
 
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
@@ -286,7 +287,7 @@ class RequestNoteControllerTest {
     void updateRequestNote_forbidden() throws Exception {
 
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         final NoteRequest noteRequest = NoteRequest.builder()
@@ -312,7 +313,7 @@ class RequestNoteControllerTest {
     void deleteRequestNote() throws Exception {
 
         final AppUser user = AppUser.builder()
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);

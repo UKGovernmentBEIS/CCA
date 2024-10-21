@@ -3,15 +3,15 @@ package uk.gov.cca.api.web.orchestrator.authorization.service;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.core.domain.dto.UserAuthoritiesDTO;
-import uk.gov.cca.api.authorization.core.domain.dto.UserAuthorityDTO;
-import uk.gov.cca.api.authorization.verifier.service.VerifierAuthorityQueryService;
-import uk.gov.cca.api.user.core.domain.dto.UserInfoDTO;
-import uk.gov.cca.api.user.verifier.service.VerifierUserInfoService;
 import uk.gov.cca.api.web.orchestrator.authorization.dto.UserAuthorityInfoDTO;
 import uk.gov.cca.api.web.orchestrator.authorization.dto.UsersAuthoritiesInfoDTO;
 import uk.gov.cca.api.web.orchestrator.authorization.transform.UserAuthorityInfoMapper;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.core.domain.dto.UserAuthoritiesDTO;
+import uk.gov.netz.api.authorization.core.domain.dto.UserAuthorityDTO;
+import uk.gov.netz.api.authorization.verifier.service.VerifierAuthorityQueryService;
+import uk.gov.netz.api.user.verifier.service.VerifierUserInfoService;
+import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ public class VerifierUserAuthorityQueryOrchestrator {
         UserAuthoritiesDTO verifierAuthorities  = verifierAuthorityQueryService.getVerifierAuthorities(authUser);
         List<String> userIds = verifierAuthorities.getAuthorities().stream().map(UserAuthorityDTO::getUserId).collect(Collectors.toList());
         List<UserInfoDTO> verifierUserInfoList = verifierUserInfoService
-            .getVerifierUsersInfo(authUser, authUser.getVerificationBodyId(), userIds);
+            .getVerifierUsersInfo(userIds);
 
         return getVerifierUsersAuthoritiesInfo(verifierAuthorities, verifierUserInfoList);
     }
@@ -37,7 +37,7 @@ public class VerifierUserAuthorityQueryOrchestrator {
         UserAuthoritiesDTO verifierAuthorities  = verifierAuthorityQueryService
             .getVerificationBodyAuthorities(verificationBodyId, true);
         List<String> userIds = verifierAuthorities.getAuthorities().stream().map(UserAuthorityDTO::getUserId).collect(Collectors.toList());
-        List<UserInfoDTO> verifierUserInfoList = verifierUserInfoService.getVerifierUserInfo(userIds);
+        List<UserInfoDTO> verifierUserInfoList = verifierUserInfoService.getVerifierUsersInfo(userIds);
         return getVerifierUsersAuthoritiesInfo(verifierAuthorities, verifierUserInfoList);
     }
 

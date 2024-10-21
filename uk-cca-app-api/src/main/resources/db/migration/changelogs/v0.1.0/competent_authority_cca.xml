@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/competent_authority_cca.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_clear_competent_authority_entries" author="pafilisa@unisystems.gr">
+        <sql>
+            truncate table competent_authority cascade;
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_competent_authority_entries_for_ea" author="pafilisa@unisystems.gr">
+        <sql>
+            insert into competent_authority(id, name, email) values ('ENGLAND', 'Environment Agency', 'ethelp@environment-agency.gov.uk');
+        </sql>
+        <rollback>
+            <sql>
+                delete from competent_authority where id = 'ENGLAND';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_rename_competent_authority_ENGLAND_email" author="P70383">
+        <sql>
+            UPDATE competent_authority
+            SET email = 'cca-help@environment-agency.gov.uk'
+            WHERE id = 'ENGLAND';
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE competent_authority
+                SET email = 'ethelp@environment-agency.gov.uk'
+                WHERE id = 'ENGLAND';
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

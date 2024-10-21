@@ -1,7 +1,19 @@
 package uk.gov.cca.api.web.controller.workflow;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.hibernate.validator.HibernateValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,55 +27,42 @@ import org.springframework.aop.framework.DefaultAopProxyFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.context.support.GenericWebApplicationContext;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.referencedata.service.County;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import uk.gov.cca.api.web.config.AppUserArgumentResolver;
+import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.cca.api.web.controller.utils.TestConstrainValidatorFactory;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.cca.api.referencedata.service.CountyService;
-import uk.gov.cca.api.web.config.AppUserArgumentResolver;
-import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestCreateActionProcessDTO;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestDetailsDTO;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestDetailsSearchResults;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestSearchByAccountCriteria;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestSearchCriteria;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestCreateActionPayloadType;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestCreateActionType;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestHistoryCategory;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestStatus;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestType;
-import uk.gov.cca.api.workflow.request.core.service.RequestQueryService;
-import uk.gov.cca.api.workflow.request.flow.common.actionhandler.RequestCreateActionHandler;
-import uk.gov.cca.api.workflow.request.flow.common.actionhandler.RequestCreateActionHandlerMapper;
-import uk.gov.cca.api.workflow.request.flow.common.domain.RequestCreateActionEmptyPayload;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestCreateActionType.DUMMY_REQUEST_CREATE_ACTION_TYPE;
-import static uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestType.DUMMY_REQUEST_TYPE;
+import uk.gov.netz.api.referencedata.service.County;
+import uk.gov.netz.api.referencedata.service.CountyService;
+import uk.gov.netz.api.workflow.request.core.domain.constants.RequestCreateActionPayloadTypes;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestCreateActionProcessDTO;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestDetailsDTO;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestDetailsSearchResults;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestSearchByAccountCriteria;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestSearchCriteria;
+import uk.gov.netz.api.workflow.request.core.service.RequestQueryService;
+import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestCreateActionHandler;
+import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestCreateActionHandlerMapper;
+import uk.gov.netz.api.workflow.request.flow.common.domain.RequestCreateActionEmptyPayload;
+import uk.gov.netz.api.workflow.request.flow.common.jsonprovider.RequestCreateActionPayloadCommonTypesProvider;
 
 @ExtendWith(MockitoExtension.class)
 class RequestControllerTest {
@@ -99,6 +98,11 @@ class RequestControllerTest {
         mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
 
+        mapper.registerSubtypes(new RequestCreateActionPayloadCommonTypesProvider().getTypes().toArray(NamedType[]::new));
+        
+		MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+		mappingJackson2HttpMessageConverter.setObjectMapper(mapper);
+
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
 
@@ -116,24 +120,25 @@ class RequestControllerTest {
                 .setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))
                 .setControllerAdvice(new ExceptionControllerAdvice())
                 .setValidator(validatorFactoryBean)
+                .setMessageConverters(mappingJackson2HttpMessageConverter)
                 .build();
     }
 
     @Test
     void processRequestCreateAction() throws Exception {
         AppUser appUser = AppUser.builder().userId("id").build();
-        RequestCreateActionType requestCreateActionType = DUMMY_REQUEST_CREATE_ACTION_TYPE;
+        String requestType = "DUMMY_REQUEST_CREATE_ACTION_TYPE";
 
         RequestCreateActionEmptyPayload payload = RequestCreateActionEmptyPayload.builder()
-            .payloadType(RequestCreateActionPayloadType.EMPTY_PAYLOAD)
+            .payloadType(RequestCreateActionPayloadTypes.EMPTY_PAYLOAD)
             .build();
         RequestCreateActionProcessDTO requestCreateActionProcessDTO = RequestCreateActionProcessDTO.builder()
-                .requestCreateActionType(requestCreateActionType)
+                .requestType(requestType)
                 .requestCreateActionPayload(payload)
                 .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        when(requestCreateActionHandlerMapper.get(requestCreateActionType)).thenReturn(handler);
+        when(requestCreateActionHandlerMapper.get(requestType)).thenReturn(handler);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post(BASE_PATH)
@@ -141,26 +146,28 @@ class RequestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(requestCreateActionHandlerMapper, times(1)).get(requestCreateActionType);
-        verify(handler, times(1)).process(null, requestCreateActionType, payload, appUser);
+        verify(requestCreateActionHandlerMapper, times(1)).get(requestType);
+        verify(handler, times(1)).process(null, requestType, payload, appUser);
     }
 
     @Test
     void processRequestCreateAction_forbidden() throws Exception {
+    	mapper.registerSubtypes(new RequestCreateActionPayloadCommonTypesProvider().getTypes().toArray(NamedType[]::new));
+    	
         AppUser appUser = AppUser.builder().userId("id").build();
-        RequestCreateActionType requestCreateActionType = DUMMY_REQUEST_CREATE_ACTION_TYPE;
+        String requestType = "DUMMY_REQUEST_CREATE_ACTION_TYPE";
         RequestCreateActionEmptyPayload payload = RequestCreateActionEmptyPayload.builder()
-                .payloadType(RequestCreateActionPayloadType.EMPTY_PAYLOAD)
+                .payloadType(RequestCreateActionPayloadTypes.EMPTY_PAYLOAD)
                 .build();
         RequestCreateActionProcessDTO requestCreateActionProcessDTO = RequestCreateActionProcessDTO.builder()
-                .requestCreateActionType(requestCreateActionType)
+                .requestType(requestType)
                 .requestCreateActionPayload(payload)
                 .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(appUser, "processRequestCreateAction", null, requestCreateActionType.name());
+                .authorize(appUser, "processRequestCreateAction", null, requestType);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post(BASE_PATH)
@@ -195,16 +202,16 @@ class RequestControllerTest {
     void getRequestDetailsByAccountId() throws Exception {
         Long accountId = 1L;
         final String requestId = "1";
-        RequestType requestType = DUMMY_REQUEST_TYPE;
+        String requestType = "DUMMY_REQUEST_TYPE";
         RequestSearchByAccountCriteria criteriaByAccount = RequestSearchByAccountCriteria.builder().accountId(accountId)
         		.paging(PagingRequest.builder().pageNumber(0L).pageSize(30L).build())
-        		.category(RequestHistoryCategory.PERMIT).build();
+        		.historyCategory("cat1").build();
         
         RequestSearchCriteria criteria = RequestSearchCriteria.builder().accountId(accountId)
         		.paging(PagingRequest.builder().pageNumber(0L).pageSize(30L).build())
-        		.category(RequestHistoryCategory.PERMIT).build();
+        		.historyCategory("cat1").build();
 
-        RequestDetailsDTO workflowResult1 = new RequestDetailsDTO(requestId, requestType, RequestStatus.IN_PROGRESS, LocalDateTime.now(), null);
+        RequestDetailsDTO workflowResult1 = new RequestDetailsDTO(requestId, requestType, "IN_PROGRESS", LocalDateTime.now(), null);
 
         RequestDetailsSearchResults results = RequestDetailsSearchResults.builder()
                 .requestDetails(List.of(workflowResult1))
@@ -230,7 +237,7 @@ class RequestControllerTest {
         AppUser user = AppUser.builder().userId("user").build();
         RequestSearchByAccountCriteria criteria = RequestSearchByAccountCriteria.builder().accountId(accountId)
         		.paging(PagingRequest.builder().pageNumber(0L).pageSize(30L).build())
-        		.category(RequestHistoryCategory.PERMIT).build();
+        		.historyCategory("cat1").build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))

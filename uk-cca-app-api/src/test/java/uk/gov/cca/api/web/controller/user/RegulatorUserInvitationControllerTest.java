@@ -15,20 +15,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MimeTypeUtils;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.web.controller.user.RegulatorUserInvitationController;
+import uk.gov.cca.api.web.config.AppUserArgumentResolver;
+import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
-import uk.gov.cca.api.user.regulator.domain.RegulatorInvitedUserDTO;
-import uk.gov.cca.api.user.regulator.domain.RegulatorInvitedUserDetailsDTO;
-import uk.gov.cca.api.user.regulator.service.RegulatorUserInvitationService;
-import uk.gov.cca.api.web.config.AppUserArgumentResolver;
-import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
+import uk.gov.netz.api.user.regulator.domain.RegulatorInvitedUserDTO;
+import uk.gov.netz.api.user.regulator.domain.RegulatorInvitedUserDetailsDTO;
+import uk.gov.netz.api.user.regulator.service.RegulatorUserInvitationService;
 
 import java.util.Map;
 
@@ -38,13 +37,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.cca.api.authorization.regulator.domain.RegulatorPermissionGroup.MANAGE_USERS_AND_CONTACTS;
-import static uk.gov.cca.api.authorization.regulator.domain.RegulatorPermissionLevel.NONE;
+import static uk.gov.netz.api.authorization.regulator.domain.RegulatorPermissionGroup.MANAGE_USERS_AND_CONTACTS;
+import static uk.gov.netz.api.authorization.regulator.domain.RegulatorPermissionLevel.NONE;
 
 @ExtendWith(MockitoExtension.class)
 class RegulatorUserInvitationControllerTest {
 
-    public static final String BASE_PATH = "/v1.0/regulator-users/invite";
+	private static final String BASE_PATH = "/v1.0/regulator-users/invite";
 
     private MockMvc mockMvc;
 

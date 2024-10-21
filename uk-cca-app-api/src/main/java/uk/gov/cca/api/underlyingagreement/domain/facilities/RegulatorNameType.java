@@ -1,0 +1,10 @@
+package uk.gov.cca.api.underlyingagreement.domain.facilities;
+
+public enum RegulatorNameType {
+
+	ENVIRONMENT_AGENCY,
+	SCOTTISH_ENVIRONMENT_PROTECTION_AGENCY,
+	DEPARTMENT_OF_AGRICULTURE_ENVIRONMENT_AND_RURAL_AFFAIRS,
+	NATURAL_RESOURCES_WALES,
+	OTHER
+}

@@ -18,23 +18,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.AuthorizedRole;
-import uk.gov.netz.api.common.domain.RoleType;
-import uk.gov.netz.api.common.validation.SpELExpression;
-import uk.gov.cca.api.mireport.common.MiReportService;
-import uk.gov.cca.api.mireport.common.domain.dto.MiReportParams;
-import uk.gov.cca.api.mireport.common.domain.dto.MiReportResult;
-import uk.gov.cca.api.mireport.common.domain.dto.MiReportSearchResult;
-import uk.gov.cca.api.mireport.common.outstandingrequesttasks.OutstandingRequestTasksReportService;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.workflow.request.core.domain.enumeration.RequestTaskType;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.common.validation.SpELExpression;
+import uk.gov.netz.api.mireport.MiReportService;
+import uk.gov.netz.api.mireport.domain.MiReportParams;
+import uk.gov.netz.api.mireport.domain.MiReportResult;
+import uk.gov.netz.api.mireport.domain.MiReportSearchResult;
+import uk.gov.netz.api.mireport.outstandingrequesttasks.OutstandingRequestTasksReportService;
+import uk.gov.netz.api.security.AuthorizedRole;
 
 import java.util.List;
 import java.util.Set;
 
-import static uk.gov.netz.api.common.domain.RoleType.REGULATOR;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 @RestController
 @RequestMapping(path = "/v1.0/mireports")
@@ -75,7 +73,7 @@ public class MiReportController {
                                                          @Parameter(description = "The parameters based on which the report will be generated", required = true)
                                                          @Valid
                                                          @SpELExpression(expression = "{(#reportType ne 'CUSTOM')}", message = "mireport.type.notSupported")
-                                                                 MiReportParams reportParams) {
+                                                         MiReportParams reportParams) {
         MiReportResult reportResult = miReportService.generateReport(appUser.getCompetentAuthority(), reportParams);
         return ResponseEntity.ok(reportResult);
     }
@@ -102,15 +100,15 @@ public class MiReportController {
     @GetMapping("/request-task-types")
     @Operation(summary = "Get regulator related request task types")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
-            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = RequestTaskType.class))))
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = String.class))))
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @AuthorizedRole(roleType = {RoleType.REGULATOR})
-    public ResponseEntity<Set<RequestTaskType>> getRegulatorRequestTaskTypes(
+    @AuthorizedRole(roleType = {REGULATOR})
+    public ResponseEntity<Set<String>> getRegulatorRequestTaskTypes(
             @Parameter(hidden = true) AppUser appUser) {
-        Set<RequestTaskType> requestTaskTypes =
+        Set<String> requestTaskTypes =
                 outstandingRequestTasksReportService.getRequestTaskTypesByRoleType(appUser.getRoleType());
         return new ResponseEntity<>(requestTaskTypes, HttpStatus.OK);
     }

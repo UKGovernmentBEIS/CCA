@@ -12,13 +12,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.user.core.domain.dto.OneTimePasswordDTO;
-import uk.gov.cca.api.user.core.domain.dto.TokenDTO;
-import uk.gov.cca.api.user.core.service.UserSecuritySetupService;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.controller.user.UserSecuritySetupController;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.user.core.domain.dto.OneTimePasswordDTO;
+import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
+import uk.gov.netz.api.user.core.service.UserSecuritySetupService;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;

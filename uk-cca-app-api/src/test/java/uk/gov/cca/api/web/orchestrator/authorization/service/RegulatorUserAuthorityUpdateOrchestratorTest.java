@@ -5,15 +5,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.authorization.core.domain.AppAuthority;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.core.domain.AuthorityStatus;
-import uk.gov.cca.api.authorization.regulator.domain.RegulatorUserUpdateStatusDTO;
-import uk.gov.cca.api.authorization.regulator.service.RegulatorAuthorityUpdateService;
-import uk.gov.cca.api.web.orchestrator.authorization.service.RegulatorUserAuthorityUpdateOrchestrator;
-import uk.gov.netz.api.common.domain.RoleType;
+import uk.gov.netz.api.authorization.core.domain.AppAuthority;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
+import uk.gov.netz.api.authorization.regulator.domain.RegulatorUserUpdateStatusDTO;
+import uk.gov.netz.api.authorization.regulator.service.RegulatorAuthorityUpdateService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
-import uk.gov.cca.api.user.regulator.service.RegulatorUserNotificationGateway;
+import uk.gov.netz.api.user.regulator.service.RegulatorUserNotificationGateway;
 
 import java.util.List;
 
@@ -57,7 +56,7 @@ class RegulatorUserAuthorityUpdateOrchestratorTest {
     private AppUser buildRegulatorUser(final String userId, final CompetentAuthorityEnum ca) {
         return AppUser.builder()
             .userId(userId)
-            .roleType(RoleType.REGULATOR)
+            .roleType(RoleTypeConstants.REGULATOR)
             .authorities(
                 List.of(AppAuthority.builder()
                     .competentAuthority(ca)

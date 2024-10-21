@@ -1,13 +1,5 @@
 package uk.gov.cca.api.web.controller.workflow;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,18 +12,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.Authorized;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestCreateActionProcessDTO;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestCreateActionProcessResponseDTO;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestDetailsDTO;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestDetailsSearchResults;
-import uk.gov.cca.api.workflow.request.core.domain.dto.RequestSearchByAccountCriteria;
-import uk.gov.cca.api.workflow.request.core.service.RequestQueryService;
-import uk.gov.cca.api.workflow.request.core.transform.RequestSearchCriteriaMapper;
-import uk.gov.cca.api.workflow.request.flow.common.actionhandler.RequestCreateActionHandlerMapper;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.security.Authorized;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestCreateActionProcessDTO;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestCreateActionProcessResponseDTO;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestDetailsDTO;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestDetailsSearchResults;
+import uk.gov.netz.api.workflow.request.core.domain.dto.RequestSearchByAccountCriteria;
+import uk.gov.netz.api.workflow.request.core.service.RequestQueryService;
+import uk.gov.netz.api.workflow.request.core.transform.RequestSearchCriteriaMapper;
+import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestCreateActionHandlerMapper;
 
 @Validated
 @RestController
@@ -55,14 +56,14 @@ public class RequestController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-// TODO remove for now update it later.
-    @Authorized(resourceId = "#accountId", resourceSubType = "#requestCreateActionProcess.requestCreateActionType")
+   // TODO remove for now update it later.
+    @Authorized(resourceId = "#accountId", resourceSubType = "#requestCreateActionProcess.requestType")
     public ResponseEntity<RequestCreateActionProcessResponseDTO> processRequestCreateAction(@Parameter(hidden = true) AppUser appUser,
                                                                                             @RequestParam(required = false) @Parameter(name = "accountId", description = "The account id", required = false) Long accountId,
                                                                                             @RequestBody @Valid @Parameter(description = "The request create action body", required = true) RequestCreateActionProcessDTO requestCreateActionProcess) {
         String requestId = requestCreateActionHandlerMapper
-                .get(requestCreateActionProcess.getRequestCreateActionType())
-                .process(accountId, requestCreateActionProcess.getRequestCreateActionType(),
+                .get(requestCreateActionProcess.getRequestType())
+                .process(accountId, requestCreateActionProcess.getRequestType(),
                         requestCreateActionProcess.getRequestCreateActionPayload(), appUser);
         return ResponseEntity.ok(new RequestCreateActionProcessResponseDTO(requestId));
     }

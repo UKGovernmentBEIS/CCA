@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.user.operator.domain.OperatorUserInvitationDTO;
-import uk.gov.cca.api.user.operator.service.OperatorUserInvitationService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.cca.api.web.security.Authorized;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.cca.api.user.operator.domain.CcaOperatorUserInvitationDTO;
+import uk.gov.cca.api.web.orchestrator.user.service.OperatorInvitationOrchestratorService;
+import uk.gov.netz.api.security.Authorized;
 
 /**
  * Controller for adding operator users.
@@ -32,7 +32,7 @@ import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 @RequiredArgsConstructor
 public class OperatorUserInvitationController {
 
-    private final OperatorUserInvitationService operatorUserInvitationService;
+    private final OperatorInvitationOrchestratorService operatorInvitationOrchestratorService;
 
     @PostMapping(path = "/account/{accountId}")
     @Operation(summary = "Adds a new operator user to an account with a specified role.")
@@ -50,8 +50,8 @@ public class OperatorUserInvitationController {
             @Parameter(hidden = true) AppUser currentUser,
             @PathVariable("accountId") @Parameter(description = "The account id") Long accountId,
             @RequestBody @Valid @Parameter(description = "The operator user account registration info", required = true)
-                    OperatorUserInvitationDTO operatorUserInvitationDTO) {
-        operatorUserInvitationService.inviteUserToAccount(accountId, operatorUserInvitationDTO, currentUser);
+            CcaOperatorUserInvitationDTO operatorUserInvitationDTO) {
+        operatorInvitationOrchestratorService.inviteUserToAccount(accountId, operatorUserInvitationDTO, currentUser);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

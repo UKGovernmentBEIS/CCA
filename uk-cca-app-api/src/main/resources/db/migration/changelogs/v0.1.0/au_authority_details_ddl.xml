@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/au_authority_details_ddl.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_AU_AUTHORITY_DETAILS_SEQUENCE" author="P70311">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="au_authority_details_id_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="au_authority_details_id_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS au_authority_details_id_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_AU_AUTHORITY_DETAILS_CREATE_TABLE" author="P70311">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="au_authority_details"/>
+            </not>
+        </preConditions>
+        <comment>Create au_authority_details table</comment>
+        <createTable tableName="au_authority_details" remarks="Represents sector user details">
+            <column name="id" type="bigint" remarks="The id of the authority details">
+                <constraints primaryKey="true" primaryKeyName="au_authority_details_pk" nullable="false"/>
+            </column>
+            <column name="contact_type" type="varchar(64)" remarks="Contact type of sector user">
+                <constraints nullable="false" />
+            </column>
+            <column name="organisation_name" type="varchar(255)" remarks="Organisation name">
+                <constraints nullable="true" />
+            </column>
+            <column name="authority_id" type="bigint" remarks="The CCA Authority id">
+                <constraints foreignKeyName="au_authority_details_au_authority_fk" references="au_authority(id)" nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS au_authority_details CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_AU_AUTHORITY_DETAILS_CREATE_SHARED_KEY" author="loukerip">
+    	<dropColumn tableName="au_authority_details">
+    		<column name="id"/>
+        </dropColumn>
+    	<dropSequence sequenceName="au_authority_details_id_seq"/>
+    	<addPrimaryKey columnNames="authority_id" tableName="au_authority_details" constraintName="au_authority_details_pk"></addPrimaryKey>
+    </changeSet>
+
+</databaseChangeLog>

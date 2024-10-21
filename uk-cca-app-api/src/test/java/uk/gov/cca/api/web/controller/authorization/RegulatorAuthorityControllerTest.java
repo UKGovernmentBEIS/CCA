@@ -14,28 +14,27 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.authorization.core.domain.AppAuthority;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.core.domain.AuthorityStatus;
-import uk.gov.cca.api.authorization.regulator.domain.RegulatorUserUpdateStatusDTO;
-import uk.gov.cca.api.authorization.regulator.service.RegulatorAuthorityDeletionService;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.cca.api.authorization.rules.services.RoleAuthorizationService;
-import uk.gov.cca.api.web.controller.authorization.RegulatorAuthorityController;
-import uk.gov.netz.api.common.domain.RoleType;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.cca.api.web.orchestrator.authorization.dto.RegulatorUserAuthorityInfoDTO;
 import uk.gov.cca.api.web.orchestrator.authorization.dto.RegulatorUsersAuthoritiesInfoDTO;
 import uk.gov.cca.api.web.orchestrator.authorization.service.RegulatorUserAuthorityQueryOrchestrator;
 import uk.gov.cca.api.web.orchestrator.authorization.service.RegulatorUserAuthorityUpdateOrchestrator;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.cca.api.web.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
+import uk.gov.netz.api.authorization.core.domain.AppAuthority;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
+import uk.gov.netz.api.authorization.regulator.domain.RegulatorUserUpdateStatusDTO;
+import uk.gov.netz.api.authorization.regulator.service.RegulatorAuthorityDeletionService;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 
 import java.util.Collections;
 import java.util.List;
@@ -246,7 +245,7 @@ class RegulatorAuthorityControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(roleAuthorizationService)
-            .evaluate(authUser, new RoleType[] {RoleType.REGULATOR});
+            .evaluate(authUser, new String[] {RoleTypeConstants.REGULATOR});
 
         //invoke
         mockMvc.perform(
@@ -280,7 +279,7 @@ class RegulatorAuthorityControllerTest {
     private AppUser buildRegulatorUser() {
         return AppUser.builder()
                 .userId("userId")
-                .roleType(RoleType.REGULATOR)
+                .roleType(RoleTypeConstants.REGULATOR)
                 .authorities(List.of(AppAuthority.builder().competentAuthority(CompetentAuthorityEnum.ENGLAND).build()))
                 .build();
     }

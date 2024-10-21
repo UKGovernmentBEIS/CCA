@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/sector_association_ddl.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_SECTOR_ASSOCIATION_CONTACT_SEQUENCE" author="P63979">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="sector_association_contact_id_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="sector_association_contact_id_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS sector_association_contact_id_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SECTOR_ASSOCIATION_CONTACT_CREATE_TABLE" author="P63979">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sector_association_contact"/>
+            </not>
+        </preConditions>
+        <comment>Create sector_association_contact table</comment>
+        <createTable tableName="sector_association_contact" remarks="Represents a sector association contact">
+            <column name="id" type="bigint" remarks="The id of the sector association contact">
+                <constraints primaryKey="true" primaryKeyName="sector_association_contact_pk" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(20)" remarks="Title of the user">
+                <constraints nullable="true" />
+            </column>
+            <column name="first_name" type="varchar(255)" remarks="User's first name">
+                <constraints nullable="false" />
+            </column>
+            <column name="last_name" type="varchar(255)" remarks="User's last name">
+                <constraints nullable="false" />
+            </column>
+            <column name="job_title" type="varchar(255)" remarks="User's job title">
+                <constraints nullable="true" />
+            </column>
+            <column name="organisation_name" type="varchar(255)" remarks="Organisation name">
+                <constraints nullable="true" />
+            </column>
+            <column name="location_id" type="bigint" remarks="The location id">
+                <constraints foreignKeyName="sector_association_contact_location_fk" references="location(id)" nullable="true"/>
+            </column>
+            <column name="phone_number" type="varchar(255)" remarks="User's phone number">
+                <constraints nullable="true" />
+            </column>
+            <column name="email" type="varchar(255)" remarks="User's email address">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sector_association_contact CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="0_1_0_SECTOR_ASSOCIATION_SEQUENCE" author="P63979">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="sector_association_id_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="sector_association_id_seq" minValue="1" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS sector_association_id_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SECTOR_ASSOCIATION_CREATE_TABLE" author="P63979">
+        <validCheckSum>1:any</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sector_association"/>
+            </not>
+        </preConditions>
+        <createTable tableName="sector_association"
+                     remarks="Represents a sector association">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="sector_association_pk" nullable="false"/>
+            </column>
+            <column name="competent_authority" type="varchar(255)" remarks="The competent authority of the sector">
+                <constraints nullable="false" />
+            </column>
+            <column name="name" type="varchar(255)" remarks="The common name of the sector association">
+                <constraints nullable="false" />
+            </column>
+            <column name="legal_name" type="varchar(255)" remarks="The name of the sector/trade association">
+                <constraints nullable="false" />
+            </column>
+            <column name="acronym" type="varchar(255)" remarks="The acronym of a sector">
+                <constraints nullable="false" />
+            </column>
+            <column name="facilitator" type="varchar(255)" remarks="The sector facilitator">
+                <constraints nullable="true" />
+            </column>
+            <column name="location_id" type="bigint" remarks="The location id">
+                <constraints foreignKeyName="sector_association_location_fk" references="location(id)" nullable="true"/>
+            </column>
+            <column name="energy_epr_factor" type="varchar(255)" remarks="Energy intensive or EPR">
+                <constraints nullable="false" />
+            </column>
+            <column name="sector_association_contact_id" type="bigint" remarks="The sector association contact id">
+                <constraints foreignKeyName="sector_association_sector_association_contact_fk" references="sector_association_contact(id)" nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sector_association CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SECTOR_ASSOCIATION_RENAME_FACILITATOR_COLUMN" author="P63979">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="sector_association" columnName="facilitator" />
+        </preConditions>
+        <renameColumn tableName="sector_association" oldColumnName="facilitator" newColumnName="facilitator_user_id"/>
+        <rollback>
+            <sql>
+                ALTER TABLE sector_association RENAME COLUMN facilitator_user_id TO facilitator;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TARGET_SET_SEQUENCE" author="P70628">
+        <createSequence sequenceName="target_set_id_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS target_set_id_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TARGET_SET_CREATE_TABLE" author="P70628">
+        <comment>Create targetSet table</comment>
+        <createTable tableName="target_set" remarks="Represents a target set of sector association or subsector association">
+            <column name="id" type="bigint" remarks="The id of the target set">
+                <constraints primaryKey="true" primaryKeyName="target_set_pk" nullable="false"/>
+            </column>
+            <column name="target_currency_type" type="varchar(255)" remarks="Target currency type">
+                <constraints nullable="false" />
+            </column>
+            <column name="energy_or_carbon_unit" type="varchar(255)" remarks="Energy or carbon unit">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS target_set CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SECTOR_ASSOCIATION_SCHEME_DOCUMENT_SEQUENCE" author="P70628">
+        <createSequence sequenceName="sector_association_scheme_document_id_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS sector_association_scheme_document_id_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SECTOR_ASSOCIATION_SCHEME_DOCUMENT_CREATE_TABLE" author="P70628">
+        <comment>Create sector_association_scheme_document table</comment>
+        <createTable tableName="sector_association_scheme_document" remarks="Represents a sector association scheme document">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="sector_association_scheme_document_pk" nullable="false"/>
+            </column>
+            <column name="uuid" type="varchar(255)" remarks="The file document uuid">
+                <constraints nullable="false" unique="true" uniqueConstraintName="sector_association_scheme_document_uuid_uq" />
+            </column>
+            <column name="file_name" type="varchar(255)" remarks="The file name">
+                <constraints nullable="false" />
+            </column>
+            <column name="file_content" type="bytea" remarks="The document binary content">
+                <constraints nullable="false" />
+            </column>
+            <column name="file_size" type="bigint" remarks="The size of the file in bytes">
+                <constraints nullable="false" />
+            </column>
+            <column name="file_type" type="varchar(255)" remarks="The mime type of the file">
+                <constraints nullable="false" />
+            </column>
+            <column name="status" type="varchar(255)" remarks="The status of the document file">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_by" type="varchar(255)" remarks="The creator of the entry">
+                <constraints nullable="false" />
+            </column>
+            <column name="last_updated_on" type="timestamp" remarks="When the document file last updated">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sector_association_scheme_document CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SECTOR_ASSOCIATION_SCHEME_SEQUENCE" author="P70628">
+        <createSequence sequenceName="sector_association_scheme_id_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS sector_association_scheme_id_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SECTOR_ASSOCIATION_SCHEME_CREATE_TABLE" author="P70628">
+        <comment>Create sector_association_scheme table</comment>
+        <createTable tableName="sector_association_scheme" remarks="Represents a sector association scheme">
+            <column name="id" type="bigint" remarks="The id of the sector association scheme">
+                <constraints primaryKey="true" primaryKeyName="sector_association_scheme_pk" nullable="false"/>
+            </column>
+            <column name="umbrella_agreement_doc_id" type="bigint" remarks="Umbrella agreement document id">
+                <constraints foreignKeyName="sector_association_scheme_sector_association_scheme_document_agreement_fk" references="sector_association_scheme_document(id)" nullable="true"/>
+            </column>
+            <column name="facilities_list_doc_id" type="bigint" remarks="List of facilities document id">
+                <constraints foreignKeyName="sector_association_scheme_sector_association_scheme_document_facilities_fk" references="sector_association_scheme_document(id)" nullable="true"/>
+            </column>
+            <column name="sector_association_id" type="bigint" remarks="The sector association id">
+                <constraints foreignKeyName="sector_association_scheme_sector_association_fk" references="sector_association(id)" nullable="false"/>
+            </column>
+            <column name="target_set_id" type="bigint" remarks="The target set id">
+                <constraints foreignKeyName="sector_association_scheme_target_set_fk" references="target_set(id)" nullable="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sector_association_scheme CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="0_1_0_TARGET_COMMITMENT_SEQUENCE" author="P70628">
+        <createSequence sequenceName="target_commitment_id_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS target_commitment_id_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TARGET_COMMITMENT_CREATE_TABLE" author="P70628">
+        <comment>Create target_commitment table</comment>
+        <createTable tableName="target_commitment" remarks="Represents a sector association target commitment">
+            <column name="id" type="bigint" remarks="The id of the sector association scheme commitment">
+                <constraints primaryKey="true" primaryKeyName="target_commitment_pk" nullable="false"/>
+            </column>
+            <column name="target_period" type="varchar(255)" remarks="The target period">
+                <constraints nullable="false" />
+            </column>
+            <column name="target_improvement" type="varchar(255)" remarks="The target improvement">
+                <constraints nullable="false" />
+            </column>
+            <column name="target_set_id" type="bigint" remarks="The target set id">
+                <constraints foreignKeyName="target_commitment_scheme_fk" references="target_set(id)" nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS target_commitment CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SUBSECTOR_ASSOCIATION_SEQUENCE" author="P70628">
+        <createSequence sequenceName="subsector_association_id_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS subsector_association_id_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SUBSECTOR_ASSOCIATION_CREATE_TABLE" author="P70628">
+        <comment>Create subsector_association table</comment>
+        <createTable tableName="subsector_association" remarks="Represents a subsector association">
+            <column name="id" type="bigint" remarks="The id of the subsector association">
+                <constraints primaryKey="true" primaryKeyName="subsector_association_pk" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)" remarks="The name of subsector">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS subsector_association CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SUBSECTOR_ASSOCIATION_SCHEME_SEQUENCE" author="P70628">
+        <createSequence sequenceName="subsector_association_scheme_id_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS subsector_association_scheme_id_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SUBSECTOR_ASSOCIATION_SCHEME_TABLE" author="P70628">
+        <comment>Create subsector_association_scheme table</comment>
+        <createTable tableName="subsector_association_scheme" remarks="Represents a subsector association scheme">
+            <column name="id" type="bigint" remarks="The id of the subsector association scheme">
+                <constraints primaryKey="true" primaryKeyName="subsector_association_scheme_pk" nullable="false"/>
+            </column>
+            <column name="subsector_association_id" type="bigint" remarks="The subsector association id">
+                <constraints foreignKeyName="subsector_association_scheme_subsector_association_fk" references="subsector_association(id)" nullable="false"/>
+            </column>
+            <column name="sector_association_scheme_id" type="bigint" remarks="The subsector association id">
+                <constraints foreignKeyName="subsector_association_scheme_sector_association_scheme_fk" references="sector_association_scheme(id)" nullable="false"/>
+            </column>
+            <column name="target_set_id" type="bigint" remarks="The target set id">
+                <constraints foreignKeyName="subsector_association_scheme_target_set_fk" references="target_set(id)" nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS subsector_association_scheme CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SECTOR_ASSOCIATION_ADD_THROUGHPUT_UNIT_COLUMN" author="vourdoukasd@unisystems.gr">
+        <addColumn tableName="target_set">
+            <column name="throughput_unit" type="varchar(255)"/>
+        </addColumn>
+
+        <rollback>
+            <dropColumn tableName="target_set" columnName="throughput_unit"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SECTOR_ASSOCIATION_DROP_FACILITIES_LIST" author="vourdoukasd@unisystems.gr">
+        <dropColumn tableName="sector_association_scheme" columnName="facilities_list_doc_id"/>
+
+        <rollback>
+            <addColumn tableName="sector_association_scheme">
+                <column name="facilities_list_doc_id" type="bigint" remarks="List of facilities document id">
+                    <constraints foreignKeyName="sector_association_scheme_sector_association_scheme_document_facilities_fk" references="sector_association_scheme_document(id)" nullable="true"/>
+                </column>
+
+            </addColumn>
+        </rollback>
+
+    </changeSet>
+    
+    <changeSet id="0_1_0_SECTOR_ASSOCIATION_SCHEME_ADD_DEFINITION_AND_UMA_DATE" author="apostolouk@unisystems.gr">
+        <addColumn tableName="sector_association_scheme">
+            <column name="uma_date" type="date" remarks="The issue date of the umbrella agreement"/>
+            <column name="sector_definition" type="text" remarks="The sector definition"/>
+        </addColumn>
+
+        <rollback>
+            <dropColumn tableName="sector_association_scheme" columnName="sector_definition"/>
+            <dropColumn tableName="sector_association_scheme" columnName="uma_date"/>
+		</rollback>
+	</changeSet>
+
+    <changeSet id="0_1_0_ADD_UNIQUE_CONSTRAINT_TO_SECTOR_ASSOCIATION" author="loukerip">
+        <addUniqueConstraint tableName="sector_association" columnNames="acronym" constraintName="sector_association_acronym_uc"/>
+        
+        <rollback>
+            <dropUniqueConstraint tableName="sector_association" constraintName="sector_association_acronym_uc"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_MODIFY_TARGET_IMPROVEMENT_TYPE_TO_NUMERIC_AND_NULLABLE" author="loukerip">
+        <modifyDataType tableName="target_commitment" columnName="target_improvement" newDataType="numeric"/>
+        <dropNotNullConstraint tableName="target_commitment" columnName="target_improvement"/>
+        <rollback>
+            <modifyDataType tableName="target_commitment" columnName="target_improvement" newDataType="varchar(255)"/>
+            <addNotNullConstraint tableName="target_commitment" columnName="target_improvement" />
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

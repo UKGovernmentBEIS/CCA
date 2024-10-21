@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
-import uk.gov.netz.api.files.common.domain.dto.FileDTO;
-import uk.gov.cca.api.user.core.service.UserSignatureService;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.files.common.domain.dto.FileDTO;
+import uk.gov.netz.api.user.core.service.UserSignatureService;
 
 import java.nio.charset.StandardCharsets;
 

@@ -2,12 +2,11 @@ package uk.gov.cca.api.web.controller.authorization.orchestrator;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uk.gov.cca.api.authorization.core.domain.AuthorityStatus;
-import uk.gov.cca.api.authorization.core.domain.dto.AuthorityDTO;
-import uk.gov.cca.api.authorization.core.service.AuthorityService;
-import uk.gov.cca.api.user.core.domain.enumeration.AuthenticationStatus;
-import uk.gov.cca.api.user.core.service.auth.UserAuthService;
 import uk.gov.cca.api.web.controller.authorization.orchestrator.dto.LoginStatus;
+import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
+import uk.gov.netz.api.authorization.core.domain.dto.AuthorityDTO;
+import uk.gov.netz.api.authorization.core.service.AuthorityService;
+import uk.gov.netz.api.user.core.service.auth.UserAuthService;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
 public class UserAuthorityQueryOrchestrator {
 
     private final UserAuthService userAuthService;
-    private final AuthorityService authorityService;
+    private final AuthorityService<?> authorityService;
 
     public LoginStatus getUserLoginStatusInfo(String userId) {
         List<AuthorityDTO> userAuthorities = authorityService.getAuthoritiesByUserId(userId);
@@ -45,10 +44,7 @@ public class UserAuthorityQueryOrchestrator {
             }
         }
 
-        // If user has no authorities at all
-        return userAuthService.getUserByUserId(userId).getStatus().equals(AuthenticationStatus.DELETED)
-                ? LoginStatus.DELETED
-                : LoginStatus.NO_AUTHORITY;
+        return LoginStatus.NO_AUTHORITY;
     }
 
     private List<AuthorityDTO> getActiveUserAuthorities(List<AuthorityDTO> userAuthorities) {

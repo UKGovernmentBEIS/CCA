@@ -13,11 +13,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.ContentCachingResponseWrapper;
-import uk.gov.cca.api.web.controller.exception.AppErrorController;
-import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.cca.api.web.logging.MultiReadHttpServletRequestWrapper;
-import uk.gov.cca.api.web.logging.RestLoggingService;
+import uk.gov.netz.api.logging.MultiReadHttpServletRequestWrapper;
+import uk.gov.netz.api.logging.RestLoggingService;
 
 import java.time.LocalDateTime;
 

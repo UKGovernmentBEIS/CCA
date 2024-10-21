@@ -16,19 +16,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.core.domain.dto.RoleDTO;
-import uk.gov.cca.api.authorization.core.service.RoleService;
-import uk.gov.cca.api.authorization.regulator.domain.RegulatorPermissionLevel;
-import uk.gov.cca.api.authorization.regulator.domain.RegulatorRolePermissionsDTO;
-import uk.gov.cca.api.authorization.regulator.service.RegulatorRoleService;
-import uk.gov.cca.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
-import uk.gov.cca.api.web.security.AuthorizationAspectUserResolver;
-import uk.gov.cca.api.web.security.AuthorizedAspect;
-import uk.gov.netz.api.common.domain.RoleType;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.core.domain.dto.RoleDTO;
+import uk.gov.netz.api.authorization.core.service.RoleService;
+import uk.gov.netz.api.authorization.regulator.domain.RegulatorPermissionLevel;
+import uk.gov.netz.api.authorization.regulator.domain.RegulatorRolePermissionsDTO;
+import uk.gov.netz.api.authorization.regulator.service.RegulatorRoleService;
+import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 
@@ -39,8 +39,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.cca.api.authorization.regulator.domain.RegulatorPermissionGroup.MANAGE_USERS_AND_CONTACTS;
-import static uk.gov.cca.api.authorization.regulator.domain.RegulatorPermissionLevel.NONE;
+import static uk.gov.netz.api.authorization.regulator.domain.RegulatorPermissionGroup.MANAGE_USERS_AND_CONTACTS;
+import static uk.gov.netz.api.authorization.regulator.domain.RegulatorPermissionLevel.NONE;
 
 @ExtendWith(MockitoExtension.class)
 class RoleControllerTest {
@@ -93,7 +93,7 @@ class RoleControllerTest {
     @Test
     void getOperatorRoleCodes() throws Exception {
         final long accountId = 1L;
-        AppUser user = AppUser.builder().userId("authId").roleType(RoleType.OPERATOR).build();
+        AppUser user = AppUser.builder().userId("authId").roleType(RoleTypeConstants.OPERATOR).build();
         List<RoleDTO> roles = List.of(buildRole("code1"), buildRole("code2"));
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
@@ -111,7 +111,7 @@ class RoleControllerTest {
     @Test
     void getOperatorRoleCodesForbidden() throws Exception {
         final long accountId = 1L;
-        AppUser user = AppUser.builder().userId("authId").roleType(RoleType.OPERATOR).build();
+        AppUser user = AppUser.builder().userId("authId").roleType(RoleTypeConstants.OPERATOR).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
@@ -127,7 +127,7 @@ class RoleControllerTest {
 
     @Test
     void getRegulatorRolesForbidden() throws Exception {
-        AppUser user = AppUser.builder().userId("authId").roleType(RoleType.OPERATOR).build();
+        AppUser user = AppUser.builder().userId("authId").roleType(RoleTypeConstants.OPERATOR).build();
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
@@ -173,7 +173,7 @@ class RoleControllerTest {
 
     @Test
     void getVerifierRoleCodes_forbidden() throws Exception {
-        AppUser appUser = AppUser.builder().userId("authId").roleType(RoleType.VERIFIER).build();
+        AppUser appUser = AppUser.builder().userId("authId").roleType(RoleTypeConstants.VERIFIER).build();
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)

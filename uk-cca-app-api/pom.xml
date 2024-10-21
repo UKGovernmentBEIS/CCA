@@ -11,10 +11,11 @@
     <parent>
         <groupId>uk.gov.netz</groupId>
         <artifactId>uk-netz-app-api-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </parent>
 
     <properties>
+		<jsch.version>0.2.20</jsch.version>
     </properties>
 
     <dependencies>
@@ -50,15 +51,17 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.camunda.bpm.springboot</groupId>
+            <artifactId>camunda-bpm-spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -71,7 +74,7 @@
         <dependency>
             <groupId>uk.gov.netz</groupId>
             <artifactId>uk-netz-app-api-common</artifactId>
-            <version>1.0.0</version>
+            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.netz</groupId>
@@ -94,36 +97,88 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-notification</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-documenttemplate</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-authorization</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-rest-logging</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-alert</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-mireport</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-referencedata</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-account</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-verificationbody</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-user</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-request</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-feedback</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-companieshouse</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-security-camunda-admin</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>no.api.freemarker</groupId>
             <artifactId>freemarker-java8</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.camunda.bpm.springboot</groupId>
-            <artifactId>camunda-bpm-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.camunda.bpm.springboot</groupId>
-            <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.camunda.bpm.springboot</groupId>
-            <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.camunda.bpm.extension</groupId>
-            <artifactId>camunda-platform-7-keycloak</artifactId>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-security</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.hypersistence</groupId>
-            <artifactId>hypersistence-utils-hibernate-60</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -175,10 +230,6 @@
             <artifactId>commons-beanutils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
         </dependency>
@@ -192,14 +243,19 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>12.6.2.jre11</version>
+        </dependency>
+        <dependency>
             <groupId>xyz.capybara</groupId>
             <artifactId>clamav-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>com.github.mwiede</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${jsch.version}</version>
         </dependency>
-
 
         <!-- xdoc report and export -->
         <dependency>
@@ -267,11 +323,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>fluent-hc</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.tngtech.archunit</groupId>
             <artifactId>archunit-junit5</artifactId>
             <scope>test</scope>
@@ -286,7 +337,7 @@
             <artifactId>uk-netz-app-api-common</artifactId>
             <classifier>tests</classifier>
             <type>test-jar</type>
-            <version>1.0.0</version>
+            <version>1.2.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -384,10 +435,6 @@
                 <artifactId>hibernate-enhance-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <configuration>
-                            <failOnError>true</failOnError>
-                            <enableLazyInitialization>true</enableLazyInitialization>
-                        </configuration>
                         <goals>
                             <goal>enhance</goal>
                         </goals>

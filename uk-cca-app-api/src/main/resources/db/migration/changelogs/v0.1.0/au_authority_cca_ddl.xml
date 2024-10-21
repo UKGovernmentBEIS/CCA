@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/au_authority_cca_ddl.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_AU_AUTHORITY_ADD_COLUMN_SECTOR_ASSOCIATION_ID" author="pafilisa@unisystems.gr">
+
+        <addColumn tableName="au_authority">
+            <column name="sector_association_id" type="bigint"/>
+        </addColumn>
+
+        <rollback>
+            <dropColumn tableName="au_authority">
+                <column name="sector_association_id"/>
+            </dropColumn>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

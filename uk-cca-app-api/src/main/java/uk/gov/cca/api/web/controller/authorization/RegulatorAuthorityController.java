@@ -20,17 +20,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.authorization.regulator.domain.RegulatorUserUpdateStatusDTO;
-import uk.gov.cca.api.authorization.regulator.service.RegulatorAuthorityDeletionService;
-import uk.gov.netz.api.common.domain.RoleType;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.cca.api.web.orchestrator.authorization.dto.RegulatorUsersAuthoritiesInfoDTO;
 import uk.gov.cca.api.web.orchestrator.authorization.service.RegulatorUserAuthorityQueryOrchestrator;
 import uk.gov.cca.api.web.orchestrator.authorization.service.RegulatorUserAuthorityUpdateOrchestrator;
-import uk.gov.cca.api.web.security.Authorized;
-import uk.gov.cca.api.web.security.AuthorizedRole;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.regulator.domain.RegulatorUserUpdateStatusDTO;
+import uk.gov.netz.api.authorization.regulator.service.RegulatorAuthorityDeletionService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.security.Authorized;
+import uk.gov.netz.api.security.AuthorizedRole;
 
 import java.util.List;
 
@@ -99,7 +99,7 @@ public class RegulatorAuthorityController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @AuthorizedRole(roleType = RoleType.REGULATOR)
+    @AuthorizedRole(roleType = RoleTypeConstants.REGULATOR)
     public ResponseEntity<RegulatorUsersAuthoritiesInfoDTO> getCaRegulators(@Parameter(hidden = true) AppUser appUser) {
 
         return new ResponseEntity<>(regulatorUserAuthorityQueryOrchestrator.getCaUsersAuthoritiesInfo(appUser),

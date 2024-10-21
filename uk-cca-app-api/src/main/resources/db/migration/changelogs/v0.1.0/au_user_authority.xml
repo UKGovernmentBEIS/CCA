@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/changelog_au_user_authority.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_POPULATE_USER_ROLE_TYPE_TABLE" author="P35066">
+        <sql>
+            insert into au_user_role_type(user_id, role_type)
+            select distinct user_id,
+                            case
+                                when account_id is not null then 'OPERATOR'
+                                when competent_authority is not null then 'REGULATOR'
+                                when verification_body_id is not null then 'VERIFIER'
+                                when sector_association_id is not null then 'SECTOR_USER'
+                                end
+            from au_authority
+            where status != 'PENDING';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_user_role_type;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

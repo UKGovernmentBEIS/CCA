@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.cca.api.authorization.core.domain.AuthorityStatus;
+import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
 
 import java.time.LocalDateTime;
 
@@ -20,5 +20,4 @@ public class UserAuthorityInfoDTO {
     private String roleCode;
     private LocalDateTime authorityCreationDate;
     private AuthorityStatus authorityStatus;
-    private Boolean locked;
 }

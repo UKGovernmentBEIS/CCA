@@ -7,13 +7,13 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import uk.gov.cca.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.web.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AppSecurityComponentProvider;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor	
 public class AppUserArgumentResolver implements HandlerMethodArgumentResolver {
-    private final AppSecurityComponent appSecurityComponent;
+    private final AppSecurityComponentProvider appSecurityComponent;
 
     @Override
     public AppUser resolveArgument(MethodParameter methodParameter,

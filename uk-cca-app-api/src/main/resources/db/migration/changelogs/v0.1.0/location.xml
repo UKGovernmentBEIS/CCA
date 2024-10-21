@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/location.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_LOCATION_SEQUENCE" author="P63979">
+        <createSequence sequenceName="location_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS location_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_LOCATION" author="P63979">
+        <createTable tableName="location" remarks="Represents a location">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="location_pk" nullable="false"/>
+            </column>
+            <column name="line1" type="varchar(255)" remarks="The line 1 address">
+                <constraints nullable="false" />
+            </column>
+            <column name="line2" type="varchar(255)" remarks="The line 2 address">
+                <constraints nullable="true" />
+            </column>
+            <column name="city" type="varchar(255)" remarks="The city">
+                <constraints nullable="false" />
+            </column>
+            <column name="county" type="varchar(255)" remarks="The county">
+                <constraints nullable="false" />
+            </column>
+            <column name="postcode" type="varchar(64)" remarks="The postcode">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS location CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_LOCATION_ALTER_COUNTY_TO_NULL" author="vourdoukasd@unisystems.gr">
+        <dropNotNullConstraint tableName="location" columnName="county"/>
+
+        <rollback>
+            <addNotNullConstraint tableName="location" columnName="county"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

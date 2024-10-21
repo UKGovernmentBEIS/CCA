@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.user.core.domain.dto.EmailDTO;
-import uk.gov.cca.api.user.core.domain.dto.ResetPasswordDTO;
-import uk.gov.cca.api.user.core.domain.dto.TokenDTO;
-import uk.gov.cca.api.user.core.service.UserResetPasswordService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.user.core.domain.dto.EmailDTO;
+import uk.gov.netz.api.user.core.domain.dto.ResetPasswordDTO;
+import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
+import uk.gov.netz.api.user.core.service.UserResetPasswordService;
 
 @RestController
 @RequestMapping(path = "/v1.0/users/forgot-password")

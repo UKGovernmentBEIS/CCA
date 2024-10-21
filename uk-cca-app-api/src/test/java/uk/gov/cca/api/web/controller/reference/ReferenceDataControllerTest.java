@@ -13,13 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.referencedata.domain.Country;
-import uk.gov.cca.api.referencedata.domain.County;
-import uk.gov.cca.api.referencedata.domain.enumeration.ReferenceDataType;
-import uk.gov.cca.api.referencedata.service.CountryService;
-import uk.gov.cca.api.referencedata.service.CountyService;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.controller.reference.ReferenceDataController;
+import uk.gov.netz.api.referencedata.domain.Country;
+import uk.gov.netz.api.referencedata.domain.County;
+import uk.gov.netz.api.referencedata.domain.enumeration.ReferenceDataType;
+import uk.gov.netz.api.referencedata.service.CountryService;
+import uk.gov.netz.api.referencedata.service.CountyService;
 
 import java.util.Arrays;
 import java.util.List;

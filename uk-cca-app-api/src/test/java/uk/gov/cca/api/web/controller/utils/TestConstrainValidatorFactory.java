@@ -3,7 +3,7 @@ package uk.gov.cca.api.web.controller.utils;
 import jakarta.validation.ConstraintValidator;
 import org.springframework.web.bind.support.SpringWebConstraintValidatorFactory;
 import org.springframework.web.context.WebApplicationContext;
-import uk.gov.cca.api.referencedata.service.CountryValidator;
+import uk.gov.netz.api.referencedata.service.CountryValidator;
 
 public class TestConstrainValidatorFactory extends SpringWebConstraintValidatorFactory {
 

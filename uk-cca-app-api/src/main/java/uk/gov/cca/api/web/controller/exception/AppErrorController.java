@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.ContentCachingResponseWrapper;
-import uk.gov.cca.api.web.logging.MultiReadHttpServletRequestWrapper;
-import uk.gov.cca.api.web.logging.RestLoggingService;
 import uk.gov.cca.api.web.util.ErrorUtil;
 import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.logging.MultiReadHttpServletRequestWrapper;
+import uk.gov.netz.api.logging.RestLoggingService;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
