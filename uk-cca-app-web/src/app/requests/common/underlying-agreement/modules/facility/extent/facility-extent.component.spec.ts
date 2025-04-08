@@ -12,6 +12,7 @@ import { BasePage } from '@netz/common/testing';
 import { mockRequestTaskItemDTO } from '../../../testing';
 import { FACILITIES_SUBTASK, FacilityWizardStep } from '../../../underlying-agreement.types';
 import { FacilityExtentComponent } from './facility-extent.component';
+
 describe('FacilityExtentComponent', () => {
   let component: FacilityExtentComponent;
   let fixture: ComponentFixture<FacilityExtentComponent>;
@@ -27,8 +28,9 @@ describe('FacilityExtentComponent', () => {
     get areActivitiesClaimedRadios() {
       return this.queryAll<HTMLInputElement>('input[name$="areActivitiesClaimed"]');
     }
+
     get filesText() {
-      return this.queryAll<HTMLDivElement>('.moj-multi-file-upload__message');
+      return this.queryAll<HTMLDivElement>('.cca-multi-file-upload__message');
     }
 
     get submitButton() {
@@ -84,21 +86,13 @@ describe('FacilityExtentComponent', () => {
     fixture.detectChanges();
 
     expect(taskServiceSpy).toHaveBeenCalledWith(FACILITIES_SUBTASK, FacilityWizardStep.EXTENT, route, {
-      facility: {
-        facilityId: 'ADS_1-F00001',
-        facilityExtent: {
-          manufacturingProcessFile: 'manufacturingProcessFile',
-          processFlowFile: 'processFlowFile',
-          annotatedSitePlansFile: 'annotatedSitePlansFile',
-          eligibleProcessFile: 'eligibleProcessFile',
-          areActivitiesClaimed: false,
-        },
-      },
-      attachments: {
-        manufacturingProcessFile: 'manufacturingProcessFile.xlsx',
-        processFlowFile: 'processFlowFile.xlsx',
-        annotatedSitePlansFile: 'annotatedSitePlansFile.xlsx',
-        eligibleProcessFile: 'eligibleProcessFile.xlsx',
+      facilityId: 'ADS_1-F00001',
+      facilityExtent: {
+        manufacturingProcessFile: 'manufacturingProcessFile',
+        processFlowFile: 'processFlowFile',
+        annotatedSitePlansFile: 'annotatedSitePlansFile',
+        eligibleProcessFile: 'eligibleProcessFile',
+        areActivitiesClaimed: false,
       },
     });
   });

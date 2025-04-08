@@ -9,12 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RdeForceDecisionPayload } from './rdeForceDecisionPayload';
 import { RdeResponsePayload } from './rdeResponsePayload';
+import { RdeForceDecisionPayload } from './rdeForceDecisionPayload';
 
 export interface RdeForceDecisionRequestTaskPayload {
   payloadType?: string;
+  sendEmailNotification?: boolean;
   rdeResponsePayload: RdeResponsePayload;
   rdeForceDecisionPayload: RdeForceDecisionPayload;
-  rdeAttachments?: { [key: string]: string };
+  rdeAttachments?: Record<string, string>;
 }

@@ -19,7 +19,7 @@ import { Configuration, FileToken, SectorAssociationSchemeService } from 'cca-ap
   template: `
     <h1 class="govuk-heading-l">Your download has started</h1>
     <p class="govuk-body">You should see your downloads in the downloads folder.</p>
-    <a govukLink [href]="downloadURL()" download #anchor>Click to restart download if it fails</a>
+    <a class="govuk-link" [href]="downloadURL()" download #anchor>Click to restart download if it fails</a>
   `,
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,

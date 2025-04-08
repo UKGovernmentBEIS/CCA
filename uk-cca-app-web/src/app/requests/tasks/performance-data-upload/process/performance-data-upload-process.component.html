@@ -1,0 +1,72 @@
+@if (!performanceDataUpload()?.performanceDataTargetPeriodType) {
+  <cca-wizard-step (formSubmit)="onSubmit()" [formGroup]="form">
+    <div
+      widthClass="govuk-!-width-one-quarter"
+      label="Select the target period you are uploading"
+      [options]="targetPeriodsOptions"
+      formControlName="targetPeriodType"
+      govuk-select
+    ></div>
+
+    <div class="govuk-warning-text govuk-!-margin-top-6">
+      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+      <strong class="govuk-warning-text__text">
+        <span class="govuk-visually-hidden">Warning</span>
+        The uploaded spreadsheet needs to have the same filename as the download
+      </strong>
+    </div>
+
+    <govuk-details class="govuk-body" summary="Help with uploading" data-testid="performance-upload-details">
+      <p>To upload your target period reporting spreadsheets:</p>
+      <ul>
+        <li>
+          Download the pre-populated target period reporting (TPR) templates for each target unit in the sector that
+          needs to submit a report
+        </li>
+
+        <li>Complete the green-shaded cells in the TPR template that are relevant to each target unit</li>
+
+        <li>Save the spreadsheet as [FILENAME]. Do not change the filename</li>
+
+        <li>
+          Save the completed TPR templates to a ZIP file. There is a maximum upload size limit of 20MB per ZIP file.
+        </li>
+
+        <li>Upload the .ZIP files on this page – you may add multiple .ZIP files for upload.</li>
+
+        <li>Upload the ZIP files then select 'Continue'</li>
+      </ul>
+      <p>
+        After you have successfully uploaded a TPR for a target unit, the service will lock the report workflow. To
+        submit a correction, you must ask the regulator to unlock the target unit. The regulator cannot unlock the
+        report workflow between 2 May and 1 July.
+      </p>
+    </govuk-details>
+
+    <cca-multiple-file-input
+      baseDownloadUrl="file-download"
+      [listTitle]="'Uploaded files'"
+      label="Upload a file"
+      hint="The selected file must be a ZIP smaller than 20MB.
+      You can upload multiple .zip files in the same session but you will have to wait for all the uploads to be processed
+      before you can continue."
+      formControlName="uploadedFiles"
+    />
+
+    <p class="govuk-hint govuk-!-static-margin-bottom-9 govuk-!-static-margin-top-9">
+      Select "Continue" when all the files have been added.
+    </p>
+  </cca-wizard-step>
+}
+
+@if (performanceDataUpload()?.performanceDataTargetPeriodType && !processCompleted()) {
+  <cca-performance-data-upload-processing />
+}
+
+@if (processCompleted()) {
+  <cca-performance-data-upload-processed />
+}
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+
+<a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true">Return to: Dashboard</a>

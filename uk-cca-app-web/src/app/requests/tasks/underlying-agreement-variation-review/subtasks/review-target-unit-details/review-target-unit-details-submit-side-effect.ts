@@ -1,7 +1,5 @@
 import { SideEffect, SubtaskOperation } from '@netz/common/forms';
-import { REVIEW_TARGET_UNIT_DETAILS_SUBTASK } from '@requests/common';
-
-import { submitReviewSideEffect } from '../../submit-side-effect';
+import { REVIEW_TARGET_UNIT_DETAILS_SUBTASK, submitReviewSideEffect } from '@requests/common';
 
 export class ReviewTargetUnitDetailsSubmitSideEffect extends SideEffect {
   override step = undefined;

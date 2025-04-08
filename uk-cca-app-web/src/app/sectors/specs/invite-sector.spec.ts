@@ -52,7 +52,7 @@ describe('Invite Sector Spec', () => {
     expect(screen.getByTestId('sector-list')).toBeInTheDocument();
   }));
 
-  test('Main Scenario: add a new Sector User to a Sector', async () => {
+  test('Main Scenario: add a new Sector User to a Sector', fakeAsync(async () => {
     const id = 231;
     const user = UserEvent.setup();
     const opts = { harness, httpTestingController, user };
@@ -76,8 +76,8 @@ describe('Invite Sector Spec', () => {
     req2.flush(mockSectorAuthorities);
     harness.detectChanges();
     expect(screen.getByTestId('sector-user-type-form')).toBeVisible();
-  });
-  test('Alternative Scenario 1: User provides an existing user’s email for this Sector', async () => {
+  }));
+  test('Alternative Scenario 1: User provides an existing user’s email for this Sector', fakeAsync(async () => {
     const id = 231;
     const user = UserEvent.setup();
     const opts = { harness, httpTestingController, user };
@@ -93,11 +93,11 @@ describe('Invite Sector Spec', () => {
     harness.detectChanges();
     expect(document.querySelector('.govuk-error-summary')).toBeInTheDocument();
     expect(screen.getAllByText('This user email already exists in CCA for this Sector')).toHaveLength(2);
-  });
+  }));
 
   // Alternative Scenario 2: User provides an existing (other Sector) user’s email
   // this is handled by the backend. Nothing to test here
-  test('Alternative Scenario 3: User does not enter mandatory fields', async () => {
+  test('Alternative Scenario 3: User does not enter mandatory fields', fakeAsync(async () => {
     const id = 231;
     const user = UserEvent.setup();
     const opts = { harness, httpTestingController, user };
@@ -117,9 +117,9 @@ describe('Invite Sector Spec', () => {
     req.flush(null);
     await harness.fixture.whenStable();
     await assertConfirmationPage();
-  });
+  }));
 
-  test('Alternative Scenario 4: User does not provide valid user email', async () => {
+  test('Alternative Scenario 4: User does not provide valid user email', fakeAsync(async () => {
     const id = 231;
     const user = UserEvent.setup();
     const opts = { harness, httpTestingController, user };
@@ -140,9 +140,9 @@ describe('Invite Sector Spec', () => {
     req.flush(null);
     await harness.fixture.whenStable();
     await assertConfirmationPage();
-  });
+  }));
 
-  test('Alternative Scenario 5: User provides an existing (Regulator or Operator) user’s email', async () => {
+  test('Alternative Scenario 5: User provides an existing (Regulator or Operator) user’s email', fakeAsync(async () => {
     const id = 231;
     const user = UserEvent.setup();
     const opts = { harness, httpTestingController, user };
@@ -158,5 +158,5 @@ describe('Invite Sector Spec', () => {
     harness.detectChanges();
     expect(document.querySelector('.govuk-error-summary')).toBeInTheDocument();
     expect(screen.getAllByText('This user email already exists in CCA for this Sector')).toHaveLength(2);
-  });
+  }));
 });

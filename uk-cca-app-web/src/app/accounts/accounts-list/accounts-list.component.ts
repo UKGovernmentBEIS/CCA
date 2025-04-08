@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { GovukTableColumn, LinkDirective, TableComponent, TagComponent } from '@netz/govuk-components';
+import { GovukTableColumn, TableComponent, TagComponent } from '@netz/govuk-components';
 import { AccountStatusPipe, TargetUnitStatusColorPipe } from '@shared/pipes';
 
 import { AccountSearchResultInfoDTO } from 'cca-api';
@@ -9,13 +9,13 @@ import { AccountSearchResultInfoDTO } from 'cca-api';
 @Component({
   selector: 'cca-accounts-list',
   standalone: true,
-  imports: [TagComponent, LinkDirective, TableComponent, AccountStatusPipe, RouterLink, TargetUnitStatusColorPipe],
+  imports: [TagComponent, TableComponent, AccountStatusPipe, RouterLink, TargetUnitStatusColorPipe],
   template: `
     <div class="govuk-grid-row">
       <govuk-table [columns]="tableColumns" [data]="accounts()" data-testid="accounts-list-table">
         <ng-template let-column="column" let-index="index" let-row="row">
           @if (column.field === 'name') {
-            <a [routerLink]="[row.id]" govukLink>{{ row[column.field] }}</a>
+            <a [routerLink]="[row.id]" class="govuk-link">{{ row[column.field] }}</a>
           } @else if (column.field === 'status') {
             <govuk-tag [color]="row[column.field] | statusColorPipe">
               {{ row[column.field] | accountStatus }}

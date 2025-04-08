@@ -3,6 +3,7 @@ package uk.gov.cca.api.migration.sectorassociation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +31,7 @@ import uk.gov.cca.api.sectorassociation.transform.SectorAssociationMapper;
 public class SectorAssociationCreationMigrationService {
     
     private final SectorAssociationMapper sectorAssociationMapper;
-    private final SectorAssociationMigrationMapper sectorAssociationMigrationMapper;
+    private final SectorAssociationMigrationMapper sectorAssociationMigrationMapper = Mappers.getMapper(SectorAssociationMigrationMapper.class);
 
     private final SectorAssociationRepository sectorAssociationRepository;
     private final SectorAssociationSchemeRepository sectorAssociationSchemeRepository;

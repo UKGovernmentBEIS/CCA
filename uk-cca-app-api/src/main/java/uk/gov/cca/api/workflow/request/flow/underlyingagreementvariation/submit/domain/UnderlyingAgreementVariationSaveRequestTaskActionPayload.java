@@ -6,8 +6,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.UnderlyingAgreementReviewDecision;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationFacilityReviewDecision;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationReviewGroup;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskActionPayload;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,4 +26,13 @@ public class UnderlyingAgreementVariationSaveRequestTaskActionPayload extends Re
 
     @Builder.Default
     private Map<String, String> sectionsCompleted = new HashMap<>();
+
+    @Builder.Default
+    private Map<UnderlyingAgreementVariationReviewGroup, UnderlyingAgreementReviewDecision> reviewGroupDecisions = new EnumMap<>(UnderlyingAgreementVariationReviewGroup.class);
+
+    @Builder.Default
+    private Map<String, UnderlyingAgreementVariationFacilityReviewDecision> facilitiesReviewGroupDecisions = new HashMap<>();
+
+    @Builder.Default
+    private Map<String, String> reviewSectionsCompleted = new HashMap<>();
 }

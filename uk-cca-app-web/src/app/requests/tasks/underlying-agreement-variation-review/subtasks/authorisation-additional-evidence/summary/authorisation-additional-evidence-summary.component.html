@@ -1,7 +1,14 @@
 <div>
-  <cca-page-heading caption="Authorisation and additional evidence">Summary</cca-page-heading>
+  <netz-page-heading caption="Authorisation and additional evidence">Summary</netz-page-heading>
 
-  <cca-summary [data]="summaryData" />
+  <ng-template #contentTpl let-showOriginal="showOriginal">
+    <cca-summary [data]="showOriginal ? summaryDataOriginal : summaryDataCurrent" />
+  </ng-template>
+
+  <cca-highlight-diff>
+    <ng-container slot="previous" *ngTemplateOutlet="contentTpl; context: { showOriginal: true }"></ng-container>
+    <ng-container slot="current" *ngTemplateOutlet="contentTpl; context: { showOriginal: false }"></ng-container>
+  </cca-highlight-diff>
 </div>
 
 <netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

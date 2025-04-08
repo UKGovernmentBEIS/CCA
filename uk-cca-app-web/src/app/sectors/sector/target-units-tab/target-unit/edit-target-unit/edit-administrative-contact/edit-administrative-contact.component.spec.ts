@@ -1,11 +1,10 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { CountryService } from '@core/services/country.service';
 import { ActivatedRouteStub, BasePage, mockClass } from '@netz/common/testing';
+import { CountryService } from '@shared/services';
 
 import { UpdateTargetUnitAccountService } from 'cca-api';
 
@@ -104,7 +103,7 @@ describe('EditAdministrativeContactComponent', () => {
   beforeEach(async () => {
     activatedRoute = new ActivatedRouteStub({ targetUnitId: '1' });
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, EditAdministrativeContactComponent],
+      imports: [EditAdministrativeContactComponent],
       providers: [
         ActiveTargetUnitStore,
         { provide: UpdateTargetUnitAccountService, useValue: updateTargetUnitAccountService },
@@ -140,7 +139,7 @@ describe('EditAdministrativeContactComponent', () => {
     expect(page.addressPostCodeValue).toEqual(
       mockTargetUnitAccountDetails.administrativeContactDetails.address.postcode,
     );
-    expect(page.addressCountryValue).toEqual('2: GR');
+    expect(page.addressCountryValue).toEqual('3: GR');
     expect(page.addressLine1.disabled).toBeFalsy();
     expect(page.addressLine2.disabled).toBeFalsy();
     expect(page.addressCity.disabled).toBeFalsy();

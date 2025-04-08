@@ -8,15 +8,17 @@ import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } f
 import { BASELINE_AND_TARGETS_SUBTASK, BaselineAndTargetPeriodsSubtasks } from '@requests/common';
 import { render } from '@testing-library/angular';
 
-import { mockRequestTaskState } from '../../../../testing/mock-data';
+import { mockVariationReviewRequestTaskState } from '../../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import { TP6DecisionComponent } from './tp6-decision.component';
 
 describe('TP6DecisionComponent', () => {
   let store: RequestTaskStore;
+  let tree: Element;
+
   const unaTaskService: Partial<jest.Mocked<TaskService>> = {
     saveSubtask: jest.fn().mockReturnValue(of({})),
   };
-  let tree: Element;
+
   beforeEach(async () => {
     const renderResult = await render(TP6DecisionComponent, {
       providers: [
@@ -30,11 +32,13 @@ describe('TP6DecisionComponent', () => {
       ],
       configureTestBed: (testbed) => {
         store = testbed.inject(RequestTaskStore);
-        store.setState(mockRequestTaskState);
+        store.setState(mockVariationReviewRequestTaskState);
       },
     });
+
     tree = renderResult.container;
   });
+
   it('should match snapshot', () => {
     expect(tree).toMatchSnapshot();
   });

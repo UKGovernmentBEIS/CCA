@@ -4,7 +4,7 @@ import { FormControl, ValidatorFn } from '@angular/forms';
  * Validates provided length to actual fileName length
  */
 export function fileNameLengthValidator(maxLength: number, message: string): ValidatorFn {
-  return (control: FormControl): { [key: string]: any } | null => {
+  return (control: FormControl): Record<string, any> | null => {
     const file = control.value;
 
     if (file instanceof File) {

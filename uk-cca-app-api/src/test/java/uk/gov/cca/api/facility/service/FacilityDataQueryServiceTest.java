@@ -6,10 +6,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.facility.domain.FacilityData;
+import uk.gov.cca.api.facility.domain.dto.FacilityDataDetailsDTO;
 import uk.gov.cca.api.facility.repository.FacilityDataRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
@@ -19,11 +21,22 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class FacilityDataQueryServiceTest {
 
-	@InjectMocks
+    @InjectMocks
     private FacilityDataQueryService service;
 
     @Mock
     private FacilityDataRepository repository;
+
+    @Test
+    void getFacilityData() {
+        FacilityData facility = FacilityData.builder().facilityId("facilityId").build();
+        when(repository.findByFacilityId("facilityId")).thenReturn(Optional.ofNullable(facility));
+
+        FacilityDataDetailsDTO facilityDetailsDTO = service.getFacilityData("facilityId");
+
+        assertThat(facilityDetailsDTO.getFacilityId()).isEqualTo("facilityId");
+        verify(repository, times(1)).findByFacilityId("facilityId");
+    }
 
     @Test
     void isExistingFacilityId() {
@@ -38,7 +51,7 @@ class FacilityDataQueryServiceTest {
 
     @Test
     void isActiveFacility() {
-    	String facilityId = "facilityId";
+        String facilityId = "facilityId";
         when(repository.existsByFacilityIdAndClosedDateIsNull(facilityId)).thenReturn(false);
 
         boolean result = service.isActiveFacility(facilityId);
@@ -61,5 +74,17 @@ class FacilityDataQueryServiceTest {
         List<FacilityData> results = service.findActiveFacilitiesByAccountId(accountId);
 
         assertThat(results).contains(activeFacility);
+    }
+
+    @Test
+    void getAccountIdByFacilityId() {
+        long accountId = 1L;
+        FacilityData facility = FacilityData.builder().accountId(accountId).facilityId("facilityId").build();
+        when(repository.findByFacilityId("facilityId")).thenReturn(Optional.ofNullable(facility));
+
+        Long result = service.getAccountIdByFacilityId("facilityId");
+
+        assertThat(result).isEqualTo(accountId);
+        verify(repository, times(1)).findByFacilityId("facilityId");
     }
 }

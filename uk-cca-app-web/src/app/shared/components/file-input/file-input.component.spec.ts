@@ -42,7 +42,7 @@ describe('FileInputComponent', () => {
 
   class Page extends BasePage<TestComponent> {
     get fileText() {
-      return this.query<HTMLDivElement>('.moj-multi-file-upload__message');
+      return this.query<HTMLDivElement>('.cca-multi-file-upload__message');
     }
 
     get downloadLink() {
@@ -50,7 +50,7 @@ describe('FileInputComponent', () => {
     }
 
     get delete() {
-      return this.query<HTMLButtonElement>('.moj-multi-file-upload__delete');
+      return this.query<HTMLButtonElement>('.cca-multi-file-upload__delete');
     }
 
     get file() {

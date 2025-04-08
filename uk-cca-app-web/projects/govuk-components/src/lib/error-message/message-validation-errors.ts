@@ -1,8 +1,6 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-export interface MessageValidationErrors extends ValidationErrors {
-  [key: string]: string;
-}
+export type MessageValidationErrors = ValidationErrors & Record<string, string>;
 
 export declare interface MessageValidatorFn extends ValidatorFn {
   (control: AbstractControl): MessageValidationErrors | null;

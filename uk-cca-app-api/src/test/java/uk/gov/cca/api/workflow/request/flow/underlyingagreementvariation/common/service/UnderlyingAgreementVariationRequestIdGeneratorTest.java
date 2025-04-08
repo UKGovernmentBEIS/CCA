@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.repository.TargetUnitAccountRepository;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.RequestSequence;
 import uk.gov.netz.api.workflow.request.core.domain.RequestType;
 import uk.gov.netz.api.workflow.request.core.repository.RequestSequenceRepository;
@@ -54,7 +56,7 @@ class UnderlyingAgreementVariationRequestIdGeneratorTest {
     	Long accountId = 10000L;
     	long currentSequence = 500;
     	RequestParams params = RequestParams.builder()
-    			.accountId(accountId)
+    			.requestResources(Map.of(ResourceType.ACCOUNT, accountId.toString()))
     			.type(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION)
     			.build();
     	

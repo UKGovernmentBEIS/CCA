@@ -1,5 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, DoCheck, HostBinding, Input, OnInit, Optional, Self } from '@angular/core';
+import { Component, DestroyRef, DoCheck, HostBinding, Input, OnInit, Optional, Self } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ControlContainer,
   ControlValueAccessor,
@@ -11,24 +12,23 @@ import {
   UntypedFormGroup,
 } from '@angular/forms';
 
-import { BehaviorSubject, filter, map, Observable, takeUntil } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable } from 'rxjs';
 
-import { CountryService } from '@core/services/country.service';
-import { CountryCallingCodeService } from '@core/services/country-calling-code.service';
-import { DestroySubject } from '@core/services/destroy-subject.service';
 import { ErrorMessageComponent, FieldsetDirective, FormService, GovukSelectOption } from '@netz/govuk-components';
-import { transformPhoneInput } from '@shared/pipes/phone-number-input.pipe';
+import { transformPhoneInput } from '@shared/pipes';
+import { CountryCallingCodeService, CountryService } from '@shared/services';
 import { UKCountryCodes } from '@shared/types';
 
 import { PhoneNumberDTO } from 'cca-api';
 
-// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+type CountryOption = { text: string; value: string };
+
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'div[cca-phone-input]',
   templateUrl: './phone-input.component.html',
   standalone: true,
   imports: [ReactiveFormsModule, ErrorMessageComponent, AsyncPipe, FieldsetDirective],
-  providers: [DestroySubject],
 })
 export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccessor {
   @Input() label: string;
@@ -45,18 +45,26 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
 
   phoneCodes$: Observable<GovukSelectOption<string>[]> = this.countryService.getUkCountries().pipe(
     map((countries) => {
-      const sortedCountries = this.sortByProp(countries, 'code');
-      const options: { text: string; value: string }[] = [{ text: '', value: '' }];
+      const emptyOption: CountryOption[] = [{ text: '--', value: '' }];
+      const ukCountries: CountryOption[] = [];
+      const otherCountries: CountryOption[] = [];
 
-      sortedCountries.forEach((country) => {
+      countries.forEach((country) => {
         const callingCode = this.countryCallingCodeService.getCountryCallingCode(country.code);
+
         const option = {
           text: `${UKCountryCodes.GB === country.code ? UKCountryCodes.UK : country.code} (${callingCode})`,
           value: String(callingCode),
         };
-        options.push(option);
+
+        if (['GB-ENG', 'GB-NIR', 'GB-SCT', 'GB-WLS', 'GB'].includes(country.code)) {
+          ukCountries.push(option);
+        } else {
+          otherCountries.push(option);
+        }
       });
-      return this.sortByProp(options, 'text');
+
+      return [...this.sortByProp(ukCountries, 'text'), ...emptyOption, ...this.sortByProp(otherCountries, 'text')];
     }),
   );
 
@@ -68,7 +76,7 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
     @Self() @Optional() private readonly ngControl: NgControl,
     private readonly countryService: CountryService,
     private readonly formService: FormService,
-    private readonly destroy$: DestroySubject,
+    private readonly destroy$: DestroyRef,
     @Optional() private readonly container: ControlContainer,
     private readonly countryCallingCodeService: CountryCallingCodeService,
   ) {
@@ -101,7 +109,7 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
   ngOnInit(): void {
     this.formGroup.valueChanges
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroy$),
         filter(() => !!this.onChange),
       )
       .subscribe((value) => this.onChange({ countryCode: value.countryCode || null, number: value.number || null }));
@@ -140,7 +148,7 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
     this.disabled = isDisabled;
   }
 
-  sortByProp(items: any[], prop: string) {
+  sortByProp(items: CountryOption[], prop: keyof CountryOption) {
     return items.sort((a, b) => (a[prop] > b[prop] ? 1 : -1));
   }
 }

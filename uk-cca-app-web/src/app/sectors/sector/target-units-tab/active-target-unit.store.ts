@@ -13,6 +13,7 @@ import {
 const initialState: TargetUnitAccountDetailsResponseDTO = {
   subsectorAssociation: null,
   targetUnitAccountDetails: null,
+  underlyingAgreementDetails: null,
 };
 
 @Injectable()

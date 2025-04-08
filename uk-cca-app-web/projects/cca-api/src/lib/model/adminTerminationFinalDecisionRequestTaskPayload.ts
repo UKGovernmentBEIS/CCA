@@ -13,7 +13,8 @@ import { AdminTerminationFinalDecisionReasonDetails } from './adminTerminationFi
 
 export interface AdminTerminationFinalDecisionRequestTaskPayload {
   payloadType?: string;
+  sendEmailNotification?: boolean;
   adminTerminationFinalDecisionReasonDetails?: AdminTerminationFinalDecisionReasonDetails;
-  sectionsCompleted?: { [key: string]: string };
-  adminTerminationAttachments?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
+  adminTerminationAttachments?: Record<string, string>;
 }

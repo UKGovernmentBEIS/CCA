@@ -9,15 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { TargetUnitAccountSiteContactDTO } from '../model/targetUnitAccountSiteContactDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -90,34 +90,34 @@ export class TargetUnitAccountsSiteContactsService {
    */
   public updateTargetUnitAccountSiteContacts(
     sectorId: number,
-    targetUnitAccountSiteContactDTO: Array<TargetUnitAccountSiteContactDTO>,
+    targetUnitAccountSiteContactDTO: TargetUnitAccountSiteContactDTO[],
   ): Observable<any>;
   public updateTargetUnitAccountSiteContacts(
     sectorId: number,
-    targetUnitAccountSiteContactDTO: Array<TargetUnitAccountSiteContactDTO>,
+    targetUnitAccountSiteContactDTO: TargetUnitAccountSiteContactDTO[],
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<any>>;
   public updateTargetUnitAccountSiteContacts(
     sectorId: number,
-    targetUnitAccountSiteContactDTO: Array<TargetUnitAccountSiteContactDTO>,
+    targetUnitAccountSiteContactDTO: TargetUnitAccountSiteContactDTO[],
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<any>>;
   public updateTargetUnitAccountSiteContacts(
     sectorId: number,
-    targetUnitAccountSiteContactDTO: Array<TargetUnitAccountSiteContactDTO>,
+    targetUnitAccountSiteContactDTO: TargetUnitAccountSiteContactDTO[],
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any>;
   public updateTargetUnitAccountSiteContacts(
     sectorId: number,
-    targetUnitAccountSiteContactDTO: Array<TargetUnitAccountSiteContactDTO>,
+    targetUnitAccountSiteContactDTO: TargetUnitAccountSiteContactDTO[],
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorId === null || sectorId === undefined) {
@@ -165,7 +165,7 @@ export class TargetUnitAccountsSiteContactsService {
       `${this.configuration.basePath}/v1.0/account-site-contacts/sector-association/${encodeURIComponent(String(sectorId))}`,
       targetUnitAccountSiteContactDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

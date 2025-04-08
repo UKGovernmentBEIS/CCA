@@ -2,7 +2,13 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { FacilityWizardReviewStep, isEditableSummaryRedirectGuard, underlyingAgreementQuery } from '@requests/common';
+import {
+  FacilityWizardReviewStep,
+  isEditableSummaryRedirectGuard,
+  resetCurrentFacility,
+  setCurrentFacility,
+  underlyingAgreementQuery,
+} from '@requests/common';
 
 import {
   canActivateFacility,
@@ -14,7 +20,8 @@ import {
 export const FACILITY_ROUTES: Routes = [
   {
     path: ':facilityId',
-    canActivate: [isEditableSummaryRedirectGuard],
+    canActivate: [isEditableSummaryRedirectGuard, setCurrentFacility],
+    canDeactivate: [resetCurrentFacility],
     children: [
       {
         path: FacilityWizardReviewStep.DETAILS,

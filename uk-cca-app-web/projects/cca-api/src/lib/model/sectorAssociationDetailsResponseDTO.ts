@@ -9,8 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AddressDTO } from './addressDTO';
 import { UserBasicInfoDTO } from './userBasicInfoDTO';
+import { AddressDTO } from './addressDTO';
 
 export interface SectorAssociationDetailsResponseDTO {
   competentAuthority: 'ENGLAND' | 'NORTHERN_IRELAND' | 'OPRED' | 'SCOTLAND' | 'WALES';

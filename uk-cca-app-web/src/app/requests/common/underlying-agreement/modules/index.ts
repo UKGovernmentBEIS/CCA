@@ -5,3 +5,5 @@ export * from './review-target-unit-details';
 export * from './baseline-and-targets';
 export * from './variation-details';
 export * from './decision';
+export * from './overall-decision';
+export * from './notify-operator';

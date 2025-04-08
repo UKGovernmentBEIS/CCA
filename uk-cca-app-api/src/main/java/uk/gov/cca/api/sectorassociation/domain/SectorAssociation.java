@@ -57,13 +57,6 @@ import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
         name = SectorAssociation.NAMED_QUERY_FIND_SECTOR_ASSOCIATION_ACRONYM_BY_ID,
         query = "SELECT sa.acronym FROM SectorAssociation sa WHERE sa.id = :id")
 @NamedQuery(
-        name = SectorAssociation.NAMED_QUERY_FIND_SECTOR_ASSOCIATION_NOTICE_RECIPIENT_BY_ID,
-        query = "SELECT new uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO(sac.firstName, sac.lastName, sac.email, uk.gov.cca.api.account.domain.dto.NoticeRecipientType.SECTOR_CONTACT) "
-                + "FROM SectorAssociation sa "
-                + "INNER JOIN sa.sectorAssociationContact sac "
-                + "ON sa.sectorAssociationContact.id = sac.id "
-                + "WHERE sa.id = :id")
-@NamedQuery(
         name = SectorAssociation.NAMED_QUERY_FIND_SECTOR_ASSOCIATION_ID_BY_ACRONYM,
         query = "SELECT sa.ID FROM SectorAssociation sa WHERE sa.acronym = :acronym")
 
@@ -74,7 +67,6 @@ public class SectorAssociation {
     public static final String NAMED_QUERY_FIND_SECTOR_ASSOCIATIONS_SITE_CONTACTS = "SectorAssociation.findSectorAssociationSiteContacts";
     public static final String NAMED_QUERY_FIND_SECTOR_ASSOCIATIONS_IDS_BY_COMPETENT_AUTHORITY = "SectorAssociation.findSectorAssociationsIdsByCompetentAuthority";
     public static final String NAMED_QUERY_FIND_SECTOR_ASSOCIATION_ACRONYM_BY_ID = "SectorAssociation.findSectorAssociationAcronymById";
-    public static final String NAMED_QUERY_FIND_SECTOR_ASSOCIATION_NOTICE_RECIPIENT_BY_ID = "SectorAssociation.findSectorAssociationNoticeRecipientById";
     public static final String NAMED_QUERY_FIND_SECTOR_ASSOCIATION_ID_BY_ACRONYM = "SectorAssociation.findSectorAssociationIdByAcronym";
 
     @Id

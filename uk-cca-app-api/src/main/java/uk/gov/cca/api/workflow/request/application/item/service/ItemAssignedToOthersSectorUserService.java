@@ -14,6 +14,7 @@ import uk.gov.netz.api.workflow.request.application.item.domain.ItemAssignmentTy
 import uk.gov.netz.api.workflow.request.application.item.domain.ItemPage;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemAssignedToOthersService;
+import uk.gov.netz.api.workflow.request.application.item.service.ItemRequestResourcesService;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemResponseService;
 import uk.gov.netz.api.common.domain.PagingRequest;
 
@@ -25,6 +26,7 @@ public class ItemAssignedToOthersSectorUserService implements ItemAssignedToOthe
 
 	private final ItemSectorUserRepository itemSectorUserRepository;
     private final ItemResponseService itemResponseService;
+    private final ItemRequestResourcesService itemRequestResourcesService;
     private final SectorUserAuthorityResourceAdapter sectorUserAuthorityResourceAdapter;
 
     @Override
@@ -41,8 +43,11 @@ public class ItemAssignedToOthersSectorUserService implements ItemAssignedToOthe
                 ItemAssignmentType.OTHERS,
                 scopedRequestTaskTypes,
                 paging);
+        
+        Map<String, Map<String, String>> itemRequestResources = 
+        		itemRequestResourcesService.getItemRequestResources(itemPage);
 
-        return itemResponseService.toItemDTOResponse(itemPage, appUser);
+        return itemResponseService.toItemDTOResponse(itemPage, itemRequestResources, appUser);
     }
 
     @Override

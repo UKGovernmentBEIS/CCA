@@ -63,13 +63,19 @@ describe('ManageFacilitiesSummaryComponent', () => {
     expect(page.facilitiesTable).toEqual([
       ['Name', 'Facility ID', 'Status', 'Actions'],
       ['Facility 1', 'ADS_1-F00001', 'Live', 'Edit Exclude'],
-      ['Facility 2', 'ADS_1-F00002', 'Excluded', 'Edit Undo'],
+      ['Facility 2', 'ADS_1-F00002', 'New', 'Edit Delete'],
+      ['Facility 3', 'ADS_1-F00003', 'Excluded', 'Edit Undo'],
+      ['Facility 4', 'ADS_1-F00004', 'New', 'Edit Delete'],
       ['Name', 'Facility ID', 'Status', 'Actions'],
-      ['Facility 1', 'ADS_1-F00001', 'Live', 'Edit Exclude'],
-      ['Facility 2', 'ADS_1-F00002', 'Excluded', 'Edit Undo'],
+      ['Original Facility 1', 'ADS_1-F00001', 'New', 'Edit Delete'],
+      ['Original Facility 2', 'ADS_1-F00002', 'New', 'Edit Delete'],
+      ['Original Facility 3', 'ADS_1-F00003', 'Live', 'Edit Exclude'],
+      ['Original Facility 4', 'ADS_1-F00004', 'Excluded', 'Edit Undo'],
       ['Name', 'Facility ID', 'Status', 'Actions'],
-      ['Facility 1', 'ADS_1-F00001', 'Live', 'Edit Exclude'],
-      ['Facility 2', 'ADS_1-F00002', 'Excluded', 'Edit Undo'],
+      ['Original Facility 1', 'ADS_1-F00001', 'NewLive', 'Edit DeleteExclude'],
+      ['Original Facility 2', 'ADS_1-F00002', 'New', 'Edit Delete'],
+      ['Original Facility 3', 'ADS_1-F00003', 'LiveExcluded', 'Edit ExcludeUndo'],
+      ['Original Facility 4', 'ADS_1-F00004', 'ExcludedNew', 'Edit UndoDelete'],
     ]);
   });
 

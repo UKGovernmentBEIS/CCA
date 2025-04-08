@@ -11,10 +11,13 @@ import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod5De
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.UnderlyingAgreementReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationDetails;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationFacilityReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationModificationType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationReviewGroup;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.transform.UnderlyingAgreementVariationSubmitMapper;
@@ -33,7 +36,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class UnderlyingAgreementVariationSubmitServiceTest {
+class UnderlyingAgreementVariationSubmitServiceTest {
 
     @InjectMocks
     private UnderlyingAgreementVariationSubmitService service;
@@ -46,16 +49,17 @@ public class UnderlyingAgreementVariationSubmitServiceTest {
 
     @Test
     void submitUnderlyingAgreementVariation() {
-        AppUser authUser = AppUser.builder().userId("user1").build();
-        UUID att1UUID = UUID.randomUUID();
-        Request request = Request.builder()
-                .accountId(1L)
-                .id("1")
-                .payload(UnderlyingAgreementVariationRequestPayload.builder().build())
-                .build();
+        final AppUser authUser = AppUser.builder().userId("user1").build();
+        final UUID att1UUID = UUID.randomUUID();
 
-
-        UnderlyingAgreementVariationPayload unav = UnderlyingAgreementVariationPayload
+        final Map<String, String> reviewSectionsCompleted = Map.of("subtask", "ACCEPTED");
+        final Map<UnderlyingAgreementVariationReviewGroup, UnderlyingAgreementReviewDecision> reviewGroups = Map.of(
+                UnderlyingAgreementVariationReviewGroup.TARGET_UNIT_DETAILS, UnderlyingAgreementReviewDecision.builder().build()
+        );
+        final Map<String, UnderlyingAgreementVariationFacilityReviewDecision> facilityGroups = Map.of(
+                "facilityId", UnderlyingAgreementVariationFacilityReviewDecision.builder().build()
+        );
+        final UnderlyingAgreementVariationPayload unav = UnderlyingAgreementVariationPayload
                 .builder()
                 .underlyingAgreementVariationDetails(UnderlyingAgreementVariationDetails.builder()
                         .modifications(List.of(UnderlyingAgreementVariationModificationType.ADD_ONE_OR_MORE_FACILITIES_TO_AGREEMENT))
@@ -66,12 +70,20 @@ public class UnderlyingAgreementVariationSubmitServiceTest {
                         .targetPeriod5Details(TargetPeriod5Details.builder().exist(false).build())
                         .build())
                 .build();
-        UnderlyingAgreementVariationSubmitRequestTaskPayload requestTaskPayload = UnderlyingAgreementVariationSubmitRequestTaskPayload.builder()
+        final UnderlyingAgreementVariationSubmitRequestTaskPayload requestTaskPayload = UnderlyingAgreementVariationSubmitRequestTaskPayload.builder()
                 .underlyingAgreement(unav)
                 .sectionsCompleted(Map.of("section1", "completed"))
                 .underlyingAgreementAttachments(Map.of(att1UUID, "att1"))
+                .reviewGroupDecisions(reviewGroups)
+                .facilitiesReviewGroupDecisions(facilityGroups)
+                .reviewSectionsCompleted(reviewSectionsCompleted)
                 .build();
-        RequestTask requestTask = RequestTask.builder()
+
+        Request request = Request.builder()
+                .id("1")
+                .payload(UnderlyingAgreementVariationRequestPayload.builder().build())
+                .build();
+        final RequestTask requestTask = RequestTask.builder()
                 .request(request)
                 .payload(requestTaskPayload)
                 .build();
@@ -85,7 +97,9 @@ public class UnderlyingAgreementVariationSubmitServiceTest {
         assertThat(requestPayload.getUnderlyingAgreement()).isEqualTo(unav);
         assertThat(requestPayload.getSectionsCompleted()).containsExactlyInAnyOrderEntriesOf(Map.of("section1", "completed"));
         assertThat(requestPayload.getUnderlyingAgreementAttachments()).containsExactlyInAnyOrderEntriesOf(Map.of(att1UUID, "att1"));
-
+        assertThat(requestPayload.getReviewGroupDecisions()).isEqualTo(reviewGroups);
+        assertThat(requestPayload.getFacilitiesReviewGroupDecisions()).isEqualTo(facilityGroups);
+        assertThat(requestPayload.getReviewSectionsCompleted()).isEqualTo(reviewSectionsCompleted);
 
         UnderlyingAgreementVariationSubmittedRequestActionPayload actionPayload = Mappers
                 .getMapper(UnderlyingAgreementVariationSubmitMapper.class).toUnderlyingAgreementVariationSubmittedRequestActionPayload(

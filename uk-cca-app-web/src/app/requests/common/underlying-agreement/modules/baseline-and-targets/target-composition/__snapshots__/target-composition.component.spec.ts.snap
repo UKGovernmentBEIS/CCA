@@ -14,7 +14,7 @@ exports[`TargetCompositionComponent should correctly render fields: initial-fiel
       novalidate=""
     >
       
-      <cca-page-heading>
+      <netz-page-heading>
         <span
           class="govuk-caption-l"
         >
@@ -26,7 +26,7 @@ exports[`TargetCompositionComponent should correctly render fields: initial-fiel
         >
           Add target composition
         </h1>
-      </cca-page-heading>
+      </netz-page-heading>
       <div
         class="govuk-body govuk-!-margin-top-9 govuk-!-width-two-thirds"
       >
@@ -44,7 +44,7 @@ exports[`TargetCompositionComponent should correctly render fields: initial-fiel
             label="Upload the completed target calculator file."
           >
             <div
-              class="moj-multi-file-upload moj-multi-file-upload--enhanced"
+              class="cca-multi-file-upload cca-multi-file-upload--enhanced"
             >
               <label
                 class="govuk-label"
@@ -74,15 +74,15 @@ exports[`TargetCompositionComponent should correctly render fields: initial-fiel
               />
               <cca-file-upload-list>
                 <div
-                  class="moj-multi-file__uploaded-files moj-hidden"
+                  class="cca-multi-file__uploaded-files govuk-body cca-hidden"
                 >
                   
+                  
                   <dl
-                    class="govuk-summary-list moj-multi-file-upload__list"
+                    class="govuk-summary-list cca-multi-file-upload__list"
                   >
                     
                   </dl>
-                  
                   
                   
                   
@@ -118,12 +118,12 @@ exports[`TargetCompositionComponent should correctly render fields: initial-fiel
             </label>
             
             
+            
             <p
               class="govuk-body"
             >
                Energy (kWh) 
             </p>
-            
             
             
             
@@ -341,9 +341,9 @@ exports[`TargetCompositionComponent should correctly render fields: initial-fiel
         
       </div>
       <button
-        ccapendingbutton=""
         class="govuk-button"
         govukbutton=""
+        netzpendingbutton=""
         type="submit"
       >
         Continue
@@ -357,7 +357,6 @@ exports[`TargetCompositionComponent should correctly render fields: initial-fiel
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >
@@ -377,11 +376,11 @@ exports[`TargetCompositionComponent should not render measure fields isMeasured 
     heading="Add target composition"
   >
     <form
-      class="ng-untouched ng-pristine ng-invalid"
+      class="ng-invalid ng-dirty ng-touched"
       novalidate=""
     >
       
-      <cca-page-heading>
+      <netz-page-heading>
         <span
           class="govuk-caption-l"
         >
@@ -393,7 +392,7 @@ exports[`TargetCompositionComponent should not render measure fields isMeasured 
         >
           Add target composition
         </h1>
-      </cca-page-heading>
+      </netz-page-heading>
       <div
         class="govuk-body govuk-!-margin-top-9 govuk-!-width-two-thirds"
       >
@@ -411,7 +410,7 @@ exports[`TargetCompositionComponent should not render measure fields isMeasured 
             label="Upload the completed target calculator file."
           >
             <div
-              class="moj-multi-file-upload moj-multi-file-upload--enhanced"
+              class="cca-multi-file-upload cca-multi-file-upload--enhanced"
             >
               <label
                 class="govuk-label"
@@ -441,15 +440,15 @@ exports[`TargetCompositionComponent should not render measure fields isMeasured 
               />
               <cca-file-upload-list>
                 <div
-                  class="moj-multi-file__uploaded-files moj-hidden"
+                  class="cca-multi-file__uploaded-files govuk-body cca-hidden"
                 >
                   
+                  
                   <dl
-                    class="govuk-summary-list moj-multi-file-upload__list"
+                    class="govuk-summary-list cca-multi-file-upload__list"
                   >
                     
                   </dl>
-                  
                   
                   
                   
@@ -485,12 +484,12 @@ exports[`TargetCompositionComponent should not render measure fields isMeasured 
             </label>
             
             
+            
             <p
               class="govuk-body"
             >
                Energy (kWh) 
             </p>
-            
             
             
             
@@ -728,12 +727,12 @@ exports[`TargetCompositionComponent should not render measure fields isMeasured 
             </label>
             
             
+            
             <p
               class="govuk-body"
             >
                tonne 
             </p>
-            
             
             
             
@@ -832,9 +831,9 @@ exports[`TargetCompositionComponent should not render measure fields isMeasured 
         
       </div>
       <button
-        ccapendingbutton=""
         class="govuk-button"
         govukbutton=""
+        netzpendingbutton=""
         type="submit"
       >
         Continue
@@ -848,7 +847,6 @@ exports[`TargetCompositionComponent should not render measure fields isMeasured 
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >
@@ -868,11 +866,11 @@ exports[`TargetCompositionComponent should not render throughput if NOVEM is sel
     heading="Add target composition"
   >
     <form
-      class="ng-untouched ng-pristine ng-invalid"
+      class="ng-untouched ng-invalid ng-dirty"
       novalidate=""
     >
       
-      <cca-page-heading>
+      <netz-page-heading>
         <span
           class="govuk-caption-l"
         >
@@ -884,7 +882,7 @@ exports[`TargetCompositionComponent should not render throughput if NOVEM is sel
         >
           Add target composition
         </h1>
-      </cca-page-heading>
+      </netz-page-heading>
       <div
         class="govuk-body govuk-!-margin-top-9 govuk-!-width-two-thirds"
       >
@@ -902,7 +900,7 @@ exports[`TargetCompositionComponent should not render throughput if NOVEM is sel
             label="Upload the completed target calculator file."
           >
             <div
-              class="moj-multi-file-upload moj-multi-file-upload--enhanced"
+              class="cca-multi-file-upload cca-multi-file-upload--enhanced"
             >
               <label
                 class="govuk-label"
@@ -932,15 +930,15 @@ exports[`TargetCompositionComponent should not render throughput if NOVEM is sel
               />
               <cca-file-upload-list>
                 <div
-                  class="moj-multi-file__uploaded-files moj-hidden"
+                  class="cca-multi-file__uploaded-files govuk-body cca-hidden"
                 >
                   
+                  
                   <dl
-                    class="govuk-summary-list moj-multi-file-upload__list"
+                    class="govuk-summary-list cca-multi-file-upload__list"
                   >
                     
                   </dl>
-                  
                   
                   
                   
@@ -976,12 +974,12 @@ exports[`TargetCompositionComponent should not render throughput if NOVEM is sel
             </label>
             
             
+            
             <p
               class="govuk-body"
             >
                Energy (kWh) 
             </p>
-            
             
             
             
@@ -1199,9 +1197,9 @@ exports[`TargetCompositionComponent should not render throughput if NOVEM is sel
         
       </div>
       <button
-        ccapendingbutton=""
         class="govuk-button"
         govukbutton=""
+        netzpendingbutton=""
         type="submit"
       >
         Continue
@@ -1215,7 +1213,6 @@ exports[`TargetCompositionComponent should not render throughput if NOVEM is sel
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >
@@ -1235,11 +1232,11 @@ exports[`TargetCompositionComponent should render measure fields isMeasured is t
     heading="Add target composition"
   >
     <form
-      class="ng-untouched ng-pristine ng-invalid"
+      class="ng-invalid ng-dirty ng-touched"
       novalidate=""
     >
       
-      <cca-page-heading>
+      <netz-page-heading>
         <span
           class="govuk-caption-l"
         >
@@ -1251,7 +1248,7 @@ exports[`TargetCompositionComponent should render measure fields isMeasured is t
         >
           Add target composition
         </h1>
-      </cca-page-heading>
+      </netz-page-heading>
       <div
         class="govuk-body govuk-!-margin-top-9 govuk-!-width-two-thirds"
       >
@@ -1269,7 +1266,7 @@ exports[`TargetCompositionComponent should render measure fields isMeasured is t
             label="Upload the completed target calculator file."
           >
             <div
-              class="moj-multi-file-upload moj-multi-file-upload--enhanced"
+              class="cca-multi-file-upload cca-multi-file-upload--enhanced"
             >
               <label
                 class="govuk-label"
@@ -1299,15 +1296,15 @@ exports[`TargetCompositionComponent should render measure fields isMeasured is t
               />
               <cca-file-upload-list>
                 <div
-                  class="moj-multi-file__uploaded-files moj-hidden"
+                  class="cca-multi-file__uploaded-files govuk-body cca-hidden"
                 >
                   
+                  
                   <dl
-                    class="govuk-summary-list moj-multi-file-upload__list"
+                    class="govuk-summary-list cca-multi-file-upload__list"
                   >
                     
                   </dl>
-                  
                   
                   
                   
@@ -1343,12 +1340,12 @@ exports[`TargetCompositionComponent should render measure fields isMeasured is t
             </label>
             
             
+            
             <p
               class="govuk-body"
             >
                Energy (kWh) 
             </p>
-            
             
             
             
@@ -1586,12 +1583,12 @@ exports[`TargetCompositionComponent should render measure fields isMeasured is t
             </label>
             
             
+            
             <p
               class="govuk-body"
             >
                tonne 
             </p>
-            
             
             
             
@@ -1759,10 +1756,10 @@ exports[`TargetCompositionComponent should render measure fields isMeasured is t
               widthclass="govuk-!-width-two-thirds"
             >
               <div
-                class="moj-multi-file-upload moj-multi-file-upload--enhanced"
+                class="cca-multi-file-upload cca-multi-file-upload--enhanced"
               >
                 <div
-                  class="moj-multi-file-upload__upload"
+                  class="cca-multi-file-upload__upload"
                 >
                   <div
                     class="govuk-form-group"
@@ -1774,6 +1771,7 @@ exports[`TargetCompositionComponent should render measure fields isMeasured is t
                     >
                       Upload evidence
                     </label>
+                    
                     <span
                       class="govuk-hint"
                       id="conversionEvidences-hint"
@@ -1782,14 +1780,13 @@ exports[`TargetCompositionComponent should render measure fields isMeasured is t
                     </span>
                     
                     
-                    
                     <div
-                      class="moj-multi-file-upload__dropzone govuk-!-margin-top-4"
+                      class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
                     >
                       <input
                         accept="*/*"
                         aria-labelledby="l.conversionEvidences ld.conversionEvidences"
-                        class="govuk-file-upload moj-multi-file-upload__input"
+                        class="govuk-file-upload cca-multi-file-upload__input"
                         id="conversionEvidences"
                         multiple=""
                         name="conversionEvidences"
@@ -1819,15 +1816,15 @@ exports[`TargetCompositionComponent should render measure fields isMeasured is t
                 </div>
                 <cca-file-upload-list>
                   <div
-                    class="moj-multi-file__uploaded-files moj-hidden"
+                    class="cca-multi-file__uploaded-files govuk-body cca-hidden"
                   >
                     
+                    
                     <dl
-                      class="govuk-summary-list moj-multi-file-upload__list"
+                      class="govuk-summary-list cca-multi-file-upload__list"
                     >
                       
                     </dl>
-                    
                     
                     
                     
@@ -1846,9 +1843,9 @@ exports[`TargetCompositionComponent should render measure fields isMeasured is t
         
       </div>
       <button
-        ccapendingbutton=""
         class="govuk-button"
         govukbutton=""
+        netzpendingbutton=""
         type="submit"
       >
         Continue
@@ -1862,7 +1859,6 @@ exports[`TargetCompositionComponent should render measure fields isMeasured is t
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >
@@ -1882,11 +1878,11 @@ exports[`TargetCompositionComponent should render throughput if ABSOLUTE or RELA
     heading="Add target composition"
   >
     <form
-      class="ng-untouched ng-pristine ng-invalid"
+      class="ng-untouched ng-invalid ng-dirty"
       novalidate=""
     >
       
-      <cca-page-heading>
+      <netz-page-heading>
         <span
           class="govuk-caption-l"
         >
@@ -1898,7 +1894,7 @@ exports[`TargetCompositionComponent should render throughput if ABSOLUTE or RELA
         >
           Add target composition
         </h1>
-      </cca-page-heading>
+      </netz-page-heading>
       <div
         class="govuk-body govuk-!-margin-top-9 govuk-!-width-two-thirds"
       >
@@ -1916,7 +1912,7 @@ exports[`TargetCompositionComponent should render throughput if ABSOLUTE or RELA
             label="Upload the completed target calculator file."
           >
             <div
-              class="moj-multi-file-upload moj-multi-file-upload--enhanced"
+              class="cca-multi-file-upload cca-multi-file-upload--enhanced"
             >
               <label
                 class="govuk-label"
@@ -1946,15 +1942,15 @@ exports[`TargetCompositionComponent should render throughput if ABSOLUTE or RELA
               />
               <cca-file-upload-list>
                 <div
-                  class="moj-multi-file__uploaded-files moj-hidden"
+                  class="cca-multi-file__uploaded-files govuk-body cca-hidden"
                 >
                   
+                  
                   <dl
-                    class="govuk-summary-list moj-multi-file-upload__list"
+                    class="govuk-summary-list cca-multi-file-upload__list"
                   >
                     
                   </dl>
-                  
                   
                   
                   
@@ -1990,12 +1986,12 @@ exports[`TargetCompositionComponent should render throughput if ABSOLUTE or RELA
             </label>
             
             
+            
             <p
               class="govuk-body"
             >
                Energy (kWh) 
             </p>
-            
             
             
             
@@ -2233,12 +2229,12 @@ exports[`TargetCompositionComponent should render throughput if ABSOLUTE or RELA
             </label>
             
             
+            
             <p
               class="govuk-body"
             >
                tonne 
             </p>
-            
             
             
             
@@ -2337,9 +2333,9 @@ exports[`TargetCompositionComponent should render throughput if ABSOLUTE or RELA
         
       </div>
       <button
-        ccapendingbutton=""
         class="govuk-button"
         govukbutton=""
+        netzpendingbutton=""
         type="submit"
       >
         Continue
@@ -2353,7 +2349,6 @@ exports[`TargetCompositionComponent should render throughput if ABSOLUTE or RELA
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

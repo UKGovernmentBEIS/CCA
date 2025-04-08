@@ -15,13 +15,16 @@ import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.Admin
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionReasonDetails;
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.WorkflowService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestType;
 import uk.gov.netz.api.workflow.request.core.domain.constants.RequestStatuses;
 import uk.gov.netz.api.workflow.request.core.service.RequestQueryService;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,18 +43,22 @@ class AdminTerminationFinalisedServiceTest {
 
     @Mock
     private RequestService requestService;
+    
     @InjectMocks
     private AdminTerminationFinalisedService finalisedService;
 
     @Mock
     private TargetUnitAccountUpdateService targetUnitAccountUpdateService;
+    
     @Mock
     private RequestQueryService requestQueryService;
+   
     @Mock
     private FacilityDataUpdateService facilityDataUpdateService;
 
     @Mock
     private WorkflowService workflowService;
+    
     private static final String TERMINATE_REASON = "Workflow terminated by the system because the final decision is \"Terminate agreement\"";
 
 
@@ -80,7 +87,6 @@ class AdminTerminationFinalisedServiceTest {
 
         final Request request = Request.builder()
                 .id(requestId)
-                .accountId(accountId)
                 .processInstanceId(processInstanceId)
                 .payload(AdminTerminationRequestPayload.builder()
                         .regulatorAssignee(regulator)
@@ -93,6 +99,7 @@ class AdminTerminationFinalisedServiceTest {
                         .build())
                 .status(RequestStatuses.IN_PROGRESS)
                 .build();
+        addResourcesToRequest(accountId, request);
         account.setId(accountId);
 
         // Mock the requestService
@@ -101,7 +108,6 @@ class AdminTerminationFinalisedServiceTest {
         // Mock the requestQueryService to include the created request
         Request anotherRequest = Request.builder()
                 .id("anotherRequestId")
-                .accountId(accountId)
                 .processInstanceId("anotherProcessInstanceId")
                 .payload(AdminTerminationRequestPayload.builder()
                         .regulatorAssignee(regulator)
@@ -112,6 +118,7 @@ class AdminTerminationFinalisedServiceTest {
                 .type(RequestType.builder().code("OTHER_TYPE").build())
                 .status(RequestStatuses.IN_PROGRESS)
                 .build();
+        addResourcesToRequest(accountId, anotherRequest);
 
         when(requestQueryService.findInProgressRequestsByAccount(accountId)).thenReturn(List.of(request, anotherRequest));
 
@@ -120,7 +127,7 @@ class AdminTerminationFinalisedServiceTest {
 
         // Verify the interactions
         verify(requestService, times(1)).findRequestById(requestId);
-        verify(targetUnitAccountUpdateService, times(1)).handleTargetUnitAccountTerminated(accountId);
+        verify(targetUnitAccountUpdateService, times(1)).handleTargetUnitAccountTerminated(eq(accountId), any(LocalDateTime.class));
         verify(workflowService, times(1)).deleteProcessInstance("anotherProcessInstanceId", TERMINATE_REASON);
         verify(requestService, times(1)).addActionToRequest(eq(anotherRequest), any(), eq(CcaRequestActionType.REQUEST_TERMINATED), eq(regulator));
 
@@ -128,8 +135,18 @@ class AdminTerminationFinalisedServiceTest {
         verify(requestService, never()).addActionToRequest(eq(request), any(), eq(CcaRequestActionType.REQUEST_TERMINATED), eq(regulator));
         verify(workflowService, never()).deleteProcessInstance(processInstanceId, TERMINATE_REASON);
 
-        verify(facilityDataUpdateService, times(1)).terminateFacilities(accountId);
+        verify(facilityDataUpdateService, times(1)).terminateFacilities(eq(accountId), any(LocalDateTime.class));
         verifyNoMoreInteractions(requestService, targetUnitAccountUpdateService, requestQueryService, workflowService);
 
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

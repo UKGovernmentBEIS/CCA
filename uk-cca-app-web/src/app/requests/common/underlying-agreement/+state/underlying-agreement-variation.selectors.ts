@@ -29,36 +29,38 @@ const selectOriginalUnderlyingAgreementContainer: StateSelector<RequestTaskState
 
 const selectOriginalFacility = (facilityId: string): StateSelector<RequestTaskState, Facility> => {
   return createDescendingSelector(selectOriginalUnderlyingAgreementContainer, (originalDataContainer) =>
-    originalDataContainer.underlyingAgreement.facilities
-      ? originalDataContainer.underlyingAgreement.facilities.find((f) => f.facilityId === facilityId)
+    originalDataContainer?.underlyingAgreement.facilities
+      ? originalDataContainer?.underlyingAgreement.facilities.find((f) => f.facilityId === facilityId)
       : null,
   );
 };
 
-const selectOriginalUnderlyingAgreementAttachments: StateSelector<RequestTaskState, { [key: string]: string }> =
-  createDescendingSelector(
-    selectOriginalUnderlyingAgreementContainer,
-    (originalDataContainer) => originalDataContainer.underlyingAgreementAttachments,
-  );
+const selectOriginalUnderlyingAgreementAttachments: StateSelector<
+  RequestTaskState,
+  Record<string, string>
+> = createDescendingSelector(
+  selectOriginalUnderlyingAgreementContainer,
+  (originalDataContainer) => originalDataContainer?.underlyingAgreementAttachments,
+);
 
 const selectOriginalAuthorisationAndAdditionalEvidence: StateSelector<
   RequestTaskState,
   AuthorisationAndAdditionalEvidence
 > = createDescendingSelector(
   selectOriginalUnderlyingAgreementContainer,
-  (originalDataContainer) => originalDataContainer.underlyingAgreement.authorisationAndAdditionalEvidence,
+  (originalDataContainer) => originalDataContainer?.underlyingAgreement.authorisationAndAdditionalEvidence,
 );
 
 const selectOriginalBaselineExists: StateSelector<RequestTaskState, boolean> = createDescendingSelector(
   selectOriginalUnderlyingAgreementContainer,
-  (originalDataContainer) => originalDataContainer.underlyingAgreement.targetPeriod5Details.exist,
+  (originalDataContainer) => originalDataContainer?.underlyingAgreement.targetPeriod5Details.exist,
 );
 
 const selectOriginalTargetPeriodDetails = (isTP5: boolean) =>
   createDescendingSelector(selectOriginalUnderlyingAgreementContainer, (originalDataContainer) =>
     isTP5
-      ? originalDataContainer.underlyingAgreement.targetPeriod5Details.details
-      : originalDataContainer.underlyingAgreement.targetPeriod6Details,
+      ? originalDataContainer?.underlyingAgreement.targetPeriod5Details.details
+      : originalDataContainer?.underlyingAgreement.targetPeriod6Details,
   );
 
 export const underlyingAgreementVariationQuery = {

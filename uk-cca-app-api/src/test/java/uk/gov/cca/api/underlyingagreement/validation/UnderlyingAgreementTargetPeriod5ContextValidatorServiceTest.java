@@ -10,7 +10,7 @@ import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.common.domain.MeasurementType;
-import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.AgreementCompositionType;
+import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.BaselineData;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetComposition;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod5Details;

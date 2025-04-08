@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
-import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.AgreementCompositionType;
+import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetComposition;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod5Details;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod6Details;

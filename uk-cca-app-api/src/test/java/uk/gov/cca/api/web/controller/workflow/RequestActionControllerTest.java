@@ -104,7 +104,7 @@ class RequestActionControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "getRequestActionById", String.valueOf(requestActionId));
+                .authorize(user, "getRequestActionById", String.valueOf(requestActionId), null, null);
 
         mockMvc.perform(
                     MockMvcRequestBuilders.get(BASE_PATH + "/" + requestActionId)
@@ -138,7 +138,7 @@ class RequestActionControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(appUser, "getRequestActionsByRequestId", "2");
+                .authorize(appUser, "getRequestActionsByRequestId", "2", null, null);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(BASE_PATH)

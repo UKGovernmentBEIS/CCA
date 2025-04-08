@@ -17,21 +17,24 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
+import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaReviewDecisionType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementFacilityReviewDecision;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementPayload;
-import uk.gov.cca.api.workflow.request.flow.common.domain.review.UnderlyingAgreementReviewDecision;
-import uk.gov.cca.api.workflow.request.flow.common.domain.review.UnderlyingAgreementReviewDecisionDetails;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementReviewGroup;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.DeterminationType;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.UnderlyingAgreementReviewDecision;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.UnderlyingAgreementReviewDecisionDetails;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementFacilityReviewDecision;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementReviewGroup;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementReviewRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementReviewSavePayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementSaveFacilityReviewGroupDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementSaveReviewDeterminationRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementSaveReviewGroupDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementSaveReviewRequestTaskActionPayload;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
@@ -47,7 +50,6 @@ class UnderlyingAgreementReviewServiceTest {
 
     @InjectMocks
     private UnderlyingAgreementReviewService service;
-
 
     @Test
     void saveUnderlyingAgreement() {
@@ -75,6 +77,10 @@ class UnderlyingAgreementReviewServiceTest {
                                 .underlyingAgreementTargetUnitDetails(UnderlyingAgreementTargetUnitDetails.builder().build())
                                 .underlyingAgreement(UnderlyingAgreement.builder().build())
                                 .build())
+                        .determination(Determination.builder()
+                                .type(DeterminationType.ACCEPTED)
+                                .additionalInformation("info")
+                                .build())
                         .build();
 
         RequestTask requestTask = RequestTask.builder().payload(reviewRequestTaskPayload).build();
@@ -91,6 +97,7 @@ class UnderlyingAgreementReviewServiceTest {
                                 .authorisationAndAdditionalEvidence(evidence)
                                 .build())
                         .sectionsCompleted(Map.of(UnderlyingAgreementTargetUnitDetails.class.getName(), "COMPLETED"))
+                        .determination(Determination.builder().type(DeterminationType.ACCEPTED).reason("Reason etc").additionalInformation("info").build())
                         .reviewSectionsCompleted(Map.of(UnderlyingAgreementTargetUnitDetails.class.getName(), "COMPLETED"))
                         .build();
 
@@ -122,6 +129,7 @@ class UnderlyingAgreementReviewServiceTest {
                 .containsExactlyInAnyOrderEntriesOf(reviewRequestTaskActionPayload.getSectionsCompleted());
         assertThat(payloadSaved.getReviewSectionsCompleted())
                 .containsExactlyInAnyOrderEntriesOf(reviewRequestTaskActionPayload.getReviewSectionsCompleted());
+        assertThat(payloadSaved.getDetermination().getAdditionalInformation()).isEqualTo("info");
     }
 
     @Test
@@ -156,8 +164,10 @@ class UnderlyingAgreementReviewServiceTest {
                                 .build())
                         .build();
 
+        // Invoke
         service.saveReviewGroupDecision(payload, requestTask);
 
+        // Verify
         assertThat(requestTask.getPayload()).isInstanceOf(UnderlyingAgreementReviewRequestTaskPayload.class);
 
         final UnderlyingAgreementReviewRequestTaskPayload
@@ -206,8 +216,10 @@ class UnderlyingAgreementReviewServiceTest {
                                 .build())
                         .build();
 
+        // Invoke
         service.saveFacilityReviewGroupDecision(payload, requestTask);
 
+        // Verify
         assertThat(requestTask.getPayload()).isInstanceOf(UnderlyingAgreementReviewRequestTaskPayload.class);
 
         final UnderlyingAgreementReviewRequestTaskPayload
@@ -216,7 +228,6 @@ class UnderlyingAgreementReviewServiceTest {
         assertThat(payloadSaved.getFacilitiesReviewGroupDecisions()).containsEntry("ADS-F00064", decision);
         assertThat(payloadSaved.getReviewSectionsCompleted())
                 .containsExactlyInAnyOrderEntriesOf(payload.getReviewSectionsCompleted());
-        assertThat(taskPayload.getDetermination()).isNull();
     }
 
     @Test
@@ -260,5 +271,40 @@ class UnderlyingAgreementReviewServiceTest {
                 .isEqualTo(reviewSaveDeterminationPayload.getDetermination().getAdditionalInformation());
         assertThat(payloadSaved.getDetermination().getFiles())
                 .isEqualTo(reviewSaveDeterminationPayload.getDetermination().getFiles());
+    }
+
+    @Test
+    void notifyOperator() {
+        final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
+                .sectorUsers(Set.of("sector"))
+                .build();
+        final AppUser appUser = AppUser.builder().userId("userId").build();
+        final UnderlyingAgreementReviewRequestTaskPayload reviewRequestTaskPayload =
+                UnderlyingAgreementReviewRequestTaskPayload
+                        .builder()
+                        .payloadType(CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW_PAYLOAD)
+                        .reviewSectionsCompleted(Map.of(UnderlyingAgreementTargetUnitDetails.class.getName(), "COMPLETED"))
+                        .build();
+        final UnderlyingAgreementRequestPayload requestPayload = UnderlyingAgreementRequestPayload.builder()
+                .payloadType(CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW_PAYLOAD)
+                .build();
+        final RequestTask requestTask = RequestTask.builder()
+                .payload(reviewRequestTaskPayload)
+                .request(Request.builder().payload(requestPayload).build())
+                .build();
+
+        service.notifyOperator(requestTask, decisionNotification, appUser);
+
+        UnderlyingAgreementRequestPayload actual = (UnderlyingAgreementRequestPayload) requestTask.getRequest().getPayload();
+        assertThat(actual.getRegulatorReviewer()).isEqualTo(appUser.getUserId());
+        assertThat(actual.getSectionsCompleted()).isEqualTo(reviewRequestTaskPayload.getSectionsCompleted());
+        assertThat(actual.getDecisionNotification()).isEqualTo(decisionNotification);
+        assertThat(actual.getUnderlyingAgreement()).isEqualTo(reviewRequestTaskPayload.getUnderlyingAgreement());
+        assertThat(actual.getUnderlyingAgreementAttachments()).isEqualTo(reviewRequestTaskPayload.getUnderlyingAgreementAttachments());
+        assertThat(actual.getReviewSectionsCompleted()).isEqualTo(reviewRequestTaskPayload.getReviewSectionsCompleted());
+        assertThat(actual.getReviewGroupDecisions()).isEqualTo(reviewRequestTaskPayload.getReviewGroupDecisions());
+        assertThat(actual.getFacilitiesReviewGroupDecisions()).isEqualTo(reviewRequestTaskPayload.getFacilitiesReviewGroupDecisions());
+        assertThat(actual.getReviewAttachments()).isEqualTo(reviewRequestTaskPayload.getReviewAttachments());
+        assertThat(actual.getDetermination()).isEqualTo(reviewRequestTaskPayload.getDetermination());
     }
 }

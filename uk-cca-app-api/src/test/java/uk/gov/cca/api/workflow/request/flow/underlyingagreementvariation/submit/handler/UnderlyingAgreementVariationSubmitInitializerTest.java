@@ -11,21 +11,32 @@ import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationDetails;
 import uk.gov.cca.api.workflow.request.core.domain.TargetUnitAccountDetails;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
+import uk.gov.cca.api.workflow.request.flow.common.domain.CcaReviewDecisionType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitResponsiblePerson;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.UnderlyingAgreementReviewDecision;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationFacilityReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationReviewGroup;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSubmitRequestTaskPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
@@ -44,16 +55,26 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
     @Test
     void initializePayload() {
         final Long accountId = 1L;
+        final String facilityId = "facilityId";
+        final UnderlyingAgreementContainer originalData = UnderlyingAgreementContainer.builder()
+                .underlyingAgreement(UnderlyingAgreement.builder()
+                        .facilities(Set.of(
+                                Facility.builder()
+                                        .status(FacilityStatus.LIVE)
+                                        .facilityItem(FacilityItem.builder()
+                                                .facilityId(facilityId)
+                                                .build())
+                                        .build()))
+                        .build())
+                .underlyingAgreementAttachments(new HashMap<>())
+                .build();
         final Request request = Request.builder()
                 .id("ADS_53-T00037-VAR-1")
-                .accountId(accountId)
                 .payload(UnderlyingAgreementVariationRequestPayload.builder()
-                        .originalUnderlyingAgreementContainer(UnderlyingAgreementContainer.builder()
-                                .underlyingAgreement(UnderlyingAgreement.builder().build())
-                                .underlyingAgreementAttachments(new HashMap<>())
-                                .build())
+                        .originalUnderlyingAgreementContainer(originalData)
                         .build())
                 .build();
+        addResourcesToRequest(accountId, request);
 
         final TargetUnitAccountContactDTO responsiblePerson = TargetUnitAccountContactDTO.builder()
                 .email("xx@test.gr")
@@ -97,6 +118,9 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
 
         final UnderlyingAgreementVariationRequestPayload requestPayload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();
 
+        final UnderlyingAgreementReviewDecision reviewDecision = UnderlyingAgreementReviewDecision.builder()
+                .type(CcaReviewDecisionType.ACCEPTED)
+                .build();
         final UnderlyingAgreementVariationSubmitRequestTaskPayload expected =
                 UnderlyingAgreementVariationSubmitRequestTaskPayload.builder()
                         .payloadType(CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_SUBMIT_PAYLOAD)
@@ -118,11 +142,20 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
                                 .underlyingAgreement(requestPayload.getOriginalUnderlyingAgreementContainer().getUnderlyingAgreement())
                                 .build())
                         .accountReferenceData(data)
-                        .originalUnderlyingAgreementContainer(UnderlyingAgreementContainer.builder()
-                                .underlyingAgreement(UnderlyingAgreement.builder().build())
-                                .underlyingAgreementAttachments(new HashMap<>())
-                                .build())
+                        .originalUnderlyingAgreementContainer(originalData)
                         .underlyingAgreementAttachments(requestPayload.getOriginalUnderlyingAgreementContainer().getUnderlyingAgreementAttachments())
+                        .reviewGroupDecisions(Map.of(
+                                UnderlyingAgreementVariationReviewGroup.TARGET_UNIT_DETAILS, reviewDecision,
+                                UnderlyingAgreementVariationReviewGroup.TARGET_PERIOD5_DETAILS, reviewDecision,
+                                UnderlyingAgreementVariationReviewGroup.TARGET_PERIOD6_DETAILS, reviewDecision,
+                                UnderlyingAgreementVariationReviewGroup.AUTHORISATION_AND_ADDITIONAL_EVIDENCE, reviewDecision
+                        ))
+                        .facilitiesReviewGroupDecisions(Map.of(
+                                "facilityId", UnderlyingAgreementVariationFacilityReviewDecision.builder()
+                                        .facilityStatus(FacilityStatus.LIVE)
+                                        .type(CcaReviewDecisionType.ACCEPTED)
+                                        .build()
+                        ))
                         .build();
 
         when(accountReferenceDetailsService.getAccountReferenceData(accountId)).thenReturn(data);
@@ -142,5 +175,14 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
                 .containsExactly(CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_SUBMIT);
     }
 
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 
 }

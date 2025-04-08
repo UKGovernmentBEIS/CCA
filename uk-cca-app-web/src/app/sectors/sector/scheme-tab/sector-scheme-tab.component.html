@@ -5,7 +5,7 @@
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Current umbrella agreement</dt>
       <dd govukSummaryListRowValue>
-        <a [routerLink]="['sector-documents', scheme.umbrellaAgreement.uuid]" govukLink target="_blank">
+        <a [routerLink]="['sector-documents', scheme.umbrellaAgreement.uuid]" class="govuk-link" target="_blank">
           {{ scheme.umbrellaAgreement.fileName }} ({{ scheme.umbrellaAgreement.fileType }},
           {{ scheme.umbrellaAgreement.fileSize }}KB)
         </a>
@@ -68,7 +68,7 @@
     <govuk-table [columns]="subsectorsColumns" [data]="subSectors()" (sort)="sortBy($event)">
       <ng-template let-column="column" let-index="index" let-row="row">
         @if (column.field === 'name') {
-          <a [routerLink]="'subsector/' + row.id" govukLink>{{ row['subsectorAssociation'][column.field] }}</a>
+          <a [routerLink]="'subsector/' + row.id" class="govuk-link">{{ row['subsectorAssociation'][column.field] }}</a>
         }
       </ng-template>
     </govuk-table>

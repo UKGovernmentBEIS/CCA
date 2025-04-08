@@ -9,15 +9,21 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AccountReferenceData } from './accountReferenceData';
-import { UnderlyingAgreementContainer } from './underlyingAgreementContainer';
 import { UnderlyingAgreementVariationPayload } from './underlyingAgreementVariationPayload';
+import { AccountReferenceData } from './accountReferenceData';
+import { UnderlyingAgreementReviewDecision } from './underlyingAgreementReviewDecision';
+import { UnderlyingAgreementVariationFacilityReviewDecision } from './underlyingAgreementVariationFacilityReviewDecision';
+import { UnderlyingAgreementContainer } from './underlyingAgreementContainer';
 
 export interface UnderlyingAgreementVariationSubmitRequestTaskPayload {
   payloadType?: string;
+  sendEmailNotification?: boolean;
   accountReferenceData?: AccountReferenceData;
   originalUnderlyingAgreementContainer?: UnderlyingAgreementContainer;
   underlyingAgreement?: UnderlyingAgreementVariationPayload;
-  sectionsCompleted?: { [key: string]: string };
-  underlyingAgreementAttachments?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
+  underlyingAgreementAttachments?: Record<string, string>;
+  reviewSectionsCompleted?: Record<string, string>;
+  reviewGroupDecisions?: Record<string, UnderlyingAgreementReviewDecision>;
+  facilitiesReviewGroupDecisions?: Record<string, UnderlyingAgreementVariationFacilityReviewDecision>;
 }

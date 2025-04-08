@@ -9,17 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { EmailDTO } from '../model/emailDTO';
 import { ResetPasswordDTO } from '../model/resetPasswordDTO';
 import { TokenDTO } from '../model/tokenDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -111,7 +111,7 @@ export class ForgotPasswordService {
   public resetPassword(
     resetPasswordDTO: ResetPasswordDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (resetPasswordDTO === null || resetPasswordDTO === undefined) {
@@ -152,7 +152,7 @@ export class ForgotPasswordService {
       `${this.configuration.basePath}/v1.0/users/forgot-password/reset-password`,
       resetPasswordDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -189,7 +189,7 @@ export class ForgotPasswordService {
   public sendResetPasswordEmail(
     emailDTO: EmailDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (emailDTO === null || emailDTO === undefined) {
@@ -230,7 +230,7 @@ export class ForgotPasswordService {
       `${this.configuration.basePath}/v1.0/users/forgot-password/reset-password-email`,
       emailDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -267,7 +267,7 @@ export class ForgotPasswordService {
   public verifyToken(
     tokenDTO: TokenDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (tokenDTO === null || tokenDTO === undefined) {
@@ -308,7 +308,7 @@ export class ForgotPasswordService {
       `${this.configuration.basePath}/v1.0/users/forgot-password/token-verification`,
       tokenDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

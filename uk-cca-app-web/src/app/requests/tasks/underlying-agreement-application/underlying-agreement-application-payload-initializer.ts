@@ -4,7 +4,7 @@ import {
   UNAApplicationRequestTaskPayload,
   UNARequestTaskPayload,
 } from '@requests/common';
-import produce from 'immer';
+import { produce } from 'immer';
 
 export function initializeUnderlyingAgreementSubmitPayload(
   currentPayload: UNAApplicationRequestTaskPayload,

@@ -9,17 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { NotificationTemplateDTO } from '../model/notificationTemplateDTO';
 import { NotificationTemplateSearchResults } from '../model/notificationTemplateSearchResults';
 import { NotificationTemplateUpdateDTO } from '../model/notificationTemplateUpdateDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -131,7 +131,7 @@ export class NotificationTemplatesService {
     size: number,
     term?: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (role === null || role === undefined) {
@@ -152,16 +152,16 @@ export class NotificationTemplatesService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (role !== undefined && role !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>role, 'role');
+      queryParameters = this.addToHttpParams(queryParameters, role as any, 'role');
     }
     if (term !== undefined && term !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>term, 'term');
+      queryParameters = this.addToHttpParams(queryParameters, term as any, 'term');
     }
     if (page !== undefined && page !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>page, 'page');
+      queryParameters = this.addToHttpParams(queryParameters, page as any, 'page');
     }
     if (size !== undefined && size !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>size, 'size');
+      queryParameters = this.addToHttpParams(queryParameters, size as any, 'size');
     }
 
     let headers = this.defaultHeaders;
@@ -191,7 +191,7 @@ export class NotificationTemplatesService {
       `${this.configuration.basePath}/v1.0/notification-templates`,
       {
         params: queryParameters,
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -228,7 +228,7 @@ export class NotificationTemplatesService {
   public getNotificationTemplateById(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -261,7 +261,7 @@ export class NotificationTemplatesService {
     return this.httpClient.get<NotificationTemplateDTO>(
       `${this.configuration.basePath}/v1.0/notification-templates/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -306,7 +306,7 @@ export class NotificationTemplatesService {
     id: number,
     notificationTemplateUpdateDTO: NotificationTemplateUpdateDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -352,7 +352,7 @@ export class NotificationTemplatesService {
       `${this.configuration.basePath}/v1.0/notification-templates/${encodeURIComponent(String(id))}`,
       notificationTemplateUpdateDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

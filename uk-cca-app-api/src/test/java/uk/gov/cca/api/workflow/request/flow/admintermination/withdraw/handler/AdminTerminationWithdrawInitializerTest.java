@@ -23,7 +23,6 @@ class AdminTerminationWithdrawInitializerTest {
     void initializePayload() {
         final Request request = Request.builder()
                 .id("UNA-ADS_1T00001")
-                .accountId(1L)
                 .build();
 
         final AdminTerminationWithdrawRequestTaskPayload expected =

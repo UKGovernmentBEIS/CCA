@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
 import uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType;
 import uk.gov.cca.api.user.operator.domain.CcaOperatorUserInvitationDTO;
 import uk.gov.cca.api.user.operator.transform.OperatorUserInvitationMapper;
@@ -24,7 +25,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
@@ -50,8 +54,11 @@ class CcaOperatorUserInvitationServiceTest {
     @Mock
     private OperatorUserInvitationMapper operatorUserInvitationMapper;
 
+    @Mock
+    private TargetUnitAccountQueryService targetUnitAccountQueryService;
+
     @Test
-    void inviteUserToSectorAssociationWhenUserAlreadyExists() {
+    void inviteUserToAccountWhenUserAlreadyExists() {
         String userId = "254cad93-d1f5-4951-bb0e-e9b0a1586844";
         String userRoleCode = "operator";
         String email = "email";
@@ -68,8 +75,9 @@ class CcaOperatorUserInvitationServiceTest {
         when(authUserService.getUserByEmail(ccaOperatorUserInvitationDTO.getEmail())).thenReturn(Optional.of(userInfoDTO));
         when(existingOperatorUserInvitationService.addExistingUserToTargetUnit(ccaOperatorUserInvitationDTO, accountId, userId, currentUser))
                 .thenReturn(authorityUuid);
+        when(targetUnitAccountQueryService.getAccountName(accountId)).thenReturn(accountName);
 
-        service.inviteUserToTargetUnit(accountId, accountName, ccaOperatorUserInvitationDTO, currentUser);
+        service.inviteUserToAccount(accountId, ccaOperatorUserInvitationDTO, currentUser);
 
         verify(authUserService, times(1)).getUserByEmail(email);
         verify(existingOperatorUserInvitationService, times(1))
@@ -80,7 +88,7 @@ class CcaOperatorUserInvitationServiceTest {
     }
 
     @Test
-    void inviteUserToTargetUnitWhenUserNotExists() {
+    void inviteUserToAccountWhenUserNotExists() {
         String userId = "254cad93-d1f5-4951-bb0e-e9b0a1586844";
         String userRoleCode = "operator";
         String email = "email";
@@ -96,8 +104,9 @@ class CcaOperatorUserInvitationServiceTest {
         when(authUserService.getUserByEmail(operatorUserInvitationDTO.getEmail())).thenReturn(Optional.empty());
         when(operatorUserRegistrationService.registerUserToAccountWithStatusPending(ccaOperatorUserInvitationDTO, accountId, currentUser))
                 .thenReturn(authorityUuid);
+        when(targetUnitAccountQueryService.getAccountName(accountId)).thenReturn(accountName);
 
-        service.inviteUserToTargetUnit(accountId, accountName, ccaOperatorUserInvitationDTO, currentUser);
+        service.inviteUserToAccount(accountId, ccaOperatorUserInvitationDTO, currentUser);
 
         verify(authUserService, times(1)).getUserByEmail(operatorUserInvitationDTO.getEmail());
         verify(operatorUserRegistrationService, times(1)).registerUserToAccountWithStatusPending(any(), anyLong(), any());
@@ -107,7 +116,7 @@ class CcaOperatorUserInvitationServiceTest {
     }
 
     @Test
-    void inviteUserToTargetUnitWhenRegulatorRegisteredExists() throws Exception {
+    void inviteUserToAccountWhenRegulatorRegisteredExists() throws Exception {
         String userId = "254cad93-d1f5-4951-bb0e-e9b0a1586844";
         String userRoleCode = "regulator_administrator";
         String email = "email";
@@ -123,9 +132,10 @@ class CcaOperatorUserInvitationServiceTest {
         when(authUserService.getUserByEmail(operatorUserInvitationDTO.getEmail())).thenReturn(Optional.of(userInfoDTO));
         when(existingOperatorUserInvitationService.addExistingUserToTargetUnit(ccaOperatorUserInvitationDTO, accountId, userId, currentUser))
                 .thenThrow(new BusinessException(ErrorCode.USER_ROLE_ALREADY_EXISTS));
+        when(targetUnitAccountQueryService.getAccountName(accountId)).thenReturn(accountName);
 
         BusinessException businessException =
-                assertThrows(BusinessException.class, () -> service.inviteUserToTargetUnit(accountId, accountName, ccaOperatorUserInvitationDTO, currentUser));
+                assertThrows(BusinessException.class, () -> service.inviteUserToAccount(accountId, ccaOperatorUserInvitationDTO, currentUser));
 
         assertEquals(ErrorCode.USER_ROLE_ALREADY_EXISTS, businessException.getErrorCode());
 

@@ -14,5 +14,5 @@ import { RdeForceDecisionPayload } from './rdeForceDecisionPayload';
 export interface RdeDecisionForcedRequestActionPayload {
   payloadType?: string;
   rdeForceDecisionPayload: RdeForceDecisionPayload;
-  rdeAttachments?: { [key: string]: string };
+  rdeAttachments?: Record<string, string>;
 }

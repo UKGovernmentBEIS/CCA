@@ -11,7 +11,7 @@
  */
 
 export interface DecisionNotification {
-  operators?: Array<string>;
-  externalContacts?: Array<number>;
+  operators?: string[];
+  externalContacts?: number[];
   signatory: string;
 }

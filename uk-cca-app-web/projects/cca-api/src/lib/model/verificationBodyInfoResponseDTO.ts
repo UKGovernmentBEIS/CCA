@@ -12,6 +12,6 @@
 import { VerificationBodyInfoDTO } from './verificationBodyInfoDTO';
 
 export interface VerificationBodyInfoResponseDTO {
-  verificationBodies?: Array<VerificationBodyInfoDTO>;
+  verificationBodies?: VerificationBodyInfoDTO[];
   editable?: boolean;
 }

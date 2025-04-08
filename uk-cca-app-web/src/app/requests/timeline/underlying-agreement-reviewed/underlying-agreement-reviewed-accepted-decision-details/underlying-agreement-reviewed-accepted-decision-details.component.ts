@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { RequestActionStore } from '@netz/common/store';
-import { underlyingAgreementRequestActionQuery } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 
 import { UnderlyingAgreementAcceptedRequestActionPayload } from 'cca-api';
 
+import { underlyingAgreementReviewedRequestActionQuery } from '../+state/underlying-agreement-reviewed-request-action.selectors';
 import { toAcceptedDecisionDetailsSummaryData } from '../underlying-agreement-reviewed-decision-summary-data';
 
 @Component({
@@ -20,7 +20,7 @@ export class UnderlyingAgreementReviewedAcceptedDecisionDetailsComponent {
   readonly summaryData = computed(() =>
     toAcceptedDecisionDetailsSummaryData(
       this.requestActionStore.select(
-        underlyingAgreementRequestActionQuery.selectPayload,
+        underlyingAgreementReviewedRequestActionQuery.selectPayload,
       )() as UnderlyingAgreementAcceptedRequestActionPayload,
     ),
   );

@@ -1,5 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { BehaviorSubject } from 'rxjs';
 
@@ -21,7 +20,7 @@ describe('TimeoutBannerComponent', () => {
     console.error = jest.fn();
     console.warn = jest.fn();
     await TestBed.configureTestingModule({
-      imports: [TimeoutBannerComponent, RouterTestingModule],
+      imports: [TimeoutBannerComponent],
       providers: [{ provide: TimeoutBannerService, useValue: timeoutBannerService }],
     }).compileComponents();
   });
@@ -40,11 +39,12 @@ describe('TimeoutBannerComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should open dialog', () => {
+  it('should open dialog', fakeAsync(() => {
     timeoutBannerService.isVisible$.next(true);
+    tick();
     fixture.detectChanges();
     expect(component.isDialogOpen()).toBeTruthy();
-  });
+  }));
 
   it('should hide dialog', () => {
     timeoutBannerService.isVisible$.next(false);

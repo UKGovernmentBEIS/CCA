@@ -105,7 +105,7 @@ public class UnderlyingAgreementControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(user, "generateGetUnderlyingAgreementDocumentToken", String.valueOf(underlyingAgreementId));
+            .authorize(user, "generateGetUnderlyingAgreementDocumentToken", String.valueOf(underlyingAgreementId), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(CONTROLLER_PATH + "/" + String.valueOf(underlyingAgreementId) + "/document")

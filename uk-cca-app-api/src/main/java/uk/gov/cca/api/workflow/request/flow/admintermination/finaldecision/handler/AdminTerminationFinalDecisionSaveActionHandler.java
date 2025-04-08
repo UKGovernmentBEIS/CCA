@@ -8,6 +8,7 @@ import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domai
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.service.AdminTerminationFinalDecisionService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestTaskActionHandler;
 
@@ -21,10 +22,12 @@ public class AdminTerminationFinalDecisionSaveActionHandler implements RequestTa
     private final AdminTerminationFinalDecisionService adminTerminationFinalDecisionService;
 
     @Override
-    public void process(Long requestTaskId, String requestTaskActionType, AppUser appUser,
+    public RequestTaskPayload process(Long requestTaskId, String requestTaskActionType, AppUser appUser,
                         AdminTerminationFinalDecisionSaveRequestTaskActionPayload payload) {
         final RequestTask requestTask = requestTaskService.findTaskById(requestTaskId);
         adminTerminationFinalDecisionService.applySaveAction(payload, requestTask);
+        
+        return requestTask.getPayload();
     }
 
     @Override

@@ -27,13 +27,24 @@ describe('SectorComponent', () => {
     expect(screen.getByText(title)).toBeInTheDocument();
   });
 
-  it('should contain tabs "Details", "Scheme", "Contacts" and "Target units"', () => {
-    const tabTitles = ['Details', 'Scheme', 'Contacts', 'Target units'];
+  it('should contain tabs "Details", "Scheme", "Contacts", "Target units", "Workflow history", "Reports" and "Subsistence fees"', () => {
+    const tabTitles = [
+      'Details',
+      'Scheme',
+      'Contacts',
+      'Target units',
+      'Workflow history',
+      'Reports',
+      'Subsistence fees',
+    ];
 
-    expect(screen.getAllByRole('tab')).toHaveLength(4);
+    expect(screen.getAllByRole('tab')).toHaveLength(7);
     expect(screen.getAllByRole('tab')[0]).toHaveTextContent(tabTitles[0]);
     expect(screen.getAllByRole('tab')[1]).toHaveTextContent(tabTitles[1]);
     expect(screen.getAllByRole('tab')[2]).toHaveTextContent(tabTitles[2]);
     expect(screen.getAllByRole('tab')[3]).toHaveTextContent(tabTitles[3]);
+    expect(screen.getAllByRole('tab')[4]).toHaveTextContent(tabTitles[4]);
+    expect(screen.getAllByRole('tab')[5]).toHaveTextContent(tabTitles[5]);
+    expect(screen.getAllByRole('tab')[6]).toHaveTextContent(tabTitles[6]);
   });
 });

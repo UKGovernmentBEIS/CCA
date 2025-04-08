@@ -9,15 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { RoleDTO } from '../model/roleDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -87,29 +87,29 @@ export class CcaAuthoritiesService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getSectorUserRoles(sectorId: number): Observable<Array<RoleDTO>>;
+  public getSectorUserRoles(sectorId: number): Observable<RoleDTO[]>;
   public getSectorUserRoles(
     sectorId: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<RoleDTO>>>;
+  ): Observable<HttpResponse<RoleDTO[]>>;
   public getSectorUserRoles(
     sectorId: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<RoleDTO>>>;
+  ): Observable<HttpEvent<RoleDTO[]>>;
   public getSectorUserRoles(
     sectorId: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<RoleDTO>>;
+  ): Observable<RoleDTO[]>;
   public getSectorUserRoles(
     sectorId: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorId === null || sectorId === undefined) {
@@ -139,10 +139,10 @@ export class CcaAuthoritiesService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<RoleDTO>>(
+    return this.httpClient.get<RoleDTO[]>(
       `${this.configuration.basePath}/v1.0/cca-authorities/sector-association/${encodeURIComponent(String(sectorId))}/sector-user-roles`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

@@ -9,19 +9,19 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AdminTerminationFinalDecisionReasonDetails } from './adminTerminationFinalDecisionReasonDetails';
-import { CcaDecisionNotification } from './ccaDecisionNotification';
-import { DefaultNoticeRecipient } from './defaultNoticeRecipient';
-import { FileInfoDTO } from './fileInfoDTO';
 import { RequestActionUserInfo } from './requestActionUserInfo';
+import { AdminTerminationFinalDecisionReasonDetails } from './adminTerminationFinalDecisionReasonDetails';
+import { DefaultNoticeRecipient } from './defaultNoticeRecipient';
+import { CcaDecisionNotification } from './ccaDecisionNotification';
+import { FileInfoDTO } from './fileInfoDTO';
 
 export interface AdminTerminationFinalDecisionSubmittedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
   adminTerminationFinalDecisionReasonDetails: AdminTerminationFinalDecisionReasonDetails;
   decisionNotification: CcaDecisionNotification;
-  adminTerminationFinalDecisionAttachments?: { [key: string]: string };
-  usersInfo?: { [key: string]: RequestActionUserInfo };
-  defaultContacts: Array<DefaultNoticeRecipient>;
+  adminTerminationFinalDecisionAttachments?: Record<string, string>;
+  usersInfo?: Record<string, RequestActionUserInfo>;
+  defaultContacts: DefaultNoticeRecipient[];
   officialNotice: FileInfoDTO;
 }

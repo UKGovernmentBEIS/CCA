@@ -1,20 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import {
-  mockAuthorityService,
-  mockKeycloakService,
-  mockTermsAndConditionsService,
-  mockUsersService,
-} from '@core/guards/mocks';
 import { AuthStore } from '@netz/common/auth';
+import { PageHeadingComponent } from '@netz/common/components';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { BackToTopComponent, PageHeadingComponent } from '@shared/components';
+import { BackToTopComponent } from '@shared/components';
 import { screen } from '@testing-library/dom';
 import { KeycloakService } from 'keycloak-angular';
 
 import { AuthoritiesService, TermsAndConditionsService, UsersService, UserStateDTO } from 'cca-api';
 
+import {
+  mockAuthorityService,
+  mockKeycloakService,
+  mockTermsAndConditionsService,
+  mockUsersService,
+} from '../shared/guards/mocks';
 import { LandingPageComponent } from './landing-page.component';
 
 describe('LandingPageComponent', () => {

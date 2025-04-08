@@ -3,9 +3,9 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, Subject } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 
-import { AuthService } from '@core/services/auth.service';
 import { mockClass } from '@netz/common/testing';
 import { testSchedulerFactory } from '@netz/common/testing/marble-helpers';
+import { AuthService } from '@shared/services';
 import { KeycloakEvent, KeycloakEventType, KeycloakService } from 'keycloak-angular';
 import { KeycloakInstance } from 'keycloak-js';
 

@@ -10,9 +10,14 @@
  * Do not edit the class manually.
  */
 import { UnderlyingAgreementVariationApplySavePayload } from './underlyingAgreementVariationApplySavePayload';
+import { UnderlyingAgreementReviewDecision } from './underlyingAgreementReviewDecision';
+import { UnderlyingAgreementVariationFacilityReviewDecision } from './underlyingAgreementVariationFacilityReviewDecision';
 
 export interface UnderlyingAgreementVariationSaveRequestTaskActionPayload {
   payloadType?: string;
   underlyingAgreement?: UnderlyingAgreementVariationApplySavePayload;
-  sectionsCompleted?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
+  reviewGroupDecisions?: Record<string, UnderlyingAgreementReviewDecision>;
+  facilitiesReviewGroupDecisions?: Record<string, UnderlyingAgreementVariationFacilityReviewDecision>;
+  reviewSectionsCompleted?: Record<string, string>;
 }

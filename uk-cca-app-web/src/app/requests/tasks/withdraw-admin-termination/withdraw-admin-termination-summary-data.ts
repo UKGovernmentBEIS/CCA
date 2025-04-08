@@ -1,5 +1,5 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { transformAttachmentsToDownloadableFiles } from '@shared/utils';
+import { transformAttachmentsAndFileUUIDsToDownloadableFiles } from '@shared/utils';
 
 import { AdminTerminationWithdrawReasonDetails } from 'cca-api';
 
@@ -7,7 +7,7 @@ import { ReasonForWithdrawAdminTerminationWizardStep } from './withdraw-admin-te
 
 export function toWithdrawAdminTerminationReasonSummaryData(
   adminTerminationWithdrawReasonDetails: AdminTerminationWithdrawReasonDetails,
-  adminTerminationWithdrawAttachments: { [key: string]: string },
+  adminTerminationWithdrawAttachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
 ): SummaryData {
@@ -22,7 +22,7 @@ export function toWithdrawAdminTerminationReasonSummaryData(
     )
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsToDownloadableFiles(
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
         adminTerminationWithdrawReasonDetails.relevantFiles,
         adminTerminationWithdrawAttachments,
         downloadUrl,

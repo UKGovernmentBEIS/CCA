@@ -1,5 +1,6 @@
 package uk.gov.cca.api.authorization.ccaauth.rules.services.handlers;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.authorization.ccaauth.rules.services.authorityinfo.providers.UnderlyingAgreementAuthorityInfoProvider;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.domain.AuthorizationRuleScopePermission;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.authorization.rules.services.AuthorizationResourceRuleHandler;
 import uk.gov.netz.api.authorization.rules.services.authorization.AppAuthorizationService;
 import uk.gov.netz.api.authorization.rules.services.authorization.AuthorizationCriteria;
@@ -25,7 +27,7 @@ public class UnderlyingAgreementAccessRuleHandler implements AuthorizationResour
 
         authorizationRules.forEach(rule -> {
             AuthorizationCriteria authorizationCriteria = AuthorizationCriteria.builder()
-                    .accountId(accountId)
+            		.requestResources(Map.of(ResourceType.ACCOUNT, accountId.toString()))
                     .permission(rule.getPermission())
                     .build();
             

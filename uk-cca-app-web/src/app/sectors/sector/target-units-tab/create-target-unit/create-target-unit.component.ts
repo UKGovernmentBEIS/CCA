@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { LinkDirective } from '@netz/govuk-components';
 import { WizardStepComponent } from '@shared/components';
 
 import { SectorAssociationSchemeDTO } from 'cca-api';
@@ -17,27 +16,27 @@ import { TARGET_UNIT_CREATION_FORM, TargetUnitCreationFormProvider } from './cre
   selector: 'cca-create-target-unit',
   templateUrl: './create-target-unit.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, LinkDirective, RouterLink, WizardStepComponent, TargetUnitDetailsInputComponent],
+  imports: [ReactiveFormsModule, RouterLink, WizardStepComponent, TargetUnitDetailsInputComponent],
   providers: [TargetUnitCreationFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateTargetUnitComponent {
-  private readonly route = inject(ActivatedRoute);
+  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly store = inject(CreateTargetUnitStore);
+  private readonly createTargetUnitStore = inject(CreateTargetUnitStore);
   private readonly activeSector = inject(ActiveSectorStore).state;
 
-  readonly form = inject<FormGroup<TargetUnitCreationFormModel>>(TARGET_UNIT_CREATION_FORM);
+  protected readonly form = inject<FormGroup<TargetUnitCreationFormModel>>(TARGET_UNIT_CREATION_FORM);
 
-  readonly subSectors = (this.route.snapshot.data.subSectorScheme as SectorAssociationSchemeDTO)
+  protected readonly subSectors = (this.activatedRoute.snapshot.data.subSectorScheme as SectorAssociationSchemeDTO)
     .subsectorAssociationSchemes;
 
   onSubmitTargetUnit() {
-    this.store.updateState({
+    this.createTargetUnitStore.updateState({
       ...this.form.value,
       competentAuthority: this.activeSector.sectorAssociationDetails.competentAuthority,
     });
 
-    this.router.navigate(['..', 'operator-address'], { relativeTo: this.route });
+    this.router.navigate(['..', 'operator-address'], { relativeTo: this.activatedRoute });
   }
 }

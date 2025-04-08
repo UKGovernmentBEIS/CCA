@@ -7,7 +7,9 @@ import java.util.UUID;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.stereotype.Service;
 
+import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.migration.MigrationEndpoint;
+import uk.gov.cca.api.migration.MigrationUtil;
 import uk.gov.cca.api.sectorassociation.domain.dto.AddressDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
@@ -18,8 +20,8 @@ import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationSchemeDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.TargetCommitmentDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.TargetSetDTO;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.AgreementType;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
-
 
 @Service
 @ConditionalOnAvailableEndpoint(endpoint = MigrationEndpoint.class)
@@ -37,13 +39,15 @@ public class SectorAssociationDTOBuilder {
                 .city(vo.getCity())
                 .county(vo.getCounty())
                 .postcode(vo.getPostcode()).build();
+        
+        AgreementType agreementType = MigrationUtil.getAgreementType(vo.getEnergyIntensiveOrEPR());
 
         return SectorAssociationDetailsDTO.builder()
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .acronym(vo.getAcronym())
                 .commonName(vo.getCommonName())
                 .legalName(vo.getLegalName())
-                .energyIntensiveOrEPR(vo.getEnergyIntensiveOrEPR())
+                .energyIntensiveOrEPR(agreementType != null ? agreementType.name() : null)
                 .noticeServiceAddress(noticeServiceAddressDTO)
                 .build();
     }
@@ -92,19 +96,21 @@ public class SectorAssociationDTOBuilder {
     }
 
     private TargetSetDTO constructTargetSet(TargetSetVO vo) {
+        
+        MeasurementType measurementType = MigrationUtil.getMeasurementType(vo.getEnergyCarbonUnit());
 
         return TargetSetDTO.builder()
                 .id(1L)
                 .targetCurrencyType(vo.getTargetType())
                 .throughputUnit(vo.getThroughputUnit())
-                .energyOrCarbonUnit(vo.getEnergyCarbonUnit())
+                .energyOrCarbonUnit(measurementType != null ? measurementType.getUnit() : null)
                 .targetCommitments(List.of(
-                        constructTargetCommitment("2013 - 2014", vo.getTp1SectorCommitment()),
-                        constructTargetCommitment("2015 - 2016", vo.getTp2SectorCommitment()),
-                        constructTargetCommitment("2017 - 2018", vo.getTp3SectorCommitment()),
-                        constructTargetCommitment("2019 - 2020", vo.getTp4SectorCommitment()),
-                        constructTargetCommitment("2021 - 2022", vo.getTp5SectorCommitment()),
-                        constructTargetCommitment("2023 - 2024", vo.getTp6SectorCommitment())))
+                        constructTargetCommitment("TP1 (2013-2014)", vo.getTp1SectorCommitment()),
+                        constructTargetCommitment("TP2 (2015-2016)", vo.getTp2SectorCommitment()),
+                        constructTargetCommitment("TP3 (2017-2018)", vo.getTp3SectorCommitment()),
+                        constructTargetCommitment("TP4 (2019-2020)", vo.getTp4SectorCommitment()),
+                        constructTargetCommitment("TP5 (2021-2022)", vo.getTp5SectorCommitment()),
+                        constructTargetCommitment("TP6 (2024)", vo.getTp6SectorCommitment())))
                 .build();
     }
 

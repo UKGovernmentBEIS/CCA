@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
@@ -233,12 +233,12 @@ describe('RegulatorDetailsComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should submit a valid form not for current user', async () => {
+  it('should submit a valid form not for current user', fakeAsync(async () => {
     const user = UserEvent.setup();
     await bootstrap(routeEdit2);
     const spy = jest.spyOn(regulatorUsersService, 'updateRegulatorUserByCaAndId');
     await user.type(document.getElementById('user.firstName'), 'Johnathan');
     await user.click(screen.getByText('Save'));
     expect(spy).toHaveBeenCalled();
-  });
+  }));
 });

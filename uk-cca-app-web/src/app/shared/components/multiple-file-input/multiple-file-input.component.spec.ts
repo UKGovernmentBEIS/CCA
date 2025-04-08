@@ -8,9 +8,12 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 
 import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
-import { FileUploadService, FileValidators, MultipleFileInputComponent } from '@shared/components';
 
 import { FileUuidDTO } from 'cca-api';
+
+import { FileUploadService } from '../file-input/file-upload.service';
+import { FileValidators } from '../file-input/file-validators';
+import { MultipleFileInputComponent } from './multiple-file-input.component';
 
 describe('MultipleFileInputComponent', () => {
   let component: MultipleFileInputComponent;
@@ -40,7 +43,7 @@ describe('MultipleFileInputComponent', () => {
 
   class Page extends BasePage<TestComponent> {
     get filesText() {
-      return this.queryAll<HTMLDivElement>('.moj-multi-file-upload__message');
+      return this.queryAll<HTMLDivElement>('.cca-multi-file-upload__message');
     }
 
     get downloadLinks() {
@@ -48,7 +51,7 @@ describe('MultipleFileInputComponent', () => {
     }
 
     get deleteButtons() {
-      return this.queryAll<HTMLButtonElement>('.moj-multi-file-upload__delete');
+      return this.queryAll<HTMLButtonElement>('.cca-multi-file-upload__delete');
     }
 
     set files(file: File[]) {

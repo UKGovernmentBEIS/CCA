@@ -1,6 +1,6 @@
 <div class="govuk-grid-row" data-testid="account-search">
   <div class="govuk-grid-column-full">
-    <cca-page-heading size="xl" data-testid="page-heading">Target unit accounts</cca-page-heading>
+    <netz-page-heading size="xl" data-testid="page-heading">Target unit accounts</netz-page-heading>
 
     <div class="govuk-grid-row">
       <form (ngSubmit)="onSearch()" [formGroup]="searchForm" id="search-form">
@@ -16,7 +16,7 @@
           </div>
 
           <div class="govuk-grid-column-one-third align-self-end">
-            <button ccaPendingButton govukButton type="submit">Search</button>
+            <button netzPendingButton govukButton type="submit">Search</button>
           </div>
         </div>
 

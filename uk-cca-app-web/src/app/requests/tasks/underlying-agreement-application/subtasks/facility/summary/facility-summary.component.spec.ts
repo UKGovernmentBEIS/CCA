@@ -23,8 +23,8 @@ describe('FacilitySummaryComponent', () => {
       paramMap: {
         get: jest.fn().mockReturnValue(mockRequestTaskItemDTO.requestTask.id),
       },
-      pathFromRoot: []
-    }
+      pathFromRoot: [],
+    },
   };
 
   class Page extends BasePage<FacilitySummaryComponent> {

@@ -13,5 +13,6 @@ import { RdeResponsePayload } from './rdeResponsePayload';
 
 export interface RdeResponseRequestTaskPayload {
   payloadType?: string;
+  sendEmailNotification?: boolean;
   rdeResponsePayload: RdeResponsePayload;
 }

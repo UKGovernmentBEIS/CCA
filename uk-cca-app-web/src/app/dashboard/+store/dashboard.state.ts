@@ -1,12 +1,12 @@
 import { Paging } from '@shared/components';
 
-import { ItemTargetUnitDTO } from 'cca-api';
+import { ItemDTO } from 'cca-api';
 
 export type WorkflowItemsAssignmentType = 'assigned-to-me' | 'assigned-to-others' | 'unassigned';
 
 export interface DashboardState {
   activeTab: WorkflowItemsAssignmentType;
-  items: ItemTargetUnitDTO[];
+  items: ItemDTO[];
   total: number;
   paging: Paging;
 }

@@ -1,11 +1,13 @@
 <div>
-  <cca-page-heading data-testid="heading" [caption]="finalDecisionType | finalDecisionType">
+  <netz-page-heading data-testid="heading" [caption]="finalDecisionType | finalDecisionType">
     Check your answers
-  </cca-page-heading>
+  </netz-page-heading>
 
   <cca-summary [data]="summaryData" />
 
-  <button ccaPendingButton govukButton type="button" (click)="onSaveFinalDecisionReason()">Confirm and complete</button>
+  <button netzPendingButton govukButton type="button" (click)="onSaveFinalDecisionReason()">
+    Confirm and complete
+  </button>
 </div>
 
 <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />

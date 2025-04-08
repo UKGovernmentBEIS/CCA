@@ -1,5 +1,6 @@
 package uk.gov.cca.api.web.controller.workflow;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -63,6 +64,12 @@ public class RequestActionController {
     @Authorized(resourceId = "#requestId")
     public ResponseEntity<List<RequestActionInfoDTO>> getRequestActionsByRequestId(@Parameter(hidden = true) AppUser appUser,
                                                                                    @RequestParam("requestId") @Parameter(name = "requestId", description = "The request id") String requestId) {
-        return new ResponseEntity<>(requestActionQueryService.getRequestActionsByRequestId(requestId, appUser), HttpStatus.OK);
+        List<RequestActionInfoDTO> sortedByDateList =
+            requestActionQueryService.getRequestActionsByRequestId(requestId, appUser).stream()
+                .sorted(Comparator.comparing(RequestActionInfoDTO::getCreationDate)
+                    .reversed())
+                .toList();
+
+        return new ResponseEntity<>(sortedByDateList, HttpStatus.OK);
     }
 }

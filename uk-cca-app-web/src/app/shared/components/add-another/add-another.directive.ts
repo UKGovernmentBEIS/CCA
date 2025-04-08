@@ -16,7 +16,7 @@ import {
 export class AddAnotherDirective implements AfterViewInit, OnChanges {
   @Input() heading: HTMLElement;
 
-  @HostBinding('class.moj-add-another__remove-button')
+  @HostBinding('class.cca-add-another__remove-button')
   readonly addAnotherRemoveButtonClass = true;
 
   constructor(private readonly element: ElementRef) {}
@@ -28,13 +28,13 @@ export class AddAnotherDirective implements AfterViewInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.heading) {
       this.heading.tabIndex = -1;
-      this.heading.classList.add('moj-add-another__heading');
+      this.heading.classList.add('cca-add-another__heading');
     }
   }
 
   ngAfterViewInit(): void {
-    this.nativeElement.parentElement.classList.add('moj-add-another__item');
-    this.nativeElement.parentElement.querySelector('legend').classList.add('moj-add-another__title');
+    this.nativeElement.parentElement.classList.add('cca-add-another__item');
+    this.nativeElement.parentElement.querySelector('legend').classList.add('cca-add-another__title');
   }
 
   @HostListener('click')

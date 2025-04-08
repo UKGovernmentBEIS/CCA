@@ -1,0 +1,46 @@
+@if (!targetPeriodType() && !processCompleted()) {
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    submitText="Generate TPR Spreadsheets"
+    [hideSubmit]="!isEditable()"
+  >
+    <dl govuk-summary-list data-testid="downloadPerformanceDataSummaryList">
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Sector ID</dt>
+        <dd govukSummaryListRowValue>{{ sectorAssociationInfo()?.acronym }}</dd>
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Sector name</dt>
+        <dd govukSummaryListRowValue>{{ sectorAssociationInfo()?.name }}</dd>
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Target period</dt>
+        <dd govukSummaryListRowValue>
+          <div
+            widthClass="govuk-!-width-one-quarter"
+            [options]="targetPeriodsOptions"
+            formControlName="targetPeriodType"
+            govuk-select
+          ></div>
+        </dd>
+      </div>
+    </dl>
+
+    <div class="govuk-body">Generate a zip file containing the TPR spreadsheets</div>
+  </cca-wizard-step>
+}
+
+@if (targetPeriodType() && !processCompleted()) {
+  <cca-performance-data-download-generating />
+}
+
+@if (processCompleted()) {
+  <cca-performance-data-download-generated
+    [sectorId]="sectorAssociationInfo().acronym"
+    [sectorName]="sectorAssociationInfo().name"
+    [targetPeriod]="targetPeriodType()"
+  />
+}

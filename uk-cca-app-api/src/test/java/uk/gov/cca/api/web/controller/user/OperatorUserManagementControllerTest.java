@@ -129,7 +129,7 @@ class OperatorUserManagementControllerTest {
 		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(user, "getOperatorUserById", accountId.toString());
+            .authorize(user, "getOperatorUserById", accountId.toString(), null, null);
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.get(BASE_PATH + "/account/" + accountId + "/" + userId)
@@ -244,7 +244,7 @@ class OperatorUserManagementControllerTest {
 		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(user, "updateOperatorUserById", Long.toString(accountId));
+            .authorize(user, "updateOperatorUserById", Long.toString(accountId), null, null);
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.patch(BASE_PATH + "/account/" + accountId + "/" + userId)
@@ -279,7 +279,7 @@ class OperatorUserManagementControllerTest {
 		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(user, "resetOperator2Fa", accountId.toString());
+            .authorize(user, "resetOperator2Fa", accountId.toString(), null, null);
 
 		mockMvc.perform(
 				MockMvcRequestBuilders.patch(BASE_PATH + "/account/" + accountId + "/" + userId + "/reset-2fa"))

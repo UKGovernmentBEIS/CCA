@@ -11,7 +11,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { screen } from '@testing-library/angular';
 import UserEvent from '@testing-library/user-event';
 
-import { mockRequestTaskState } from '../../../testing/mock-data';
+import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import AuthorisationAdditionalEvidenceCheckYourAnswersComponent from './authorisation-additional-evidence-check-your-answers.component';
 
 describe('AuthorisationAdditionalEvidenceCheckYourAnswersComponent', () => {
@@ -20,9 +20,11 @@ describe('AuthorisationAdditionalEvidenceCheckYourAnswersComponent', () => {
   let store: RequestTaskStore;
 
   const route = new ActivatedRouteStub();
+
   const taskService: Partial<jest.Mocked<TaskService>> = {
     submitSubtask: jest.fn().mockReturnValue(of({})),
   };
+
   const submitSubtaskSpy = jest.spyOn(taskService, 'submitSubtask');
 
   beforeEach(async () => {
@@ -39,7 +41,7 @@ describe('AuthorisationAdditionalEvidenceCheckYourAnswersComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
-    store.setState(mockRequestTaskState);
+    store.setState(mockVariationReviewRequestTaskState);
 
     fixture = TestBed.createComponent(AuthorisationAdditionalEvidenceCheckYourAnswersComponent);
     component = fixture.componentInstance;

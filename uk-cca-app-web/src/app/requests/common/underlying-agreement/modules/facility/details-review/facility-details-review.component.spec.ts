@@ -9,7 +9,7 @@ import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { BasePage } from '@netz/common/testing';
 
-import { mockUNAReviewRequestTaskState } from '../../../testing';
+import { mockRequestTaskItemUNAReviewDTO } from '../../../testing';
 import { FACILITIES_SUBTASK, FacilityWizardStep } from '../../../underlying-agreement.types';
 import { FacilityDetailsReviewComponent } from './facility-details-review.component';
 
@@ -18,7 +18,13 @@ describe('FacilityDetailsReviewComponent', () => {
   let store: RequestTaskStore;
   let page: Page;
 
-  const route: any = { snapshot: { params: { facilityId: 'ADS_53-F00007' }, pathFromRoot: [] } };
+  const route = {
+    snapshot: {
+      params: { facilityId: 'ADS_1-F00001' },
+      pathFromRoot: [],
+    },
+  };
+
   const unaTaskService: Partial<jest.Mocked<TaskService>> = {
     saveSubtask: jest.fn().mockReturnValue(of({})),
   };
@@ -84,7 +90,7 @@ describe('FacilityDetailsReviewComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
-    store.setState(mockUNAReviewRequestTaskState);
+    store.setRequestTaskItem(mockRequestTaskItemUNAReviewDTO);
 
     fixture = TestBed.createComponent(FacilityDetailsReviewComponent);
     page = new Page(fixture);
@@ -115,23 +121,21 @@ describe('FacilityDetailsReviewComponent', () => {
     fixture.detectChanges();
 
     expect(taskServiceSpy).toHaveBeenCalledWith(FACILITIES_SUBTASK, FacilityWizardStep.DETAILS, route, {
-      facility: {
-        facilityId: 'ADS_53-F00007',
-        facilityDetails: {
-          facilityAddress: {
-            city: 'Addres1',
-            country: 'GB',
-            county: null,
-            line1: 'Address',
-            line2: 'Apartment 1',
-            postcode: '94043',
-          },
-          uketsId: 'uk identifier',
-          isCoveredByUkets: true,
-          applicationReason: 'NEW_AGREEMENT',
-          name: 'Facility 2',
-          previousFacilityId: undefined,
+      facilityId: 'ADS_1-F00001',
+      facilityDetails: {
+        facilityAddress: {
+          city: 'Addres1',
+          country: 'GB',
+          county: null,
+          line1: 'Address',
+          line2: 'Apartment 1',
+          postcode: '94043',
         },
+        uketsId: 'uk identifier',
+        isCoveredByUkets: true,
+        applicationReason: 'NEW_AGREEMENT',
+        name: 'Facility 1',
+        previousFacilityId: null,
       },
     });
   });

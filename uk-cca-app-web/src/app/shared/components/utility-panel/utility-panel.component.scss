@@ -1,0 +1,14 @@
+@import 'settings/index';
+@import 'tools/index';
+@import 'helpers/index';
+
+.utility-panel-container {
+  border: 1px solid $govuk-border-colour;
+  padding: govuk-spacing(0) govuk-spacing(3) govuk-spacing(1) govuk-spacing(3);
+}
+
+.utility-panel-header {
+  background: govuk-colour('light-grey');
+  padding: govuk-spacing(4);
+  font-weight: bold;
+}

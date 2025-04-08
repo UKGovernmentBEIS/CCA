@@ -3,7 +3,6 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { PendingRequestService } from '@netz/common/services';
-import { LinkDirective } from '@netz/govuk-components';
 import { WizardStepComponent } from '@shared/components';
 
 import {
@@ -21,7 +20,7 @@ import { EDIT_TARGET_UNIT_DETAILS_FORM, EditDetailsFormProvider } from './edit-d
   selector: 'cca-edit-details',
   templateUrl: './edit-details.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, WizardStepComponent, LinkDirective, RouterLink, TargetUnitDetailsInputComponent],
+  imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, TargetUnitDetailsInputComponent],
   providers: [EditDetailsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

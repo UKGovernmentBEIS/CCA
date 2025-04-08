@@ -8,7 +8,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.service.TargetUnitAccountUpdateService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
 import static org.mockito.Mockito.times;
@@ -39,9 +41,9 @@ class UnderlyingAgreementCancelledServiceTest {
                 .build();
 
         Request request = Request.builder()
-                .accountId(accountId)
                 .payload(payload)
                 .build();
+        addResourcesToRequest(accountId, request);
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
 
@@ -52,5 +54,15 @@ class UnderlyingAgreementCancelledServiceTest {
         verify(requestService, times(1))
                 .addActionToRequest(request, null, CcaRequestActionType.UNDERLYING_AGREEMENT_APPLICATION_CANCELLED, requestTaskAssignee);
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 
 }

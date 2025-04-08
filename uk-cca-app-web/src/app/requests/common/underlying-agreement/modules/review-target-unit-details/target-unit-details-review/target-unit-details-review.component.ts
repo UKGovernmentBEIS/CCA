@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -14,7 +13,7 @@ import {
   TextInputComponent,
 } from '@netz/govuk-components';
 import { WizardStepComponent } from '@shared/components';
-import { operatorTypeOptions, OperatorTypePipe } from '@shared/pipes/operator-type.pipe';
+import { operatorTypeOptions } from '@shared/pipes';
 import { existingControlContainer } from '@shared/providers';
 
 import { SectorAssociationSchemeService, SubsectorAssociationSchemeInfoDTO } from 'cca-api';
@@ -36,7 +35,6 @@ import {
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
-    OperatorTypePipe,
     TextInputComponent,
     RadioComponent,
     RadioOptionComponent,
@@ -50,39 +48,24 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetUnitDetailsReviewComponent implements OnInit {
-  protected readonly form = inject<FormGroup<TargetUnitDetailsReviewFormModel>>(TARGET_UNIT_DETAILS_REVIEW_FORM);
   private readonly store = inject(RequestTaskStore);
   private readonly taskService = inject(TaskService);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly sectorAssociationSchemeService = inject(SectorAssociationSchemeService);
+
+  protected readonly form = inject<FormGroup<TargetUnitDetailsReviewFormModel>>(TARGET_UNIT_DETAILS_REVIEW_FORM);
+
   private readonly sectorAssociationId = this.store.select(underlyingAgreementReviewQuery.selectSectorAssociationId);
   private readonly subsectors = signal<SubsectorAssociationSchemeInfoDTO[]>([]);
 
-  readonly isCompanyRegistrationNumberValue = toSignal(this.form.controls.isCompanyRegistrationNumber.valueChanges, {
-    initialValue: this.form.value.isCompanyRegistrationNumber,
-  });
-
-  constructor() {
-    effect(() => {
-      if (this.isCompanyRegistrationNumberValue()) {
-        this.form.get('companyRegistrationNumber').enable();
-        this.form.get('registrationNumberMissingReason').disable();
-        this.form.get('registrationNumberMissingReason').reset();
-      } else {
-        this.form.get('registrationNumberMissingReason').enable();
-        this.form.get('companyRegistrationNumber').disable();
-        this.form.get('companyRegistrationNumber').reset();
-      }
-    });
-  }
-
-  subsectorsOptions = computed(() =>
+  protected readonly subsectorsOptions = computed(() =>
     this.subsectors().map((subsector) => ({
       text: subsector.subsectorAssociation.name,
       value: subsector.id,
     })),
   );
-  operatorTypeOptions = operatorTypeOptions;
+
+  protected readonly operatorTypeOptions = operatorTypeOptions;
 
   ngOnInit(): void {
     if (this.sectorAssociationId()) {
@@ -97,12 +80,19 @@ export class TargetUnitDetailsReviewComponent implements OnInit {
   }
 
   onSubmit() {
+    const selectedSubsectorAssociationName = computed(
+      () =>
+        this.subsectors().find((ssa) => ssa.id === this.form.value.subsectorAssociationId)?.subsectorAssociation?.name,
+    );
+
+    const formData = { ...this.form.getRawValue(), subsectorAssociationName: selectedSubsectorAssociationName() };
+
     this.taskService
       .saveSubtask(
         REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
         ReviewTargetUnitDetailsWizardStep.TARGET_UNIT_DETAILS,
         this.activatedRoute,
-        this.form.getRawValue(),
+        formData,
       )
       .subscribe();
   }

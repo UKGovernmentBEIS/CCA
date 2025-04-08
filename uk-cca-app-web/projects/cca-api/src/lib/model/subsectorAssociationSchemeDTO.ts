@@ -9,8 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { SubsectorAssociationDTO } from './subsectorAssociationDTO';
 import { TargetSetDTO } from './targetSetDTO';
+import { SubsectorAssociationDTO } from './subsectorAssociationDTO';
 
 export interface SubsectorAssociationSchemeDTO {
   subsectorAssociation: SubsectorAssociationDTO;

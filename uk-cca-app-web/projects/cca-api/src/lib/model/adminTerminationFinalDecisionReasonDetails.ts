@@ -13,5 +13,5 @@
 export interface AdminTerminationFinalDecisionReasonDetails {
   finalDecisionType: 'TERMINATE_AGREEMENT' | 'WITHDRAW_TERMINATION';
   explanation: string;
-  relevantFiles?: Array<string>;
+  relevantFiles?: string[];
 }

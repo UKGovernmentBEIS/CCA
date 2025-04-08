@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { RouterLink } from '@angular/router';
 
 import {
-  LinkDirective,
   SummaryListComponent,
   SummaryListRowActionsDirective,
   SummaryListRowDirective,
@@ -28,7 +27,6 @@ import { SummaryData, SummarySection } from './type';
     SummaryListRowValueDirective,
     SummaryListRowActionsDirective,
     RouterLink,
-    LinkDirective,
     SummaryQueryParamsPipe,
     SummaryDownloadFilesComponent,
   ],

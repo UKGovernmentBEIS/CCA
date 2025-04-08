@@ -2,19 +2,24 @@ import { DecimalPipe } from '@angular/common';
 
 import { GovukDatePipe } from '@netz/common/pipes';
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { transformAttachmentsToDownloadableFiles, transformPhoneNumber } from '@shared/utils';
-import { getAddressAsArray } from '@shared/utils/address';
+import { FacilityStatusEnum } from '@shared/pipes';
+import { transformAttachmentsAndFileUUIDsToDownloadableFiles, transformPhoneNumber } from '@shared/utils';
+import { getAddressAsArray } from '@shared/utils';
 
-import { Facility, UnderlyingAgreementFacilityReviewDecision } from 'cca-api';
+import {
+  Facility,
+  UnderlyingAgreementFacilityReviewDecision,
+  UnderlyingAgreementVariationFacilityReviewDecision,
+} from 'cca-api';
 
-import { AgreementTypeEnum, ApplicationReasonTypeEnum, CaNameEnum, FacilityStatusEnum } from '../pipes';
+import { AgreementTypeEnum, ApplicationReasonTypeEnum, CaNameEnum } from '../pipes';
 import { FacilityWizardStep } from '../underlying-agreement.types';
 import { boolToString } from '../utils';
 import { addFacilityDecisionSummaryData } from './decision-summary-data';
 
 function facilitySummaryFactory(
   facility: Facility,
-  attachments: { [key: string]: string },
+  attachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
   opts: { changeName?: boolean; factory?: SummaryFactory } = {},
@@ -41,10 +46,10 @@ function facilitySummaryFactory(
       change: isEditable,
     })
     .addRow('Application reason', ApplicationReasonTypeEnum[facilityDetails?.applicationReason], {
-      change: isEditable,
+      change: isEditable && facility?.status === 'NEW',
     })
     .addRow('Previous facility ID', facilityDetails?.previousFacilityId, {
-      change: isEditable,
+      change: isEditable && facility?.status === 'NEW',
     })
     .addRow('Facility address', getAddressAsArray(facilityDetails?.facilityAddress), {
       change: isEditable,
@@ -98,29 +103,41 @@ function facilitySummaryFactory(
     })
     .addFileListRow(
       'Attach a copy of the permit',
-      transformAttachmentsToDownloadableFiles([eligibility?.permitFile], attachments, downloadUrl),
+      transformAttachmentsAndFileUUIDsToDownloadableFiles([eligibility?.permitFile], attachments, downloadUrl),
       { change: isEditable },
     )
 
     .addSection('Extent of the facility', `../${FacilityWizardStep.EXTENT}`)
     .addFileListRow(
       'Manufacturing process description',
-      transformAttachmentsToDownloadableFiles([facilityExtent?.manufacturingProcessFile], attachments, downloadUrl),
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
+        [facilityExtent?.manufacturingProcessFile],
+        attachments,
+        downloadUrl,
+      ),
       { change: isEditable },
     )
     .addFileListRow(
       'Process flow maps',
-      transformAttachmentsToDownloadableFiles([facilityExtent?.processFlowFile], attachments, downloadUrl),
+      transformAttachmentsAndFileUUIDsToDownloadableFiles([facilityExtent?.processFlowFile], attachments, downloadUrl),
       { change: isEditable },
     )
     .addFileListRow(
       'Annotated site plans',
-      transformAttachmentsToDownloadableFiles([facilityExtent?.annotatedSitePlansFile], attachments, downloadUrl),
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
+        [facilityExtent?.annotatedSitePlansFile],
+        attachments,
+        downloadUrl,
+      ),
       { change: isEditable },
     )
     .addFileListRow(
       'Eligible process description',
-      transformAttachmentsToDownloadableFiles([facilityExtent?.eligibleProcessFile], attachments, downloadUrl),
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
+        [facilityExtent?.eligibleProcessFile],
+        attachments,
+        downloadUrl,
+      ),
       { change: isEditable },
     )
     .addRow('Are any directly associated activities claimed?', boolToString(facilityExtent?.areActivitiesClaimed), {
@@ -128,21 +145,25 @@ function facilitySummaryFactory(
     })
     .addFileListRow(
       'Directly associated activities description',
-      transformAttachmentsToDownloadableFiles([facilityExtent?.activitiesDescriptionFile], attachments, downloadUrl),
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
+        [facilityExtent?.activitiesDescriptionFile],
+        attachments,
+        downloadUrl,
+      ),
       { change: isEditable },
     )
 
     .addSection('Apply the 70% rule', `../${FacilityWizardStep.APPLY_RULE}`)
     .addRow(
       'Energy consumed in the installation',
-      applyRule?.energyConsumed != null ? applyRule?.energyConsumed?.toString() + ' %' : '',
+      applyRule?.energyConsumed != null ? pipe.transform(applyRule?.energyConsumed, '1.0-7') + ' %' : '',
       {
         change: isEditable,
       },
     )
     .addRow(
       'Energy consumed in relation to 3/7ths provision',
-      applyRule?.energyConsumedProvision ? applyRule?.energyConsumedProvision?.toString() + ' %' : '',
+      applyRule?.energyConsumedProvision ? pipe.transform(applyRule?.energyConsumedProvision, '1.0-7') + ' %' : '',
       {
         change: isEditable,
       },
@@ -150,7 +171,7 @@ function facilitySummaryFactory(
     .addRow(
       'Energy consumed in eligible facility',
       applyRule?.energyConsumedEligible != null
-        ? pipe.transform(applyRule?.energyConsumedEligible, '1.0-2') + ' %'
+        ? pipe.transform(applyRule?.energyConsumedEligible, '1.0-7') + ' %'
         : '',
       {
         change: isEditable,
@@ -161,14 +182,14 @@ function facilitySummaryFactory(
     })
     .addFileListRow(
       'Evidence',
-      transformAttachmentsToDownloadableFiles([applyRule?.evidenceFile], attachments, downloadUrl),
+      transformAttachmentsAndFileUUIDsToDownloadableFiles([applyRule?.evidenceFile], attachments, downloadUrl),
       { change: isEditable },
     );
 }
 
 export function toFacilitySummaryData(
   facility: Facility,
-  attachments: { [key: string]: string },
+  attachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
   opts: { changeName?: boolean } = {},
@@ -178,7 +199,7 @@ export function toFacilitySummaryData(
 
 export function toFacilitySummaryDataWithStatus(
   facility: Facility,
-  attachments: { [key: string]: string },
+  attachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
   opts: { changeName?: boolean } = {},
@@ -197,7 +218,7 @@ export function toFacilitySummaryDataWithStatus(
 
 export function toFacilitySummaryDataWithDecision(
   facility: Facility,
-  decision: UnderlyingAgreementFacilityReviewDecision,
+  decision: UnderlyingAgreementFacilityReviewDecision | UnderlyingAgreementVariationFacilityReviewDecision,
   attachments: { submit: Record<string, string>; review: Record<string, string> },
   isEditable: boolean,
   downloadUrl: string,
@@ -208,7 +229,7 @@ export function toFacilitySummaryDataWithDecision(
 
 export function toFacilitySummaryDataWithStatusAndDecision(
   facility: Facility,
-  decision: UnderlyingAgreementFacilityReviewDecision,
+  decision: UnderlyingAgreementFacilityReviewDecision | UnderlyingAgreementVariationFacilityReviewDecision,
   attachments: { submit: Record<string, string>; review: Record<string, string> },
   isEditable: boolean,
   downloadUrl: string,

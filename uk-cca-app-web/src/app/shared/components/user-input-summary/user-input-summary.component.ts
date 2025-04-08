@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 
 import {
-  LinkDirective,
   SummaryListRowActionsDirective,
   SummaryListRowDirective,
   SummaryListRowKeyDirective,
@@ -20,7 +19,6 @@ import { CcaOperatorUserRegistrationWithCredentialsDTO } from 'cca-api';
   imports: [
     RouterLink,
     PhoneNumberPipe,
-    LinkDirective,
     SummaryListRowDirective,
     SummaryListRowKeyDirective,
     SummaryListRowValueDirective,

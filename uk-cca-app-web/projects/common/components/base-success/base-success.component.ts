@@ -12,6 +12,11 @@ export class BaseSuccessComponent implements OnInit {
   protected readonly breadcrumbs = inject(BreadcrumbService);
 
   ngOnInit(): void {
-    this.breadcrumbs.showDashboardBreadcrumb();
+    this.breadcrumbs.show([
+      {
+        text: 'Dashboard',
+        link: ['dashboard'],
+      },
+    ]);
   }
 }

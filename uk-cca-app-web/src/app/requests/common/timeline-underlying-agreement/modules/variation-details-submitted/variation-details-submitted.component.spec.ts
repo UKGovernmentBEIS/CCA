@@ -38,9 +38,8 @@ describe('VariationDetailsComponent', () => {
         RequestActionStore,
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
       ],
-    })
-    .compileComponents();
-    
+    }).compileComponents();
+
     store = TestBed.inject(RequestActionStore);
     store.setAction(mockUnderlyingAgreementVariationSubmittedRequestAction);
 

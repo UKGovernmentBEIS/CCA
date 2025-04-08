@@ -1,6 +1,14 @@
-<cca-page-heading size="l">{{ title }}</cca-page-heading>
+<div class="row-flex align-items-end">
+  <div class="col-flex-three-quarters">
+    <netz-page-heading size="l">{{ title }}</netz-page-heading>
+  </div>
 
-<govuk-tabs>
+  <div class="col-flex-one-quarter">
+    <button govukButton type="button" routerLink="./process-actions" class="float-right">Start a new task</button>
+  </div>
+</div>
+
+<govuk-tabs queryParamsHandling="replace">
   <ng-template govukTabLazy id="details" label="Details">
     <cca-sector-details-tab />
   </ng-template>
@@ -15,5 +23,17 @@
 
   <ng-template govukTabLazy id="target-units" label="Target units">
     <cca-sector-target-units-tab />
+  </ng-template>
+
+  <ng-template govukTabLazy id="workflow-history" label="Workflow history">
+    <cca-workflow-history-tab />
+  </ng-template>
+
+  <ng-template govukTabLazy id="reports" label="Reports">
+    <cca-reports-component />
+  </ng-template>
+
+  <ng-template govukTabLazy id="subsistence-fees" label="Subsistence fees">
+    <cca-subsistence-fees-tab />
   </ng-template>
 </govuk-tabs>

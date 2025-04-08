@@ -1,5 +1,5 @@
 <div>
-  <cca-page-heading caption="Change">Check your answers</cca-page-heading>
+  <netz-page-heading caption="Change">Check your answers</netz-page-heading>
 
   <ng-template #contentTpl let-showOriginal="showOriginal">
     <cca-summary [data]="showOriginal ? summaryDataOriginal : summaryDataCurrent" />
@@ -10,7 +10,7 @@
     <ng-container slot="current" *ngTemplateOutlet="contentTpl; context: { showOriginal: false }"></ng-container>
   </cca-highlight-diff>
 
-  <button ccaPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
+  <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
 </div>
 
 <netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

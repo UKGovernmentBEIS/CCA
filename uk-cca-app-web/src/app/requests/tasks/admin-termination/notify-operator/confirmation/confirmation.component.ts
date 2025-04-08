@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { LinkDirective, PanelComponent } from '@netz/govuk-components';
+import { PanelComponent } from '@netz/govuk-components';
 
 import { AdminTerminationQuery } from '../../+state/admin-termination.selectors';
 
@@ -10,7 +10,7 @@ import { AdminTerminationQuery } from '../../+state/admin-termination.selectors'
   selector: 'cca-confirmation',
   templateUrl: './confirmation.component.html',
   standalone: true,
-  imports: [PanelComponent, LinkDirective, RouterLink],
+  imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ConfirmationComponent {

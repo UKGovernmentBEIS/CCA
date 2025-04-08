@@ -21,8 +21,10 @@ import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
 import uk.gov.netz.api.authorization.core.domain.dto.UserAuthoritiesDTO;
 import uk.gov.netz.api.authorization.core.domain.dto.UserAuthorityDTO;
 import uk.gov.netz.api.authorization.operator.service.OperatorAuthorityQueryService;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.RequestTaskAssignmentValidationService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 import uk.gov.netz.api.workflow.request.flow.common.domain.DecisionNotification;
 
@@ -62,9 +64,12 @@ class CcaDecisionNotificationUsersValidatorTest {
         final long sectorId = 2L;
         final AppUser appUser = AppUser.builder().userId("user").build();
         final String signatory = "regulator";
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .build();
+        
         final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
                 .sectorUsers(Set.of("sector1"))
                 .decisionNotification(DecisionNotification.builder()
@@ -130,8 +135,10 @@ class CcaDecisionNotificationUsersValidatorTest {
         final long sectorId = 2L;
         final AppUser appUser = AppUser.builder().userId("user").build();
         final String signatory = "regulator";
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .build();
         final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
                 .sectorUsers(Set.of("sector3"))
@@ -198,8 +205,10 @@ class CcaDecisionNotificationUsersValidatorTest {
         final long sectorId = 2L;
         final AppUser appUser = AppUser.builder().userId("user").build();
         final String signatory = "regulator";
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .build();
         final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
                 .sectorUsers(Set.of("sector1"))
@@ -264,8 +273,10 @@ class CcaDecisionNotificationUsersValidatorTest {
     void validate_empty_users_valid() {
         final long accountId = 1L;
         final AppUser appUser = AppUser.builder().userId("user").build();
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .build();
         final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
                 .sectorUsers(Set.of())
@@ -290,8 +301,10 @@ class CcaDecisionNotificationUsersValidatorTest {
         final long sectorId = 2L;
         final AppUser appUser = AppUser.builder().userId("user").build();
         final String signatory = "regulator";
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .build();
         final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
                 .sectorUsers(Set.of("sector1"))
@@ -342,4 +355,14 @@ class CcaDecisionNotificationUsersValidatorTest {
         verify(requestTaskAssignmentValidationService, times(1))
                 .hasUserPermissionsToBeAssignedToTask(requestTask, signatory);
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

@@ -12,9 +12,7 @@ type UserForm = {
   jobTitle: FormControl<string>;
 };
 
-type PermissionsForm = {
-  [key: string]: FormControl<'NONE' | 'EXECUTE' | 'VIEW_ONLY'>;
-};
+type PermissionsForm = Record<string, FormControl<'NONE' | 'EXECUTE' | 'VIEW_ONLY'>>;
 
 type DetailsForm = {
   user: FormGroup<UserForm>;

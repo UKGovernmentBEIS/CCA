@@ -1,25 +1,27 @@
 package uk.gov.cca.api.workflow.bpmn.handler.underlyingagreement;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Date;
+
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.SendReminderNotificationService;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestType;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
-
-import java.util.Date;
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UnderlyingAgreementSecondReminderDateReachedHandlerTest {
@@ -44,7 +46,7 @@ class UnderlyingAgreementSecondReminderDateReachedHandlerTest {
 
         final Request request = Request.builder()
                 .id(requestId)
-                .type(RequestType.builder().code(CcaRequestType.UNDERLYING_AGREEMENT).build())
+                .type(RequestType.builder().code(CcaRequestType.UNDERLYING_AGREEMENT).resourceType(ResourceType.ACCOUNT).build())
                 .payload(payload).build();
 
         when(execution.getVariable(BpmnProcessConstants.REQUEST_ID)).thenReturn(requestId);

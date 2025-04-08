@@ -1,5 +1,6 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +10,11 @@ import lombok.experimental.SuperBuilder;
 
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.UnderlyingAgreementReviewDecision;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +39,15 @@ public class UnderlyingAgreementVariationRequestTaskPayload extends RequestTaskP
     @Builder.Default
     private Map<UUID, String> underlyingAgreementAttachments = new HashMap<>();
 
+    @Builder.Default
+    private Map<String, String> reviewSectionsCompleted = new HashMap<>();
+
+    @Builder.Default
+    private Map<UnderlyingAgreementVariationReviewGroup, UnderlyingAgreementReviewDecision> reviewGroupDecisions = new EnumMap<>(UnderlyingAgreementVariationReviewGroup.class);
+
+    @Builder.Default
+    private Map<String, UnderlyingAgreementVariationFacilityReviewDecision> facilitiesReviewGroupDecisions = new HashMap<>();
+
     @Override
     public Map<UUID, String> getAttachments() {
         return getUnderlyingAgreementAttachments();
@@ -46,5 +58,10 @@ public class UnderlyingAgreementVariationRequestTaskPayload extends RequestTaskP
         return getUnderlyingAgreement() != null ?
                 getUnderlyingAgreement().getUnderlyingAgreement().getUnderlyingAgreementSectionAttachmentIds() :
                 Collections.emptySet();
+    }
+
+    @JsonIgnore
+    public UnderlyingAgreementVariationPayload getEditedUnderlyingAgreement() {
+        return this.underlyingAgreement;
     }
 }

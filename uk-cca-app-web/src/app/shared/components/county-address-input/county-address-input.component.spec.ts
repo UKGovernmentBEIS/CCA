@@ -5,11 +5,9 @@ import { By } from '@angular/platform-browser';
 
 import { of } from 'rxjs';
 
-import { CountyService } from '@core/services/county.service';
 import { changeInputValue, getInputValue, MockType } from '@netz/common/testing';
 import { TextInputComponent } from '@netz/govuk-components';
-
-import { CountyAddressDTO } from 'cca-api';
+import { CountyService } from '@shared/services';
 
 import { CountyAddressInputComponent } from './county-address-input.component';
 import { createCountyAddressControl } from './create-county-address-controls';
@@ -56,7 +54,7 @@ describe('CountyAddressInputComponent', () => {
     });
   }
 
-  const address: CountyAddressDTO = {
+  const address = {
     line1: 'Street',
     line2: 'Neighbourhood',
     city: 'City',
@@ -107,7 +105,7 @@ describe('CountyAddressInputComponent', () => {
   });
 
   it('should update values on setValue', () => {
-    hostComponent.form.get('address').setValue(<any>address);
+    hostComponent.form.get('address').setValue(address as any);
     fixture.detectChanges();
 
     expect(getInputValue(fixture, '#address\\.line1')).toEqual(address.line1);

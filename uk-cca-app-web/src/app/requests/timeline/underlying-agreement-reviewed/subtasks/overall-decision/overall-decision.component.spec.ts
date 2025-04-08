@@ -3,7 +3,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestActionStore, TYPE_AWARE_STORE } from '@netz/common/store';
+import { RequestActionStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 
 import { mockRequestActionState } from '../../testing/mock-data';
@@ -22,8 +22,6 @@ describe('OverallDecisionComponent', () => {
         provideHttpClientTesting(),
         RequestActionStore,
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
-        { provide: TYPE_AWARE_STORE, useExisting: RequestActionStore },
-        { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Underlying agreement application rejected' },
       ],
     }).compileComponents();
 

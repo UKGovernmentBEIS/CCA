@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { PageHeadingComponent } from '@shared/components';
-import { SummaryComponent } from '@shared/components/summary';
+import { SummaryComponent } from '@shared/components';
 
 import { AdminTerminationQuery } from '../../../+state/admin-termination.selectors';
 import { toAdminTerminationReasonSummaryData } from '../../../admin-termination-summary-data';

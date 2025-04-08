@@ -3,7 +3,7 @@
 }
 
 <div class="govuk-grid-row" data-testid="add-sector-user-form">
-  <cca-page-heading size="l" caption="Add new user">{{ title }}</cca-page-heading>
+  <netz-page-heading size="l" caption="Add new user">{{ title }}</netz-page-heading>
 
   <p class="govuk-body">This user will have permission to:</p>
   @if (isAdmin) {
@@ -44,6 +44,6 @@
         <govuk-radio-option [label]="option.text" [value]="option.value"></govuk-radio-option>
       }
     </div>
-    <button ccaPendingButton govukButton type="submit">Submit</button>
+    <button netzPendingButton govukButton type="submit">Submit</button>
   </form>
 </div>

@@ -5,7 +5,7 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
   id="root0"
 >
   <div>
-    <cca-page-heading
+    <netz-page-heading
       caption="TP6 (2024)"
     >
       <span
@@ -19,7 +19,7 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
       >
         Check your answers
       </h1>
-    </cca-page-heading>
+    </netz-page-heading>
     <cca-summary>
       <h2
         class="govuk-heading-m"
@@ -44,10 +44,10 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
             <cca-summary-download-files>
               <a
                 class="govuk-link"
-                govuklink=""
                 href="/tasks/null/file-download/1acfa056-39f1-415b-b69a-3c771db1c4df"
                 target="_blank"
               >
@@ -59,7 +59,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             
             
             
-            
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -67,7 +66,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/target-composition?change=true"
             >
               Change
@@ -89,9 +87,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              Energy (kWh) 
-            
-            
             
             
             
@@ -103,7 +101,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/target-composition?change=true"
             >
               Change
@@ -125,9 +122,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              Energy (MWh) 
-            
-            
             
             
             
@@ -139,7 +136,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/target-composition?change=true"
             >
               Change
@@ -161,9 +157,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              Absolute 
-            
-            
             
             
             
@@ -175,7 +171,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/target-composition?change=true"
             >
               Change
@@ -197,9 +192,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              tonnne 
-            
-            
             
             
             
@@ -235,7 +230,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/target-composition?change=true"
             >
               Change
@@ -270,9 +264,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              No 
-            
-            
             
             
             
@@ -284,7 +278,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/add-baseline-data?change=true"
             >
               Change
@@ -306,9 +299,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              1 Feb 2023 
-            
-            
             
             
             
@@ -320,7 +313,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/add-baseline-data?change=true"
             >
               Change
@@ -342,9 +334,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              xfdasdασδασδsd 
-            
-            
             
             
             
@@ -356,7 +348,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/add-baseline-data?change=true"
             >
               Change
@@ -392,7 +383,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/add-baseline-data?change=true"
             >
               Change
@@ -408,15 +398,15 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Baseline kWh for the target facility
+            Baseline MWh for the target facility
           </dt>
           <dd
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             3022 
             
             
+             3,022 
             
             
             
@@ -428,7 +418,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/add-baseline-data?change=true"
             >
               Change
@@ -450,9 +439,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              No 
-            
-            
             
             
             
@@ -464,7 +453,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/add-baseline-data?change=true"
             >
               Change
@@ -480,15 +468,15 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Baseline throughput (MWh)
+            Baseline throughput (tonnne)
           </dt>
           <dd
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              100 
-            
-            
             
             
             
@@ -500,7 +488,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/add-baseline-data?change=true"
             >
               Change
@@ -522,9 +509,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              100 
-            
-            
             
             
             
@@ -536,7 +523,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/add-baseline-data?change=true"
             >
               Change
@@ -571,9 +557,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              100 
-            
-            
             
             
             
@@ -585,7 +571,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/add-targets?change=true"
             >
               Change
@@ -607,9 +592,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              0 
-            
-            
             
             
             
@@ -621,7 +606,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/add-targets?change=true"
             >
               Change
@@ -656,9 +640,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              Accepted 
-            
-            
             
             
             
@@ -670,7 +654,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/decision?change=true"
             >
               Change
@@ -692,9 +675,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              asd 
-            
-            
             
             
             
@@ -706,7 +689,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/decision?change=true"
             >
               Change
@@ -742,7 +724,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/decision?change=true"
             >
               Change
@@ -757,9 +738,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
       
     </cca-summary>
     <button
-      ccapendingbutton=""
       class="govuk-button"
       govukbutton=""
+      netzpendingbutton=""
       type="button"
     >
       Confirm and complete
@@ -770,7 +751,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

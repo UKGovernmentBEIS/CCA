@@ -119,7 +119,7 @@ public class TargetUnitAccountSiteContactControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(user, "updateTargetUnitAccountSiteContacts", Long.toString(sectorAssociationId));
+            .authorize(user, "updateTargetUnitAccountSiteContacts", Long.toString(sectorAssociationId), null, null);
 
         mockMvc.perform(post(BASE_PATH + "/sector-association/" + sectorAssociationId)
                 .contentType(MediaType.APPLICATION_JSON)

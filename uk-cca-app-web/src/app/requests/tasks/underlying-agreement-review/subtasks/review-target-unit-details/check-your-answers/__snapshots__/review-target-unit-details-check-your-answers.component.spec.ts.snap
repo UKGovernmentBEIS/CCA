@@ -11,7 +11,7 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
   taskService={[Function Object]}
 >
   <div>
-    <cca-page-heading
+    <netz-page-heading
       caption="Target unit details"
     >
       <span
@@ -24,7 +24,7 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
       >
         Check your answers
       </h1>
-    </cca-page-heading>
+    </netz-page-heading>
     <cca-summary>
       <h2
         class="govuk-heading-m"
@@ -57,7 +57,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -86,7 +85,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -115,7 +113,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -144,7 +141,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -191,7 +187,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -230,7 +225,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -259,7 +253,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -288,7 +281,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -325,7 +317,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -364,7 +355,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -393,7 +383,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -424,7 +413,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -434,9 +422,9 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
       </dl>
     </cca-summary>
     <button
-      ccapendingbutton=""
       class="govuk-button"
       govukbutton=""
+      netzpendingbutton=""
       type="button"
     >
       Confirm and complete
@@ -445,7 +433,6 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
     class="govuk-footer__section-break govuk-!-margin-bottom-3"
   /><netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

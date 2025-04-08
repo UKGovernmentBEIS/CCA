@@ -14,7 +14,7 @@ import {
   UnderlyingAgreementsService,
 } from 'cca-api';
 
-import FileDownloadComponent from './file-download.component';
+import { FileDownloadComponent } from './file-download.component';
 
 describe('FileDownloadComponent', () => {
   let component: FileDownloadComponent;

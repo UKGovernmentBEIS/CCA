@@ -13,6 +13,7 @@ import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestQueryService;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,12 +30,13 @@ public class AdminTerminationFinalisedService {
     public void terminateAccountAndOpenWorkflows(String requestId){
         final Request request = requestService.findRequestById(requestId);
         final Long accountId = request.getAccountId();
+        final LocalDateTime terminationDate = LocalDateTime.now();
 
         // Update Target Unit Account Status
-        targetUnitAccountUpdateService.handleTargetUnitAccountTerminated(accountId);
+        targetUnitAccountUpdateService.handleTargetUnitAccountTerminated(accountId, terminationDate);
 
         // Terminate facility data
-        facilityDataUpdateService.terminateFacilities(accountId);
+        facilityDataUpdateService.terminateFacilities(accountId, terminationDate);
 
         // Any open WF related to this Target Unit account is terminated.
         terminateWorkflowsByAccountId(accountId);

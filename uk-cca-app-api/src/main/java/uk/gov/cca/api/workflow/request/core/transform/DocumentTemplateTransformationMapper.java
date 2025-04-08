@@ -30,10 +30,11 @@ public class DocumentTemplateTransformationMapper {
         Optional.ofNullable(address.getLine2())
                 .ifPresent(line2 -> addressBuilder.append("\n").append(line2));
         addressBuilder.append("\n").append(address.getCity());
-        addressBuilder.append("\n").append(address.getPostcode());
         Optional.ofNullable(address.getCounty())
                 .ifPresent(county -> addressBuilder.append("\n").append(county));
+        addressBuilder.append("\n").append(address.getPostcode());
         addressBuilder.append("\n").append(countryName);
+
         return addressBuilder.toString();
     }
 
@@ -43,9 +44,9 @@ public class DocumentTemplateTransformationMapper {
         Optional.ofNullable(address.getLine2())
                 .ifPresent(line2 -> addressBuilder.append("\n").append(line2));
         addressBuilder.append("\n").append(address.getCity());
-        addressBuilder.append("\n").append(address.getPostcode());
         Optional.ofNullable(address.getCounty())
                 .ifPresent(county -> addressBuilder.append("\n").append(county));
+        addressBuilder.append("\n").append(address.getPostcode());
 
         return addressBuilder.toString();
     }

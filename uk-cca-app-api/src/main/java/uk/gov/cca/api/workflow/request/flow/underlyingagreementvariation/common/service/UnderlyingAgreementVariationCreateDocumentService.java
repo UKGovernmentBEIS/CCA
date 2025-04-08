@@ -30,19 +30,21 @@ public class UnderlyingAgreementVariationCreateDocumentService {
         final UnderlyingAgreementVariationRequestPayload requestPayload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();
         final CcaDecisionNotification decisionNotification = requestPayload.getDecisionNotification();
         final TargetUnitAccountDetailsDTO accountDetails = accountReferenceDetailsService.getTargetUnitAccountDetails(accountId);
+        final boolean isFinalDocument = requestPayload.getUnderlyingAgreementActivationDetails() != null;
         return ccaFileDocumentGeneratorService.generateAsync(request,
-        		decisionNotification,
-        		CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_PROPOSED_DOCUMENT,
+                decisionNotification,
+                isFinalDocument ? CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_FINAL_DOCUMENT
+                        : CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_PROPOSED_DOCUMENT,
                 CcaDocumentTemplateType.UNDERLYING_AGREEMENT,
-                constructFileName(accountDetails.getBusinessId(), requestPayload.getUnderlyingAgreementVersion() + 1));
+                constructFileName(accountDetails.getBusinessId(), requestPayload.getUnderlyingAgreementVersion() + 1, isFinalDocument));
     }
-    
-    private String constructFileName(final String businessId, int version) {
-        return businessId + 
-        		" Underlying Agreement" + 
-        		" v" + 
-        		version +
-        		" [proposed]" +
-        		".pdf";
+
+    private String constructFileName(final String businessId, final int version, final boolean isFinalDocument) {
+        return businessId +
+                " Underlying Agreement" +
+                " v" +
+                version +
+                (isFinalDocument ? "" : " [proposed]") +
+                ".pdf";
     }
 }

@@ -4,9 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
-import { WizardStepComponent } from '@shared/components';
-import { TextInputComponent } from '@shared/components/text-input/text-input.component';
-import { OperatorTypePipe, transformOperatorType } from '@shared/pipes/operator-type.pipe';
+import { TextInputComponent, WizardStepComponent } from '@shared/components';
+import { transformOperatorType } from '@shared/pipes';
 
 import {
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
@@ -20,31 +19,26 @@ import {
 @Component({
   selector: 'cca-target-unit-details-submit',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    WizardStepComponent,
-    OperatorTypePipe,
-    TextInputComponent,
-    ReturnToTaskOrActionPageComponent,
-  ],
+  imports: [ReactiveFormsModule, WizardStepComponent, TextInputComponent, ReturnToTaskOrActionPageComponent],
   templateUrl: './target-unit-details-submit.component.html',
   providers: [TargetUnitDetailsSubmitFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetUnitDetailsSubmitComponent {
-  protected readonly form = inject<FormGroup<TargetUnitDetailsSubmitFormModel>>(TARGET_UNIT_DETAILS_SUBMIT_FORM);
   private readonly taskService = inject(TaskService);
   private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+
+  protected readonly form = inject<FormGroup<TargetUnitDetailsSubmitFormModel>>(TARGET_UNIT_DETAILS_SUBMIT_FORM);
+  protected readonly transformOperatorType = transformOperatorType;
+
   onSubmit() {
     this.taskService
       .saveSubtask(
         REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
         ReviewTargetUnitDetailsWizardStep.TARGET_UNIT_DETAILS,
         this.activatedRoute,
-        this.form.value,
+        this.form.getRawValue(),
       )
       .subscribe();
   }
-
-  protected readonly transformOperatorType = transformOperatorType;
 }

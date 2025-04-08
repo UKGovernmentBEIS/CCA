@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import { PROVIDE_EVIDENCE_SUBTASK, TaskItemStatus } from '@requests/common';
-import { PendingButtonDirective } from '@shared/directives';
 
 import { underlyingAgreementActivationQuery } from './+state/una-activation.selectors';
 
@@ -13,7 +13,7 @@ import { underlyingAgreementActivationQuery } from './+state/una-activation.sele
   template: `
     @if (isTaskCompleted() && isEditable) {
       <div class="govuk-body">
-        <button ccaPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
+        <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
           Notify operator of decision
         </button>
       </div>

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { LinkDirective, PanelComponent } from '@netz/govuk-components';
+import { PanelComponent } from '@netz/govuk-components';
 
 @Component({
   selector: 'cca-confirmation',
@@ -13,12 +13,12 @@ import { LinkDirective, PanelComponent } from '@netz/govuk-components';
         <p>The admin termination agreement has been withdrawn.</p>
         <p>The selected users will receive an email notification of your decision.</p>
 
-        <a govukLink routerLink="/dashboard" [replaceUrl]="true"> Return to: Dashboard </a>
+        <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true"> Return to: Dashboard </a>
       </div>
     </div>
   `,
   standalone: true,
-  imports: [PanelComponent, LinkDirective, RouterLink],
+  imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ConfirmationComponent {}

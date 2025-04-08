@@ -8,6 +8,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.submit.domain.Un
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.submit.service.UnderlyingAgreementApplyService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestTaskActionHandler;
 
@@ -22,10 +23,12 @@ public class UnderlyingAgreementSaveActionHandler
     private final UnderlyingAgreementApplyService underlyingAgreementApplyService;
 
     @Override
-    public void process(Long requestTaskId, String requestTaskActionType, AppUser appUser,
+    public RequestTaskPayload process(Long requestTaskId, String requestTaskActionType, AppUser appUser,
                         UnderlyingAgreementSaveRequestTaskActionPayload payload) {
         final RequestTask requestTask = requestTaskService.findTaskById(requestTaskId);
         underlyingAgreementApplyService.applySaveAction(payload, requestTask);
+        
+        return requestTask.getPayload();
     }
 
     @Override

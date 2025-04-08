@@ -9,10 +9,12 @@ import uk.gov.cca.api.account.service.TargetUnitAccountSiteContactService;
 import uk.gov.cca.api.authorization.ccaauth.core.service.CcaUserRoleTypeService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.domain.TargetUnitAccountCreationRequestPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.common.exception.BusinessCheckedException;
 import uk.gov.netz.api.workflow.request.core.assignment.requestassign.release.RequestReleaseService;
 import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.RequestTaskAssignmentService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskType;
 
@@ -24,7 +26,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 
 @ExtendWith(MockitoExtension.class)
-public class SectorUserRequestTaskDefaultAssignmentServiceTest {
+class SectorUserRequestTaskDefaultAssignmentServiceTest {
 
     @InjectMocks
     private SectorUserRequestTaskDefaultAssignmentService sectorUserRequestTaskDefaultAssignmentService;
@@ -45,12 +47,12 @@ public class SectorUserRequestTaskDefaultAssignmentServiceTest {
     void assignDefaultAssigneeToTask() throws BusinessCheckedException {
         String requestSectorAssignee = "requestSectorAssignee";
         Request request = Request.builder()
-                .accountId(1L)
                 .payload(TargetUnitAccountCreationRequestPayload.builder()
                         .payloadType(CcaRequestPayloadType.TARGET_UNIT_ACCOUNT_CREATION_REQUEST_PAYLOAD)
                         .sectorUserAssignee(requestSectorAssignee)
                         .build())
                 .build();
+        addResourcesToRequest(1L, request);
 
         RequestTask requestTask = RequestTask.builder().request(request).type(RequestTaskType.builder().code("requestTaskType").build()).build();
 
@@ -70,12 +72,12 @@ public class SectorUserRequestTaskDefaultAssignmentServiceTest {
         Long accountId = 1L;
         String siteContact = "siteContact";
         Request request = Request.builder()
-                .accountId(accountId)
                 .payload(TargetUnitAccountCreationRequestPayload.builder()
                         .payloadType(CcaRequestPayloadType.TARGET_UNIT_ACCOUNT_CREATION_REQUEST_PAYLOAD)
                         .sectorUserAssignee(requestSectorAssignee)
                         .build())
                 .build();
+        addResourcesToRequest(accountId, request);
 
         RequestTask requestTask = RequestTask.builder().request(request).type(RequestTaskType.builder().code("requestTaskType").build()).build();
 
@@ -93,4 +95,14 @@ public class SectorUserRequestTaskDefaultAssignmentServiceTest {
     void getRoleType() {
         assertEquals(SECTOR_USER, sectorUserRequestTaskDefaultAssignmentService.getRoleType());
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

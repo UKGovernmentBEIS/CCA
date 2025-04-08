@@ -9,15 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { TargetPeriod6Details } from './targetPeriod6Details';
+import { TargetPeriod5Details } from './targetPeriod5Details';
+import { UnderlyingAgreementTargetUnitDetails } from './underlyingAgreementTargetUnitDetails';
 import { AuthorisationAndAdditionalEvidence } from './authorisationAndAdditionalEvidence';
 import { FacilityItem } from './facilityItem';
-import { TargetPeriod5Details } from './targetPeriod5Details';
-import { TargetPeriod6Details } from './targetPeriod6Details';
-import { UnderlyingAgreementTargetUnitDetails } from './underlyingAgreementTargetUnitDetails';
 
 export interface UnderlyingAgreementReviewSavePayload {
   underlyingAgreementTargetUnitDetails: UnderlyingAgreementTargetUnitDetails;
-  facilities: Array<FacilityItem>;
+  facilities: FacilityItem[];
   targetPeriod5Details: TargetPeriod5Details;
   targetPeriod6Details: TargetPeriod6Details;
   authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence;

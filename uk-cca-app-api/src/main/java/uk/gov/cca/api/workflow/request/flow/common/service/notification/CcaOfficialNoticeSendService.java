@@ -1,23 +1,5 @@
 package uk.gov.cca.api.workflow.request.flow.common.service.notification;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
-import uk.gov.cca.api.common.exception.CcaErrorCode;
-import uk.gov.cca.api.notification.mail.constants.CcaEmailNotificationTemplateConstants;
-import uk.gov.cca.api.notification.mail.constants.CcaNotificationTemplateName;
-import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
-import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
-import uk.gov.netz.api.files.documents.service.FileDocumentService;
-import uk.gov.netz.api.notification.mail.config.property.NotificationProperties;
-import uk.gov.netz.api.notification.mail.domain.EmailData;
-import uk.gov.netz.api.notification.mail.domain.EmailNotificationTemplateData;
-import uk.gov.netz.api.notification.mail.service.NotificationEmailService;
-import uk.gov.netz.api.workflow.request.core.domain.Request;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,11 +7,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
+import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
+import uk.gov.cca.api.common.exception.CcaErrorCode;
+import uk.gov.cca.api.notification.mail.constants.CcaEmailNotificationTemplateConstants;
+import uk.gov.cca.api.notification.mail.constants.CcaNotificationTemplateName;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
+import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
+import uk.gov.cca.api.workflow.request.core.service.SectorReferenceDetailsService;
+import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
+import uk.gov.netz.api.files.documents.service.FileDocumentService;
+import uk.gov.netz.api.notificationapi.mail.config.property.NotificationProperties;
+import uk.gov.netz.api.notificationapi.mail.domain.EmailData;
+import uk.gov.netz.api.notificationapi.mail.domain.EmailNotificationTemplateData;
+import uk.gov.netz.api.notificationapi.mail.service.NotificationEmailService;
+import uk.gov.netz.api.workflow.request.core.domain.Request;
+
 @Service
 @RequiredArgsConstructor
 public class CcaOfficialNoticeSendService {
 
     private final AccountReferenceDetailsService accountReferenceDetailsService;
+    private final SectorReferenceDetailsService sectorReferenceDetailsService;
     private final NotificationEmailService notificationEmailService;
     private final FileDocumentService fileDocumentService;
     private final NotificationProperties notificationProperties;
@@ -46,7 +51,8 @@ public class CcaOfficialNoticeSendService {
         // Add Sector Contact to cc List
         DefaultNoticeRecipient sectorContact = defaultNoticeRecipients.stream()
                 .filter(recipient -> recipient.getRecipientType().equals(NoticeRecipientType.SECTOR_CONTACT))
-                        .findFirst().orElseThrow(() -> new BusinessException(CcaErrorCode.SECTOR_ASSOCIATION_NO_CONTACT_FOUND));
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(CcaErrorCode.SECTOR_ASSOCIATION_NO_CONTACT_FOUND));
         ccRecipientsEmails.add(sectorContact.getEmail());
 
         // Find to List
@@ -61,7 +67,6 @@ public class CcaOfficialNoticeSendService {
         // Create email data
         Map<String, Object> templateParams = new HashMap<>();
         templateParams.put(CcaEmailNotificationTemplateConstants.RESPONSIBLE_USER, getRecipientNameByType(defaultNoticeRecipients, NoticeRecipientType.RESPONSIBLE_PERSON));
-        templateParams.put(CcaEmailNotificationTemplateConstants.ADMINISTRATIVE_USER, getRecipientNameByType(defaultNoticeRecipients, NoticeRecipientType.ADMINISTRATIVE_CONTACT));
         templateParams.put(CcaEmailNotificationTemplateConstants.TARGET_UNIT_ID, businessId);
         templateParams.put(CcaEmailNotificationTemplateConstants.CONTACT, notificationProperties.getEmail().getContactUsLink());
 
@@ -80,6 +85,36 @@ public class CcaOfficialNoticeSendService {
 
         // Send
         this.notificationEmailService.notifyRecipients(emailData, toRecipientsEmails, ccRecipientsEmails, bccRecipientsEmails);
+    }
+
+    public void sendOfficialNotice(List<FileInfoDTO> attachments, Request request, Long sectorAssociationId) {
+        final SectorAssociationDTO sectorAssociationDetails = sectorReferenceDetailsService.getSectorAssociationDetails(sectorAssociationId);
+        final SectorAssociationContactDTO sectorAssociationContact = sectorAssociationDetails.getSectorAssociationContact();
+        final SectorAssociationDetailsDTO sectorDetails = sectorAssociationDetails.getSectorAssociationDetails();
+
+        // Create email data
+        Map<String, Object> templateParams = new HashMap<>();
+        templateParams.put(CcaEmailNotificationTemplateConstants.SECTOR_CONTACT, sectorAssociationContact.getFullName());
+        templateParams.put(CcaEmailNotificationTemplateConstants.SECTOR_ASSOCIATION_NAME, sectorDetails.getCommonName());
+        templateParams.put(CcaEmailNotificationTemplateConstants.SECTOR_ASSOCIATION_ACRONYM, sectorDetails.getAcronym());
+        templateParams.put(CcaEmailNotificationTemplateConstants.CONTACT, notificationProperties.getEmail().getContactUsLink());
+
+        EmailData emailData = EmailData.builder()
+                .notificationTemplateData(EmailNotificationTemplateData.builder()
+                        .templateName(CcaNotificationTemplateName.GENERIC_SECTOR_EMAIL_TEMPLATE)
+                        .competentAuthority(request.getCompetentAuthority())
+                        .templateParams(templateParams)
+                        .build())
+                .attachments(attachments.stream()
+                        .collect(Collectors.toMap(
+                                FileInfoDTO::getName,
+                                file -> fileDocumentService.getFileDTO(file.getUuid()).getFileContent())
+                        )
+                ).build();
+
+        // Send
+        final List<String> toRecipientsEmails = List.of(sectorAssociationContact.getEmail());
+        this.notificationEmailService.notifyRecipients(emailData, toRecipientsEmails);
     }
 
     public List<DefaultNoticeRecipient> getOfficialNoticeToDefaultRecipients(Request request) {

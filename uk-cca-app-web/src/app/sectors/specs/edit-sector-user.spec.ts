@@ -42,7 +42,7 @@ describe('Edit sector user spec', () => {
     httpTestingController.verify();
   }));
 
-  test('Main: Administrator views and edits user details of another user', async () => {
+  test('Main: Administrator views and edits user details of another user', fakeAsync(async () => {
     const sectorId = 123;
     const sectorUser = mockSectorAuthorities.authorities[0];
     const user = UserEvent.setup();
@@ -74,9 +74,9 @@ describe('Edit sector user spec', () => {
     await harness.fixture.whenStable();
     harness.detectChanges();
     await checkThatSectorUserDetailsAreUpdated('reg1 basic1');
-  });
+  }));
 
-  test('Alternative scenario 1: User views and edits his own user details', async () => {
+  test('Alternative scenario 1: User views and edits his own user details', fakeAsync(async () => {
     const sectorId = 123;
     const sectorUser = mockSectorAuthorities.authorities[1];
     const user = UserEvent.setup();
@@ -109,9 +109,9 @@ describe('Edit sector user spec', () => {
 
     harness.detectChanges();
     await checkThatSectorUserDetailsAreUpdated('reg3 basic3');
-  });
+  }));
 
-  test("Alternative scenario 2: Basic user clicks the 'Change two factor authentication' link", async () => {
+  test("Alternative scenario 2: Basic user clicks the 'Change two factor authentication' link", fakeAsync(async () => {
     const sectorId = 123;
     const sectorUser = mockSectorAuthorities.authorities[0];
     const user = UserEvent.setup();
@@ -120,9 +120,9 @@ describe('Edit sector user spec', () => {
     await navigateToSectorUserDetails(sectorId, sectorUser.userId, transformUsername(sectorUser), opts);
 
     expect(screen.getByText('Reset two-factor authentication')).toHaveAttribute('href', '/2fa/reset-2fa');
-  });
+  }));
 
-  test("Alternative scenario 3: Administrator clicks the 'Change two factor authentication' link", async () => {
+  test("Alternative scenario 3: Administrator clicks the 'Change two factor authentication' link", fakeAsync(async () => {
     const sectorId = 123;
     const sectorUser = mockSectorAuthorities.authorities[1];
     const user = UserEvent.setup();
@@ -132,5 +132,5 @@ describe('Edit sector user spec', () => {
     await navigateToSectorUserDetails(sectorId, sectorUser.userId, transformUsername(sectorUser), opts);
 
     expect(screen.getByText('Reset two-factor authentication')).toHaveAttribute('href', '/2fa/reset-2fa');
-  });
+  }));
 });

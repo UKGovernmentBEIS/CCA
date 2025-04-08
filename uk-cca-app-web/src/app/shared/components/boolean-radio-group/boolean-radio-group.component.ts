@@ -18,7 +18,6 @@ import { ConditionalContentDirective, RadioComponent, RadioOptionComponent } fro
 
 import { existingControlContainer } from '../../providers/control-container.factory';
 
-// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
 @Component({
   selector: 'cca-boolean-radio-group',
   templateUrl: './boolean-radio-group.component.html',

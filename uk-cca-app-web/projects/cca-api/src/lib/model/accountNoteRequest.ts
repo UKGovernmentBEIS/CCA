@@ -15,6 +15,6 @@
  */
 export interface AccountNoteRequest {
   note: string;
-  files?: Array<string>;
+  files?: string[];
   accountId: number;
 }

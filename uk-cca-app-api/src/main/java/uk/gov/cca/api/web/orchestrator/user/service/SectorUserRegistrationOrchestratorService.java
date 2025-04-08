@@ -29,7 +29,7 @@ public class SectorUserRegistrationOrchestratorService {
     	
     	SectorInvitedUserInfoDTO sectorInvitedUserInfoDTO = sectorUserAcceptInvitationService.acceptInvitation(invitationToken);
     	
-    	String sector = sectorAssociationQueryService.getSectorAssociationIdentifier(sectorInvitedUserInfoDTO.getSectorAssociationId());
+    	String sector = sectorAssociationQueryService.getSectorAssociationAcronymAndName(sectorInvitedUserInfoDTO.getSectorAssociationId());
     	
     	return ACCEPT_INVITATION_MAPPER.toSectorInvitedUserInfoDTO(sectorInvitedUserInfoDTO, sector);
     	

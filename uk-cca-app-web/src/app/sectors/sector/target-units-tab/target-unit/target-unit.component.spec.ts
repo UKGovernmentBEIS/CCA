@@ -27,7 +27,7 @@ describe('TargetUnitComponent', () => {
     });
   });
 
-  it('should render all headings', () => {
+  it('should render all headings from details tab', () => {
     expect(screen.getByRole('heading', { name: 'Target unit name 01 Live' })).toBeVisible();
     expect(screen.getByRole('heading', { name: 'Target unit details' })).toBeVisible();
     expect(screen.getByRole('heading', { name: 'Financial independence' })).toBeVisible();
@@ -37,23 +37,14 @@ describe('TargetUnitComponent', () => {
   });
 
   it('should display the tabs', () => {
-    const tabTitles = ['Details', 'Workflow history', 'Reports', 'Users and contacts'];
+    const tabTitles = ['Details', 'Facilities', 'Workflow history', 'Reports', 'Users and contacts'];
 
-    expect(screen.getAllByRole('tab')).toHaveLength(4);
+    expect(screen.getAllByRole('tab')).toHaveLength(5);
     expect(screen.getAllByRole('tab')[0]).toHaveTextContent(tabTitles[0]);
     expect(screen.getAllByRole('tab')[1]).toHaveTextContent(tabTitles[1]);
     expect(screen.getAllByRole('tab')[2]).toHaveTextContent(tabTitles[2]);
     expect(screen.getAllByRole('tab')[3]).toHaveTextContent(tabTitles[3]);
-  });
-
-  it('should display the headers', () => {
-    const tabTitles = ['Details', 'Workflow history', 'Reports', 'Users and contacts'];
-
-    expect(screen.getAllByRole('tab')).toHaveLength(4);
-    expect(screen.getAllByRole('tab')[0]).toHaveTextContent(tabTitles[0]);
-    expect(screen.getAllByRole('tab')[1]).toHaveTextContent(tabTitles[1]);
-    expect(screen.getAllByRole('tab')[2]).toHaveTextContent(tabTitles[2]);
-    expect(screen.getAllByRole('tab')[3]).toHaveTextContent(tabTitles[3]);
+    expect(screen.getAllByRole('tab')[4]).toHaveTextContent(tabTitles[4]);
   });
 
   it('should display the target unit details', () => {

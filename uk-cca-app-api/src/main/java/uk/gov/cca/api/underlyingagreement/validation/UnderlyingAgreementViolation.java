@@ -29,6 +29,8 @@ public class UnderlyingAgreementViolation extends BusinessViolation {
         INVALID_SECTION_DATA ("Invalid section data"),
         ATTACHMENT_NOT_FOUND("Attachment not found"),
         INVALID_ATTACHMENT_TYPE ("Invalid attachment type"),
+        INVALID_EVIDENCE_ATTACHMENT_TYPE ("Invalid evidence attachment type"),
+        INVALID_TARGET_CALCULATOR_ATTACHMENT_TYPE ("Invalid target calculator attachment type"),
 
         INVALID_TARGET_UNIT_TYPE("Target unit type not in compliance with sector or subsector scheme"),
         INVALID_TARGET_UNIT_THROUGHPUT_MEASURED("Is target unit throughput measured not in compliance with sector or subsector scheme"),

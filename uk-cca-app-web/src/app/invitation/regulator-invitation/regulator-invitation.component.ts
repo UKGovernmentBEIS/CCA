@@ -5,9 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { first, map, of, switchMap } from 'rxjs';
 
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
-import { PageHeadingComponent, PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
+import { PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/components';
 
 import { RegulatorUsersRegistrationService } from 'cca-api';
 

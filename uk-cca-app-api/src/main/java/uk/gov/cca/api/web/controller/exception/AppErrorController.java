@@ -19,8 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 import uk.gov.cca.api.web.util.ErrorUtil;
 import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.netz.api.logging.MultiReadHttpServletRequestWrapper;
-import uk.gov.netz.api.logging.RestLoggingService;
+import uk.gov.netz.api.restlogging.MultiReadHttpServletRequestWrapper;
+import uk.gov.netz.api.restlogging.RestLoggingService;
+import uk.gov.netz.api.restlogging.RestLoggingUtils;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -71,14 +72,17 @@ public class AppErrorController implements ErrorController {
         ResponseEntity<ErrorResponse>  errorResponse = getResponse(request);
         ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
 
-        String requestUri = request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI).toString();
-        HttpStatus httpStatus = ObjectUtils.isEmpty(request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)) ? null
+        String originalRequestUri = request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI).toString();
+        HttpStatus originalHttpStatus = ObjectUtils.isEmpty(request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)) ? null
                 : HttpStatus.valueOf((int) request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE));
         MultiReadHttpServletRequestWrapper wrappedRequest = new MultiReadHttpServletRequestWrapper(request);
 
         LocalDateTime requestTimestamp = LocalDateTime.now();
 
-        restLoggingService.logRestRequestResponse(wrappedRequest, requestUri, wrappedResponse, httpStatus, requestTimestamp);
+        restLoggingService.log(wrappedRequest, wrappedResponse, requestTimestamp,
+                response.getHeader(RestLoggingUtils.CORRELATION_ID_HEADER),
+                response.getHeader(RestLoggingUtils.CORRELATION_PARENT_ID_HEADER),
+                originalRequestUri, originalHttpStatus);
         return errorResponse;
     }
 

@@ -6,9 +6,9 @@ import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import { RequestTaskStore } from '@netz/common/store';
 import { TextareaComponent } from '@netz/govuk-components';
-import { FinalDecisionTypePipe } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { FinalDecisionTypePipe } from '@shared/pipes';
+import { generateDownloadUrl } from '@shared/utils';
 
 import { AdminTerminationFinalDecisionQuery } from '../../../+state/admin-termination-final-decision.selectors';
 import {

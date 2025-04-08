@@ -110,7 +110,7 @@ export class GovukValidators {
   };
 
   private static isPositiveNumber(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
+    return (control: AbstractControl): Record<string, boolean> | null => {
       const inputNumValue = Number(control.value);
 
       return control.value !== null && control.value !== undefined && inputNumValue <= 0
@@ -121,7 +121,7 @@ export class GovukValidators {
 
   private static isInteger(): ValidatorFn {
     const intRegex = new RegExp('^[0-9]*$');
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
+    return (control: AbstractControl): Record<string, boolean> | null => {
       const value = control.value;
       return control.value !== null && control.value !== undefined && !intRegex.test(value)
         ? { invalidInteger: true }
@@ -131,7 +131,7 @@ export class GovukValidators {
 
   private static isNatural(): ValidatorFn {
     const intRegex = new RegExp('^[0-9]*$');
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
+    return (control: AbstractControl): Record<string, boolean> | null => {
       const value = control.value;
       return control.value !== null && control.value !== undefined && (!intRegex.test(value) || Number(value) <= 0)
         ? { invalidNatural: true }
@@ -141,7 +141,7 @@ export class GovukValidators {
 
   private static isWhole(): ValidatorFn {
     const intRegex = new RegExp('^[0-9]*$');
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
+    return (control: AbstractControl): Record<string, boolean> | null => {
       const value = control.value;
       return control.value !== null && control.value !== undefined && (!intRegex.test(value) || Number(value) < 0)
         ? { invalidWhole: true }
@@ -150,7 +150,7 @@ export class GovukValidators {
   }
 
   private static maxFileSizeValidator(maxFileSize: number): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
+    return (control: AbstractControl): Record<string, boolean> | null => {
       if (
         control.value &&
         control.value instanceof FileList &&
@@ -163,7 +163,7 @@ export class GovukValidators {
   }
 
   private static fileExtensionValidator(accepted: string[]): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
+    return (control: AbstractControl): Record<string, boolean> | null => {
       if (
         control.value &&
         control.value instanceof FileList &&
@@ -176,7 +176,7 @@ export class GovukValidators {
   }
 
   private static notNaNValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
+    return (control: AbstractControl): Record<string, boolean> | null => {
       if (control.value !== '' && isNaN(control.value)) {
         return { isNaN: true };
       }
@@ -185,7 +185,7 @@ export class GovukValidators {
   }
 
   private static emptyValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
+    return (control: AbstractControl): Record<string, boolean> | null => {
       if (
         control.value === null ||
         control.value === undefined ||
@@ -201,7 +201,7 @@ export class GovukValidators {
   }
 
   private static incompleteValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
+    return (control: AbstractControl): Record<string, boolean> | null => {
       if (
         control.value !== null &&
         control.value !== undefined &&

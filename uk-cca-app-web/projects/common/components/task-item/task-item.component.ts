@@ -1,9 +1,9 @@
-import { I18nSelectPipe, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { StatusTagColorPipe, StatusTagTextPipe } from '@netz/common/pipes';
-import { LinkDirective, TagComponent } from '@netz/govuk-components';
+import { TagComponent } from '@netz/govuk-components';
 
 /* eslint-disable @angular-eslint/component-selector */
 @Component({
@@ -21,7 +21,7 @@ import { LinkDirective, TagComponent } from '@netz/govuk-components';
     <ng-content></ng-content>
   `,
   standalone: true,
-  imports: [RouterLink, StatusTagColorPipe, I18nSelectPipe, NgIf, StatusTagTextPipe, LinkDirective, TagComponent],
+  imports: [RouterLink, StatusTagColorPipe, NgIf, StatusTagTextPipe, TagComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskItemComponent {

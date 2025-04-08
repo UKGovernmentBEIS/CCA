@@ -123,7 +123,7 @@ class RequestTaskPaymentControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(appUser, "createCardPayment", String.valueOf(requestTaskId));
+            .authorize(appUser, "createCardPayment", String.valueOf(requestTaskId), null, null);
 
         mockMvc.perform(
             MockMvcRequestBuilders.post(BASE_PATH + "/" + requestTaskId + "/create"))
@@ -175,7 +175,7 @@ class RequestTaskPaymentControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(appUser, "processExistingCardPayment", String.valueOf(requestTaskId));
+            .authorize(appUser, "processExistingCardPayment", String.valueOf(requestTaskId), null, null);
 
         mockMvc.perform(
             MockMvcRequestBuilders.post(BASE_PATH + "/" + requestTaskId + "/process"))

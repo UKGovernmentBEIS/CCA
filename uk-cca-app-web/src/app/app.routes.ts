@@ -1,10 +1,13 @@
 import { ExtraOptions, Routes } from '@angular/router';
 
-import { AuthorizeGuard } from '@core/guards/authorize.guard';
-import { LoggedInGuard } from '@core/guards/logged-in.guard';
-import { NonAuthGuard } from '@core/guards/non-auth.guard';
-import { PendingRequestGuard } from '@core/guards/pending-request.guard';
-import { TermsAndConditionsGuard } from '@core/guards/terms-and-conditions.guard';
+import { isFeatureEnabled } from '@shared/config';
+import {
+  AuthorizeGuard,
+  LoggedInGuard,
+  NonAuthGuard,
+  PendingRequestGuard,
+  TermsAndConditionsGuard,
+} from '@shared/guards';
 
 import { AccessibilityComponent } from './accessibility/accessibility.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
@@ -30,38 +33,39 @@ export const APP_ROUTES: Routes = [
     redirectTo: 'landing',
     pathMatch: 'full',
   },
+  // unauthorized routes
   {
     path: '',
     data: { breadcrumb: 'Home' },
     children: [
       {
         path: 'about',
-        data: { pageTitle: 'About', breadcrumb: true },
+        data: { pageTitle: 'About' },
         component: VersionComponent,
       },
       {
         path: 'privacy-notice',
-        data: { pageTitle: 'Privacy notice', breadcrumb: true },
+        data: { pageTitle: 'Privacy notice' },
         component: PrivacyNoticeComponent,
       },
       {
         path: 'accessibility',
-        data: { pageTitle: 'Accessibility Statement', breadcrumb: true },
+        data: { pageTitle: 'Accessibility Statement' },
         component: AccessibilityComponent,
       },
       {
         path: 'contact-us',
-        data: { pageTitle: 'Contact us', breadcrumb: true },
+        data: { pageTitle: 'Contact us' },
         component: ContactUsComponent,
       },
       {
         path: 'legislation',
-        data: { pageTitle: 'UK ETS legislation', breadcrumb: true },
+        data: { pageTitle: 'CCA legislation' },
         component: LegislationComponent,
       },
       {
         path: 'feedback',
-        data: { pageTitle: 'Feedback', breadcrumb: true },
+        data: { pageTitle: 'Feedback' },
         component: FeedbackComponent,
         canDeactivate: [PendingRequestGuard],
       },
@@ -72,6 +76,16 @@ export const APP_ROUTES: Routes = [
       {
         path: '2fa',
         loadChildren: () => import('./two-fa/two-fa.routes').then((r) => r.TWO_FA_ROUTES),
+      },
+    ],
+  },
+  {
+    path: 'registration',
+    children: [
+      {
+        path: 'invitation',
+        loadChildren: () =>
+          import('./invitation/operator-user-invitation/routes').then((r) => r.OPERATOR_INVITATION_USER_ROUTES),
       },
     ],
   },
@@ -90,67 +104,65 @@ export const APP_ROUTES: Routes = [
     canActivate: [NonAuthGuard],
     component: TimedOutComponent,
   },
+  // authorized routes
   {
     path: '',
     canActivate: [LoggedInGuard],
+    data: { breadcrumb: 'Dashboard' },
     children: [
       {
-        path: '',
-        data: { breadcrumb: 'Dashboard' },
+        path: 'dashboard',
+        data: { pageTitle: 'Climate Change Agreement dashboard' },
+        canActivate: [AuthorizeGuard],
+        component: DashboardPageComponent,
+      },
+      {
+        path: 'user',
+        canActivate: [AuthorizeGuard],
         children: [
           {
-            path: 'dashboard',
-            data: { pageTitle: 'Climate Change Agreement dashboard' },
-            canActivate: [AuthorizeGuard],
-            component: DashboardPageComponent,
-          },
-          {
-            path: 'user',
-            canActivate: [AuthorizeGuard],
-            children: [
-              {
-                path: 'regulators',
-                data: { breadcrumb: 'Regulator users' },
-                loadChildren: () => import('./regulators/regulators.routes').then((r) => r.REGULATOR_ROUTES),
-              },
-            ],
-          },
-          {
-            path: 'sectors',
-            data: { breadcrumb: 'Manage sectors' },
-            loadChildren: () => import('./sectors/sectors.routes').then((r) => r.SECTORS_ROUTES),
-          },
-          {
-            path: 'target-unit-accounts',
-            data: { breadcrumb: 'Target unit accounts' },
-            loadChildren: () => import('./accounts/accounts.routes').then((r) => r.ACCOUNT_ROUTES),
-          },
-          {
-            path: 'tasks',
-            canActivate: [AuthorizeGuard],
-            loadChildren: () => import('./requests/tasks/tasks.routes').then((r) => r.TASKS_ROUTES),
-          },
-          {
-            path: 'terms',
-            data: { pageTitle: 'Accept terms and conditions' },
-            component: TermsAndConditionsComponent,
-            canActivate: [TermsAndConditionsGuard],
-            canDeactivate: [PendingRequestGuard],
+            path: 'regulators',
+            data: { breadcrumb: 'Regulator users' },
+            loadChildren: () => import('./regulators/regulators.routes').then((r) => r.REGULATOR_ROUTES),
           },
         ],
       },
-    ],
-  },
-  {
-    path: 'registration',
-    children: [
       {
-        path: 'invitation',
-        loadChildren: () =>
-          import('./invitation/operator-user-invitation/routes').then((r) => r.OPERATOR_INVITATION_USER_ROUTES),
+        path: 'sectors',
+        data: { breadcrumb: 'Manage Sectors' },
+        loadChildren: () => import('./sectors/sectors.routes').then((r) => r.SECTORS_ROUTES),
+      },
+      {
+        path: 'target-unit-accounts',
+        data: { breadcrumb: 'Target Unit Accounts' },
+        loadChildren: () => import('./accounts/accounts.routes').then((r) => r.ACCOUNT_ROUTES),
+      },
+      {
+        path: 'tasks',
+        canActivate: [AuthorizeGuard],
+        loadChildren: () => import('./requests/tasks/tasks.routes').then((r) => r.TASKS_ROUTES),
+      },
+      {
+        path: 'mi-reports',
+        loadChildren: () => import('./mi-reports/mi-reports.routes').then((r) => r.MI_REPORTS_ROUTES),
+      },
+      {
+        path: 'subsistence-fees',
+        data: { breadcrumb: 'Subsistence fees' },
+        canMatch: [() => !isFeatureEnabled('subsistenceFeesHideMenu')()],
+        canActivate: [AuthorizeGuard],
+        loadChildren: () => import('./subsistence-fees/subsistence-fees.routes').then((r) => r.SUBSISTENCE_FEES_ROUTES),
+      },
+      {
+        path: 'terms',
+        data: { pageTitle: 'Accept terms and conditions' },
+        component: TermsAndConditionsComponent,
+        canActivate: [TermsAndConditionsGuard],
+        canDeactivate: [PendingRequestGuard],
       },
     ],
   },
+
   // The route below handles all unknown routes / Page Not Found functionality.
   // Please keep this route last else there will be unexpected behavior.
   {

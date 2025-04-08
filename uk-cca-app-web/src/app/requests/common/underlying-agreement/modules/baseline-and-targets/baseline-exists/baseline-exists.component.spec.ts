@@ -1,7 +1,8 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { of } from 'rxjs';
 
@@ -18,6 +19,8 @@ describe('BaselineExistsComponent', () => {
   let component: BaselineExistsComponent;
   let fixture: ComponentFixture<BaselineExistsComponent>;
   let store: RequestTaskStore;
+  let router: Router;
+
   const route = new ActivatedRouteStub();
 
   const taskService: Partial<jest.Mocked<TaskService>> = {
@@ -28,7 +31,7 @@ describe('BaselineExistsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BaselineExistsComponent],
+      imports: [BaselineExistsComponent, RouterTestingModule.withRoutes([])],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
@@ -36,6 +39,9 @@ describe('BaselineExistsComponent', () => {
         { provide: ActivatedRoute, useValue: route },
       ],
     }).compileComponents();
+
+    router = TestBed.inject(Router);
+    jest.spyOn(router, 'url', 'get').mockReturnValue('tasks/1/underlying-agreement-application/target-period-5');
 
     store = TestBed.inject(RequestTaskStore);
     store.setState(mockRequestTaskState);
@@ -103,5 +109,12 @@ describe('BaselineExistsComponent', () => {
 
   afterEach(() => {
     saveSubTaskSpy.mockClear();
+  });
+
+  it('should show notification banner only in the UnA application flow', () => {
+    expect(component.showNotificationBanner).toBe(true);
+    jest.spyOn(router, 'url', 'get').mockReturnValue('');
+    fixture.detectChanges();
+    expect(component.showNotificationBanner).toBe(true);
   });
 });

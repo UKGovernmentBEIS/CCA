@@ -8,7 +8,6 @@ import { of } from 'rxjs';
 import { TaskService } from '@netz/common/forms';
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { ResponsiblePersonInputComponent } from '@shared/components/responsible-person-input/responsible-person-input.component';
 import { screen } from '@testing-library/angular';
 import UserEvent from '@testing-library/user-event';
 
@@ -29,7 +28,7 @@ describe('ResponsiblePersonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResponsiblePersonComponent, ResponsiblePersonInputComponent],
+      imports: [ResponsiblePersonComponent],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),

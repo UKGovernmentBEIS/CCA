@@ -2,7 +2,7 @@ import { InjectionToken, Provider } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { AddressFormModel, createCountyAddressControl } from '@shared/components';
-import { textFieldValidators } from '@shared/validators/validators';
+import { textFieldValidators } from '@shared/validators';
 
 import { ActiveSectorStore } from '../../active-sector.store';
 

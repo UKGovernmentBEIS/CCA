@@ -1,8 +1,5 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,6 +12,9 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementFacilityReviewDecision;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskActionPayload;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -22,15 +22,15 @@ import uk.gov.netz.api.workflow.request.core.domain.RequestTaskActionPayload;
 @SuperBuilder
 public class UnderlyingAgreementSaveFacilityReviewGroupDecisionRequestTaskActionPayload extends RequestTaskActionPayload {
 
-	@NotNull
+    private Determination determination;
+
+    @NotNull
     private String group;
 
     @NotNull
     @Valid
     private UnderlyingAgreementFacilityReviewDecision decision;
 
-    private Determination determination;
-    
     @Builder.Default
     private Map<String, String> reviewSectionsCompleted = new HashMap<>();
 }

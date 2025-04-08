@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
+import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
+import uk.gov.cca.api.account.repository.TargetUnitAccountRepository;
 import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
 import uk.gov.cca.api.account.service.TargetUnitAccountService;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
@@ -21,6 +23,7 @@ public class TargetUnitAccountCreationMigrationService {
     private final TargetUnitAccountQueryService targetUnitAccountQueryService;
     private final TargetUnitAccountService targetUnitAccountService;
     private final AccountIdentifierService accountIdentifierService;
+    private final TargetUnitAccountRepository targetUnitAccountRepository;
     
     @Transactional
     public void createMigratedTargetUnitAccount(TargetUnitAccountDTO targetUnitDTO) throws Exception {
@@ -31,7 +34,12 @@ public class TargetUnitAccountCreationMigrationService {
         
         final Long accountId = accountIdentifierService.incrementAndGet();
 
-        targetUnitAccountService.createTargetUnitAccount(targetUnitDTO, accountId, targetUnitDTO.getBusinessId());
+        TargetUnitAccountDTO createdTargetUnitAccountDTO = targetUnitAccountService.createTargetUnitAccount(targetUnitDTO, accountId, targetUnitDTO.getBusinessId());
+        
+        TargetUnitAccount account = targetUnitAccountRepository.findById(createdTargetUnitAccountDTO.getId())
+                .orElseThrow(() -> new Exception("Account failed to persist in CCA"));
+        
+        account.setMigrated(true);
      }
 
 }

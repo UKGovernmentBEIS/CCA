@@ -12,4 +12,5 @@
 
 export interface RequestTaskPayload {
   payloadType?: string;
+  sendEmailNotification?: boolean;
 }

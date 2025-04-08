@@ -11,9 +11,7 @@ export const WORKFLOW_DETAILS_ROUTES: Routes = [
         resolve: { workflowDetailsItemsAndActions: WorkflowDetailsResolver },
         data: {
           pageTitle: 'Workflow details',
-          breadcrumb: {
-            resolveText: ({ workflowDetailsItemsAndActions }) => `${workflowDetailsItemsAndActions.workflowDetails.id}`,
-          },
+          breadcrumb: ({ workflowDetailsItemsAndActions }) => `${workflowDetailsItemsAndActions.workflowDetails.id}`,
         },
         children: [
           {

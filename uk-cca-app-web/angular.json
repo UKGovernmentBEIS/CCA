@@ -44,7 +44,7 @@
                 "output": "/assets/"
               }
             ],
-            "styles": ["src/styles.scss", "node_modules/dialog-polyfill/dialog-polyfill.css"],
+            "styles": ["src/styles.scss"],
             "stylePreprocessorOptions": {
               "includePaths": ["node_modules/govuk-frontend/dist/govuk/"]
             },
@@ -190,7 +190,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["projects/cca-api/**/*.ts"]
+            "lintFilePatterns": ["projects/cca-api/**/*.ts", "projects/cca-api/**/*.html"]
           }
         }
       }

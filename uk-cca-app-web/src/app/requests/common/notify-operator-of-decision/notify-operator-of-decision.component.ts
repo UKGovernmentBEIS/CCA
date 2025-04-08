@@ -4,13 +4,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { CheckboxComponent, CheckboxesComponent, SelectComponent } from '@netz/govuk-components';
+import { NoticeRecipientsTypePipe } from '@shared/pipes';
 import { existingControlContainer } from '@shared/providers';
 
 import { CaExternalContactsService, NoticeRecipientsService, RegulatorAuthoritiesService, TasksService } from 'cca-api';
 
-import { NoticeRecipientsTypePipe } from '../pipes';
-
-// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
 @Component({
   selector: 'cca-notify-operator-of-decision',
   templateUrl: './notify-operator-of-decision.component.html',

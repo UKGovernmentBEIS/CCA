@@ -9,8 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AccountAddressDTO } from './accountAddressDTO';
 import { UnderlyingAgreementTargetUnitResponsiblePerson } from './underlyingAgreementTargetUnitResponsiblePerson';
+import { AccountAddressDTO } from './accountAddressDTO';
 
 export interface UnderlyingAgreementApplySaveTargetUnitDetails {
   operatorName: string;

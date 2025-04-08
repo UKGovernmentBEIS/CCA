@@ -1,0 +1,59 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Notify operator of decision"
+  heading="Select who should receive the determination notification"
+  data-testid="underlying-agreement-review-notify-operator-form"
+  submitText="Confirm and complete"
+>
+  <h3 class="govuk-heading-m">Users automatically notified</h3>
+
+  <div class="govuk-body">
+    @for (user of defaultUsers(); track user.email) {
+      <p class="govuk-!-margin-bottom-1 govuk-!-margin-top-0">
+        {{ user.firstName }} {{ user.lastName }}, {{ user.type | noticeRecipientsType }}, {{ user.email }}
+      </p>
+    }
+  </div>
+
+  @if (additionalUsers(); as additionalUsers) {
+    <div
+      formControlName="additionalUsersNotified"
+      legend="Select any additional users you want to notify"
+      legendSize="medium"
+      class="govuk-checkboxes"
+      govuk-checkboxes
+    >
+      @for (user of additionalUsers; track user.email) {
+        <govuk-checkbox
+          [value]="user"
+          [label]="user.firstName + ' ' + user.lastName + ', ' + (user.type | noticeRecipientsType) + ', ' + user.email"
+        ></govuk-checkbox>
+      }
+    </div>
+  }
+
+  @if (externalContacts(); as caExternalContacts) {
+    <div
+      formControlName="externalContactsNotified"
+      legend="Select the external contacts you want to notify"
+      legendSize="medium"
+      class="govuk-checkboxes"
+      govuk-checkboxes
+    >
+      @for (contact of caExternalContacts; track contact.id) {
+        <govuk-checkbox [value]="contact.id" [label]="contact.email"></govuk-checkbox>
+      }
+    </div>
+  }
+
+  <div
+    [options]="regulatorAuthorities()"
+    formControlName="signatory"
+    govuk-select
+    label="Select the name and signature that will be shown on the official notice document"
+  ></div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

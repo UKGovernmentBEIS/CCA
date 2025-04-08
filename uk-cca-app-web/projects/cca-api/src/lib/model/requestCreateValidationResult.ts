@@ -13,6 +13,6 @@
 export interface RequestCreateValidationResult {
   valid?: boolean;
   accountStatus?: string;
-  applicableAccountStatuses?: Array<string>;
-  requests?: Array<string>;
+  applicableAccountStatuses?: string[];
+  requests?: string[];
 }

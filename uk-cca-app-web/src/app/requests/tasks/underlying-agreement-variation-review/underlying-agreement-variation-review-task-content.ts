@@ -1,18 +1,21 @@
 import { inject } from '@angular/core';
 
-import { TaskItem, TaskSection } from '@netz/common/model';
+import { TaskSection } from '@netz/common/model';
 import { RequestTaskPageContentFactory } from '@netz/common/request-task';
 import { RequestTaskStore } from '@netz/common/store';
 import {
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
   BaselineAndTargetPeriodsSubtasks,
+  overallDecisionStatus,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   TaskItemStatus,
+  transformFacilities,
   UNAVariationReviewRequestTaskPayload,
   VARIATION_DETAILS_SUBTASK,
 } from '@requests/common';
 
-import { Facility } from 'cca-api';
+import { UnderlyingAgreementVariationReviewPrecontentComponent } from './precontent/underlying-agreement-variation-review-precontent.component';
+import { reviewSectionsCompleted } from './utils';
 
 const routePrefix = 'underlying-agreement-variation-review';
 
@@ -21,6 +24,7 @@ export const underlyingAgreementVariationReviewTaskContent: RequestTaskPageConte
 
   return {
     header: 'Review underlying agreement variation',
+    preContentComponent: UnderlyingAgreementVariationReviewPrecontentComponent,
     sections: getAllUnderlyingAgreementVariationSections(store.state?.requestTaskItem?.requestTask?.payload),
   };
 };
@@ -28,6 +32,24 @@ export const underlyingAgreementVariationReviewTaskContent: RequestTaskPageConte
 export function getAllUnderlyingAgreementVariationSections(
   payload: UNAVariationReviewRequestTaskPayload,
 ): TaskSection[] {
+  const facilities = transformFacilities(
+    payload?.underlyingAgreement?.facilities,
+    ['NEW', 'LIVE'],
+    payload?.reviewSectionsCompleted,
+    routePrefix,
+    'summary',
+    TaskItemStatus.UNDECIDED,
+  );
+
+  const excludedFacilities = transformFacilities(
+    payload?.underlyingAgreement?.facilities,
+    ['EXCLUDED'],
+    payload?.reviewSectionsCompleted,
+    routePrefix,
+    'summary',
+    TaskItemStatus.UNDECIDED,
+  );
+
   return [
     {
       title: 'Variation details',
@@ -51,11 +73,11 @@ export function getAllUnderlyingAgreementVariationSections(
     },
     {
       title: 'Facilities',
-      tasks: [...getAllFacilities(payload, ['NEW', 'LIVE'])],
+      tasks: facilities,
     },
     {
       title: 'Excluded facilities',
-      tasks: [...getAllFacilities(payload, ['EXCLUDED'])],
+      tasks: excludedFacilities,
     },
     {
       title: 'Baseline and Targets',
@@ -91,23 +113,11 @@ export function getAllUnderlyingAgreementVariationSections(
       title: 'Decision',
       tasks: [
         {
-          status: TaskItemStatus.CANNOT_START_YET,
-          link: '',
+          status: reviewSectionsCompleted(payload) ? overallDecisionStatus(payload) : TaskItemStatus.CANNOT_START_YET,
+          link: reviewSectionsCompleted(payload) ? `${routePrefix}/send-application` : '',
           linkText: 'Overall decision',
         },
       ],
     },
   ].filter((item) => item.tasks.length > 0);
-}
-
-function getAllFacilities(payload: UNAVariationReviewRequestTaskPayload, statuses: Facility['status'][]): TaskItem[] {
-  return (
-    payload?.underlyingAgreement?.facilities
-      ?.filter((facility) => statuses.includes(facility.status))
-      ?.map((facility) => ({
-        status: payload?.reviewSectionsCompleted?.[facility.facilityId] ?? TaskItemStatus.UNDECIDED,
-        link: `${routePrefix}/facility/${facility.facilityId}/summary`,
-        linkText: `${facility.facilityDetails.name} (${facility.facilityId})`,
-      })) ?? []
-  );
 }

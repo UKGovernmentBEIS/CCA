@@ -6,7 +6,7 @@ import { GovukValidators } from '@netz/govuk-components';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
 import { transformAttachmentsToFilesWithUUIDs, transformFilesToUUIDsList } from '@shared/utils';
-import { textFieldValidators } from '@shared/validators/validators';
+import { textFieldValidators } from '@shared/validators';
 
 import { AdminTerminationReasonDetails } from 'cca-api';
 

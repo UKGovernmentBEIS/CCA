@@ -14,5 +14,5 @@ import { UnderlyingAgreementActivationDetails } from './underlyingAgreementActiv
 export interface UnderlyingAgreementVariationActivationSaveRequestTaskActionPayload {
   payloadType?: string;
   underlyingAgreementActivationDetails?: UnderlyingAgreementActivationDetails;
-  sectionsCompleted?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
 }

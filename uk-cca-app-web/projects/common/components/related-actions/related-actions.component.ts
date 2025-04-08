@@ -2,8 +2,6 @@ import { NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
-import { LinkDirective } from '@netz/govuk-components';
-
 import { RequestTaskDTO, RequestTaskItemDTO } from 'cca-api';
 
 import { RelatedActionsMap, TASK_RELATED_ACTIONS_MAP } from './related-actions.providers';
@@ -17,7 +15,7 @@ import { RelatedActionsMap, TASK_RELATED_ACTIONS_MAP } from './related-actions.p
       <nav role="navigation" aria-labelledby="subsection-title">
         <ul class="govuk-list govuk-!-font-size-16">
           <li *ngFor="let action of relatedActions">
-            <a [routerLink]="action.link" govukLink [relativeTo]="route">{{ action.text }}</a>
+            <a [routerLink]="action.link" class="govuk-link" [relativeTo]="route">{{ action.text }}</a>
           </li>
         </ul>
       </nav>
@@ -25,7 +23,7 @@ import { RelatedActionsMap, TASK_RELATED_ACTIONS_MAP } from './related-actions.p
   `,
   styleUrl: './related-actions.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgFor, RouterLink, LinkDirective],
+  imports: [NgFor, RouterLink],
 })
 export class RelatedActionsComponent implements OnChanges {
   @Input({ required: true }) allowedRequestTaskActions: RequestTaskItemDTO['allowedRequestTaskActions'];

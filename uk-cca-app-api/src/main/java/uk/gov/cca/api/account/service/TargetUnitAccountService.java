@@ -14,6 +14,11 @@ import uk.gov.netz.api.account.service.AccountSearchAdditionalKeywordService;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 
+import java.util.Map;
+
+import static uk.gov.cca.api.account.domain.AccountSearchKey.ACCOUNT_NAME;
+import static uk.gov.cca.api.account.domain.AccountSearchKey.BUSINESS_ID;
+
 @Service
 @AllArgsConstructor
 public class TargetUnitAccountService {
@@ -36,7 +41,9 @@ public class TargetUnitAccountService {
 
         TargetUnitAccount accountSaved = targetUnitAccountRepository.save(account);
 
-        accountSearchAdditionalKeywordService.storeKeywordsForAccount(accountSaved.getId(), accountSaved.getName(), accountSaved.getBusinessId());
+        accountSearchAdditionalKeywordService.storeKeywordsForAccount(accountSaved.getId(), Map.of(
+                ACCOUNT_NAME.name(), accountSaved.getName(),
+                BUSINESS_ID.name(), accountSaved.getBusinessId()));
 
         return targetUnitAccountMapper.toTargetUnitAccountDTO(accountSaved);
     }

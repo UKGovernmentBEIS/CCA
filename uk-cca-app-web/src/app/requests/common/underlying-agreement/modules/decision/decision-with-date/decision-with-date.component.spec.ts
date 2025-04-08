@@ -9,7 +9,7 @@ import { render } from '@testing-library/angular';
 import { screen } from '@testing-library/dom';
 import UserEvent from '@testing-library/user-event';
 
-import { mockUNAReviewRequestTaskState } from '../../../testing';
+import { mockRequestTaskItemUNAReviewDTO } from '../../../testing';
 import { DECISION_FORM_PROVIDER, facilityDecisionFormProvider } from '../decision-form.provider';
 import { DecisionWithDateFormModel } from '../decision-form.type';
 import { DecisionWithDateComponent } from './decision-with-date.component';
@@ -50,7 +50,7 @@ describe('decision with date test', () => {
       ],
       configureTestBed: (testbed) => {
         const store = testbed.inject(RequestTaskStore);
-        store.setState(mockUNAReviewRequestTaskState);
+        store.setRequestTaskItem(mockRequestTaskItemUNAReviewDTO);
       },
     });
   });
@@ -58,7 +58,7 @@ describe('decision with date test', () => {
   it('should display controls', () => {
     expect(screen.getByLabelText('Accepted')).toBeInTheDocument();
     expect(screen.getByLabelText('Rejected')).toBeInTheDocument();
-    expect(screen.getByLabelText('Notes')).toBeInTheDocument();
+    expect(screen.getByLabelText('Notes (optional)')).toBeInTheDocument();
     expect(screen.getByLabelText('Upload evidence (optional)')).toBeInTheDocument();
   });
 

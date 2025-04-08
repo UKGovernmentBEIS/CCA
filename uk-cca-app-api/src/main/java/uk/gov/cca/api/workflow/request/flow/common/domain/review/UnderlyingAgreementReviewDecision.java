@@ -1,6 +1,6 @@
 package uk.gov.cca.api.workflow.request.flow.common.domain.review;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +15,6 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.CcaReviewDecision;
 @SuperBuilder
 public class UnderlyingAgreementReviewDecision extends CcaReviewDecision {
 
-	@NotNull
+	@Valid
 	private UnderlyingAgreementReviewDecisionDetails details;
-	
 }

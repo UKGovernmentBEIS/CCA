@@ -1,7 +1,5 @@
 import { SideEffect } from '@netz/common/forms';
-import { BaselineAndTargetPeriodsSubtasks } from '@requests/common';
-
-import { submitReviewSideEffect } from '../../../submit-side-effect';
+import { BaselineAndTargetPeriodsSubtasks, submitReviewSideEffect } from '@requests/common';
 
 export class Tp5SubmitSideEffect extends SideEffect {
   override step = undefined;

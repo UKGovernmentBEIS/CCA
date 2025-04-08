@@ -3,10 +3,10 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { UserFullNamePipe } from '@netz/common/pipes';
 import { PendingRequestService } from '@netz/common/services';
-import { ButtonDirective, LinkDirective, PanelComponent, WarningTextComponent } from '@netz/govuk-components';
-import { PendingButtonDirective } from '@shared/directives/pending-button.directive';
+import { ButtonDirective, PanelComponent, WarningTextComponent } from '@netz/govuk-components';
 
 import { OperatorAuthoritiesService } from 'cca-api';
 
@@ -24,7 +24,6 @@ import { ActiveOperatorStore } from '../active-operator.store';
     UserFullNamePipe,
     ButtonDirective,
     PendingButtonDirective,
-    LinkDirective,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -2,8 +2,8 @@ import { Observable, of } from 'rxjs';
 
 import { PayloadMutator } from '@netz/common/forms';
 import { TaskItemStatus } from '@requests/common';
-import { transformFilesToAttachments, transformFilesToUUIDsList } from '@shared/utils';
-import produce from 'immer';
+import { transformFilesToUUIDsList } from '@shared/utils';
+import { produce } from 'immer';
 
 import { AdminTerminationWithdrawReasonDetails, AdminTerminationWithdrawRequestTaskPayload } from 'cca-api';
 
@@ -25,15 +25,9 @@ export class WithdrawAdminTerminationSubmitPayloadMutator extends PayloadMutator
       relevantFiles: transformFilesToUUIDsList(userInput.relevantFiles) as string[],
     };
 
-    const attachments = transformFilesToAttachments(userInput.relevantFiles);
-
     return of(
       produce(currentPayload, (payload) => {
         payload[this.subtask] = formData;
-        payload.adminTerminationAttachments = {
-          ...payload.adminTerminationAttachments,
-          ...attachments,
-        };
         payload.sectionsCompleted[this.subtask] = TaskItemStatus.IN_PROGRESS;
       }),
     );

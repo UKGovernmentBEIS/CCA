@@ -72,7 +72,7 @@ describe('TargetPeriod6Component', () => {
         `Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?`,
         'Yes',
       ],
-      ['Baseline throughput (kWh)', '10'],
+      ['Baseline throughput (GJ)', '10'],
       ['Performance (kWh/GJ)', '10'],
       ['Baseline energy to carbon factor (kgC/kWh)', '1'],
       ['Improvement (%)', '0.1'],

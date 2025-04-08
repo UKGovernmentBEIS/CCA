@@ -1,30 +1,25 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs';
-
-import { BREADCRUMB_ITEMS } from './breadcrumbs.factory';
-import { BreadcrumbItem } from './breadcrumbs.interface';
+export type Link = {
+  text: string;
+  link: string | string[];
+  queryParams?: Map<string, string | number>;
+  fragment?: string;
+};
+export type BreadcrumbRouteData = Array<Link | (() => Link)>;
 
 @Injectable({
   providedIn: 'root',
 })
 export class BreadcrumbService {
-  constructor(@Inject(BREADCRUMB_ITEMS) readonly breadcrumbItem$: BehaviorSubject<BreadcrumbItem[]>) {}
+  links = signal<Link[]>([]);
+  inverse = signal<boolean>(false);
 
-  show(items: BreadcrumbItem[]): void {
-    this.breadcrumbItem$.next(items);
-  }
-
-  showDashboardBreadcrumb(): void {
-    this.breadcrumbItem$.next([
-      {
-        text: 'Dashboard',
-        link: ['dashboard'],
-      },
-    ]);
+  show(l: Link[]): void {
+    this.links.set(l);
   }
 
   clear(): void {
-    this.breadcrumbItem$.next(null);
+    this.links.set([]);
   }
 }

@@ -1,15 +1,16 @@
 package uk.gov.cca.api.user.sectoruser.service;
 
-import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.RequiredArgsConstructor;
+import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserInvitationDTO;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.user.core.service.auth.UserAuthService;
 import uk.gov.netz.api.userinfoapi.UserInfoDTO;
+
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class SectorUserInvitationService {
     private final SectorUserRegistrationService sectorUserRegistrationService;
     private final ExistingSectorUserInvitationService existingSectorUserInvitationService;
     private final SectorUserNotificationGateway sectorUserNotificationGateway;
+    private final SectorAssociationQueryService sectorAssociationQueryService;
 
     /**
      * Invites a new user to join a sector with a specified role.
@@ -28,7 +30,10 @@ public class SectorUserInvitationService {
      * @param currentUser             the current logged-in {@link AppUser}
      */
     @Transactional
-    public void inviteUserToSectorAssociation(Long sectorAssociationId, String sectorAssociationName, SectorUserInvitationDTO sectorUserInvitationDTO, AppUser currentUser) {
+    public void inviteUserToSectorAssociation(Long sectorAssociationId, SectorUserInvitationDTO sectorUserInvitationDTO, AppUser currentUser) {
+
+        String sectorAssociationName = sectorAssociationQueryService.getSectorAssociationAcronymAndName(sectorAssociationId);
+        Objects.requireNonNull(sectorAssociationName);
 
         Optional<UserInfoDTO> registeredEmail = authUserService.getUserByEmail(sectorUserInvitationDTO.getEmail());
 

@@ -1,4 +1,5 @@
 import { InjectionToken, Provider } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { RequestTaskStore } from '@netz/common/store';
@@ -30,23 +31,35 @@ export const addTargetsFormProvider: Provider = {
     const targets = requestTaskStore.select(underlyingAgreementQuery.selectTargets(isTargetPeriodFive))();
 
     const targetsControl = fb.control(targets?.target ?? null);
+
     const improvementControl = fb.control(targets?.improvement ?? null, [
-      GovukValidators.required('Enter the Improvement % for the target period.'),
+      GovukValidators.required('Enter a numerical value, without alpha or special characters'),
+      GovukValidators.max(100, 'Enter a number less than 100'),
+      GovukValidators.maxIntegerAndDecimalsValidator(3, 7),
     ]);
-    improvementControl.valueChanges.subscribe((value) => {
+
+    improvementControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
       const baselineData = requestTaskStore.select(underlyingAgreementQuery.selectBaselineData(isTargetPeriodFive))();
+
       const targetComposition = requestTaskStore.select(
         underlyingAgreementQuery.selectTargetComposition(isTargetPeriodFive),
       )();
-      const performance = baselineData.performance;
+
       const energyOrCarbon = baselineData?.energy;
       const agreementCompositionType = targetComposition.agreementCompositionType;
+
+      // Novem agreement composition has no target value
+      if (agreementCompositionType === 'NOVEM') return;
+
+      // calculate target value depending on agreement composition
       const targets =
         agreementCompositionType === 'ABSOLUTE'
           ? calculateAbsoluteTarget(energyOrCarbon, value, isTargetPeriodFive)
-          : calculateRelativeTarget(performance, value);
+          : calculateRelativeTarget(energyOrCarbon, baselineData.throughput, value);
+
       if (typeof targets === 'number') targetsControl.patchValue(targets);
     });
+
     return fb.group({
       improvement: improvementControl,
       target: targetsControl,

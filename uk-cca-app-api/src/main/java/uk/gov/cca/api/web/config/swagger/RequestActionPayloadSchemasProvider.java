@@ -1,17 +1,25 @@
 package uk.gov.cca.api.web.config.swagger;
 
 import org.springframework.stereotype.Component;
+
+import uk.gov.cca.api.migration.underlyingagreement.request.UnderlyingAgreementMigratedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.AdminTerminationWithdrawSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaGeneratedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.subsistencefees.subsistencefeesrun.domain.SubsistenceFeesRunCompletedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.subsistencefees.targetunitmoa.domain.TargetUnitMoaGeneratedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.domain.TargetUnitAccountCreationSubmittedRequestActionPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementRejectedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.activation.domain.UnderlyingAgreementActivatedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementAcceptedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementRejectedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.submit.domain.UnderlyingAgreementSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivatedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationAcceptedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationRejectedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSubmittedRequestActionPayload;
+import uk.gov.netz.api.swagger.SwaggerSchemasAbstractProvider;
 import uk.gov.netz.api.workflow.request.flow.payment.domain.PaymentCancelledRequestActionPayload;
 import uk.gov.netz.api.workflow.request.flow.payment.domain.PaymentProcessedRequestActionPayload;
 import uk.gov.netz.api.workflow.request.flow.rde.domain.RdeDecisionForcedRequestActionPayload;
@@ -45,6 +53,8 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
     	addResolvedShemas(UnderlyingAgreementRejectedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementRejectedRequestActionPayload.class);
 		addResolvedShemas(UnderlyingAgreementAcceptedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementAcceptedRequestActionPayload.class);
 		addResolvedShemas(UnderlyingAgreementActivatedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementActivatedRequestActionPayload.class);
+		
+        addResolvedShemas(UnderlyingAgreementMigratedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementMigratedRequestActionPayload.class);
 
         // Admin Termination
     	addResolvedShemas(AdminTerminationSubmittedRequestActionPayload.class.getSimpleName(), AdminTerminationSubmittedRequestActionPayload.class);
@@ -55,6 +65,15 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
         addResolvedShemas(UnderlyingAgreementVariationSubmittedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationSubmittedRequestActionPayload.class);
         addResolvedShemas(UnderlyingAgreementVariationAcceptedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationAcceptedRequestActionPayload.class);
 		addResolvedShemas(UnderlyingAgreementVariationRejectedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationRejectedRequestActionPayload.class);
-    }
-    
+		addResolvedShemas(UnderlyingAgreementVariationActivatedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationActivatedRequestActionPayload.class);
+
+		// Performance data upload
+		addResolvedShemas(PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload.class.getSimpleName(), PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload.class);
+		
+		// Subsistence fees
+		addResolvedShemas(SubsistenceFeesRunCompletedRequestActionPayload.class.getSimpleName(), SubsistenceFeesRunCompletedRequestActionPayload.class);
+		addResolvedShemas(SectorMoaGeneratedRequestActionPayload.class.getSimpleName(), SectorMoaGeneratedRequestActionPayload.class);
+		addResolvedShemas(TargetUnitMoaGeneratedRequestActionPayload.class.getSimpleName(), TargetUnitMoaGeneratedRequestActionPayload.class);
+	}
+
 }

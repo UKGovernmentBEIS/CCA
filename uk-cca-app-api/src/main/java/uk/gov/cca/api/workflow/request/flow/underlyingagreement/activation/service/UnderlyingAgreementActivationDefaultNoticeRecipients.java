@@ -2,12 +2,11 @@ package uk.gov.cca.api.workflow.request.flow.underlyingagreement.activation.serv
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.RequestTaskDefaultNoticeRecipients;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.TargetUnitAccountNoticeRecipients;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class UnderlyingAgreementActivationDefaultNoticeRecipients implements Req
                 (UnderlyingAgreementRequestPayload) requestTask.getRequest().getPayload();
 
         return targetUnitAccountNoticeRecipients.getNoticeRecipients(accountId,
-                requestPayload.getUnderlyingAgreement().getUnderlyingAgreementTargetUnitDetails());
+                requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails());
     }
 
     @Override

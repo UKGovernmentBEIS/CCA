@@ -5,12 +5,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.DocumentTemplateUnderlyingAgreementParamsProvider;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +44,9 @@ class UnderlyingAgreementRejectedDocumentTemplateWorkflowParamsProviderTest {
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = UnderlyingAgreementTargetUnitDetails.builder().build();
         final UnderlyingAgreementRequestPayload requestPayload = UnderlyingAgreementRequestPayload.builder()
                 .underlyingAgreement(UnderlyingAgreementPayload.builder()
+                        .underlyingAgreementTargetUnitDetails(targetUnitDetails)
+                        .build())
+                .underlyingAgreementProposed(UnderlyingAgreementPayload.builder()
                         .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                         .build())
                 .determination(determination)

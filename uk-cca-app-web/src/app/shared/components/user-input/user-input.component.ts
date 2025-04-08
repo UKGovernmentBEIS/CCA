@@ -2,12 +2,11 @@ import { Component, Input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { TextInputComponent } from '@netz/govuk-components';
-import { CountyAddressInputComponent } from '@shared/components';
-import { PhoneInputComponent } from '@shared/components';
 
 import { existingControlContainer } from '../../providers/control-container.factory';
+import { CountyAddressInputComponent } from '../county-address-input/county-address-input.component';
+import { PhoneInputComponent } from '../phone-input/phone-input.component';
 
-// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
 @Component({
   selector: 'cca-user-input',
   templateUrl: './user-input.component.html',

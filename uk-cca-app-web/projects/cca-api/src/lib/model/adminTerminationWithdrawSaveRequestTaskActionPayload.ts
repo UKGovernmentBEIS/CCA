@@ -14,5 +14,5 @@ import { AdminTerminationWithdrawReasonDetails } from './adminTerminationWithdra
 export interface AdminTerminationWithdrawSaveRequestTaskActionPayload {
   payloadType?: string;
   adminTerminationWithdrawReasonDetails?: AdminTerminationWithdrawReasonDetails;
-  sectionsCompleted?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
 }

@@ -8,15 +8,17 @@ import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } f
 import { BASELINE_AND_TARGETS_SUBTASK, BaselineAndTargetPeriodsSubtasks } from '@requests/common';
 import { render } from '@testing-library/angular';
 
-import { mockRequestTaskState } from '../../../../testing/mock-data';
+import { mockVariationReviewRequestTaskState } from '../../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import { TP5SummaryComponent } from './tp5-summary.component';
 
 describe('TP5SummaryComponent', () => {
   let store: RequestTaskStore;
+  let container: Element;
+
   const unaTaskService: Partial<jest.Mocked<TaskService>> = {
     saveSubtask: jest.fn().mockReturnValue(of({})),
   };
-  let container: Element;
+
   async function renderComponent(period: BaselineAndTargetPeriodsSubtasks) {
     const renderResult = await render(TP5SummaryComponent, {
       providers: [
@@ -30,11 +32,13 @@ describe('TP5SummaryComponent', () => {
       ],
       configureTestBed: (testbed) => {
         store = testbed.inject(RequestTaskStore);
-        store.setState(mockRequestTaskState);
+        store.setState(mockVariationReviewRequestTaskState);
       },
     });
+
     container = renderResult.container;
   }
+
   it('should match snapshot for TP5, ABSOLUTE agreementMeasurementType and no Measuremenet', async () => {
     await renderComponent(BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_5_DETAILS);
     expect(container).toMatchSnapshot();

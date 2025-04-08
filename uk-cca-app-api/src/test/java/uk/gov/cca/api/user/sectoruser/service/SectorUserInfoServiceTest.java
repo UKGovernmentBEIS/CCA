@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.authorization.ccaauth.rules.services.SectorAssociationAuthorizationResourceService;
 import uk.gov.netz.api.user.core.service.UserInfoService;
 import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
@@ -21,9 +20,6 @@ class SectorUserInfoServiceTest {
 
     @InjectMocks
     private SectorUserInfoService sectorUserInfoService;
-
-    @Mock
-    private SectorAssociationAuthorizationResourceService sectorAssociationAuthorizationResourceService;
 
     @Mock
     private UserInfoService userInfoService;

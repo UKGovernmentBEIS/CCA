@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationInfoDTO;
-import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.cca.api.web.orchestrator.sectorassociation.dto.SectorAssociationResponseDTO;
@@ -28,6 +27,7 @@ import uk.gov.netz.api.security.AuthorizedRole;
 import java.util.List;
 
 import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 @RestController
@@ -37,7 +37,6 @@ import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 public class SectorAssociationViewController {
 
     private final SectorAssociationQueryServiceOrchestrator sectorAssociationQueryServiceOrchestrator;
-    private final SectorAssociationQueryService sectorAssociationQueryService;
 
     @GetMapping(path = "/{id}")
     @Operation(summary = "Retrieves the sector association info that corresponds to the provided sector id")
@@ -64,9 +63,9 @@ public class SectorAssociationViewController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @AuthorizedRole(roleType = {REGULATOR, SECTOR_USER})
+    @AuthorizedRole(roleType = {REGULATOR, SECTOR_USER, OPERATOR})
     public ResponseEntity<List<SectorAssociationInfoDTO>> getSectorAssociations(@Parameter(hidden = true) AppUser appUser) {
-        return new ResponseEntity<>(sectorAssociationQueryService.getSectorAssociations(appUser), HttpStatus.OK);
+        return new ResponseEntity<>(sectorAssociationQueryServiceOrchestrator.getSectorAssociations(appUser), HttpStatus.OK);
     }
 }
 

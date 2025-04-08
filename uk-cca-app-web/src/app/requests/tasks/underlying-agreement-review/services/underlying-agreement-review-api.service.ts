@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 
-import { catchError, map, Observable, of, throwError } from 'rxjs';
+import { catchError, Observable, of, throwError } from 'rxjs';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, catchTaskReassignedBadRequest, ErrorCodes } from '@error/business-errors';
@@ -8,18 +8,18 @@ import { catchNotFoundRequest, ErrorCode } from '@error/not-found-error';
 import { TaskApiService } from '@netz/common/forms';
 import { PendingRequestService } from '@netz/common/services';
 import { requestTaskQuery } from '@netz/common/store';
-import { requestTaskReassignedError, taskNotFoundError } from '@shared/errors/request-task-error';
-import produce from 'immer';
+import { requestTaskReassignedError, taskNotFoundError } from '@shared/errors';
+import { produce } from 'immer';
 
 import {
   CcaDecisionNotification,
-  CcaNotifyOperatorForDecisionRequestTaskActionPayload,
   RequestTaskActionProcessDTO,
+  UnderlyingAgreementNotifyOperatorForDecisionRequestTaskActionPayload,
+  UnderlyingAgreementPayload,
   UnderlyingAgreementReviewRequestTaskPayload,
   UnderlyingAgreementSaveFacilityReviewGroupDecisionRequestTaskActionPayload,
   UnderlyingAgreementSaveReviewDeterminationRequestTaskActionPayload,
   UnderlyingAgreementSaveReviewGroupDecisionRequestTaskActionPayload,
-  UnderlyingAgreementSaveReviewRequestTaskActionPayload,
 } from 'cca-api';
 
 type DecisionPayloadType =
@@ -32,18 +32,13 @@ export class UnderlyingAgreementReviewTaskApiService extends TaskApiService {
   private readonly businessErrorService = inject(BusinessErrorService);
 
   save(payload: UnderlyingAgreementReviewRequestTaskPayload): Observable<UnderlyingAgreementReviewRequestTaskPayload> {
-    return this.service
-      .processRequestTaskAction(this.createSaveAction(payload))
-      .pipe(
-        catchError((err) => {
-          if (err.code === ErrorCode.NOTFOUND1001) {
-            this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
-          }
-          return throwError(() => err);
-        }),
-        this.pendingRequestService.trackRequest(),
-      )
-      .pipe(map(() => payload));
+    return this.service.processRequestTaskAction(this.createSaveAction(payload)).pipe(
+      catchError((err) => {
+        if (err.code === ErrorCode.NOTFOUND1001) this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
+        return throwError(() => err);
+      }),
+      this.pendingRequestService.trackRequest(),
+    );
   }
 
   submit(): Observable<void> {
@@ -66,18 +61,13 @@ export class UnderlyingAgreementReviewTaskApiService extends TaskApiService {
       requestTaskActionPayload: payload,
     };
 
-    return this.service
-      .processRequestTaskAction(requestPayload)
-      .pipe(
-        catchError((err) => {
-          if (err.code === ErrorCode.NOTFOUND1001) {
-            this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
-          }
-          return throwError(() => err);
-        }),
-        this.pendingRequestService.trackRequest(),
-      )
-      .pipe(map(() => payload));
+    return this.service.processRequestTaskAction(requestPayload).pipe(
+      catchError((err) => {
+        if (err.code === ErrorCode.NOTFOUND1001) this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
+        return throwError(() => err);
+      }),
+      this.pendingRequestService.trackRequest(),
+    );
   }
 
   saveDetermination(payload: UnderlyingAgreementSaveReviewDeterminationRequestTaskActionPayload) {
@@ -91,29 +81,28 @@ export class UnderlyingAgreementReviewTaskApiService extends TaskApiService {
       requestTaskActionPayload: payload,
     };
 
-    return this.service
-      .processRequestTaskAction(requestPayload)
-      .pipe(
-        catchError((err) => {
-          if (err.code === ErrorCode.NOTFOUND1001) {
-            this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
-          }
-          return throwError(() => err);
-        }),
-        this.pendingRequestService.trackRequest(),
-      )
-      .pipe(map(() => payload));
+    return this.service.processRequestTaskAction(requestPayload).pipe(
+      catchError((err) => {
+        if (err.code === ErrorCode.NOTFOUND1001) this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
+        return throwError(() => err);
+      }),
+      this.pendingRequestService.trackRequest(),
+    );
   }
 
-  notifyOperator(decisionNotification: CcaDecisionNotification): Observable<void> {
+  notifyOperator(
+    decisionNotification: CcaDecisionNotification,
+    proposedPayload: UnderlyingAgreementPayload,
+  ): Observable<void> {
     return this.service
       .processRequestTaskAction({
         requestTaskActionType: 'UNDERLYING_AGREEMENT_NOTIFY_OPERATOR_FOR_DECISION',
         requestTaskId: this.store.select(requestTaskQuery.selectRequestTaskId)(),
         requestTaskActionPayload: {
-          payloadType: 'NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD',
+          payloadType: 'UNDERLYING_AGREEMENT_NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD',
           decisionNotification: decisionNotification,
-        } as CcaNotifyOperatorForDecisionRequestTaskActionPayload,
+          underlyingAgreementProposed: proposedPayload,
+        } as UnderlyingAgreementNotifyOperatorForDecisionRequestTaskActionPayload,
       })
       .pipe(
         catchNotFoundRequest(ErrorCode.NOTFOUND1001, () =>
@@ -140,9 +129,15 @@ export class UnderlyingAgreementReviewTaskApiService extends TaskApiService {
 
   private createSaveAction(
     payload: UnderlyingAgreementReviewRequestTaskPayload,
-  ): RequestTaskActionProcessDTO & { requestTaskActionPayload: UnderlyingAgreementSaveReviewRequestTaskActionPayload } {
+  ): RequestTaskActionProcessDTO & { requestTaskActionPayload: UnderlyingAgreementReviewRequestTaskPayload } {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
-    const { underlyingAgreement, sectionsCompleted } = payload;
+    const {
+      underlyingAgreement,
+      sectionsCompleted,
+      reviewSectionsCompleted,
+      underlyingAgreementProposed,
+      determination,
+    } = payload;
 
     return {
       requestTaskId,
@@ -155,7 +150,9 @@ export class UnderlyingAgreementReviewTaskApiService extends TaskApiService {
           });
         }),
         sectionsCompleted,
-        reviewSectionsCompleted: payload.reviewSectionsCompleted,
+        reviewSectionsCompleted,
+        underlyingAgreementProposed,
+        determination,
       },
     };
   }

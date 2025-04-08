@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/changelog_buy_out_fees.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_TPR_BUY_OUY_SURPLUS_EXCLUSION_SEQUENCE" author="vourdoukasd@unisystems.gr">
+        <createSequence
+                sequenceName="tpr_buy_out_surplus_exclusion_seq"
+                minValue="0"
+                maxValue="999999999999999999"
+                incrementBy="1"
+                startValue="1"
+                cycle="false"/>
+        <rollback>
+            <dropSequence sequenceName="tpr_buy_out_surplus_exclusion_seq"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TPR_BUY_OUT_SURPLUS_EXCLUSION" author="vourdoukasd">
+        <comment>Buy-out surplus exclusion accounts Table. All end dates (deadlines) are inclusive</comment>
+        <createTable tableName="tpr_buy_out_surplus_exclusion" remarks="Represents the buy out surplus exclusion accounts">
+        <column name="id" type="bigint" remarks="Primary key">
+            <constraints primaryKey="true" primaryKeyName="tpr_buy_out_surplus_exclusion_pk" nullable="false"/>
+        </column>
+        <column name="account_id" type="bigint" remarks="Represents the account id">
+            <constraints unique="true" uniqueConstraintName="tpr_buy_out_surplus_exclusion_accountId_uq" nullable="false"/>
+        </column>
+    </createTable>
+        <rollback>
+            <dropTable tableName="tpr_buy_out_surplus_exclusion" cascadeConstraints="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TPR_BUY_OUT_SURPLUS_sequence" author="P70383">
+        <createSequence
+                sequenceName="tpr_buy_out_surplus_seq"
+                minValue="0"
+                maxValue="999999999999999999"
+                incrementBy="1"
+                startValue="1"
+                cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS tpr_buy_out_surplus_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TPR_BUY_OUT_SURPLUS_CREATE_TABLE" author="P70383">
+        <comment>Create buy out surplus table</comment>
+        <createTable tableName="tpr_buy_out_surplus"
+                     remarks="Represents the buy out surplus for performance data results">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="tpr_buy_out_surplus_pk"
+                             nullable="false"/>
+            </column>
+            <column name="performance_data_id" type="bigint" remarks="The performance data id value">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="transaction_id" type="varchar(20)" remarks="The transaction ID">
+                <constraints nullable="true" unique="true"/>
+            </column>
+            <column name="buy_out_fee" type="numeric" remarks="The current buy out fee value">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_status" type="varchar(20)" remarks="The payment status">
+                <constraints nullable="true"/>
+            </column>
+            <column name="data" type="jsonb" remarks="The metrics as calculated during the buy-out and surplus batch run">
+                <constraints nullable="false" />
+            </column>
+            <column name="file_document_uuid" type="varchar(255)" remarks="The notice's file document uuid">
+                <constraints nullable="true" />
+            </column>
+            <column name="creation_date" type="timestamp" remarks="The date creation of the buy out surplus">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS tpr_buy_out_surplus CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TPR_BUY_OUT_TRANSACTION_IDENTIFIER_CREATE_TABLE" author="P70383">
+        <comment>Create buy out transaction identifier table</comment>
+        <createTable tableName="tpr_buy_out_transaction_identifier" remarks="Represents the latest transaction identifier value">
+            <column name="id" type="integer" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="tpr_buy_out_transaction_identifier_pk" nullable="false"/>
+            </column>
+            <column name="target_period_type" type="varchar(20)" remarks="The target period type">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="transaction_id" type="bigint" remarks="The sequential number">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS tpr_buy_out_transaction_identifier CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,13 +1,12 @@
-import { TaskItem, TaskSection } from '@netz/common/model';
+import { TaskSection } from '@netz/common/model';
 import {
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
   BaselineAndTargetPeriodsSubtasks,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   TaskItemStatus,
+  transformFacilities,
   UnderlyingAgreementDecisionRequestActionPayload,
 } from '@requests/common';
-
-import { UnderlyingAgreementReviewRequestTaskPayload } from 'cca-api';
 
 export function getAllUnderlyingAgreementReviewTimelineSections(
   payload: UnderlyingAgreementDecisionRequestActionPayload,
@@ -17,7 +16,7 @@ export function getAllUnderlyingAgreementReviewTimelineSections(
       title: 'Target unit',
       tasks: [
         {
-          status: payload.reviewSectionsCompleted[REVIEW_TARGET_UNIT_DETAILS_SUBTASK],
+          status: payload?.reviewSectionsCompleted[REVIEW_TARGET_UNIT_DETAILS_SUBTASK],
           link: `review-target-unit-details`,
           linkText: 'Target unit details',
         },
@@ -25,7 +24,7 @@ export function getAllUnderlyingAgreementReviewTimelineSections(
     },
     {
       title: 'Facilities',
-      tasks: getAllFacilities(payload),
+      tasks: transformFacilities(payload?.underlyingAgreement?.facilities, [], payload?.reviewSectionsCompleted, ''),
     },
     {
       title: 'Baseline and Targets',
@@ -56,19 +55,11 @@ export function getAllUnderlyingAgreementReviewTimelineSections(
       title: 'Decision',
       tasks: [
         {
-          status: payload.determination.type === 'ACCEPTED' ? TaskItemStatus.ACCEPTED : TaskItemStatus.REJECTED,
+          status: payload?.determination.type === 'ACCEPTED' ? TaskItemStatus.ACCEPTED : TaskItemStatus.REJECTED,
           link: 'overall-decision',
           linkText: 'Overall decision',
         },
       ],
     },
   ];
-}
-
-function getAllFacilities(payload: UnderlyingAgreementReviewRequestTaskPayload): TaskItem[] {
-  return payload?.underlyingAgreement?.facilities?.map((facility) => ({
-    status: payload?.reviewSectionsCompleted?.[facility.facilityId],
-    link: `facility/${facility.facilityId}`,
-    linkText: `${facility.facilityDetails.name} (${facility.facilityId})`,
-  }));
 }

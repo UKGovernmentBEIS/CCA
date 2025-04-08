@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { SectorAssociationSiteContactDTO } from '../model/sectorAssociationSiteContactDTO';
 import { SectorAssociationSiteContactInfoResponse } from '../model/sectorAssociationSiteContactInfoResponse';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -118,7 +118,7 @@ export class SectorAssociationsSiteContactsService {
     page: number,
     size: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (page === null || page === undefined) {
@@ -130,10 +130,10 @@ export class SectorAssociationsSiteContactsService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (page !== undefined && page !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>page, 'page');
+      queryParameters = this.addToHttpParams(queryParameters, page as any, 'page');
     }
     if (size !== undefined && size !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>size, 'size');
+      queryParameters = this.addToHttpParams(queryParameters, size as any, 'size');
     }
 
     let headers = this.defaultHeaders;
@@ -163,7 +163,7 @@ export class SectorAssociationsSiteContactsService {
       `${this.configuration.basePath}/v1.0/sector-association/site-contacts`,
       {
         params: queryParameters,
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -179,30 +179,30 @@ export class SectorAssociationsSiteContactsService {
    * @param reportProgress flag to report request and response progress.
    */
   public updateSectorAssociationSiteContacts(
-    sectorAssociationSiteContactDTO: Array<SectorAssociationSiteContactDTO>,
+    sectorAssociationSiteContactDTO: SectorAssociationSiteContactDTO[],
   ): Observable<any>;
   public updateSectorAssociationSiteContacts(
-    sectorAssociationSiteContactDTO: Array<SectorAssociationSiteContactDTO>,
+    sectorAssociationSiteContactDTO: SectorAssociationSiteContactDTO[],
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<any>>;
   public updateSectorAssociationSiteContacts(
-    sectorAssociationSiteContactDTO: Array<SectorAssociationSiteContactDTO>,
+    sectorAssociationSiteContactDTO: SectorAssociationSiteContactDTO[],
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<any>>;
   public updateSectorAssociationSiteContacts(
-    sectorAssociationSiteContactDTO: Array<SectorAssociationSiteContactDTO>,
+    sectorAssociationSiteContactDTO: SectorAssociationSiteContactDTO[],
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any>;
   public updateSectorAssociationSiteContacts(
-    sectorAssociationSiteContactDTO: Array<SectorAssociationSiteContactDTO>,
+    sectorAssociationSiteContactDTO: SectorAssociationSiteContactDTO[],
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorAssociationSiteContactDTO === null || sectorAssociationSiteContactDTO === undefined) {
@@ -245,7 +245,7 @@ export class SectorAssociationsSiteContactsService {
       `${this.configuration.basePath}/v1.0/sector-association/site-contacts`,
       sectorAssociationSiteContactDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

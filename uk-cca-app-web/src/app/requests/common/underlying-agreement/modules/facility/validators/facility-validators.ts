@@ -14,8 +14,8 @@ export function facilityExistenceValidator(facilityService: FacilityService): As
         .pipe(
           map((exists) => (exists ? null : { facilityIdNotExists: 'Enter the facility ID of an existing facility' })),
         );
-    } else {
-      return of(null);
     }
+
+    return of(null);
   };
 }

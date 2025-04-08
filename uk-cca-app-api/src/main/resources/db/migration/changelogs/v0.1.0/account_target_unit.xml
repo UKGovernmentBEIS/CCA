@@ -284,4 +284,116 @@
             </dropColumn>
         </rollback>
     </changeSet>
+
+    <changeSet id="0_1_0_TARGET_UNIT_ACCOUNT_ADD_COLUMN_MIGRATED" author="loukerip">
+        <addColumn tableName="account_target_unit">
+            <column name="migrated" type="boolean" defaultValueBoolean="false"/>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="account_target_unit">
+                <column name="migrated"/>
+            </dropColumn>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TARGET_UNIT_ACCOUNT_ADD_COLUMN_TERMINATED_DATE" author="vourdoukasd">
+        <addColumn tableName="account_target_unit">
+            <column name="terminated_date" type="timestamp" remarks="The termination date"/>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="account_target_unit">
+                <column name="terminated_date"/>
+            </dropColumn>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_TARGET_UNIT_ACCOUNT_INITIALIZE_TERMINATED_DATE" author="vourdoukasd">
+        <sql>
+            update account_target_unit atu
+            set terminated_date = (
+                select min(r.end_date)
+                FROM request r
+                         JOIN request_resource rr ON r.id = rr.request_id
+                         JOIN request_type rt on rt.id = r.type_id
+                where CAST(rr.resource_id AS BIGINT) = atu.id
+                  and rr.resource_type = 'ACCOUNT'
+                  and rt.code = 'ADMIN_TERMINATION'
+                  and r.status = 'COMPLETED')
+            where atu.status = 'TERMINATED'
+              and atu.terminated_date is null;
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE account_target_unit atu
+                SET terminated_date = NULL
+                WHERE atu.status = 'TERMINATED'
+                  AND atu.terminated_date IS NOT NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+
+ <changeSet id="0_1_0_ACCOUNT_INITIALIZE_ACCEPTED_DATE" author="vourdoukasd">
+        <sql>
+            update account a
+            set accepted_date =(
+                select min(r.end_date)
+                from request r
+                         join request_resource rr ON r.id = rr.request_id
+                         JOIN request_type rt on rt.id = r.type_id
+                WHERE CAST(rr.resource_id AS BIGINT) = a.id
+                  AND rr.resource_type = 'ACCOUNT'
+                  AND rt.code = 'UNDERLYING_AGREEMENT'
+                  AND r.status = 'APPROVED')
+            where exists (
+                select 1 from account_target_unit atu
+                where atu.id = a.id
+                  and atu.status in ('LIVE', 'TERMINATED'))
+              and a.accepted_date is null;
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE account a
+                SET accepted_date = NULL
+                WHERE exists (
+                    select 1 from account_target_unit atu
+                    where atu.id = a.id
+                      and atu.status in ('LIVE', 'TERMINATED'))
+                  and a.accepted_date is not null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+ <changeSet id="0_1_0_ACCOUNT_INITIALIZE_ACCEPTED_DATE_FOR_MIGRATED_ACCOUNTS" author="loukerip">
+        <sql>
+            update account a
+            set accepted_date =(
+                select min(r.end_date)
+                from request r
+                         join request_resource rr ON r.id = rr.request_id
+                         JOIN request_type rt on rt.id = r.type_id
+                WHERE CAST(rr.resource_id AS BIGINT) = a.id
+                  AND rr.resource_type = 'ACCOUNT'
+                  AND rt.code = 'UNDERLYING_AGREEMENT'
+                  AND r.status = 'MIGRATED')
+            where exists (
+                select 1 from account_target_unit atu
+                where atu.id = a.id
+                  and atu.status in ('LIVE', 'TERMINATED')
+                  and atu.migrated = true)
+              and a.accepted_date is null;
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE account a
+                SET accepted_date = NULL
+                WHERE exists (
+                    select 1 from account_target_unit atu
+                    where atu.id = a.id
+                      and atu.status in ('LIVE', 'TERMINATED')
+                      and atu.migrated = true)
+                  and a.accepted_date is not null;
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

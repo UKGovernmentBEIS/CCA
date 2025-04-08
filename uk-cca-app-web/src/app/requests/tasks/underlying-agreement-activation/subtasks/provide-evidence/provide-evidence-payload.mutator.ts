@@ -2,7 +2,7 @@ import { Observable, of } from 'rxjs';
 
 import { PayloadMutator } from '@netz/common/forms';
 import { PROVIDE_EVIDENCE_SUBTASK, TaskItemStatus } from '@requests/common';
-import produce from 'immer';
+import { produce } from 'immer';
 
 import { UnderlyingAgreementActivationDetails } from 'cca-api';
 
@@ -14,15 +14,11 @@ export class ProvideEvidencePayloadMutator extends PayloadMutator {
   apply(
     currentPayload: UNAActivationRequestTaskPayload,
     step,
-    userInput: { details: UnderlyingAgreementActivationDetails; attachments: { [key: string]: string } },
+    userInput: { details: UnderlyingAgreementActivationDetails; attachments: Record<string, string> },
   ): Observable<UNAActivationRequestTaskPayload> {
     return of(
       produce(currentPayload, (payload) => {
         payload.underlyingAgreementActivationDetails = userInput.details;
-        payload.underlyingAgreementActivationAttachments = {
-          ...payload.underlyingAgreementActivationAttachments,
-          ...userInput.attachments,
-        };
         payload.sectionsCompleted[this.subtask] = TaskItemStatus.IN_PROGRESS;
       }),
     );

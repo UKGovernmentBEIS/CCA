@@ -12,6 +12,6 @@
 import { NotificationTemplateInfoDTO } from './notificationTemplateInfoDTO';
 
 export interface NotificationTemplateSearchResults {
-  templates?: Array<NotificationTemplateInfoDTO>;
+  templates?: NotificationTemplateInfoDTO[];
   total?: number;
 }

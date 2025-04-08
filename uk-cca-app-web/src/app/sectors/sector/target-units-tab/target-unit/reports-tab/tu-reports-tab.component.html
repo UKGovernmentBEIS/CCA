@@ -1,0 +1,36 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-quarter">
+    <h2>Reports</h2>
+    <nav class="cca-side-navigation" aria-label="Side navigation">
+      <ul class="cca-side-navigation__list">
+        <li
+          class="cca-side-navigation__item"
+          [class.cca-side-navigation__item--active]="currentSection === 'performance'"
+        >
+          <a
+            class="govuk-link"
+            href="#"
+            (click)="updateSection($event, 'performance')"
+            [attr.aria-current]="currentSection === 'performance' ? 'location' : null"
+            >Performance</a
+          >
+        </li>
+        <li class="cca-side-navigation__item" [class.cca-side-navigation__item--active]="currentSection === 'pat'">
+          <a
+            href="#"
+            (click)="updateSection($event, 'pat')"
+            [attr.aria-current]="currentSection === 'pat' ? 'location' : null"
+            >PAT</a
+          >
+        </li>
+      </ul>
+    </nav>
+  </div>
+  @if (currentSection === 'performance') {
+    <div class="govuk-grid-column-three-quarters govuk-!-margin-top-5">
+      <cca-performance-report />
+    </div>
+  } @else {
+    <p>not yet implemented</p>
+  }
+</div>

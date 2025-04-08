@@ -1,17 +1,10 @@
 package uk.gov.cca.api.workflow.request.flow.common.service.notification;
 
-import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.stereotype.Service;
 import uk.gov.cca.api.notification.template.domain.TargetUnitDetailsParams;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
-import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.AgreementCompositionType;
+import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod5Details;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod6Details;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
@@ -22,92 +15,92 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTar
 import uk.gov.cca.api.workflow.request.flow.common.domain.notification.BaselineAndTargetsTemplateData;
 import uk.gov.cca.api.workflow.request.flow.common.domain.notification.FacilityTemplateData;
 
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class DocumentTemplateUnderlyingAgreementParamsProvider {
 
-	private final DocumentTemplateTransformationMapper documentTemplateTransformationMapper;
+    private final DocumentTemplateTransformationMapper documentTemplateTransformationMapper;
 
-	public Map<String, Object> constructTargetUnitDetailsTemplateParams(UnderlyingAgreementTargetUnitDetails targetUnitDetails, int version) {
-		Map<String, Object> params = constructTargetUnitDetailsTemplateParams(targetUnitDetails);
-		params.put("version", "v" + version);
+    public Map<String, Object> constructTargetUnitDetailsTemplateParams(UnderlyingAgreementTargetUnitDetails targetUnitDetails, int version) {
+        Map<String, Object> params = constructTargetUnitDetailsTemplateParams(targetUnitDetails);
+        params.put("version", "v" + version);
 
-		return params;
-	}
+        return params;
+    }
 
-	public Map<String, Object> constructTargetUnitDetailsTemplateParams(UnderlyingAgreementTargetUnitDetails targetUnitDetails) {
-		UnderlyingAgreementTargetUnitResponsiblePerson responsiblePerson = targetUnitDetails.getResponsiblePersonDetails();
+    public Map<String, Object> constructTargetUnitDetailsTemplateParams(UnderlyingAgreementTargetUnitDetails targetUnitDetails) {
+        UnderlyingAgreementTargetUnitResponsiblePerson responsiblePerson = targetUnitDetails.getResponsiblePersonDetails();
 
-		TargetUnitDetailsParams targetUnitDetailsParams = TargetUnitDetailsParams.builder()
-				.name(targetUnitDetails.getOperatorName())
-				.companyRegistrationNumber(targetUnitDetails.getCompanyRegistrationNumber())
-				.targetUnitAddress(documentTemplateTransformationMapper.constructAccountAddressDTO(targetUnitDetails.getOperatorAddress()))
-				.primaryContact(responsiblePerson.getFirstName() + " " + responsiblePerson.getLastName())
-				.primaryContactEmail(responsiblePerson.getEmail())
-				.location(documentTemplateTransformationMapper.constructAccountAddressDTO(responsiblePerson.getAddress()))
-				.build();
+        TargetUnitDetailsParams targetUnitDetailsParams = TargetUnitDetailsParams.builder()
+                .name(targetUnitDetails.getOperatorName())
+                .companyRegistrationNumber(targetUnitDetails.getCompanyRegistrationNumber())
+                .targetUnitAddress(documentTemplateTransformationMapper.constructAccountAddressDTO(targetUnitDetails.getOperatorAddress()))
+                .primaryContact(responsiblePerson.getFirstName() + " " + responsiblePerson.getLastName())
+                .primaryContactEmail(responsiblePerson.getEmail())
+                .location(documentTemplateTransformationMapper.constructAccountAddressDTO(responsiblePerson.getAddress()))
+                .build();
 
-		return new HashMap<>(Map.of("targetUnitDetails", targetUnitDetailsParams));
-	}
+        return new HashMap<>(Map.of("targetUnitDetails", targetUnitDetailsParams));
+    }
 
-    public Map<String, Object> constructTemplateParams(
-        final UnderlyingAgreement underlyingAgreement, Set<String> rejectedFacilityIds, String activationDate, int version) {
+    public Map<String, Object> constructTemplateParams(final UnderlyingAgreement underlyingAgreement, String activationDate, int version) {
 
-        final List<FacilityTemplateData> facilities = getActiveFacilityData(
-        		underlyingAgreement.getFacilities(), rejectedFacilityIds);
+        // get only the active facilities in case of Variation
+        final List<FacilityTemplateData> activeFacilities = underlyingAgreement.getFacilities().stream()
+                .filter(facility -> !facility.getStatus().equals(FacilityStatus.EXCLUDED))
+                .map(this::getFacilityTemplateData)
+                .collect(Collectors.toList());
+
         final BaselineAndTargetsTemplateData baselineTargetTP5 = getBaselineAndTargetsDataTP5(underlyingAgreement.getTargetPeriod5Details());
         final BaselineAndTargetsTemplateData baselineTargetTP6 = getBaselineAndTargetsData(underlyingAgreement.getTargetPeriod6Details());
 
         Map<String, Object> paramMap = new HashMap<>(Map.of(
-                "facilities", facilities,
+                "facilities", activeFacilities,
                 "baselineTargetTP5", baselineTargetTP5,
                 "baselineTargetTP6", baselineTargetTP6,
                 "version", "v" + version
-            ));
+        ));
         paramMap.put("activationDate", activationDate);
-		return paramMap;
+        return paramMap;
+
     }
 
-	private BaselineAndTargetsTemplateData getBaselineAndTargetsDataTP5(TargetPeriod5Details targetPeriod5Details) {
-		return Boolean.TRUE.equals(targetPeriod5Details.getExist()) 
-				? getBaselineAndTargetsData(targetPeriod5Details.getDetails()) 
-						: BaselineAndTargetsTemplateData.builder().build();
-	}
+    private BaselineAndTargetsTemplateData getBaselineAndTargetsDataTP5(TargetPeriod5Details targetPeriod5Details) {
+        return Boolean.TRUE.equals(targetPeriod5Details.getExist())
+                ? getBaselineAndTargetsData(targetPeriod5Details.getDetails())
+                : BaselineAndTargetsTemplateData.builder().build();
+    }
 
-	private BaselineAndTargetsTemplateData getBaselineAndTargetsData(TargetPeriod6Details targetPeriod6Details) {
-		AgreementCompositionType targetType = targetPeriod6Details.getTargetComposition().getAgreementCompositionType();
-		return BaselineAndTargetsTemplateData.builder()
-				.targetType(targetType.getDescription())
-				.throughput(!AgreementCompositionType.NOVEM.equals(targetType) 
-						? targetPeriod6Details.getBaselineData().getThroughput()
-								: null)
-				.energy(targetPeriod6Details.getBaselineData().getEnergy())
-				.usedReportingMechanism(targetPeriod6Details.getBaselineData().getUsedReportingMechanism())
-				.throughputUnit(targetPeriod6Details.getTargetComposition().getThroughputUnit())
-				.energyCarbonUnit(targetPeriod6Details.getTargetComposition().getMeasurementType().getUnit())
-				.target(!AgreementCompositionType.NOVEM.equals(targetType) 
-						? targetPeriod6Details.getTargets().getTarget().setScale(3, RoundingMode.HALF_UP)
-								: null)
-				.improvement(targetPeriod6Details.getTargets().getImprovement() + "%")
-				.build();
-	}
+    private BaselineAndTargetsTemplateData getBaselineAndTargetsData(TargetPeriod6Details targetPeriod6Details) {
+        AgreementCompositionType targetType = targetPeriod6Details.getTargetComposition().getAgreementCompositionType();
+        return BaselineAndTargetsTemplateData.builder()
+                .targetType(targetType.getDescription())
+                .throughput(!AgreementCompositionType.NOVEM.equals(targetType)
+                        ? targetPeriod6Details.getBaselineData().getThroughput()
+                        : null)
+                .energy(targetPeriod6Details.getBaselineData().getEnergy())
+                .usedReportingMechanism(targetPeriod6Details.getBaselineData().getUsedReportingMechanism())
+                .throughputUnit(targetPeriod6Details.getTargetComposition().getThroughputUnit())
+                .energyCarbonUnit(targetPeriod6Details.getTargetComposition().getMeasurementType().getUnit())
+                .target(!AgreementCompositionType.NOVEM.equals(targetType)
+                        ? targetPeriod6Details.getTargets().getTarget().setScale(3, RoundingMode.HALF_UP)
+                        : null)
+                .improvement(targetPeriod6Details.getTargets().getImprovement() + "%")
+                .build();
+    }
 
-	private List<FacilityTemplateData> getActiveFacilityData(Set<Facility> facilities, Set<String> rejectedFacilityIds) {
-		return facilities.stream()
-				.filter(facility -> isActiveFacility(rejectedFacilityIds, facility))
-				.map(facility -> FacilityTemplateData.builder()
-						.id(facility.getFacilityItem().getFacilityId())
-						.name(facility.getFacilityItem().getFacilityDetails().getName())
-						.address(documentTemplateTransformationMapper.constructAccountAddressDTO(facility.getFacilityItem().getFacilityDetails().getFacilityAddress()))
-						.uketsId(facility.getFacilityItem().getFacilityDetails().getUketsId())
-						.build())
-				.toList();
-	}
-
-	private boolean isActiveFacility(Set<String> rejectedFacilityIds, Facility facility) {
-		return (!rejectedFacilityIds.contains(facility.getFacilityItem().getFacilityId()) 
-				&& !FacilityStatus.EXCLUDED.equals(facility.getStatus()))
-				|| (rejectedFacilityIds.contains(facility.getFacilityItem().getFacilityId()) 
-						&& FacilityStatus.EXCLUDED.equals(facility.getStatus()));
-	}
+    private FacilityTemplateData getFacilityTemplateData(Facility facility) {
+        return FacilityTemplateData.builder()
+                .id(facility.getFacilityItem().getFacilityId())
+                .name(facility.getFacilityItem().getFacilityDetails().getName())
+                .address(documentTemplateTransformationMapper.constructAccountAddressDTO(facility.getFacilityItem().getFacilityDetails().getFacilityAddress()))
+                .uketsId(facility.getFacilityItem().getFacilityDetails().getUketsId())
+                .build();
+    }
 }

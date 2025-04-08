@@ -20,6 +20,7 @@ export class RequestStatusTagColorPipe implements PipeTransform {
         return 'grey';
 
       case 'completed':
+      case 'migrated':
         return 'green';
 
       case 'in_progress':

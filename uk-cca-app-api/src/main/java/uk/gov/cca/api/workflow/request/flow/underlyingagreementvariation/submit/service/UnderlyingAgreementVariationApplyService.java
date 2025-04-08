@@ -46,5 +46,8 @@ public class UnderlyingAgreementVariationApplyService {
         }
 
         taskPayload.setSectionsCompleted(actionPayload.getSectionsCompleted());
+        taskPayload.setReviewGroupDecisions(actionPayload.getReviewGroupDecisions());
+        taskPayload.setFacilitiesReviewGroupDecisions(actionPayload.getFacilitiesReviewGroupDecisions());
+        taskPayload.setReviewSectionsCompleted(actionPayload.getReviewSectionsCompleted());
     }
 }

@@ -13,5 +13,5 @@
 export interface RegulatorRolePermissionsDTO {
   name?: string;
   code?: string;
-  rolePermissions?: { [key: string]: 'NONE' | 'VIEW_ONLY' | 'EXECUTE' };
+  rolePermissions?: Record<string, 'NONE' | 'VIEW_ONLY' | 'EXECUTE'>;
 }

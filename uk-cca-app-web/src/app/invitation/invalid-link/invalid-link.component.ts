@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { map } from 'rxjs';
 
-import { PageHeadingComponent } from '@shared/components';
+import { PageHeadingComponent } from '@netz/common/components';
 
 @Component({
   selector: 'cca-invalid-link',

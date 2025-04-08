@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 
-import produce from 'immer';
+import { produce } from 'immer';
 
 import { UnderlyingAgreementVariationDetails } from 'cca-api';
 

@@ -26,7 +26,6 @@ import { GovukTextWidthClass, HTMLInputType } from './text-input.type';
 
 /*
  eslint-disable
- @angular-eslint/prefer-on-push-component-change-detection,
  @angular-eslint/component-selector
  */
 @Component({
@@ -91,7 +90,7 @@ export class TextInputComponent extends FormInput implements ControlValueAccesso
   override ngOnInit(): void {
     super.ngOnInit();
     if (this.inputType === 'number') {
-      const notNanValidator = GovukValidators.notNaN('Enter a numerical value');
+      const notNanValidator = GovukValidators.notNaN('Enter a numerical value, without alpha or special characters');
       this.control.addValidators(notNanValidator);
       this.control.updateValueAndValidity();
     }

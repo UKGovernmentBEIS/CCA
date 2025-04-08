@@ -1,3 +1,5 @@
+import { AuthState } from '@netz/common/auth';
+
 import {
   CcaOperatorUserDetailsDTO,
   OperatorAuthoritiesInfoDTO,
@@ -404,6 +406,14 @@ export const mockTargetUnitAccount = (sectorAssociationId) => ({
     },
   },
 });
+
+export const mockAuthState: AuthState = {
+  user: { email: 'reg@cca.uk', firstName: 'regulator', lastName: 'england' },
+  userProfile: undefined,
+  userState: { roleType: 'REGULATOR', status: 'ENABLED' },
+  userTerms: undefined,
+  isLoggedIn: true,
+};
 
 export const mockOperatorAuthorities: OperatorAuthoritiesInfoDTO = {
   authorities: [

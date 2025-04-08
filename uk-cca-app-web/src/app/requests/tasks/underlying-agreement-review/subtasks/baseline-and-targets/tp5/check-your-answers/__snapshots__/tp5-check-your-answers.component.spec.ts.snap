@@ -5,7 +5,7 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
   id="root0"
 >
   <div>
-    <cca-page-heading
+    <netz-page-heading
       caption="TP5 (2021-2022)"
     >
       <span
@@ -19,7 +19,7 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
       >
         Check your answers
       </h1>
-    </cca-page-heading>
+    </netz-page-heading>
     <cca-summary>
       <h2
         class="govuk-heading-m"
@@ -44,9 +44,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              No 
-            
-            
             
             
             
@@ -58,7 +58,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/baseline-exists?change=true"
             >
               Change
@@ -93,9 +92,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              Accepted 
-            
-            
             
             
             
@@ -107,7 +106,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/decision?change=true"
             >
               Change
@@ -129,9 +127,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              asd 
-            
-            
             
             
             
@@ -143,7 +141,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/decision?change=true"
             >
               Change
@@ -179,7 +176,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/decision?change=true"
             >
               Change
@@ -194,9 +190,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
       
     </cca-summary>
     <button
-      ccapendingbutton=""
       class="govuk-button"
       govukbutton=""
+      netzpendingbutton=""
       type="button"
     >
       Confirm and complete
@@ -207,7 +203,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

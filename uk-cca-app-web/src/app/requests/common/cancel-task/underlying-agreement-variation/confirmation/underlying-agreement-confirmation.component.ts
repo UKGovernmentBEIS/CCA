@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CancelConfirmationComponent } from '@netz/common/components';
 
 @Component({
-  selector: 'cca-underlying-agreement-variation-cancel-task-confirmation',
+  selector: 'cca-underlying-agreement-variation-submit-cancel-task-confirmation',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<netz-cancel-confirmation>
@@ -12,4 +12,4 @@ import { CancelConfirmationComponent } from '@netz/common/components';
   </netz-cancel-confirmation> `,
   imports: [CancelConfirmationComponent],
 })
-export class UnderlyingAgreementVariationConfirmationComponent {}
+export class UnderlyingAgreementVariationSubmitConfirmationComponent {}

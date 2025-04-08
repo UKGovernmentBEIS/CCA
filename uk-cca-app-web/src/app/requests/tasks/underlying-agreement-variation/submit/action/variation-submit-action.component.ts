@@ -2,17 +2,23 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { TaskService } from '@netz/common/forms';
 import { ButtonDirective, WarningTextComponent } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
 
 @Component({
   selector: 'cca-una-variation-submit-action',
   standalone: true,
-  imports: [ButtonDirective, PageHeadingComponent, PendingButtonDirective, WarningTextComponent, ReturnToTaskOrActionPageComponent],
+  imports: [
+    ButtonDirective,
+    PageHeadingComponent,
+    PendingButtonDirective,
+    WarningTextComponent,
+    ReturnToTaskOrActionPageComponent,
+  ],
   template: `
-    <cca-page-heading size="xl">Send variation application to regulator</cca-page-heading>
+    <netz-page-heading size="xl">Send variation application to regulator</netz-page-heading>
 
     <govuk-warning-text assistiveText="">
       You will not be able to make any changes until the regulator has completed the review.
@@ -24,7 +30,7 @@ import { PendingButtonDirective } from '@shared/directives';
     </p>
 
     <div class="govuk-button-group">
-      <button type="button" ccaPendingButton (click)="submit()" govukButton>Confirm and send</button>
+      <button type="button" netzPendingButton (click)="submit()" govukButton>Confirm and send</button>
     </div>
 
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />

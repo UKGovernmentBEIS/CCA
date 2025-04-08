@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { TaskService } from '@netz/common/forms';
 import { RequestTaskStore } from '@netz/common/store';
-import { ButtonDirective, LinkDirective, WarningTextComponent } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
+import { ButtonDirective, WarningTextComponent } from '@netz/govuk-components';
 
 import { underlyingAgreementQuery } from '../../../+state';
 import {
@@ -17,14 +17,7 @@ import {
 @Component({
   selector: 'cca-delete-facility-item',
   standalone: true,
-  imports: [
-    LinkDirective,
-    PageHeadingComponent,
-    RouterLink,
-    ButtonDirective,
-    PendingButtonDirective,
-    WarningTextComponent,
-  ],
+  imports: [PageHeadingComponent, RouterLink, ButtonDirective, PendingButtonDirective, WarningTextComponent],
   templateUrl: './delete-facility-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

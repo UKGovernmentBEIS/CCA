@@ -115,7 +115,7 @@ class FacilityControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "generateFacilityId", Long.toString(1L));
+                .authorize(user, "generateFacilityId", Long.toString(1L), null, null);
 
         mockMvc.perform(
                         MockMvcRequestBuilders

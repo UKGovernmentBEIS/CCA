@@ -8,6 +8,7 @@ import { tap } from 'rxjs';
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 import { AuthStore, selectUserId } from '@netz/common/auth';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { UserFullNamePipe } from '@netz/common/pipes';
 import {
   ButtonDirective,
@@ -17,7 +18,7 @@ import {
   SelectComponent,
   TableComponent,
 } from '@netz/govuk-components';
-import { PendingButtonDirective, UsersTableDirective } from '@shared/directives';
+import { UsersTableDirective } from '@shared/directives';
 
 import { RegulatorAuthoritiesService, RegulatorUsersAuthoritiesInfoDTO } from 'cca-api';
 

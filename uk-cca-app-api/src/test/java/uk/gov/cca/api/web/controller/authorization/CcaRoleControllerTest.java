@@ -102,7 +102,7 @@ class CcaRoleControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(appUser, "getSectorUserRoles", String.valueOf(sectorId));
+                .authorize(appUser, "getSectorUserRoles", String.valueOf(sectorId), null, null);
 
         // Invoke
         mockMvc.perform(MockMvcRequestBuilders

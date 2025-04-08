@@ -1,27 +1,26 @@
 package uk.gov.cca.api.migration.sectoruser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.stereotype.Service;
-
-import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.migration.DryRunException;
 import uk.gov.cca.api.migration.ExecutionMode;
 import uk.gov.cca.api.migration.MigrationBaseService;
 import uk.gov.cca.api.migration.MigrationEndpoint;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserInvitationDTO;
-import uk.gov.cca.api.web.orchestrator.user.service.SectorUserInvitationOrchestratorService;
+import uk.gov.cca.api.user.sectoruser.service.SectorUserInvitationService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.user.core.service.auth.UserAuthService;
 import uk.gov.netz.api.userinfoapi.UserInfoDTO;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @ConditionalOnAvailableEndpoint(endpoint = MigrationEndpoint.class)
@@ -29,7 +28,7 @@ import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 public class SectorUserInvitationMigration extends MigrationBaseService {
     
     private final UserAuthService authUserService;
-    private final SectorUserInvitationOrchestratorService sectorUserInvitationOrchestratorService;
+    private final SectorUserInvitationService sectorUserInvitationService;
 
     private final SectorUserInvitationMapper sectorUserInvitationMapper;
     private final SectorAssociationQueryService sectorAssociationQueryService;
@@ -116,7 +115,7 @@ public class SectorUserInvitationMigration extends MigrationBaseService {
         try {
             switch (executionMode) {
             case COMMIT:
-                sectorUserInvitationOrchestratorService.inviteUserToSectorAssociation(sectorId, userInvitationDTO, inviter);
+                sectorUserInvitationService.inviteUserToSectorAssociation(sectorId, userInvitationDTO, inviter);
                 break;
             case DRY:
                 // mock (async actions + keyclock request cannot be rollbacked)

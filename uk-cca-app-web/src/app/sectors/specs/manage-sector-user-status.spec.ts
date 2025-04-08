@@ -27,7 +27,7 @@ describe('Manage sector user status spec', () => {
     flush();
     httpMock.verify();
   }));
-  it('Main: Αctivate a Sector User in ‘Disabled’ status', async () => {
+  it('Main: Αctivate a Sector User in ‘Disabled’ status', fakeAsync(async () => {
     const sectorId = 123;
     const user = UserEvent.setup();
     const opts = { harness, httpTestingController: httpMock, user };
@@ -51,8 +51,8 @@ describe('Manage sector user status spec', () => {
     req.flush(null);
     expect(document.getElementById(`authorities.${length - 1}.status`)).toHaveValue('0: ACTIVE');
     expect(document.getElementById(`authorities.${length - 1}.userType`)).toHaveValue('0: sector_user_administrator');
-  });
-  it('Alternative scenario 1: Disable an active Sector User', async () => {
+  }));
+  it('Alternative scenario 1: Disable an active Sector User', fakeAsync(async () => {
     const sectorId = 123;
     const user = UserEvent.setup();
     const opts = { harness, httpTestingController: httpMock, user };
@@ -67,5 +67,5 @@ describe('Manage sector user status spec', () => {
     const req = httpMock.expectOne(`/api/v1.0/sector-authorities/sector-association/${sectorId}`);
     req.flush(null);
     expect(document.getElementById(`authorities.${activeSectorUserIdx}.status`)).toHaveValue('1: DISABLED');
-  });
+  }));
 });

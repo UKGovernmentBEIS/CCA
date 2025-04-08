@@ -12,12 +12,14 @@ import lombok.NoArgsConstructor;
 public class TargetUnitAccountVO {
     
     private Long originalTuPk;
-    private String tuId;
+    private String targetUnitId;
     private String operatorName;
     private String companyRegistrationNumber;
     private String sicCode;
     private String sectorAcronym;
     private String subsectorName;
+    private String operatorType;
+    private Boolean financiallyIndependent;
 
     //Operator Address
     private String addressLine1;
@@ -28,6 +30,6 @@ public class TargetUnitAccountVO {
     private Long country;
     
     private TargetUnitAccountContactVO responsiblePerson;
-    
     private TargetUnitAccountContactVO administrativeContact;
+    
 }

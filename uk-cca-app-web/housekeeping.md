@@ -21,9 +21,11 @@ Issues in this document are not to be taken as is. The team can remove/add entri
    via the `UnderlyingAgreementActivationTaskService`. A better implementation can be found on `underlying-agreement-review-task.service.ts`.
 2. In underlying agreement application -> subtasks -> baseline and targets, we have a shared `check-your-answers` and `summary` components, whereas in the underlying agreement review we do not. Consider not using a common component in the underlying agreement application for consistency
 3. In file inputs, we can define the file type accepted like this, to make the broswer popup accept these types by default.
-For example, for EXCEL type files: `accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"`
+   For example, for EXCEL type files: `accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"`
 4. The form manipulation from the `effect` should be removed from the components and be put to the form provider (as done to this component `FacilityApplyRuleComponent`), as we introduce a second point of manipulating the form, instead of a single point, the form provider.
+5. Use the isEditableGuard in all subtasks and remove isEditable check for each respective wizard step guard.
 
 ## Code smells
 
 1. There's a `@ts-expect-error` on `manage-facilities-payload.mutator.ts`. We should generally avoid that. The problem in this case is that we need to update the payload with some data that the RequestTaskPayload considers invalid.
+2. We have directives with HTML which is incorrect. These should be components. We also have components that use the directive syntax on template usage. These also should be components.

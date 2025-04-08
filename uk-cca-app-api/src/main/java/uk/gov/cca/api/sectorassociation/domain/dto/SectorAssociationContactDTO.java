@@ -18,39 +18,59 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SectorAssociationContactDTO {
 
-    /** The title of the contact. */
+    /**
+     * The title of the contact.
+     */
     @Size(max = 20, message = "{contact.title.size}")
     private String title;
 
-    /** The first name of the contact. */
+    /**
+     * The first name of the contact.
+     */
     @NotBlank(message = "{contact.firstName.notEmpty}")
     @Size(max = 255, message = "{contact.firstName.size}")
     private String firstName;
 
-    /** The last name of the contact. */
+    /**
+     * The last name of the contact.
+     */
     @NotBlank(message = "{contact.lastName.notEmpty}")
     @Size(max = 255, message = "{contact.lastName.size}")
     private String lastName;
 
-    /** The job title of the contact. */
+    /**
+     * The job title of the contact.
+     */
     @Size(max = 255, message = "{contact.jobTitle.size}")
     private String jobTitle;
 
-    /** The name of the organisation associated with the contact. */
+    /**
+     * The name of the organisation associated with the contact.
+     */
     @Size(max = 255, message = "{contact.organisationName.size}")
     private String organisationName;
 
-    /** The address details of the contact. */
+    /**
+     * The address details of the contact.
+     */
     @NotNull(message = "{contact.address.notNull}")
     @Valid
     private AddressDTO address;
 
-    /** The phone number of the contact. */
+    /**
+     * The phone number of the contact.
+     */
     @Size(max = 255, message = "{contact.phoneNumber.size}")
     private String phoneNumber;
 
-    /** The email address of the contact. */
+    /**
+     * The email address of the contact.
+     */
     @NotBlank(message = "{contact.email.notEmpty}")
     @Size(max = 255, message = "{contact.email.size}")
     private String email;
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

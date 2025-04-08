@@ -10,6 +10,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.Un
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.service.UnderlyingAgreementReviewService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestTaskActionHandler;
 
@@ -22,7 +23,7 @@ public class UnderlyingAgreementSaveFacilityReviewGroupDecisionActionHandler
     private final UnderlyingAgreementReviewService underlyingAgreementReviewService;
 
     @Override
-    public void process(final Long requestTaskId,
+    public RequestTaskPayload process(final Long requestTaskId,
                         final String requestTaskActionType,
                         final AppUser user,
                         final UnderlyingAgreementSaveFacilityReviewGroupDecisionRequestTaskActionPayload payload) {
@@ -30,6 +31,8 @@ public class UnderlyingAgreementSaveFacilityReviewGroupDecisionActionHandler
         final RequestTask requestTask = requestTaskService.findTaskById(requestTaskId);
         
         underlyingAgreementReviewService.saveFacilityReviewGroupDecision(payload, requestTask);
+        
+        return requestTask.getPayload();
     }
 
     @Override

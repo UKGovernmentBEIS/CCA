@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { PendingRequestGuard } from '@core/guards/pending-request.guard';
+import { PendingRequestGuard } from '@shared/guards';
 
 import { EditTargetUnitSubSectorResolver } from './edit-target-unit-subsector.resolver';
 

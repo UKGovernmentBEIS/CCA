@@ -40,7 +40,9 @@ public class UnderlyingAgreementVariationRequestPayload extends CcaRequestPayloa
 	
 	private UnderlyingAgreementVariationPayload underlyingAgreement;
 
-    private CcaDecisionNotification decisionNotification;
+	private UnderlyingAgreementVariationPayload underlyingAgreementProposed;
+
+	private CcaDecisionNotification decisionNotification;
 
     private UnderlyingAgreementActivationDetails underlyingAgreementActivationDetails;
 

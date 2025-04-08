@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { ButtonDirective } from '@netz/govuk-components';
 import {
   DECISION_FORM_PROVIDER,
   DecisionComponent,
@@ -16,8 +15,8 @@ import {
   underlyingAgreementVariationQuery,
   VARIATION_DETAILS_SUBTASK,
 } from '@requests/common';
-import { PageHeadingComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { SummaryComponent, WizardStepComponent } from '@shared/components';
+import { generateDownloadUrl } from '@shared/utils';
 
 import { UnderlyingAgreementVariationReviewTaskService } from '../../../services/underlying-agreement-variation-review-task.service';
 
@@ -25,7 +24,7 @@ import { UnderlyingAgreementVariationReviewTaskService } from '../../../services
   selector: 'cca-variation-details-decision',
   template: `
     <div>
-      <cca-page-heading>Variation details</cca-page-heading>
+      <netz-page-heading>Variation details</netz-page-heading>
       <cca-summary [data]="summaryData" />
       <cca-wizard-step [formGroup]="form" (formSubmit)="submit()">
         <cca-decision></cca-decision>
@@ -43,7 +42,6 @@ import { UnderlyingAgreementVariationReviewTaskService } from '../../../services
     SummaryComponent,
     ReactiveFormsModule,
     DecisionComponent,
-    ButtonDirective,
     WizardStepComponent,
     ReturnToTaskOrActionPageComponent,
   ],

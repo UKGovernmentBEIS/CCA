@@ -31,7 +31,7 @@ export class AccordionItemComponent implements OnInit, OnDestroy {
 
   itemIndex: number;
   isFocused = false;
-  isExpanded: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  isExpanded = new BehaviorSubject<boolean>(false);
   isExpanded$: Observable<boolean> = this.isExpanded.asObservable().pipe(tap(() => this.storeState()));
 
   readonly destroy$ = new Subject<void>();

@@ -1,11 +1,11 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { ButtonDirective } from '@netz/govuk-components';
 import {
   BaselineAndTargetPeriodsSubtasks,
   BaseLineAndTargetsReviewStep,
@@ -15,9 +15,10 @@ import {
   decisionFormProvider,
   toBaselineAndTargetsSummaryData,
   underlyingAgreementQuery,
+  underlyingAgreementVariationQuery,
 } from '@requests/common';
-import { PageHeadingComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { HighlightDiffComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
+import { generateDownloadUrl } from '@shared/utils';
 
 import { UnderlyingAgreementVariationReviewTaskService } from '../../../../services/underlying-agreement-variation-review-task.service';
 
@@ -29,52 +30,63 @@ import { UnderlyingAgreementVariationReviewTaskService } from '../../../../servi
     SummaryComponent,
     DecisionComponent,
     ReactiveFormsModule,
-    ButtonDirective,
     WizardStepComponent,
     ReturnToTaskOrActionPageComponent,
+    HighlightDiffComponent,
+    NgTemplateOutlet,
   ],
   providers: [decisionFormProvider('TARGET_PERIOD6_DETAILS')],
-  template: `
-    <div>
-      <cca-page-heading caption="Baseline and targets">TP6(2024)</cca-page-heading>
-
-      <cca-summary [data]="summaryData" />
-      <cca-wizard-step [formGroup]="form" (formSubmit)="submit()">
-        <cca-decision></cca-decision>
-      </cca-wizard-step>
-    </div>
-
-    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-    <netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>
-  `,
+  templateUrl: './tp6-decision.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TP6DecisionComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly requestTaskStore = inject(RequestTaskStore);
-  private readonly taskId = this.activatedRoute.snapshot.paramMap.get('taskId');
   private readonly taskService = inject(TaskService);
   private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
+
   readonly form = inject<DecisionFormModel>(DECISION_FORM_PROVIDER);
 
-  protected readonly baselineExists = this.requestTaskStore.select(underlyingAgreementQuery.selectTargetPeriodExists)();
+  private readonly taskId = this.activatedRoute.snapshot.paramMap.get('taskId');
 
-  protected readonly sectorAssociationDetails = this.requestTaskStore.select(
+  private readonly baselineExists = this.requestTaskStore.select(underlyingAgreementQuery.selectTargetPeriodExists)();
+
+  private readonly originalBaselineExists = this.requestTaskStore.select(
+    underlyingAgreementVariationQuery.selectOriginalBaselineExists,
+  )();
+  private readonly sectorAssociationDetails = this.requestTaskStore.select(
     underlyingAgreementQuery.selectAccountReferenceDataSectorAssociationDetails,
   )();
 
-  protected readonly targetPeriodDetails = this.requestTaskStore.select(
+  private readonly targetPeriodDetails = this.requestTaskStore.select(
     underlyingAgreementQuery.selectTargetPeriodDetails(false),
   )();
 
-  protected attachments = this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)();
+  private readonly originalTargetPeriodDetails = this.requestTaskStore.select(
+    underlyingAgreementVariationQuery.selectOriginalTargetPeriodDetails(false),
+  )();
 
-  protected isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();
+  private readonly attachments = this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)();
 
-  protected readonly multipleFilesDownloadUrl = generateDownloadUrl(this.taskId);
+  private readonly originalAttachments = this.requestTaskStore.select(
+    underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments,
+  )();
 
-  protected readonly summaryData = toBaselineAndTargetsSummaryData(
+  private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();
+
+  private readonly multipleFilesDownloadUrl = generateDownloadUrl(this.taskId);
+
+  protected readonly summaryDataOriginal = toBaselineAndTargetsSummaryData(
+    false,
+    this.originalBaselineExists,
+    this.sectorAssociationDetails,
+    this.originalTargetPeriodDetails,
+    this.originalAttachments,
+    this.isEditable,
+    this.multipleFilesDownloadUrl,
+  );
+
+  protected readonly summaryDataCurrent = toBaselineAndTargetsSummaryData(
     false,
     this.baselineExists,
     this.sectorAssociationDetails,
@@ -83,12 +95,13 @@ export class TP6DecisionComponent {
     this.isEditable,
     this.multipleFilesDownloadUrl,
   );
+
   submit() {
     (this.taskService as UnderlyingAgreementVariationReviewTaskService)
       .saveDecision(this.form.value, 'TARGET_PERIOD6_DETAILS', BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS)
       .subscribe(() => {
         this.router.navigate(['../', BaseLineAndTargetsReviewStep.CHECK_YOUR_ANSWERS], {
-          relativeTo: this.route,
+          relativeTo: this.activatedRoute,
         });
       });
   }

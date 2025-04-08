@@ -928,4 +928,396 @@ This is an automatic email - please do not reply to this address.'
             <param name="fileDocumentName" value="AA_L003_Underlying_Agreement_Activated.docx"/>
         </customChange>
     </changeSet>
+    <changeSet id="0_1_0_update_Underlying_Agreement_Application_Refusal_document_info" author="P70628">
+        <comment>Update AA_L001_Underlying_Agreement_Application_Refusal.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_REJECTED"/>
+            <param name="fileDocumentName" value="AA_L001_Underlying_Agreement_Application_Refusal.docx"/>
+        </customChange>
+    </changeSet>
+    <changeSet id="0_1_0_update_Proposed_Underlying_Agreement_document_info" author="P70628">
+        <comment>Update AA_L002_Proposed_Underlying_Agreement.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_ACCEPTED"/>
+            <param name="fileDocumentName" value="AA_L002_Proposed_Underlying_Agreement.docx"/>
+        </customChange>
+    </changeSet>
+    <changeSet id="0_1_0_update_Underlying_Agreement_Activated_document_info" author="P70628">
+        <comment>Update AA_L003_Underlying_Agreement_Activated.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_ACTIVATED"/>
+            <param name="fileDocumentName" value="AA_L003_Underlying_Agreement_Activated.docx"/>
+        </customChange>
+    </changeSet>
+    <changeSet id="0_1_0_update_Administrative_Termination_document_info" author="P70628">
+        <comment>Update AIT_L001_Administrative_Termination.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="ADMIN_TERMINATION_ADMINISTRATIVE_SUBMITTED"/>
+            <param name="fileDocumentName" value="AIT_L001_Administrative_Termination.docx"/>
+        </customChange>
+    </changeSet>
+    <changeSet id="0_1_0_update_Regulatory_Termination_Right_Of_Appeal_document_info" author="P70628">
+        <comment>Update AIT_L002_Regulatory_Termination_Right_Of_Appeal.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="ADMIN_TERMINATION_REGULATORY_SUBMITTED"/>
+            <param name="fileDocumentName" value="AIT_L002_Regulatory_Termination_Right_Of_Appeal.docx"/>
+        </customChange>
+    </changeSet>
+    <changeSet id="0_1_0_update_Regulatory_Termination_document_info" author="P70628">
+        <comment>Update AIT_L003_Regulatory_Termination.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="ADMIN_TERMINATION_REGULATORY_TERMINATED"/>
+            <param name="fileDocumentName" value="AIT_L003_Regulatory_Termination.docx"/>
+        </customChange>
+    </changeSet>
+    <changeSet id="0_1_0_update_Variation_Refused_document_info" author="P70628">
+        <comment>Update CR_L001_Variation_Refused.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_REJECTED"/>
+            <param name="fileDocumentName" value="CR_L001_Variation_Refused.docx"/>
+        </customChange>
+    </changeSet>
+    <changeSet id="0_1_0_update_Variation_Approved_document_info" author="P70628">
+        <comment>Update CR_L002_Variation_Approved.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_ACCEPTED"/>
+            <param name="fileDocumentName" value="CR_L002_Variation_Approved.docx"/>
+        </customChange>
+    </changeSet>
+    <changeSet id="0_1_0_update_Updated_UnA_template-v03_document_info" author="P70628">
+        <comment>Update Updated UnA template - v03.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT"/>
+            <param name="fileDocumentName" value="Updated UnA template - v03.docx"/>
+        </customChange>
+    </changeSet>
+    <changeSet id="0_1_0_update_Withdrawal_of_termination_letter_document_info" author="P70628">
+        <comment>Update Withdrawal of termination letter.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="ADMIN_TERMINATION_REGULATORY_WITHDRAWN"/>
+            <param name="fileDocumentName" value="Withdrawal of termination letter.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_Variation_Approved_documents_tu_identifier" author="vourdoukasd@unisystems.gr">
+        <comment>Update CR_L002_Variation_Approved.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_ACCEPTED"/>
+            <param name="fileDocumentName" value="CR_L002_Variation_Approved.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_INSERT_USER_FEEDBACK_NOTIFICATION_TEMPLATE" author="vourdoukasd@unisystems.gr">
+
+        <comment>Insert record in notification_template Table for User Feedback email</comment>
+        <sql>
+            <![CDATA[
+            INSERT INTO notification_template (
+                id,
+                name,
+                subject,
+                text)
+            VALUES (
+                       nextval('notification_template_seq'),
+                       'UserFeedbackForService',
+                       'New feedback received for the CCA service',
+                       '## Survey results:
+
+ **Domain** ${domainUrl}
+ **Time created** ${timestamp}
+ - **User registration & 2FA**
+	 - Rating: ${userRegistrationRate}
+	 - Reason: ${userRegistrationRateReason}
+ - **Online guidance & communication**
+	 - Rating: ${onlineGuidanceRate}
+	 - Reason: ${onlineGuidanceRateReason}
+ - **Create accounts**
+	 - Rating: ${creatingAccountRate}
+	 - Reason: ${creatingAccountRateReason}
+ - **On-boarding, Identity & security checks**
+	 - Rating: ${onBoardingRate}
+	 - Reason: ${onBoardingRateReason}
+ - **View, search & respond to tasks**
+	 - Rating: ${tasksRate}
+	 - Reason: ${tasksRateReason}
+ - **Overall experience**
+	 - Rating: ${satisfactionRate}
+	 - Reason: ${satisfactionRateReason}
+ - **Improvement Suggestion**
+	 ${improvementSuggestion}
+ '
+                   )]]>;
+        </sql>
+
+        <rollback>
+            <sql>
+                DELETE FROM notification_template WHERE name = 'UserFeedbackForService';
+            </sql>
+        </rollback>
+
+    </changeSet>
+
+
+    <changeSet id="0_1_0_insert_REPORTING_SPREADSHEETS_DOWNLOAD_TP6_V6_template" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="Consolidated target reporting template (blank).xlsx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'REPORTING_SPREADSHEETS_DOWNLOAD_TP6_V6',
+                       'Generate download performance data',
+                       'ENGLAND',
+                       'Download performance data',
+                       '2024-09-25 00:00:00',
+                       (select id from file_document_template where file_name = 'Consolidated target reporting template (blank).xlsx' order by id desc limit 1));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'Generate download performance data' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'Consolidated target reporting template (blank).xlsx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_REPORTING_SPREADSHEETS_DOWNLOAD_TP6_template" author="P70383">
+        <comment>Update Consolidated target reporting template (blank).xlsx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="REPORTING_SPREADSHEETS_DOWNLOAD_TP6_V6"/>
+            <param name="fileDocumentName" value="Consolidated target reporting template (blank).xlsx"/>
+        </customChange>
+        <sql>
+            UPDATE document_template
+            SET type = 'REPORTING_SPREADSHEETS_DOWNLOAD_TP6'
+            WHERE type = 'REPORTING_SPREADSHEETS_DOWNLOAD_TP6_V6';
+        </sql>
+        <rollback>
+            UPDATE document_template
+            SET type = 'REPORTING_SPREADSHEETS_DOWNLOAD_TP6_V6'
+            WHERE type = 'REPORTING_SPREADSHEETS_DOWNLOAD_TP6';
+        </rollback>
+    </changeSet>
+    
+     <changeSet id="0_1_0_update_REPORTING_SPREADSHEETS_DOWNLOAD_TP6_template_to_locked_version" author="loukerip@unisystems.gr">
+        <comment>Update Consolidated target reporting template (blank).xlsx to the locked version</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="REPORTING_SPREADSHEETS_DOWNLOAD_TP6"/>
+            <param name="fileDocumentName" value="Consolidated target reporting template (blank).xlsx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_Variation_Approved_documents_template_amendment" author="vourdoukasd@unisystems.gr">
+        <comment>Update CR_L002_Variation_Approved.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_ACCEPTED"/>
+            <param name="fileDocumentName" value="CR_L002_Variation_Approved.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_1_UPDATE_generic_email_notification_template_fix" author="vourdoukasd">
+        <sql>
+            UPDATE notification_template SET text=
+                                                 'Dear ${responsibleUser},
+
+Please find attached a communication from the Environment Agency about your Climate Change Agreement (${targetUnit}).
+
+If you have any queries, please [contact the CCA Helpdesk](${contactRegulator}).
+
+If you think you should not have received this email, you must [contact the CCA Helpdesk](${contactRegulator}).
+
+This is an automatic email - please do not reply to this address.'
+            WHERE NAME = 'GenericEmailTemplate';
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE notification_template SET text=
+                'Dear ${responsibleUser} and ${administrativeUser},
+
+                Please find attached a communication from the Environment Agency about your Climate Change Agreement (${targetUnit}).
+
+                If you have any queries, please [contact the CCA Helpdesk](${contactRegulator}).
+
+                If you think you should not have received this email, you must [contact the CCA Helpdesk](${contactRegulator}).
+
+                This is an automatic email - please do not reply to this address.'
+                WHERE NAME = 'GenericEmailTemplate';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_1_update_REPORTING_SPREADSHEETS_DOWNLOAD_TP6_template_to_new_version" author="vourdoukasd@unisystems.gr">
+        <comment>Update Consolidated target reporting template (blank).xlsx to the locked version</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="REPORTING_SPREADSHEETS_DOWNLOAD_TP6"/>
+            <param name="fileDocumentName" value="Consolidated target reporting template (blank).xlsx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_1_Updated_UnA_template_fix_usedReportingMechanism" author="vourdoukasd@unisystems.gr">
+        <comment>Update Updated UnA template - v03.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT"/>
+            <param name="fileDocumentName" value="Updated UnA template - v03.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_insert_generic_email_sector_notification_template" author="P70311">
+        <sql>
+            <![CDATA[
+            INSERT INTO notification_template (
+                id,
+                name,
+                subject,
+                competent_authority,
+                is_managed,
+                last_updated_date,
+                text
+            )
+            VALUES (
+                       nextval('notification_template_seq'),
+                       'GenericSectorEmailTemplate',
+                       'An important letter from the CCA service',
+                       'ENGLAND',
+                       true,
+                       '2025-01-31 00:00:00',
+                       'Dear ${sectorContact},
+
+Please find attached a communication from the Environment Agency about your Climate Change Agreement (${sectorAssociationAcronym} ${sectorAssociationName}).
+
+If you have any queries, please [contact the CCA Helpdesk](${contactRegulator}).
+
+If you think you should not have received this email, you must [contact the CCA Helpdesk](${contactRegulator}).
+
+This is an automatic email - please do not reply to this address.')
+            ]]>;
+        </sql>
+
+        <rollback>
+            <sql>
+                delete from notification_template
+                where name = 'GenericSectorEmailTemplate' and competent_authority = 'ENGLAND';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_insert_SECTOR_MOA_document_template" author="P70311">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="SC_L002_Sector_MoA.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'SECTOR_MOA',
+                       'Subsistence charges Sector MoA',
+                       'ENGLAND',
+                       'Sector MoA',
+                       '2025-02-13 00:00:00',
+                       (select id from file_document_template where file_name = 'SC_L002_Sector_MoA.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericSectorEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'Subsistence charges Sector MoA' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'SC_L002_Sector_MoA.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_insert_TARGET_UNIT_MOA_document_template" author="P70311">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="SC_L001_Target_Unit_MoA.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'TARGET_UNIT_MOA',
+                       'Subsistence charges Target Unit MoA',
+                       'ENGLAND',
+                       'Target Unit MoA',
+                       '2025-02-13 00:00:00',
+                       (select id from file_document_template where file_name = 'SC_L001_Target_Unit_MoA.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericSectorEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'Subsistence charges Target Unit MoA' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'SC_L001_Target_Unit_MoA.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_1_update_REPORTING_SPREADSHEETS_DOWNLOAD_TP6_template_with_new_functions" author="P70383">
+        <comment>Update template to enhance functions</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="REPORTING_SPREADSHEETS_DOWNLOAD_TP6"/>
+            <param name="fileDocumentName" value="Consolidated target reporting template (blank).xlsx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_1_Updated_Sector_Moa_template_correct_text" author="P70311">
+        <comment>Update SC_L002_Sector_MoA.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="SECTOR_MOA"/>
+            <param name="fileDocumentName" value="SC_L002_Sector_MoA.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_1_Updated_Target_Unit_Moa_template_correct_text" author="P70311">
+        <comment>Update SC_L001_Target_Unit_MoA.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="TARGET_UNIT_MOA"/>
+            <param name="fileDocumentName" value="SC_L001_Target_Unit_MoA.docx"/>
+        </customChange>
+    </changeSet>
 </databaseChangeLog>

@@ -1,7 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, Inject } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { provideRouter } from '@angular/router';
 
@@ -36,19 +35,14 @@ export class TestComponent {
 }
 
 describe('PasswordComponent', () => {
-  let passwordService: PasswordService;
-
   beforeEach(async () => {
+    PasswordService.blacklisted = jest
+      .fn()
+      .mockReturnValue(of({ blacklisted: 'Password has been blacklisted. Please select another password' }));
+
     await render(TestComponent, {
-      providers: [
-        provideRouter([]),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        PasswordService,
-        provideZxvbnServiceForPSM(),
-      ],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting(), provideZxvbnServiceForPSM()],
     });
-    passwordService = TestBed.inject(PasswordService);
   });
 
   it('should create', () => {
@@ -66,6 +60,7 @@ describe('PasswordComponent', () => {
   it('should require more than 12 characters for the password', async () => {
     const user = UserEvent.setup();
     await user.type(document.getElementById('password'), 'test');
+    await insertValidatePassword(user, 'test');
     await user.type(document.getElementById('validatePassword'), 'test');
     await user.click(screen.getByText('Submit'));
 
@@ -75,7 +70,7 @@ describe('PasswordComponent', () => {
   it('should not accept weak password', async () => {
     const user = UserEvent.setup();
     await user.type(document.getElementById('password'), '12345678');
-    await user.type(document.getElementById('validatePassword'), '12345678');
+    await insertValidatePassword(user, '12345678');
     await user.click(screen.getByText('Submit'));
     expect(screen.getAllByText('Enter a strong password')).toHaveLength(2);
   });
@@ -83,7 +78,7 @@ describe('PasswordComponent', () => {
   it('should require the passwords to match', async () => {
     const user = UserEvent.setup();
     await user.type(document.getElementById('password'), '12345678');
-    await user.type(document.getElementById('validatePassword'), '123456789');
+    await insertValidatePassword(user, '123456789');
     await user.click(screen.getByText('Submit'));
     expect(
       screen.getByText('Password and re-typed password do not match. Please enter both passwords again'),
@@ -91,13 +86,15 @@ describe('PasswordComponent', () => {
   });
 
   it('should not accept a blacklisted password', async () => {
-    jest
-      .spyOn(passwordService, 'blacklisted')
-      .mockReturnValue(of({ blacklisted: 'Password has been blacklisted. Please select another password' }));
     const user = UserEvent.setup();
-    await user.type(document.getElementById('password'), 'ThisIsAStrongP@ssw0rd');
-    await user.type(document.getElementById('validatePassword'), '123456789');
+    await user.type(document.getElementById('password'), 'password123123');
+    await insertValidatePassword(user, 'password123123');
     await user.click(screen.getByText('Submit'));
     expect(screen.getAllByText('Password has been blacklisted. Please select another password')).toHaveLength(2);
   });
 });
+
+async function insertValidatePassword(user: UE, input: string) {
+  await user.click(document.getElementById('validatePassword'));
+  await user.type(document.getElementById('validatePassword'), input);
+}

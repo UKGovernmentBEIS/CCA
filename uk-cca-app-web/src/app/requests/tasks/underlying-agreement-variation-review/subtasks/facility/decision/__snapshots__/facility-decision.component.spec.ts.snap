@@ -5,1290 +5,3279 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
   id="root0"
 >
   <div>
-    <cca-page-heading>
+    <netz-page-heading>
       
       <h1
         class="govuk-heading-l"
       >
         Facility 1 (ADS_1-F00001)
       </h1>
-    </cca-page-heading>
-    <cca-summary>
-      <h2
-        class="govuk-heading-m"
+    </netz-page-heading>
+    
+    <cca-highlight-diff>
+      <div
+        class="govuk-!-display-none"
       >
-        
-      </h2>
-      <dl
-        class="govuk-summary-list govuk-!-margin-bottom-9"
-        govuk-summary-list=""
-      >
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
+        <cca-summary>
+          <h2
+            class="govuk-heading-m"
           >
-            Facility status
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
+            
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
           >
-             Live 
-            
-            
-            
-            
-            
-            
-          </dd>
-          
-        </div>
-        
-        
-        
-      </dl>
-      <h2
-        class="govuk-heading-m"
-      >
-        Facility Details
-      </h2>
-      <dl
-        class="govuk-summary-list govuk-!-margin-bottom-9"
-        govuk-summary-list=""
-      >
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Site name
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             Facility 1 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
             >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Facility code
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             ADS_1-F00001 
-            
-            
-            
-            
-            
-            
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Is this facility covered by UK ETS?
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             No 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            UK ETS Installation Identifier
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-              
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Application reason
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             New agreement 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Previous facility ID
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-              
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Facility address
-          </dt>
-          <dd
-            class="pre-wrap govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             Facility Line1 
-            
-            
-            <br />
-            
-             Facility Line2 
-            
-            
-            <br />
-            
-             Facility City 
-            
-            
-            <br />
-            
-             Facility 14 
-            
-            
-            <br />
-            
-             GR 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        
-        
-        
-      </dl>
-      <h2
-        class="govuk-heading-m"
-      >
-        Facility contact details
-      </h2>
-      <dl
-        class="govuk-summary-list govuk-!-margin-bottom-9"
-        govuk-summary-list=""
-      >
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            First name
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             FacilityFirst 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Last name
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             FacilityLast 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Email address
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             facility@email.com 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Contact address
-          </dt>
-          <dd
-            class="pre-wrap govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             Facility Contact Line1 
-            
-            
-            <br />
-            
-             Facility Contact Line2 
-            
-            
-            <br />
-            
-             Facility Contact City 
-            
-            
-            <br />
-            
-             Facility Contact 14 
-            
-            
-            <br />
-            
-             GR 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Phone number
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             UK (44) 1234567890 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        
-        
-        
-      </dl>
-      <h2
-        class="govuk-heading-m"
-      >
-        CCA eligibility details and authorisation
-      </h2>
-      <dl
-        class="govuk-summary-list govuk-!-margin-bottom-9"
-        govuk-summary-list=""
-      >
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Is the facility adjacent to or connected to an existing CCA facility?
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             Yes 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Facility ID of adjacent facility
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             ADS_1-F11111 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Agreement type - eligible under
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             Environmental Permitting Regulations (EPR) 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Do you hold a current Environmental Permitting Regulations (EPR) authorisation for any activity being carried out in the facility?
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             Yes 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Authorisation number
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             authorisation 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Regulator name
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             Environment Agency (England) 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Attach a copy of the permit
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-            <cca-summary-download-files>
-              <a
-                class="govuk-link"
-                govuklink=""
-                href="/tasks/20/file-download/permitFile"
-                target="_blank"
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Facility status
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
               >
                 
-              </a>
+                
+                 Live 
+                
+                
+                
+                
+              </dd>
               
-              
-            </cca-summary-download-files>
+            </div>
             
             
             
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
+          </dl>
+          <h2
+            class="govuk-heading-m"
           >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
+            Facility Details
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
             >
-              Change
-            </a>
-          </dd>
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Site name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Facility 1 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Facility code
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 ADS_1-F00001 
+                
+                
+                
+                
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Is this facility covered by UK ETS?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 No 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                UK ETS Installation Identifier
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                  
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Application reason
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 New agreement 
+                
+                
+                
+                
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Previous facility ID
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                  
+                
+                
+                
+                
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Facility address
+              </dt>
+              <dd
+                class="pre-wrap govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Facility Line1 
+                
+                <br />
+                
+                
+                 Facility Line2 
+                
+                <br />
+                
+                
+                 Facility City 
+                
+                <br />
+                
+                
+                 Facility 14 
+                
+                <br />
+                
+                
+                 GR 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Facility contact details
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                First name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 FacilityFirst 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Last name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 FacilityLast 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Email address
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 facility@email.com 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Contact address
+              </dt>
+              <dd
+                class="pre-wrap govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Facility Contact Line1 
+                
+                <br />
+                
+                
+                 Facility Contact Line2 
+                
+                <br />
+                
+                
+                 Facility Contact City 
+                
+                <br />
+                
+                
+                 Facility Contact 14 
+                
+                <br />
+                
+                
+                 GR 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Phone number
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 UK (44) 1234567890 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            CCA eligibility details and authorisation
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Is the facility adjacent to or connected to an existing CCA facility?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Yes 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Facility ID of adjacent facility
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 ADS_1-F11111 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Agreement type - eligible under
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Environmental Permitting Regulations (EPR) 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Do you hold a current Environmental Permitting Regulations (EPR) authorisation for any activity being carried out in the facility?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Yes 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Authorisation number
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 authorisation 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Regulator name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Environment Agency (England) 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Attach a copy of the permit
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/permitFile"
+                    target="_blank"
+                  >
+                    
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Extent of the facility
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Manufacturing process description
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/manufacturingProcessFile"
+                    target="_blank"
+                  >
+                    manufacturingProcessFile.xlsx
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Process flow maps
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/processFlowFile"
+                    target="_blank"
+                  >
+                    processFlowFile.xlsx
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Annotated site plans
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/annotatedSitePlansFile"
+                    target="_blank"
+                  >
+                    annotatedSitePlansFile.xlsx
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Eligible process description
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/eligibleProcessFile"
+                    target="_blank"
+                  >
+                    eligibleProcessFile.xlsx
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Are any directly associated activities claimed?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Yes 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Directly associated activities description
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/activitiesDescriptionFile"
+                    target="_blank"
+                  >
+                    activitiesDescriptionFile.xlsx
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Apply the 70% rule
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Energy consumed in the installation
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 50 % 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Energy consumed in relation to 3/7ths provision
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 40 % 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Energy consumed in eligible facility
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 70 % 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Sub-metered start date
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                  
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Evidence
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/evidenceFile"
+                    target="_blank"
+                  >
+                    evidenceFile.xlsx
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
           
-        </div>
+        </cca-summary>
         
-        
-        
-      </dl>
-      <h2
-        class="govuk-heading-m"
+      </div>
+      <div
+        class="govuk-!-display-none"
       >
-        Extent of the facility
-      </h2>
-      <dl
-        class="govuk-summary-list govuk-!-margin-bottom-9"
-        govuk-summary-list=""
+        <cca-summary>
+          <h2
+            class="govuk-heading-m"
+          >
+            
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Facility status
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Live 
+                
+                
+                
+                
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Facility Details
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Site name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Facility 1 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Facility code
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 ADS_1-F00001 
+                
+                
+                
+                
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Is this facility covered by UK ETS?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 No 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                UK ETS Installation Identifier
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                  
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Application reason
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 New agreement 
+                
+                
+                
+                
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Previous facility ID
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                  
+                
+                
+                
+                
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Facility address
+              </dt>
+              <dd
+                class="pre-wrap govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Facility Line1 
+                
+                <br />
+                
+                
+                 Facility Line2 
+                
+                <br />
+                
+                
+                 Facility City 
+                
+                <br />
+                
+                
+                 Facility 14 
+                
+                <br />
+                
+                
+                 GR 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Facility contact details
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                First name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 FacilityFirst 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Last name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 FacilityLast 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Email address
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 facility@email.com 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Contact address
+              </dt>
+              <dd
+                class="pre-wrap govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Facility Contact Line1 
+                
+                <br />
+                
+                
+                 Facility Contact Line2 
+                
+                <br />
+                
+                
+                 Facility Contact City 
+                
+                <br />
+                
+                
+                 Facility Contact 14 
+                
+                <br />
+                
+                
+                 GR 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Phone number
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 UK (44) 1234567890 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            CCA eligibility details and authorisation
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Is the facility adjacent to or connected to an existing CCA facility?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Yes 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Facility ID of adjacent facility
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 ADS_1-F11111 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Agreement type - eligible under
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Environmental Permitting Regulations (EPR) 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Do you hold a current Environmental Permitting Regulations (EPR) authorisation for any activity being carried out in the facility?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Yes 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Authorisation number
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 authorisation 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Regulator name
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Environment Agency (England) 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Attach a copy of the permit
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/permitFile"
+                    target="_blank"
+                  >
+                    
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Extent of the facility
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Manufacturing process description
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/manufacturingProcessFile"
+                    target="_blank"
+                  >
+                    manufacturingProcessFile.xlsx
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Process flow maps
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/processFlowFile"
+                    target="_blank"
+                  >
+                    processFlowFile.xlsx
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Annotated site plans
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/annotatedSitePlansFile"
+                    target="_blank"
+                  >
+                    annotatedSitePlansFile.xlsx
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Eligible process description
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/eligibleProcessFile"
+                    target="_blank"
+                  >
+                    eligibleProcessFile.xlsx
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Are any directly associated activities claimed?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Yes 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Directly associated activities description
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/activitiesDescriptionFile"
+                    target="_blank"
+                  >
+                    activitiesDescriptionFile.xlsx
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Apply the 70% rule
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Energy consumed in the installation
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 50 % 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Energy consumed in relation to 3/7ths provision
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 40 % 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Energy consumed in eligible facility
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 70 % 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Sub-metered start date
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                  
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Evidence
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/20/file-download/evidenceFile"
+                    target="_blank"
+                  >
+                    evidenceFile.xlsx
+                  </a>
+                  
+                  
+                </cca-summary-download-files>
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          
+        </cca-summary>
+        
+      </div>
+      <div
+        class="highlight"
       >
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
+        <h2
+          class="govuk-heading-m"
+        />
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
         >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
+          <div
+            class="govuk-summary-list__row"
           >
-            Manufacturing process description
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Facility status
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Live 
+            </dd>
+          </div>
+        </dl>
+        <h2
+          class="govuk-heading-m"
+        >
+          Facility Details
+        </h2>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+        >
+          <div
+            class="govuk-summary-list__row"
           >
-            <cca-summary-download-files>
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Site name
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Facility 1 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
               <a
                 class="govuk-link"
-                govuklink=""
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Facility code
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               ADS_1-F00001 
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Is this facility covered by UK ETS?
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               No 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              UK ETS Installation Identifier
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+                
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Application reason
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               New agreement 
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Previous facility ID
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+                
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Facility address
+            </dt>
+            <dd
+              class="pre-wrap govuk-summary-list__value"
+            >
+               Facility Line1 
+              <br />
+               Facility Line2 
+              <br />
+               Facility City 
+              <br />
+               Facility 14 
+              <br />
+               GR 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+        </dl>
+        <h2
+          class="govuk-heading-m"
+        >
+          Facility contact details
+        </h2>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+        >
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              First name
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               FacilityFirst 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Last name
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               FacilityLast 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Email address
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               facility@email.com 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Contact address
+            </dt>
+            <dd
+              class="pre-wrap govuk-summary-list__value"
+            >
+               Facility Contact Line1 
+              <br />
+               Facility Contact Line2 
+              <br />
+               Facility Contact City 
+              <br />
+               Facility Contact 14 
+              <br />
+               GR 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Phone number
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               UK (44) 1234567890 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+        </dl>
+        <h2
+          class="govuk-heading-m"
+        >
+          CCA eligibility details and authorisation
+        </h2>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+        >
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Is the facility adjacent to or connected to an existing CCA facility?
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Yes 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Facility ID of adjacent facility
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               ADS_1-F11111 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Agreement type - eligible under
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Environmental Permitting Regulations (EPR) 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Do you hold a current Environmental Permitting Regulations (EPR) authorisation for any activity being carried out in the facility?
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Yes 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Authorisation number
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               authorisation 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Regulator name
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Environment Agency (England) 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Attach a copy of the permit
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <a
+                class="govuk-link"
+                href="/tasks/20/file-download/permitFile"
+                target="_blank"
+              />
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+        </dl>
+        <h2
+          class="govuk-heading-m"
+        >
+          Extent of the facility
+        </h2>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+        >
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Manufacturing process description
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <a
+                class="govuk-link"
                 href="/tasks/20/file-download/manufacturingProcessFile"
                 target="_blank"
               >
                 manufacturingProcessFile.xlsx
               </a>
-              
-              
-            </cca-summary-download-files>
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
             >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Process flow maps
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-            <cca-summary-download-files>
               <a
                 class="govuk-link"
-                govuklink=""
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Process flow maps
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <a
+                class="govuk-link"
                 href="/tasks/20/file-download/processFlowFile"
                 target="_blank"
               >
                 processFlowFile.xlsx
               </a>
-              
-              
-            </cca-summary-download-files>
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
             >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Annotated site plans
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-            <cca-summary-download-files>
               <a
                 class="govuk-link"
-                govuklink=""
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Annotated site plans
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <a
+                class="govuk-link"
                 href="/tasks/20/file-download/annotatedSitePlansFile"
                 target="_blank"
               >
                 annotatedSitePlansFile.xlsx
               </a>
-              
-              
-            </cca-summary-download-files>
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
             >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Eligible process description
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-            <cca-summary-download-files>
               <a
                 class="govuk-link"
-                govuklink=""
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Eligible process description
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <a
+                class="govuk-link"
                 href="/tasks/20/file-download/eligibleProcessFile"
                 target="_blank"
               >
                 eligibleProcessFile.xlsx
               </a>
-              
-              
-            </cca-summary-download-files>
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
             >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Are any directly associated activities claimed?
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             Yes 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Directly associated activities description
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-            <cca-summary-download-files>
               <a
                 class="govuk-link"
-                govuklink=""
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Are any directly associated activities claimed?
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Yes 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Directly associated activities description
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <a
+                class="govuk-link"
                 href="/tasks/20/file-download/activitiesDescriptionFile"
                 target="_blank"
               >
                 activitiesDescriptionFile.xlsx
               </a>
-              
-              
-            </cca-summary-download-files>
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
             >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        
-        
-        
-      </dl>
-      <h2
-        class="govuk-heading-m"
-      >
-        Apply the 70% rule
-      </h2>
-      <dl
-        class="govuk-summary-list govuk-!-margin-bottom-9"
-        govuk-summary-list=""
-      >
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Energy consumed in the installation
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             50 % 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Energy consumed in relation to 3/7ths provision
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             40 % 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Energy consumed in eligible facility
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             70 % 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Sub-metered start date
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-              
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Evidence
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-            <cca-summary-download-files>
               <a
                 class="govuk-link"
-                govuklink=""
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+        </dl>
+        <h2
+          class="govuk-heading-m"
+        >
+          Apply the 70% rule
+        </h2>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+        >
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Energy consumed in the installation
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               50 % 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Energy consumed in relation to 3/7ths provision
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               40 % 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Energy consumed in eligible facility
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               70 % 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Sub-metered start date
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+                
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Evidence
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <a
+                class="govuk-link"
                 href="/tasks/20/file-download/evidenceFile"
                 target="_blank"
               >
                 evidenceFile.xlsx
               </a>
-              
-              
-            </cca-summary-download-files>
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/?change=true"
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
             >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        
-        
-        
-      </dl>
-      
-    </cca-summary>
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </cca-highlight-diff>
     <cca-wizard-step
       class="ng-untouched ng-pristine ng-valid"
     >
@@ -1297,14 +3286,14 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
         novalidate=""
       >
         
-        <cca-page-heading>
+        <netz-page-heading>
           
           <h1
             class="govuk-heading-l"
           >
             
           </h1>
-        </cca-page-heading>
+        </netz-page-heading>
         <cca-decision-with-date>
           <h2
             class="govuk-heading-m"
@@ -1403,28 +3392,19 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
             formcontrolname="notes"
             govuk-textarea=""
-            hint="The operator cannot view this"
-            label="Notes"
+            label="Notes (optional)"
           >
             <label
               class="govuk-label"
               for="notes"
               id="l.notes"
             >
-               Notes
+               Notes (optional)
 
             </label>
-            <div
-              class="govuk-hint"
-              id="notes-hint"
-            >
-               The operator cannot view this
-
-            </div>
             
             
             <textarea
-              aria-describedby="notes-hint"
               class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-valid"
               id="notes"
               name="notes"
@@ -1438,10 +3418,10 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             label="Upload evidence (optional)"
           >
             <div
-              class="moj-multi-file-upload moj-multi-file-upload--enhanced"
+              class="cca-multi-file-upload cca-multi-file-upload--enhanced"
             >
               <div
-                class="moj-multi-file-upload__upload"
+                class="cca-multi-file-upload__upload"
               >
                 <div
                   class="govuk-form-group"
@@ -1463,12 +3443,12 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
                   
                   
                   <div
-                    class="moj-multi-file-upload__dropzone govuk-!-margin-top-4"
+                    class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
                   >
                     <input
                       accept="*/*"
                       aria-labelledby="l.files ld.files"
-                      class="govuk-file-upload moj-multi-file-upload__input"
+                      class="govuk-file-upload cca-multi-file-upload__input"
                       id="files"
                       multiple=""
                       name="files"
@@ -1498,15 +3478,15 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
               </div>
               <cca-file-upload-list>
                 <div
-                  class="moj-multi-file__uploaded-files moj-hidden"
+                  class="cca-multi-file__uploaded-files govuk-body cca-hidden"
                 >
                   
+                  
                   <dl
-                    class="govuk-summary-list moj-multi-file-upload__list"
+                    class="govuk-summary-list cca-multi-file-upload__list"
                   >
                     
                   </dl>
-                  
                   
                   
                   
@@ -1519,9 +3499,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
           </cca-multiple-file-input>
         </cca-decision-with-date>
         <button
-          ccapendingbutton=""
           class="govuk-button"
           govukbutton=""
+          netzpendingbutton=""
           type="submit"
         >
           Continue
@@ -1537,7 +3517,6 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

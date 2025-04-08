@@ -1,7 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
-import { CountryService } from '@core/services/country.service';
+import { CountryService } from '@shared/services';
 
 import { CountryServiceStub } from 'src/testing/country.service.stub';
 

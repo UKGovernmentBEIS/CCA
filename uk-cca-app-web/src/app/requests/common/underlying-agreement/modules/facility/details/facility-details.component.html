@@ -3,7 +3,7 @@
     (formSubmit)="onSubmit()"
     [formGroup]="form"
     [caption]="facility.name"
-    heading="Add facility details"
+    heading="{{ facility.status !== 'NEW' ? 'Change' : 'Add' }} facility details"
     data-testid="add-facility-details-form"
   >
     <div formControlName="facilityId" cca-text-input label="Facility code"></div>

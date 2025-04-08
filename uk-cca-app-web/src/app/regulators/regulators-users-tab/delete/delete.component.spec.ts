@@ -4,10 +4,10 @@ import { ActivatedRoute, provideRouter } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
-import { AuthService } from '@core/services/auth.service';
 import { BusinessTestingModule, expectBusinessErrorToBe } from '@error/testing/business-error';
 import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteStub, BasePage, expectToHaveNavigatedTo, RouterStubComponent } from '@netz/common/testing';
+import { AuthService } from '@shared/services';
 
 import { RegulatorAuthoritiesService, RegulatorUserDTO } from 'cca-api';
 

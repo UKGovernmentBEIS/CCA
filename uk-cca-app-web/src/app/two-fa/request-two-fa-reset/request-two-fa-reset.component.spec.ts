@@ -12,7 +12,7 @@ describe('RequestTwoFaResetComponent', () => {
 
   class Page extends BasePage<RequestTwoFaResetComponent> {
     get heading() {
-      return this.query<HTMLElement>('cca-page-heading h1.govuk-heading-l');
+      return this.query<HTMLElement>('netz-page-heading h1.govuk-heading-l');
     }
   }
 

@@ -79,6 +79,7 @@
           (targetComposition.measurementType | measurementTypeToUnit) +
           ' for the target facility'
         "
+        hint="Enter a number up to 7 decimals, without alpha or special characters"
         inputType="number"
         govuk-text-input
       ></div>
@@ -100,8 +101,8 @@
         widthClass="govuk-!-width-one-quarter"
         formControlName="throughput"
         [suffix]="targetComposition?.throughputUnit"
-        [label]="'Enter the baseline throughput ' + (targetComposition?.throughputUnit ?? sectorThroughputUnit)"
-        hint="Not applicable for novem targets"
+        [label]="'Enter the baseline throughput ' + ((targetComposition?.throughputUnit ?? sectorThroughputUnit) || '')"
+        hint="Not applicable for novem targets. Enter a number up to 7 decimals, without alpha or special characters"
         inputType="number"
         govuk-text-input
       ></div>

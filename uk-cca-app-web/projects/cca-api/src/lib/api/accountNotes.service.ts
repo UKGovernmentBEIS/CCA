@@ -9,20 +9,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { AccountNoteDto } from '../model/accountNoteDto';
 import { AccountNoteRequest } from '../model/accountNoteRequest';
 import { AccountNoteResponse } from '../model/accountNoteResponse';
 import { FileToken } from '../model/fileToken';
 import { FileUuidDTO } from '../model/fileUuidDTO';
 import { NoteRequest } from '../model/noteRequest';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -128,7 +128,7 @@ export class AccountNotesService {
   public createAccountNote(
     accountNoteRequest: AccountNoteRequest,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountNoteRequest === null || accountNoteRequest === undefined) {
@@ -166,7 +166,7 @@ export class AccountNotesService {
     }
 
     return this.httpClient.post<any>(`${this.configuration.basePath}/v1.0/account-notes`, accountNoteRequest, {
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -202,7 +202,7 @@ export class AccountNotesService {
   public deleteAccountNote(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -235,7 +235,7 @@ export class AccountNotesService {
     return this.httpClient.delete<any>(
       `${this.configuration.basePath}/v1.0/account-notes/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -277,7 +277,7 @@ export class AccountNotesService {
     accountId: number,
     uuid: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -291,7 +291,7 @@ export class AccountNotesService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (uuid !== undefined && uuid !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>uuid, 'uuid');
+      queryParameters = this.addToHttpParams(queryParameters, uuid as any, 'uuid');
     }
 
     let headers = this.defaultHeaders;
@@ -321,7 +321,7 @@ export class AccountNotesService {
       `${this.configuration.basePath}/v1.0/account-notes/${encodeURIComponent(String(accountId))}/files`,
       {
         params: queryParameters,
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -358,7 +358,7 @@ export class AccountNotesService {
   public getAccountNote(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -391,7 +391,7 @@ export class AccountNotesService {
     return this.httpClient.get<AccountNoteDto>(
       `${this.configuration.basePath}/v1.0/account-notes/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -438,7 +438,7 @@ export class AccountNotesService {
     page: number,
     size: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -453,13 +453,13 @@ export class AccountNotesService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (accountId !== undefined && accountId !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>accountId, 'accountId');
+      queryParameters = this.addToHttpParams(queryParameters, accountId as any, 'accountId');
     }
     if (page !== undefined && page !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>page, 'page');
+      queryParameters = this.addToHttpParams(queryParameters, page as any, 'page');
     }
     if (size !== undefined && size !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>size, 'size');
+      queryParameters = this.addToHttpParams(queryParameters, size as any, 'size');
     }
 
     let headers = this.defaultHeaders;
@@ -487,7 +487,7 @@ export class AccountNotesService {
 
     return this.httpClient.get<AccountNoteResponse>(`${this.configuration.basePath}/v1.0/account-notes`, {
       params: queryParameters,
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -528,7 +528,7 @@ export class AccountNotesService {
     id: number,
     noteRequest: NoteRequest,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -572,7 +572,7 @@ export class AccountNotesService {
       `${this.configuration.basePath}/v1.0/account-notes/${encodeURIComponent(String(id))}`,
       noteRequest,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -614,7 +614,7 @@ export class AccountNotesService {
     accountId: number,
     file: Blob,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -660,7 +660,7 @@ export class AccountNotesService {
     }
 
     if (file !== undefined) {
-      formParams = (formParams.append('file', <any>file) as any) || formParams;
+      formParams = (formParams.append('file', file as any) as any) || formParams;
     }
 
     let responseType_: 'text' | 'json' = 'json';
@@ -672,7 +672,7 @@ export class AccountNotesService {
       `${this.configuration.basePath}/v1.0/account-notes/upload/account/${encodeURIComponent(String(accountId))}`,
       convertFormParamsToString ? formParams.toString() : formParams,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

@@ -11,9 +11,9 @@
  */
 
 export interface RfiSubmitPayload {
-  questions: Array<string>;
-  files?: Array<string>;
+  questions: string[];
+  files?: string[];
   deadline: string;
-  operators?: Array<string>;
+  operators?: string[];
   signatory: string;
 }

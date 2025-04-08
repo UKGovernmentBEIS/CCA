@@ -15,7 +15,7 @@ export const PASSWORD_FORM = new InjectionToken<FormGroup<PasswordFormModel>>('P
 
 export const passwordFormFactory: FactoryProvider = {
   provide: PASSWORD_FORM,
-  useFactory: (fb: FormBuilder, passwordService: PasswordService) =>
+  useFactory: (fb: FormBuilder) =>
     fb.group(
       {
         email: fb.control({ value: null, disabled: true }),
@@ -23,9 +23,9 @@ export const passwordFormFactory: FactoryProvider = {
           validators: [
             GovukValidators.required('Please enter your password'),
             GovukValidators.minLength(12, 'Password must be 12 characters or more'),
-            (control) => passwordService.strong(control),
+            (control) => PasswordService.strong(control),
           ],
-          asyncValidators: (control) => passwordService.blacklisted(control),
+          asyncValidators: (control) => PasswordService.blacklisted(control),
         }),
         validatePassword: fb.control(null, { validators: GovukValidators.required('Re-enter your password') }),
       },
@@ -35,11 +35,10 @@ export const passwordFormFactory: FactoryProvider = {
           (group: FormGroup) => {
             const password = group.get('password');
             const validatePassword = group.get('validatePassword');
-
             return password.value === validatePassword.value ? null : { notEquivalent: true };
           },
         ),
       },
     ),
-  deps: [FormBuilder, PasswordService],
+  deps: [FormBuilder],
 };

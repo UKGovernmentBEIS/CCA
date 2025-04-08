@@ -14,7 +14,7 @@
           } @else {
             @for (value of row.value; track value; let last = $last) {
               @if (row.link) {
-                <a govukLink [routerLink]="row.link">{{ value }}</a>
+                <a class="govuk-link" [routerLink]="row.link">{{ value }}</a>
               } @else {
                 {{ value }}
               }
@@ -27,7 +27,10 @@
 
         @if (row.change) {
           <dd govukSummaryListRowActions>
-            <a govukLink [routerLink]="row.changeLink || section.changeLink" [queryParams]="row | parseQueryParams"
+            <a
+              class="govuk-link"
+              [routerLink]="row.changeLink || section.changeLink"
+              [queryParams]="row | parseQueryParams"
               >Change</a
             >
           </dd>

@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { OneTimePasswordDTO } from '../model/oneTimePasswordDTO';
 import { TokenDTO } from '../model/tokenDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -110,7 +110,7 @@ export class UsersSecuritySetupService {
   public deleteOtpCredentials(
     tokenDTO: TokenDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (tokenDTO === null || tokenDTO === undefined) {
@@ -142,7 +142,7 @@ export class UsersSecuritySetupService {
     }
 
     return this.httpClient.patch<any>(`${this.configuration.basePath}/v1.0/users/security-setup/2fa/delete`, tokenDTO, {
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -178,7 +178,7 @@ export class UsersSecuritySetupService {
   public requestTwoFactorAuthChange(
     oneTimePasswordDTO: OneTimePasswordDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (oneTimePasswordDTO === null || oneTimePasswordDTO === undefined) {
@@ -221,7 +221,7 @@ export class UsersSecuritySetupService {
       `${this.configuration.basePath}/v1.0/users/security-setup/2fa/request-change`,
       oneTimePasswordDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

@@ -6,3 +6,4 @@ export * from './una-apply-review-target-unit-details-summary-data';
 export * from './una-review-review-target-unit-details-summary-data';
 export * from './underlying-agreement-activation-summary-data';
 export * from './variation-details-summary-data';
+export * from './to-overall-decision-summary-data';

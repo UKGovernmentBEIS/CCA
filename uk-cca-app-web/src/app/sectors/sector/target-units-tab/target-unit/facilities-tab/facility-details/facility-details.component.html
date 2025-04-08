@@ -1,0 +1,74 @@
+@if (facilityDetails; as details) {
+  <div class="row-flex align-items-end">
+    <div class="col-flex-three-quarters">
+      <netz-page-heading size="l" [caption]="details.facilityId">
+        {{ details.siteName }}
+
+        <span class="govuk-tag-heading-align">
+          <govuk-tag [color]="details.status === 'LIVE' ? 'green' : 'red'">
+            {{ details.status | facilityStatus }}
+          </govuk-tag>
+        </span>
+      </netz-page-heading>
+    </div>
+  </div>
+
+  <h2 class="govuk-heading-m">Facility details</h2>
+  <dl govuk-summary-list data-testid="facility-details">
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Site name</dt>
+      <dd govukSummaryListRowValue>{{ details.siteName }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Address</dt>
+      <dd govukSummaryListRowValue>
+        {{ details.address.line1 }}<br />
+
+        @if (details.address.line2) {
+          {{ details.address.line2 }}<br />
+        }
+
+        {{ details.address.city }}<br />
+
+        @if (details.address.county) {
+          {{ details.address.county }}<br />
+        }
+
+        {{ details.address.postcode }}<br />
+        {{ details.address.country }}
+      </dd>
+    </div>
+  </dl>
+
+  <h2 class="govuk-heading-m">Subsistence fees</h2>
+  <dl govuk-summary-list data-testid="subsistence-fees">
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Subsistence fees start date</dt>
+      <dd govukSummaryListRowValue>
+        @if (details.chargeStartDate) {
+          {{ details.chargeStartDate | date: 'dd/MM/yyyy' }}
+        } @else {
+          Not provided
+        }
+      </dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Scheme exit date</dt>
+      <dd govukSummaryListRowValue>
+        @if (details.schemeExitDate) {
+          {{ details.schemeExitDate | date: 'dd/MM/yyyy' }}
+        } @else {
+          Not Provided
+        }
+      </dd>
+
+      @if (roleType() === 'REGULATOR') {
+        <dd govukSummaryListRowActions>
+          <a class="govuk-link" [routerLink]="'../edit'" [queryParams]="queryParams">Change</a>
+        </dd>
+      }
+    </div>
+  </dl>
+}

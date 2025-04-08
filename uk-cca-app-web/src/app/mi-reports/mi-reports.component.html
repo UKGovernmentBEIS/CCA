@@ -1,0 +1,13 @@
+<netz-page-heading size="xl">MI Reports</netz-page-heading>
+
+<div class="overflow-auto overflow-auto-table govuk-!-padding-1">
+  <govuk-table [columns]="tableColumns" [data]="currentPageData()">
+    <ng-template let-column="column" let-row="row">
+      @switch (column.field) {
+        @default {
+          <a [routerLink]="miReportTypeLinkMap[row.miReportType]" class="govuk-link">{{ row[column.field] }}</a>
+        }
+      }
+    </ng-template>
+  </govuk-table>
+</div>

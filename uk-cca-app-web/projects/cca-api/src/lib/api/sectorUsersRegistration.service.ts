@@ -9,19 +9,19 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { InvitedUserCredentialsDTO } from '../model/invitedUserCredentialsDTO';
 import { SectorInvitedUserInfoDTO } from '../model/sectorInvitedUserInfoDTO';
 import { SectorUserDTO } from '../model/sectorUserDTO';
 import { SectorUserRegistrationWithCredentialsDTO } from '../model/sectorUserRegistrationWithCredentialsDTO';
 import { TokenDTO } from '../model/tokenDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -115,7 +115,7 @@ export class SectorUsersRegistrationService {
   public acceptAuthorityAndEnableInvitedUserWithCredentials(
     sectorUserRegistrationWithCredentialsDTO: SectorUserRegistrationWithCredentialsDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorUserRegistrationWithCredentialsDTO === null || sectorUserRegistrationWithCredentialsDTO === undefined) {
@@ -158,7 +158,7 @@ export class SectorUsersRegistrationService {
       `${this.configuration.basePath}/v1.0/sector-users/registration/accept-authority-and-enable-invited-sector-user-with-credentials`,
       sectorUserRegistrationWithCredentialsDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -197,7 +197,7 @@ export class SectorUsersRegistrationService {
   public acceptAuthorityAndSetCredentialsToSectorUser(
     invitedUserCredentialsDTO: InvitedUserCredentialsDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (invitedUserCredentialsDTO === null || invitedUserCredentialsDTO === undefined) {
@@ -240,7 +240,7 @@ export class SectorUsersRegistrationService {
       `${this.configuration.basePath}/v1.0/sector-users/registration/accept-authority-and-set-credentials-to-sector-user`,
       invitedUserCredentialsDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -277,7 +277,7 @@ export class SectorUsersRegistrationService {
   public acceptSectorUserInvitation(
     tokenDTO: TokenDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (tokenDTO === null || tokenDTO === undefined) {
@@ -318,7 +318,7 @@ export class SectorUsersRegistrationService {
       `${this.configuration.basePath}/v1.0/sector-users/registration/accept-invitation`,
       tokenDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

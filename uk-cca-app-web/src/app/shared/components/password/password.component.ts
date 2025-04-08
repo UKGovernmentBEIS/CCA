@@ -4,7 +4,6 @@ import { ControlContainer, FormGroupDirective, ReactiveFormsModule } from '@angu
 import { ButtonDirective, TagComponent, TextInputComponent } from '@netz/govuk-components';
 import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter';
 
-// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
 @Component({
   selector: 'cca-password',
   templateUrl: './password.component.html',

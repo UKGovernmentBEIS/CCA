@@ -12,5 +12,5 @@
 
 export interface MiReportResult {
   reportType: string;
-  columnNames: Array<string>;
+  columnNames: string[];
 }

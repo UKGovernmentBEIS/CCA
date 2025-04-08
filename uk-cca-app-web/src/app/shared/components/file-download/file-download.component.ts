@@ -4,15 +4,15 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { combineLatest, expand, map, Observable, of, switchMap, timer } from 'rxjs';
 
-import { LinkDirective } from '@netz/govuk-components';
-
 import {
+  AccountTargetPeriodReportingService,
   FileAttachmentsService,
   FileDocumentsService,
   FileToken,
   RequestActionAttachmentsHandlingService,
   RequestActionFileDocumentsHandlingService,
   RequestTaskAttachmentsHandlingService,
+  SubsistenceFeesMoAInfoViewService,
   UnderlyingAgreementsService,
 } from 'cca-api';
 
@@ -26,20 +26,22 @@ export type FileDownloadInfo = {
   template: `
     <h1 class="govuk-heading-l">Your download has started</h1>
     <p class="govuk-body">You should see your downloads in the downloads folder.</p>
-    <a govukLink [href]="url$ | async" download #anchor>Click to restart download if it fails</a>
+    <a class="govuk-link" [href]="url$ | async" download #anchor>Click to restart download if it fails</a>
   `,
   standalone: true,
-  imports: [AsyncPipe, LinkDirective],
+  imports: [AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class FileDownloadComponent implements AfterViewChecked {
+export class FileDownloadComponent implements AfterViewChecked {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly requestTaskAttachmentsHandlingService = inject(RequestTaskAttachmentsHandlingService);
   private readonly requestActionAttachmentsHandlingService = inject(RequestActionAttachmentsHandlingService);
   private readonly requestActionFileDocumentsHandlingService = inject(RequestActionFileDocumentsHandlingService);
+  private readonly subsistenceFeesMoAInfoViewService = inject(SubsistenceFeesMoAInfoViewService);
   private readonly fileAttachmentsService = inject(FileAttachmentsService);
   private readonly fileDocumentsService = inject(FileDocumentsService);
   private readonly underlyingAgreementsService = inject(UnderlyingAgreementsService);
+  private readonly accountTargetPeriodReportingService = inject(AccountTargetPeriodReportingService);
 
   anchor = viewChild<ElementRef<HTMLAnchorElement>>('anchor');
 
@@ -49,11 +51,17 @@ export default class FileDownloadComponent implements AfterViewChecked {
 
   url$ = this.activatedRoute.paramMap.pipe(
     map((params): FileDownloadInfo => {
-      return params.has('actionId')
-        ? this.requestActionDownloadInfo(params)
-        : params.has('taskId')
-          ? this.requestTaskDownloadInfo(params)
-          : this.underlyingAgreementDownloadInfo(params);
+      console.log(params);
+      if (params.has('actionId')) return this.requestActionDownloadInfo(params);
+
+      if (params.has('taskId')) return this.requestTaskDownloadInfo(params);
+
+      if (params.has('targetUnitId') && params.has('targetPeriodType'))
+        return this.targetUnitAccountDownloadInfo(params);
+
+      if (params.has('moaId')) return this.subsistenceFeesMoasDownloadInfo(params);
+
+      return this.underlyingAgreementDownloadInfo(params);
     }),
     switchMap(({ request, fileType }) => {
       return combineLatest([
@@ -119,6 +127,27 @@ export default class FileDownloadComponent implements AfterViewChecked {
         params.get('uuid'),
       ),
       fileType: 'document',
+    };
+  }
+
+  private subsistenceFeesMoasDownloadInfo(params: ParamMap): FileDownloadInfo {
+    return {
+      request: this.subsistenceFeesMoAInfoViewService.generateGetSubsistenceFeesMoaDocumentToken(
+        +params.get('moaId'),
+        params.get('uuid'),
+      ),
+      fileType: 'document',
+    };
+  }
+
+  private targetUnitAccountDownloadInfo(params: ParamMap): FileDownloadInfo {
+    return {
+      request: this.accountTargetPeriodReportingService.generateGetAccountPerformanceReportAttachmentToken(
+        +params.get('targetUnitId'),
+        (params.get('targetPeriodType') as 'TP5') || 'TP6',
+        params.get('uuid'),
+      ),
+      fileType: 'attachment',
     };
   }
 }

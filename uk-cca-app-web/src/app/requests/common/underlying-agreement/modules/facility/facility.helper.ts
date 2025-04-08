@@ -69,7 +69,7 @@ export function facilityReviewNextStepPath(currentStep: string): Observable<stri
 
 export function applyFacility(
   currentPayload: UNARequestTaskPayload,
-  { facility, attachments }: { facility: Facility; attachments?: { [key: string]: string } },
+  facility: Facility,
 ): Observable<UNARequestTaskPayload> {
   return of(
     produce(currentPayload, (payload) => {
@@ -85,14 +85,9 @@ export function applyFacility(
         };
       }
 
-      if (attachments) {
-        payload.underlyingAgreementAttachments = {
-          ...payload.underlyingAgreementAttachments,
-          ...attachments,
-        };
+      if (facility?.facilityDetails?.applicationReason === 'NEW_AGREEMENT') {
+        delete facility.facilityDetails.previousFacilityId;
       }
-
-      payload.currentFacilityId = facilityId;
 
       payload.sectionsCompleted[facilityId] = TaskItemStatus.IN_PROGRESS;
     }),

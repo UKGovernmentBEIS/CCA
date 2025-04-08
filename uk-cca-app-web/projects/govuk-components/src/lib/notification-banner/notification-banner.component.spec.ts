@@ -21,7 +21,7 @@ describe('NotificationBannerComponent', () => {
   })
   class TestComponent {
     type: NotificationBannerComponent['type'] = 'neutral';
-    heading: string = 'Alert';
+    heading = 'Alert';
   }
 
   const getBanner = () => element.querySelector<HTMLDivElement>('.govuk-notification-banner');

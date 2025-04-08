@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.workflow.request.application.authorization.SectorUserAuthorityResourceAdapter;
 import uk.gov.cca.api.workflow.request.application.item.repository.ItemSectorUserRepository;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -32,6 +33,7 @@ import uk.gov.netz.api.workflow.request.application.item.domain.ItemAssignmentTy
 import uk.gov.netz.api.workflow.request.application.item.domain.ItemPage;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTO;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
+import uk.gov.netz.api.workflow.request.application.item.service.ItemRequestResourcesService;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemResponseService;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,6 +47,9 @@ class ItemUnassignedSectorUserServiceTest {
 
     @Mock
     private ItemSectorUserRepository itemRepository;
+    
+    @Mock
+    private ItemRequestResourcesService itemRequestResourcesService;
 
     @Mock
     private SectorUserAuthorityResourceAdapter sectorUserAuthorityResourceAdapter;
@@ -52,6 +57,8 @@ class ItemUnassignedSectorUserServiceTest {
     @Test
     void getUnassignedItems() {
         Map<Long, Set<String>> scopedRequestTaskTypes = Map.of(1L, Set.of("requestTaskType1"));
+        Map<String, Map<String, String>> expectedItemRequestResources = 
+        		Map.of("requestId", Map.of(CcaResourceType.SECTOR_ASSOCIATION, "sectorId"));
 
         AppUser appUser = AppUser.builder().userId("userId").roleType(SECTOR_USER).build();
         Item expectedItem = mock(Item.class);
@@ -66,9 +73,10 @@ class ItemUnassignedSectorUserServiceTest {
         // Mock
         when(sectorUserAuthorityResourceAdapter.getUserScopedRequestTaskTypes(appUser))
                 .thenReturn(scopedRequestTaskTypes);
+        when(itemRequestResourcesService.getItemRequestResources(expectedItemPage)).thenReturn(expectedItemRequestResources);
         when(itemRepository.findItems(appUser.getUserId(), ItemAssignmentType.UNASSIGNED, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0L).pageSize(10L).build()))
                 .thenReturn(expectedItemPage);
-        when(itemResponseService.toItemDTOResponse(expectedItemPage, appUser))
+        when(itemResponseService.toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser))
                 .thenReturn(expectedItemDTOResponse);
 
         // Invoke
@@ -77,8 +85,8 @@ class ItemUnassignedSectorUserServiceTest {
         // Assert
         assertThat(actualResponse).isEqualTo(expectedItemDTOResponse);
 
-        verify(sectorUserAuthorityResourceAdapter, times(1))
-            .getUserScopedRequestTaskTypes(appUser);
+        verify(sectorUserAuthorityResourceAdapter, times(1)).getUserScopedRequestTaskTypes(appUser);
+        verify(itemRequestResourcesService, times(1)).getItemRequestResources(expectedItemPage);
     }
 
     @Test
@@ -100,12 +108,14 @@ class ItemUnassignedSectorUserServiceTest {
         verify(sectorUserAuthorityResourceAdapter, times(1))
             .getUserScopedRequestTaskTypes(appUser);
         verify(itemRepository, never()).findItems(anyString(), Mockito.any(), anyMap(), any(PagingRequest.class));
-        verify(itemResponseService, never()).toItemDTOResponse(any(), any());
+        verify(itemResponseService, never()).toItemDTOResponse(any(), any(), any());
     }
 
     @Test
     void getUnassignedItems_ReturnsEmptyResponseWhenNoItemsFetched() {
         Map<Long, Set<String>> scopedRequestTaskTypes = Map.of(1L, Set.of("requestTaskType1"));
+        Map<String, Map<String, String>> expectedItemRequestResources = 
+        		Map.of("requestId", Map.of(CcaResourceType.SECTOR_ASSOCIATION, "sectorId"));
 
         AppUser appUser = AppUser.builder().userId("userId").roleType(SECTOR_USER).build();
         ItemPage itemPage = ItemPage.builder()
@@ -116,9 +126,10 @@ class ItemUnassignedSectorUserServiceTest {
         // Mock
         when(sectorUserAuthorityResourceAdapter.getUserScopedRequestTaskTypes(appUser))
                 .thenReturn(scopedRequestTaskTypes);
+        when(itemRequestResourcesService.getItemRequestResources(itemPage)).thenReturn(expectedItemRequestResources);
         when(itemRepository.findItems(appUser.getUserId(), ItemAssignmentType.UNASSIGNED, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0L).pageSize(10L).build()))
                 .thenReturn(itemPage);
-        when(itemResponseService.toItemDTOResponse(itemPage, appUser))
+        when(itemResponseService.toItemDTOResponse(itemPage, expectedItemRequestResources, appUser))
                 .thenReturn(expectedItemDTOResponse);
 
         // Invoke

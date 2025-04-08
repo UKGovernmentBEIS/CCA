@@ -94,15 +94,6 @@ exports[`OverallDecisionComponent should match snapshot 1`] = `
         </div>
       </dl>
     </cca-summary>
-    <netz-return-to-task-or-action-page>
-      <a
-        class="govuk-link"
-        govuklink=""
-        href="/undefined"
-      >
-         Return to: Underlying agreement application rejected 
-      </a>
-    </netz-return-to-task-or-action-page>
   </div>
 </cca-timeline-review-overall-decision>
 `;

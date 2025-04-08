@@ -2,7 +2,7 @@ import { UuidFilePair } from '@shared/components';
 
 import { FileInfoDTO } from 'cca-api';
 
-export type Attachments = { [key: string]: string };
+export type Attachments = Record<string, string>;
 export type DownloadableFile = { fileName: string; downloadUrl: string };
 
 export const transformAttachmentsToFilesWithUUIDs = (fileUUIDs: string[], attachments: Attachments): UuidFilePair[] =>
@@ -20,7 +20,7 @@ export const transformFilesToAttachments = (files: UuidFilePair[]): Attachments 
     return map;
   }, {});
 
-export const transformAttachmentsToDownloadableFiles = (
+export const transformAttachmentsAndFileUUIDsToDownloadableFiles = (
   fileUUIDs: string[],
   attachments: Attachments,
   downloadUrl: string,
@@ -29,6 +29,15 @@ export const transformAttachmentsToDownloadableFiles = (
     fileName: attachments[uuid],
     downloadUrl: `${downloadUrl}/${uuid}`,
   })) || [];
+
+export const transformAttachmentsToDownloadableFiles = (
+  attachments: Attachments,
+  downloadUrl: string,
+): DownloadableFile[] =>
+  Object.entries(attachments).map((e) => ({
+    fileName: e[1],
+    downloadUrl: `${downloadUrl}/${e[0]}`,
+  }));
 
 export const transformFileInfoToDownloadableFile = (
   files: FileInfoDTO | FileInfoDTO[],
@@ -47,4 +56,13 @@ export const transformFileInfoToDownloadableFile = (
       },
     ];
   }
+};
+
+export const downloadFileInfoDTOFromAttachmentsUrl = (file: FileInfoDTO, downloadUrl: string): DownloadableFile[] => {
+  return [
+    {
+      fileName: file.name,
+      downloadUrl: `${downloadUrl}/${file.uuid}`,
+    },
+  ];
 };

@@ -8,9 +8,8 @@ import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.ValidatorHelper;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.validation.*;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.transform.UnderlyingAgreementVariationContainerMapper;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.validation.UnderlyingAgreementVariationDetailsValidatorService;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.validation.UnderlyingAgreementVariationTargetUnitDetailsValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSubmitRequestTaskPayload;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
@@ -22,9 +21,12 @@ import java.util.List;
 public class UnderlyingAgreementVariationPayloadValidatorService {
 
     private final UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
-    private final UnderlyingAgreementVariationDetailsValidatorService underlyingAgreementVariationDetailsValidatorService;
-    private final UnderlyingAgreementVariationTargetUnitDetailsValidatorService underlyingAgreementVariationTargetUnitDetailsValidatorService;
+    private final EditedUnderlyingAgreementVariationDetailsValidatorService underlyingAgreementVariationDetailsValidatorService;
+    private final EditedUnderlyingAgreementVariationTargetUnitDetailsValidatorService underlyingAgreementVariationTargetUnitDetailsValidatorService;
     private final UnderlyingAgreementVariationSubmitFacilitiesContextValidatorService underlyingAgreementVariationSubmitFacilitiesContextValidatorService;
+    private final EditedUnderlyingAgreementVariationApplicationReasonDataValidator underlyingAgreementVariationApplicationReasonDataValidator;
+    private final UnderlyingAgreementVariationReviewDecisionDataValidator underlyingAgreementVariationReviewDecisionDataValidator;
+    private final UnderlyingAgreementVariationFacilityReviewDecisionDataValidator underlyingAgreementVariationFacilityReviewDecisionDataValidator;
     private static final UnderlyingAgreementVariationContainerMapper UNDERLYING_AGREEMENT_VARIATION_CONTAINER_MAPPER = Mappers.getMapper(UnderlyingAgreementVariationContainerMapper.class);
 
     public void validate(RequestTask requestTask) {
@@ -38,11 +40,22 @@ public class UnderlyingAgreementVariationPayloadValidatorService {
         // Validate facilities context for variation submission step
         validationResults.add(underlyingAgreementVariationSubmitFacilitiesContextValidatorService.validate(unaContainer));
 
+        // Validate previous facility ids and application reasons
+        validationResults.add(underlyingAgreementVariationApplicationReasonDataValidator.validate(taskPayload));
+
         // Validate target unit
         validationResults.add(underlyingAgreementVariationTargetUnitDetailsValidatorService.validate(requestTask));
 
         // Validate variation details
-        validationResults.add(underlyingAgreementVariationDetailsValidatorService.validate(requestTask));
+        validationResults.add(underlyingAgreementVariationDetailsValidatorService.validate(taskPayload));
+
+        // Validate review groups
+        validationResults.add(underlyingAgreementVariationReviewDecisionDataValidator
+                .validateUnderlyingAgreementVariationReviewDecisions(taskPayload));
+
+        // Validate facility review groups
+        validationResults.add(underlyingAgreementVariationFacilityReviewDecisionDataValidator
+                .validateUnderlyingAgreementVariationFacilityReviewDecisions(taskPayload));
 
         boolean isValid = validationResults.stream().allMatch(BusinessValidationResult::isValid);
 

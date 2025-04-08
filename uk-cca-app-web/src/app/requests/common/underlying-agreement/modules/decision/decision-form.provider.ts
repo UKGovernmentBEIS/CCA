@@ -32,12 +32,11 @@ export function decisionFormProvider(
     ) => {
       const requestTaskType = requestTaskStore.select(requestTaskQuery.selectRequestTaskType)();
       const attachments = requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
-
       const decision = requestTaskStore.select(underlyingAgreementReviewQuery.selectSubtaskDecision(group))();
 
       const filesControl = requestTaskFileService.buildFormControl(
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
-        decision?.details.files || [],
+        decision?.details?.files || [],
         attachments,
         UPLOAD_DECISION_ATTACHMENT_TYPE[requestTaskType],
       );
@@ -46,10 +45,7 @@ export function decisionFormProvider(
         type: fb.control(decision?.type, [
           GovukValidators.required('Select the option that corresponds to your decision on the information above.'),
         ]),
-        notes: fb.control(
-          decision?.details?.notes,
-          GovukValidators.required('Enter notes to support your decision on this page.'),
-        ),
+        notes: fb.control(decision?.details?.notes),
         files: filesControl,
       });
     },
@@ -70,13 +66,14 @@ export function facilityDecisionFormProvider(): Provider {
       const attachments = requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
       const facilityId = route.snapshot.params.facilityId;
       const facility = requestTaskStore.select(underlyingAgreementQuery.selectFacility(facilityId))();
+
       const decision = requestTaskStore.select(
         underlyingAgreementReviewQuery.selectFacilitySubtaskDecision(facilityId),
       )();
 
       const filesControl = requestTaskFileService.buildFormControl(
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
-        decision?.details.files || [],
+        decision?.details?.files || [],
         attachments,
         UPLOAD_DECISION_ATTACHMENT_TYPE[requestTaskType],
       );
@@ -86,10 +83,7 @@ export function facilityDecisionFormProvider(): Provider {
           type: fb.control(decision?.type, [
             GovukValidators.required('Select the option that corresponds to your decision on the information above.'),
           ]),
-          notes: fb.control(
-            decision?.details?.notes,
-            GovukValidators.required('Enter notes to support your decision on this page.'),
-          ),
+          notes: fb.control(decision?.details?.notes),
           files: filesControl,
           changeDate: fb.control({
             value: [decision?.changeStartDate],
@@ -114,9 +108,11 @@ export function facilityDecisionFormProvider(): Provider {
 const startDateValidator: ValidatorFn = (control: AbstractControl) => {
   const form = control.parent as DecisionWithDateFormModel;
   if (!form) return {};
+
   const type = form.controls.type.value;
   const changeDate = form.controls.changeDate.value;
   const startDate = form.controls.startDate.value;
+
   if (type === 'REJECTED') return null;
   if (changeDate && !startDate) return { required: 'Select a date' };
   return null;

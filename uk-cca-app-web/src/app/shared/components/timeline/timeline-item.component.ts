@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { GovukDatePipe, ItemActionHeaderPipe } from '@netz/common/pipes';
-import { LinkDirective } from '@netz/govuk-components';
 
 import { RequestActionInfoDTO } from 'cca-api';
 
@@ -14,13 +13,13 @@ import { RequestActionInfoDTO } from 'cca-api';
     <p class="govuk-body govuk-!-margin-bottom-1">{{ action.creationDate | govukDate: 'datetime' }}</p>
 
     @if (link) {
-      <span><a [routerLink]="link" [relativeTo]="route" [state]="state" govukLink>View details</a></span>
+      <span><a [routerLink]="link" [relativeTo]="route" [state]="state" class="govuk-link">View details</a></span>
     }
 
     <hr class="govuk-!-margin-top-6" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ItemActionHeaderPipe, GovukDatePipe, RouterLink, LinkDirective],
+  imports: [ItemActionHeaderPipe, GovukDatePipe, RouterLink],
 })
 export class TimelineItemComponent {
   @Input() action: RequestActionInfoDTO;

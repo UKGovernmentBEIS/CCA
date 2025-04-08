@@ -57,8 +57,8 @@ describe('AuthorisationAdditionalEvidenceComponent', () => {
     expect(page.header.textContent.trim()).toEqual('Authorisation and additional evidence');
 
     expect(page.summaryListValues).toEqual([
-      ['Uploaded files', 'authorisationAttachment.xlsx'],
-      ['Uploaded files', 'No files provided'],
+      ['Authorisation', 'authorisationAttachment.xlsx'],
+      ['Additional evidence', 'No files provided'],
     ]);
   });
 });

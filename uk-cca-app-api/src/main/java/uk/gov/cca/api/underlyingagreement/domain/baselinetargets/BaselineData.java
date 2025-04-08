@@ -41,18 +41,18 @@ public class BaselineData {
     private Set<UUID> greenfieldEvidences = new HashSet<>();
 
     @NotNull
-    @Digits(integer = Integer.MAX_VALUE, fraction = 3)
+    @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal energy;
 
     private Boolean usedReportingMechanism;
 
-    @Digits(integer = Integer.MAX_VALUE, fraction = 3)
+    @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal throughput;
 
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal performance;
 
     @NotNull
-    @Digits(integer = Integer.MAX_VALUE, fraction = 4)
+    @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal energyCarbonFactor;
 }

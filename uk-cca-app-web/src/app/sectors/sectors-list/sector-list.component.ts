@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 
-import { GovukTableColumn, LinkDirective, SortEvent, TableComponent } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
+import { PageHeadingComponent } from '@netz/common/components';
+import { GovukTableColumn, SortEvent, TableComponent } from '@netz/govuk-components';
 
 import { SectorAssociationInfoDTO, SectorAssociationInfoViewService } from 'cca-api';
 
@@ -11,12 +11,12 @@ import { SectorAssociationInfoDTO, SectorAssociationInfoViewService } from 'cca-
   selector: 'cca-sector-list',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeadingComponent, TableComponent, RouterLink, LinkDirective],
-  template: ` <cca-page-heading size="xl">Manage Sectors</cca-page-heading>
+  imports: [PageHeadingComponent, TableComponent, RouterLink],
+  template: ` <netz-page-heading size="xl">Manage Sectors</netz-page-heading>
     <govuk-table [columns]="tableColumns" [data]="sectors()" (sort)="sortBy($event)" data-testid="sector-list">
       <ng-template let-column="column" let-index="index" let-row="row">
         @if (column.field === 'sector') {
-          <a [routerLink]="row.id" govukLink>{{ row[column.field] }}</a>
+          <a [routerLink]="row.id" class="govuk-link">{{ row[column.field] }}</a>
         } @else {
           {{ row[column.field] }}
         }

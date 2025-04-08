@@ -14,8 +14,9 @@ import { UnderlyingAgreementPayload } from './underlyingAgreementPayload';
 
 export interface UnderlyingAgreementSubmitRequestTaskPayload {
   payloadType?: string;
+  sendEmailNotification?: boolean;
   accountReferenceData?: AccountReferenceData;
   underlyingAgreement?: UnderlyingAgreementPayload;
-  sectionsCompleted?: { [key: string]: string };
-  underlyingAgreementAttachments?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
+  underlyingAgreementAttachments?: Record<string, string>;
 }

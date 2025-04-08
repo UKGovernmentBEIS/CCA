@@ -2,7 +2,7 @@ import { Observable, of } from 'rxjs';
 
 import { SideEffect, SubtaskOperation } from '@netz/common/forms';
 import { TaskItemStatus } from '@requests/common';
-import produce from 'immer';
+import { produce } from 'immer';
 
 import { AdminTerminationFinalDecisionRequestTaskPayload } from 'cca-api';
 

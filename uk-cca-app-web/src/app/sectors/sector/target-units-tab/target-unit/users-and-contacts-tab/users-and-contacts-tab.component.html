@@ -1,6 +1,7 @@
-@if (isEditable()) {
+@if (isEditable() && roleType() === 'REGULATOR') {
   <button type="button" govukButton [routerLink]="['users', 'add']">Add a new operator</button>
 }
+
 @if (isEditable()) {
   <govuk-details summary="Learn more about user types">
     <h3 class="govuk-heading-s">User types</h3>
@@ -22,7 +23,7 @@
         @switch (column.field) {
           @case ('name') {
             @if (isEditable() || row.userId === currentUserId()) {
-              <a [routerLink]="['users', row.userId]" govukLink>{{ row | userFullName }}</a>
+              <a [routerLink]="['users', row.userId]" class="govuk-link">{{ row | userFullName }}</a>
             } @else {
               {{ row | userFullName }}
             }
@@ -60,7 +61,7 @@
 
   @if (isEditable() && users()?.length > 0) {
     <div class="govuk-button-group">
-      <button ccaPendingButton govukButton type="submit">Save</button>
+      <button netzPendingButton govukButton type="submit">Save</button>
       <button (click)="refresh()" govukSecondaryButton type="button">Discard changes</button>
     </div>
   }

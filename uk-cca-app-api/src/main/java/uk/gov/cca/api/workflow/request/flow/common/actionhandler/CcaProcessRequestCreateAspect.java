@@ -6,7 +6,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
-import uk.gov.cca.api.workflow.request.flow.common.service.RequestCreateBySectorAssociationValidator;
+import uk.gov.cca.api.workflow.request.flow.common.service.RequestCreateBySectorAndAccountValidator;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.workflow.request.core.domain.RequestType;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CcaProcessRequestCreateAspect {
 
-    private final List<RequestCreateBySectorAssociationValidator> requestCreateBySectorAssociationValidators;
+    private final List<RequestCreateBySectorAndAccountValidator> requestCreateBySectorAndAccountValidators;
     private final SectorAssociationQueryService sectorAssociationQueryService;
     private final RequestTypeRepository requestTypeRepository;
 
@@ -36,7 +36,7 @@ public class CcaProcessRequestCreateAspect {
         final String requestType = (String)args[2];
 
         if (sectorAssociationId != null) {
-            Optional<RequestCreateBySectorAssociationValidator> requestCreateBySectorAssociationValidatorOpt = requestCreateBySectorAssociationValidators
+            Optional<RequestCreateBySectorAndAccountValidator> requestCreateBySectorAssociationValidatorOpt = requestCreateBySectorAndAccountValidators
                     .stream().filter(requestCreateValidator -> requestCreateValidator.getRequestType().equals(requestType)).findFirst();
 
             final Set<String> availableRequestTypes = requestTypeRepository.findAllByCanCreateManually(true).stream()
@@ -50,7 +50,7 @@ public class CcaProcessRequestCreateAspect {
             sectorAssociationQueryService.exclusiveLockSectorAssociation(sectorAssociationId);
 
             final RequestCreateValidationResult validationResult = requestCreateBySectorAssociationValidatorOpt
-                    .map(requestCreateByAccountValidator -> requestCreateByAccountValidator.validateAction(sectorAssociationId, accountId))
+                    .map(requestCreateBySectorAndAccountValidator -> requestCreateBySectorAndAccountValidator.validateAction(sectorAssociationId, accountId))
                     .orElse(RequestCreateValidationResult.builder().valid(true).isAvailable(true).build());
 
             if (!validationResult.isValid() || !validationResult.isAvailable()) {

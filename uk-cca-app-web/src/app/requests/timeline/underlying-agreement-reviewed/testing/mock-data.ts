@@ -181,7 +181,7 @@ const reviewSectionsCompleted = {
   underlyingAgreementTargetUnitDetails: 'REJECTED',
 };
 
-const reviewGroupDecisions: { [key: string]: UnderlyingAgreementFacilityReviewDecision } = {
+const reviewGroupDecisions: Record<string, UnderlyingAgreementFacilityReviewDecision> = {
   TARGET_UNIT_DETAILS: {
     type: 'REJECTED',
     details: {
@@ -208,7 +208,7 @@ const reviewGroupDecisions: { [key: string]: UnderlyingAgreementFacilityReviewDe
   },
 };
 
-const facilitiesReviewGroupDecisions: { [key: string]: UnderlyingAgreementFacilityReviewDecision } = {
+const facilitiesReviewGroupDecisions: Record<string, UnderlyingAgreementFacilityReviewDecision> = {
   'ADS_2-F00029': {
     type: 'ACCEPTED',
     details: {

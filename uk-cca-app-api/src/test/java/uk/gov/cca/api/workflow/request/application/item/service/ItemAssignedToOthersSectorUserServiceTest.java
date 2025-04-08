@@ -26,6 +26,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.authorization.ccaauth.core.domain.AppCcaAuthority;
+import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.workflow.request.application.authorization.SectorUserAuthorityResourceAdapter;
 import uk.gov.cca.api.workflow.request.application.item.repository.ItemSectorUserRepository;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -35,6 +36,7 @@ import uk.gov.netz.api.workflow.request.application.item.domain.ItemAssignmentTy
 import uk.gov.netz.api.workflow.request.application.item.domain.ItemPage;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTO;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
+import uk.gov.netz.api.workflow.request.application.item.service.ItemRequestResourcesService;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemResponseService;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,6 +50,9 @@ class ItemAssignedToOthersSectorUserServiceTest {
 
     @Mock
     private ItemSectorUserRepository itemRepository;
+    
+    @Mock
+    private ItemRequestResourcesService itemRequestResourcesService;
 
     @Mock
     private SectorUserAuthorityResourceAdapter sectorUserAuthorityResourceAdapter;
@@ -59,6 +64,8 @@ class ItemAssignedToOthersSectorUserServiceTest {
         final AppUser appUser = buildSectorUser(userId, "username", sectorId);
         Map<Long, Set<String>> scopedRequestTaskTypes =
                 Map.of(sectorId, Set.of("requestTaskType1"));
+        Map<String, Map<String, String>> expectedItemRequestResources = 
+        		Map.of("requestId", Map.of(CcaResourceType.SECTOR_ASSOCIATION, "sectorId"));
 
         Item expectedItem = mock(Item.class);
         ItemPage expectedItemPage = ItemPage.builder().items(List.of(expectedItem)).totalItems(1L).build();
@@ -69,8 +76,14 @@ class ItemAssignedToOthersSectorUserServiceTest {
         when(sectorUserAuthorityResourceAdapter
             .getUserScopedRequestTaskTypes(appUser))
             .thenReturn(scopedRequestTaskTypes);
-        doReturn(expectedItemPage).when(itemRepository).findItems(appUser.getUserId(), ItemAssignmentType.OTHERS, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
-        doReturn(expectedItemDTOResponse).when(itemResponseService).toItemDTOResponse(expectedItemPage, appUser);
+        when(itemRequestResourcesService.getItemRequestResources(expectedItemPage)).thenReturn(expectedItemRequestResources);
+        doReturn(expectedItemPage).when(itemRepository).findItems(
+        		appUser.getUserId(), ItemAssignmentType.OTHERS, scopedRequestTaskTypes, PagingRequest.builder()
+	        		.pageNumber(0L)
+	        		.pageSize(10L)
+	        		.build());
+        doReturn(expectedItemDTOResponse).when(itemResponseService)
+        	.toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
 
         // Invoke
         ItemDTOResponse actualItemDTOResponse = itemService
@@ -81,8 +94,12 @@ class ItemAssignedToOthersSectorUserServiceTest {
 
         verify(sectorUserAuthorityResourceAdapter, times(1))
                 .getUserScopedRequestTaskTypes(appUser);
-        verify(itemRepository, times(1)).findItems(appUser.getUserId(), ItemAssignmentType.OTHERS, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
-        verify(itemResponseService, times(1)).toItemDTOResponse(expectedItemPage, appUser);
+        verify(itemRepository, times(1)).findItems(
+        		appUser.getUserId(), ItemAssignmentType.OTHERS, scopedRequestTaskTypes, PagingRequest.builder()
+	        		.pageNumber(0L)
+	        		.pageSize(10L)
+	        		.build());
+        verify(itemResponseService, times(1)).toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
     }
 
     @Test
@@ -105,7 +122,7 @@ class ItemAssignedToOthersSectorUserServiceTest {
 		verify(sectorUserAuthorityResourceAdapter, times(1))
 		    .getUserScopedRequestTaskTypes(appUser);
 		verify(itemRepository, never()).findItems(anyString(), Mockito.any(), anyMap(), any(PagingRequest.class));
-		verify(itemResponseService, never()).toItemDTOResponse(any(), any());
+		verify(itemResponseService, never()).toItemDTOResponse(any(), any(), any());
     }
 
     @Test

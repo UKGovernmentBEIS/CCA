@@ -1,10 +1,10 @@
-<cca-page-heading size="xl" [caption]="'Reset two-factor authentication'">
+<netz-page-heading size="xl" [caption]="'Reset two-factor authentication'">
   Are you sure you want to reset two-factor authentication for {{ userName$ | async }} ?
-</cca-page-heading>
+</netz-page-heading>
 
 <p class="govuk-body">This will send a two-factor authentication reset email to {{ userName$ | async }}</p>
 
 <div class="govuk-button-group">
-  <button type="button" ccaPendingButton (click)="reset()" govukWarnButton>Yes, reset authentication</button>
-  <a govukLink routerLink="." (click)="location.back()">Cancel</a>
+  <button type="button" netzPendingButton (click)="reset()" govukWarnButton>Yes, reset authentication</button>
+  <a class="govuk-link" routerLink="." (click)="location.back()">Cancel</a>
 </div>

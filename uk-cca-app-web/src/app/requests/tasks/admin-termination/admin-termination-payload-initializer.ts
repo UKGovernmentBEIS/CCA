@@ -1,4 +1,4 @@
-import produce from 'immer';
+import { produce } from 'immer';
 
 import { ADTRequestTaskPayload } from './admin-termination.types';
 

@@ -7,9 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import { RequestTaskStore } from '@netz/common/store';
-import { RadioComponent, RadioOptionComponent } from '@netz/govuk-components';
-import { WizardStepComponent } from '@shared/components';
-import { TextInputComponent } from '@shared/components/text-input/text-input.component';
+import { TextInputComponent, WizardStepComponent } from '@shared/components';
 
 import { underlyingAgreementQuery } from '../../../+state';
 import {
@@ -24,8 +22,6 @@ import { ADD_TARGETS_FORM, AddTargetsFormModel, addTargetsFormProvider } from '.
   selector: 'cca-add-targets',
   standalone: true,
   imports: [
-    RadioComponent,
-    RadioOptionComponent,
     ReactiveFormsModule,
     WizardStepComponent,
     TextInputComponent,

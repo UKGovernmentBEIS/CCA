@@ -10,51 +10,51 @@
  * Do not edit the class manually.
  */
 import { ContentDisposition } from './contentDisposition';
-import { HttpHeadersAcceptLanguage } from './httpHeadersAcceptLanguage';
-import { HttpHeadersAcceptLanguageAsLocales } from './httpHeadersAcceptLanguageAsLocales';
 import { HttpHeadersHost } from './httpHeadersHost';
 import { MediaType } from './mediaType';
+import { HttpHeadersAcceptLanguageAsLocales } from './httpHeadersAcceptLanguageAsLocales';
+import { HttpHeadersAcceptLanguage } from './httpHeadersAcceptLanguage';
 
 export interface HttpHeaders {
-  [key: string]: Array<string> | any;
+  [key: string]: string[] | any;
 
-  origin?: string;
-  allow?: Array<object>;
-  accept?: Array<MediaType>;
-  acceptLanguageAsLocales?: Array<HttpHeadersAcceptLanguageAsLocales>;
-  acceptLanguage?: Array<HttpHeadersAcceptLanguage>;
-  acceptPatch?: Array<MediaType>;
+  allow?: object[];
+  acceptLanguage?: HttpHeadersAcceptLanguage[];
+  basicAuth?: string;
+  accept?: MediaType[];
+  acceptLanguageAsLocales?: HttpHeadersAcceptLanguageAsLocales[];
+  acceptPatch?: MediaType[];
   accessControlAllowCredentials?: boolean;
-  accessControlAllowHeaders?: Array<string>;
-  accessControlAllowMethods?: Array<object>;
+  accessControlAllowHeaders?: string[];
+  accessControlAllowMethods?: object[];
   accessControlAllowOrigin?: string;
-  accessControlExposeHeaders?: Array<string>;
+  accessControlExposeHeaders?: string[];
   accessControlMaxAge?: number;
-  accessControlRequestHeaders?: Array<string>;
+  accessControlRequestHeaders?: string[];
   accessControlRequestMethod?: object;
-  acceptCharset?: Array<string>;
+  acceptCharset?: string[];
   contentDisposition?: ContentDisposition;
   etag?: string;
   expires?: number;
-  ifMatch?: Array<string>;
-  ifNoneMatch?: Array<string>;
+  ifMatch?: string[];
+  ifNoneMatch?: string[];
   ifUnmodifiedSince?: number;
   pragma?: string;
-  range?: Array<object>;
+  range?: object[];
   upgrade?: string;
-  vary?: Array<string>;
+  vary?: string[];
   empty?: boolean;
   location?: string;
   host?: HttpHeadersHost;
-  all?: { [key: string]: string };
+  all?: Record<string, string>;
   lastModified?: number;
   date?: number;
   contentLength?: number;
-  bearerAuth?: string;
-  basicAuth?: string;
-  contentLanguage?: HttpHeadersAcceptLanguageAsLocales;
-  cacheControl?: string;
-  connection?: Array<string>;
+  connection?: string[];
   ifModifiedSince?: number;
   contentType?: MediaType;
+  origin?: string;
+  contentLanguage?: HttpHeadersAcceptLanguageAsLocales;
+  bearerAuth?: string;
+  cacheControl?: string;
 }

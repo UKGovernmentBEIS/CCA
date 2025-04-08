@@ -9,17 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { RegulatorRolePermissionsDTO } from '../model/regulatorRolePermissionsDTO';
 import { RoleDTO } from '../model/roleDTO';
 import { UserStateDTO } from '../model/userStateDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -106,7 +106,7 @@ export class AuthoritiesService {
   ): Observable<UserStateDTO>;
   public getCurrentUserState(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -133,7 +133,7 @@ export class AuthoritiesService {
     }
 
     return this.httpClient.get<UserStateDTO>(`${this.configuration.basePath}/v1.0/authorities/current-user-state`, {
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -147,29 +147,29 @@ export class AuthoritiesService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getOperatorRoleCodes(accountId: number): Observable<Array<RoleDTO>>;
+  public getOperatorRoleCodes(accountId: number): Observable<RoleDTO[]>;
   public getOperatorRoleCodes(
     accountId: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<RoleDTO>>>;
+  ): Observable<HttpResponse<RoleDTO[]>>;
   public getOperatorRoleCodes(
     accountId: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<RoleDTO>>>;
+  ): Observable<HttpEvent<RoleDTO[]>>;
   public getOperatorRoleCodes(
     accountId: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<RoleDTO>>;
+  ): Observable<RoleDTO[]>;
   public getOperatorRoleCodes(
     accountId: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -199,10 +199,10 @@ export class AuthoritiesService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<RoleDTO>>(
+    return this.httpClient.get<RoleDTO[]>(
       `${this.configuration.basePath}/v1.0/authorities/account/${encodeURIComponent(String(accountId))}/operator-role-codes`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -216,25 +216,25 @@ export class AuthoritiesService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getRegulatorRoles(): Observable<Array<RegulatorRolePermissionsDTO>>;
+  public getRegulatorRoles(): Observable<RegulatorRolePermissionsDTO[]>;
   public getRegulatorRoles(
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<RegulatorRolePermissionsDTO>>>;
+  ): Observable<HttpResponse<RegulatorRolePermissionsDTO[]>>;
   public getRegulatorRoles(
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<RegulatorRolePermissionsDTO>>>;
+  ): Observable<HttpEvent<RegulatorRolePermissionsDTO[]>>;
   public getRegulatorRoles(
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<RegulatorRolePermissionsDTO>>;
+  ): Observable<RegulatorRolePermissionsDTO[]>;
   public getRegulatorRoles(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -260,10 +260,10 @@ export class AuthoritiesService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<RegulatorRolePermissionsDTO>>(
+    return this.httpClient.get<RegulatorRolePermissionsDTO[]>(
       `${this.configuration.basePath}/v1.0/authorities/regulator-roles`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -277,25 +277,25 @@ export class AuthoritiesService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getVerifierRoleCodes(): Observable<Array<RoleDTO>>;
+  public getVerifierRoleCodes(): Observable<RoleDTO[]>;
   public getVerifierRoleCodes(
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<RoleDTO>>>;
+  ): Observable<HttpResponse<RoleDTO[]>>;
   public getVerifierRoleCodes(
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<RoleDTO>>>;
+  ): Observable<HttpEvent<RoleDTO[]>>;
   public getVerifierRoleCodes(
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<RoleDTO>>;
+  ): Observable<RoleDTO[]>;
   public getVerifierRoleCodes(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -321,8 +321,8 @@ export class AuthoritiesService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<RoleDTO>>(`${this.configuration.basePath}/v1.0/authorities/verifier-role-codes`, {
-      responseType: <any>responseType_,
+    return this.httpClient.get<RoleDTO[]>(`${this.configuration.basePath}/v1.0/authorities/verifier-role-codes`, {
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,

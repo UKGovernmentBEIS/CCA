@@ -9,7 +9,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
   taskId="null"
 >
   <div>
-    <cca-page-heading
+    <netz-page-heading
       caption="Authorisation and additional evidence"
     >
       <span
@@ -22,7 +22,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
       >
         Summary
       </h1>
-    </cca-page-heading>
+    </netz-page-heading>
     <cca-summary>
       <h2
         class="govuk-heading-m"
@@ -40,7 +40,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Uploaded files
+            Authorisation
           </dt>
           <dd
             class="govuk-summary-list__value"
@@ -49,7 +49,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
             <cca-summary-download-files>
               <a
                 class="govuk-link"
-                govuklink=""
                 href="/tasks/null/file-download/6a8ab09d-531e-4529-893e-6e0fac29a13b"
                 target="_blank"
               >
@@ -63,7 +62,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -78,7 +76,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Uploaded files
+            Additional evidence
           </dt>
           <dd
             class="govuk-summary-list__value"
@@ -94,7 +92,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -133,7 +130,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -162,7 +158,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -193,7 +188,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -204,7 +198,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
     </cca-summary>
   </div><netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

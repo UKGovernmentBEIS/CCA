@@ -9,6 +9,8 @@ import { underlyingAgreementQuery } from '../../../+state';
 
 export type FacilityItemFormModel = {
   name: FormControl<string>;
+  facilityId: FormControl<string>;
+  status: FormControl<string>;
 };
 
 export const ADD_FACILITY_FORM = new InjectionToken<FacilityItemFormModel>('Add Facility Form');
@@ -16,13 +18,15 @@ export const ADD_FACILITY_FORM = new InjectionToken<FacilityItemFormModel>('Add 
 export const FacilityItemFormProvider: Provider = {
   provide: ADD_FACILITY_FORM,
   deps: [FormBuilder, ActivatedRoute, RequestTaskStore],
-  useFactory: (fb: FormBuilder, route: ActivatedRoute, store: RequestTaskStore) => {
-    const facilityId = route.snapshot.params?.facilityId;
-    const facility = store.select(underlyingAgreementQuery.selectFacility(facilityId))();
+  useFactory: (fb: FormBuilder, activatedRoute: ActivatedRoute, requestTaskStore: RequestTaskStore) => {
+    const facilityId = activatedRoute.snapshot.params?.facilityId;
+    const facility = requestTaskStore.select(underlyingAgreementQuery.selectFacility(facilityId))();
     const name = facility?.facilityDetails.name;
 
     return fb.group<FacilityItemFormModel>({
       name: fb.control(name, textFieldValidators('site name')),
+      facilityId: fb.control(facility?.facilityId),
+      status: fb.control(facility?.status),
     });
   },
 };

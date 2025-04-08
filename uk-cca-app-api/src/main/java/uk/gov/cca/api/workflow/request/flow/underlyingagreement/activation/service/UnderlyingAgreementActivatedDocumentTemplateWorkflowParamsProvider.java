@@ -27,7 +27,7 @@ public class UnderlyingAgreementActivatedDocumentTemplateWorkflowParamsProvider 
     public Map<String, Object> constructParams(UnderlyingAgreementRequestPayload payload) {
         final int version = 1;
 
-        UnderlyingAgreementTargetUnitDetails targetUnitDetails = payload.getUnderlyingAgreement()
+        UnderlyingAgreementTargetUnitDetails targetUnitDetails = payload.getUnderlyingAgreementProposed()
                 .getUnderlyingAgreementTargetUnitDetails();
 
         return documentTemplateUnderlyingAgreementParamsProvider

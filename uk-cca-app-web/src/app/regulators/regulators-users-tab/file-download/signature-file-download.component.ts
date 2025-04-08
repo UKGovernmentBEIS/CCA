@@ -11,7 +11,7 @@ import { FileToken, RegulatorUsersService, UsersService } from 'cca-api';
   template: `
     <h1 class="govuk-heading-l">Your download has started</h1>
     <p class="govuk-body">You should see your downloads in the downloads folder.</p>
-    <a govukLink [href]="url$ | async" download #anchor>Click to restart download if it fails</a>
+    <a class="govuk-link" [href]="url$ | async" download #anchor>Click to restart download if it fails</a>
   `,
   standalone: true,
   imports: [AsyncPipe],

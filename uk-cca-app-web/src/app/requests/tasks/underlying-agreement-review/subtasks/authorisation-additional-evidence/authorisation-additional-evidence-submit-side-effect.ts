@@ -1,7 +1,5 @@
 import { SideEffect, SubtaskOperation } from '@netz/common/forms';
-import { AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK } from '@requests/common';
-
-import { submitReviewSideEffect } from '../../submit-side-effect';
+import { AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK, submitReviewSideEffect } from '@requests/common';
 
 export class AuthorisationAdditionalEvidenceSubmitSideEffect extends SideEffect {
   override step = undefined;

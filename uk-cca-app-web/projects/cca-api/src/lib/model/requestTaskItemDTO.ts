@@ -9,12 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RequestInfoDTO } from './requestInfoDTO';
 import { RequestTaskDTO } from './requestTaskDTO';
+import { RequestInfoDTO } from './requestInfoDTO';
 
 export interface RequestTaskItemDTO {
   requestTask?: RequestTaskDTO;
-  allowedRequestTaskActions?: Array<string>;
+  allowedRequestTaskActions?: string[];
   userAssignCapable?: boolean;
   requestInfo?: RequestInfoDTO;
 }

@@ -10,8 +10,11 @@ import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.authorisation.AuthorisationAndAdditionalEvidence;
 import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitResponsiblePerson;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.UnderlyingAgreementReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationDetails;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationFacilityReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationReviewGroup;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationApplySavePayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationApplySaveTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSaveRequestTaskActionPayload;
@@ -35,12 +38,19 @@ class UnderlyingAgreementVariationApplyServiceTest {
     @Test
     void applySaveAction() {
         final Map<String, String> sectionsCompleted = Map.of("subtask", "in_progress");
+        final Map<String, String> reviewSectionsCompleted = Map.of("subtask", "ACCEPTED");
 
         final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder()
                 .authorisationAndAdditionalEvidence(AuthorisationAndAdditionalEvidence.builder()
                         .authorisationAttachmentIds(Set.of(UUID.randomUUID()))
                         .build())
                 .build();
+        final Map<UnderlyingAgreementVariationReviewGroup, UnderlyingAgreementReviewDecision> reviewGroups = Map.of(
+                UnderlyingAgreementVariationReviewGroup.TARGET_UNIT_DETAILS, UnderlyingAgreementReviewDecision.builder().build()
+        );
+        final Map<String, UnderlyingAgreementVariationFacilityReviewDecision> facilityGroups = Map.of(
+                "facilityId", UnderlyingAgreementVariationFacilityReviewDecision.builder().build()
+        );
         final UnderlyingAgreementVariationSaveRequestTaskActionPayload taskActionPayload =
                 UnderlyingAgreementVariationSaveRequestTaskActionPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementVariationApplySavePayload.builder()
@@ -54,6 +64,9 @@ class UnderlyingAgreementVariationApplyServiceTest {
                                 .authorisationAndAdditionalEvidence(underlyingAgreement.getAuthorisationAndAdditionalEvidence())
                                 .build())
                         .sectionsCompleted(sectionsCompleted)
+                        .reviewGroupDecisions(reviewGroups)
+                        .facilitiesReviewGroupDecisions(facilityGroups)
+                        .reviewSectionsCompleted(reviewSectionsCompleted)
                         .build();
 
         final UnderlyingAgreementVariationPayload expected = UnderlyingAgreementVariationPayload.builder()
@@ -83,5 +96,8 @@ class UnderlyingAgreementVariationApplyServiceTest {
                 (UnderlyingAgreementVariationSubmitRequestTaskPayload) requestTask.getPayload();
         assertThat(actual.getSectionsCompleted()).isEqualTo(sectionsCompleted);
         assertThat(actual.getUnderlyingAgreement()).isEqualTo(expected);
+        assertThat(actual.getReviewSectionsCompleted()).isEqualTo(reviewSectionsCompleted);
+        assertThat(actual.getReviewGroupDecisions()).isEqualTo(reviewGroups);
+        assertThat(actual.getFacilitiesReviewGroupDecisions()).isEqualTo(facilityGroups);
     }
 }

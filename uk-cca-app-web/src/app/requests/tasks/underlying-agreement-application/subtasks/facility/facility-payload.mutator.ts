@@ -15,8 +15,8 @@ export class FacilityPayloadMutator extends PayloadMutator {
   apply(
     currentPayload: UNAApplicationRequestTaskPayload,
     step,
-    { facility, attachments }: { facility: Facility; attachments?: { [key: string]: string } },
+    facility: Facility,
   ): Observable<UNAApplicationRequestTaskPayload> {
-    return applyFacility(currentPayload, { facility, attachments });
+    return applyFacility(currentPayload, facility);
   }
 }

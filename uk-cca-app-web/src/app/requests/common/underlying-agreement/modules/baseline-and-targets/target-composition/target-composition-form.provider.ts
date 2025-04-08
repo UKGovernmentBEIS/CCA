@@ -107,7 +107,10 @@ export const TargetCompositionFormProvider: Provider = {
           updateOn: 'change',
         }),
         throughputUnit: fb.control(targetComposition?.throughputUnit),
-        conversionFactor: fb.control(targetComposition?.conversionFactor ?? null),
+        conversionFactor: fb.control(targetComposition?.conversionFactor ?? null, {
+          validators: [GovukValidators.maxDecimalsValidator(7)],
+          updateOn: 'change',
+        }),
         conversionEvidences: conversionEvidencesFormControl,
       },
       {

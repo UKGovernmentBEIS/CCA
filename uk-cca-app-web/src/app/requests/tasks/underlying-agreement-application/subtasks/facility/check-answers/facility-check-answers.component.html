@@ -1,10 +1,10 @@
 @if (facility(); as facility) {
   <div>
-    <cca-page-heading [caption]="facility.name">Check your answers</cca-page-heading>
+    <netz-page-heading [caption]="facility.name">Check your answers</netz-page-heading>
 
     <cca-summary [data]="summaryData()" />
 
-    <button ccaPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
+    <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
   </div>
 }
 

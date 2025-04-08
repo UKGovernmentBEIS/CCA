@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchTaskReassignedBadRequest } from '@error/business-errors';
 import { createCommonFileAsyncValidators, FileUploadEvent, FileUploadService } from '@shared/components';
-import { requestTaskReassignedError } from '@shared/errors/request-task-error';
+import { requestTaskReassignedError } from '@shared/errors';
 
 import { FileUuidDTO, RequestTaskAttachmentActionProcessDTO, RequestTaskAttachmentsHandlingService } from 'cca-api';
 
@@ -33,7 +33,7 @@ export class RequestTaskFileService {
   buildFormControl(
     requestTaskId: number,
     uuid: string | string[],
-    attachments: { [key: string]: string },
+    attachments: Record<string, string>,
     requestTaskActionType: RequestTaskAttachmentActionProcessDTO['requestTaskActionType'],
     required = false,
     disabled = false,
@@ -59,7 +59,7 @@ export class RequestTaskFileService {
     );
   }
 
-  private buildFileEvent(uuid: string, attachments: { [key: string]: string }): FileUploadEvent {
+  private buildFileEvent(uuid: string, attachments: Record<string, string>): FileUploadEvent {
     //todo This should be refactored and replace the store with what is absolutely  necessary.
     // currently an assumption is mde that either the state will have
     // the property key property or the store will have a getter for the specific property

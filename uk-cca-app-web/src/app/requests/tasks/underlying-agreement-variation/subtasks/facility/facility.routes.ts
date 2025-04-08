@@ -5,11 +5,15 @@ import {
   CanActivateFacilityCheckYourAnswers,
   CanActivateFacilitySummary,
   FacilityWizardStep,
+  resetCurrentFacility,
+  setCurrentFacility,
 } from '@requests/common';
 
 export const FACILITY_ROUTES: Routes = [
   {
     path: ':facilityId',
+    canActivate: [setCurrentFacility],
+    canDeactivate: [resetCurrentFacility],
     children: [
       {
         path: FacilityWizardStep.DETAILS,
@@ -47,18 +51,18 @@ export const FACILITY_ROUTES: Routes = [
         loadComponent: () => import('@requests/common').then((m) => m.FacilityApplyRuleComponent),
       },
       {
-        path: FacilityWizardStep.CHECK_YOUR_ANSWERS,
-        title: 'Check your answers',
-        data: { backlink: '../../../../', breadcrumb: false },
-        canActivate: [CanActivateFacilityCheckYourAnswers],
-        loadComponent: () => import('./check-answers/facility-check-answers.component'),
-      },
-      {
         path: FacilityWizardStep.SUMMARY,
         title: 'Summary details',
         data: { backlink: '../../../../', breadcrumb: false },
         canActivate: [CanActivateFacilitySummary],
         loadComponent: () => import('./summary/facility-summary.component'),
+      },
+      {
+        path: FacilityWizardStep.CHECK_YOUR_ANSWERS,
+        title: 'Check your answers',
+        data: { backlink: '../../../../', breadcrumb: false },
+        canActivate: [CanActivateFacilityCheckYourAnswers],
+        loadComponent: () => import('./check-answers/facility-check-answers.component'),
       },
       {
         path: '**',

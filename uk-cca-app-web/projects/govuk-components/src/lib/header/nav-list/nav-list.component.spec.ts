@@ -3,13 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { LinkDirective } from '../../directives';
 import { HeaderNavListComponent } from './nav-list.component';
 
 describe('HeaderNavListComponent', () => {
   @Component({
     standalone: true,
-    imports: [HeaderNavListComponent, LinkDirective],
+    imports: [HeaderNavListComponent],
     template: `
       <govuk-header-nav-list
         ariaLabel="Aria label for test navigation"

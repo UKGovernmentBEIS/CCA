@@ -18,22 +18,21 @@ import uk.gov.cca.api.authorization.ccaauth.core.domain.AppCcaAuthority;
 import uk.gov.cca.api.sectorassociation.domain.dto.AddressDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationInfoDTO;
-import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
 import uk.gov.cca.api.user.core.domain.UserBasicInfoDTO;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.cca.api.web.orchestrator.sectorassociation.dto.SectorAssociationDetailsResponseDTO;
 import uk.gov.cca.api.web.orchestrator.sectorassociation.dto.SectorAssociationResponseDTO;
 import uk.gov.cca.api.web.orchestrator.sectorassociation.service.SectorAssociationQueryServiceOrchestrator;
-import uk.gov.netz.api.security.AppSecurityComponent;
-import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
-import uk.gov.netz.api.security.AuthorizedAspect;
-import uk.gov.netz.api.security.AuthorizedRoleAspect;
 import uk.gov.netz.api.authorization.core.domain.AppAuthority;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+import uk.gov.netz.api.security.AuthorizedRoleAspect;
 
 import java.util.List;
 
@@ -61,9 +60,6 @@ public class SectorAssociationViewControllerTest {
 
     @Mock
     private RoleAuthorizationService roleAuthorizationService;
-
-    @Mock
-    private SectorAssociationQueryService sectorAssociationQueryService;
 
     @Mock
     private SectorAssociationQueryServiceOrchestrator sectorAssociationQueryServiceOrchestrator;
@@ -110,7 +106,7 @@ public class SectorAssociationViewControllerTest {
 
         //mock
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(regulatorUser);
-        when(sectorAssociationQueryService.getSectorAssociations(regulatorUser)).thenReturn(sectorAssociations);
+        when(sectorAssociationQueryServiceOrchestrator.getSectorAssociations(regulatorUser)).thenReturn(sectorAssociations);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/v1.0/sector-association/")
@@ -119,7 +115,7 @@ public class SectorAssociationViewControllerTest {
                 .andExpect(jsonPath("$", hasSize(sectorAssociations.size())))
                 .andExpect(jsonPath("$[*].id").value(containsInAnyOrder(1, 2)));
 
-        verify(sectorAssociationQueryService, times(1)).getSectorAssociations(regulatorUser);
+        verify(sectorAssociationQueryServiceOrchestrator, times(1)).getSectorAssociations(regulatorUser);
     }
 
     @Test
@@ -135,7 +131,7 @@ public class SectorAssociationViewControllerTest {
 
         //mock
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(sectorUser);
-        when(sectorAssociationQueryService.getSectorAssociations(sectorUser)).thenReturn(sectorAssociations);
+        when(sectorAssociationQueryServiceOrchestrator.getSectorAssociations(sectorUser)).thenReturn(sectorAssociations);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/v1.0/sector-association/")
@@ -144,7 +140,7 @@ public class SectorAssociationViewControllerTest {
                 .andExpect(jsonPath("$", hasSize(sectorAssociations.size())))
                 .andExpect(jsonPath("$[*].id").value(containsInAnyOrder(1)));
 
-        verify(sectorAssociationQueryService, times(1)).getSectorAssociations(sectorUser);
+        verify(sectorAssociationQueryServiceOrchestrator, times(1)).getSectorAssociations(sectorUser);
     }
 
     private static SectorAssociationResponseDTO createSectorAssociationResponseDTO() {

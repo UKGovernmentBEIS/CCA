@@ -1,8 +1,8 @@
 import { Observable, of } from 'rxjs';
 
-import { transformFilesToAttachments, transformFilesToUUIDsList } from '@shared/utils';
+import { transformFilesToUUIDsList } from '@shared/utils';
 import BigNumber from 'bignumber.js';
-import produce from 'immer';
+import { produce } from 'immer';
 
 import { AccountReferenceData, SectorAssociationDetails, TargetComposition, Targets } from 'cca-api';
 
@@ -17,22 +17,24 @@ import {
   UNARequestTaskPayload,
 } from '../../underlying-agreement.types';
 
-export const roundDecimals = (n: number, decimals = 3): number => new BigNumber(n).decimalPlaces(decimals).toNumber();
-
 export function calculatePerformance(energyOrCarbon: number, throughput: number) {
   const energyOrCarbonBig = new BigNumber(energyOrCarbon);
   const throughputBig = new BigNumber(throughput);
+
   const calculation = energyOrCarbonBig.div(throughputBig).decimalPlaces(7, BigNumber.ROUND_HALF_UP).toNumber();
 
   return !isNaN(calculation) ? calculation : null;
 }
 
 // For relative target types the baseline is the energy/throughput
-export function calculateRelativeTarget(performance: number, improvement: number) {
-  const performanceBig = new BigNumber(performance);
+export function calculateRelativeTarget(energy: number, throughput: number, improvement: number) {
+  const energyBig = new BigNumber(energy);
+  const throughputBig = new BigNumber(throughput);
   const improvementBig = new BigNumber(improvement);
 
-  const baseline = performanceBig
+  const performance = energyBig.div(throughputBig);
+
+  const baseline = performance
     .multipliedBy(new BigNumber(100).minus(improvementBig).div(100))
     .decimalPlaces(7, BigNumber.ROUND_HALF_UP)
     .toNumber();
@@ -43,6 +45,7 @@ export function calculateRelativeTarget(performance: number, improvement: number
 export function calculateAbsoluteTarget(energyOrCarbon: number, improvement: number, extendedPeriod: boolean) {
   const energyOrCarbonBig = new BigNumber(energyOrCarbon);
   const improvementBig = new BigNumber(improvement);
+
   const baseline = energyOrCarbonBig.multipliedBy(new BigNumber(100).minus(improvementBig).div(100));
 
   return !isNaN(baseline.toNumber())
@@ -231,20 +234,12 @@ export function applyTp5TargetComposition(
   return of(
     produce(currentPayload, (payload) => {
       payload.sectionsCompleted[subtask] = TaskItemStatus.IN_PROGRESS;
-
-      const attachments = transformFilesToAttachments([
-        userInput.calculatorFile,
-        ...(userInput?.conversionEvidences || []),
-      ]);
-
       payload.underlyingAgreement.targetPeriod5Details.details.targetComposition = {
         ...userInput,
-        conversionFactor: round(userInput.conversionFactor, 4),
+        conversionFactor: userInput.conversionFactor,
         conversionEvidences: transformFilesToUUIDsList(userInput.conversionEvidences) as string[],
         calculatorFile: transformFilesToUUIDsList(userInput.calculatorFile) as string,
       };
-
-      payload.underlyingAgreementAttachments = { ...currentPayload.underlyingAgreementAttachments, ...attachments };
     }),
   );
 }
@@ -258,19 +253,12 @@ export function applyTp6TargetComposition(
     produce(currentPayload, (payload) => {
       payload.sectionsCompleted[subtask] = TaskItemStatus.IN_PROGRESS;
 
-      const attachments = transformFilesToAttachments([
-        userInput.calculatorFile,
-        ...(userInput?.conversionEvidences || []),
-      ]);
-
       payload.underlyingAgreement.targetPeriod6Details.targetComposition = {
         ...userInput,
-        conversionFactor: round(userInput.conversionFactor, 4),
+        conversionFactor: userInput.conversionFactor,
         conversionEvidences: (transformFilesToUUIDsList(userInput.conversionEvidences) as string[]) ?? [],
         calculatorFile: transformFilesToUUIDsList(userInput.calculatorFile) as string,
       };
-
-      payload.underlyingAgreementAttachments = { ...currentPayload.underlyingAgreementAttachments, ...attachments };
     }),
   );
 }
@@ -287,20 +275,16 @@ export function applyTp5BaselineData(
       const hasRelativeAgreementCompositionType =
         payload.underlyingAgreement.targetPeriod5Details.details.targetComposition.agreementCompositionType ===
         'RELATIVE';
-      const attachments = transformFilesToAttachments(userInput?.greenfieldEvidences ?? []);
-
       payload.underlyingAgreement.targetPeriod5Details.details.baselineData = {
         ...userInput,
-        energy: round(userInput.energy),
-        throughput: round(userInput.throughput),
+        energy: userInput.energy,
+        throughput: userInput.throughput,
         performance: hasRelativeAgreementCompositionType
           ? calculatePerformance(userInput.energy, userInput.throughput)
           : null,
-        energyCarbonFactor: round(userInput.energyCarbonFactor, 4),
+        energyCarbonFactor: userInput.energyCarbonFactor,
         greenfieldEvidences: transformFilesToUUIDsList(userInput?.greenfieldEvidences) as string[],
       };
-
-      payload.underlyingAgreementAttachments = { ...currentPayload.underlyingAgreementAttachments, ...attachments };
     }),
   );
 }
@@ -317,20 +301,16 @@ export function applyTp6BaselineData(
       const hasRelativeAgreementCompositionType =
         payload.underlyingAgreement.targetPeriod6Details.targetComposition.agreementCompositionType === 'RELATIVE';
 
-      const attachments = transformFilesToAttachments(userInput?.greenfieldEvidences ?? []);
-
       payload.underlyingAgreement.targetPeriod6Details.baselineData = {
         ...userInput,
-        energy: round(userInput.energy),
-        throughput: round(userInput.throughput),
+        energy: userInput.energy,
+        throughput: userInput.throughput,
         performance: hasRelativeAgreementCompositionType
           ? calculatePerformance(userInput.energy, userInput.throughput)
           : null,
-        energyCarbonFactor: round(userInput.energyCarbonFactor, 4),
+        energyCarbonFactor: userInput.energyCarbonFactor,
         greenfieldEvidences: transformFilesToUUIDsList(userInput?.greenfieldEvidences) as string[],
       };
-
-      payload.underlyingAgreementAttachments = { ...currentPayload.underlyingAgreementAttachments, ...attachments };
     }),
   );
 }
@@ -374,7 +354,7 @@ export function applyTp5BaselineDataSideEffect(
       const baselineData = payload.underlyingAgreement.targetPeriod5Details?.details?.baselineData;
       const targets = payload.underlyingAgreement.targetPeriod5Details?.details?.targets;
       const agreementCompositionType = targetComposition?.agreementCompositionType;
-      const performance = baselineData?.performance;
+
       const energyOrCarbon = baselineData?.energy;
       const improvement = targets?.improvement;
 
@@ -383,7 +363,8 @@ export function applyTp5BaselineDataSideEffect(
       switch (agreementCompositionType) {
         case 'RELATIVE':
           payload.underlyingAgreement.targetPeriod5Details.details.targets.target = calculateRelativeTarget(
-            performance,
+            energyOrCarbon,
+            baselineData.throughput,
             improvement,
           );
           return;
@@ -409,7 +390,6 @@ export function applyTp6BaselineDataSideEffect(
       const baselineData = payload.underlyingAgreement.targetPeriod6Details?.baselineData;
       const targets = payload.underlyingAgreement.targetPeriod6Details?.targets;
       const agreementCompositionType = targetComposition.agreementCompositionType;
-      const performance = baselineData?.performance;
       const energyOrCarbon = baselineData?.energy;
       const improvement = targets?.improvement;
 
@@ -418,7 +398,8 @@ export function applyTp6BaselineDataSideEffect(
       switch (agreementCompositionType) {
         case 'RELATIVE':
           payload.underlyingAgreement.targetPeriod6Details.targets.target = calculateRelativeTarget(
-            performance,
+            energyOrCarbon,
+            baselineData.throughput,
             improvement,
           );
           return;
@@ -464,7 +445,8 @@ export function applyTp5TargetCompositionSideEffect(
           if (!energy || !throughput) return;
 
           payload.underlyingAgreement.targetPeriod5Details.details.targets.target = calculateRelativeTarget(
-            calculatePerformance(energy, throughput),
+            energy,
+            throughput,
             improvement,
           );
           break;
@@ -512,7 +494,8 @@ export function applyTp6TargetCompositionSideEffect(
           if (!energy || !throughput) return;
 
           payload.underlyingAgreement.targetPeriod6Details.targets.target = calculateRelativeTarget(
-            calculatePerformance(energy, throughput),
+            energy,
+            throughput,
             improvement,
           );
           break;
@@ -529,8 +512,4 @@ export function applyTp6TargetCompositionSideEffect(
       }
     }),
   );
-}
-
-function round(v: number | undefined, decimals = 3): number | null {
-  return v ? roundDecimals(v, decimals) : null;
 }

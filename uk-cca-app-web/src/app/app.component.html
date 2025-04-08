@@ -12,22 +12,41 @@
 
   @if (isAuthorized()) {
     <govuk-header-nav-list identifier="navigation" ariaLabel="Primary navigation">
-      <a govukLink="header" [routerLink]="['/dashboard']"> Tasks </a>
-      <a govukLink="header" [routerLink]="['/target-unit-accounts']"> Target unit accounts </a>
+      <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
+        <a routerLinkActive class="govuk-header__link" [routerLink]="['/dashboard']"> Tasks </a>
+      </li>
+
+      <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
+        <a routerLinkActive class="govuk-header__link" [routerLink]="['/target-unit-accounts']">
+          Target unit accounts
+        </a>
+      </li>
 
       @if (showSectors()) {
-        <a govukLink="header" [routerLink]="['/sectors']"> Manage sectors </a>
+        <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
+          <a class="govuk-header__link" [routerLink]="['/sectors']"> Manage sectors </a>
+        </li>
       }
 
       @if (showRegulators()) {
-        <a govukLink="header" [routerLink]="['/user/regulators']"> Regulator users </a>
+        @if (!subsistenceFeesHideMenu) {
+          <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
+            <a routerLinkActive class="govuk-header__link" [routerLink]="['/subsistence-fees']"> Subsistence fees </a>
+          </li>
+        }
+        <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
+          <a routerLinkActive class="govuk-header__link" [routerLink]="['/user/regulators']"> Regulator users </a>
+        </li>
+        <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
+          <a routerLinkActive class="govuk-header__link" [routerLink]="['/mi-reports']"> MI Reports </a>
+        </li>
       }
     </govuk-header-nav-list>
   }
 </govuk-header>
 
 <section class="govuk-width-container">
-  <cca-phase-bar />
+  <cca-phase-bar [isUserLoggedIn]="isLoggedIn()" />
   <cca-workflow-task-header />
   <netz-breadcrumbs />
   <netz-back-link />
@@ -38,10 +57,18 @@
 
 <govuk-footer>
   <govuk-footer-meta-info>
-    <a govukLink="meta" routerLink="/privacy-notice"> Privacy Notice </a>
-    <a govukLink="meta" routerLink="/contact-us"> Contact us </a>
-    <a govukLink="meta" routerLink="/accessibility"> Accessibility Statement </a>
-    <a govukLink="meta" routerLink="/legislation"> UK ETS legislation </a>
+    <li class="govuk-footer__inline-list-item">
+      <a routerLink="/privacy-notice"> Privacy Notice </a>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+      <a routerLink="/contact-us"> Contact us </a>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+      <a routerLink="/accessibility"> Accessibility Statement </a>
+    </li>
+    <li class="govuk-footer__inline-list-item">
+      <a routerLink="/legislation"> CCA legislation </a>
+    </li>
   </govuk-footer-meta-info>
 </govuk-footer>
 

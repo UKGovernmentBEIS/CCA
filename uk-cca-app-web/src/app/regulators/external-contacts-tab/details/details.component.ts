@@ -1,4 +1,3 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,10 +6,10 @@ import { first, map, switchMap } from 'rxjs';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, ErrorCodes, isBadRequest } from '@error/business-errors';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { ButtonDirective, ErrorSummaryComponent, GovukValidators, TextInputComponent } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
-import { SubmitIfEmptyPipe } from '@shared/pipes/submit-if-empty.pipe';
+import { SubmitIfEmptyPipe } from '@shared/pipes';
 import { requiredFieldsValidator } from '@shared/validators';
 
 import { CaExternalContactsService } from 'cca-api';
@@ -24,7 +23,6 @@ import { ActiveExternalContactStore } from '../active-external-contact.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    AsyncPipe,
     ErrorSummaryComponent,
     PageHeadingComponent,
     ReactiveFormsModule,

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { FinalDecisionTypePipe } from '@requests/common';
-import { PageHeadingComponent, SummaryComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { SummaryComponent } from '@shared/components';
+import { FinalDecisionTypePipe } from '@shared/pipes';
+import { generateDownloadUrl } from '@shared/utils';
 
 import { AdminTerminationFinalDecisionQuery } from '../../../+state/admin-termination-final-decision.selectors';
 import { toFinalDecisionReasonSummaryData } from '../../../final-decision-reason-summary-data';

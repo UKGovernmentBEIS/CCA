@@ -5,10 +5,9 @@ import { RouterLink } from '@angular/router';
 
 import { BehaviorSubject, filter, startWith, take } from 'rxjs';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
-import { ButtonDirective, ErrorSummaryComponent, LinkDirective } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives/pending-button.directive';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
+import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
 
 @Component({
   selector: 'cca-wizard-step',
@@ -22,9 +21,7 @@ import { PendingButtonDirective } from '@shared/directives/pending-button.direct
     PendingButtonDirective,
     RouterLink,
     ButtonDirective,
-    LinkDirective,
     ErrorSummaryComponent,
-    ReturnToTaskOrActionPageComponent,
   ],
 })
 export class WizardStepComponent {
@@ -59,7 +56,7 @@ export class WizardStepComponent {
           case 'INVALID':
             this.formGroup.markAllAsTouched();
             this.isSummaryDisplayedSubject.next(true);
-            this.errorSummaryEl()?.container.nativeElement.focus();
+            this.errorSummaryEl()?.container?.nativeElement.focus();
             break;
         }
       });

@@ -101,7 +101,7 @@ class RequestActionAttachmentControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(appUser, "generateRequestActionGetFileAttachmentToken", String.valueOf(requestActionId));
+            .authorize(appUser, "generateRequestActionGetFileAttachmentToken", String.valueOf(requestActionId), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders
             .get(BASE_PATH + "/" + requestActionId)

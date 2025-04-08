@@ -9,15 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { FacilityDTO } from '../model/facilityDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -109,7 +109,7 @@ export class FacilityService {
   public generateFacilityId(
     accountId: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -142,7 +142,7 @@ export class FacilityService {
     return this.httpClient.get<FacilityDTO>(
       `${this.configuration.basePath}/v1.0/facility/generate/${encodeURIComponent(String(accountId))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -179,7 +179,7 @@ export class FacilityService {
   public isActiveFacility(
     facilityId: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
   ): Observable<any> {
     if (facilityId === null || facilityId === undefined) {
@@ -188,7 +188,7 @@ export class FacilityService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (facilityId !== undefined && facilityId !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>facilityId, 'facilityId');
+      queryParameters = this.addToHttpParams(queryParameters, facilityId as any, 'facilityId');
     }
 
     let headers = this.defaultHeaders;
@@ -216,7 +216,7 @@ export class FacilityService {
 
     return this.httpClient.get<boolean>(`${this.configuration.basePath}/v1.0/facility/facilityId`, {
       params: queryParameters,
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,

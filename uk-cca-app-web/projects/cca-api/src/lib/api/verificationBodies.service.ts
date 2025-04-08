@@ -9,20 +9,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { VerificationBodyCreationDTO } from '../model/verificationBodyCreationDTO';
 import { VerificationBodyDTO } from '../model/verificationBodyDTO';
 import { VerificationBodyInfoDTO } from '../model/verificationBodyInfoDTO';
 import { VerificationBodyInfoResponseDTO } from '../model/verificationBodyInfoResponseDTO';
 import { VerificationBodyUpdateDTO } from '../model/verificationBodyUpdateDTO';
 import { VerificationBodyUpdateStatusDTO } from '../model/verificationBodyUpdateStatusDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -116,7 +116,7 @@ export class VerificationBodiesService {
   public createVerificationBody(
     verificationBodyCreationDTO: VerificationBodyCreationDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (verificationBodyCreationDTO === null || verificationBodyCreationDTO === undefined) {
@@ -159,7 +159,7 @@ export class VerificationBodiesService {
       `${this.configuration.basePath}/v1.0/verification-bodies`,
       verificationBodyCreationDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -196,7 +196,7 @@ export class VerificationBodiesService {
   public deleteVerificationBodyById(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -229,7 +229,7 @@ export class VerificationBodiesService {
     return this.httpClient.delete<any>(
       `${this.configuration.basePath}/v1.0/verification-bodies/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -261,7 +261,7 @@ export class VerificationBodiesService {
   ): Observable<VerificationBodyInfoResponseDTO>;
   public getVerificationBodies(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -290,7 +290,7 @@ export class VerificationBodiesService {
     return this.httpClient.get<VerificationBodyInfoResponseDTO>(
       `${this.configuration.basePath}/v1.0/verification-bodies`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -327,7 +327,7 @@ export class VerificationBodiesService {
   public getVerificationBodyById(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -360,7 +360,7 @@ export class VerificationBodiesService {
     return this.httpClient.get<VerificationBodyDTO>(
       `${this.configuration.basePath}/v1.0/verification-bodies/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -376,30 +376,30 @@ export class VerificationBodiesService {
    * @param reportProgress flag to report request and response progress.
    */
   public updateVerificationBodiesStatus(
-    verificationBodyUpdateStatusDTO: Array<VerificationBodyUpdateStatusDTO>,
+    verificationBodyUpdateStatusDTO: VerificationBodyUpdateStatusDTO[],
   ): Observable<any>;
   public updateVerificationBodiesStatus(
-    verificationBodyUpdateStatusDTO: Array<VerificationBodyUpdateStatusDTO>,
+    verificationBodyUpdateStatusDTO: VerificationBodyUpdateStatusDTO[],
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<any>>;
   public updateVerificationBodiesStatus(
-    verificationBodyUpdateStatusDTO: Array<VerificationBodyUpdateStatusDTO>,
+    verificationBodyUpdateStatusDTO: VerificationBodyUpdateStatusDTO[],
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<any>>;
   public updateVerificationBodiesStatus(
-    verificationBodyUpdateStatusDTO: Array<VerificationBodyUpdateStatusDTO>,
+    verificationBodyUpdateStatusDTO: VerificationBodyUpdateStatusDTO[],
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any>;
   public updateVerificationBodiesStatus(
-    verificationBodyUpdateStatusDTO: Array<VerificationBodyUpdateStatusDTO>,
+    verificationBodyUpdateStatusDTO: VerificationBodyUpdateStatusDTO[],
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (verificationBodyUpdateStatusDTO === null || verificationBodyUpdateStatusDTO === undefined) {
@@ -442,7 +442,7 @@ export class VerificationBodiesService {
       `${this.configuration.basePath}/v1.0/verification-bodies`,
       verificationBodyUpdateStatusDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -479,7 +479,7 @@ export class VerificationBodiesService {
   public updateVerificationBody(
     verificationBodyUpdateDTO: VerificationBodyUpdateDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (verificationBodyUpdateDTO === null || verificationBodyUpdateDTO === undefined) {
@@ -522,7 +522,7 @@ export class VerificationBodiesService {
       `${this.configuration.basePath}/v1.0/verification-bodies`,
       verificationBodyUpdateDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

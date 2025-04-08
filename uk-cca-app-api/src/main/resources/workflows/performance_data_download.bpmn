@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1wu6qib" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.23.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="PROCESS_PERFORMANCE_DATA_DOWNLOAD" name="Reporting spreadsheets download process" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0dngp89</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0dngp89" sourceRef="StartEvent_1" targetRef="PERFORMANCE_DATA_DOWNLOAD_SUBMIT" />
+    <bpmn:userTask id="PERFORMANCE_DATA_DOWNLOAD_SUBMIT" name="Download performance data">
+      <bpmn:incoming>Flow_0dngp89</bpmn:incoming>
+      <bpmn:outgoing>Flow_07p8xfi</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_1nup2so">
+      <bpmn:incoming>Flow_07p8xfi</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_08hxjhh" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_07p8xfi" sourceRef="PERFORMANCE_DATA_DOWNLOAD_SUBMIT" targetRef="Event_1nup2so" />
+    <bpmn:subProcess id="Activity_16k96ry" triggeredByEvent="true">
+      <bpmn:startEvent id="Event_1izrf0m" name="performance data zip file generated message" isInterrupting="false">
+        <bpmn:outgoing>Flow_0hq1tls</bpmn:outgoing>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_1drmfto" messageRef="Message_3h3btcu" />
+      </bpmn:startEvent>
+      <bpmn:serviceTask id="Activity_1q4stws" name="performance data zip file generated" camunda:delegateExpression="#{performanceDataDownloadZipFileGeneratedHandler}">
+        <bpmn:incoming>Flow_0hq1tls</bpmn:incoming>
+        <bpmn:outgoing>Flow_1e1s8st</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:endEvent id="Event_0v91jk3">
+        <bpmn:incoming>Flow_1e1s8st</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0hq1tls" sourceRef="Event_1izrf0m" targetRef="Activity_1q4stws" />
+      <bpmn:sequenceFlow id="Flow_1e1s8st" sourceRef="Activity_1q4stws" targetRef="Event_0v91jk3" />
+    </bpmn:subProcess>
+  </bpmn:process>
+  <bpmn:message id="Message_3h3btcu" name="reportingSpreadsheetsZipGenerateCompleted" />
+  <bpmn:message id="Message_084jmma" name="reportingSpreadsheetsGenerateCompleted" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PROCESS_PERFORMANCE_DATA_DOWNLOAD">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="242" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pfc23y_di" bpmnElement="PERFORMANCE_DATA_DOWNLOAD_SUBMIT">
+        <dc:Bounds x="460" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_06ummgv_di" bpmnElement="Event_1nup2so">
+        <dc:Bounds x="792" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dt37u3_di" bpmnElement="Activity_16k96ry" isExpanded="true">
+        <dc:Bounds x="160" y="240" width="700" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_15568ib_di" bpmnElement="Event_1izrf0m">
+        <dc:Bounds x="250" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="226" y="257" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0itubo7_di" bpmnElement="Activity_1q4stws">
+        <dc:Bounds x="470" y="310" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0v91jk3_di" bpmnElement="Event_0v91jk3">
+        <dc:Bounds x="732" y="332" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0hq1tls_di" bpmnElement="Flow_0hq1tls">
+        <di:waypoint x="286" y="350" />
+        <di:waypoint x="470" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1e1s8st_di" bpmnElement="Flow_1e1s8st">
+        <di:waypoint x="570" y="350" />
+        <di:waypoint x="732" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dngp89_di" bpmnElement="Flow_0dngp89">
+        <di:waypoint x="278" y="120" />
+        <di:waypoint x="460" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07p8xfi_di" bpmnElement="Flow_07p8xfi">
+        <di:waypoint x="560" y="120" />
+        <di:waypoint x="792" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

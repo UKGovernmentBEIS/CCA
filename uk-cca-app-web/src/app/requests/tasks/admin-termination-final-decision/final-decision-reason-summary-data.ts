@@ -1,6 +1,6 @@
-import { transformAdminTerminationFinalDecisionType } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { transformAttachmentsToDownloadableFiles } from '@shared/utils';
+import { transformAdminTerminationFinalDecisionType } from '@shared/pipes';
+import { transformAttachmentsAndFileUUIDsToDownloadableFiles } from '@shared/utils';
 
 import { AdminTerminationFinalDecisionReasonDetails } from 'cca-api';
 
@@ -8,7 +8,7 @@ import { AdminTerminationFinalDecisionTerminateAgreementWizardStep } from './adm
 
 export function toFinalDecisionReasonSummaryData(
   adminTerminationFinalDecisionReasonDetails: AdminTerminationFinalDecisionReasonDetails,
-  adminTerminationFinalDecisionAttachments: { [key: string]: string },
+  adminTerminationFinalDecisionAttachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
 ): SummaryData {
@@ -25,7 +25,7 @@ export function toFinalDecisionReasonSummaryData(
     .addRow('Explain reason', adminTerminationFinalDecisionReasonDetails.explanation, { change: isEditable })
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsToDownloadableFiles(
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
         adminTerminationFinalDecisionReasonDetails.relevantFiles,
         adminTerminationFinalDecisionAttachments,
         downloadUrl,

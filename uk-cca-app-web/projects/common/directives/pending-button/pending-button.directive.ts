@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, DestroyRef, Directive, ElementRef, OnInit, Optional, Renderer2 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { DestroySubject, PendingRequestService } from '@netz/common/services';
+import { PendingRequestService } from '@netz/common/services';
 
-@Directive({ selector: 'button[netzPendingButton]', providers: [DestroySubject], standalone: true })
+@Directive({ selector: 'button[netzPendingButton]', standalone: true })
 export class PendingButtonDirective implements OnInit {
   constructor(
     @Optional() private readonly pendingRequest: PendingRequestService,

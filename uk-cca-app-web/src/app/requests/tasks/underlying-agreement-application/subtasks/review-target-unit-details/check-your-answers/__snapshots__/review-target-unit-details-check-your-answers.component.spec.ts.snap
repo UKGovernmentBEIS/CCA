@@ -9,7 +9,7 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
   taskService={[Function Object]}
 >
   <div>
-    <cca-page-heading
+    <netz-page-heading
       caption="Change"
     >
       <span
@@ -22,7 +22,7 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
       >
         Check your answers
       </h1>
-    </cca-page-heading>
+    </netz-page-heading>
     <cca-summary>
       <h2
         class="govuk-heading-m"
@@ -55,7 +55,6 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -151,7 +150,6 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -190,7 +188,6 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -219,7 +216,6 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -248,7 +244,6 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -287,7 +282,6 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -297,16 +291,15 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
       </dl>
     </cca-summary>
     <button
-      ccapendingbutton=""
       class="govuk-button"
       govukbutton=""
+      netzpendingbutton=""
       type="button"
     >
       Confirm and complete
     </button>
   </div><netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

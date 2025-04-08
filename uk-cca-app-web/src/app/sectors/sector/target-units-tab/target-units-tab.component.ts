@@ -7,6 +7,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs';
 
 import { AuthStore, selectUserId } from '@netz/common/auth';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { transformUsername } from '@netz/common/pipes';
 import {
   ButtonDirective,
@@ -17,7 +18,6 @@ import {
   TagComponent,
 } from '@netz/govuk-components';
 import { PaginationComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
 import { TargetUnitStatusColorPipe } from '@shared/pipes';
 
 import {
@@ -66,32 +66,32 @@ export class SectorTargetUnitsTabComponent {
   private readonly sectorAssociationAuthoritiesService = inject(SectorAssociationAuthoritiesService);
   private readonly targetUnitService = inject(TargetUnitAccountInfoViewService);
   private readonly targetUnitSiteContactsService = inject(TargetUnitAccountsSiteContactsService);
-  private readonly route = inject(ActivatedRoute);
+  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
-  private readonly sectorId = +this.route.snapshot.paramMap.get('sectorId');
+  private readonly sectorId = +this.activatedRoute.snapshot.paramMap.get('sectorId');
   private readonly userId = inject(AuthStore).select(selectUserId);
 
   readonly pageSize = 50;
 
   private readonly state = signal<State>({
-    currentPage: +this.route.snapshot.queryParamMap.get('page') || 1,
+    currentPage: +this.activatedRoute.snapshot.queryParamMap.get('page') || 1,
     editable: true,
     targetUnits: [],
     totalItems: 0,
   });
 
-  editable = computed(() => this.state().editable);
+  protected readonly editable = computed(() => this.state().editable);
 
-  targetUnits = computed(() => {
+  protected readonly targetUnits = computed(() => {
     const tus = this.state().targetUnits;
     const sorting = this.sorting();
 
     if (!sorting) return tus;
 
     return tus.sort((a, b) => {
-      const diff = a[sorting.column].localeCompare(b[sorting.column], 'en-GB', {
+      const diff = a[sorting.column]?.localeCompare(b[sorting.column], 'en-GB', {
         numeric: true,
         sensitivity: 'base',
       });
@@ -109,10 +109,10 @@ export class SectorTargetUnitsTabComponent {
     return namesMap;
   });
 
-  currentPage = computed(() => this.state().currentPage);
-  currentPage$ = toObservable(this.currentPage);
-  sorting = signal<SortEvent | null>(null);
-  count = computed(() => this.state().totalItems);
+  private readonly currentPage = computed(() => this.state().currentPage);
+  private readonly currentPage$ = toObservable(this.currentPage);
+  protected readonly count = computed(() => this.state().totalItems);
+  private readonly sorting = signal<SortEvent>({ column: 'id', direction: 'ascending' });
 
   private sectorUsersAuthorities = toSignal(
     this.sectorAssociationAuthoritiesService
@@ -120,24 +120,29 @@ export class SectorTargetUnitsTabComponent {
       .pipe(map((r) => r.authorities.filter((a) => a.status === 'ACTIVE'))),
   );
 
-  targetUnitsColumns: GovukTableColumn[] = [
-    { field: 'accountName', header: 'Name', isSortable: true },
+  protected readonly targetUnitsColumns: GovukTableColumn[] = [
+    { field: 'accountName', header: 'Name' },
     { field: 'businessId', header: 'Target Unit ID' },
     { field: 'assignedTo', header: 'Assigned to' },
     { field: 'status', header: 'Status' },
   ];
 
-  sectorUserOptions = computed(() =>
+  protected readonly sectorUserOptions = computed(() =>
     this.sectorUsersAuthorities()
       ? [{ text: 'Unassigned', value: null }].concat(
-          this.sectorUsersAuthorities()?.map((a) => ({ text: transformUsername(a), value: a.userId })),
+          this.sectorUsersAuthorities()?.map((a) => ({
+            text: transformUsername(a),
+            value: a.userId,
+          })),
         )
       : [],
   );
 
   canCreateTargetUnit = computed(() => !!this.sectorUsersAuthorities()?.find((u) => u.userId === this.userId()));
 
-  targetUnitsForm = this.fb.group({ targetUnits: this.fb.array<TargetUnitFormModel>([]) });
+  protected readonly targetUnitsForm = this.fb.group({
+    targetUnits: this.fb.array<TargetUnitFormModel>([]),
+  });
 
   constructor() {
     effect(() => {
@@ -161,7 +166,12 @@ export class SectorTargetUnitsTabComponent {
     accountsWithSiteContact: targetUnits,
     totalItems,
   }: TargetUnitAccountInfoResponseDTO): void => {
-    this.state.update((state) => ({ ...state, editable, targetUnits, totalItems }));
+    this.state.update((state) => ({
+      ...state,
+      editable,
+      targetUnits,
+      totalItems,
+    }));
   };
 
   private patchTargetUnitsForm(targetUnits: TargetUnitAccountInfoDTO[]) {
@@ -195,19 +205,20 @@ export class SectorTargetUnitsTabComponent {
     this.state.update((state) => ({ ...state, currentPage: page }));
   }
 
-  sortBy(sorting: SortEvent) {
-    this.sorting.set(sorting);
-  }
-
   onAddNewTargetUnit() {
-    this.router.navigate(['target-units', 'create'], { relativeTo: this.route });
+    this.router.navigate(['target-units', 'create'], {
+      relativeTo: this.activatedRoute,
+    });
   }
 
   onSubmit() {
     this.targetUnitSiteContactsService
       .updateTargetUnitAccountSiteContacts(
         this.sectorId,
-        this.targetUnitsForm.getRawValue().targetUnits.map((tu) => ({ accountId: tu.id, userId: tu.assignedTo })),
+        this.targetUnitsForm.getRawValue().targetUnits.map((tu) => ({
+          accountId: tu.id,
+          userId: tu.assignedTo,
+        })),
       )
       .subscribe();
   }

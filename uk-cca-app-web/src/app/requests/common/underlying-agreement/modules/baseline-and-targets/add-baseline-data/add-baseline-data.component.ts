@@ -7,7 +7,6 @@ import { ActivatedRoute } from '@angular/router';
 import { distinct } from 'rxjs';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
-import { PendingButtonDirective } from '@netz/common/directives';
 import { TaskService } from '@netz/common/forms';
 import { RequestTaskStore } from '@netz/common/store';
 import {
@@ -20,7 +19,7 @@ import {
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
 
 import { underlyingAgreementQuery } from '../../../+state';
-import { MeasurementTypeToOptionTextPipe, MeasurementTypeToUnitPipe } from '../../../pipes';
+import { MeasurementTypeToUnitPipe } from '../../../pipes';
 import {
   BASELINE_AND_TARGETS_SUBTASK,
   BaselineAndTargetPeriodsSubtasks,
@@ -46,10 +45,7 @@ import {
     TextareaComponent,
     TextInputComponent,
     MultipleFileInputComponent,
-    MeasurementTypeToOptionTextPipe,
     MeasurementTypeToUnitPipe,
-    PendingButtonDirective,
-    DecimalPipe,
     ReturnToTaskOrActionPageComponent,
   ],
   templateUrl: './add-baseline-data.component.html',
@@ -84,9 +80,11 @@ export class AddBaselineDataComponent {
   private readonly throughputValue = toSignal(this.form.get('throughput').valueChanges, {
     initialValue: this.form.get('throughput').value,
   });
+
   readonly baselineDateValue = toSignal(this.form.controls.baselineDate.valueChanges, {
     initialValue: this.form.value.baselineDate,
   });
+
   readonly calculatedPerformance = computed(() => {
     if (this.targetComposition?.agreementCompositionType !== 'RELATIVE') return null;
     const energyOrCarbon = this.energyOrCarbonValue();
@@ -101,7 +99,7 @@ export class AddBaselineDataComponent {
       this.sectorThroughputUnit,
       this.targetComposition.measurementType,
     );
-    return `${pipe.transform(this.calculatedPerformance(), '1.0-3')} ${suffix}`;
+    return `${pipe.transform(this.calculatedPerformance(), '1.0-7')} ${suffix}`;
   });
 
   readonly performanceSuffix = getMeasurementAndThroughputUnits(
@@ -113,6 +111,7 @@ export class AddBaselineDataComponent {
   readonly dateIsStartof2018 = computed(() => {
     return this.baselineDateValue() && this.baselineDateValue().getTime() === new Date('2018-01-01').getTime();
   });
+
   constructor() {
     this.form.controls.isTwelveMonths.valueChanges.pipe(takeUntilDestroyed(), distinct()).subscribe((v) => {
       if (typeof v === 'boolean') {
@@ -126,12 +125,14 @@ export class AddBaselineDataComponent {
         this.form.updateValueAndValidity();
       }
     });
+
     effect(() => {
       if (this.isTwelveMonthsValue() && this.baselineDateValue() && this.dateIsStartof2018()) {
         this.form.get('explanation').reset();
       }
     });
   }
+
   onSubmit() {
     this.taskService
       .saveSubtask(

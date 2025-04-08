@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/mi_reports.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+   <changeSet id="0_1_0_create_custom_mi_report" author="apostolouk@unisystems.gr">
+        <sql>
+		INSERT INTO mi_report (id, competent_authority, type) VALUES ((1), 'ENGLAND', 'CUSTOM');
+        </sql>
+        <rollback>
+        	DELETE
+            FROM mi_report
+            WHERE type = 'CUSTOM';
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

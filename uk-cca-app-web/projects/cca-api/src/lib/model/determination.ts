@@ -14,5 +14,5 @@ export interface Determination {
   type: 'ACCEPTED' | 'REJECTED';
   reason?: string;
   additionalInformation?: string;
-  files?: Array<string>;
+  files?: string[];
 }

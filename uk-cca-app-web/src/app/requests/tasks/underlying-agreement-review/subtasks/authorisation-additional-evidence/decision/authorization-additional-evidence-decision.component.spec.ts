@@ -8,7 +8,7 @@ import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } f
 import { mockUNAReviewRequestTaskState } from '@requests/common';
 import { render } from '@testing-library/angular';
 
-import { AUthorizationAdditionalEvidenceDecisionComponent } from './authorization-additional-evidence-decision.component';
+import { AuthorizationAdditionalEvidenceDecisionComponent } from './authorization-additional-evidence-decision.component';
 
 describe('TP5 Decision', () => {
   let store: RequestTaskStore;
@@ -17,7 +17,7 @@ describe('TP5 Decision', () => {
   };
   let tree: Element;
   beforeEach(async () => {
-    const renderResult = await render(AUthorizationAdditionalEvidenceDecisionComponent, {
+    const renderResult = await render(AuthorizationAdditionalEvidenceDecisionComponent, {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),

@@ -13,6 +13,9 @@ export class Tp6SubmitSideEffect extends SideEffect {
     return of(
       produce(currentPayload, (payload) => {
         payload.sectionsCompleted[this.subtask] = TaskItemStatus.COMPLETED;
+        payload.reviewSectionsCompleted[this.subtask] = TaskItemStatus.UNDECIDED;
+
+        delete payload.reviewGroupDecisions['TARGET_PERIOD6_DETAILS'];
       }),
     );
   }

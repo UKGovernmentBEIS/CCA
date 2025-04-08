@@ -19,7 +19,7 @@
           @switch (column.field) {
             @case ('name') {
               @if (isEditable() || row.userId === userId()) {
-                <a [routerLink]="row.userId" govukLink>{{ row | userFullName }}</a>
+                <a [routerLink]="row.userId" class="govuk-link">{{ row | userFullName }}</a>
               } @else {
                 {{ row | userFullName }}
               }
@@ -41,7 +41,7 @@
             }
 
             @case ('deleteBtn') {
-              <a [routerLink]="[row.userId, 'delete']" govukLink>Delete</a>
+              <a [routerLink]="[row.userId, 'delete']" class="govuk-link">Delete</a>
             }
 
             @default {
@@ -55,7 +55,7 @@
 
   @if (isEditable() && regulators()?.length > 0) {
     <div class="govuk-button-group">
-      <button ccaPendingButton govukButton type="submit">Save</button>
+      <button netzPendingButton govukButton type="submit">Save</button>
       <button (click)="refresh()" govukSecondaryButton type="button">Discard changes</button>
     </div>
   }

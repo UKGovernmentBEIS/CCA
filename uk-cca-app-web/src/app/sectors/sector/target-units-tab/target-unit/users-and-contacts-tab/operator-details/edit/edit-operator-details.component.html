@@ -1,6 +1,6 @@
 <govuk-error-summary [form]="form"></govuk-error-summary>
 
-<cca-page-heading>Change user details</cca-page-heading>
+<netz-page-heading>Change user details</netz-page-heading>
 
 <div class="govuk-body">
   <form (ngSubmit)="onSubmit()" [formGroup]="form" data-testid="operator-details-form">
@@ -45,9 +45,9 @@
     <div cca-phone-input formControlName="phoneNumber" label="Phone number 1"></div>
     <div cca-phone-input formControlName="mobileNumber" label="Phone number 2"></div>
 
-    <button ccaPendingButton govukButton type="submit">Confirm and continue</button>
+    <button netzPendingButton govukButton type="submit">Confirm and continue</button>
   </form>
 </div>
 
 <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-<a govukLink [routerLink]="'../'"> Return to: User details </a>
+<a class="govuk-link" [routerLink]="'../'"> Return to: User details </a>

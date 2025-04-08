@@ -2,23 +2,22 @@ import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@a
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { ButtonDirective, LinkDirective } from '@netz/govuk-components';
+import { ButtonDirective } from '@netz/govuk-components';
 import {
   FacilityItemListComponent,
   MANAGE_FACILITIES_SUBTASK,
   TaskItemStatus,
   underlyingAgreementQuery,
 } from '@requests/common';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
 
 @Component({
   selector: 'cca-una-manage-facilities-summary',
   standalone: true,
   imports: [
-    LinkDirective,
     PageHeadingComponent,
     RouterLink,
     ButtonDirective,

@@ -1,0 +1,169 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AdditionalInfoComponent should match snapshot for AdditionalInfoComponent 1`] = `
+<div
+  id="root0"
+>
+  <cca-wizard-step
+    class="ng-untouched ng-pristine ng-valid"
+    heading="Provide any additional information here to support your decision (optional)"
+  >
+    <form
+      class="ng-untouched ng-pristine ng-valid"
+      novalidate=""
+    >
+      
+      <netz-page-heading>
+        <span
+          class="govuk-caption-l"
+        >
+          Reject
+        </span>
+        
+        <h1
+          class="govuk-heading-l"
+        >
+          Provide any additional information here to support your decision (optional)
+        </h1>
+      </netz-page-heading>
+      <div
+        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+        formcontrolname="additionalInfo"
+        govuk-textarea=""
+        hint="This will be included in the official notice."
+      >
+        <label
+          class="govuk-label govuk-visually-hidden"
+          for="additionalInfo"
+          id="l.additionalInfo"
+        >
+           Insert text details
+
+        </label>
+        <div
+          class="govuk-hint"
+          id="additionalInfo-hint"
+        >
+           This will be included in the official notice.
+
+        </div>
+        
+        
+        <textarea
+          aria-describedby="additionalInfo-hint"
+          class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-valid"
+          id="additionalInfo"
+          name="additionalInfo"
+          rows="5"
+        />
+        
+      </div>
+      <cca-multiple-file-input
+        class="ng-untouched ng-pristine ng-valid"
+        formcontrolname="files"
+      >
+        <div
+          class="cca-multi-file-upload cca-multi-file-upload--enhanced"
+        >
+          <div
+            class="cca-multi-file-upload__upload"
+          >
+            <div
+              class="govuk-form-group"
+            >
+              <label
+                class="govuk-label govuk-label--null"
+                for="files"
+                id="l.files"
+              >
+                Upload a file
+              </label>
+              <span
+                class="govuk-hint"
+                id="files-hint-file-size"
+              >
+                 Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
+              </span>
+              
+              
+              
+              <div
+                class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
+              >
+                <input
+                  accept="*/*"
+                  aria-labelledby="l.files ld.files"
+                  class="govuk-file-upload cca-multi-file-upload__input"
+                  id="files"
+                  multiple=""
+                  name="files"
+                  type="file"
+                />
+                <p
+                  class="govuk-body"
+                >
+                  Drag and drop files here or
+                </p>
+                <label
+                  class="govuk-button govuk-button--secondary"
+                  for="files"
+                  id="ld.files"
+                >
+                   Choose files 
+                </label>
+                <div
+                  aria-live="polite"
+                  class="govuk-visually-hidden"
+                  role="status"
+                >
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          <cca-file-upload-list>
+            <div
+              class="cca-multi-file__uploaded-files govuk-body cca-hidden"
+            >
+              
+              
+              <dl
+                class="govuk-summary-list cca-multi-file-upload__list"
+              >
+                
+              </dl>
+              
+              
+              
+              
+              
+            </div>
+            
+          </cca-file-upload-list>
+        </div>
+      </cca-multiple-file-input>
+      <button
+        class="govuk-button"
+        govukbutton=""
+        netzpendingbutton=""
+        type="submit"
+      >
+        Continue
+      </button>
+      
+      
+    </form>
+  </cca-wizard-step>
+  <hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  />
+  <netz-return-to-task-or-action-page>
+    <a
+      govuklink=""
+      href="/undefined"
+    >
+       Return to: Review application for underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</div>
+`;

@@ -9,17 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { MiReportParams } from '../model/miReportParams';
 import { MiReportResult } from '../model/miReportResult';
 import { MiReportSearchResult } from '../model/miReportSearchResult';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -111,7 +111,7 @@ export class MiReportsService {
   public generateCustomReport(
     miReportParams: MiReportParams,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (miReportParams === null || miReportParams === undefined) {
@@ -152,7 +152,7 @@ export class MiReportsService {
       `${this.configuration.basePath}/v1.0/mireports/custom`,
       miReportParams,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -189,7 +189,7 @@ export class MiReportsService {
   public generateReport(
     miReportParams: MiReportParams,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (miReportParams === null || miReportParams === undefined) {
@@ -227,7 +227,7 @@ export class MiReportsService {
     }
 
     return this.httpClient.post<MiReportResult>(`${this.configuration.basePath}/v1.0/mireports`, miReportParams, {
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -240,25 +240,25 @@ export class MiReportsService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getCurrentUserMiReports(): Observable<Array<MiReportSearchResult>>;
+  public getCurrentUserMiReports(): Observable<MiReportSearchResult[]>;
   public getCurrentUserMiReports(
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<MiReportSearchResult>>>;
+  ): Observable<HttpResponse<MiReportSearchResult[]>>;
   public getCurrentUserMiReports(
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<MiReportSearchResult>>>;
+  ): Observable<HttpEvent<MiReportSearchResult[]>>;
   public getCurrentUserMiReports(
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<MiReportSearchResult>>;
+  ): Observable<MiReportSearchResult[]>;
   public getCurrentUserMiReports(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -284,8 +284,8 @@ export class MiReportsService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<MiReportSearchResult>>(`${this.configuration.basePath}/v1.0/mireports/types`, {
-      responseType: <any>responseType_,
+    return this.httpClient.get<MiReportSearchResult[]>(`${this.configuration.basePath}/v1.0/mireports/types`, {
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -298,25 +298,25 @@ export class MiReportsService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getRegulatorRequestTaskTypes(): Observable<Array<string>>;
+  public getRegulatorRequestTaskTypes(): Observable<string[]>;
   public getRegulatorRequestTaskTypes(
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<string>>>;
+  ): Observable<HttpResponse<string[]>>;
   public getRegulatorRequestTaskTypes(
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<string>>>;
+  ): Observable<HttpEvent<string[]>>;
   public getRegulatorRequestTaskTypes(
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<string>>;
+  ): Observable<string[]>;
   public getRegulatorRequestTaskTypes(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -342,8 +342,8 @@ export class MiReportsService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<string>>(`${this.configuration.basePath}/v1.0/mireports/request-task-types`, {
-      responseType: <any>responseType_,
+    return this.httpClient.get<string[]>(`${this.configuration.basePath}/v1.0/mireports/request-task-types`, {
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,

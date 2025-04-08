@@ -7,9 +7,7 @@ export const SECTOR_USER_DETAILS_ROUTES: Routes = [
     path: '',
     data: {
       pageTitle: 'Sector user details',
-      breadcrumb: {
-        resolveText: ({ sectorUserDetails }) => `${sectorUserDetails.firstName} ${sectorUserDetails.lastName}`,
-      },
+      breadcrumb: ({ sectorUserDetails }) => `${sectorUserDetails.firstName} ${sectorUserDetails.lastName}`,
     },
     canActivate: [CanEditSectorUserGuard],
     loadComponent: () => import('./sector-user-details.component').then((c) => c.SectorUserDetailsComponent),

@@ -12,5 +12,5 @@
 
 export interface NotePayload {
   note: string;
-  files?: { [key: string]: string };
+  files?: Record<string, string>;
 }

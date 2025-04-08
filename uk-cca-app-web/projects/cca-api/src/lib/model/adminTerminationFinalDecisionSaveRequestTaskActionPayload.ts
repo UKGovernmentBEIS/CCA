@@ -14,5 +14,5 @@ import { AdminTerminationFinalDecisionReasonDetails } from './adminTerminationFi
 export interface AdminTerminationFinalDecisionSaveRequestTaskActionPayload {
   payloadType?: string;
   adminTerminationFinalDecisionReasonDetails?: AdminTerminationFinalDecisionReasonDetails;
-  sectionsCompleted?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
 }

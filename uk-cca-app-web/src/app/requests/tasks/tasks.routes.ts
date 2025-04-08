@@ -71,6 +71,13 @@ export const TASKS_ROUTES: Routes = [
           ),
       },
       {
+        path: 'underlying-agreement-variation-activation',
+        loadChildren: () =>
+          import('./underlying-agreement-variation-activation/underlying-agreement-variation-activation.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_ROUTES,
+          ),
+      },
+      {
         path: 'admin-termination',
         loadChildren: () =>
           import('./admin-termination/admin-termination.routes').then((r) => r.ADMIN_TERMINATION_ROUTES),
@@ -104,12 +111,24 @@ export const TASKS_ROUTES: Routes = [
           ),
       },
       {
+        path: 'performance-data-download',
+        loadChildren: () =>
+          import('./performance-data-download/performance-data-download.routes').then((r) => r.PERFORMANCE_DATA_ROUTES),
+      },
+      {
+        path: 'performance-data-upload',
+        loadChildren: () =>
+          import('./performance-data-upload/performance-data-upload.routes').then(
+            (r) => r.PERFORMANCE_DATA_UPLOAD_ROUTES,
+          ),
+      },
+      {
         path: 'file-download/:uuid',
-        loadComponent: () => import('@shared/components/file-download/file-download.component'),
+        loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },
       {
         path: 'file-download/:fileType/:uuid',
-        loadComponent: () => import('@shared/components/file-download/file-download.component'),
+        loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },
     ],
   },

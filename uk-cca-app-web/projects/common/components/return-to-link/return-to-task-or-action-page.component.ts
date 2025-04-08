@@ -8,12 +8,11 @@ import {
   selectType,
   TYPE_AWARE_STORE,
 } from '@netz/common/store';
-import { LinkDirective } from '@netz/govuk-components';
 
 @Component({
   selector: 'netz-return-to-task-or-action-page',
   standalone: true,
-  imports: [RouterLinkWithHref, LinkDirective],
+  imports: [RouterLinkWithHref],
   template: `<a govukLink [routerLink]="returnToUrl()"> Return to: {{ returnToText() }} </a> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

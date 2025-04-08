@@ -1,6 +1,6 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { ContactTypeEnum } from '@shared/pipes';
-import { transformPhoneNumber } from '@shared/utils/phone';
+import { transformPhoneNumber } from '@shared/utils';
 
 import { CcaOperatorUserDetailsDTO } from 'cca-api';
 

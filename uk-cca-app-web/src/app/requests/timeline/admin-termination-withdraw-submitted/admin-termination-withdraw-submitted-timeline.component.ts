@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
-import { SummaryComponent } from '@shared/components/summary';
+import { SummaryComponent } from '@shared/components';
 
 import { AdminTerminationWithdrawSubmittedRequestActionPayload } from 'cca-api';
 

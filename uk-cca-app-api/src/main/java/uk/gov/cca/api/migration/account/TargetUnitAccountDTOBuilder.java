@@ -1,6 +1,7 @@
 package uk.gov.cca.api.migration.account;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,9 @@ import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
+import uk.gov.cca.api.migration.MigrationConstants;
 import uk.gov.cca.api.migration.MigrationEndpoint;
+import uk.gov.cca.api.migration.MigrationUtil;
 import uk.gov.netz.api.common.domain.PhoneNumberDTO;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.referencedata.domain.Country;
@@ -45,12 +48,12 @@ public class TargetUnitAccountDTOBuilder {
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .emissionTradingScheme(CcaEmissionTradingScheme.DUMMY_EMISSION_TRADING_SCHEME)
                 .name(targetUnitVO.getOperatorName())
-                .businessId(StringUtils.replace(targetUnitVO.getTuId(), "/", "-"))
-                .operatorType(TargetUnitAccountOperatorType.LIMITED_COMPANY)
+                .businessId(MigrationUtil.convertLegacyToCcaBusinessId(targetUnitVO.getTargetUnitId()))
+                .operatorType(getTargetUnitAccountOperatorType(targetUnitVO.getOperatorType()))
                 .isCompanyRegistrationNumber(StringUtils.isNotBlank(targetUnitVO.getCompanyRegistrationNumber()))
                 .companyRegistrationNumber(targetUnitVO.getCompanyRegistrationNumber())
-                .registrationNumberMissingReason(StringUtils.isNotBlank(targetUnitVO.getCompanyRegistrationNumber()) ? targetUnitVO.getCompanyRegistrationNumber() : REGISTRATION_NUMBER_MISSING_REASON)
-                .financialIndependenceStatus(FinancialIndependenceStatus.NON_FINANCIALLY_INDEPENDENT)
+                .registrationNumberMissingReason(StringUtils.isNotBlank(targetUnitVO.getCompanyRegistrationNumber()) ? null : REGISTRATION_NUMBER_MISSING_REASON)
+                .financialIndependenceStatus(Boolean.TRUE.equals(targetUnitVO.getFinanciallyIndependent()) ? FinancialIndependenceStatus.FINANCIALLY_INDEPENDENT : FinancialIndependenceStatus.NON_FINANCIALLY_INDEPENDENT)
                 .sicCode(targetUnitVO.getSicCode())
                 .sectorAssociationId(sectorId)
                 .subsectorAssociationId(subSectorId)
@@ -59,6 +62,7 @@ public class TargetUnitAccountDTOBuilder {
                 .responsiblePerson(constructTargetUnitAccountContactDTO(targetUnitVO.getResponsiblePerson(), legacyCountries))
                 .administrativeContactDetails(constructTargetUnitAccountContactDTO(targetUnitVO.getAdministrativeContact(), legacyCountries))
                 .creationDate(LocalDateTime.now())
+                .createdBy(MigrationConstants.MIGRATION_PROCESS_USER)
                 .build();
     }
     
@@ -98,6 +102,16 @@ public class TargetUnitAccountDTOBuilder {
         }
 
         return countryRepository.findByName(legacyCountryPair.get().getValue()).map(Country::getCode).orElse(null);
+    }
+    
+    private TargetUnitAccountOperatorType getTargetUnitAccountOperatorType(String operatorType) {
+        if (operatorType == null) {
+            return TargetUnitAccountOperatorType.NONE;
+        }
+        return Arrays.stream(TargetUnitAccountOperatorType.values())
+                .filter(type -> type.getName().equalsIgnoreCase(operatorType))
+                .findFirst()
+                .orElse(TargetUnitAccountOperatorType.NONE);
     }
 
 }

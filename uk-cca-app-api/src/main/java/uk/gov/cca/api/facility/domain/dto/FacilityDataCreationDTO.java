@@ -1,12 +1,14 @@
 package uk.gov.cca.api.facility.domain.dto;
 
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,6 +28,13 @@ public class FacilityDataCreationDTO {
     @NotNull
     @PastOrPresent
     private LocalDateTime createdDate;
+
+    @NotNull
+    private String siteName;
+
+    @NotNull
+    @Valid
+    private AccountAddressDTO address;
 
     private LocalDate chargeStartDate;
 }

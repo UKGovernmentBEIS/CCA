@@ -1,5 +1,5 @@
 import { SummaryFactory } from '@shared/components';
-import { transformAttachmentsToDownloadableFiles } from '@shared/utils';
+import { transformAttachmentsAndFileUUIDsToDownloadableFiles } from '@shared/utils';
 
 import { UnderlyingAgreementFacilityReviewDecision, UnderlyingAgreementReviewDecision } from 'cca-api';
 
@@ -24,7 +24,7 @@ export function addDecisionSummaryData(
     })
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsToDownloadableFiles(decision?.details?.files, attachments, downloadUrl),
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(decision?.details?.files, attachments, downloadUrl),
       { change: isEditable },
     );
 }
@@ -55,7 +55,7 @@ export function addFacilityDecisionSummaryData(
     })
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsToDownloadableFiles(decision?.details?.files, attachments, downloadUrl),
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(decision?.details?.files, attachments, downloadUrl),
       { change: isEditable },
     );
 }

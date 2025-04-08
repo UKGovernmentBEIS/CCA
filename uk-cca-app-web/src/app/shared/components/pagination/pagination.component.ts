@@ -12,8 +12,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { distinctUntilChanged, map, tap } from 'rxjs';
 
-import { ScrollService } from '@netz/govuk-components';
-
 /**
  * Marked for refactor
  * Remove HMCTS specific scss, new govuk-frontend includes pagination, move to @netz/govuk-components
@@ -42,10 +40,7 @@ export class PaginationComponent implements OnChanges {
     tap((page) => this.currentPageChange.emit(page)),
   );
 
-  constructor(
-    public readonly route: ActivatedRoute,
-    private readonly _: ScrollService,
-  ) {}
+  constructor(public readonly route: ActivatedRoute) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.count || changes?.pageSize) {

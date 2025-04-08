@@ -12,6 +12,7 @@
 
 export interface PaymentConfirmRequestTaskPayload {
   payloadType?: string;
+  sendEmailNotification?: boolean;
   paymentRefNum?: string;
   paymentDate?: string;
   paidByFullName?: string;

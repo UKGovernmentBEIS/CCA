@@ -1,16 +1,16 @@
-import { TaskItem, TaskSection } from '@netz/common/model';
-import { UNAApplicationRequestTaskPayload } from '@requests/common';
+import { TaskSection } from '@netz/common/model';
+import { transformFacilities } from '@requests/common';
 
-const routePrefix = 'underlying-agreement-submitted';
+import { Facility } from 'cca-api';
 
-export function getAllUnderlyingAgreementSections(payload: UNAApplicationRequestTaskPayload): TaskSection[] {
+export function getAllUnderlyingAgreementSections(facilities: Facility[], prefix = ''): TaskSection[] {
   return [
     {
       title: 'Target unit',
       tasks: [
         {
           status: '',
-          link: `${routePrefix}/review-target-unit-details`,
+          link: `${prefix}review-target-unit-details`,
           linkText: 'Target unit details',
         },
       ],
@@ -20,10 +20,10 @@ export function getAllUnderlyingAgreementSections(payload: UNAApplicationRequest
       tasks: [
         {
           status: '',
-          link: `${routePrefix}/manage-facilities`,
+          link: `${prefix}manage-facilities`,
           linkText: 'Manage facilities list',
         },
-        ...getAllFacilities(payload),
+        ...transformFacilities(facilities, [], null, prefix),
       ],
     },
     {
@@ -31,12 +31,12 @@ export function getAllUnderlyingAgreementSections(payload: UNAApplicationRequest
       tasks: [
         {
           status: '',
-          link: `${routePrefix}/target-period-5`,
+          link: `${prefix}target-period-5`,
           linkText: 'TP5 (2021-2022)',
         },
         {
           status: '',
-          link: `${routePrefix}/target-period-6`,
+          link: `${prefix}target-period-6`,
           linkText: 'TP6 (2024)',
         },
       ],
@@ -46,20 +46,10 @@ export function getAllUnderlyingAgreementSections(payload: UNAApplicationRequest
       tasks: [
         {
           status: '',
-          link: `${routePrefix}/authorisation-additional-evidence`,
+          link: `${prefix}authorisation-additional-evidence`,
           linkText: 'Authorisation and additional evidence',
         },
       ],
     },
   ];
-}
-
-function getAllFacilities(payload: UNAApplicationRequestTaskPayload): TaskItem[] {
-  return (
-    payload?.underlyingAgreement?.facilities?.map((facility) => ({
-      status: '',
-      link: `${routePrefix}/facility/${facility.facilityId}`,
-      linkText: `${facility.facilityDetails.name} (${facility.facilityId})`,
-    })) ?? []
-  );
 }

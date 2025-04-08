@@ -4,9 +4,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
+import { PageHeadingComponent } from '@netz/common/components';
 import { GovukComponentsModule } from '@netz/govuk-components';
 
-import { PageHeadingComponent } from '../page-heading/page-heading.component';
 import { WizardStepComponent } from './wizard-step.component';
 
 describe('WizardStepComponent', () => {

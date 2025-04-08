@@ -93,7 +93,7 @@ class RequestTaskReleaseControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(appUser, "releaseTask", "1");
+            .authorize(appUser, "releaseTask", "1", null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.delete(BASE_PATH + "/" + 1)
             .contentType(MediaType.APPLICATION_JSON))

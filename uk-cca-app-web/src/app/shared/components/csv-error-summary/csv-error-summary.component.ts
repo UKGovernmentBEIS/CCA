@@ -1,4 +1,4 @@
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -14,12 +14,13 @@ import { Title } from '@angular/platform-browser';
 import { map, Observable, startWith, tap } from 'rxjs';
 
 import { DetailsComponent, FormService } from '@netz/govuk-components';
-import { NestedMessageValidationError } from '@shared/components';
+
+import { NestedMessageValidationError } from './nested-message-validation-error.interface';
 
 @Component({
   selector: 'cca-csv-error-summary',
   standalone: true,
-  imports: [AsyncPipe, DetailsComponent, JsonPipe],
+  imports: [AsyncPipe, DetailsComponent],
   templateUrl: './csv-error-summary.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

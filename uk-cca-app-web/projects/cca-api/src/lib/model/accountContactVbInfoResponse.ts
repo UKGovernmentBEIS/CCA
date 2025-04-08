@@ -12,7 +12,7 @@
 import { AccountContactVbInfoDTO } from './accountContactVbInfoDTO';
 
 export interface AccountContactVbInfoResponse {
-  contacts?: Array<AccountContactVbInfoDTO>;
+  contacts?: AccountContactVbInfoDTO[];
   editable?: boolean;
   totalItems?: number;
 }

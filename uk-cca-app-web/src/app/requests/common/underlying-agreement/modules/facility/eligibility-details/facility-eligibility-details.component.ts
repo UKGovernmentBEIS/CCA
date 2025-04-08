@@ -13,14 +13,13 @@ import {
   RadioOptionComponent,
   SelectComponent,
 } from '@netz/govuk-components';
-import { AccountAddressInputComponent, FileInputComponent, WizardStepComponent } from '@shared/components';
-import { TextInputComponent } from '@shared/components/text-input/text-input.component';
-import { transformFilesToAttachments, transformFilesToUUIDsList } from '@shared/utils';
+import { FileInputComponent, TextInputComponent, WizardStepComponent } from '@shared/components';
+import { transformFilesToUUIDsList } from '@shared/utils';
 
 import { EligibilityDetailsAndAuthorisation } from 'cca-api';
 
 import { underlyingAgreementQuery } from '../../../+state';
-import { AgreementTypeEnum, ApplicationReasonTypePipe, CaNameEnum } from '../../../pipes';
+import { AgreementTypeEnum, CaNameEnum } from '../../../pipes';
 import { FACILITIES_SUBTASK, FacilityWizardStep } from '../../../underlying-agreement.types';
 import {
   FACILITY_ELIGIBILITY_DETAILS_FORM,
@@ -36,8 +35,6 @@ import {
     RadioComponent,
     RadioOptionComponent,
     ConditionalContentDirective,
-    ApplicationReasonTypePipe,
-    AccountAddressInputComponent,
     TextInputComponent,
     SelectComponent,
     FileInputComponent,
@@ -151,20 +148,15 @@ export class FacilityEligibilityDetailsComponent {
   }
 
   onSubmit() {
-    const payload = this.requestTaskStore.select(underlyingAgreementQuery.selectPayload)();
-    this.requestTaskStore.setPayload({ ...payload, currentFacilityId: this.facilityId });
-    const attachments = transformFilesToAttachments([this.form.value.permitFile]);
+    const facility = {
+      facilityId: this.facilityId,
+      eligibilityDetailsAndAuthorisation: {
+        ...this.form.value,
+        permitFile: transformFilesToUUIDsList(this.form.value.permitFile),
+      },
+    };
     this.taskService
-      .saveSubtask(FACILITIES_SUBTASK, FacilityWizardStep.ELIGIBILITY_DETAILS, this.activatedRoute, {
-        facility: {
-          facilityId: this.facilityId,
-          eligibilityDetailsAndAuthorisation: {
-            ...this.form.value,
-            permitFile: transformFilesToUUIDsList(this.form.value.permitFile),
-          },
-        },
-        attachments,
-      })
+      .saveSubtask(FACILITIES_SUBTASK, FacilityWizardStep.ELIGIBILITY_DETAILS, this.activatedRoute, facility)
       .subscribe();
   }
 }

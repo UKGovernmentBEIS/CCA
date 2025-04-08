@@ -20,24 +20,7 @@ import { UnderlyingAgreementVariationCancelTaskComponent } from './underlying-ag
     AdminTerminationCancelTaskComponent,
     UnderlyingAgreementVariationCancelTaskComponent,
   ],
-  template: `
-    <netz-cancel-task (cancelled)="cancel()">
-      @switch (requestTaskType) {
-        @case ('UNDERLYING_AGREEMENT_APPLICATION_SUBMIT') {
-          <cca-underlying-agreement-cancel-task />
-        }
-        @case ('UNDERLYING_AGREEMENT_APPLICATION_REVIEW') {
-          <cca-underlying-agreement-cancel-task />
-        }
-        @case ('ADMIN_TERMINATION_APPLICATION_SUBMIT') {
-          <cca-admin-termination-cancel-task />
-        }
-        @case ('UNDERLYING_AGREEMENT_VARIATION_SUBMIT') {
-          <cca-underlying-agreement-variation-cancel-task />
-        }
-      }
-    </netz-cancel-task>
-  `,
+  templateUrl: './cancel-task.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CancelTaskComponent {

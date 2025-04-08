@@ -20,5 +20,5 @@ export interface RegulatorInvitedUserDTO {
   jobTitle: string;
   phoneNumber: string;
   mobileNumber?: string;
-  permissions: { [key: string]: 'NONE' | 'VIEW_ONLY' | 'EXECUTE' };
+  permissions: Record<string, 'NONE' | 'VIEW_ONLY' | 'EXECUTE'>;
 }

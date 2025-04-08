@@ -11,7 +11,6 @@ import { LabelSizeType } from './label-size.type';
 
 /*
   eslint-disable
-  @angular-eslint/prefer-on-push-component-change-detection,
   @typescript-eslint/no-empty-function,
   @angular-eslint/component-selector
 */

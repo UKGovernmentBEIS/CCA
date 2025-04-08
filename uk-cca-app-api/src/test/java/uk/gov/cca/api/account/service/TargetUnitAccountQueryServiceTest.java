@@ -1,17 +1,5 @@
 package uk.gov.cca.api.account.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,13 +8,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-
 import uk.gov.cca.api.account.domain.CcaEmissionTradingScheme;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountHeaderInfoDTO;
 import uk.gov.cca.api.account.repository.TargetUnitAccountRepository;
@@ -35,6 +23,19 @@ import uk.gov.cca.api.account.transform.TargetUnitAccountMapper;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TargetUnitAccountQueryServiceTest {
@@ -93,6 +94,33 @@ class TargetUnitAccountQueryServiceTest {
         //verify
         assertThat(actualList).containsExactly(accountDTO);
         verify(repository, times(1)).findAllByIdIn(accountIds);
+    }
+
+    @Test
+    void getSectorAssociationIdsByAccountIds() {
+        Long accountId = 1L;
+        List<Long> accountIds = List.of(accountId);
+        LocalDateTime now = LocalDateTime.now();
+        TargetUnitAccount account = TargetUnitAccount.builder()
+                .name("name")
+                .subsectorAssociationId(1L)
+                .emissionTradingScheme(CcaEmissionTradingScheme.DUMMY_EMISSION_TRADING_SCHEME)
+                .competentAuthority(CompetentAuthorityEnum.ENGLAND)
+                .operatorType(TargetUnitAccountOperatorType.PARTNERSHIP)
+                .companyRegistrationNumber("companyRegistrationNumber")
+                .sicCode("sicCode")
+                .creationDate(now)
+                .sectorAssociationId(123L)
+                .status(TargetUnitAccountStatus.NEW)
+                .build();
+
+        when(repository.findAllByIdIn(accountIds)).thenReturn(List.of(account));
+
+        Set<Long> results = service.getSectorAssociationIdsByAccountIds(accountIds);
+
+        verify(repository, times(1)).findAllByIdIn(accountIds);
+
+        assertEquals(Set.of(123L), results);
     }
 
     @Test
@@ -208,6 +236,30 @@ class TargetUnitAccountQueryServiceTest {
         assertEquals(list, result);
 
         verify(repository).findTargetUnitAccountNoticeRecipientsByAccountId(accountId);
+    }
+    
+    @Test
+    void findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedDuringActivatedYearOrTerminatedBetween() {
+    	Long sectorAssociationId = 1L;
+    	LocalDateTime acceptedDate = LocalDateTime.now();
+    	LocalDateTime terminatedDateFrom = LocalDateTime.now();
+		LocalDateTime terminatedDateTo = LocalDateTime.now();
+		
+		List<TargetUnitAccountBusinessInfoDTO> accounts = List.of(
+				TargetUnitAccountBusinessInfoDTO.builder().accountId(1L).businessId("1").build()
+				);
+		
+		when(repository.findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedBetween(
+				sectorAssociationId, acceptedDate, terminatedDateFrom, terminatedDateTo)).thenReturn(accounts);
+		
+		var result = service
+				.findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedDuringActivatedYearOrTerminatedBetween(
+						sectorAssociationId, acceptedDate, terminatedDateFrom, terminatedDateTo);
+		
+		assertThat(result).containsExactlyElementsOf(accounts);
+		
+		verify(repository, times(1)).findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedBetween(
+				sectorAssociationId, acceptedDate, terminatedDateFrom, terminatedDateTo);
     }
 
     private TargetUnitAccount buildAccount(Long id, String accountName, String businessId, TargetUnitAccountStatus status, Long sectorAssociationId) {

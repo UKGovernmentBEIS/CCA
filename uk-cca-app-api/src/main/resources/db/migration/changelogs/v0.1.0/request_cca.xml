@@ -6,14 +6,15 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
 
     <changeSet id="0_1_0_POPULATE_REQUEST_TYPE_TABLE" author="P70628">
+    	<validCheckSum>1:any</validCheckSum>
         <sql>
             INSERT INTO public.request_type
-            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually)
-            VALUES(nextval('request_type_seq'), 'TARGET_UNIT_ACCOUNT_CREATION', 'Target unit account creation', 'PROCESS_TARGET_UNIT_ACCOUNT_CREATION', '', false, true, false, true);
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'TARGET_UNIT_ACCOUNT_CREATION', 'Target unit account creation', 'PROCESS_TARGET_UNIT_ACCOUNT_CREATION', '', false, true, false, true, 'ACCOUNT');
 
             INSERT INTO public.request_type
-            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually)
-            VALUES(nextval('request_type_seq'), 'UNDERLYING_AGREEMENT', 'Underlying agreement', 'PROCESS_UNDERLYING_AGREEMENT', '', true, true, false, false);
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'UNDERLYING_AGREEMENT', 'Underlying agreement', 'PROCESS_UNDERLYING_AGREEMENT', '', true, true, false, false, 'ACCOUNT');
         </sql>
     </changeSet>
 
@@ -43,10 +44,11 @@
     </changeSet>
 
     <changeSet id="0_1_0_ADD_ADMIN_TERMINATION_REQUEST_TYPE" author="apostolouk@unisystems.gr">
+    	<validCheckSum>1:any</validCheckSum>
         <sql>
             INSERT INTO request_type
-            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually)
-            VALUES(nextval('request_type_seq'), 'ADMIN_TERMINATION', 'Admin termination', 'PROCESS_ADMIN_TERMINATION', 'UNA', false, true, false, true);
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'ADMIN_TERMINATION', 'Admin termination', 'PROCESS_ADMIN_TERMINATION', 'UNA', false, true, false, true, 'ACCOUNT');
         </sql>
         <rollback>
             <sql>
@@ -531,10 +533,11 @@
     </changeSet>
     
     <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_VARIATION_REQUEST_TYPE" author="apostolouk@unisystems.gr">
+    	<validCheckSum>1:any</validCheckSum>
         <sql>
             INSERT INTO request_type
-            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually)
-            VALUES(nextval('request_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION', 'Underlying agreement variation', 'PROCESS_UNDERLYING_AGREEMENT_VARIATION', 'UNA', false, true, false, true);
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION', 'Underlying agreement variation', 'PROCESS_UNDERLYING_AGREEMENT_VARIATION', 'UNA', false, true, false, true, 'ACCOUNT');
         </sql>
         <rollback>
             <sql>
@@ -927,6 +930,492 @@
                 <column name="expiration_key" value="" />
                 <where>code = 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION'</where>
             </update>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_populate_request_resource_with_sectors_for_every_account" author="apostolouk@unisystems.gr">
+        	<sql>
+				insert into request_resource (resource_type, resource_id, request_id)
+				select 'SECTOR_ASSOCIATION', atu.sector_association_id, rr.request_id 
+				from request_resource rr
+				inner join account_target_unit atu
+				on rr.resource_id::bigint = atu.id 
+				where rr.resource_type = 'ACCOUNT';
+            </sql>
+        <rollback>
+            <sql>
+				delete from request_resource where resource_type = 'SECTOR_ASSOCIATION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERFORMANCE_DATA_DOWNLOAD" author="P70383">
+    	<validCheckSum>1:any</validCheckSum>
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'PERFORMANCE_DATA_DOWNLOAD', 'Download performance data', 'PROCESS_PERFORMANCE_DATA_DOWNLOAD', 'SYSTEM', false, true, false, true, 'SECTOR_ASSOCIATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'PERFORMANCE_DATA_DOWNLOAD';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERFORMANCE_DATA_DOWNLOAD_SUBMIT_REQUEST_TASK_TYPE" author="P70383">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'PERFORMANCE_DATA_DOWNLOAD_SUBMIT', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'PERFORMANCE_DATA_DOWNLOAD'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'PERFORMANCE_DATA_DOWNLOAD_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_PERFORMANCE_DATA_DOWNLOAD_SUBMIT_REQUEST_TASK_TYPE" author="P70383">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+                (nextval('request_task_action_type_seq'), 'PERFORMANCE_DATA_DOWNLOAD_GENERATE', false),
+                (nextval('request_task_action_type_seq'), 'PERFORMANCE_DATA_DOWNLOAD_COMPLETE', false);
+
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'PERFORMANCE_DATA_DOWNLOAD_SUBMIT'
+              AND rtat.code in ('PERFORMANCE_DATA_DOWNLOAD_GENERATE', 'PERFORMANCE_DATA_DOWNLOAD_COMPLETE');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code in (
+                'PERFORMANCE_DATA_DOWNLOAD_GENERATE', 'PERFORMANCE_DATA_DOWNLOAD_COMPLETE')
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('PERFORMANCE_DATA_DOWNLOAD_GENERATE', 'PERFORMANCE_DATA_DOWNLOAD_COMPLETE');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERFORMANCE_DATA_GENERATE" author="P70383">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'PERFORMANCE_DATA_GENERATE', 'Generate spreadsheets of performance data', 'PROCESS_PERFORMANCE_DATA_GENERATE', 'SYSTEM', false, true, false, true, 'SECTOR_ASSOCIATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'PERFORMANCE_DATA_GENERATE';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERFORMANCE_DATA_SPREADSHEET_GENERATE" author="P70383">
+    	<validCheckSum>1:any</validCheckSum>
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'PERFORMANCE_DATA_SPREADSHEET_GENERATE', 'Generate spreadsheet of performance data', 'PROCESS_PERFORMANCE_DATA_SPREADSHEET_GENERATE', 'SYSTEM', false, true, false, true, 'ACCOUNT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'PERFORMANCE_DATA_SPREADSHEET_GENERATE';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_CAN_CREATE_MANUALLY_FOR_PERFORMANCE_DATA_CODES" author="vvitzilaios">
+    	<validCheckSum>1:any</validCheckSum>
+        <sql>
+            UPDATE request_type
+            SET can_create_manually = false
+            WHERE code IN ('PERFORMANCE_DATA_GENERATE', 'PERFORMANCE_DATA_SPREADSHEET_GENERATE');
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE request_type
+                SET can_create_manually = true
+                WHERE code in ('PERFORMANCE_DATA_GENERATE', 'PERFORMANCE_DATA_SPREADSHEET_GENERATE');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERFORMANCE_DATA_UPLOAD" author="P70383">
+    	<validCheckSum>1:any</validCheckSum>
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'PERFORMANCE_DATA_UPLOAD', 'Upload performance data', 'PROCESS_PERFORMANCE_DATA_UPLOAD', 'SYSTEM', false, true, false, true, 'SECTOR_ASSOCIATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'PERFORMANCE_DATA_UPLOAD';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERFORMANCE_DATA_UPLOAD_SUBMIT_REQUEST_TASK_TYPE" author="P70383">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'PERFORMANCE_DATA_UPLOAD_SUBMIT', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'PERFORMANCE_DATA_UPLOAD'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'PERFORMANCE_DATA_UPLOAD_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_PERFORMANCE_DATA_UPLOAD_SUBMIT_REQUEST_TASK_TYPE" author="P70383">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+                (nextval('request_task_action_type_seq'), 'PERFORMANCE_DATA_UPLOAD_ATTACH_REPORT_PACKAGE', false),
+                (nextval('request_task_action_type_seq'), 'PERFORMANCE_DATA_UPLOAD_PROCESSING', false),
+                (nextval('request_task_action_type_seq'), 'PERFORMANCE_DATA_UPLOAD_COMPLETE', false);
+
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'PERFORMANCE_DATA_UPLOAD_SUBMIT'
+              AND rtat.code in ('PERFORMANCE_DATA_UPLOAD_ATTACH_REPORT_PACKAGE', 'PERFORMANCE_DATA_UPLOAD_PROCESSING', 'PERFORMANCE_DATA_UPLOAD_COMPLETE');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code in (
+                'PERFORMANCE_DATA_UPLOAD_ATTACH_REPORT_PACKAGE', 'PERFORMANCE_DATA_UPLOAD_PROCESSING', 'PERFORMANCE_DATA_UPLOAD_COMPLETE')
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('PERFORMANCE_DATA_UPLOAD_ATTACH_REPORT_PACKAGE', 'PERFORMANCE_DATA_UPLOAD_PROCESSING', 'PERFORMANCE_DATA_UPLOAD_COMPLETE');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERFORMANCE_DATA_PROCESSING" author="P70383">
+    	<validCheckSum>1:any</validCheckSum>
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'PERFORMANCE_DATA_PROCESSING', 'Process spreadsheets of performance data', 'PROCESS_PERFORMANCE_DATA_PROCESSING', 'SYSTEM', false, false, false, false, 'SECTOR_ASSOCIATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'PERFORMANCE_DATA_PROCESSING';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PERFORMANCE_DATA_SPREADSHEET_PROCESSING" author="P70383">
+    	<validCheckSum>1:any</validCheckSum>
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING', 'Processing performance data spreadsheet of account', 'PROCESS_PERFORMANCE_DATA_SPREADSHEET_PROCESSING', 'UNA', false, false, false, false, 'ACCOUNT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_PERFORMANCE_DATA_GENERATE_and_PERFORMANCE_DATA_SPREADSHEET_GENERATE_not_display_in_progress" author="P70383">
+        <sql>
+            UPDATE request_type
+            SET displayed_in_progress = false
+            WHERE code IN ('PERFORMANCE_DATA_GENERATE', 'PERFORMANCE_DATA_SPREADSHEET_GENERATE');
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE request_type
+                SET displayed_in_progress = true
+                WHERE code IN ('PERFORMANCE_DATA_GENERATE', 'PERFORMANCE_DATA_SPREADSHEET_GENERATE');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_SUBSISTENCE_FEES_RUN" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'SUBSISTENCE_FEES_RUN', 'Generate a new subsistence fees run', 'PROCESS_SUBSISTENCE_FEES_RUN', 'CA', false, true, false, true, 'CA');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'SUBSISTENCE_FEES_RUN';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_ADD_SECTOR_MOA" author="apostolouk@unisystems.gr">
+    	<validCheckSum>1:any</validCheckSum>
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'SECTOR_MOA', 'Generate a Sector MoA', 'PROCESS_SECTOR_MOA', 'SECTOR', false, false, false, false, 'SECTOR_ASSOCIATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'SECTOR_MOA';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_ADD_TARGET_UNIT_MOA" author="apostolouk@unisystems.gr">
+    	<validCheckSum>1:any</validCheckSum>
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'TARGET_UNIT_MOA', 'Generate a Target Unit MoA', 'PROCESS_TARGET_UNIT_MOA', 'UNA', false, false, false, false, 'ACCOUNT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'TARGET_UNIT_MOA';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_ADD_MOA_PAYMENT" author="apostolouk@unisystems.gr">
+    	<validCheckSum>1:any</validCheckSum>
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'MOA_PAYMENT', 'Generate a MoA payment', 'PROCESS_MOA_PAYMENT', 'SECTOR', false, true, false, false, 'SECTOR_ASSOCIATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'MOA_PAYMENT';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_ADD_MOA_PAYMENT_SUBMIT_REQUEST_TASK_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'MOA_PAYMENT_SUBMIT', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'MOA_PAYMENT'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'MOA_PAYMENT_SUBMIT';
+            </sql>
+        </rollback>
+        
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_HOLD_HISTORY_OF_PERFORMANCE_DATA_SPREADSHEET_PROCESSING_REQUEST_TYPE" author="P70383">
+        <sql>
+            UPDATE request_type
+            set hold_history = true
+            WHERE code = 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING';
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE request_type
+                set hold_history = false
+                WHERE code = 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    
+    <changeSet id="0_1_0_add_request_type_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD" author="P35066">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD', 'Performance Account Template (PAT) Data Upload', 'PROCESS_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD', 'SYSTEM', false, true, false, true, 'SECTOR_ASSOCIATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_request_task_type_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT" author="P35066">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT', true, null, null,
+                   (SELECT id FROM request_type WHERE code = 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_request_task_action_types_for_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT" author="P35066">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+                (nextval('request_task_action_type_seq'), 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_ATTACH_REPORT_PACKAGE', false),
+                (nextval('request_task_action_type_seq'), 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PROCESSING', false),
+                (nextval('request_task_action_type_seq'), 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETE', false);
+
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT'
+              AND rtat.code in ('PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_ATTACH_REPORT_PACKAGE', 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PROCESSING', 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETE');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code in (
+                'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_ATTACH_REPORT_PACKAGE', 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PROCESSING', 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETE')
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_ATTACH_REPORT_PACKAGE', 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PROCESSING', 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_COMPLETE');
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_add_request_type_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING" author="P35066">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING', 'Process performance account template data processing', 'PROCESS_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING', 'SYSTEM', false, false, false, false, 'SECTOR_ASSOCIATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_add_request_type_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING" author="P35066">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING', 'Processing performance data spreadsheet of account', 'PROCESS_PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING', 'UNA', false, false, false, false, 'ACCOUNT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_DELETE_EXISTING_MOA_PAYMENT_REQUEST_TASKS_AND_REQUESTS" author="apostolouk@unisystems.gr">
+        <sql>
+        	DELETE FROM request_task
+            WHERE type_id IN (
+                SELECT id from request_task_type where code = 'MOA_PAYMENT_SUBMIT'
+                );
+                
+            DELETE FROM request_resource
+            WHERE request_id IN (
+                SELECT id from request where type_id IN (SELECT id from request_type where code = 'MOA_PAYMENT')
+                );
+                
+            DELETE FROM request
+            WHERE type_id IN (
+                SELECT id from request_type where code = 'MOA_PAYMENT'
+                );
+        </sql>
+    </changeSet>
+    
+    <changeSet id="0_1_0_DELETE_MOA_PAYMENT_SUBMIT_REQUEST_TASK_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+        	DELETE FROM request_task_type
+            WHERE code = 'MOA_PAYMENT_SUBMIT';
+        </sql>
+        <rollback>
+            <sql>
+                INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'MOA_PAYMENT_SUBMIT', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'MOA_PAYMENT'));
+            </sql>
+        </rollback>
+    </changeSet>
+
+	<changeSet id="0_1_0_DELETE_MOA_PAYMENT_REQUEST_TYPE" author="apostolouk@unisystems.gr">
+        <sql>
+        	DELETE FROM request_type
+            WHERE code = 'MOA_PAYMENT';
+        </sql>
+        <rollback>
+            <sql>
+               INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'MOA_PAYMENT', 'Generate a MoA payment', 'PROCESS_MOA_PAYMENT', 'SECTOR', false, true, false, false, 'SECTOR_ASSOCIATION'); 
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_FIX_resource_type_IN_request_type_TABLE" author="P70383">
+        <sql>
+            update request_type set resource_type = 'ACCOUNT' where code in ('PERFORMANCE_DATA_SPREADSHEET_GENERATE', 'UNDERLYING_AGREEMENT');
+
+            update request_type set resource_type = 'SECTOR_ASSOCIATION' where code in ('PERFORMANCE_DATA_GENERATE');
+
+            update request_type set history_category  = 'SYSTEM' where history_category = 'REPORTING';
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_BUY_OUT_SURPLUS_RUN" author="P70383">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'BUY_OUT_SURPLUS_RUN', 'Generate a new buy out surplus run', 'PROCESS_BUY_OUT_SURPLUS_RUN', 'CA', false, true, false, true, 'CA');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'BUY_OUT_SURPLUS_RUN';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_BUY_OUT_SURPLUS_ACCOUNT_PROCESSING" author="P70383">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING', 'Generate a new buy out surplus for target unit account', 'PROCESS_BUY_OUT_SURPLUS_ACCOUNT_PROCESSING', 'UNA', false, false, false, false, 'ACCOUNT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING';
+            </sql>
         </rollback>
     </changeSet>
     

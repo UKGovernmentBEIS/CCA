@@ -5,11 +5,11 @@ import { RouterLink } from '@angular/router';
 
 import { BehaviorSubject, filter, startWith, take } from 'rxjs';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
-import { ButtonDirective, LinkDirective } from '@netz/govuk-components';
-import { CsvErrorSummaryComponent } from '@shared/components';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives/pending-button.directive';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
+import { ButtonDirective } from '@netz/govuk-components';
+
+import { CsvErrorSummaryComponent } from '../csv-error-summary/csv-error-summary.component';
 
 @Component({
   selector: 'cca-csv-wizard-step',
@@ -21,7 +21,6 @@ import { PendingButtonDirective } from '@shared/directives/pending-button.direct
     ButtonDirective,
     PendingButtonDirective,
     ReactiveFormsModule,
-    LinkDirective,
     CsvErrorSummaryComponent,
     ReturnToTaskOrActionPageComponent,
   ],
@@ -36,7 +35,7 @@ export class CsvWizardStepComponent {
   @Input() submitText = 'Continue';
   @Input() hideSubmit: boolean;
   @Input() showReturnLink = false;
-  @Input() showCancelLink: boolean = false;
+  @Input() showCancelLink = false;
   @Input() cancelLinkPath: string;
   @Output() readonly formSubmit = new EventEmitter<UntypedFormGroup>();
 

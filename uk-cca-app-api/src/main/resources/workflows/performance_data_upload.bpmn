@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1wu6qib" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.23.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="PROCESS_PERFORMANCE_DATA_UPLOAD" name="Reporting spreadsheets upload process" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0dngp89</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0dngp89" sourceRef="StartEvent_1" targetRef="PERFORMANCE_DATA_UPLOAD_SUBMIT" />
+    <bpmn:userTask id="PERFORMANCE_DATA_UPLOAD_SUBMIT" name="Upload performance data">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_0dngp89</bpmn:incoming>
+      <bpmn:outgoing>Flow_07p8xfi</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_1nup2so">
+      <bpmn:incoming>Flow_07p8xfi</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_08hxjhh" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_07p8xfi" sourceRef="PERFORMANCE_DATA_UPLOAD_SUBMIT" targetRef="Event_1nup2so" />
+    <bpmn:boundaryEvent id="Event_1489b5u" name="performance data processing completed message" cancelActivity="false" attachedToRef="PERFORMANCE_DATA_UPLOAD_SUBMIT">
+      <bpmn:extensionElements />
+      <bpmn:outgoing>Flow_0a7zfgg</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1ppsur9" messageRef="Message_3h3btcu" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_0c8whcs" name="performance data processing completed" camunda:delegateExpression="#{performanceDataUploadCompletedHandler}">
+      <bpmn:incoming>Flow_0e19u9e</bpmn:incoming>
+      <bpmn:incoming>Flow_1jvcxi6</bpmn:incoming>
+      <bpmn:outgoing>Flow_10p7tu8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_1r68pko">
+      <bpmn:incoming>Flow_10p7tu8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0a7zfgg" sourceRef="Event_1489b5u" targetRef="Activity_0o1npsi" />
+    <bpmn:sequenceFlow id="Flow_10p7tu8" sourceRef="Activity_0c8whcs" targetRef="Event_1r68pko" />
+    <bpmn:serviceTask id="Activity_0o1npsi" name="create csv file" camunda:delegateExpression="#{performanceDataUploadCreateCsvFileHandler}">
+      <bpmn:incoming>Flow_0a7zfgg</bpmn:incoming>
+      <bpmn:outgoing>Flow_0e19u9e</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_15b3rt0" name="csv generation failed" attachedToRef="Activity_0o1npsi">
+      <bpmn:outgoing>Flow_0bot7pk</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_19ii2kd" />
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_1fw5ib6" name="csv generation failed" camunda:delegateExpression="#{performanceDataUploadCsvFailedHandler}">
+      <bpmn:incoming>Flow_0bot7pk</bpmn:incoming>
+      <bpmn:outgoing>Flow_1jvcxi6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0bot7pk" sourceRef="Event_15b3rt0" targetRef="Activity_1fw5ib6" />
+    <bpmn:sequenceFlow id="Flow_0e19u9e" sourceRef="Activity_0o1npsi" targetRef="Activity_0c8whcs" />
+    <bpmn:sequenceFlow id="Flow_1jvcxi6" sourceRef="Activity_1fw5ib6" targetRef="Activity_0c8whcs" />
+  </bpmn:process>
+  <bpmn:message id="Message_3h3btcu" name="reportingSpreadsheetsProcessingCompleted" />
+  <bpmn:message id="Message_084jmma" name="reportingSpreadsheetsGenerateCompleted" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PROCESS_PERFORMANCE_DATA_UPLOAD">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="182" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pfc23y_di" bpmnElement="PERFORMANCE_DATA_UPLOAD_SUBMIT">
+        <dc:Bounds x="410" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1gv7mzr" bpmnElement="Activity_0o1npsi">
+        <dc:Bounds x="550" y="240" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1x9shc1_di" bpmnElement="Activity_1fw5ib6">
+        <dc:Bounds x="550" y="400" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_06lshmo_di" bpmnElement="Activity_0c8whcs">
+        <dc:Bounds x="810" y="240" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1r68pko_di" bpmnElement="Event_1r68pko">
+        <dc:Bounds x="1002" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_06ummgv_di" bpmnElement="Event_1nup2so">
+        <dc:Bounds x="1002" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_036xldn_di" bpmnElement="Event_15b3rt0">
+        <dc:Bounds x="582" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="615" y="333" width="72" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1oz4zel_di" bpmnElement="Event_1489b5u">
+        <dc:Bounds x="442" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="366" y="187" width="87" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0dngp89_di" bpmnElement="Flow_0dngp89">
+        <di:waypoint x="218" y="120" />
+        <di:waypoint x="410" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07p8xfi_di" bpmnElement="Flow_07p8xfi">
+        <di:waypoint x="510" y="120" />
+        <di:waypoint x="1002" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0a7zfgg_di" bpmnElement="Flow_0a7zfgg">
+        <di:waypoint x="460" y="178" />
+        <di:waypoint x="460" y="280" />
+        <di:waypoint x="550" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10p7tu8_di" bpmnElement="Flow_10p7tu8">
+        <di:waypoint x="910" y="280" />
+        <di:waypoint x="1002" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bot7pk_di" bpmnElement="Flow_0bot7pk">
+        <di:waypoint x="600" y="338" />
+        <di:waypoint x="600" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0e19u9e_di" bpmnElement="Flow_0e19u9e">
+        <di:waypoint x="650" y="280" />
+        <di:waypoint x="810" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1jvcxi6_di" bpmnElement="Flow_1jvcxi6">
+        <di:waypoint x="650" y="440" />
+        <di:waypoint x="860" y="440" />
+        <di:waypoint x="860" y="320" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -27,31 +27,34 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OperatorAddressComponent {
-  private readonly route = inject(ActivatedRoute);
+  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly store = inject(CreateTargetUnitStore);
+  private readonly createTargetUnitStore = inject(CreateTargetUnitStore);
 
-  readonly form = inject<FormGroup<AccountAddressFormModel>>(TARGET_UNIT_OPERATOR_ADDRESS_FORM);
+  protected readonly form = inject<FormGroup<AccountAddressFormModel>>(TARGET_UNIT_OPERATOR_ADDRESS_FORM);
 
   onSubmitOperatorAddress() {
-    this.store.updateState({ address: { ...this.form.getRawValue() } });
+    this.createTargetUnitStore.updateState({ address: { ...this.form.getRawValue() } });
 
-    if (this.store.sameAddressWithOperator) {
-      this.store.sameAddressWithOperator = false;
-      this.store.updateState({
-        responsiblePerson: { ...this.store.state.responsiblePerson, address: null },
+    if (this.createTargetUnitStore.sameAddressWithOperator) {
+      this.createTargetUnitStore.sameAddressWithOperator = false;
+
+      this.createTargetUnitStore.updateState({
+        responsiblePerson: { ...this.createTargetUnitStore.state.responsiblePerson, address: null },
       });
-      if (this.store.sameAddressWithResponsiblePerson) {
-        this.store.sameAddressWithResponsiblePerson = false;
-        this.store.updateState({
+
+      if (this.createTargetUnitStore.sameAddressWithResponsiblePerson) {
+        this.createTargetUnitStore.sameAddressWithResponsiblePerson = false;
+
+        this.createTargetUnitStore.updateState({
           administrativeContactDetails: {
-            ...this.store.state.administrativeContactDetails,
+            ...this.createTargetUnitStore.state.administrativeContactDetails,
             address: null,
           },
         });
       }
     }
 
-    this.router.navigate(['..', 'responsible-person'], { relativeTo: this.route });
+    this.router.navigate(['..', 'responsible-person'], { relativeTo: this.activatedRoute });
   }
 }

@@ -9,13 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Determination } from './determination';
 import { UnderlyingAgreementFacilityReviewDecision } from './underlyingAgreementFacilityReviewDecision';
+import { Determination } from './determination';
 
 export interface UnderlyingAgreementSaveFacilityReviewGroupDecisionRequestTaskActionPayload {
   payloadType?: string;
+  determination?: Determination;
   group: string;
   decision: UnderlyingAgreementFacilityReviewDecision;
-  determination?: Determination;
-  reviewSectionsCompleted?: { [key: string]: string };
+  reviewSectionsCompleted?: Record<string, string>;
 }

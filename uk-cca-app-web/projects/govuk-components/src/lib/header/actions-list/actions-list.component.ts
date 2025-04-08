@@ -19,7 +19,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
+
   encapsulation: ViewEncapsulation.None,
 })
 export class HeaderActionsListComponent {}

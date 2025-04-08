@@ -17,6 +17,9 @@ export class AuthorisationAdditionalEvidenceSubmitSideEffect extends SideEffect 
     return of(
       produce(currentPayload, (payload) => {
         payload.sectionsCompleted[this.subtask] = TaskItemStatus.COMPLETED;
+        payload.reviewSectionsCompleted[this.subtask] = TaskItemStatus.UNDECIDED;
+
+        delete payload.reviewGroupDecisions['AUTHORISATION_AND_ADDITIONAL_EVIDENCE'];
       }),
     );
   }

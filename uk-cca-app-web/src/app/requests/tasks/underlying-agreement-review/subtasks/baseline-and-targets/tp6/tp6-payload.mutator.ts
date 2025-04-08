@@ -8,11 +8,12 @@ import {
   BaselineAndTargetPeriodsSubtasks,
   BaseLineAndTargetsReviewStep,
   BaselineDataUserInput,
+  OVERALL_DECISION_SUBTASK,
   TargetCompositionUserInput,
   TaskItemStatus,
   UNAReviewRequestTaskPayload,
 } from '@requests/common';
-import produce from 'immer';
+import { produce } from 'immer';
 
 import { Targets } from 'cca-api';
 
@@ -27,8 +28,10 @@ export class Tp6PayloadMutator extends PayloadMutator {
     switch (step) {
       case BaseLineAndTargetsReviewStep.TARGET_COMPOSITION:
         return this.applyTargetComposition(currentPayload, step, userInput as TargetCompositionUserInput);
+
       case BaseLineAndTargetsReviewStep.ADD_BASELINE_DATA:
         return this.applyBaselineData(currentPayload, step, userInput as BaselineDataUserInput);
+
       case BaseLineAndTargetsReviewStep.ADD_TARGETS:
         return this.applyAddTargets(currentPayload, step, userInput as Targets);
     }
@@ -46,6 +49,15 @@ export class Tp6PayloadMutator extends PayloadMutator {
         of(
           produce(currentPayload, (payload) => {
             payload.reviewSectionsCompleted[this.subtask] = TaskItemStatus.UNDECIDED;
+            delete payload.reviewSectionsCompleted[OVERALL_DECISION_SUBTASK];
+
+            if (payload.determination) {
+              delete payload.determination.type;
+
+              if (payload.determination.type === 'REJECTED') {
+                delete payload.determination.reason;
+              }
+            }
           }),
         ),
       ),
@@ -64,6 +76,15 @@ export class Tp6PayloadMutator extends PayloadMutator {
         of(
           produce(currentPayload, (payload) => {
             payload.reviewSectionsCompleted[this.subtask] = TaskItemStatus.UNDECIDED;
+            delete payload.reviewSectionsCompleted[OVERALL_DECISION_SUBTASK];
+
+            if (payload.determination) {
+              delete payload.determination.type;
+
+              if (payload.determination.type === 'REJECTED') {
+                delete payload.determination.reason;
+              }
+            }
           }),
         ),
       ),
@@ -82,6 +103,15 @@ export class Tp6PayloadMutator extends PayloadMutator {
         of(
           produce(currentPayload, (payload) => {
             payload.reviewSectionsCompleted[this.subtask] = TaskItemStatus.UNDECIDED;
+            delete payload.reviewSectionsCompleted[OVERALL_DECISION_SUBTASK];
+
+            if (payload.determination) {
+              delete payload.determination.type;
+
+              if (payload.determination.type === 'REJECTED') {
+                delete payload.determination.reason;
+              }
+            }
           }),
         ),
       ),

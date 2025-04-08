@@ -9,13 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { FileInfoDTO } from './fileInfoDTO';
-import { RdePayload } from './rdePayload';
 import { RequestActionUserInfo } from './requestActionUserInfo';
+import { RdePayload } from './rdePayload';
+import { FileInfoDTO } from './fileInfoDTO';
 
 export interface RdeSubmittedRequestActionPayload {
   payloadType?: string;
   rdePayload: RdePayload;
-  usersInfo?: { [key: string]: RequestActionUserInfo };
+  usersInfo?: Record<string, RequestActionUserInfo>;
   officialDocument: FileInfoDTO;
 }

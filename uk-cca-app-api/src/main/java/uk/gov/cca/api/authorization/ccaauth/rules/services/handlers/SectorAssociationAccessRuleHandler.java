@@ -3,20 +3,24 @@ package uk.gov.cca.api.authorization.ccaauth.rules.services.handlers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uk.gov.cca.api.authorization.ccaauth.rules.services.SectorAssociationAuthorizationService;
+
+import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.domain.AuthorizationRuleScopePermission;
 import uk.gov.netz.api.authorization.rules.services.AuthorizationResourceRuleHandler;
+import uk.gov.netz.api.authorization.rules.services.authorization.AppAuthorizationService;
+import uk.gov.netz.api.authorization.rules.services.authorization.AuthorizationCriteria;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 
+import java.util.Map;
 import java.util.Set;
 
 @Service("sectorAssociationAccessHandler")
 @RequiredArgsConstructor
 public class SectorAssociationAccessRuleHandler implements AuthorizationResourceRuleHandler {
 
-    private final SectorAssociationAuthorizationService sectorAssociationAuthorizationService;
+    private final AppAuthorizationService appAuthorizationService;
 
     /**
      * @param user the authenticated user
@@ -29,8 +33,16 @@ public class SectorAssociationAccessRuleHandler implements AuthorizationResource
      */
     @Override
     public void evaluateRules(@Valid Set<AuthorizationRuleScopePermission> authorizationRules, AppUser user, String resourceId) {
-        authorizationRules.forEach(
-            rule -> sectorAssociationAuthorizationService.authorize(user, Long.parseLong(resourceId), rule.getPermission())
-        );
+        if (authorizationRules.isEmpty()) {
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+        }
+    	
+    	authorizationRules.forEach(rule -> {
+            AuthorizationCriteria authorizationCriteria = AuthorizationCriteria.builder()
+            		.requestResources(Map.of(CcaResourceType.SECTOR_ASSOCIATION, resourceId))
+                    .permission(rule.getPermission())
+                    .build();
+            appAuthorizationService.authorize(user, authorizationCriteria);
+        });
     }
 }

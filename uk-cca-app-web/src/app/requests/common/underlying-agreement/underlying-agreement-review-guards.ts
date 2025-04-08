@@ -94,11 +94,10 @@ export const canActivateReviewSummary: (
   const isEditable = store.select(requestTaskQuery.selectIsEditable)();
   if (!isEditable) return true;
 
-  const hasDecision = selectDecision(store, route, decisionGroup);
   const reviewSectionCompleted = selectReviewSectionIsCompleted(store, route, subtask);
-
   if (reviewSectionCompleted) return true;
 
+  const hasDecision = selectDecision(store, route, decisionGroup);
   if (!hasDecision) return createUrlTreeFromSnapshot(route, ['../', wizardStep.DECISION]);
 
   return createUrlTreeFromSnapshot(route, ['../', wizardStep.CHECK_YOUR_ANSWERS]);
@@ -124,11 +123,9 @@ export const canActivateReviewDecision: (
   if (change) return true;
 
   const reviewSectionCompleted = selectReviewSectionIsCompleted(store, route, subtask);
-
-  const hasDecision = selectDecision(store, route, decisionGroup);
-
   if (reviewSectionCompleted) return createUrlTreeFromSnapshot(route, ['../', wizardStep.SUMMARY]);
 
+  const hasDecision = selectDecision(store, route, decisionGroup);
   if (hasDecision) return createUrlTreeFromSnapshot(route, ['../', wizardStep.CHECK_YOUR_ANSWERS]);
 
   return true;

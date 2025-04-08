@@ -2,7 +2,7 @@ import { LowerCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
-import { LinkDirective, PanelComponent } from '@netz/govuk-components';
+import { PanelComponent } from '@netz/govuk-components';
 
 import { roleOptions } from '../../types';
 
@@ -19,10 +19,10 @@ import { roleOptions } from '../../types';
         </p>
       </div>
     </div>
-    <a govukLink routerLink="../../" fragment="contacts"> Return to: Contacts </a>
+    <a class="govuk-link" routerLink="../../" fragment="contacts"> Return to: Contacts </a>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LowerCasePipe, PanelComponent, RouterLink, LinkDirective],
+  imports: [LowerCasePipe, PanelComponent, RouterLink],
 })
 export class AddSectorConfirmationComponent {
   route = inject(ActivatedRoute);

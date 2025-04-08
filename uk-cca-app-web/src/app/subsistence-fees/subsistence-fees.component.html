@@ -1,0 +1,46 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <netz-page-heading size="xl">Subsistence fees payment requests</netz-page-heading>
+  </div>
+
+  <div class="govuk-grid-column-one-third govuk-!-padding-top-1">
+    <button
+      govukButton
+      type="button"
+      class="float-right"
+      [disabled]="!canInitiateSubsistenceRun()"
+      (click)="onNewPaymentRequest()"
+    >
+      New payment request
+    </button>
+  </div>
+</div>
+
+@if (!canInitiateSubsistenceRun()) {
+  @if (!isValidChargeDate()) {
+    <div class="govuk-!-margin-bottom-9">
+      <govuk-warning-text assistiveText="">
+        New payment requests will become available after 1 Apr 2025
+      </govuk-warning-text>
+    </div>
+  } @else {
+    @if (isActivePolling()) {
+      <div class="govuk-!-margin-bottom-9">
+        <govuk-warning-text assistiveText="">
+          Payment request run is <a [routerLink]="[]" fragment="workflow-history" class="govuk-link">in progress</a>,
+          you cannot initiate a new one until it has finished
+        </govuk-warning-text>
+      </div>
+    }
+  }
+}
+
+<govuk-tabs [queryParamsHandling]="'replace'">
+  <ng-template govukTabLazy id="sent-subsistence-fees" label="Sent subsistence fees">
+    <cca-sent-subsistence-fees-tab />
+  </ng-template>
+
+  <ng-template govukTabLazy id="workflow-history" label="Workflow history" [badgeNumber]="badgeNumber()">
+    <cca-workflow-history-tab />
+  </ng-template>
+</govuk-tabs>

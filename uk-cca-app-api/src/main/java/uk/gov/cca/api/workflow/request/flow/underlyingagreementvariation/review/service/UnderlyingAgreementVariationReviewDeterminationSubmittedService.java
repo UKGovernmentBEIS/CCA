@@ -1,12 +1,8 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.review.service;
 
-import java.util.List;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
-
-import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
@@ -20,11 +16,14 @@ import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestActionUserInfo;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class UnderlyingAgreementVariationReviewDeterminationSubmittedService {
 
-	private final UnderlyingAgreementVariationOfficialNoticeService underlyingAgreementVariationOfficialNoticeService;
+    private final UnderlyingAgreementVariationOfficialNoticeService underlyingAgreementVariationOfficialNoticeService;
     private final UnderlyingAgreementVariationAcceptedGenerateDocumentsService underlyingAgreementVariationAcceptedGenerateDocumentsService;
     private final RequestService requestService;
     private final CcaRequestActionUserInfoResolver ccaRequestActionUserInfoResolver;
@@ -33,6 +32,7 @@ public class UnderlyingAgreementVariationReviewDeterminationSubmittedService {
 
     public void acceptUnderlyingAgreementVariation(final String requestId) {
         final Request request = requestService.findRequestById(requestId);
+
         final UnderlyingAgreementVariationRequestPayload requestPayload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();
 
         // Get users' information
@@ -49,8 +49,8 @@ public class UnderlyingAgreementVariationReviewDeterminationSubmittedService {
 
         // Create request action
         final UnderlyingAgreementVariationAcceptedRequestActionPayload actionPayload =
-        		UNA_VARIATION_REVIEW_MAPPER.toUnderlyingAgreementVariationAcceptedRequestActionPayload(
-        				requestPayload, usersInfo, defaultContacts);
+                UNA_VARIATION_REVIEW_MAPPER.toUnderlyingAgreementVariationAcceptedRequestActionPayload(
+                        requestPayload, usersInfo, defaultContacts);
 
         requestService.addActionToRequest(request,
                 actionPayload,

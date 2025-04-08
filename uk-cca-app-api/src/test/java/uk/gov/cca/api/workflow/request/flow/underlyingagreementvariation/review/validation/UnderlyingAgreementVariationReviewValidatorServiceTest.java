@@ -18,8 +18,9 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.CcaNotifyOperatorForDe
 import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.validation.UnderlyingAgreementVariationDetailsValidatorService;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.validation.UnderlyingAgreementVariationTargetUnitDetailsValidatorService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.validation.EditedUnderlyingAgreementVariationApplicationReasonDataValidator;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.validation.EditedUnderlyingAgreementVariationDetailsValidatorService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.validation.EditedUnderlyingAgreementVariationTargetUnitDetailsValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
@@ -33,6 +34,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,16 +49,26 @@ public class UnderlyingAgreementVariationReviewValidatorServiceTest {
     private UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
 
     @Mock
-    private UnderlyingAgreementVariationTargetUnitDetailsValidatorService underlyingAgreementVariationTargetUnitDetailsValidatorService;
+    private EditedUnderlyingAgreementVariationTargetUnitDetailsValidatorService editedUnderlyingAgreementVariationTargetUnitDetailsValidatorService;
+
+    @Mock
+    private ProposedUnderlyingAgreementVariationTargetUnitDetailsValidatorService proposedUnderlyingAgreementVariationTargetUnitDetailsValidatorService;
 
     @Mock
     private UnderlyingAgreementVariationReviewNotifyOperatorValidator underlyingAgreementVariationReviewNotifyOperatorValidator;
 
     @Mock
-    private UnderlyingAgreementVariationReviewDeterminationDecisionsValidator determinationDecisionsValidator;
+    private EditedUnderlyingAgreementVariationDetailsValidatorService editedVariationDetailsValidator;
 
     @Mock
-    private UnderlyingAgreementVariationDetailsValidatorService variationDetailsValidator;
+    private ProposedUnderlyingAgreementVariationDetailsValidatorService proposedVariationDetailsValidator;
+
+    @Mock
+    private EditedUnderlyingAgreementVariationApplicationReasonDataValidator editedUnderlyingAgreementVariationApplicationReasonDataValidator;
+
+    @Mock
+    private ProposedUnderlyingAgreementVariationApplicationReasonDataValidator proposedUnderlyingAgreementVariationApplicationReasonDataValidator;
+
     @Test
     void validate() {
         final Set<Facility> facilities = Set.of(Facility.builder()
@@ -80,6 +92,11 @@ public class UnderlyingAgreementVariationReviewValidatorServiceTest {
                         .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                         .underlyingAgreement(underlyingAgreement)
                         .build())
+                .underlyingAgreementProposed(
+                        UnderlyingAgreementVariationPayload.builder()
+                                .underlyingAgreementTargetUnitDetails(targetUnitDetails)
+                                .underlyingAgreement(underlyingAgreement)
+                                .build())
                 .build();
         final RequestTask requestTask = RequestTask.builder()
                 .request(Request.builder()
@@ -99,30 +116,34 @@ public class UnderlyingAgreementVariationReviewValidatorServiceTest {
 
         List<BusinessValidationResult> validationResults = new ArrayList<>();
         validationResults.add(BusinessValidationResult.valid());
-        when(underlyingAgreementValidatorService.getValidationResults(unaContainer))
+        when(underlyingAgreementValidatorService.getValidationResults(any()))
                 .thenReturn(validationResults);
-        when(underlyingAgreementVariationTargetUnitDetailsValidatorService.validate(requestTask))
+        when(editedUnderlyingAgreementVariationTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
-        when(determinationDecisionsValidator.validateOverallDecision(taskPayload))
+        when(proposedUnderlyingAgreementVariationTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
-        when(variationDetailsValidator.validate(requestTask)).thenReturn(BusinessValidationResult.valid());
+        when(editedVariationDetailsValidator.validate(taskPayload)).thenReturn(BusinessValidationResult.valid());
+        when(proposedVariationDetailsValidator.validate(taskPayload)).thenReturn(BusinessValidationResult.valid());
         when(underlyingAgreementVariationReviewNotifyOperatorValidator.validate(requestTask, actionPayload, appUser))
                 .thenReturn(validationResults);
+        when(editedUnderlyingAgreementVariationApplicationReasonDataValidator.validate(taskPayload))
+                .thenReturn(BusinessValidationResult.valid());
+        when(proposedUnderlyingAgreementVariationApplicationReasonDataValidator.validate(taskPayload))
+                .thenReturn(BusinessValidationResult.valid());
 
         // Invoke
         validatorService.validate(requestTask, actionPayload, appUser);
 
         // Verify
-        verify(underlyingAgreementValidatorService, times(1))
-                .getValidationResults(unaContainer);
-        verify(underlyingAgreementVariationTargetUnitDetailsValidatorService, times(1))
+        verify(underlyingAgreementValidatorService, times(2)).getValidationResults(any());
+        verify(editedUnderlyingAgreementVariationTargetUnitDetailsValidatorService, times(1))
                 .validate(requestTask);
-        verify(determinationDecisionsValidator, times(1))
-                .validateOverallDecision(taskPayload);
-        verify(variationDetailsValidator, times(1))
-                .validate(requestTask);
+        verify(editedVariationDetailsValidator, times(1))
+                .validate(taskPayload);
         verify(underlyingAgreementVariationReviewNotifyOperatorValidator, times(1))
                 .validate(requestTask, actionPayload, appUser);
+        verify(editedUnderlyingAgreementVariationApplicationReasonDataValidator, times(1))
+                .validate(taskPayload);
     }
 
     @Test
@@ -147,6 +168,11 @@ public class UnderlyingAgreementVariationReviewValidatorServiceTest {
                         .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                         .underlyingAgreement(underlyingAgreement)
                         .build())
+                .underlyingAgreementProposed(
+                        UnderlyingAgreementVariationPayload.builder()
+                                .underlyingAgreementTargetUnitDetails(targetUnitDetails)
+                                .underlyingAgreement(underlyingAgreement)
+                                .build())
                 .build();
         final RequestTask requestTask = RequestTask.builder()
                 .request(Request.builder()
@@ -169,15 +195,20 @@ public class UnderlyingAgreementVariationReviewValidatorServiceTest {
 
         List<BusinessValidationResult> validationResults = new ArrayList<>();
         validationResults.add(BusinessValidationResult.valid());
-        when(underlyingAgreementValidatorService.getValidationResults(unaContainer))
+        when(underlyingAgreementValidatorService.getValidationResults(any()))
                 .thenReturn(validationResults);
-        when(underlyingAgreementVariationTargetUnitDetailsValidatorService.validate(requestTask))
+        when(editedUnderlyingAgreementVariationTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
-        when(determinationDecisionsValidator.validateOverallDecision(taskPayload))
+        when(proposedUnderlyingAgreementVariationTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
-        when(variationDetailsValidator.validate(requestTask)).thenReturn(BusinessValidationResult.valid());
+        when(editedVariationDetailsValidator.validate(taskPayload)).thenReturn(BusinessValidationResult.valid());
+        when(proposedVariationDetailsValidator.validate(taskPayload)).thenReturn(BusinessValidationResult.valid());
         when(underlyingAgreementVariationReviewNotifyOperatorValidator.validate(requestTask, actionPayload, appUser))
                 .thenReturn(validationResults);
+        when(editedUnderlyingAgreementVariationApplicationReasonDataValidator.validate(taskPayload))
+                .thenReturn(BusinessValidationResult.valid());
+        when(proposedUnderlyingAgreementVariationApplicationReasonDataValidator.validate(taskPayload))
+                .thenReturn(BusinessValidationResult.valid());
 
         // Invoke
         BusinessException ex = assertThrows(BusinessException.class, () ->
@@ -185,15 +216,15 @@ public class UnderlyingAgreementVariationReviewValidatorServiceTest {
 
         // Verify
         assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.INVALID_UNDERLYING_AGREEMENT_VARIATION_REVIEW);
-        verify(underlyingAgreementValidatorService, times(1))
-                .getValidationResults(unaContainer);
-        verify(underlyingAgreementVariationTargetUnitDetailsValidatorService, times(1))
+        verify(underlyingAgreementValidatorService, times(2))
+                .getValidationResults(any());
+        verify(editedUnderlyingAgreementVariationTargetUnitDetailsValidatorService, times(1))
                 .validate(requestTask);
-        verify(determinationDecisionsValidator, times(1))
-                .validateOverallDecision((UnderlyingAgreementVariationReviewRequestTaskPayload)requestTask.getPayload());
-        verify(variationDetailsValidator, times(1))
-                .validate(requestTask);
+        verify(editedVariationDetailsValidator, times(1))
+                .validate(taskPayload);
         verify(underlyingAgreementVariationReviewNotifyOperatorValidator, times(1))
                 .validate(requestTask, actionPayload, appUser);
+        verify(editedUnderlyingAgreementVariationApplicationReasonDataValidator, times(1))
+                .validate(taskPayload);
     }
 }

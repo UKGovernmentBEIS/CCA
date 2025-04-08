@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { AssigneeUserInfoDTO } from '../model/assigneeUserInfoDTO';
 import { RequestTaskAssignmentDTO } from '../model/requestTaskAssignmentDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -110,7 +110,7 @@ export class TasksAssignmentService {
   public assignTask(
     requestTaskAssignmentDTO: RequestTaskAssignmentDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (requestTaskAssignmentDTO === null || requestTaskAssignmentDTO === undefined) {
@@ -151,7 +151,7 @@ export class TasksAssignmentService {
       `${this.configuration.basePath}/v1.0/tasks-assignment/assign`,
       requestTaskAssignmentDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -166,29 +166,29 @@ export class TasksAssignmentService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getCandidateAssigneesByTaskId(taskId: number): Observable<Array<AssigneeUserInfoDTO>>;
+  public getCandidateAssigneesByTaskId(taskId: number): Observable<AssigneeUserInfoDTO[]>;
   public getCandidateAssigneesByTaskId(
     taskId: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<AssigneeUserInfoDTO>>>;
+  ): Observable<HttpResponse<AssigneeUserInfoDTO[]>>;
   public getCandidateAssigneesByTaskId(
     taskId: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<AssigneeUserInfoDTO>>>;
+  ): Observable<HttpEvent<AssigneeUserInfoDTO[]>>;
   public getCandidateAssigneesByTaskId(
     taskId: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<AssigneeUserInfoDTO>>;
+  ): Observable<AssigneeUserInfoDTO[]>;
   public getCandidateAssigneesByTaskId(
     taskId: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (taskId === null || taskId === undefined) {
@@ -218,10 +218,10 @@ export class TasksAssignmentService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<AssigneeUserInfoDTO>>(
+    return this.httpClient.get<AssigneeUserInfoDTO[]>(
       `${this.configuration.basePath}/v1.0/tasks-assignment/${encodeURIComponent(String(taskId))}/candidate-assignees`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -237,33 +237,33 @@ export class TasksAssignmentService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getCandidateAssigneesByTaskType(taskId: number, taskType: string): Observable<Array<AssigneeUserInfoDTO>>;
+  public getCandidateAssigneesByTaskType(taskId: number, taskType: string): Observable<AssigneeUserInfoDTO[]>;
   public getCandidateAssigneesByTaskType(
     taskId: number,
     taskType: string,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<AssigneeUserInfoDTO>>>;
+  ): Observable<HttpResponse<AssigneeUserInfoDTO[]>>;
   public getCandidateAssigneesByTaskType(
     taskId: number,
     taskType: string,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<AssigneeUserInfoDTO>>>;
+  ): Observable<HttpEvent<AssigneeUserInfoDTO[]>>;
   public getCandidateAssigneesByTaskType(
     taskId: number,
     taskType: string,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<AssigneeUserInfoDTO>>;
+  ): Observable<AssigneeUserInfoDTO[]>;
   public getCandidateAssigneesByTaskType(
     taskId: number,
     taskType: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (taskId === null || taskId === undefined) {
@@ -298,10 +298,10 @@ export class TasksAssignmentService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<AssigneeUserInfoDTO>>(
+    return this.httpClient.get<AssigneeUserInfoDTO[]>(
       `${this.configuration.basePath}/v1.0/tasks-assignment/${encodeURIComponent(String(taskId))}/candidate-assignees/${encodeURIComponent(String(taskType))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

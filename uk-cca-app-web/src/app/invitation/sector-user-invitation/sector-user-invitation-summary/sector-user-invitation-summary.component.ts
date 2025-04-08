@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { ButtonDirective } from '@netz/govuk-components';
-import { PageHeadingComponent, SummaryComponent, SummaryData, SummaryFactory } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
-import { ContactTypeEnum, PhoneNumberPipe } from '@shared/pipes';
+import { SummaryComponent, SummaryData, SummaryFactory } from '@shared/components';
+import { ContactTypeEnum } from '@shared/pipes';
 import { transformPhoneNumber } from '@shared/utils';
 
 import { SectorUserRegistrationWithCredentialsDTO, SectorUsersRegistrationService } from 'cca-api';
@@ -20,7 +21,7 @@ function toSummaryData(user: InvitedSectorUserExtended): SummaryData {
     .addChangeRow('First name', user.firstName)
     .addChangeRow('Last name', user.lastName)
     .addChangeRow('Job title', user.jobTitle)
-    .addChangeRow('Email address', user.email)
+    .addRow('Email address', user.email)
 
     .addSection('Your organization details', '../', { testid: 'sector-user-invitation-organisation-details-list' })
     .addChangeRow('Contact type', ContactTypeEnum[user.contactType])
@@ -37,14 +38,7 @@ function toSummaryData(user: InvitedSectorUserExtended): SummaryData {
   selector: 'cca-sector-user-invitation-summary',
   templateUrl: './sector-user-invitation-summary.component.html',
   standalone: true,
-  imports: [
-    SummaryComponent,
-    PageHeadingComponent,
-    ButtonDirective,
-    PhoneNumberPipe,
-    RouterLink,
-    PendingButtonDirective,
-  ],
+  imports: [SummaryComponent, PageHeadingComponent, ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorUserInvitationSummaryComponent {

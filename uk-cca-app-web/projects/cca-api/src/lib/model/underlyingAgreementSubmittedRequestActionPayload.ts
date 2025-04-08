@@ -17,5 +17,5 @@ export interface UnderlyingAgreementSubmittedRequestActionPayload {
   businessId?: string;
   accountReferenceData?: AccountReferenceData;
   underlyingAgreement: UnderlyingAgreementPayload;
-  underlyingAgreementAttachments?: { [key: string]: string };
+  underlyingAgreementAttachments?: Record<string, string>;
 }

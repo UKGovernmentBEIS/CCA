@@ -5,7 +5,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { RadioComponent, RadioOptionComponent, TextareaComponent } from '@netz/govuk-components';
 import { MultipleFileInputComponent } from '@shared/components';
 import { existingControlContainer } from '@shared/providers';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-decision',
@@ -16,7 +16,7 @@ import { generateDownloadUrl } from '@shared/utils/download-url-generator';
       <govuk-radio-option label="Accepted" value="ACCEPTED"> </govuk-radio-option>
       <govuk-radio-option label="Rejected" value="REJECTED"> </govuk-radio-option>
     </div>
-    <div govuk-textarea label="Notes" hint="The operator cannot view this" formControlName="notes"></div>
+    <div govuk-textarea label="Notes (optional)" formControlName="notes"></div>
     <cca-multiple-file-input formControlName="files" [baseDownloadUrl]="downloadUrl" label="Upload evidence (optional)">
     </cca-multiple-file-input>
   `,

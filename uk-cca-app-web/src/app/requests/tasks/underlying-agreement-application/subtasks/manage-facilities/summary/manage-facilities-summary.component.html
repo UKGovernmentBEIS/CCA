@@ -1,5 +1,5 @@
 <div>
-  <cca-page-heading>Manage facilities list</cca-page-heading>
+  <netz-page-heading>Manage facilities list</netz-page-heading>
 
   <h2 class="govuk-heading-m">Facilities</h2>
   <p class="govuk-body">You must include at least one facility.</p>
@@ -15,7 +15,7 @@
 
       @if (isCompleted() === false) {
         <div class="govuk-button-group">
-          <button (click)="onSubmit()" ccaPendingButton govukButton type="button">Confirm and complete</button>
+          <button (click)="onSubmit()" netzPendingButton govukButton type="button">Confirm and complete</button>
         </div>
       }
     }

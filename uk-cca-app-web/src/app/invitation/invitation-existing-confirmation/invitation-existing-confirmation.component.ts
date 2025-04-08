@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ButtonDirective, LinkDirective, PanelComponent } from '@netz/govuk-components';
+import { PanelComponent } from '@netz/govuk-components';
 import { SectorUserRoleCodePipe } from '@shared/pipes';
 
 import { SectorUserInvitationStore } from '../sector-user-invitation/sector-user-invitation.store';
@@ -17,12 +17,12 @@ import { SectorUserInvitationStore } from '../sector-user-invitation/sector-user
           {{ storeUser.sector }}
         </govuk-panel>
 
-        <a govukLink [routerLink]="['/']" [replaceUrl]="true">Go to my dashboard</a>
+        <a class="govuk-link" [routerLink]="['/']" [replaceUrl]="true">Go to my dashboard</a>
       </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PanelComponent, ButtonDirective, LinkDirective, RouterLink, SectorUserRoleCodePipe],
+  imports: [PanelComponent, RouterLink, SectorUserRoleCodePipe],
 })
 export class InvitationExistingConfirmationComponent {
   private readonly store = inject(SectorUserInvitationStore);

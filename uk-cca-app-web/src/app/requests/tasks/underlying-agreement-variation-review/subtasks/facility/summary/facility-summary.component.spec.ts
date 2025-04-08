@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 
-import { mockRequestTaskState } from '../../../testing/mock-data';
+import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import FacilitySummaryComponent from './facility-summary.component';
 
 describe('FacilitySummaryComponent', () => {
@@ -29,7 +29,7 @@ describe('FacilitySummaryComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
-    store.setState(mockRequestTaskState);
+    store.setState(mockVariationReviewRequestTaskState);
 
     fixture = TestBed.createComponent(FacilitySummaryComponent);
     component = fixture.componentInstance;

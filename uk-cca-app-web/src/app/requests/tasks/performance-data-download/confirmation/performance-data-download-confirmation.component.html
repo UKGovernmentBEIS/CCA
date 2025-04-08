@@ -1,0 +1,22 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds govuk-body">
+    @if (!zipFile()) {
+      <govuk-panel>TPR spreadsheet could not be generated</govuk-panel>
+      <p>
+        You can try generating the file again. Contact
+        <a class="govuk-link" href="mailto:cca-help@environment-agency.gov.uk">
+          cca-help&#64;environment-agency.gov.uk
+        </a>
+        if you need further help.
+      </p>
+    } @else {
+      <govuk-panel>Reporting templates downloaded</govuk-panel>
+      <h3 class="govuk-heading-m">What happens next</h3>
+      <p>
+        You can upload completed reporting spreadsheets by selecting the "Upload target period reporting spreadsheets"
+        task
+      </p>
+    }
+    <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true">Return to: Dashboard</a>
+  </div>
+</div>

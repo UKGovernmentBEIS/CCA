@@ -32,7 +32,7 @@ public class AvailableRequestController {
 
     private final AvailableRequestService availableRequestService;
 
-    @GetMapping("/permit/{accountId}")
+    @GetMapping("/{resourceType}/{resourceId}")
     @Operation(summary = "Get workflows to start a task")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, useReturnTypeSchema = true)
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
@@ -41,11 +41,12 @@ public class AvailableRequestController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @Authorized(resourceId = "#accountId")
-    public ResponseEntity<Map<String, RequestCreateValidationResult>> getAvailableAccountWorkflows(
+    @Authorized(resourceId = "#resourceId", resourceType = "#resourceType")
+    public ResponseEntity<Map<String, RequestCreateValidationResult>> getAvailableWorkflows(
             @Parameter(hidden = true) AppUser appUser,
-            @PathVariable("accountId") @Parameter(name = "accountId", description = "The account id", required = true) Long accountId) {
+            @PathVariable("resourceType") @Parameter(name = "resourceType", description = "The resource type associated with given resource id") String resourceType,
+            @PathVariable("resourceId") @Parameter(name = "resourceId", description = "The resource id for which the available workflows will be retrieved", required = true) String resourceId) {
 
-        return new ResponseEntity<>(availableRequestService.getAvailableAccountWorkflows(accountId, appUser), HttpStatus.OK);
+        return new ResponseEntity<>(availableRequestService.getAvailableWorkflows(resourceId, resourceType, appUser), HttpStatus.OK);
     }
 }

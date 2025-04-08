@@ -1,5 +1,5 @@
-<div class="moj-multi-file-upload moj-multi-file-upload--enhanced">
-  <div class="moj-multi-file-upload__upload">
+<div class="cca-multi-file-upload cca-multi-file-upload--enhanced">
+  <div class="cca-multi-file-upload__upload">
     <div class="govuk-form-group">
       <label [for]="id" [class]="'govuk-label govuk-label--' + headerSize()" id="{{ 'l.' + id }}">{{ label() }}</label>
 
@@ -19,8 +19,8 @@
         (dragleave)="onDragLeave()"
         (dragover)="onDragOver($event)"
         (drop)="onDrop($event)"
-        [class.moj-multi-file-upload--dragover]="isDraggedOver"
-        class="moj-multi-file-upload__dropzone govuk-!-margin-top-4"
+        [class.cca-multi-file-upload--dragover]="isDraggedOver"
+        class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
       >
         <input
           #input
@@ -28,12 +28,12 @@
           (change)="onFileChange($event)"
           (focus)="onFileFocus()"
           [accept]="accepted()"
-          [class.moj-multi-file-upload--focused]="isFocused"
+          [class.cca-multi-file-upload--focused]="isFocused"
           [disabled]="isDisabled"
           [id]="id"
           [name]="id"
           [attr.aria-labelledby]="'l.' + id + ' ld.' + id"
-          class="govuk-file-upload moj-multi-file-upload__input"
+          class="govuk-file-upload cca-multi-file-upload__input"
           multiple
           type="file"
         />

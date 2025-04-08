@@ -7,7 +7,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.service.TargetUnitAccountService;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.repository.RequestRepository;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
@@ -33,12 +35,12 @@ class TargetUnitAccountCreationRollbackServiceTest {
     @Test
     void rollback() {
         final String requestId = "request-id";
-        final long accountId = 1L;
+        final Long accountId = 1L;
 
         Request request = Request.builder()
                 .id(requestId)
-                .accountId(accountId)
                 .build();
+        addResourcesToRequest(accountId, request);
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
 
@@ -50,4 +52,14 @@ class TargetUnitAccountCreationRollbackServiceTest {
         verify(requestRepository, times(1)).delete(request);
         verify(targetUnitAccountService, times(1)).deleteTargetUnitAccount(accountId);
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

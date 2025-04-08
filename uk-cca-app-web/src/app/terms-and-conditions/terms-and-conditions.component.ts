@@ -4,11 +4,17 @@ import { Router } from '@angular/router';
 
 import { switchMap } from 'rxjs';
 
-import { AuthService } from '@core/services/auth.service';
-import { LatestTermsStore } from '@core/store/latest-terms.store';
-import { ButtonDirective, CheckboxComponent, CheckboxesComponent, GovukValidators } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
+import {
+  AccordionComponent,
+  AccordionItemComponent,
+  ButtonDirective,
+  CheckboxComponent,
+  CheckboxesComponent,
+  GovukValidators,
+} from '@netz/govuk-components';
+import { AuthService, LatestTermsStore } from '@shared/services';
 
 import { TermsAndConditionsService } from 'cca-api';
 
@@ -24,6 +30,8 @@ import { TermsAndConditionsService } from 'cca-api';
     CheckboxesComponent,
     PendingButtonDirective,
     ButtonDirective,
+    AccordionComponent,
+    AccordionItemComponent,
   ],
 })
 export class TermsAndConditionsComponent {

@@ -12,6 +12,6 @@
 import { OperatorAuthorityInfoDTO } from './operatorAuthorityInfoDTO';
 
 export interface OperatorAuthoritiesInfoDTO {
-  authorities?: Array<OperatorAuthorityInfoDTO>;
+  authorities?: OperatorAuthorityInfoDTO[];
   editable?: boolean;
 }

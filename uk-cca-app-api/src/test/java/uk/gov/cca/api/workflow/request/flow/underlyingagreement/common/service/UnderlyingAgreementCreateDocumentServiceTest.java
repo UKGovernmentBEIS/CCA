@@ -20,7 +20,9 @@ import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaFileD
 import uk.gov.cca.api.workflow.request.flow.common.domain.activation.UnderlyingAgreementActivationDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 import uk.gov.netz.api.workflow.request.flow.common.domain.DecisionNotification;
 
@@ -55,8 +57,9 @@ class UnderlyingAgreementCreateDocumentServiceTest {
                 		.underlyingAgreement(underlyingAgreement)
                 		.build())
                 .build();
-        final Request request =
-                Request.builder().accountId(accountId).payload(requestPayload).build();
+        final Request request = Request.builder().payload(requestPayload).build();
+        addResourcesToRequest(accountId, request);
+        
         TargetUnitAccountDetailsDTO accountDetails = TargetUnitAccountDetailsDTO.builder().businessId(businessId).build();
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
@@ -89,8 +92,9 @@ class UnderlyingAgreementCreateDocumentServiceTest {
                 		.build())
                 .underlyingAgreementActivationDetails(UnderlyingAgreementActivationDetails.builder().comments("comments").build())
                 .build();
-        final Request request =
-                Request.builder().accountId(accountId).payload(requestPayload).build();
+        final Request request = Request.builder().payload(requestPayload).build();
+        addResourcesToRequest(accountId, request);
+        
         TargetUnitAccountDetailsDTO accountDetails = TargetUnitAccountDetailsDTO.builder().businessId(businessId).build();
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
@@ -105,4 +109,14 @@ class UnderlyingAgreementCreateDocumentServiceTest {
         		CcaDocumentTemplateType.UNDERLYING_AGREEMENT,
         		"businessId Underlying Agreement v1.pdf");
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

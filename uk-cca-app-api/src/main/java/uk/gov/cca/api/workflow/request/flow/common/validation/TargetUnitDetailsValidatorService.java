@@ -28,15 +28,17 @@ public abstract class TargetUnitDetailsValidatorService {
 
     public abstract BusinessValidationResult validate(final RequestTask requestTask);
 
+    public abstract String getPayloadType();
+
     protected List<UnderlyingAgreementViolation> validateTargetUnitDetails(final Long accountId, final UnderlyingAgreementTargetUnitDetails underlyingAgreementTargetUnitDetails) {
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
         if (ObjectUtils.isEmpty(underlyingAgreementTargetUnitDetails)) {
-            violations.add(new UnderlyingAgreementViolation(UnderlyingAgreementTargetUnitDetails.class.getName(),
+            violations.add(new UnderlyingAgreementViolation(this.getPayloadType() + UnderlyingAgreementTargetUnitDetails.class.getName(),
                     UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_SECTION_DATA));
         } else {
             validator.validate(underlyingAgreementTargetUnitDetails).map(businessViolation -> new UnderlyingAgreementViolation(
-                            UnderlyingAgreementTargetUnitDetails.class.getName(),
+                            this.getPayloadType() + UnderlyingAgreementTargetUnitDetails.class.getName(),
                             UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_SECTION_DATA,
                             businessViolation.getData()))
                     .ifPresent(violations::add);

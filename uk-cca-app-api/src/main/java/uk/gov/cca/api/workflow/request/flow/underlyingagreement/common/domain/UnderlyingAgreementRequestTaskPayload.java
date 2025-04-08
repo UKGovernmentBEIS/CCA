@@ -1,5 +1,6 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,5 +44,10 @@ public class UnderlyingAgreementRequestTaskPayload extends RequestTaskPayload {
         return getUnderlyingAgreement() != null ?
                 getUnderlyingAgreement().getUnderlyingAgreement().getUnderlyingAgreementSectionAttachmentIds() :
                 Collections.emptySet();
+    }
+
+    @JsonIgnore
+    public UnderlyingAgreementPayload getEditedUnderlyingAgreement() {
+        return this.underlyingAgreement;
     }
 }

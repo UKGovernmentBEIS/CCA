@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
-import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
 import { toBaselineAndTargetsSummaryDataWithDecision, underlyingAgreementRequestActionQuery } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
@@ -10,7 +10,7 @@ import { underlyingAgreementReviewedRequestActionQuery } from '../../+state/unde
 @Component({
   selector: 'cca-timeline-review-target-period-6',
   standalone: true,
-  imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
+  imports: [PageHeadingComponent, SummaryComponent],
   templateUrl: './target-period-6.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

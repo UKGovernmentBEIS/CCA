@@ -3,13 +3,13 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { first, switchMap, tap } from 'rxjs';
 
-import { AuthService } from '@core/services/auth.service';
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 import { AuthStore, selectUserId } from '@netz/common/auth';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { UserFullNamePipe } from '@netz/common/pipes';
-import { ButtonDirective, LinkDirective, PanelComponent, WarningTextComponent } from '@netz/govuk-components';
-import { PendingButtonDirective } from '@shared/directives';
+import { ButtonDirective, PanelComponent, WarningTextComponent } from '@netz/govuk-components';
+import { AuthService } from '@shared/services';
 
 import { RegulatorAuthoritiesService } from 'cca-api';
 
@@ -25,7 +25,6 @@ import { DetailsStore } from '../details/details.store';
     PanelComponent,
     UserFullNamePipe,
     ButtonDirective,
-    LinkDirective,
     RouterLink,
     PendingButtonDirective,
   ],

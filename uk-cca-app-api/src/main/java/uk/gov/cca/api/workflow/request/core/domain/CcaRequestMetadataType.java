@@ -7,4 +7,12 @@ public class CcaRequestMetadataType {
 
     public static final String TARGET_UNIT_ACCOUNT_CREATION = "TARGET_UNIT_ACCOUNT_CREATION";
     public static final String UNDERLYING_AGREEMENT = "UNDERLYING_AGREEMENT";
+    public static final String PERFORMANCE_DATA_GENERATE = "PERFORMANCE_DATA_GENERATE";
+    public static final String PERFORMANCE_DATA_PROCESSING = "PERFORMANCE_DATA_PROCESSING";
+    public static final String PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING = "PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING";
+    public static final String SUBSISTENCE_FEES_RUN = "SUBSISTENCE_FEES_RUN";
+    public static final String SECTOR_MOA = "SECTOR_MOA";
+    public static final String TARGET_UNIT_MOA = "TARGET_UNIT_MOA";
+    public static final String BUY_OUT_SURPLUS_RUN = "BUY_OUT_SURPLUS_RUN";
+    public static final String BUY_OUT_SURPLUS_ACCOUNT_PROCESSING = "BUY_OUT_SURPLUS_ACCOUNT_PROCESSING";
 }

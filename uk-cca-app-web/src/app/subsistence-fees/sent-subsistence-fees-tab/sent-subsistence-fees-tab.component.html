@@ -1,0 +1,52 @@
+@if (state().totalSubsistenceFeesRunItems === 0) {
+  <p>No payment requests have been sent yet.</p>
+  <p>More information will be available when one or more payment requests have been sent.</p>
+} @else {
+  <div class="x-scroll">
+    <div class="max-content-width">
+      <div class="overflow-auto overflow-auto-table">
+        <govuk-table [columns]="sentSubsistenceFeesColumns" [data]="state().subsistenceFeesRuns">
+          <ng-template let-column="column" let-row="row">
+            @switch (column.field) {
+              @case ('paymentRequestId') {
+                <a [routerLink]="['/', 'subsistence-fees', 'sent-subsistence-fees', row.runId]" class="govuk-link">
+                  {{ row[column.field] }}
+                </a>
+              }
+
+              @case ('submissionDate') {
+                <span>{{ row[column.field] | date: 'dd MMM yyyy' }}</span>
+              }
+
+              @case ('paymentStatus') {
+                <govuk-tag [color]="row[column.field] | subsistenceFeesRunPaymentStatusTagColor" class="failure-tag">
+                  {{ row[column.field] | subsistenceFeesRunPaymentStatus }}
+                </govuk-tag>
+              }
+
+              @case ('markFacilitiesStatus') {
+                <div class="govuk-!-width-full">
+                  <span>{{ row[column.field] | subsistenceFeesRunMarkFacilitiesStatus }}</span>
+                </div>
+              }
+
+              @case ('currentTotalAmount') {
+                <span>{{ row[column.field] | number }}</span>
+              }
+
+              @case ('outstandingTotalAmount') {
+                <span>{{ row[column.field] | number }}</span>
+              }
+            }
+          </ng-template>
+        </govuk-table>
+
+        <cca-pagination
+          [count]="state().totalSubsistenceFeesRunItems"
+          (currentPageChange)="handlePageChange($event)"
+          [pageSize]="state().pageSize"
+        ></cca-pagination>
+      </div>
+    </div>
+  </div>
+}

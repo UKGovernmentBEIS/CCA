@@ -15,7 +15,7 @@ import {
 } from '@netz/govuk-components';
 import { MultipleFileInputComponent } from '@shared/components';
 import { existingControlContainer } from '@shared/providers';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { generateDownloadUrl } from '@shared/utils';
 
 import { underlyingAgreementQuery } from '../../../+state';
 

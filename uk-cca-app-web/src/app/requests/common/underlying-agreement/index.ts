@@ -7,3 +7,4 @@ export * from './underlying-agreement-review-guards';
 export * from './summaries';
 export * from './utils';
 export * from './isEditable.guard';
+export * from './submit-review-side-effects';

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
+import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
-import { PageHeadingComponent } from '@shared/components';
 
 import { FacilityItemListComponent } from '../../../underlying-agreement';
 import { underlyingAgreementRequestActionQuery } from '../../+state';

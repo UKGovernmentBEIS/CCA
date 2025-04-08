@@ -13,7 +13,8 @@ import { AdminTerminationReasonDetails } from './adminTerminationReasonDetails';
 
 export interface AdminTerminationSubmitRequestTaskPayload {
   payloadType?: string;
+  sendEmailNotification?: boolean;
   adminTerminationReasonDetails?: AdminTerminationReasonDetails;
-  sectionsCompleted?: { [key: string]: string };
-  adminTerminationAttachments?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
+  adminTerminationAttachments?: Record<string, string>;
 }

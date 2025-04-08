@@ -12,6 +12,6 @@
 import { RequestNoteDto } from './requestNoteDto';
 
 export interface RequestNoteResponse {
-  requestNotes?: Array<RequestNoteDto>;
+  requestNotes?: RequestNoteDto[];
   totalItems?: number;
 }

@@ -2,12 +2,12 @@
   <!--Page heading-->
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <cca-page-heading size="xl" [caption]="details?.workflowDetails.id" data-testid="page-heading">
-        {{ details?.workflowDetails.requestType | requestTypeToHeading }}
+      <netz-page-heading size="xl" [caption]="details?.workflowDetails.id" data-testid="page-heading">
+        {{ details?.workflowDetails.requestType | requestTypeToHeading: details?.workflowDetails?.requestMetadata }}
         <govuk-tag class="float-right" [color]="details?.workflowDetails.requestStatus | requestStatusTagColor">
           {{ details?.workflowDetails.requestStatus | workflowStatus }}
         </govuk-tag>
-      </cca-page-heading>
+      </netz-page-heading>
     </div>
 
     <!--Tasks to complete-->
@@ -35,6 +35,7 @@
           </netz-timeline>
         </div>
       </ng-template>
+
       <ng-template govukTabLazy id="notes" label="Notes">
         <!-- Add Notes content here -->
       </ng-template>

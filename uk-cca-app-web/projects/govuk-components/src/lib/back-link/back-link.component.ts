@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, Params, RouterLink } from '@angular/router';
 
-// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
 @Component({
   selector: 'govuk-back-link',
   standalone: true,

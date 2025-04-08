@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { TaskService } from '@netz/common/forms';
 import { ButtonDirective } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
 
 import { AdminTerminationFinalDecisionReasonDetails } from 'cca-api';
 

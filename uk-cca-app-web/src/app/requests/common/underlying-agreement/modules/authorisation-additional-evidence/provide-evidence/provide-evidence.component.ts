@@ -4,9 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
-import { RadioComponent, RadioOptionComponent, TextareaComponent } from '@netz/govuk-components';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { generateDownloadUrl } from '@shared/utils';
 
 import {
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
@@ -21,15 +20,7 @@ import {
 @Component({
   selector: 'cca-provide-evidence',
   standalone: true,
-  imports: [
-    MultipleFileInputComponent,
-    RadioComponent,
-    RadioOptionComponent,
-    ReactiveFormsModule,
-    TextareaComponent,
-    WizardStepComponent,
-    ReturnToTaskOrActionPageComponent,
-  ],
+  imports: [MultipleFileInputComponent, ReactiveFormsModule, WizardStepComponent, ReturnToTaskOrActionPageComponent],
   templateUrl: './provide-evidence.component.html',
   providers: [ProvideEvidenceFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,

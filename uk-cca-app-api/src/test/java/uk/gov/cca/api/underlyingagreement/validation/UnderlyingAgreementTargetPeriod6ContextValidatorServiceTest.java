@@ -11,7 +11,7 @@ import uk.gov.cca.api.common.validation.BusinessViolation;
 import uk.gov.cca.api.common.validation.DataValidator;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
-import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.AgreementCompositionType;
+import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.BaselineData;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetComposition;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod6Details;
@@ -636,7 +636,7 @@ class UnderlyingAgreementTargetPeriod6ContextValidatorServiceTest {
         // Verify
         assertThat(result.isValid()).isFalse();
         assertThat((List<UnderlyingAgreementViolation>) result.getViolations()).extracting(UnderlyingAgreementViolation::getMessage)
-                .containsOnly(UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_ATTACHMENT_TYPE.getMessage());
+                .containsOnly(UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_CALCULATOR_ATTACHMENT_TYPE.getMessage());
         verify(validator, times(1))
                 .validate(container.getUnderlyingAgreement().getTargetPeriod6Details());
         verify(fileAttachmentService, times(1))

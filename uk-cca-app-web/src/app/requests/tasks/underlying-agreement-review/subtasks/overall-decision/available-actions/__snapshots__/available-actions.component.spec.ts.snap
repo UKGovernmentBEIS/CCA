@@ -42,7 +42,6 @@ exports[`ExplanationComponent should match snapshot for AvailableActionsComponen
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

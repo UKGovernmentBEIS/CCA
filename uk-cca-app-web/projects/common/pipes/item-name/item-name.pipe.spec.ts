@@ -24,6 +24,9 @@ describe('ItemNamePipe', () => {
     expect(pipe.transform('ADMIN_TERMINATION_APPLICATION_FINAL_DECISION')).toEqual('Admin termination final decision');
 
     expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_SUBMIT')).toEqual('Apply to vary the underlying agreement');
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW')).toEqual(
+      'Review underlying agreement variation',
+    );
 
     expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_REVIEW')).toEqual(
       'Application for underlying agreement variation sent for review',
@@ -31,6 +34,17 @@ describe('ItemNamePipe', () => {
 
     expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_ACTIVATION')).toEqual(
       'Application to vary underlying agreement sent for review',
+    );
+
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_ACTIVATION')).toEqual(
+      'Upload target unit assent on variation',
+    );
+
+    expect(pipe.transform('PERFORMANCE_DATA_DOWNLOAD_SUBMIT')).toEqual(
+      'Download target period reporting (TPR) spreadsheets',
+    );
+    expect(pipe.transform('PERFORMANCE_DATA_UPLOAD_SUBMIT')).toEqual(
+      'Target period reporting (TPR) spreadsheets upload',
     );
 
     expect(pipe.transform(null)).toBeNull();

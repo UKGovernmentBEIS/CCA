@@ -8,7 +8,6 @@ import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } f
 import { mockUNAReviewRequestTaskState } from '@requests/common';
 import { render } from '@testing-library/angular';
 
-import { OverallDecisionStore } from '../overall-decision.store';
 import { AvailableActionsComponent } from './available-actions.component';
 
 describe('ExplanationComponent', () => {
@@ -22,7 +21,6 @@ describe('ExplanationComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        OverallDecisionStore,
         RequestTaskStore,
         { provide: TaskService, useValue: unaTaskService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
@@ -30,8 +28,6 @@ describe('ExplanationComponent', () => {
       ],
       configureTestBed: (testbed) => {
         store = testbed.inject(RequestTaskStore);
-        const overallDecisionStore = testbed.inject(OverallDecisionStore);
-        overallDecisionStore.updateDetermination({ type: 'REJECTED' });
         store.setState(mockUNAReviewRequestTaskState);
       },
     });

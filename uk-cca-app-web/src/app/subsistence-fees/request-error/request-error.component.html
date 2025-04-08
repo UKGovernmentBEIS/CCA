@@ -1,0 +1,24 @@
+<netz-page-heading caption="Subsistence fees">New payment request</netz-page-heading>
+
+<div class="govuk-body govuk-!-width-two-thirds">
+  @switch (errorCode) {
+    @case ('inProgress') {
+      <span data-testid="in-progress-error">
+        Payment request run is
+        <a [routerLink]="['/', 'subsistence-fees']" fragment="workflow-history" [replaceUrl]="true" class="govuk-link"
+          >in progress</a
+        >, you cannot initiate a new one until it has finished
+      </span>
+    }
+
+    @case ('invalidChargeDate') {
+      <span data-testid="invalid-charge-date-error">New payment requests will become available after 1 Apr 2025</span>
+    }
+  }
+
+  <div class="govuk-!-margin-top-9">
+    <a class="govuk-link" [routerLink]="['/', 'subsistence-fees']" [replaceUrl]="true" class="govuk-link">
+      Return to: Subsistence fees
+    </a>
+  </div>
+</div>

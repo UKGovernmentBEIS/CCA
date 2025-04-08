@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 
-import { TaskItem, TaskSection } from '@netz/common/model';
+import { TaskSection } from '@netz/common/model';
 import { RequestTaskPageContentFactory } from '@netz/common/request-task';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
@@ -11,6 +11,7 @@ import {
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   staticSections,
   TaskItemStatus,
+  transformFacilities,
   UNAApplicationRequestTaskPayload,
 } from '@requests/common';
 
@@ -61,7 +62,14 @@ export function getAllUnderlyingAgreementApplicationSections(payload: UNAApplica
           link: `${routePrefix}/manage-facilities`,
           linkText: 'Manage facilities list',
         },
-        ...getAllFacilities(payload),
+        ...transformFacilities(
+          payload?.underlyingAgreement?.facilities,
+          [],
+          payload?.sectionsCompleted,
+          routePrefix,
+          'summary',
+          TaskItemStatus.NOT_STARTED,
+        ),
       ],
     },
     {
@@ -94,16 +102,6 @@ export function getAllUnderlyingAgreementApplicationSections(payload: UNAApplica
       ],
     },
   ];
-}
-
-function getAllFacilities(payload: UNAApplicationRequestTaskPayload): TaskItem[] {
-  return (
-    payload?.underlyingAgreement?.facilities?.map((facility) => ({
-      status: payload?.sectionsCompleted?.[facility.facilityId] ?? TaskItemStatus.NOT_STARTED,
-      link: `${routePrefix}/facility/${facility.facilityId}/summary`,
-      linkText: `${facility.facilityDetails.name} (${facility.facilityId})`,
-    })) ?? []
-  );
 }
 
 function allSectionsCompleted(payload: UNAApplicationRequestTaskPayload): boolean {

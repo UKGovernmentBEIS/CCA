@@ -1,9 +1,8 @@
 package uk.gov.cca.api.authorization.ccaauth.rules.services.resource;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.stereotype.Service;
-import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
+import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.service.SectorUserAuthorityService;
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.authorization.rules.domain.Scope;
@@ -20,17 +19,13 @@ public class SectorUserRequestTaskRoleTypeAuthorizationQueryService implements R
 
     private final SectorUserAuthorityService sectorUserAuthorityService;
     private final SectorUserAuthorityResourceService sectorUserAuthorityResourceService;
-    private final TargetUnitAccountQueryService targetUnitAccountQueryService;
 
     @Override
     public List<String> findUsersWhoCanExecuteRequestTaskTypeByResourceCriteria(
             String requestTaskType, ResourceCriteria resourceCriteria, boolean requiresPermission) {
 
-        if (resourceCriteria.getAccountId() == null) {
-            throw new NotImplementedException();
-        }
-
-        Long accountSectorAssociationId = targetUnitAccountQueryService.getAccountSectorAssociationId(resourceCriteria.getAccountId());
+        Long accountSectorAssociationId = 
+        		Long.parseLong(resourceCriteria.getRequestResources().get(CcaResourceType.SECTOR_ASSOCIATION));
 
         if (!requiresPermission) {
             return sectorUserAuthorityService.findActiveSectorUsersBySectorAssociationId(accountSectorAssociationId);

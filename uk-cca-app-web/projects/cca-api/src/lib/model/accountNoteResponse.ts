@@ -12,6 +12,6 @@
 import { AccountNoteDto } from './accountNoteDto';
 
 export interface AccountNoteResponse {
-  accountNotes?: Array<AccountNoteDto>;
+  accountNotes?: AccountNoteDto[];
   totalItems?: number;
 }

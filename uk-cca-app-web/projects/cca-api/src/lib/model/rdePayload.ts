@@ -13,6 +13,6 @@
 export interface RdePayload {
   extensionDate: string;
   deadline: string;
-  operators?: Array<string>;
+  operators?: string[];
   signatory: string;
 }

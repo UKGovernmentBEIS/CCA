@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { first, from, Observable, of } from 'rxjs';
 
-import { Country } from '../app/core/models/country';
-import { CountryService } from '../app/core/services/country.service';
+import { CountryService } from '@shared/services';
+import { Country } from '@shared/types';
 
 @Injectable()
 export class CountryServiceStub implements Partial<CountryService> {

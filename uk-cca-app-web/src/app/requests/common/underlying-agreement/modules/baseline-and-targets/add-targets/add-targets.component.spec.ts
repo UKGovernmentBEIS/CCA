@@ -14,10 +14,12 @@ import { AddTargetsComponent } from './add-targets.component';
 
 describe('AddTargetsComponent', () => {
   let container: Element;
+  let store: RequestTaskStore;
+
   const unaTaskService: Partial<jest.Mocked<TaskService>> = {
     saveSubtask: jest.fn().mockReturnValue(of({})),
   };
-  let store: RequestTaskStore;
+
   it('should correctly show data for ABSOLUTE/RELATIVE', async () => {
     const renderResult = await render(AddTargetsComponent, {
       providers: [
@@ -33,8 +35,10 @@ describe('AddTargetsComponent', () => {
         store.setRequestTaskItem(mockRequestTaskItemDTOABSOLUTE);
       },
     });
+
     container = renderResult.container;
   });
+
   it('should correctly show data for NOVEM', async () => {
     await render(AddTargetsComponent, {
       providers: [
@@ -50,6 +54,7 @@ describe('AddTargetsComponent', () => {
         store.setRequestTaskItem(mockRequestTaskItemDTONOVEM);
       },
     });
+
     expect(container).toMatchSnapshot();
   });
 });

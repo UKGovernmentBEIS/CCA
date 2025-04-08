@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/tpr_buy_out_fees.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_POPULATE_TPR_BUY_OUT_TRANSACTION_IDENTIFIER_TABLE" author="P70383">
+        <sql>
+            INSERT INTO tpr_buy_out_transaction_identifier (id, target_period_type, transaction_id) VALUES (1, 'TP6', 0);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

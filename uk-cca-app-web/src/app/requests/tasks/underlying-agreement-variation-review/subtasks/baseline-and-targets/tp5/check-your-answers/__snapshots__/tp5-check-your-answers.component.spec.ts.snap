@@ -5,7 +5,7 @@ exports[`TP5CheckYourAnswersComponent should match snapshot 1`] = `
   id="root0"
 >
   <div>
-    <cca-page-heading
+    <netz-page-heading
       caption="TP5 (2021-2022)"
     >
       <span
@@ -19,184 +19,480 @@ exports[`TP5CheckYourAnswersComponent should match snapshot 1`] = `
       >
         Check your answers
       </h1>
-    </cca-page-heading>
-    <cca-summary>
-      <h2
-        class="govuk-heading-m"
+    </netz-page-heading>
+    
+    <cca-highlight-diff>
+      <div
+        class="govuk-!-display-none"
       >
+        <cca-summary>
+          <h2
+            class="govuk-heading-m"
+          >
+            
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Are you providing baseline and target information for TP5 (2021 to 2022)?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 No 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/baseline-exists?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Decision Summary
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Decision status
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Accepted 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/decision?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Notes
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Tp5 notes 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/decision?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Uploaded files
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <span>
+                  No files provided
+                </span>
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/decision?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          
+        </cca-summary>
         
-      </h2>
-      <dl
-        class="govuk-summary-list govuk-!-margin-bottom-9"
-        govuk-summary-list=""
+      </div>
+      <div
+        class="govuk-!-display-none"
       >
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
+        <cca-summary>
+          <h2
+            class="govuk-heading-m"
           >
-            Are you providing baseline and target information for TP5 (2021 to 2022)?
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
+            
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
           >
-             No 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/baseline-exists?change=true"
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
             >
-              Change
-            </a>
-          </dd>
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Are you providing baseline and target information for TP5 (2021 to 2022)?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 No 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/baseline-exists?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
+          <h2
+            class="govuk-heading-m"
+          >
+            Decision Summary
+          </h2>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Decision status
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Accepted 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/decision?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Notes
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                 Tp5 notes 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/decision?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Uploaded files
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <span>
+                  No files provided
+                </span>
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/decision?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+            </div>
+            
+            
+            
+          </dl>
           
-        </div>
+        </cca-summary>
         
-        
-        
-      </dl>
-      <h2
-        class="govuk-heading-m"
+      </div>
+      <div
+        class="highlight"
       >
-        Decision Summary
-      </h2>
-      <dl
-        class="govuk-summary-list govuk-!-margin-bottom-9"
-        govuk-summary-list=""
-      >
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
+        <h2
+          class="govuk-heading-m"
+        />
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
         >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
+          <div
+            class="govuk-summary-list__row"
           >
-            Decision status
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             Accepted 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/decision?change=true"
+            <dt
+              class="govuk-summary-list__key"
             >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
+              Are you providing baseline and target information for TP5 (2021 to 2022)?
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               No 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/baseline-exists?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+        </dl>
+        <h2
+          class="govuk-heading-m"
         >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Notes
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             Tp5 notes 
-            
-            
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/decision?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
+          Decision Summary
+        </h2>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
         >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
+          <div
+            class="govuk-summary-list__row"
           >
-            Uploaded files
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-            <span>
-              No files provided
-            </span>
-            
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              govuklink=""
-              href="/decision?change=true"
+            <dt
+              class="govuk-summary-list__key"
             >
-              Change
-            </a>
-          </dd>
-          
-        </div>
-        
-        
-        
-      </dl>
-      
-    </cca-summary>
+              Decision status
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Accepted 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/decision?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Notes
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Tp5 notes 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/decision?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Uploaded files
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <span>
+                No files provided
+              </span>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/decision?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </cca-highlight-diff>
     <button
-      ccapendingbutton=""
       class="govuk-button"
       govukbutton=""
+      netzpendingbutton=""
       type="button"
     >
       Confirm and complete
@@ -207,7 +503,6 @@ exports[`TP5CheckYourAnswersComponent should match snapshot 1`] = `
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

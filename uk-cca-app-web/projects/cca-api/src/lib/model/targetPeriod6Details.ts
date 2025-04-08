@@ -9,9 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { BaselineData } from './baselineData';
 import { TargetComposition } from './targetComposition';
 import { Targets } from './targets';
+import { BaselineData } from './baselineData';
 
 export interface TargetPeriod6Details {
   targetComposition: TargetComposition;

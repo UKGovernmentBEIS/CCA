@@ -18,10 +18,11 @@
         [state]="getState()"
         [tabIndex]="(tabItem.isSelected | async) ? 0 : -1"
         class="govuk-tabs__tab"
-        queryParamsHandling="preserve"
+        [queryParamsHandling]="queryParamsHandling"
         role="tab"
       >
         {{ tabItem.label }}
+        <span *ngIf="tabItem.badgeNumber > 0" class="badge">{{ tabItem.badgeNumber }}</span>
       </a>
     </li>
   </ul>

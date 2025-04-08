@@ -9,11 +9,13 @@ import uk.gov.cca.api.account.domain.CcaEmissionTradingScheme;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.common.exception.BusinessCheckedException;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.RequestTaskAssignmentService;
 import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.RequestTaskReleaseService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 import uk.gov.netz.api.workflow.request.core.domain.constants.RequestStatuses;
 import uk.gov.netz.api.workflow.request.core.repository.RequestTaskRepository;
@@ -24,7 +26,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class RegulatorRequestTaskAssignmentServiceTest {
+class RegulatorRequestTaskAssignmentServiceTest {
 
     @InjectMocks
     private CcaRegulatorRequestTaskAssignmentService ccaRegulatorRequestTaskAssignmentService;
@@ -58,7 +60,8 @@ public class RegulatorRequestTaskAssignmentServiceTest {
                 .businessId("businessId")
                 .build();
 
-        Request request = Request.builder().accountId(accountId).status(RequestStatuses.IN_PROGRESS).build();
+        Request request = Request.builder().status(RequestStatuses.IN_PROGRESS).build();
+        addResourcesToRequest(accountId, request);
         RequestTask requestTask = RequestTask.builder().request(request).assignee(userId).build();
 
         when(requestTaskRepository.findByAssigneeAndRequestStatus(userId, RequestStatuses.IN_PROGRESS))
@@ -99,7 +102,8 @@ public class RegulatorRequestTaskAssignmentServiceTest {
                 .businessId("businessId")
                 .build();
 
-        Request request = Request.builder().accountId(accountId).status(RequestStatuses.IN_PROGRESS).build();
+        Request request = Request.builder().status(RequestStatuses.IN_PROGRESS).build();
+        addResourcesToRequest(accountId, request);
         RequestTask requestTask = RequestTask.builder().request(request).assignee(userId).build();
 
         when(requestTaskRepository
@@ -129,7 +133,8 @@ public class RegulatorRequestTaskAssignmentServiceTest {
                 .businessId("businessId")
                 .build();
 
-        Request request = Request.builder().accountId(accountId).status(RequestStatuses.IN_PROGRESS).build();
+        Request request = Request.builder().status(RequestStatuses.IN_PROGRESS).build();
+        addResourcesToRequest(accountId, request);
         RequestTask requestTask = RequestTask.builder().request(request).assignee(userId).build();
 
         when(requestTaskRepository.findByAssigneeAndRequestStatus(userId, RequestStatuses.IN_PROGRESS))
@@ -162,7 +167,8 @@ public class RegulatorRequestTaskAssignmentServiceTest {
                 .businessId("businessId")
                 .build();
 
-        Request request = Request.builder().accountId(accountId).status(RequestStatuses.IN_PROGRESS).build();
+        Request request = Request.builder().status(RequestStatuses.IN_PROGRESS).build();
+        addResourcesToRequest(accountId, request);
         RequestTask requestTask = RequestTask.builder().request(request).assignee(userId).build();
 
         when(requestTaskRepository
@@ -182,4 +188,14 @@ public class RegulatorRequestTaskAssignmentServiceTest {
         verify(targetUnitAccountQueryService, times(1)).getAccountById(accountId);
         verify(sectorAssociationQueryService, times(1)).getSectorAssociationFacilitatorUserId(sectorAssociationId);
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

@@ -3,7 +3,7 @@
     <div class="govuk-grid-column-two-thirds">
       <govuk-panel title="{{ sectorUser | userFullName }} has been removed from the sector account"></govuk-panel>
 
-      <a fragment="contacts" govukLink [routerLink]="['/user/sectors', sectorId]"> Return to: Contacts page </a>
+      <a fragment="contacts" class="govuk-link" [routerLink]="['/sectors', sectorId]"> Return to: Contacts page </a>
     </div>
   </div>
 } @else {
@@ -20,7 +20,7 @@
   <p class="govuk-body">If you need to reassign any of these tasks before removing this user, select 'Cancel'.</p>
 
   <div class="govuk-button-group">
-    <button type="button" (click)="onDeleteSectorUser()" ccaPendingButton govukWarnButton>Confirm removal</button>
-    <a govukLink fragment="contacts" [routerLink]="['/sectors', sectorId]">Cancel</a>
+    <button type="button" (click)="onDeleteSectorUser()" netzPendingButton govukWarnButton>Confirm removal</button>
+    <a class="govuk-link" fragment="contacts" [routerLink]="['/sectors', sectorId]">Cancel</a>
   </div>
 }

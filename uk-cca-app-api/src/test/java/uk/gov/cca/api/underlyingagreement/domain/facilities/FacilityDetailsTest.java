@@ -1,17 +1,16 @@
 package uk.gov.cca.api.underlyingagreement.domain.facilities;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Set;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
+
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FacilityDetailsTest {
 
@@ -31,7 +30,7 @@ class FacilityDetailsTest {
     			.isCoveredByUkets(Boolean.TRUE)
     			.uketsId("uketsId")
     			.applicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP)
-    			.previousFacilityId("previousFacilityId")
+    			.previousFacilityId("AAA_1-F11111")
     			.facilityAddress(AccountAddressDTO.builder()
                         .line1("Line 1")
                         .line2("Line 2")
@@ -70,6 +69,8 @@ class FacilityDetailsTest {
         assertThat(violations).extracting(ConstraintViolation::getMessage)
                 .containsExactlyInAnyOrder(
                 		"{underlyingagreement.facilities.facilitydetails.isCoveredByUkets}",
-                		"{underlyingagreement.facilities.facilitydetails.applicationReason}");
+                		"{underlyingagreement.facilities.facilitydetails.applicationReason}",
+                        "underlyingagreement.facilities.facilitydetails.previousFacilityId"
+                        );
     }
 }

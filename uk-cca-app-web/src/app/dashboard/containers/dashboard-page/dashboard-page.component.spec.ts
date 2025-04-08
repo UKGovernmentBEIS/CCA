@@ -60,6 +60,8 @@ describe('DashboardPageComponent', () => {
         isNew: true,
         accountName: 'DUMMY_ACCOUNT_NAME',
         businessId: 'DUMMY_BUSINESS_ID',
+        sectorAcronym: 'ADS_1',
+        sectorName: 'Sector 1',
       },
       {
         taskType: 'APPLY_FOR_AN_UNDERLYING_AGREEMENT',
@@ -73,6 +75,8 @@ describe('DashboardPageComponent', () => {
         isNew: false,
         accountName: 'DUMMY_ACCOUNT_NAME2',
         businessId: 'DUMMY_BUSINESS_ID2',
+        sectorAcronym: 'ADS_2',
+        sectorName: 'Sector 2',
       },
     ],
     totalItems: 2,
@@ -90,6 +94,8 @@ describe('DashboardPageComponent', () => {
         daysRemaining: 3,
         accountName: 'DUMMY_ACCOUNT_NAME3',
         businessId: 'DUMMY_BUSINESS_ID3',
+        sectorAcronym: 'ADS_3',
+        sectorName: 'Sector 3',
       },
     ],
     totalItems: 1,
@@ -151,7 +157,7 @@ describe('DashboardPageComponent', () => {
 
     expect(anchors.map((anchor) => anchor.href).length).toEqual(1);
     expect(cells.map((cell) => cell.textContent.trim())).toEqual([
-      ...['', 'Sasha Baron Cohen', '13', 'DUMMY_BUSINESS_ID2', 'DUMMY_ACCOUNT_NAME2'],
+      ...['', 'Sasha Baron Cohen', '13', 'DUMMY_BUSINESS_ID2', 'DUMMY_ACCOUNT_NAME2', 'ADS_2', 'Sector 2'],
     ]);
   });
 
@@ -188,7 +194,7 @@ describe('DashboardPageComponent', () => {
 
       expect(anchors.map((anchor) => anchor.href).length).toEqual(1);
       expect(cells.map((cell) => cell.textContent.trim())).toEqual([
-        ...['', '3', 'DUMMY_BUSINESS_ID3', 'DUMMY_ACCOUNT_NAME3'],
+        ...['', '3', 'DUMMY_BUSINESS_ID3', 'DUMMY_ACCOUNT_NAME3', 'ADS_3', 'Sector 3'],
       ]);
     });
 
@@ -209,10 +215,14 @@ describe('DashboardPageComponent', () => {
         '',
         'DUMMY_BUSINESS_ID',
         'DUMMY_ACCOUNT_NAME',
+        'ADS_1',
+        'Sector 1',
         '',
         '13',
         'DUMMY_BUSINESS_ID2',
         'DUMMY_ACCOUNT_NAME2',
+        'ADS_2',
+        'Sector 2',
       ]);
     });
   });

@@ -2,9 +2,9 @@ import { ChangeDetectorRef, Directive, OnInit } from '@angular/core';
 
 import { map } from 'rxjs';
 
-import { County } from '@core/models/county';
-import { CountyService } from '@core/services/county.service';
 import { SelectComponent } from '@netz/govuk-components';
+import { CountyService } from '@shared/services';
+import { County } from '@shared/types';
 
 @Directive({
   selector: 'govuk-select[ccaCounties],[govuk-select][ccaCounties]',

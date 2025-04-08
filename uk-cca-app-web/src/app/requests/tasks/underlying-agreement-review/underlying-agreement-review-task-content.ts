@@ -1,19 +1,21 @@
 import { inject } from '@angular/core';
 
-import { TaskItem, TaskSection } from '@netz/common/model';
+import { TaskSection } from '@netz/common/model';
 import { RequestTaskPageContentFactory } from '@netz/common/request-task';
 import { RequestTaskStore } from '@netz/common/store';
 import {
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
   BaselineAndTargetPeriodsSubtasks,
+  overallDecisionStatus,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
-  staticGroupDecisions,
   TaskItemStatus,
+  transformFacilities,
 } from '@requests/common';
 
 import { UnderlyingAgreementReviewRequestTaskPayload } from 'cca-api';
 
 import { UnderlyingAgreementReviewPrecontentComponent } from './precontent/underlying-agreement-review-precontent.component';
+import { reviewSectionsCompleted } from './utils';
 
 const routePrefix = 'underlying-agreement-review';
 
@@ -41,7 +43,14 @@ export function getAllUnderlyingAgreementSections(payload: UnderlyingAgreementRe
     },
     {
       title: 'Facilities',
-      tasks: getAllFacilities(payload),
+      tasks: transformFacilities(
+        payload?.underlyingAgreement?.facilities,
+        [],
+        payload?.reviewSectionsCompleted,
+        routePrefix,
+        '',
+        TaskItemStatus.UNDECIDED,
+      ),
     },
     {
       title: 'Baseline and Targets',
@@ -84,32 +93,4 @@ export function getAllUnderlyingAgreementSections(payload: UnderlyingAgreementRe
       ],
     },
   ];
-}
-
-function getAllFacilities(payload: UnderlyingAgreementReviewRequestTaskPayload): TaskItem[] {
-  return (
-    payload?.underlyingAgreement?.facilities?.map((facility) => ({
-      status: payload?.reviewSectionsCompleted?.[facility.facilityId] ?? TaskItemStatus.UNDECIDED,
-      link: `${routePrefix}/facility/${facility.facilityId}`,
-      linkText: `${facility.facilityDetails.name} (${facility.facilityId})`,
-    })) ?? []
-  );
-}
-
-function reviewSectionsCompleted(payload: UnderlyingAgreementReviewRequestTaskPayload): boolean {
-  const hasUndecidedSection = Object.keys(payload.reviewSectionsCompleted).some(
-    (k) => payload.reviewSectionsCompleted[k] === TaskItemStatus.UNDECIDED,
-  );
-  if (hasUndecidedSection) return false;
-  const sectionsCompleted = staticGroupDecisions.every((s) => payload.reviewGroupDecisions[s]);
-  if (!sectionsCompleted) return false;
-  return payload.underlyingAgreement.facilities.every((f) => payload.facilitiesReviewGroupDecisions[f.facilityId]);
-}
-
-function overallDecisionStatus(payload: UnderlyingAgreementReviewRequestTaskPayload): TaskItemStatus {
-  if (payload.determination?.type) {
-    return payload.determination.type === 'ACCEPTED' ? TaskItemStatus.APPROVED : TaskItemStatus.REJECTED;
-  } else {
-    return TaskItemStatus.UNDECIDED;
-  }
 }

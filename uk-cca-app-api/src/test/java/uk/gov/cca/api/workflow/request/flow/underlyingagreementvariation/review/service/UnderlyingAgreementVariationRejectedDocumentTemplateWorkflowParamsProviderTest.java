@@ -49,6 +49,9 @@ class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider
                 .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
                         .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                         .build())
+                .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
+                        .underlyingAgreementTargetUnitDetails(targetUnitDetails)
+                        .build())
                 .underlyingAgreementVersion(version)
                 .build();
 

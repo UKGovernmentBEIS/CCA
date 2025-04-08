@@ -1,5 +1,6 @@
 package uk.gov.cca.api.migration.ftp;
 
+import jakarta.validation.Valid;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.io.Resource;
@@ -20,17 +21,30 @@ import uk.gov.cca.api.migration.MigrationEndpoint;
 @Setter
 public class FtpProperties {
 
+    @Valid
     @NotBlank
     private String url;
-    
+
+    @Valid
     @NotBlank
     private String username;
-    
+
+    @Valid
     @Positive
     private int port;
 
+    @Valid
     private Resource keyPath;
 
+    @Valid
     @NotBlank
     private String serverSectorUmbrellaAgreementsDirectory;
+
+    @Valid
+    @NotBlank
+    private String serverUnderlyingAgreementsDirectory;
+
+    @Valid
+    @NotBlank
+    private String serverUnaAttachmentsDirectory;
 }

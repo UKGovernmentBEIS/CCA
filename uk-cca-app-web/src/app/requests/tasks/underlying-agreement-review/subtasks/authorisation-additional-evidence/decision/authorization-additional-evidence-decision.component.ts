@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { ButtonDirective } from '@netz/govuk-components';
 import {
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
   DECISION_FORM_PROVIDER,
@@ -17,7 +16,7 @@ import {
   underlyingAgreementQuery,
 } from '@requests/common';
 import { SummaryComponent, WizardStepComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { generateDownloadUrl } from '@shared/utils';
 
 import { UnderlyingAgreementReviewTaskService } from '../../../services/underlying-agreement-review-task.service';
 
@@ -47,12 +46,11 @@ import { UnderlyingAgreementReviewTaskService } from '../../../services/underlyi
     SummaryComponent,
     ReactiveFormsModule,
     DecisionComponent,
-    ButtonDirective,
     WizardStepComponent,
     ReturnToTaskOrActionPageComponent,
   ],
 })
-export class AUthorizationAdditionalEvidenceDecisionComponent {
+export class AuthorizationAdditionalEvidenceDecisionComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly taskService = inject(TaskService);

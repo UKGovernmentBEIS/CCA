@@ -13,7 +13,7 @@ import {
   RadioOptionComponent,
 } from '@netz/govuk-components';
 import { AccountAddressInputComponent, WizardStepComponent } from '@shared/components';
-import { TextInputComponent } from '@shared/components/text-input/text-input.component';
+import { TextInputComponent } from '@shared/components';
 
 import { underlyingAgreementQuery } from '../../../+state';
 import { ApplicationReasonTypePipe } from '../../../pipes';
@@ -60,24 +60,19 @@ export class FacilityDetailsComponent {
   );
 
   onSubmit() {
-    const payload = this.requestTaskStore.select(underlyingAgreementQuery.selectPayload)();
-    this.requestTaskStore.setPayload({ ...payload, currentFacilityId: this.facilityId });
-
+    const facility = {
+      facilityId: this.facilityId,
+      facilityDetails: {
+        name: this.form.controls.name.value,
+        isCoveredByUkets: this.form.value.isCoveredByUkets,
+        uketsId: this.form.value.uketsId,
+        applicationReason: this.form.getRawValue().applicationReason,
+        previousFacilityId: this.form.getRawValue().previousFacilityId,
+        facilityAddress: this.form.getRawValue().facilityAddress,
+      },
+    };
     this.taskService
-      .saveSubtask(FACILITIES_SUBTASK, FacilityWizardStep.DETAILS, this.activatedRoute, {
-        facility: {
-          facilityId: this.facilityId,
-
-          facilityDetails: {
-            name: this.form.controls.name.value,
-            isCoveredByUkets: this.form.value.isCoveredByUkets,
-            uketsId: this.form.value.uketsId,
-            applicationReason: this.form.value.applicationReason,
-            previousFacilityId: this.form.value.previousFacilityId,
-            facilityAddress: this.form.getRawValue().facilityAddress,
-          },
-        },
-      })
+      .saveSubtask(FACILITIES_SUBTASK, FacilityWizardStep.DETAILS, this.activatedRoute, facility)
       .subscribe();
   }
 }

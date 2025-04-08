@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
 import { SignalStore } from '@netz/common/store';
-import produce from 'immer';
+import { produce } from 'immer';
 
-import { ItemTargetUnitDTO } from 'cca-api';
+import { ItemDTO } from 'cca-api';
 
 import { DashboardState, initialState, WorkflowItemsAssignmentType } from './dashboard.state';
 
@@ -21,7 +21,7 @@ export class DashboardStore extends SignalStore<DashboardState> {
     );
   }
 
-  setItems(items: ItemTargetUnitDTO[]) {
+  setItems(items: ItemDTO[]) {
     this.setState(
       produce(this.state, (state) => {
         state.items = items;

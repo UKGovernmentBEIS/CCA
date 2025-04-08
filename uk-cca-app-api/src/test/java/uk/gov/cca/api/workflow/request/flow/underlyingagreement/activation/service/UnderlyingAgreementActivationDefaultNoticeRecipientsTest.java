@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
@@ -14,7 +13,9 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTar
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.TargetUnitAccountNoticeRecipients;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.List;
@@ -35,24 +36,28 @@ class UnderlyingAgreementActivationDefaultNoticeRecipientsTest {
 
     @Test
     void getRecipients() {
-        final long accountId = 1L;
+        final Long accountId = 1L;
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails =
                 UnderlyingAgreementTargetUnitDetails.builder()
                         .responsiblePersonDetails(UnderlyingAgreementTargetUnitResponsiblePerson.builder()
-                        .firstName("ResFn")
-                        .lastName("ResLn")
-                        .email("ResEmail")
-                        .build())
-                .build();
-        final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder()
-                        .accountId(accountId)
-                        .payload(UnderlyingAgreementRequestPayload.builder()
-                                .underlyingAgreement(UnderlyingAgreementPayload.builder()
-                                        .underlyingAgreementTargetUnitDetails(targetUnitDetails)
-                                        .build())
+                                .firstName("ResFn")
+                                .lastName("ResLn")
+                                .email("ResEmail")
+                                .build())
+                        .build();
+        final Request request = Request.builder()
+                .payload(UnderlyingAgreementRequestPayload.builder()
+                        .underlyingAgreement(UnderlyingAgreementPayload.builder()
+                                .underlyingAgreementTargetUnitDetails(targetUnitDetails)
+                                .build())
+                        .underlyingAgreementProposed(UnderlyingAgreementPayload.builder()
+                                .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                                 .build())
                         .build())
+                .build();
+        addResourcesToRequest(accountId, request);
+        final RequestTask requestTask = RequestTask.builder()
+                .request(request)
                 .build();
 
         final List<NoticeRecipientDTO> defaultNoticeRecipients = List.of(
@@ -91,5 +96,15 @@ class UnderlyingAgreementActivationDefaultNoticeRecipientsTest {
     void getType() {
         assertThat(service.getType())
                 .isEqualTo(CcaRequestTaskType.UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION);
+    }
+
+    private void addResourcesToRequest(Long accountId, Request request) {
+        RequestResource accountResource = RequestResource.builder()
+                .resourceType(ResourceType.ACCOUNT)
+                .resourceId(accountId.toString())
+                .request(request)
+                .build();
+
+        request.getRequestResources().add(accountResource);
     }
 }

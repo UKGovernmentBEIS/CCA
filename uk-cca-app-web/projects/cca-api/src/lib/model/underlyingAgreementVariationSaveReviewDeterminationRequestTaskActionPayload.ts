@@ -14,4 +14,5 @@ import { Determination } from './determination';
 export interface UnderlyingAgreementVariationSaveReviewDeterminationRequestTaskActionPayload {
   payloadType?: string;
   determination?: Determination;
+  reviewSectionsCompleted?: Record<string, string>;
 }

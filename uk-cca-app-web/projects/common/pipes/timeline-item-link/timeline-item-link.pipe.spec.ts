@@ -19,6 +19,10 @@ describe('TimelineItemLinkPipe', () => {
 
   it('should return empty link', () => {
     const noLinkActionTypes: RequestActionInfoDTO['type'][] = [
+      'UNDERLYING_AGREEMENT_APPLICATION_CANCELLED',
+      'ADMIN_TERMINATION_APPLICATION_CANCELLED',
+      'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_CANCELLED',
+
       'RDE_ACCEPTED',
       'RDE_CANCELLED',
       'RDE_EXPIRED',
@@ -29,6 +33,8 @@ describe('TimelineItemLinkPipe', () => {
       'REQUEST_TERMINATED',
 
       'VERIFICATION_STATEMENT_CANCELLED',
+
+      'SUBSISTENCE_FEES_RUN_SUBMITTED',
     ];
 
     noLinkActionTypes.forEach((type) => {
@@ -69,6 +75,29 @@ describe('TimelineItemLinkPipe', () => {
 
   it('should return link for underlying agreement variation submitted', () => {
     requestAction.type = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REJECTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACCEPTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACTIVATED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+  });
+
+  it('should return link for subsistence fees run', () => {
+    requestAction.type = 'SUBSISTENCE_FEES_RUN_COMPLETED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'SUBSISTENCE_FEES_RUN_COMPLETED_WITH_FAILURES';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'SECTOR_MOA_GENERATED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'TARGET_UNIT_MOA_GENERATED';
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 

@@ -1,7 +1,5 @@
 import { SideEffect, SubtaskOperation } from '@netz/common/forms';
-import { VARIATION_DETAILS_SUBTASK } from '@requests/common';
-
-import { submitReviewSideEffect } from '../../submit-side-effect';
+import { submitReviewSideEffect, VARIATION_DETAILS_SUBTASK } from '@requests/common';
 
 export class VariationDetailsSubmitSideEffect extends SideEffect {
   override step = undefined;

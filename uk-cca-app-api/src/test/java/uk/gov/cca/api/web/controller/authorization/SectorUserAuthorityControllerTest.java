@@ -183,7 +183,7 @@ class SectorUserAuthorityControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(currentUser, "deleteSectorUser", Long.toString(sectorId));
+                .authorize(currentUser, "deleteSectorUser", Long.toString(sectorId), null, null);
 
         //invoke
         mockMvc.perform(
@@ -221,7 +221,7 @@ class SectorUserAuthorityControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(currentUser, "deleteCurrentSectorUser", Long.toString(sectorId));
+                .authorize(currentUser, "deleteCurrentSectorUser", Long.toString(sectorId), null, null);
 
         //invoke
         mockMvc.perform(
@@ -308,7 +308,7 @@ class SectorUserAuthorityControllerTest {
 
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(currentUser, "updateSectorUserAuthorities", String.valueOf(sectorId));
+                .authorize(currentUser, "updateSectorUserAuthorities", String.valueOf(sectorId), null, null);
 
         //invoke
         mockMvc.perform(

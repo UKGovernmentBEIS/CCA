@@ -1,14 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
-import { LinkDirective } from '@netz/govuk-components';
-
 @Component({
   selector: 'cca-two-fa-link',
   template: `
     <div class="govuk-button-group">
       <a
-        govukLink
+        class="govuk-link"
         [routerLink]="link()"
         [relativeTo]="activatedRoute"
         [state]="{
@@ -25,7 +23,7 @@ import { LinkDirective } from '@netz/govuk-components';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [LinkDirective, RouterLink],
+  imports: [RouterLink],
 })
 export class TwoFaLinkComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);

@@ -2,7 +2,8 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
@@ -12,9 +13,8 @@ import {
   underlyingAgreementQuery,
   underlyingAgreementVariationQuery,
 } from '@requests/common';
-import { HighlightDiffComponent, PageHeadingComponent, SummaryComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
+import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-facility-check-answers',
@@ -49,8 +49,14 @@ export default class FacilityCheckAnswersComponent {
 
   protected readonly summaryDataOriginal = computed(() =>
     toFacilitySummaryDataWithStatus(
-      this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalFacility(this.facilityId))(),
-      this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments)(),
+      this.facility().status === 'NEW'
+        ? this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId))()
+        : this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalFacility(this.facilityId))(),
+      this.facility().status === 'NEW'
+        ? this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)()
+        : this.requestTaskStore.select(
+            underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments,
+          )(),
       this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
       this.downloadUrl,
     ),
@@ -66,9 +72,6 @@ export default class FacilityCheckAnswersComponent {
   );
 
   onSubmit() {
-    const payload = this.requestTaskStore.select(underlyingAgreementQuery.selectPayload)();
-    this.requestTaskStore.setPayload({ ...payload, currentFacilityId: this.facilityId });
-
     this.taskService
       .submitSubtask(FACILITIES_SUBTASK)
       .subscribe(() => this.router.navigate(['../../../..'], { relativeTo: this.activatedRoute }));

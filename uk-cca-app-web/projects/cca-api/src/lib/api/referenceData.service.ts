@@ -9,14 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -86,29 +85,29 @@ export class ReferenceDataService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getReferenceData(types: Array<'COUNTRIES' | 'COUNTIES'>): Observable<{ [key: string]: Array<object> }>;
+  public getReferenceData(types: ('COUNTRIES' | 'COUNTIES')[]): Observable<Record<string, object[]>>;
   public getReferenceData(
-    types: Array<'COUNTRIES' | 'COUNTIES'>,
+    types: ('COUNTRIES' | 'COUNTIES')[],
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<HttpResponse<{ [key: string]: Array<object> }>>;
+  ): Observable<HttpResponse<Record<string, object[]>>>;
   public getReferenceData(
-    types: Array<'COUNTRIES' | 'COUNTIES'>,
+    types: ('COUNTRIES' | 'COUNTIES')[],
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<HttpEvent<{ [key: string]: Array<object> }>>;
+  ): Observable<HttpEvent<Record<string, object[]>>>;
   public getReferenceData(
-    types: Array<'COUNTRIES' | 'COUNTIES'>,
+    types: ('COUNTRIES' | 'COUNTIES')[],
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<{ [key: string]: Array<object> }>;
+  ): Observable<Record<string, object[]>>;
   public getReferenceData(
-    types: Array<'COUNTRIES' | 'COUNTIES'>,
+    types: ('COUNTRIES' | 'COUNTIES')[],
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
   ): Observable<any> {
     if (types === null || types === undefined) {
@@ -118,7 +117,7 @@ export class ReferenceDataService {
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (types) {
       types.forEach((element) => {
-        queryParameters = this.addToHttpParams(queryParameters, <any>element, 'types');
+        queryParameters = this.addToHttpParams(queryParameters, element as any, 'types');
       });
     }
 
@@ -139,9 +138,9 @@ export class ReferenceDataService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<{ [key: string]: Array<object> }>(`${this.configuration.basePath}/v1.0/data`, {
+    return this.httpClient.get<Record<string, object[]>>(`${this.configuration.basePath}/v1.0/data`, {
       params: queryParameters,
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,

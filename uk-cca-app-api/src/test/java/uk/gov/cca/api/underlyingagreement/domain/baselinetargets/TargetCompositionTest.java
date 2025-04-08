@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.common.domain.MeasurementType;
 
 import java.math.BigDecimal;
@@ -163,7 +164,7 @@ class TargetCompositionTest {
                 .agreementCompositionType(AgreementCompositionType.ABSOLUTE)
                 .isTargetUnitThroughputMeasured(Boolean.TRUE)
                 .throughputUnit("GJ")
-                .conversionFactor(BigDecimal.valueOf(0.1555111))
+                .conversionFactor(BigDecimal.valueOf(0.155511111))
                 .conversionEvidences(Set.of(UUID.randomUUID()))
                 .build();
 
@@ -171,7 +172,7 @@ class TargetCompositionTest {
 
         assertThat(violations).isNotEmpty();
         assertThat(violations).extracting(ConstraintViolation::getMessage)
-                .contains("numeric value out of bounds (<2147483647 digits>.<4 digits> expected)");
+                .contains("numeric value out of bounds (<2147483647 digits>.<7 digits> expected)");
     }
 
     @Test

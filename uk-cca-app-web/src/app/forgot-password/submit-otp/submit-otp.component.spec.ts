@@ -4,8 +4,8 @@ import { provideRouter, Router } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
-import { AuthService } from '@core/services/auth.service';
 import { BasePage, mockClass } from '@netz/common/testing';
+import { AuthService } from '@shared/services';
 import { KeycloakService } from 'keycloak-angular';
 
 import { ForgotPasswordService } from 'cca-api';

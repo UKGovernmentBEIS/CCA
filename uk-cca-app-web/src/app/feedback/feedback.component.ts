@@ -1,13 +1,13 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
-import { BehaviorSubject, takeUntil } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
-import { DestroySubject } from '@core/services/destroy-subject.service';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { GovukComponentsModule, GovukValidators } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
 
 import { UserFeedbackDto, UsersService } from 'cca-api';
 
@@ -19,7 +19,6 @@ type RateWithoutNotApplicable = Exclude<Rate, 'NOT_APPLICABLE_NOT_USED_YET'>;
   standalone: true,
   templateUrl: './feedback.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DestroySubject],
   imports: [PageHeadingComponent, GovukComponentsModule, AsyncPipe, ReactiveFormsModule, PendingButtonDirective],
 })
 export class FeedbackComponent implements OnInit {
@@ -110,38 +109,38 @@ export class FeedbackComponent implements OnInit {
   constructor(
     private readonly fb: UntypedFormBuilder,
     private readonly usersService: UsersService,
-    private readonly destroy$: DestroySubject,
+    private readonly destroy$: DestroyRef,
   ) {}
 
   ngOnInit(): void {
     this.feedbackForm
       .get('userRegistrationRate')
-      .valueChanges.pipe(takeUntil(this.destroy$))
+      .valueChanges.pipe(takeUntilDestroyed(this.destroy$))
       .subscribe(() => this.feedbackForm.get('userRegistrationRateReason').enable());
 
     this.feedbackForm
       .get('onlineGuidanceRate')
-      .valueChanges.pipe(takeUntil(this.destroy$))
+      .valueChanges.pipe(takeUntilDestroyed(this.destroy$))
       .subscribe(() => this.feedbackForm.get('onlineGuidanceRateReason').enable());
 
     this.feedbackForm
       .get('creatingAccountRate')
-      .valueChanges.pipe(takeUntil(this.destroy$))
+      .valueChanges.pipe(takeUntilDestroyed(this.destroy$))
       .subscribe(() => this.feedbackForm.get('creatingAccountRateReason').enable());
 
     this.feedbackForm
       .get('onBoardingRate')
-      .valueChanges.pipe(takeUntil(this.destroy$))
+      .valueChanges.pipe(takeUntilDestroyed(this.destroy$))
       .subscribe(() => this.feedbackForm.get('onBoardingRateReason').enable());
 
     this.feedbackForm
       .get('tasksRate')
-      .valueChanges.pipe(takeUntil(this.destroy$))
+      .valueChanges.pipe(takeUntilDestroyed(this.destroy$))
       .subscribe(() => this.feedbackForm.get('tasksRateReason').enable());
 
     this.feedbackForm
       .get('satisfactionRate')
-      .valueChanges.pipe(takeUntil(this.destroy$))
+      .valueChanges.pipe(takeUntilDestroyed(this.destroy$))
       .subscribe(() => this.feedbackForm.get('satisfactionRateReason').enable());
   }
 

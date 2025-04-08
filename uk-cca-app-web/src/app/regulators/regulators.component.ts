@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { PageHeadingComponent } from '@netz/common/components';
 import { TabLazyDirective, TabsComponent } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
 
 import { ExternalContactsComponent } from './external-contacts-tab/external-contacts.component';
 import { RegulatorsUsersComponent } from './regulators-users-tab/regulators-users.component';

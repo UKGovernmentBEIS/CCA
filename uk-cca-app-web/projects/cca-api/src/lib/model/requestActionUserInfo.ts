@@ -13,5 +13,5 @@
 export interface RequestActionUserInfo {
   name: string;
   roleCode?: string;
-  contactTypes?: Array<string>;
+  contactTypes?: string[];
 }

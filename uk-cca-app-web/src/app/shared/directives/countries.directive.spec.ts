@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
-import { CountryService } from '@core/services/country.service';
 import { SelectComponent } from '@netz/govuk-components';
+import { CountryService } from '@shared/services';
 
 import { CountryServiceStub } from 'src/testing/country.service.stub';
 
@@ -39,6 +39,6 @@ describe('CountriesDirective', () => {
 
   it('should assign countries to select', () => {
     const selectElement = fixture.debugElement.query(By.css('select'));
-    expect((selectElement.nativeElement as HTMLSelectElement).options[1].label).toEqual('Cyprus');
+    expect((selectElement.nativeElement as HTMLSelectElement).options[1].label).toEqual('Afghanistan');
   });
 });

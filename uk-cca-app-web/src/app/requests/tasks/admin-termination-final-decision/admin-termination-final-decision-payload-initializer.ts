@@ -1,4 +1,4 @@
-import produce from 'immer';
+import { produce } from 'immer';
 
 import { ADTFDRequestTaskPayload } from './admin-termination-final-decision.types';
 

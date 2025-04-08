@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { LinkDirective, PanelComponent } from '@netz/govuk-components';
+import { PanelComponent } from '@netz/govuk-components';
 
 import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
 
@@ -13,10 +13,10 @@ import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
         <govuk-panel>You have successfully added an operator user for {{ targetUnitName }}</govuk-panel>
       </div>
     </div>
-    <a govukLink routerLink="/dashboard"> Go to my dashboard </a>
+    <a class="govuk-link" routerLink="/dashboard"> Go to my dashboard </a>
   </div>`,
   standalone: true,
-  imports: [PanelComponent, LinkDirective, RouterLink],
+  imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddOperatorConfirmationComponent {

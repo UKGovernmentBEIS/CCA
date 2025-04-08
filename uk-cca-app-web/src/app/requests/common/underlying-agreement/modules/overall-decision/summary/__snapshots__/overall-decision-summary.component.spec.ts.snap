@@ -1,0 +1,373 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SummaryComponentUnaDetermination should match overall decision summary 1`] = `
+<div
+  id="root0"
+>
+  <div>
+    <netz-page-heading>
+      <span
+        class="govuk-caption-l"
+      >
+        Reject
+      </span>
+      
+      <h1
+        class="govuk-heading-l"
+      >
+        Summary
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      <h2
+        class="govuk-heading-m"
+      >
+        
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Decision
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            
+            
+             Reject 
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/actions?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Rejection reason
+          </dt>
+          <dd
+            class="pre-wrap govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            
+            
+             asdasdasdasdasd 
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/explanation?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Additional information
+          </dt>
+          <dd
+            class="pre-wrap govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            
+            
+             adqwdasd 
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/additional-info?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Uploaded files
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              No files provided
+            </span>
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/additional-info?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        
+        
+        
+      </dl>
+      
+    </cca-summary>
+  </div>
+  <netz-return-to-task-or-action-page>
+    <a
+      govuklink=""
+      href="/undefined"
+    >
+       Return to: Review application for underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</div>
+`;
+
+exports[`SummaryComponentVariationDetermination should match overall decision summary 1`] = `
+<div
+  id="root1"
+>
+  <div>
+    <netz-page-heading>
+      <span
+        class="govuk-caption-l"
+      >
+        Reject
+      </span>
+      
+      <h1
+        class="govuk-heading-l"
+      >
+        Summary
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      <h2
+        class="govuk-heading-m"
+      >
+        
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Decision
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            
+            
+             Reject 
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/actions?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Rejection reason
+          </dt>
+          <dd
+            class="pre-wrap govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            
+            
+             asdasdasdasdasd 
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/explanation?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Additional information
+          </dt>
+          <dd
+            class="pre-wrap govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            
+            
+             adqwdasd 
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/additional-info?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Uploaded files
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              No files provided
+            </span>
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/additional-info?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+        </div>
+        
+        
+        
+      </dl>
+      
+    </cca-summary>
+  </div>
+  <netz-return-to-task-or-action-page>
+    <a
+      govuklink=""
+      href="/undefined"
+    >
+       Return to: Review application for underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</div>
+`;

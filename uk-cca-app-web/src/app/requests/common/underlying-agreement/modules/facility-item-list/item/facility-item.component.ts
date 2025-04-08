@@ -6,7 +6,7 @@ import { Observable, switchMap } from 'rxjs';
 
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { LinkDirective, TextInputComponent } from '@netz/govuk-components';
+import { TextInputComponent } from '@netz/govuk-components';
 import { WizardStepComponent } from '@shared/components';
 
 import { FacilityService } from 'cca-api';
@@ -17,7 +17,7 @@ import { ADD_FACILITY_FORM, FacilityItemFormModel, FacilityItemFormProvider } fr
 @Component({
   selector: 'cca-facility-item',
   standalone: true,
-  imports: [ReactiveFormsModule, WizardStepComponent, TextInputComponent, LinkDirective, RouterLink],
+  imports: [ReactiveFormsModule, WizardStepComponent, TextInputComponent, RouterLink],
   templateUrl: './facility-item.component.html',
   providers: [FacilityItemFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +30,7 @@ export class FacilityItemComponent {
 
   protected readonly form = inject<FormGroup<FacilityItemFormModel>>(ADD_FACILITY_FORM);
 
-  protected readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
+  protected readonly facilityId = this.form.value.facilityId;
 
   private readonly requestInfo = this.requestTaskStore.select(requestTaskQuery.selectRequestInfo);
 
@@ -50,7 +50,7 @@ export class FacilityItemComponent {
       MANAGE_FACILITIES_SUBTASK,
       this.facilityId ? ManageFacilitiesWizardStep.EDIT_FACILITY : ManageFacilitiesWizardStep.ADD_FACILITY,
       this.activatedRoute,
-      { name: this.form.value.name, facilityId, status: 'NEW' },
+      { name: this.form.value.name, facilityId, status: this.form.value.status ?? 'NEW' },
     );
   }
 }

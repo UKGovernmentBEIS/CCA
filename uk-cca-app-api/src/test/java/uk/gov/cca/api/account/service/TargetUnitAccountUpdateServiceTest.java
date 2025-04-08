@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.cca.api.account.domain.AccountAddress;
 import uk.gov.cca.api.account.domain.FinancialIndependenceStatus;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
@@ -15,17 +14,17 @@ import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountUpdateDTO;
 import uk.gov.cca.api.account.domain.dto.UpdateTargetUnitAccountFinancialIndependenceStatusCodeDTO;
 import uk.gov.cca.api.account.domain.dto.UpdateTargetUnitAccountResponsiblePersonDTO;
 import uk.gov.cca.api.account.domain.dto.UpdateTargetUnitAccountSicCodeDTO;
 import uk.gov.cca.api.account.repository.TargetUnitAccountRepository;
 import uk.gov.cca.api.account.transform.AccountAddressMapper;
 import uk.gov.cca.api.account.transform.TargetUnitAccountMapper;
-import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
-import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitResponsiblePerson;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +48,7 @@ class TargetUnitAccountUpdateServiceTest {
 
     @Mock
     private TargetUnitAccountMapper targetUnitAccountMapper;
-    
+
     @Mock
     private AccountAddressMapper accountAddressMapper;
 
@@ -303,11 +302,13 @@ class TargetUnitAccountUpdateServiceTest {
                 .status(TargetUnitAccountStatus.LIVE)
                 .businessId(businessId)
                 .build();
+        final LocalDateTime terminationDate = LocalDateTime.now();
+
 
         when(targetUnitAccountRepository.findById(accountId)).thenReturn(Optional.ofNullable(account));
 
         // invoke
-        targetUnitAccountUpdateService.handleTargetUnitAccountTerminated(accountId);
+        targetUnitAccountUpdateService.handleTargetUnitAccountTerminated(accountId, terminationDate);
 
         // assert
         assertThat(Objects.requireNonNull(account).getStatus()).isEqualTo(TargetUnitAccountStatus.TERMINATED);
@@ -333,30 +334,9 @@ class TargetUnitAccountUpdateServiceTest {
         assertThat(Objects.requireNonNull(account).getStatus())
                 .isEqualTo(TargetUnitAccountStatus.REJECTED);
     }
-    
+
     @Test
-    void handleTargetUnitAccountActivated(){
-        Long accountId = 1L;
-        String businessId = "ADS_53-T00004";
-
-        TargetUnitAccount account = TargetUnitAccount.builder()
-                .id(accountId)
-                .status(TargetUnitAccountStatus.NEW)
-                .businessId(businessId)
-                .build();
-
-        when(targetUnitAccountRepository.findById(accountId)).thenReturn(Optional.ofNullable(account));
-
-        // invoke
-        targetUnitAccountUpdateService.handleTargetUnitAccountActivated(accountId);
-
-        // assert
-        assertThat(Objects.requireNonNull(account).getStatus())
-                .isEqualTo(TargetUnitAccountStatus.LIVE);
-    }
-    
-    @Test
-    void updateTargetUnitAccountUponUnderlyingAgreementActivated() {
+    void activateTargetUnitAccount() {
         final long accountId = 1L;
 
         TargetUnitAccountContact responsibleContact = TargetUnitAccountContact.builder()
@@ -378,9 +358,10 @@ class TargetUnitAccountUpdateServiceTest {
         AccountAddress address = AccountAddress.builder().city("city").build();
         AccountAddress newAddress = AccountAddress.builder().city("city_new").build();
         AccountAddressDTO updatedAddress = AccountAddressDTO.builder()
-				.city("city_new")
-				.build();
-        
+                .city("city_new")
+                .build();
+
+        LocalDateTime acceptedDate = LocalDateTime.now();
         TargetUnitAccount account = TargetUnitAccount.builder()
                 .id(accountId)
                 .status(TargetUnitAccountStatus.NEW)
@@ -389,23 +370,25 @@ class TargetUnitAccountUpdateServiceTest {
                 .companyRegistrationNumber("number")
                 .address(address)
                 .targetUnitAccountContacts(targetUnitAccountContacts)
+                .acceptedDate(acceptedDate)
+                .subsectorAssociationId(888L)
                 .build();
 
-        UnderlyingAgreementTargetUnitDetails targetUnitDetails =
-        		UnderlyingAgreementTargetUnitDetails.builder()
+        TargetUnitAccountUpdateDTO targetUnitDetails =
+                TargetUnitAccountUpdateDTO.builder()
                         .companyRegistrationNumber("number_new")
                         .operatorName("name_new")
                         .operatorType(TargetUnitAccountOperatorType.SOLE_TRADER)
                         .operatorAddress(updatedAddress)
-                        .responsiblePersonDetails(UnderlyingAgreementTargetUnitResponsiblePerson.builder()
-                        		.email("email_new")
-                        		.firstName("fname_new")
-                        		.lastName("lname_new")
-                        		.build())
+                        .responsiblePerson(TargetUnitAccountContactDTO.builder()
+                                .email("email_new")
+                                .firstName("fname_new")
+                                .lastName("lname_new")
+                                .build())
+                        .subsectorAssociationId(999L)
                         .build();
 
         when(targetUnitAccountRepository.findTargetUnitAccountById(accountId)).thenReturn(Optional.of(account));
-        when(targetUnitAccountRepository.findById(accountId)).thenReturn(Optional.of(account));
 
         doAnswer(invocation -> {
             account.setAddress(newAddress);
@@ -413,7 +396,7 @@ class TargetUnitAccountUpdateServiceTest {
         }).when(accountAddressMapper).setAddress(any(AccountAddress.class),any(AccountAddressDTO.class));
 
         // Invoke
-        targetUnitAccountUpdateService.updateTargetUnitAccountUponUnderlyingAgreementActivated(accountId, targetUnitDetails);
+        targetUnitAccountUpdateService.activateTargetUnitAccount(accountId, targetUnitDetails, acceptedDate);
 
         // Verify
         assertThat(Objects.requireNonNull(account).getStatus()).isEqualTo(TargetUnitAccountStatus.LIVE);
@@ -427,7 +410,84 @@ class TargetUnitAccountUpdateServiceTest {
         assertThat(account.getTargetUnitAccountContacts().get(1).getFirstName()).isEqualTo("fname");
         assertThat(account.getTargetUnitAccountContacts().get(1).getLastName()).isEqualTo("lname");
         assertThat(account.getTargetUnitAccountContacts().get(1).getEmail()).isEqualTo("email");
+        assertThat(account.getSubsectorAssociationId()).isEqualTo(targetUnitDetails.getSubsectorAssociationId());
         verify(targetUnitAccountRepository).findTargetUnitAccountById(accountId);
-        verify(targetUnitAccountRepository).findById(accountId);
+    }
+
+
+    @Test
+    void updateTargetUnitAccountUponUnderlyingAgreementVariation() {
+
+
+        final long accountId = 1L;
+
+        TargetUnitAccountContact responsibleContact = TargetUnitAccountContact.builder()
+                .contactType(TargetUnitAccountContactType.RESPONSIBLE_PERSON)
+                .firstName("fname")
+                .lastName("lname")
+                .email("email")
+                .build();
+        TargetUnitAccountContact administrativeContact = TargetUnitAccountContact.builder()
+                .contactType(TargetUnitAccountContactType.ADMINISTRATIVE_CONTACT_DETAILS)
+                .firstName("fname")
+                .lastName("lname")
+                .email("email")
+                .build();
+        List<TargetUnitAccountContact> targetUnitAccountContacts = new ArrayList<>();
+        targetUnitAccountContacts.add(responsibleContact);
+        targetUnitAccountContacts.add(administrativeContact);
+
+        AccountAddress address = AccountAddress.builder().city("city").build();
+        AccountAddress newAddress = AccountAddress.builder().city("city_new").build();
+        AccountAddressDTO updatedAddress = AccountAddressDTO.builder()
+                .city("city_new")
+                .build();
+
+        TargetUnitAccount account = TargetUnitAccount.builder()
+                .id(accountId)
+                .status(TargetUnitAccountStatus.LIVE)
+                .operatorType(TargetUnitAccountOperatorType.LIMITED_COMPANY)
+                .name("name")
+                .companyRegistrationNumber("number")
+                .address(address)
+                .targetUnitAccountContacts(targetUnitAccountContacts)
+                .acceptedDate(LocalDateTime.now())
+                .build();
+
+        TargetUnitAccountUpdateDTO targetUnitDetails =
+                TargetUnitAccountUpdateDTO.builder()
+                        .companyRegistrationNumber("number_new")
+                        .operatorName("name_new")
+                        .operatorType(TargetUnitAccountOperatorType.SOLE_TRADER)
+                        .operatorAddress(updatedAddress)
+                        .responsiblePerson(TargetUnitAccountContactDTO.builder()
+                                .email("email_new")
+                                .firstName("fname_new")
+                                .lastName("lname_new")
+                                .build())
+                        .build();
+
+        when(targetUnitAccountRepository.findTargetUnitAccountById(accountId)).thenReturn(Optional.of(account));
+
+        doAnswer(invocation -> {
+            account.setAddress(newAddress);
+            return null;
+        }).when(accountAddressMapper).setAddress(any(AccountAddress.class),any(AccountAddressDTO.class));
+
+        // Invoke
+        targetUnitAccountUpdateService.updateTargetUnitAccountUponUnderlyingAgreementVariation(accountId, targetUnitDetails);
+
+        // Verify
+        assertThat(account.getName()).isEqualTo("name_new");
+        assertThat(account.getOperatorType()).isEqualTo(TargetUnitAccountOperatorType.SOLE_TRADER);
+        assertThat(account.getAddress().getCity()).isEqualTo("city_new");
+        assertThat(account.getCompanyRegistrationNumber()).isEqualTo("number_new");
+        assertThat(account.getTargetUnitAccountContacts().get(0).getFirstName()).isEqualTo("fname_new");
+        assertThat(account.getTargetUnitAccountContacts().get(0).getLastName()).isEqualTo("lname_new");
+        assertThat(account.getTargetUnitAccountContacts().get(0).getEmail()).isEqualTo("email_new");
+        assertThat(account.getTargetUnitAccountContacts().get(1).getFirstName()).isEqualTo("fname");
+        assertThat(account.getTargetUnitAccountContacts().get(1).getLastName()).isEqualTo("lname");
+        assertThat(account.getTargetUnitAccountContacts().get(1).getEmail()).isEqualTo("email");
+        verify(targetUnitAccountRepository).findTargetUnitAccountById(accountId);
     }
 }

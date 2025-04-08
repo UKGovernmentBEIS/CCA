@@ -27,7 +27,8 @@ public class UnderlyingAgreementVariationViolation extends BusinessViolation {
     public enum UnderlyingAgreementVariationViolationMessage {
         INVALID_SECTION_DATA("Invalid section data"),
         INVALID_UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_DETAILS_DATA("Invalid underlying agreement variation activation details data"),
-        ATTACHMENT_NOT_FOUND("Attachment not found");
+        ATTACHMENT_NOT_FOUND("Attachment not found"),
+        INVALID_APPLICATION_REASON_SECTION("Invalid application reason");
 
         private final String message;
 

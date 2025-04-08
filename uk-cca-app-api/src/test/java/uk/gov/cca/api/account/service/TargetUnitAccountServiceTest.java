@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.cca.api.account.domain.AccountAddress;
 import uk.gov.cca.api.account.domain.CcaEmissionTradingScheme;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
@@ -28,6 +27,7 @@ import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.cca.api.account.domain.AccountSearchKey.ACCOUNT_NAME;
+import static uk.gov.cca.api.account.domain.AccountSearchKey.BUSINESS_ID;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -77,6 +79,7 @@ class TargetUnitAccountServiceTest {
         TargetUnitAccountDTO accountDTOSaved = TargetUnitAccountDTO.builder()
                 .id(accountId)
                 .name("name")
+                .businessId("businessId")
                 .emissionTradingScheme(CcaEmissionTradingScheme.DUMMY_EMISSION_TRADING_SCHEME)
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .operatorType(TargetUnitAccountOperatorType.PARTNERSHIP)
@@ -105,6 +108,7 @@ class TargetUnitAccountServiceTest {
         TargetUnitAccount accountSaved = TargetUnitAccount.builder()
                 .id(accountId)
                 .name("name")
+                .businessId("businessId")
                 .emissionTradingScheme(CcaEmissionTradingScheme.DUMMY_EMISSION_TRADING_SCHEME)
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .operatorType(TargetUnitAccountOperatorType.PARTNERSHIP)
@@ -136,8 +140,9 @@ class TargetUnitAccountServiceTest {
                 .toTargetUnitAccountContact(accountDTO.getResponsiblePerson(), TargetUnitAccountContactType.RESPONSIBLE_PERSON);
         verify(targetUnitAccountMapper, times(1)).toTargetUnitAccountDTO(accountSaved);
         verify(targetUnitAccountRepository, times(1)).save(account);
-        verify(accountSearchAdditionalKeywordService, times(1)).storeKeywordsForAccount(accountDTOSaved.getId(),
-                accountDTOSaved.getName(), accountDTOSaved.getBusinessId());
+        verify(accountSearchAdditionalKeywordService, times(1)).storeKeywordsForAccount(accountDTOSaved.getId(), Map.of(
+                ACCOUNT_NAME.toString(), accountDTOSaved.getName(),
+                BUSINESS_ID.toString(), accountDTOSaved.getBusinessId()));
     }
 
     @Test

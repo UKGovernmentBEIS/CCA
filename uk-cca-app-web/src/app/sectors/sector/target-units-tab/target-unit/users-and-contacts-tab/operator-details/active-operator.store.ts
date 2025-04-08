@@ -13,6 +13,7 @@ const initialState: ActiveOperatorState = {
   editable: false,
   details: null,
 };
+
 @Injectable()
 export class ActiveOperatorStore extends SignalStore<ActiveOperatorState> {
   constructor() {

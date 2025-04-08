@@ -61,22 +61,18 @@ export class FacilityContactDetailsComponent {
   );
 
   onSubmit() {
-    const payload = this.requestTaskStore.select(underlyingAgreementQuery.selectPayload)();
-    this.requestTaskStore.setPayload({ ...payload, currentFacilityId: this.facilityId });
-
+    const facility = {
+      facilityId: this.facilityId,
+      facilityContact: {
+        firstName: this.form.getRawValue().firstName,
+        lastName: this.form.getRawValue().lastName,
+        email: this.form.getRawValue().email,
+        address: this.form.getRawValue().address,
+        phoneNumber: this.form.getRawValue().phoneNumber,
+      },
+    };
     this.taskService
-      .saveSubtask(FACILITIES_SUBTASK, FacilityWizardStep.CONTACT_DETAILS, this.activatedRoute, {
-        facility: {
-          facilityId: this.facilityId,
-          facilityContact: {
-            firstName: this.form.getRawValue().firstName,
-            lastName: this.form.getRawValue().lastName,
-            email: this.form.getRawValue().email,
-            address: this.form.getRawValue().address,
-            phoneNumber: this.form.getRawValue().phoneNumber,
-          },
-        },
-      })
+      .saveSubtask(FACILITIES_SUBTASK, FacilityWizardStep.CONTACT_DETAILS, this.activatedRoute, facility)
       .subscribe();
   }
 }

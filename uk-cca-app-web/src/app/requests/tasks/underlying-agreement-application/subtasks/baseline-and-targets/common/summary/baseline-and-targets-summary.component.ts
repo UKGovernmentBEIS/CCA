@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   BASELINE_AND_TARGETS_SUBTASK,
@@ -9,8 +9,8 @@ import {
   toBaselineAndTargetsSummaryData,
   underlyingAgreementQuery,
 } from '@requests/common';
-import { PageHeadingComponent, SummaryComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { SummaryComponent } from '@shared/components';
+import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-baseline-and-targets-summary',

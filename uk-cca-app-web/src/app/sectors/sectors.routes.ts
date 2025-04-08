@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
-import { PendingRequestGuard } from '@core/guards/pending-request.guard';
+import { PendingRequestGuard } from '@shared/guards';
 
 import { SectorGuard } from './sector.guard';
 import { ActiveSectorStore } from './sector/active-sector.store';
@@ -11,7 +11,7 @@ import { SectorListComponent } from './sectors-list/sector-list.component';
 export const SECTORS_ROUTES: Routes = [
   {
     path: '',
-    data: { pageTitle: 'Manage Sectors' },
+    data: { pageTitle: 'Sectors' },
     component: SectorListComponent,
     canDeactivate: [PendingRequestGuard],
   },
@@ -21,10 +21,8 @@ export const SECTORS_ROUTES: Routes = [
     canActivate: [SectorGuard],
     data: {
       pageTitle: 'Sector details',
-      breadcrumb: {
-        resolveText: ({ details }) =>
-          `${details.sectorAssociationDetails.acronym} - ${details.sectorAssociationDetails.commonName}`,
-      },
+      breadcrumb: ({ details }) =>
+        `${details.sectorAssociationDetails.acronym} - ${details.sectorAssociationDetails.commonName}`,
     },
     resolve: { details: () => inject(ActiveSectorStore).state },
     children: SECTOR_ROUTES,

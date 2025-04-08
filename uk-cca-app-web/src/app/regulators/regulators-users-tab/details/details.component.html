@@ -2,7 +2,7 @@
   <govuk-error-summary [form]="form"></govuk-error-summary>
 }
 
-<cca-page-heading>{{ userId ? 'User details' : 'Add a new user' }}</cca-page-heading>
+<netz-page-heading>{{ userId ? 'User details' : 'Add a new user' }}</netz-page-heading>
 
 <form (ngSubmit)="submitForm()" [formGroup]="form">
   <div formGroupName="user">
@@ -167,7 +167,7 @@
     </cca-two-fa-link>
   }
 
-  <button ccaPendingButton govukButton type="submit">
+  <button netzPendingButton govukButton type="submit">
     {{ userId | submitIfEmpty }}
   </button>
 </form>

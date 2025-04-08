@@ -5,7 +5,10 @@ import {
   transformUserContacts,
 } from '@requests/common';
 import { SummaryFactory } from '@shared/components';
-import { transformAttachmentsToDownloadableFiles, transformFileInfoToDownloadableFile } from '@shared/utils';
+import {
+  transformAttachmentsAndFileUUIDsToDownloadableFiles,
+  transformFileInfoToDownloadableFile,
+} from '@shared/utils';
 
 import { UnderlyingAgreementActivatedRequestActionPayload } from 'cca-api';
 
@@ -15,7 +18,7 @@ export function toUnderlyingAgreementActivatedSummaryData(payload: UnderlyingAgr
     .addSection('Details')
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsToDownloadableFiles(
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
         payload.underlyingAgreementActivationDetails.evidenceFiles,
         payload.underlyingAgreementActivationAttachments,
         'file-download',

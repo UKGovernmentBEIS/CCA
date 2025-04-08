@@ -3,12 +3,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
-import { CountryService } from '@core/services/country.service';
 import { BasePage } from '@netz/common/testing';
 import { GovukValidators } from '@netz/govuk-components';
-import { PhoneInputComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 
 import { CountryServiceStub } from 'src/testing/country.service.stub';
+
+import { PhoneInputComponent } from './phone-input.component';
 
 describe('PhoneInputComponent', () => {
   let component: PhoneInputComponent;

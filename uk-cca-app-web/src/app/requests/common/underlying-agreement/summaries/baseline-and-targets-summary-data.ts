@@ -2,7 +2,7 @@ import { DecimalPipe } from '@angular/common';
 
 import { GovukDatePipe } from '@netz/common/pipes';
 import { SummaryFactory } from '@shared/components';
-import { transformAttachmentsToDownloadableFiles } from '@shared/utils';
+import { transformAttachmentsAndFileUUIDsToDownloadableFiles } from '@shared/utils';
 
 import {
   BaselineData,
@@ -14,9 +14,8 @@ import {
 } from 'cca-api';
 
 import { getBaselineUnits, getMeasurementAndThroughputUnits } from '../modules';
-import { AgreementCompositionTypePipe } from '../pipes/agreement-composition-type.pipe';
-import { MeasurementTypeToOptionTextPipe } from '../pipes/measurement-type-to-option-text.pipe';
-import { MeasurementTypeToUnitPipe } from '../pipes/measurement-type-to-unit.pipe';
+import { AgreementCompositionTypePipe, MeasurementTypeToUnitPipe } from '../pipes';
+import { MeasurementTypeToOptionTextPipe } from '../pipes';
 import { BaseLineAndTargetsStep } from '../underlying-agreement.types';
 import { boolToString } from '../utils';
 import { addDecisionSummaryData } from './decision-summary-data';
@@ -34,7 +33,7 @@ export function toBaselineAndTargetsSummaryData(
   baselineExists: boolean,
   sectorAssociation: SectorAssociationDetails,
   targetPeriodDetails: TargetPeriod6Details,
-  attachments: { [key: string]: string },
+  attachments: Record<string, string>,
   isEditable: boolean,
   multiFileDownloadUrl?: string,
 ) {
@@ -76,6 +75,7 @@ export function toBaselineAndTargetsSummaryData(
 
   return factory.create();
 }
+
 export function toBaselineAndTargetsSummaryDataWithDecision(
   sectorAssociation: SectorAssociationDetails,
   targetPeriodDetails: TargetPeriod6Details,
@@ -126,7 +126,7 @@ function targetPeriodSummaryData(
   factory: SummaryFactory,
   sectorAssociation: SectorAssociationDetails,
   targetPeriod6Details: TargetPeriod6Details,
-  attachments: { [key: string]: string },
+  attachments: Record<string, string>,
   isEditable: boolean,
   multiFileDownloadUrl?: string,
 ): SummaryFactory {
@@ -162,18 +162,23 @@ function addTargetCompositionSection(
   factory: SummaryFactory,
   sectorAssociationDetails: SectorAssociationDetails,
   targetComposition: TargetComposition,
-  attachments: { [key: string]: string },
+  attachments: Record<string, string>,
   isEditable: boolean,
   multiFileDownloadUrl: string,
 ): void {
   const measurementPipe = new MeasurementTypeToOptionTextPipe();
   const agreementTypePipe = new AgreementCompositionTypePipe();
+  const decimalPipe = new DecimalPipe('en-GB');
 
   factory.addSection('Target composition', `../${BaseLineAndTargetsStep.TARGET_COMPOSITION}`);
 
   factory.addFileListRow(
     'Target calculator file',
-    transformAttachmentsToDownloadableFiles([targetComposition?.calculatorFile], attachments, multiFileDownloadUrl),
+    transformAttachmentsAndFileUUIDsToDownloadableFiles(
+      [targetComposition?.calculatorFile],
+      attachments,
+      multiFileDownloadUrl,
+    ),
     { change: isEditable },
   );
 
@@ -222,7 +227,7 @@ function addTargetCompositionSection(
           appendChangeParam: true,
         });
 
-        factory.addRow('Conversion factor', targetComposition?.conversionFactor?.toString(), {
+        factory.addRow('Conversion factor', decimalPipe.transform(targetComposition?.conversionFactor, '1.0-7'), {
           change: isEditable,
           appendChangeParam: true,
         });
@@ -233,7 +238,7 @@ function addTargetCompositionSection(
 
     factory.addFileListRow(
       'Upload evidence',
-      transformAttachmentsToDownloadableFiles(
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
         targetComposition?.conversionEvidences,
         attachments,
         multiFileDownloadUrl,
@@ -251,14 +256,13 @@ function addBaselineDataSection(
   baselineData: BaselineData,
   targetComposition: TargetComposition,
   sectorThroughputUnit: SectorAssociationDetails['throughputUnit'],
-  attachments: { [key: string]: string },
+  attachments: Record<string, string>,
   isEditable: boolean,
   multiFileDownloadUrl?: string,
 ): void {
-  const measurementPipe = new MeasurementTypeToUnitPipe();
   const datePipe = new GovukDatePipe();
   const decimalPipe = new DecimalPipe('en-GB');
-
+  const measurementTypeToUnit = new MeasurementTypeToUnitPipe();
   factory.addSection('Details of baseline data', `../${BaseLineAndTargetsStep.ADD_BASELINE_DATA}`);
 
   factory.addRow(
@@ -295,7 +299,11 @@ function addBaselineDataSection(
   if (baselineData?.isTwelveMonths === false) {
     factory.addFileListRow(
       'Evidence',
-      transformAttachmentsToDownloadableFiles(baselineData?.greenfieldEvidences, attachments, multiFileDownloadUrl),
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
+        baselineData?.greenfieldEvidences,
+        attachments,
+        multiFileDownloadUrl,
+      ),
       {
         change: isEditable,
         appendChangeParam: true,
@@ -303,10 +311,14 @@ function addBaselineDataSection(
     );
   }
 
-  factory.addRow('Baseline kWh for the target facility', baselineData?.energy?.toString(), {
-    change: isEditable,
-    appendChangeParam: true,
-  });
+  factory.addRow(
+    `Baseline ${measurementTypeToUnit.transform(targetComposition.measurementType)} for the target facility`,
+    decimalPipe.transform(baselineData?.energy, '1.0-7'),
+    {
+      change: isEditable,
+      appendChangeParam: true,
+    },
+  );
 
   factory.addRow(
     'Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?',
@@ -318,8 +330,8 @@ function addBaselineDataSection(
   );
 
   factory.addRow(
-    `Baseline throughput ${targetComposition?.measurementType != null ? '(' + measurementPipe.transform(targetComposition?.measurementType) + ')' : null}`,
-    baselineData?.throughput?.toString(),
+    `Baseline throughput ${targetComposition?.throughputUnit != null ? '(' + targetComposition.throughputUnit + ')' : sectorThroughputUnit ? '(' + sectorThroughputUnit + ')' : ''}`,
+    decimalPipe.transform(baselineData?.throughput, '1.0-7'),
     {
       change: isEditable,
       appendChangeParam: true,
@@ -329,7 +341,7 @@ function addBaselineDataSection(
   if (targetComposition?.agreementCompositionType === 'RELATIVE') {
     factory.addRow(
       `Performance (${getMeasurementAndThroughputUnits(targetComposition?.throughputUnit, sectorThroughputUnit, targetComposition?.measurementType)})`,
-      decimalPipe.transform(baselineData?.performance, '1.0-3'),
+      decimalPipe.transform(baselineData?.performance, '1.0-7'),
       {
         change: isEditable,
         appendChangeParam: true,
@@ -337,10 +349,14 @@ function addBaselineDataSection(
     );
   }
 
-  factory.addRow('Baseline energy to carbon factor (kgC/kWh)', baselineData?.energyCarbonFactor?.toString(), {
-    change: isEditable,
-    appendChangeParam: true,
-  });
+  factory.addRow(
+    'Baseline energy to carbon factor (kgC/kWh)',
+    decimalPipe.transform(baselineData?.energyCarbonFactor, '1.0-7'),
+    {
+      change: isEditable,
+      appendChangeParam: true,
+    },
+  );
 }
 
 function addTargetsSection(
@@ -354,7 +370,7 @@ function addTargetsSection(
 
   factory.addSection('Targets', `../${BaseLineAndTargetsStep.ADD_TARGETS}`);
 
-  factory.addRow('Improvement (%)', targets?.improvement?.toString(), {
+  factory.addRow('Improvement (%)', decimalPipe.transform(targets?.improvement, '1.0-7'), {
     change: isEditable,
     appendChangeParam: true,
   });
@@ -362,7 +378,7 @@ function addTargetsSection(
   if (targetComposition?.agreementCompositionType !== 'NOVEM') {
     factory.addRow(
       `Target (${getBaselineUnits(targetComposition?.throughputUnit, sectorThroughputUnit, targetComposition?.measurementType, targetComposition?.agreementCompositionType)})`,
-      decimalPipe.transform(targets?.target, '1.0-3'),
+      decimalPipe.transform(targets?.target, '1.0-7'),
       {
         change: isEditable,
         appendChangeParam: true,

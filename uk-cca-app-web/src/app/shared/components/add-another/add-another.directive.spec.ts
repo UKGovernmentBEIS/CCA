@@ -53,10 +53,10 @@ describe('AddAnotherDirective', () => {
     addButton.click();
     fixture.detectChanges();
 
-    expect(element.querySelector('h1.moj-add-another__heading')).toBeTruthy();
-    expect(element.querySelectorAll('button.moj-add-another__remove-button')).toHaveLength(2);
-    expect(element.querySelectorAll('fieldset.moj-add-another__item')).toHaveLength(2);
-    expect(element.querySelectorAll('legend.moj-add-another__title')).toHaveLength(2);
+    expect(element.querySelector('h1.cca-add-another__heading')).toBeTruthy();
+    expect(element.querySelectorAll('button.cca-add-another__remove-button')).toHaveLength(2);
+    expect(element.querySelectorAll('fieldset.cca-add-another__item')).toHaveLength(2);
+    expect(element.querySelectorAll('legend.cca-add-another__title')).toHaveLength(2);
   });
 
   it('should focus the heading when the fieldset is removed', () => {

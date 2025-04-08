@@ -114,20 +114,18 @@ describe('FacilityContactDetailsComponent', () => {
     const facilityId = 'ADS_1-F00001';
     const facility = mockUnderlyingAgreement.facilities.find((f) => f.facilityId === facilityId);
     expect(taskServiceSpy).toHaveBeenCalledWith(FACILITIES_SUBTASK, FacilityWizardStep.CONTACT_DETAILS, route, {
-      facility: {
-        facilityId,
-        facilityContact: {
-          firstName: mockTargetUnitDetails.administrativeContactDetails.firstName,
-          lastName: mockTargetUnitDetails.administrativeContactDetails.lastName,
-          email: mockTargetUnitDetails.administrativeContactDetails.email,
-          address: {
-            ...facility.facilityDetails.facilityAddress,
-            county: null,
-          },
-          phoneNumber: {
-            countryCode: '44',
-            number: '1234567890',
-          },
+      facilityId,
+      facilityContact: {
+        firstName: mockTargetUnitDetails.administrativeContactDetails.firstName,
+        lastName: mockTargetUnitDetails.administrativeContactDetails.lastName,
+        email: mockTargetUnitDetails.administrativeContactDetails.email,
+        address: {
+          ...facility.facilityDetails.facilityAddress,
+          county: null,
+        },
+        phoneNumber: {
+          countryCode: '44',
+          number: '1234567890',
         },
       },
     });

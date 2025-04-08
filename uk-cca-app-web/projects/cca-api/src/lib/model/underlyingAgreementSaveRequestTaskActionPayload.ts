@@ -14,5 +14,5 @@ import { UnderlyingAgreementApplySavePayload } from './underlyingAgreementApplyS
 export interface UnderlyingAgreementSaveRequestTaskActionPayload {
   payloadType?: string;
   underlyingAgreement?: UnderlyingAgreementApplySavePayload;
-  sectionsCompleted?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
 }

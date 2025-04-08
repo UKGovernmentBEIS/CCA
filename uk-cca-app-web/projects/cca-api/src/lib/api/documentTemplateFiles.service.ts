@@ -9,15 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { FileToken } from '../model/fileToken';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -114,7 +114,7 @@ export class DocumentTemplateFilesService {
     id: number,
     fileUuid: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -128,7 +128,7 @@ export class DocumentTemplateFilesService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (fileUuid !== undefined && fileUuid !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>fileUuid, 'fileUuid');
+      queryParameters = this.addToHttpParams(queryParameters, fileUuid as any, 'fileUuid');
     }
 
     let headers = this.defaultHeaders;
@@ -158,7 +158,7 @@ export class DocumentTemplateFilesService {
       `${this.configuration.basePath}/v1.0/document-template-files/${encodeURIComponent(String(id))}`,
       {
         params: queryParameters,
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

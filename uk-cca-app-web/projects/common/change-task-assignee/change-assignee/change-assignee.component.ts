@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { BehaviorSubject, combineLatest, iif, map, mergeMap, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, iif, map, mergeMap, Observable } from 'rxjs';
 
 import { AuthStore, selectUserState } from '@netz/common/auth';
 import { PageHeadingComponent } from '@netz/common/components';
@@ -55,7 +55,7 @@ export class ChangeAssigneeComponent {
 
   protected vm$: Observable<ViewModel> = combineLatest([
     this.authStore.rxSelect(selectUserState),
-    this.store.rxSelect(requestTaskQuery.selectRequestTaskItem),
+    this.store.rxSelect(requestTaskQuery.selectRequestTaskItem).pipe(filter(Boolean)),
     this.showErrorSummary$.asObservable(),
   ]).pipe(
     mergeMap(([userState, { requestTask }, showErrorSummary]) => {

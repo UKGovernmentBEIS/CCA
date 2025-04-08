@@ -19,7 +19,13 @@ describe('FacilityDetailsComponent', () => {
   let store: RequestTaskStore;
   let page: Page;
 
-  const route: any = { snapshot: { params: { facilityId: 'ADS_1-F00001' }, pathFromRoot: [] } };
+  const route = {
+    snapshot: {
+      params: { facilityId: 'ADS_1-F00001' },
+      pathFromRoot: [],
+    },
+  };
+
   const unaTaskService: Partial<jest.Mocked<TaskService>> = {
     saveSubtask: jest.fn().mockReturnValue(of({})),
   };
@@ -131,15 +137,14 @@ describe('FacilityDetailsComponent', () => {
     fixture.detectChanges();
 
     expect(taskServiceSpy).toHaveBeenCalledWith(FACILITIES_SUBTASK, FacilityWizardStep.DETAILS, route, {
-      facility: {
-        facilityId: 'ADS_1-F00001',
-        facilityDetails: {
-          name: 'Facility 1',
-          facilityAddress: mockTargetUnitDetails.address,
-          uketsId: 'uk identifier',
-          isCoveredByUkets: true,
-          applicationReason: 'NEW_AGREEMENT',
-        },
+      facilityId: 'ADS_1-F00001',
+      facilityDetails: {
+        name: 'Facility 1',
+        facilityAddress: mockTargetUnitDetails.address,
+        uketsId: 'uk identifier',
+        isCoveredByUkets: true,
+        applicationReason: 'NEW_AGREEMENT',
+        previousFacilityId: null,
       },
     });
   });

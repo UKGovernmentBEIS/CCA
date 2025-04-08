@@ -18,11 +18,15 @@ const selectWithdrawAdminTerminationReasonDetails: StateSelector<
   (payload) => payload.adminTerminationWithdrawReasonDetails,
 );
 
-const selectWithdrawAdminTerminationAttachments: StateSelector<RequestTaskState, { [key: string]: string }> =
-  createDescendingSelector(selectWithdrawAdminTerminationPayload, (payload) => payload.adminTerminationAttachments);
+const selectWithdrawAdminTerminationAttachments: StateSelector<
+  RequestTaskState,
+  Record<string, string>
+> = createDescendingSelector(selectWithdrawAdminTerminationPayload, (payload) => payload.adminTerminationAttachments);
 
-const selectWithdrawAdminTerminationSectionsCompleted: StateSelector<RequestTaskState, { [key: string]: string }> =
-  createDescendingSelector(selectWithdrawAdminTerminationPayload, (payload) => payload.sectionsCompleted);
+const selectWithdrawAdminTerminationSectionsCompleted: StateSelector<
+  RequestTaskState,
+  Record<string, string>
+> = createDescendingSelector(selectWithdrawAdminTerminationPayload, (payload) => payload.sectionsCompleted);
 
 export const AdminTerminationWithdrawQuery = {
   selectWithdrawAdminTerminationPayload,

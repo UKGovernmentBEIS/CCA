@@ -17,6 +17,7 @@ import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.WorkflowService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 
@@ -60,21 +61,23 @@ class UnderlyingAgreementActivationNotifyOperatorActionHandlerTest {
                         .decisionNotification(decisionNotification)
                         .build();
 
+        final UnderlyingAgreementActivationRequestTaskPayload requestTaskPayload = UnderlyingAgreementActivationRequestTaskPayload.builder()
+                .payloadType(CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION_PAYLOAD)
+                .build();
         final RequestTask requestTask = RequestTask.builder()
                 .request(Request.builder().id(requestId).build())
                 .processTaskId(processId)
-                .payload(UnderlyingAgreementActivationRequestTaskPayload.builder()
-                        .payloadType(CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION_PAYLOAD)
-                        .build())
+                .payload(requestTaskPayload)
                 .build();
 
         when(requestTaskService.findTaskById(requestTaskId)).thenReturn(requestTask);
 
         // Invoke
-        handler.process(requestTaskId, CcaRequestTaskActionType.UNDERLYING_AGREEMENT_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION,
+        RequestTaskPayload taskPayload = handler.process(requestTaskId, CcaRequestTaskActionType.UNDERLYING_AGREEMENT_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION,
                 appUser, taskActionPayload);
 
         // Verify
+        assertThat(taskPayload).isEqualTo(requestTaskPayload);
         verify(requestTaskService, times(1)).findTaskById(requestTaskId);
         verify(underlyingAgreementActivationNotifyOperatorValidator, times(1))
                 .validate(requestTask, taskActionPayload, appUser);

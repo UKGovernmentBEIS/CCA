@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
+import { TaskHeaderInfoComponent } from '@netz/common/components';
 import { BasePage } from '@netz/common/testing';
-import { TaskHeaderInfoComponent } from '@shared/components';
 
 describe('TaskHeaderInfoComponent', () => {
   let component: TaskHeaderInfoComponent;
@@ -17,7 +17,7 @@ describe('TaskHeaderInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 

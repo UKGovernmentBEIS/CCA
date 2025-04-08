@@ -1,0 +1,40 @@
+<div class="govuk-body govuk-!-width-two-thirds">
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    caption="Change"
+    heading="Scheme exit date"
+    submitText="Save and continue"
+    data-testid="edit-facility-details-form"
+  >
+    <p class="govuk-hint">
+      The scheme exit date determines whether the operator of this facility will be charged for the current charging
+      period of subsistence fees.
+    </p>
+
+    <p class="govuk-hint">
+      When a facility left the scheme before the current charging period, but the variation to remove that facility or a
+      termination workflow hasn't completed, you can manually set the scheme exit date by selecting Yes.
+    </p>
+
+    <h2 class="govuk-heading-m">Did the facility exit the scheme before the start of the current charging year?</h2>
+    <div formControlName="hasFacilityExited" govuk-radio>
+      <govuk-radio-option [value]="false" [label]="'No'"></govuk-radio-option>
+
+      <govuk-radio-option [value]="true" [label]="'Yes, set scheme exit date'">
+        <ng-container govukConditionalContent>
+          <div
+            formControlName="schemeExitDate"
+            govuk-date-input
+            [max]="today"
+            label="Select the scheme exit date"
+            hint="The scheme exit date must be today or in the past"
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+    </div>
+  </cca-wizard-step>
+
+  <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+  <a class="govuk-link" [routerLink]="'../details'">Return to: {{ facilityDetails.facilityId }}</a>
+</div>

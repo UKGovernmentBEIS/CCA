@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import { TaskItemStatus } from '@requests/common';
-import { PendingButtonDirective } from '@shared/directives';
 
 import { AdminTerminationWithdrawQuery } from '../+state/withdraw-admin-termination.selectors';
 import { REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK } from '../withdraw-admin-termination.types';
@@ -14,7 +14,7 @@ import { REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK } from '../withdraw-admin
   template: `
     @if (isReasonForWithdrawAdminTerminationCompleted && isEditable) {
       <div class="govuk-body">
-        <button ccaPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
+        <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
           Notify operator of decision
         </button>
       </div>

@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map, of } from 'rxjs';
 
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
-import { ButtonDirective, ErrorSummaryComponent, LinkDirective } from '@netz/govuk-components';
+import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
 import { PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/components';
 
 import { ForgotPasswordService } from 'cca-api';
@@ -18,7 +18,7 @@ import { ResetPasswordStore } from '../store/reset-password.store';
   providers: [passwordFormFactory],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [ErrorSummaryComponent, LinkDirective, PasswordComponent, ButtonDirective, ReactiveFormsModule],
+  imports: [ErrorSummaryComponent, PasswordComponent, ButtonDirective, ReactiveFormsModule],
 })
 export class ResetPasswordComponent implements OnInit {
   isSummaryDisplayed = false;

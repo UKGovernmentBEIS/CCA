@@ -1,0 +1,47 @@
+@if (details) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <netz-page-heading size="xl" data-testid="page-heading" class="row-flex">
+        {{ details?.workflowDetails.id }}
+        <span class="govuk-tag-heading-align">
+          <govuk-tag
+            [color]="details?.workflowDetails.requestStatus | paymentRequestStatusTagColor"
+            class="failure-tag"
+          >
+            {{ details?.workflowDetails.requestStatus | paymentRequestProcessStatus }}
+          </govuk-tag>
+        </span>
+      </netz-page-heading>
+    </div>
+
+    <!-- <div class="govuk-grid-column-one-third">
+      <button govukSecondaryButton type="button" class="float-right">View run details</button>
+    </div> -->
+  </div>
+
+  <div class="govuk-grid-row">
+    <govuk-tabs>
+      <ng-template govukTabLazy id="timeline-events" label="Timeline">
+        <div class="govuk-grid-row">
+          <netz-timeline class="govuk-grid-column-full">
+            @for (action of details?.requestActions; track action.id) {
+              <netz-timeline-item
+                [action]="action"
+                [link]="action | timelineItemLink: true"
+                [state]="navigationState"
+                data-testid="timeline-item"
+              >
+              </netz-timeline-item>
+            } @empty {
+              <p class="govuk-body" data-testid="no-timeline-events">No timeline events</p>
+            }
+          </netz-timeline>
+        </div>
+      </ng-template>
+
+      <ng-template govukTabLazy id="notes" label="Notes">
+        <!-- Add Notes content here -->
+      </ng-template>
+    </govuk-tabs>
+  </div>
+}

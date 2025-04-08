@@ -27,7 +27,7 @@ import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class SectorAssociationRepositoryIT extends AbstractContainerBaseTest {
+class SectorAssociationRepositoryIT extends AbstractContainerBaseTest {
 
     @Autowired
     private SectorAssociationRepository repository;
@@ -37,8 +37,7 @@ public class SectorAssociationRepositoryIT extends AbstractContainerBaseTest {
 
     @Test
     void whenFindDetailedContactInfo_thenReturnPageOfSiteContactInfoDTOs() {
-        SectorAssociation savedAssociation = createSectorAssociation(1L, "ADS");
-        entityManager.merge(savedAssociation);
+        SectorAssociation savedAssociation = createSectorAssociation("ADS");
         flushAndClear();
 
         Pageable pageable = PageRequest.of(0, 5);
@@ -48,17 +47,14 @@ public class SectorAssociationRepositoryIT extends AbstractContainerBaseTest {
 
         assertThat(result).isNotNull();
         assertThat(result.getContent()).isNotEmpty();
-        assertThat(result.getContent().get(0).getSectorName()).isEqualTo(
+        assertThat(result.getContent().getFirst().getSectorName()).isEqualTo(
             savedAssociation.getAcronym() + " - " + savedAssociation.getName());
     }
 
     @Test
     void whenFindAllByIdIn_thenReturnListOfSectorAssociations() {
-        SectorAssociation savedAssociationOne = createSectorAssociation(1L, "AIC");
-        SectorAssociation savedAssociationTwo = createSectorAssociation(2L, "SA");
-
-        entityManager.merge(savedAssociationOne);
-        entityManager.merge(savedAssociationTwo);
+        SectorAssociation savedAssociationOne = createSectorAssociation("AIC");
+        SectorAssociation savedAssociationTwo = createSectorAssociation("SA");
         flushAndClear();
 
         List<SectorAssociation> foundAssociations = repository.findAllByIdIn(
@@ -70,13 +66,10 @@ public class SectorAssociationRepositoryIT extends AbstractContainerBaseTest {
     @Test
     void whenFindAllByFacilitatorUserId_thenReturnListOfSectorAssociations() {
         String testUserId = "testFacilitatorId";
-        SectorAssociation savedAssociationOne = createSectorAssociation(3L, "AIC");
+        SectorAssociation savedAssociationOne = createSectorAssociation("AIC");
         savedAssociationOne.setFacilitatorUserId(testUserId);
-        SectorAssociation savedAssociationTwo = createSectorAssociation(4L, "SA");
+        SectorAssociation savedAssociationTwo = createSectorAssociation("SA");
         savedAssociationTwo.setFacilitatorUserId(testUserId);
-
-        entityManager.merge(savedAssociationOne);
-        entityManager.merge(savedAssociationTwo);
         flushAndClear();
 
         List<SectorAssociation> foundAssociations = repository.findAllByFacilitatorUserId(testUserId);
@@ -85,7 +78,7 @@ public class SectorAssociationRepositoryIT extends AbstractContainerBaseTest {
         assertThat(foundAssociations.stream().allMatch(sa -> sa.getFacilitatorUserId().equals(testUserId))).isTrue();
     }
 
-    private SectorAssociation createSectorAssociation(Long id, String acronym) {
+    private SectorAssociation createSectorAssociation(String acronym) {
         Location location = Location.builder()
             .postcode("12345")
             .line1("123 Main St")
@@ -104,17 +97,19 @@ public class SectorAssociationRepositoryIT extends AbstractContainerBaseTest {
             .location(location)
             .build();
 
-        return SectorAssociation.builder()
-            .id(id)
-            .competentAuthority(CompetentAuthorityEnum.ENGLAND)
-            .legalName("Some Association Legal")
-            .name("Some Association")
-            .acronym(acronym)
-            .facilitatorUserId("Facilitator User Id")
-            .energyEprFactor("Energy Factor")
-            .location(location)
-            .sectorAssociationContact(contact)
-            .build();
+        SectorAssociation savedAssociation = SectorAssociation.builder()
+                .competentAuthority(CompetentAuthorityEnum.ENGLAND)
+                .legalName("Some Association Legal")
+                .name("Some Association")
+                .acronym(acronym)
+                .facilitatorUserId("Facilitator User Id")
+                .energyEprFactor("Energy Factor")
+                .location(location)
+                .sectorAssociationContact(contact)
+                .build();
+        entityManager.persist(savedAssociation);
+
+        return savedAssociation;
     }
 
     private void flushAndClear() {

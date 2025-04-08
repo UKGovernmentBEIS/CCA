@@ -1,5 +1,6 @@
 @use 'sass:string';
 @use 'sass:list';
+@import 'settings/index';
 
 $govuk-page-width: 1200px;
 
@@ -24,6 +25,21 @@ $govuk-suppressed-warnings: ie8;
 $govuk-image-url-function: 'image-url';
 $govuk-font-url-function: 'font-url';
 
+.failure-tag {
+  strong {
+    max-width: 100% !important;
+  }
+}
+
+.x-scroll {
+  overflow-x: scroll;
+
+  .max-content-width {
+    min-width: 100%;
+    width: max-content;
+  }
+}
+
 @import 'all';
 @import 'theming/tables';
 @import 'theming/shared';
@@ -31,3 +47,7 @@ $govuk-font-url-function: 'font-url';
 @import 'theming/lists';
 @import 'theming/helpers';
 @import 'theming/panels';
+@import 'theming/banner';
+@import 'theming/multiple-file-input';
+@import 'theming/side-navigation';
+@import 'theming/sub-navigation';

@@ -14,10 +14,11 @@ function toSummaryData(
 ): SummaryFactory {
   const factory = new SummaryFactory().addSection('', prefix + VariationDetailsWizardStep.DETAILS);
 
-  let facilityChanges,
-    baselineChanges,
-    targetCurrencyChanges,
-    otherChanges = [];
+  let facilityChanges = [];
+  let baselineChanges = [];
+  let targetCurrencyChanges = [];
+  let otherChanges = [];
+
   if (variationDetails?.modifications?.length) {
     facilityChanges = facilityChangesTypes.filter((c) => variationDetails.modifications.includes(c));
     baselineChanges = baselineChangesTypes.filter((c) => variationDetails.modifications.includes(c));
@@ -95,7 +96,7 @@ export function toVariationDetailsSummaryDataWithDecision(
   isEditable: boolean,
   downloadUrl: string,
   decision: UnderlyingAgreementReviewDecision,
-  reviewAttachments: { [key: string]: string },
+  reviewAttachments: Record<string, string>,
   prefix = '../',
 ): SummaryData {
   const factory = toSummaryData(variationDetails, isEditable, prefix);

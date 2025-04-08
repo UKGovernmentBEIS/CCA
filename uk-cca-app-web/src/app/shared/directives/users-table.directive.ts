@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Directive, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, Directive, Input, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
-import { BehaviorSubject, combineLatest, map, Observable, shareReplay, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, shareReplay, tap } from 'rxjs';
 
-import { DestroySubject } from '@core/services/destroy-subject.service';
 import { UserFullNamePipe } from '@netz/common/pipes';
 import { SortEvent, TableComponent } from '@netz/govuk-components';
 
@@ -12,7 +12,7 @@ import { UsersTableItem } from './users-table-item';
 @Directive({
   selector: 'govuk-table[ccaUsersTable]',
   standalone: true,
-  providers: [UserFullNamePipe, DestroySubject],
+  providers: [UserFullNamePipe],
 })
 export class UsersTableDirective implements OnInit {
   @Input() users: Observable<UsersTableItem[]>;
@@ -23,7 +23,7 @@ export class UsersTableDirective implements OnInit {
   constructor(
     private readonly host: TableComponent<UsersTableItem>,
     private readonly fb: UntypedFormBuilder,
-    private readonly destroy$: DestroySubject,
+    private readonly destroy$: DestroyRef,
     private readonly userFullNamePipe: UserFullNamePipe,
     private readonly cdRef: ChangeDetectorRef,
   ) {}
@@ -60,14 +60,14 @@ export class UsersTableDirective implements OnInit {
       this.sorting$.pipe(map((sorting) => this.createSorterByColumn(sorting))),
     ])
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroy$),
         tap(([items, sorter]) => this.setFormArray(items.sort(sorter))),
         map(() => this.formArray.value),
         tap(() => this.cdRef.markForCheck()),
         shareReplay({ bufferSize: 1, refCount: false }),
       )
       .subscribe((data) => (this.host.data = data));
-    this.host.sort.pipe(takeUntil(this.destroy$)).subscribe((event: SortEvent) => this.sorting$.next(event));
+    this.host.sort.pipe(takeUntilDestroyed(this.destroy$)).subscribe((event: SortEvent) => this.sorting$.next(event));
   }
 
   private createSorterByColumn({ column, direction }: SortEvent): (a: UntypedFormGroup, b: UntypedFormGroup) => number {

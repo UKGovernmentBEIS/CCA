@@ -5,7 +5,7 @@ exports[`TP5 Decision should match snapshot 1`] = `
   id="root0"
 >
   <div>
-    <cca-page-heading
+    <netz-page-heading
       caption="TP5 (2021-2022)"
     >
       <span
@@ -19,7 +19,7 @@ exports[`TP5 Decision should match snapshot 1`] = `
       >
         Baseline and targets
       </h1>
-    </cca-page-heading>
+    </netz-page-heading>
     <cca-summary>
       <h2
         class="govuk-heading-m"
@@ -44,9 +44,9 @@ exports[`TP5 Decision should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              No 
-            
-            
             
             
             
@@ -58,7 +58,6 @@ exports[`TP5 Decision should match snapshot 1`] = `
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/baseline-exists?change=true"
             >
               Change
@@ -80,14 +79,14 @@ exports[`TP5 Decision should match snapshot 1`] = `
         novalidate=""
       >
         
-        <cca-page-heading>
+        <netz-page-heading>
           
           <h1
             class="govuk-heading-l"
           >
             
           </h1>
-        </cca-page-heading>
+        </netz-page-heading>
         <cca-decision>
           <h2
             class="govuk-heading-m"
@@ -186,28 +185,19 @@ exports[`TP5 Decision should match snapshot 1`] = `
             class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
             formcontrolname="notes"
             govuk-textarea=""
-            hint="The operator cannot view this"
-            label="Notes"
+            label="Notes (optional)"
           >
             <label
               class="govuk-label"
               for="notes"
               id="l.notes"
             >
-               Notes
+               Notes (optional)
 
             </label>
-            <div
-              class="govuk-hint"
-              id="notes-hint"
-            >
-               The operator cannot view this
-
-            </div>
             
             
             <textarea
-              aria-describedby="notes-hint"
               class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-valid"
               id="notes"
               name="notes"
@@ -221,10 +211,10 @@ exports[`TP5 Decision should match snapshot 1`] = `
             label="Upload evidence (optional)"
           >
             <div
-              class="moj-multi-file-upload moj-multi-file-upload--enhanced"
+              class="cca-multi-file-upload cca-multi-file-upload--enhanced"
             >
               <div
-                class="moj-multi-file-upload__upload"
+                class="cca-multi-file-upload__upload"
               >
                 <div
                   class="govuk-form-group"
@@ -246,12 +236,12 @@ exports[`TP5 Decision should match snapshot 1`] = `
                   
                   
                   <div
-                    class="moj-multi-file-upload__dropzone govuk-!-margin-top-4"
+                    class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
                   >
                     <input
                       accept="*/*"
                       aria-labelledby="l.files ld.files"
-                      class="govuk-file-upload moj-multi-file-upload__input"
+                      class="govuk-file-upload cca-multi-file-upload__input"
                       id="files"
                       multiple=""
                       name="files"
@@ -281,15 +271,15 @@ exports[`TP5 Decision should match snapshot 1`] = `
               </div>
               <cca-file-upload-list>
                 <div
-                  class="moj-multi-file__uploaded-files moj-hidden"
+                  class="cca-multi-file__uploaded-files govuk-body cca-hidden"
                 >
                   
+                  
                   <dl
-                    class="govuk-summary-list moj-multi-file-upload__list"
+                    class="govuk-summary-list cca-multi-file-upload__list"
                   >
                     
                   </dl>
-                  
                   
                   
                   
@@ -302,9 +292,9 @@ exports[`TP5 Decision should match snapshot 1`] = `
           </cca-multiple-file-input>
         </cca-decision>
         <button
-          ccapendingbutton=""
           class="govuk-button"
           govukbutton=""
+          netzpendingbutton=""
           type="submit"
         >
           Continue
@@ -319,7 +309,6 @@ exports[`TP5 Decision should match snapshot 1`] = `
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

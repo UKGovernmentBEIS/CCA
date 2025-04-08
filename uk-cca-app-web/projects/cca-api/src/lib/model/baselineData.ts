@@ -14,7 +14,7 @@ export interface BaselineData {
   isTwelveMonths: boolean;
   baselineDate: string;
   explanation?: string;
-  greenfieldEvidences?: Array<string>;
+  greenfieldEvidences?: string[];
   energy: number;
   usedReportingMechanism?: boolean;
   throughput?: number;

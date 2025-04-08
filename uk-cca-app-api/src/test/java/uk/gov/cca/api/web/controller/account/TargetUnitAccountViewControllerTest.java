@@ -1,18 +1,5 @@
 package uk.gov.cca.api.web.controller.account;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,11 +16,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountHeaderInfoDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountInfoDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountInfoResponseDTO;
-import uk.gov.cca.api.account.domain.dto.TargetUnitAccountHeaderInfoDTO;
 import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
 import uk.gov.cca.api.account.service.TargetUnitAccountSiteContactService;
 import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationDTO;
@@ -41,9 +27,6 @@ import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.cca.api.web.orchestrator.account.dto.TargetUnitAccountDetailsResponseDTO;
 import uk.gov.cca.api.web.orchestrator.account.service.TargetUnitAccountQueryServiceOrchestrator;
-import uk.gov.netz.api.security.AppSecurityComponent;
-import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
-import uk.gov.netz.api.security.AuthorizedAspect;
 import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria;
 import uk.gov.netz.api.account.domain.dto.AccountSearchResultInfoDTO;
 import uk.gov.netz.api.account.domain.dto.AccountSearchResults;
@@ -51,11 +34,27 @@ import uk.gov.netz.api.account.service.AccountSearchServiceDelegator;
 import uk.gov.netz.api.authorization.core.domain.AppAuthority;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
-import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 @EnableWebMvc
@@ -140,7 +139,7 @@ class TargetUnitAccountViewControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "getTargetUnitAccountDetailsById", Long.toString(accountId));
+                .authorize(user, "getTargetUnitAccountDetailsById", Long.toString(accountId), null, null);
 
         mockMvc.perform(get(BASE_PATH + accountId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -187,7 +186,7 @@ class TargetUnitAccountViewControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
 	        .when(appUserAuthorizationService)
-	        .authorize(user, "getTargetUnitAccountsWithSiteContacts", Long.toString(sectorAssociationId));
+	        .authorize(user, "getTargetUnitAccountsWithSiteContacts", Long.toString(sectorAssociationId), null, null);
 
         mockMvc.perform(get(BASE_PATH + "/sector-association/" + sectorAssociationId + "?page=0&size=2")
                 .contentType(MediaType.APPLICATION_JSON))

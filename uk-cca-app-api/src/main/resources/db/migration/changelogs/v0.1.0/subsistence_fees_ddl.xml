@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/subsistence_fees_ddl.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_SFR_FACILITY_PROCESS_STATUS_SEQUENCE" author="P70311">
+        <createSequence
+                sequenceName="sfr_facility_process_status_seq"
+                minValue="0"
+                maxValue="999999999999999999"
+                incrementBy="1"
+                startValue="1"
+                cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS sfr_facility_process_status_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SFR_FACILITY_PROCESS_STATUS_CREATE_TABLE" author="P70311">
+        <createTable tableName="sfr_facility_process_status"
+                     remarks="Represents facility subsistence fee process data status for charging or exclude facilities">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="sfr_facility_process_status_pk"
+                             nullable="false"/>
+            </column>
+            <column name="facility_id" type="varchar(20)" remarks="The facility id value">
+                <constraints nullable="false"/>
+            </column>
+            <column name="charging_year" type="int" remarks="The charging year of the run">
+                <constraints nullable="false"/>
+            </column>
+            <column name="run_id" type="varchar(50)" remarks="The run id value">
+                <constraints nullable="false"/>
+            </column>
+            <column name="moa_type" type="varchar(20)" remarks="The MOA type value">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_cancelled" type="boolean" defaultValueBoolean="false"
+                    remarks="This flag must be updated to 'true' for manually cancelled facility from the run"/>
+        </createTable>
+
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sfr_facility_process_status CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNIQUE_CONSTRAINT_SFR_FACILITY_PROCESS_STATUS_TABLE" author="P70311">
+        <addUniqueConstraint tableName="sfr_facility_process_status" columnNames="facility_id,charging_year,run_id"
+                             constraintName="sfr_facility_process_status_uc"/>
+        <rollback>
+            <dropUniqueConstraint tableName="sfr_facility_process_status"
+                                  constraintName="sfr_facility_process_status_uc"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_run_sequence" author="apostolouk@unisystems.gr">
+        <createSequence sequenceName="sfr_run_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS sfr_run_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_run_table" author="apostolouk@unisystems.gr">
+        <createTable tableName="sfr_run">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="sfr_run_pk" nullable="false"/>
+            </column>
+            <column name="business_id" type="varchar(20)" remarks="The business ID for this run">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="charging_year" type="int" remarks="The charging year for this run">
+                <constraints nullable="false" />
+            </column>
+            <column name="initial_total_amount" type="numeric" remarks="The initial total amount to be paid" >
+            	<constraints nullable="false" />
+            </column>
+            <column name="submission_date" type="date" remarks="The date the run was executed"/>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sfr_run CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_moa_sequence" author="apostolouk@unisystems.gr">
+        <createSequence sequenceName="sfr_moa_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS sfr_moa_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_moa_table" author="apostolouk@unisystems.gr">
+        <createTable tableName="sfr_moa">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="sfr_moa_pk" nullable="false"/>
+            </column>
+            <column name="transaction_id" type="varchar(20)" remarks="The transaction ID for this MoA">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="run_id" type="bigint" remarks="Foreign key to sfr_run table">
+                <constraints nullable="false" foreignKeyName="sfr_moa_sfr_run_fk" referencedTableName="sfr_run" referencedColumnNames="id" />
+            </column>
+            <column name="moa_type" type="varchar(20)" remarks="The MoA type">
+                <constraints nullable="false" />
+            </column>
+            <column name="resource_id" type="bigint" remarks="The sector id or account id associated with this MoA">
+                <constraints nullable="false" />
+            </column>
+            <column name="initial_total_amount" type="numeric" remarks="The initial total amount to be paid" >
+            	<constraints nullable="false" />
+            </column>
+            <column name="reg_received_amount" type="numeric" defaultValue="0" remarks="The amount that has been received by the regulator">
+            	<constraints nullable="false"/>
+            </column>
+            <column name="file_document_uuid" type="varchar(255)" remarks="The MoA notice's file document uuid">
+            	<constraints nullable="false" />
+            </column>
+            <column name="submission_date" type="date" remarks="The date the MoA notice was sent">
+            	<constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sfr_moa CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_moa_target_unit_sequence" author="apostolouk@unisystems.gr">
+        <createSequence sequenceName="sfr_moa_target_unit_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS sfr_moa_target_unit_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_moa_target_unit_table" author="apostolouk@unisystems.gr">
+        <createTable tableName="sfr_moa_target_unit">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="sfr_moa_target_unit_pk" nullable="false"/>
+            </column>
+            <column name="moa_id" type="bigint" remarks="Foreign key to sfr_moa table">
+                <constraints nullable="false" foreignKeyName="sfr_moa_target_unit_sfr_moa_fk" referencedTableName="sfr_moa" referencedColumnNames="id" />
+            </column>
+            <column name="account_id" type="bigint" remarks="The account id associated with this target unit entry">
+                <constraints nullable="false" />
+            </column>
+            <column name="initial_total_amount" type="numeric" remarks="The initial total amount to be paid" >
+            	<constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sfr_moa_target_unit CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_unique_constraint_sfr_moa_target_unit_table" author="apostolouk@unisystems.gr">
+        <addUniqueConstraint tableName="sfr_moa_target_unit" columnNames="moa_id, account_id"
+                             constraintName="sfr_moa_target_unit_uc"/>
+        <rollback>
+            <dropUniqueConstraint tableName="sfr_moa_target_unit"
+                                  constraintName="sfr_moa_target_unit_uc"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_moa_facility_sequence" author="apostolouk@unisystems.gr">
+        <createSequence sequenceName="sfr_moa_facility_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS sfr_moa_facility_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_moa_facility_table" author="apostolouk@unisystems.gr">
+        <createTable tableName="sfr_moa_facility">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="sfr_moa_facility_pk" nullable="false"/>
+            </column>
+            <column name="subsistence_fees_tu_id" type="bigint" remarks="Foreign key to sfr_target_unit table">
+                <constraints nullable="false" foreignKeyName="sfr_moa_facility_sfr_moa_target_unit_fk" referencedTableName="sfr_moa_target_unit" referencedColumnNames="id" />
+            </column>
+            <column name="facility_id" type="bigint" remarks="The facility ID">
+            	<constraints nullable="false" />
+            </column>
+            <column name="initial_amount" type="numeric" remarks="The initial amount to be paid for this facility" >
+            	<constraints nullable="false" />
+            </column>
+            <column name="payment_status" type="varchar(20)" remarks="The current payment status for this facility">
+                <constraints nullable="false" />
+            </column>
+            <column name="payment_date" type="date" remarks="The payment date for this facility"/>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sfr_moa_facility CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_unique_constraint_sfr_moa_facility_table" author="apostolouk@unisystems.gr">
+        <addUniqueConstraint tableName="sfr_moa_facility" columnNames="subsistence_fees_tu_id, facility_id"
+                             constraintName="sfr_moa_facility_uc"/>
+        <rollback>
+            <dropUniqueConstraint tableName="sfr_moa_facility"
+                                  constraintName="sfr_moa_facility_uc"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_column_competent_authority_sfr_run_table" author="apostolouk@unisystems.gr">
+        <addColumn tableName="sfr_run">
+            <column name="competent_authority" type="varchar(255)" remarks="The competent authority of the run">
+            	<constraints nullable="false" />
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="sfr_run">
+                <column name="competent_authority"/>
+            </dropColumn>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_modify_facility_process_status_facility_id_bigint" author="apostolouk@unisystems.gr">
+        <modifyDataType tableName="sfr_facility_process_status" columnName="facility_id" newDataType="bigint"/>
+        <rollback>
+            <modifyDataType tableName="sfr_facility_process_status" columnName="facility_id" newDataType="varchar(20)"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_SFR_TRANSACTION_IDENTIFIER_CREATE_TABLE" author="P70311">
+        <comment>Create subsistence fees transaction identifier table</comment>
+        <createTable tableName="sfr_transaction_identifier" remarks="Represents the latest transaction identifier value">
+            <column name="id" type="integer" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="sfr_transaction_identifier_pk" nullable="false"/>
+            </column>
+            <column name="moa_type" type="varchar(20)" remarks="The MOA type value">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="transaction_id" type="bigint" remarks="The 5 digit sequential number">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sfr_transaction_identifier CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_POPULATE_SFR_TRANSACTION_IDENTIFIER_TABLE" author="P70311">
+        <sql>
+            INSERT INTO public.sfr_transaction_identifier (id, moa_type, transaction_id) VALUES (1, 'SECTOR_MOA', 1199);
+            INSERT INTO public.sfr_transaction_identifier (id, moa_type, transaction_id) VALUES (2, 'TARGET_UNIT_MOA', 1199);
+        </sql>
+        <rollback>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_modify_facility_process_status_run_id_and_add_fk" author="P70311">
+        <modifyDataType tableName="sfr_facility_process_status" columnName="run_id" newDataType="bigint"/>
+        <addForeignKeyConstraint
+                constraintName="sfr_facility_process_status_sfr_run_fk"
+                referencedTableName="sfr_run"
+                referencedColumnNames="id"
+                baseTableName="sfr_facility_process_status"
+                baseColumnNames="run_id"/>
+        <rollback>
+            <modifyDataType tableName="sfr_facility_process_status" columnName="run_id" newDataType="varchar(50)"/>
+            <sql>
+                ALTER TABLE sfr_facility_process_status
+                DROP CONSTRAINT sfr_facility_process_status_sfr_run_fk;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_modify_sfr_facility_process_status_uc" author="P70311">
+        <dropUniqueConstraint tableName="sfr_facility_process_status"
+                              constraintName="sfr_facility_process_status_uc"/>
+        <addUniqueConstraint tableName="sfr_facility_process_status" columnNames="facility_id,charging_year,moa_type"
+                             constraintName="sfr_facility_process_status_uc"/>
+        <rollback>
+            <dropUniqueConstraint tableName="sfr_facility_process_status"
+                                  constraintName="sfr_facility_process_status_uc"/>
+            <addUniqueConstraint tableName="sfr_facility_process_status" columnNames="facility_id,charging_year,run_id"
+                                 constraintName="sfr_facility_process_status_uc"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_modify_sfr_facility_process_status_drop_column_is_cancelled" author="P70311">
+        <dropColumn tableName="sfr_facility_process_status" columnName="is_cancelled"/>
+        <rollback>
+            <addColumn tableName="sfr_facility_process_status">
+                <column name="is_cancelled" type="boolean" defaultValueBoolean="false"
+                        remarks="This flag must be updated to 'true' for manually cancelled facility from the run"/>
+            </addColumn>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_rename_column_subsistence_fees_tu_id_in_sfr_moa_facility" author="apostolouk@unisystems.gr">
+        <renameColumn tableName="sfr_moa_facility" newColumnName="moa_target_unit_id" oldColumnName="subsistence_fees_tu_id"/>
+        <rollback>
+            <renameColumn tableName="sfr_moa_facility" newColumnName="subsistence_fees_tu_id" oldColumnName="moa_target_unit_id"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_charging_period_seq" author="P70311">
+        <createSequence sequenceName="sfr_charging_period_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS sfr_charging_period_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_charging_period" author="P70311">
+        <createTable tableName="sfr_charging_period">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="sfr_charging_period_pk" nullable="false"/>
+            </column>
+            <column name="start_date" type="date" remarks="The start date of the charging period">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="date" remarks="The end date of the charging period">
+                <constraints nullable="false"/>
+            </column>
+            <column name="charging_year" type="int" remarks="The charging year for this period">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sfr_charging_period CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_sfr_charging_period_entries" author="P70311">
+        <sql>
+            insert into sfr_charging_period (id, start_date, end_date, charging_year)
+            values (nextval('sfr_charging_period_seq'), '2025-04-01', '2026-03-31', 2025),
+                   (nextval('sfr_charging_period_seq'), '2026-04-01', '2027-03-31', 2026),
+                   (nextval('sfr_charging_period_seq'), '2027-04-01', '2028-03-31', 2027),
+                   (nextval('sfr_charging_period_seq'), '2028-04-01', '2029-03-31', 2028),
+                   (nextval('sfr_charging_period_seq'), '2029-04-01', '2030-03-31', 2029),
+                   (nextval('sfr_charging_period_seq'), '2030-04-01', '2031-03-31', 2030),
+                   (nextval('sfr_charging_period_seq'), '2031-04-01', '2032-03-31', 2031),
+                   (nextval('sfr_charging_period_seq'), '2032-04-01', '2033-03-31', 2032),
+                   (nextval('sfr_charging_period_seq'), '2033-04-01', '2034-03-31', 2033),
+                   (nextval('sfr_charging_period_seq'), '2034-04-01', '2035-03-31', 2034),
+                   (nextval('sfr_charging_period_seq'), '2035-04-01', '2036-03-31', 2035);
+        </sql>
+        <rollback>
+            <sql>
+                delete from sfr_charging_period;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_modify_sfr_run_submission_date_column" author="P70311">
+        <modifyDataType tableName="sfr_run" columnName="submission_date" newDataType="timestamp"/>
+        <rollback>
+            <modifyDataType tableName="sfr_run" columnName="submission_date" newDataType="date"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_modify_sfr_moa_submission_date_column" author="P70311">
+        <modifyDataType tableName="sfr_moa" columnName="submission_date" newDataType="timestamp"/>
+        <rollback>
+            <modifyDataType tableName="sfr_moa" columnName="submission_date" newDataType="date"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

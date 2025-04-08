@@ -70,7 +70,12 @@ class UnderlyingAgreementServiceTest {
         // Verify
         verify(underlyingAgreementValidatorService, times(1)).validate(container);
         verify(underlyingAgreementRepository, times(1)).save(entity);
-        assertTrue(container.getUnderlyingAgreement().getFacilities().stream().allMatch(f -> f.getStatus().equals(FacilityStatus.LIVE)));
+
+        assertTrue(container.getUnderlyingAgreement().getFacilities().stream()
+                .allMatch(f -> f.getStatus().equals(FacilityStatus.LIVE)));
+        assertThat(entity.getUnderlyingAgreementContainer()).isEqualTo(container);
+        assertThat(entity.getMeasurementType()).isEqualTo(measurementType);
+        assertThat(entity.getActivationDate()).isNotNull();
     }
 
     @Test
@@ -94,6 +99,8 @@ class UnderlyingAgreementServiceTest {
         assertThat(persistentEntity.getUnderlyingAgreementContainer()).isEqualTo(newContainer);
         assertThat(persistentEntity.getMeasurementType()).isEqualTo(measurementType);
         assertThat(persistentEntity.getConsolidationNumber()).isPositive();
+        assertThat(persistentEntity.getActivationDate()).isNotNull();
+
         verify(underlyingAgreementValidatorService, times(1)).validate(newContainer);
         verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
     }

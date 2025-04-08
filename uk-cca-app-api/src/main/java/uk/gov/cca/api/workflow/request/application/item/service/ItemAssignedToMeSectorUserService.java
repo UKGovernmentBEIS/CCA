@@ -13,6 +13,7 @@ import uk.gov.netz.api.workflow.request.application.item.domain.ItemAssignmentTy
 import uk.gov.netz.api.workflow.request.application.item.domain.ItemPage;
 import uk.gov.netz.api.workflow.request.application.item.domain.dto.ItemDTOResponse;
 import uk.gov.netz.api.workflow.request.application.item.service.ItemAssignedToMeService;
+import uk.gov.netz.api.workflow.request.application.item.service.ItemRequestResourcesService;
 import uk.gov.netz.api.common.domain.PagingRequest;
 
 import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
@@ -23,6 +24,7 @@ public class ItemAssignedToMeSectorUserService implements ItemAssignedToMeServic
 
 	private final ItemSectorUserRepository itemSectorUserRepository;
     private final CcaItemResponseService itemResponseService;
+    private final ItemRequestResourcesService itemRequestResourcesService;
     private final SectorUserAuthorityResourceAdapter sectorUserAuthorityResourceAdapter;
 
     @Override
@@ -35,8 +37,11 @@ public class ItemAssignedToMeSectorUserService implements ItemAssignedToMeServic
                 ItemAssignmentType.ME,
                 userScopedRequestTaskTypes,
                 paging);
+        
+        Map<String, Map<String, String>> itemRequestResources = 
+        		itemRequestResourcesService.getItemRequestResources(itemPage);
 
-        return itemResponseService.toItemDTOResponse(itemPage, appUser);
+        return itemResponseService.toItemDTOResponse(itemPage, itemRequestResources, appUser);
     }
 
     @Override

@@ -47,7 +47,6 @@ class UnderlyingAgreementSubmitServiceTest {
     	AppUser authUser = AppUser.builder().userId("user1").build();
     	UUID att1UUID = UUID.randomUUID();
     	Request request = Request.builder()
-    			.accountId(1L)
     			.id("1")
     			.payload(UnderlyingAgreementRequestPayload.builder().build())
     			.build();

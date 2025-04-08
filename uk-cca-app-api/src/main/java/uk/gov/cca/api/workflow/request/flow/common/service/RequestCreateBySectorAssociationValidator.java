@@ -5,7 +5,7 @@ import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestCreateVali
 import uk.gov.netz.api.workflow.request.flow.common.service.RequestCreateValidator;
 
 public interface RequestCreateBySectorAssociationValidator extends RequestCreateValidator {
-
+    
     @Transactional
-    RequestCreateValidationResult validateAction(Long sectorAssociationId, Long accountId);
+    RequestCreateValidationResult validateAction(Long sectorAssociationId);
 }

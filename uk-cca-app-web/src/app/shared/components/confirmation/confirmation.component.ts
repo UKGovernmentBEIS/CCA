@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit, TemplateRef 
 import { RouterLink } from '@angular/router';
 
 import { BreadcrumbService } from '@netz/common/navigation';
-import { LinkDirective, PanelComponent } from '@netz/govuk-components';
+import { PanelComponent } from '@netz/govuk-components';
 
 @Component({
   selector: 'cca-confirmation-shared',
@@ -21,12 +21,12 @@ import { LinkDirective, PanelComponent } from '@netz/govuk-components';
         </ng-container>
 
         <ng-template #defaultWhatHappensNextTemplate></ng-template>
-        <a govukLink [routerLink]="returnToLink"> Return to dashboard </a>
+        <a class="govuk-link" [routerLink]="returnToLink"> Return to dashboard </a>
       </div>
     </div>
   `,
   standalone: true,
-  imports: [LinkDirective, PanelComponent, RouterLink, NgTemplateOutlet],
+  imports: [PanelComponent, RouterLink, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConfirmationSharedComponent implements OnInit {
@@ -39,6 +39,11 @@ export class ConfirmationSharedComponent implements OnInit {
   protected readonly breadcrumbs = inject(BreadcrumbService);
 
   ngOnInit(): void {
-    this.breadcrumbs.showDashboardBreadcrumb();
+    this.breadcrumbs.show([
+      {
+        text: 'Dashboard',
+        link: ['dashboard'],
+      },
+    ]);
   }
 }

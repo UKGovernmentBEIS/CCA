@@ -3,8 +3,12 @@ package uk.gov.cca.api.migration.ftp;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.Vector;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.stereotype.Component;
 
@@ -105,6 +109,68 @@ class FtpClientImpl implements FtpClient {
         jsch = null;
         sshSession = null;
         sftpChannel = null;
+    }
+    
+    @Override
+    public boolean existsByPrefix(String sftpDirectory, String prefix) throws FtpException {
+        if (StringUtils.isBlank(sftpDirectory) || StringUtils.isBlank(prefix)) {
+            return false;
+        }
+        try (FtpClientImpl client = this;) {
+            client.connect();
+            Vector<ChannelSftp.LsEntry> files = sftpChannel.ls(sftpDirectory);
+            for (ChannelSftp.LsEntry entry : files) {
+                String fileName = entry.getFilename();
+                if (!fileName.equals(".") && !fileName.equals("..") && fileName.startsWith(prefix)) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            throw new FtpException("Fetching result from FTP server failed. Reason: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<String> findFilesByPrefix(String sftpDirectory, String prefix) throws FtpException {
+        if (StringUtils.isBlank(sftpDirectory) || StringUtils.isBlank(prefix)) {
+            return List.of();
+        }
+        List<String> matchingFiles = new ArrayList<>();
+        try (FtpClientImpl client = this;) {
+            client.connect();
+            Vector<ChannelSftp.LsEntry> files = sftpChannel.ls(sftpDirectory);
+            for (ChannelSftp.LsEntry entry : files) {
+                String fileName = entry.getFilename();
+                if (!fileName.equals(".") && !fileName.equals("..") && fileName.startsWith(prefix)) {
+                    matchingFiles.add(fileName);
+                }
+            }
+            return matchingFiles;
+        } catch (Exception e) {
+            throw new FtpException("Fetching file from FTP server failed. Reason: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<String> listFiles(String sftpDirectory) throws FtpException {
+        if (StringUtils.isBlank(sftpDirectory)) {
+            return List.of();
+        }
+        List<String> fileNames = new ArrayList<>();
+        try (FtpClientImpl client = this;) {
+            client.connect();
+            Vector<ChannelSftp.LsEntry> files = sftpChannel.ls(sftpDirectory);
+            for (ChannelSftp.LsEntry entry : files) {
+                String fileName = entry.getFilename();
+                if (!fileName.equals(".") && !fileName.equals("..")) {
+                    fileNames.add(fileName);
+                }
+            }
+            return fileNames;
+        } catch (Exception e) {
+            throw new FtpException("Fetching file from FTP server failed. Reason: " + e.getMessage(), e);
+        }
     }
 
 }

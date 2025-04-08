@@ -1,16 +1,16 @@
 @if (facility(); as facility) {
   <div>
-    <cca-page-heading>
+    <netz-page-heading>
       Are you sure you want to undo the exclusion of {{ facility.facilityDetails.name }} ({{ facility.facilityId }})?
-    </cca-page-heading>
+    </netz-page-heading>
 
     <p class="govuk-body">This will return the facility to an active status.</p>
 
     <div class="govuk-button-group">
-      <button type="button" ccaPendingButton (click)="onSubmit()" govukButton>Yes, undo the exclusion</button>
+      <button type="button" netzPendingButton (click)="onSubmit()" govukButton>Yes, undo the exclusion</button>
     </div>
   </div>
 }
 
 <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-<a govukLink [routerLink]="['../../']"> Return to: Manage facilities list </a>
+<a class="govuk-link" [routerLink]="['../../']"> Return to: Manage facilities list </a>

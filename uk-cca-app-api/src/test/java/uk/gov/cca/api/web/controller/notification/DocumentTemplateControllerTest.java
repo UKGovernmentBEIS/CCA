@@ -207,7 +207,7 @@ class DocumentTemplateControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(appUser, "getDocumentTemplateById", Long.toString(documentTemplateId));
+            .authorize(appUser, "getDocumentTemplateById", Long.toString(documentTemplateId), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders
             .get("/v1.0/document-templates/" + documentTemplateId)
@@ -254,7 +254,7 @@ class DocumentTemplateControllerTest {
         
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN)).when(appUserAuthorizationService).authorize(authUser,
-                "updateDocumentTemplate", Long.toString(documentTemplateId));
+                "updateDocumentTemplate", Long.toString(documentTemplateId), null, null);
         
         mockMvc.perform(MockMvcRequestBuilders.multipart("/v1.0/document-templates/" + documentTemplateId)
                 .file(file)).andExpect(status().isForbidden());

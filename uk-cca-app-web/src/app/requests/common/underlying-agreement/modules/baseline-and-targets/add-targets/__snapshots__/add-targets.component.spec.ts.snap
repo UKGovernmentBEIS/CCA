@@ -14,7 +14,7 @@ exports[`AddTargetsComponent should correctly show data for NOVEM 1`] = `
       novalidate=""
     >
       
-      <cca-page-heading>
+      <netz-page-heading>
         <span
           class="govuk-caption-l"
         >
@@ -26,16 +26,20 @@ exports[`AddTargetsComponent should correctly show data for NOVEM 1`] = `
         >
           Add targets
         </h1>
-      </cca-page-heading>
+      </netz-page-heading>
       <div
         class="govuk-body"
       >
+        <p>
+          Add improvement target for the target period
+        </p>
         <div
           cca-text-input=""
           class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
           formcontrolname="improvement"
+          hint="Enter a number less than 100 with up to 7 decimal places without special characters"
           inputtype="number"
-          label="Improvement (%)"
+          label="Percentage improvement (%)"
           suffix="%"
           widthclass="govuk-!-width-one-quarter"
         >
@@ -44,11 +48,18 @@ exports[`AddTargetsComponent should correctly show data for NOVEM 1`] = `
             for="improvement"
             id="l.improvement"
           >
-            Improvement (%)
+            Percentage improvement (%)
             
             
             
           </label>
+          <div
+            class="govuk-hint"
+            id="improvement-hint"
+          >
+             Enter a number less than 100 with up to 7 decimal places without special characters
+
+          </div>
           
           
           <div
@@ -96,9 +107,9 @@ exports[`AddTargetsComponent should correctly show data for NOVEM 1`] = `
         </section>
       </div>
       <button
-        ccapendingbutton=""
         class="govuk-button"
         govukbutton=""
+        netzpendingbutton=""
         type="submit"
       >
         Continue
@@ -112,7 +123,6 @@ exports[`AddTargetsComponent should correctly show data for NOVEM 1`] = `
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

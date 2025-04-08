@@ -1,17 +1,16 @@
 import { Component, computed, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { GovukTableColumn, LinkDirective, SortEvent, TableComponent } from '@netz/govuk-components';
+import { GovukTableColumn, SortEvent, TableComponent } from '@netz/govuk-components';
+import { FacilityStatusPipe } from '@shared/pipes';
 
-import { FacilityStatusPipe } from '../../pipes';
 import { FacilityItemViewModel } from '../../underlying-agreement.types';
 
-// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
 @Component({
   selector: 'cca-facility-item-list',
   templateUrl: './facility-item-list.component.html',
   standalone: true,
-  imports: [FacilityStatusPipe, LinkDirective, TableComponent, RouterLink],
+  imports: [FacilityStatusPipe, TableComponent, RouterLink],
 })
 export class FacilityItemListComponent {
   facilityItems = input.required<FacilityItemViewModel[]>();

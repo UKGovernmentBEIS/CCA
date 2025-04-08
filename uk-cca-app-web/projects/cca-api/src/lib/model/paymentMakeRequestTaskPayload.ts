@@ -13,10 +13,11 @@ import { BankAccountDetailsDTO } from './bankAccountDetailsDTO';
 
 export interface PaymentMakeRequestTaskPayload {
   payloadType?: string;
+  sendEmailNotification?: boolean;
   amount?: number;
   paymentRefNum?: string;
   creationDate?: string;
-  paymentMethodTypes?: Array<'BANK_TRANSFER' | 'CREDIT_OR_DEBIT_CARD'>;
+  paymentMethodTypes?: ('BANK_TRANSFER' | 'CREDIT_OR_DEBIT_CARD')[];
   bankAccountDetails?: BankAccountDetailsDTO;
   externalPaymentId?: string;
 }

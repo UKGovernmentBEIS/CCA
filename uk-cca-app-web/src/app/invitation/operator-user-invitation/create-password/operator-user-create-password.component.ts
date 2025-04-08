@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
-import { PageHeadingComponent, PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
+import { PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/components';
 
 import { OperatorUserInvitationStore } from '../store';
 
@@ -16,11 +17,11 @@ import { OperatorUserInvitationStore } from '../store';
     }
 
     <div class="govuk-body govuk-!-width-three-quarters">
-      <cca-page-heading [caption]="'Create user account'">Create a password</cca-page-heading>
+      <netz-page-heading [caption]="'Create user account'">Create a password</netz-page-heading>
 
       <form (ngSubmit)="onSubmit()" [formGroup]="form" data-testid="invited-operator-user-password-form">
         <cca-password></cca-password>
-        <button ccaPendingButton govukButton type="submit">Continue</button>
+        <button netzPendingButton govukButton type="submit">Continue</button>
       </form>
     </div>
   `,

@@ -3,12 +3,11 @@ import { Router, UrlTree } from '@angular/router';
 
 import { first, map, Observable } from 'rxjs';
 
-import { selectIsFeatureEnabled } from '@core/config/config.selectors';
-import { ConfigStore } from '@core/config/config.store';
-import { AuthService } from '@core/services/auth.service';
-import { LatestTermsStore } from '@core/store/latest-terms.store';
-import { hasNoAuthority, shouldShowDisabled, statusAccepted } from '@core/util/user-status-util';
 import { AuthStore, selectIsLoggedIn, selectUserRoleType, selectUserState, selectUserTerms } from '@netz/common/auth';
+import { ConfigStore, selectIsFeatureEnabled } from '@shared/config';
+import { AuthService } from '@shared/services';
+import { LatestTermsStore } from '@shared/services';
+import { hasNoAuthority, shouldShowDisabled, statusAccepted } from '@shared/utils';
 
 export function LandingPageGuard(): Observable<boolean | UrlTree> {
   const authStore = inject(AuthStore);

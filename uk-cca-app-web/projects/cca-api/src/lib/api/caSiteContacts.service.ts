@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { AccountContactDTO } from '../model/accountContactDTO';
 import { AccountContactInfoResponse } from '../model/accountContactInfoResponse';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -115,7 +115,7 @@ export class CaSiteContactsService {
     page: number,
     size: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (page === null || page === undefined) {
@@ -127,10 +127,10 @@ export class CaSiteContactsService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (page !== undefined && page !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>page, 'page');
+      queryParameters = this.addToHttpParams(queryParameters, page as any, 'page');
     }
     if (size !== undefined && size !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>size, 'size');
+      queryParameters = this.addToHttpParams(queryParameters, size as any, 'size');
     }
 
     let headers = this.defaultHeaders;
@@ -158,7 +158,7 @@ export class CaSiteContactsService {
 
     return this.httpClient.get<AccountContactInfoResponse>(`${this.configuration.basePath}/v1.0/ca-site-contacts`, {
       params: queryParameters,
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -172,29 +172,29 @@ export class CaSiteContactsService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public updateCaSiteContacts(accountContactDTO: Array<AccountContactDTO>): Observable<any>;
+  public updateCaSiteContacts(accountContactDTO: AccountContactDTO[]): Observable<any>;
   public updateCaSiteContacts(
-    accountContactDTO: Array<AccountContactDTO>,
+    accountContactDTO: AccountContactDTO[],
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<any>>;
   public updateCaSiteContacts(
-    accountContactDTO: Array<AccountContactDTO>,
+    accountContactDTO: AccountContactDTO[],
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<any>>;
   public updateCaSiteContacts(
-    accountContactDTO: Array<AccountContactDTO>,
+    accountContactDTO: AccountContactDTO[],
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any>;
   public updateCaSiteContacts(
-    accountContactDTO: Array<AccountContactDTO>,
+    accountContactDTO: AccountContactDTO[],
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountContactDTO === null || accountContactDTO === undefined) {
@@ -232,7 +232,7 @@ export class CaSiteContactsService {
     }
 
     return this.httpClient.post<any>(`${this.configuration.basePath}/v1.0/ca-site-contacts`, accountContactDTO, {
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,

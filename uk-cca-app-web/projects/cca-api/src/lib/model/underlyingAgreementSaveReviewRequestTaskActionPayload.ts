@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 import { UnderlyingAgreementReviewSavePayload } from './underlyingAgreementReviewSavePayload';
+import { Determination } from './determination';
 
 export interface UnderlyingAgreementSaveReviewRequestTaskActionPayload {
   payloadType?: string;
+  determination?: Determination;
   underlyingAgreement?: UnderlyingAgreementReviewSavePayload;
-  sectionsCompleted?: { [key: string]: string };
-  reviewSectionsCompleted?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
+  reviewSectionsCompleted?: Record<string, string>;
 }

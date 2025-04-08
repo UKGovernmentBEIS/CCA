@@ -4,7 +4,7 @@ import { GovukValidators, MessageValidatorFn } from '@netz/govuk-components';
 import { PhoneNumberUtil } from 'google-libphonenumber';
 
 const phoneNumberSizeValidator = (): ValidatorFn => {
-  return (control: AbstractControl): { [key: string]: string } | null => {
+  return (control: AbstractControl): Record<string, string> | null => {
     return control.value?.number?.length > 255
       ? { invalidSize: `Your phone number should not be larger than 255 characters` }
       : null;
@@ -41,7 +41,7 @@ const phoneNumberOtherValidator = (): ValidatorFn => {
 
       validNumber = phoneNumberUtil.isValidNumber(phoneNumber);
       validationResult = phoneNumberUtil.isPossibleNumberWithReason(phoneNumber);
-    } catch (e) {
+    } catch {
       return { invalidPhone: 'Your phone number is not valid' };
     }
     if (!validNumber) {

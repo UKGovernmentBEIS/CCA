@@ -9,21 +9,21 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { FileToken } from '../model/fileToken';
 import { OperatorUserDTO } from '../model/operatorUserDTO';
-import { RegulatorUserDTO } from '../model/regulatorUserDTO';
+import { RegulatorCurrentUserDTO } from '../model/regulatorCurrentUserDTO';
 import { SectorUserDTO } from '../model/sectorUserDTO';
 import { UserDTO } from '../model/userDTO';
 import { UserFeedbackDto } from '../model/userFeedbackDto';
 import { VerifierUserDTO } from '../model/verifierUserDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -115,7 +115,7 @@ export class UsersService {
   public generateGetCurrentUserSignatureToken(
     signatureUuid: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (signatureUuid === null || signatureUuid === undefined) {
@@ -126,7 +126,7 @@ export class UsersService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (signatureUuid !== undefined && signatureUuid !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>signatureUuid, 'signatureUuid');
+      queryParameters = this.addToHttpParams(queryParameters, signatureUuid as any, 'signatureUuid');
     }
 
     let headers = this.defaultHeaders;
@@ -154,7 +154,7 @@ export class UsersService {
 
     return this.httpClient.get<FileToken>(`${this.configuration.basePath}/v1.0/users/signature`, {
       params: queryParameters,
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -167,25 +167,27 @@ export class UsersService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getCurrentUser(): Observable<UserDTO | SectorUserDTO | OperatorUserDTO | RegulatorUserDTO | VerifierUserDTO>;
+  public getCurrentUser(): Observable<
+    UserDTO | SectorUserDTO | OperatorUserDTO | RegulatorCurrentUserDTO | VerifierUserDTO
+  >;
   public getCurrentUser(
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<UserDTO | SectorUserDTO | OperatorUserDTO | RegulatorUserDTO | VerifierUserDTO>>;
+  ): Observable<HttpResponse<UserDTO | SectorUserDTO | OperatorUserDTO | RegulatorCurrentUserDTO | VerifierUserDTO>>;
   public getCurrentUser(
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<UserDTO | SectorUserDTO | OperatorUserDTO | RegulatorUserDTO | VerifierUserDTO>>;
+  ): Observable<HttpEvent<UserDTO | SectorUserDTO | OperatorUserDTO | RegulatorCurrentUserDTO | VerifierUserDTO>>;
   public getCurrentUser(
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<UserDTO | SectorUserDTO | OperatorUserDTO | RegulatorUserDTO | VerifierUserDTO>;
+  ): Observable<UserDTO | SectorUserDTO | OperatorUserDTO | RegulatorCurrentUserDTO | VerifierUserDTO>;
   public getCurrentUser(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -211,10 +213,10 @@ export class UsersService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<UserDTO | SectorUserDTO | OperatorUserDTO | RegulatorUserDTO | VerifierUserDTO>(
-      `${this.configuration.basePath}/v1.0/users`,
+    return this.httpClient.get<UserDTO | SectorUserDTO | OperatorUserDTO | RegulatorCurrentUserDTO | VerifierUserDTO>(
+      `${this.configuration.basePath}/v1.0/users/current`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -251,7 +253,7 @@ export class UsersService {
   public provideUserFeedback(
     userFeedbackDto: UserFeedbackDto,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (userFeedbackDto === null || userFeedbackDto === undefined) {
@@ -289,7 +291,7 @@ export class UsersService {
     }
 
     return this.httpClient.post<any>(`${this.configuration.basePath}/v1.0/users/feedback`, userFeedbackDto, {
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
