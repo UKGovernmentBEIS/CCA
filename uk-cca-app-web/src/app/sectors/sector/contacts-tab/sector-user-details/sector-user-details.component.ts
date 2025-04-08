@@ -2,13 +2,14 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 
 import { AuthStore, selectUserId } from '@netz/common/auth';
+import { PageHeadingComponent } from '@netz/common/components';
 import {
   SummaryListComponent,
   SummaryListRowDirective,
   SummaryListRowKeyDirective,
   SummaryListRowValueDirective,
 } from '@netz/govuk-components';
-import { PageHeadingComponent, TwoFaLinkComponent } from '@shared/components';
+import { TwoFaLinkComponent } from '@shared/components';
 import { ContactTypePipe, PhoneNumberPipe } from '@shared/pipes';
 
 import { ActiveSectorUserStore } from '../active-sector-user.store';

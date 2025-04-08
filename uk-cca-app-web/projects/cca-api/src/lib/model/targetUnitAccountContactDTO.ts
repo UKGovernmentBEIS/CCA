@@ -9,8 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AccountAddressDTO } from './accountAddressDTO';
 import { PhoneNumberDTO } from './phoneNumberDTO';
+import { AccountAddressDTO } from './accountAddressDTO';
 
 export interface TargetUnitAccountContactDTO {
   email: string;

@@ -1,12 +1,12 @@
 @if (files(); as files) {
-  <div [class.moj-hidden]="files.length === 0" class="moj-multi-file__uploaded-files">
+  <div [class.cca-hidden]="files.length === 0" class="cca-multi-file__uploaded-files govuk-body">
     @if (listTitle()) {
       <h2 [class]="'govuk-heading-' + headerSize()">{{ listTitle() }}</h2>
     }
 
     @if (files.length === 1) {
-      <div class="govuk-summary-list moj-multi-file-upload__list">
-        <div aria-live="polite" class="govuk-summary-list__value moj-multi-file-upload__message">
+      <div class="govuk-summary-list cca-multi-file-upload__list">
+        <div aria-live="polite" class="govuk-summary-list__value cca-multi-file-upload__message">
           <ng-container
             *ngTemplateOutlet="
               files[0].errors ? error : files[0].progress === 1 ? success : progress;
@@ -15,7 +15,7 @@
           ></ng-container>
         </div>
 
-        <div class="govuk-summary-list__actions moj-multi-file-upload__actions">
+        <div class="govuk-summary-list__actions cca-multi-file-upload__actions">
           <ng-container
             [ngTemplateOutlet]="fileDeleteButton"
             [ngTemplateOutletContext]="{ fileIndex: 0, file: files[0] }"
@@ -24,10 +24,10 @@
         </div>
       </div>
     } @else {
-      <dl class="govuk-summary-list moj-multi-file-upload__list">
+      <dl class="govuk-summary-list cca-multi-file-upload__list">
         @for (file of files; track file; let i = $index) {
-          <div class="govuk-summary-list__row moj-multi-file-upload__row">
-            <dd aria-live="polite" class="govuk-summary-list__value moj-multi-file-upload__message">
+          <div class="govuk-summary-list__row cca-multi-file-upload__row">
+            <dd aria-live="polite" class="govuk-summary-list__value cca-multi-file-upload__message">
               <ng-container
                 *ngTemplateOutlet="
                   file.errors ? error : file.progress === 1 ? success : progress;
@@ -36,7 +36,7 @@
               ></ng-container>
             </dd>
 
-            <dd class="govuk-summary-list__actions moj-multi-file-upload__actions">
+            <dd class="govuk-summary-list__actions cca-multi-file-upload__actions">
               <ng-container
                 [ngTemplateOutlet]="fileDeleteButton"
                 [ngTemplateOutletContext]="{ fileIndex: i, file: file }"
@@ -52,7 +52,7 @@
       <button
         (click)="fileDelete.emit(fileIndex)"
         [disabled]="isDisabled()"
-        class="moj-multi-file-upload__delete govuk-!-margin-bottom-0"
+        class="cca-multi-file-upload__delete govuk-!-margin-bottom-0"
         govukSecondaryButton
         name="delete"
         type="button"
@@ -62,16 +62,16 @@
     </ng-template>
 
     <ng-template #progress let-file>
-      <span class="moj-multi-file-upload__filename">
-        <a [routerLink]="file.downloadUrl" govukLink target="_blank">{{ file.file.name }}</a>
+      <span class="cca-multi-file-upload__filename">
+        <a [routerLink]="file.downloadUrl" class="govuk-link" target="_blank">{{ file.file.name }}</a>
       </span>
-      <span class="moj-multi-file-upload__progress"> {{ file.progress | percent }}</span>
+      <span class="cca-multi-file-upload__progress"> {{ file.progress | percent }}</span>
     </ng-template>
 
     <ng-template #success let-file>
-      <span class="moj-multi-file-upload__success">
+      <span class="cca-multi-file-upload__success">
         <svg
-          class="moj-banner__icon"
+          class="cca-banner__icon"
           fill="currentColor"
           focusable="false"
           height="25"
@@ -82,14 +82,14 @@
         >
           <path d="M25,6.2L8.7,23.2L0,14.1l4-4.2l4.7,4.9L21,2L25,6.2z" />
         </svg>
-        <a [routerLink]="file.downloadUrl" govukLink target="_blank">{{ file.file.name }}</a> has been uploaded
+        <a [routerLink]="file.downloadUrl" class="govuk-link" target="_blank">{{ file.file.name }}</a> has been uploaded
       </span>
     </ng-template>
 
     <ng-template #error let-message="message">
-      <span class="moj-multi-file-upload__error">
+      <span class="cca-multi-file-upload__error">
         <svg
-          class="moj-banner__icon"
+          class="cca-banner__icon"
           fill="currentColor"
           focusable="false"
           height="25"

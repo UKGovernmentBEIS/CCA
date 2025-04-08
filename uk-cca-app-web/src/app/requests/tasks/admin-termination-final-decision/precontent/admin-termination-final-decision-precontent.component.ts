@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import { TaskItemStatus } from '@requests/common';
-import { PendingButtonDirective } from '@shared/directives';
 
 import { AdminTerminationFinalDecisionQuery } from '../+state/admin-termination-final-decision.selectors';
 import { ADMIN_TERMINATION_FINAL_DECISION_SUBTASK } from '../admin-termination-final-decision.helper';
@@ -14,7 +14,7 @@ import { ADMIN_TERMINATION_FINAL_DECISION_SUBTASK } from '../admin-termination-f
   template: `
     @if (isFinalDecisionReasonCompleted && isEditable) {
       <div class="govuk-body">
-        <button ccaPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
+        <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
           Notify operator of decision
         </button>
       </div>

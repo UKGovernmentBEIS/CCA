@@ -4,6 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationInfoNameDTO;
 import uk.gov.netz.api.common.config.MapperConfig;
 
 @Mapper(componentModel = "spring", config = MapperConfig.class, uses = {LocationMapper.class,
@@ -19,6 +21,11 @@ public interface SectorAssociationMapper {
     @Mapping(source = "facilitatorUserId", target = "sectorAssociationDetails.facilitatorUserId")
     @Mapping(source = "sectorAssociationContact", target = "sectorAssociationContact")
     SectorAssociationDTO toSectorAssociationDTO(SectorAssociation sectorAssociation);
+	
+
+    @Mapping(source = "name", target = "commonName")
+    @Mapping(source = "energyEprFactor", target = "energyIntensiveOrEPR")
+	SectorAssociationDetailsDTO toSectorAssociationDetailsDTO(SectorAssociation sectorAssociation);
 
     @Mapping(source = "sectorAssociationDetails.commonName", target = "name")
     @Mapping(source = "sectorAssociationDetails.acronym", target = "acronym")
@@ -29,4 +36,6 @@ public interface SectorAssociationMapper {
     @Mapping(source = "sectorAssociationDetails.facilitatorUserId", target = "facilitatorUserId")
     @Mapping(source = "sectorAssociationContact", target = "sectorAssociationContact")
     SectorAssociation toSectorAssociation(SectorAssociationDTO sectorAssociationDTO);
+
+    SectorAssociationInfoNameDTO toSectorAssociationInfoNameDTO(SectorAssociation sectorAssociation);
 }

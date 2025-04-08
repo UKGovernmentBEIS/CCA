@@ -14,7 +14,9 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.RequestTaskDefaultNoticeRecipients;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.TargetUnitAccountNoticeRecipients;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.service.UnderlyingAgreementReviewDefaultNoticeRecipients;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskType;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
@@ -56,13 +58,15 @@ class RequestTaskRecipientsServiceTest {
     @Test
     void getDefaultNoticeRecipients() {
         final long taskId = 1L;
-        final long accountId = 11L;
+        final Long accountId = 11L;
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
                 .id(taskId)
                 .type(RequestTaskType.builder()
                         .code(CcaRequestTaskType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW)
                         .build())
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .build();
 
         final List<NoticeRecipientDTO> expected = new ArrayList<>();
@@ -110,13 +114,15 @@ class RequestTaskRecipientsServiceTest {
     @Test
     void getDefaultNoticeRecipients_contacts_from_target_unit_account() {
         final long taskId = 1L;
-        final long accountId = 11L;
+        final Long accountId = 11L;
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
                 .id(taskId)
                 .type(RequestTaskType.builder()
                         .code(CcaRequestTaskType.ADMIN_TERMINATION_APPLICATION_FINAL_DECISION)
                         .build())
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .build();
 
         final List<NoticeRecipientDTO> list = List.of(
@@ -160,4 +166,14 @@ class RequestTaskRecipientsServiceTest {
         verify(targetUnitAccountNoticeRecipients, times(1))
                 .getNoticeRecipients(accountId);
     }
+
+	private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

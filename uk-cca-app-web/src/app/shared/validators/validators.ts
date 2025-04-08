@@ -10,12 +10,6 @@ export function requiredFieldsValidator(): ValidatorFn {
   );
 }
 
-export function atLeastOneRequiredValidator(message: string): ValidatorFn {
-  return GovukValidators.builder(message, (group: UntypedFormGroup) =>
-    Object.keys(group.controls).find((key) => !!group.controls[key].value) ? null : { atLeastOneRequired: true },
-  );
-}
-
 /** Add **required** and **max length** validators to the given field name. */
 export function textFieldValidators(fieldName: string, size = 255): MessageValidatorFn[] {
   return [

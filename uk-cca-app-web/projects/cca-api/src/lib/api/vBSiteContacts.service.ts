@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { AccountContactDTO } from '../model/accountContactDTO';
 import { AccountContactVbInfoResponse } from '../model/accountContactVbInfoResponse';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -115,7 +115,7 @@ export class VBSiteContactsService {
     page: number,
     size: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (page === null || page === undefined) {
@@ -127,10 +127,10 @@ export class VBSiteContactsService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (page !== undefined && page !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>page, 'page');
+      queryParameters = this.addToHttpParams(queryParameters, page as any, 'page');
     }
     if (size !== undefined && size !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>size, 'size');
+      queryParameters = this.addToHttpParams(queryParameters, size as any, 'size');
     }
 
     let headers = this.defaultHeaders;
@@ -158,7 +158,7 @@ export class VBSiteContactsService {
 
     return this.httpClient.get<AccountContactVbInfoResponse>(`${this.configuration.basePath}/v1.0/vb-site-contacts`, {
       params: queryParameters,
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -172,29 +172,29 @@ export class VBSiteContactsService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public updateVbSiteContacts(accountContactDTO: Array<AccountContactDTO>): Observable<any>;
+  public updateVbSiteContacts(accountContactDTO: AccountContactDTO[]): Observable<any>;
   public updateVbSiteContacts(
-    accountContactDTO: Array<AccountContactDTO>,
+    accountContactDTO: AccountContactDTO[],
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<any>>;
   public updateVbSiteContacts(
-    accountContactDTO: Array<AccountContactDTO>,
+    accountContactDTO: AccountContactDTO[],
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<any>>;
   public updateVbSiteContacts(
-    accountContactDTO: Array<AccountContactDTO>,
+    accountContactDTO: AccountContactDTO[],
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any>;
   public updateVbSiteContacts(
-    accountContactDTO: Array<AccountContactDTO>,
+    accountContactDTO: AccountContactDTO[],
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountContactDTO === null || accountContactDTO === undefined) {
@@ -232,7 +232,7 @@ export class VBSiteContactsService {
     }
 
     return this.httpClient.post<any>(`${this.configuration.basePath}/v1.0/vb-site-contacts`, accountContactDTO, {
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,

@@ -12,6 +12,6 @@
 import { AccountSearchResultInfoDTO } from './accountSearchResultInfoDTO';
 
 export interface AccountSearchResults {
-  accounts?: Array<AccountSearchResultInfoDTO>;
+  accounts?: AccountSearchResultInfoDTO[];
   total?: number;
 }

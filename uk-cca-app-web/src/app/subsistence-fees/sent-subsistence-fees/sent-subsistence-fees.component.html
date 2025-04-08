@@ -1,0 +1,33 @@
+@if (subFeesDetails) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <netz-page-heading size="xl" data-testid="page-heading" class="row-flex">
+        {{ subFeesDetails.paymentRequestId }}
+        <span class="govuk-tag-heading-align">
+          <govuk-tag
+            [color]="subFeesDetails?.paymentStatus | subsistenceFeesRunPaymentStatusTagColor"
+            class="failure-tag"
+          >
+            {{ subFeesDetails?.paymentStatus | subsistenceFeesRunPaymentStatus }}
+          </govuk-tag>
+        </span>
+      </netz-page-heading>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <govuk-tabs>
+      <ng-template govukTabLazy id="details" label="Details">
+        <cca-summary [data]="data" />
+      </ng-template>
+
+      <ng-template govukTabLazy id="sector-moas" [label]="'Sector MoAs (' + subFeesDetails?.sectorMoasCount + ')'">
+        <cca-sector-moas />
+      </ng-template>
+
+      <ng-template govukTabLazy id="tu-moas" [label]="'Target unit MoAs (' + subFeesDetails?.targetUnitMoasCount + ')'">
+        <cca-tu-moas />
+      </ng-template>
+    </govuk-tabs>
+  </div>
+}

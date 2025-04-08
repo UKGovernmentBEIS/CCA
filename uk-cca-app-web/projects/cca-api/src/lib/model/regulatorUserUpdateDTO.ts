@@ -13,5 +13,5 @@ import { RegulatorUserDTO } from './regulatorUserDTO';
 
 export interface RegulatorUserUpdateDTO {
   user: RegulatorUserDTO;
-  permissions: { [key: string]: 'NONE' | 'VIEW_ONLY' | 'EXECUTE' };
+  permissions: Record<string, 'NONE' | 'VIEW_ONLY' | 'EXECUTE'>;
 }

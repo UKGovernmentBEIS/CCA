@@ -9,18 +9,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { FileToken } from '../model/fileToken';
 import { RegulatorInvitedUserDTO } from '../model/regulatorInvitedUserDTO';
 import { RegulatorUserDTO } from '../model/regulatorUserDTO';
 import { RegulatorUserUpdateDTO } from '../model/regulatorUserUpdateDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -131,7 +131,7 @@ export class RegulatorUsersService {
     userId: string,
     signatureUuid: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (userId === null || userId === undefined) {
@@ -147,7 +147,7 @@ export class RegulatorUsersService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (signatureUuid !== undefined && signatureUuid !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>signatureUuid, 'signatureUuid');
+      queryParameters = this.addToHttpParams(queryParameters, signatureUuid as any, 'signatureUuid');
     }
 
     let headers = this.defaultHeaders;
@@ -177,7 +177,7 @@ export class RegulatorUsersService {
       `${this.configuration.basePath}/v1.0/regulator-users/${encodeURIComponent(String(userId))}/signature`,
       {
         params: queryParameters,
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -214,7 +214,7 @@ export class RegulatorUsersService {
   public getRegulatorUserByCaAndId(
     userId: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (userId === null || userId === undefined) {
@@ -247,7 +247,7 @@ export class RegulatorUsersService {
     return this.httpClient.get<RegulatorUserDTO>(
       `${this.configuration.basePath}/v1.0/regulator-users/${encodeURIComponent(String(userId))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -289,7 +289,7 @@ export class RegulatorUsersService {
     regulatorInvitedUser: RegulatorInvitedUserDTO,
     signature: Blob,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (regulatorInvitedUser === null || regulatorInvitedUser === undefined) {
@@ -342,11 +342,11 @@ export class RegulatorUsersService {
           'regulatorInvitedUser',
           useForm
             ? new Blob([JSON.stringify(regulatorInvitedUser)], { type: 'application/json' })
-            : <any>regulatorInvitedUser,
+            : (regulatorInvitedUser as any),
         ) as any) || formParams;
     }
     if (signature !== undefined) {
-      formParams = (formParams.append('signature', <any>signature) as any) || formParams;
+      formParams = (formParams.append('signature', signature as any) as any) || formParams;
     }
 
     let responseType_: 'text' | 'json' = 'json';
@@ -358,7 +358,7 @@ export class RegulatorUsersService {
       `${this.configuration.basePath}/v1.0/regulator-users/invite`,
       convertFormParamsToString ? formParams.toString() : formParams,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -395,7 +395,7 @@ export class RegulatorUsersService {
   public resetRegulator2Fa(
     userId: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (userId === null || userId === undefined) {
@@ -429,7 +429,7 @@ export class RegulatorUsersService {
       `${this.configuration.basePath}/v1.0/regulator-users/${encodeURIComponent(String(userId))}/reset-2fa`,
       null,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -474,7 +474,7 @@ export class RegulatorUsersService {
     regulatorUserUpdateDTO: RegulatorUserUpdateDTO,
     signature?: Blob,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (regulatorUserUpdateDTO === null || regulatorUserUpdateDTO === undefined) {
@@ -524,11 +524,11 @@ export class RegulatorUsersService {
           'regulatorUserUpdateDTO',
           useForm
             ? new Blob([JSON.stringify(regulatorUserUpdateDTO)], { type: 'application/json' })
-            : <any>regulatorUserUpdateDTO,
+            : (regulatorUserUpdateDTO as any),
         ) as any) || formParams;
     }
     if (signature !== undefined) {
-      formParams = (formParams.append('signature', <any>signature) as any) || formParams;
+      formParams = (formParams.append('signature', signature as any) as any) || formParams;
     }
 
     let responseType_: 'text' | 'json' = 'json';
@@ -540,7 +540,7 @@ export class RegulatorUsersService {
       `${this.configuration.basePath}/v1.0/regulator-users`,
       convertFormParamsToString ? formParams.toString() : formParams,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -591,7 +591,7 @@ export class RegulatorUsersService {
     regulatorUserUpdateDTO: RegulatorUserUpdateDTO,
     signature?: Blob,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (userId === null || userId === undefined) {
@@ -644,11 +644,11 @@ export class RegulatorUsersService {
           'regulatorUserUpdateDTO',
           useForm
             ? new Blob([JSON.stringify(regulatorUserUpdateDTO)], { type: 'application/json' })
-            : <any>regulatorUserUpdateDTO,
+            : (regulatorUserUpdateDTO as any),
         ) as any) || formParams;
     }
     if (signature !== undefined) {
-      formParams = (formParams.append('signature', <any>signature) as any) || formParams;
+      formParams = (formParams.append('signature', signature as any) as any) || formParams;
     }
 
     let responseType_: 'text' | 'json' = 'json';
@@ -660,7 +660,7 @@ export class RegulatorUsersService {
       `${this.configuration.basePath}/v1.0/regulator-users/${encodeURIComponent(String(userId))}`,
       convertFormParamsToString ? formParams.toString() : formParams,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

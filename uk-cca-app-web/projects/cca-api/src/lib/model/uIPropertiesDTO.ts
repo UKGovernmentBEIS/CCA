@@ -12,8 +12,9 @@
 import { NotificationAlertDTO } from './notificationAlertDTO';
 
 export interface UIPropertiesDTO {
-  features?: { [key: string]: boolean };
-  analytics?: { [key: string]: string };
+  features?: Record<string, boolean>;
+  analytics?: Record<string, string>;
   keycloakServerUrl?: string;
-  notificationAlerts?: Array<NotificationAlertDTO>;
+  subsistenceFeesRunTriggerDate?: string;
+  notificationAlerts?: NotificationAlertDTO[];
 }

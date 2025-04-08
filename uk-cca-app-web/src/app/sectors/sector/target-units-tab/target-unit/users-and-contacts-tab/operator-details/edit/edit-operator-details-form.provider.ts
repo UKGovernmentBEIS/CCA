@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { GovukValidators } from '@netz/govuk-components';
 import { phoneInputValidators } from '@shared/components';
-import { textFieldValidators } from '@shared/validators/validators';
+import { textFieldValidators } from '@shared/validators';
 
 import { CcaOperatorUserDetailsDTO } from 'cca-api';
 
@@ -32,8 +32,8 @@ export const TARGET_UNIT_OPERATOR_USER_DETAILS_FORM = new InjectionToken<Operato
 export const OperatorUserDetailsFormProvider: Provider = {
   provide: TARGET_UNIT_OPERATOR_USER_DETAILS_FORM,
   deps: [FormBuilder, ActiveOperatorStore],
-  useFactory: (fb: FormBuilder, store: ActiveOperatorStore) => {
-    const operatorUserDetails = store.state.details;
+  useFactory: (fb: FormBuilder, activeOperatorStore: ActiveOperatorStore) => {
+    const operatorUserDetails = activeOperatorStore.state.details;
 
     return fb.group(
       {
@@ -41,9 +41,10 @@ export const OperatorUserDetailsFormProvider: Provider = {
         lastName: fb.control(operatorUserDetails.lastName, textFieldValidators('last name')),
         jobTitle: fb.control(operatorUserDetails?.jobTitle),
         email: fb.control({ value: operatorUserDetails?.email, disabled: true }),
-        contactType: fb.control({ value: operatorUserDetails?.contactType, disabled: !store.state.editable }, [
-          GovukValidators.required('Choose your contact type'),
-        ]),
+        contactType: fb.control(
+          { value: operatorUserDetails?.contactType, disabled: !activeOperatorStore.state.editable },
+          [GovukValidators.required('Choose your contact type')],
+        ),
         organisationName: fb.control(operatorUserDetails?.organisationName),
         phoneNumber: fb.control(operatorUserDetails?.phoneNumber, phoneInputValidators),
         mobileNumber: fb.control(operatorUserDetails?.mobileNumber, phoneInputValidators),

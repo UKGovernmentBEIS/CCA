@@ -29,6 +29,11 @@ Any custom components based on GDS are built on top of the `govuk-components` li
 
 is an OpenAPI generated library that contains services and models related to the CCA API and can be found [here](projects/cca-api/).
 
+### The `common` library
+
+is a set of dependencies that we take from the NETZ web repository. This dependency should eventually be moved upstream
+and follow a semver approach.
+
 ## Build
 
 The libraries of the project must be build first if there are new versions. To build both libraries at once, run the custom script:
@@ -88,14 +93,15 @@ This will build the app, generate all `source-maps` needed by `source-map-explor
 
 ## How to run Sonarqube locally
 
-1. Make sure you have sonarqube running locally. If you're running the docker compose from the [uk-cca-env-development](https://git.trasys.gr/bitbucket/projects/UKCCA/repos/uk-cca-env-development) this should be enough.
+1. Make sure you have sonarqube running locally. This is found in the netz home project.
 2. Log into your local sonarqube running at http://localhost:9000. If this is your first time you'll be prompted to change your default credentials (initial ones are admin-admin).
-3. Create a sonarqube project manually. Project display name, project key and main branch name do not matter. For consistency purposes you can type `uk-cca-web`, `uk-cca-web` and `master` respectively.
+3. Create a sonarqube project manually. Project display name, project key and main branch name do not matter. Name the project `uk-cca-app-web`.
 4. Choose `global settings` in the next screen and click `Create Project`.
 5. Click the `Locally` option to set up sonar-scanner locally.
-6. Generate a token and paste it in the `sonar.login` variable in the `sonar-project.properties` file found in the root of this repository.
-7. Change the sonarqube password in `package.json` file in the root of this repository. This should be found under the `scripts` section at the `sonar:local` script.
-8. Run `yarn sonar:local`. After completion you should be able to see the results at http://localhost:9000/projects, under the sonarqube project you just created.
+6. Generate a token. Keep the token in your clipboard.
+7. Open the `sonar-project.properties` and change the `sonar.login` to `sonar.token`. Paste the token in your clipboard here.
+8. Rename the `http://sonarqube:9000/sonarqube` to `http://locahost:9000`.
+9. Run `yarn sonar`. After completion you should be able to see the results at http://localhost:9000/projects, under the sonarqube project you just created.
 
 ## Unit tests
 
@@ -147,6 +153,13 @@ Here are some common caveats to keep in mind, while working with the RouterTesti
   of services.
 - In general, when your tests do not render the template you would expect, use `screen.debug()` and play with `harness.fixture.detectChanges()`
   along with `await harness.fixture.whenStable()`.
+
+_Edit: Due to the instability and changes of the confluence pages, we decided not to continue with this testing approach._
+
+## Snapshot testing
+
+Due to the nature of the deadlines we decided to use [Snapshot testing](https://jestjs.io/docs/snapshot-testing). Snapshot testing does a good test on the rendered mark up but does not test http action and we currently don't use it after any mutations on the
+DOM. It's a suboptimal for of testing for us right now, but it will provide _some_ coverage.
 
 ### Example
 

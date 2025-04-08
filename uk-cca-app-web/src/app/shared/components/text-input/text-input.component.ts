@@ -16,15 +16,13 @@ import { ControlContainer, ControlValueAccessor, NgControl } from '@angular/form
 
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs';
 
-import { ErrorMessageComponent, FormService, GovukValidators, LabelDirective } from '@netz/govuk-components';
+import { ErrorMessageComponent, FormInput, FormService, GovukValidators, LabelDirective } from '@netz/govuk-components';
 
-import { FormInput } from '../../../../../projects/govuk-components/src/lib/form/form-input';
 import { LabelSizeType } from './label-size.type';
 import { GovukTextWidthClass, HTMLInputType } from './text-input.type';
 
 /*
  eslint-disable
- @angular-eslint/prefer-on-push-component-change-detection,
  @angular-eslint/component-selector
  */
 @Component({
@@ -90,7 +88,7 @@ export class TextInputComponent extends FormInput implements ControlValueAccesso
   override ngOnInit(): void {
     super.ngOnInit();
     if (this.inputType === 'number') {
-      const notNanValidator = GovukValidators.notNaN('Enter a numerical value');
+      const notNanValidator = GovukValidators.notNaN('Enter a numerical value, without alpha or special characters');
       this.control.addValidators(notNanValidator);
       this.control.updateValueAndValidity();
     }

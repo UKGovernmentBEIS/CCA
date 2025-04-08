@@ -9,17 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AuthorisationAndAdditionalEvidence } from './authorisationAndAdditionalEvidence';
-import { Facility } from './facility';
-import { TargetPeriod5Details } from './targetPeriod5Details';
 import { TargetPeriod6Details } from './targetPeriod6Details';
+import { TargetPeriod5Details } from './targetPeriod5Details';
+import { AuthorisationAndAdditionalEvidence } from './authorisationAndAdditionalEvidence';
 import { UnderlyingAgreementVariationApplySaveTargetUnitDetails } from './underlyingAgreementVariationApplySaveTargetUnitDetails';
 import { UnderlyingAgreementVariationDetails } from './underlyingAgreementVariationDetails';
+import { Facility } from './facility';
 
 export interface UnderlyingAgreementVariationApplySavePayload {
   underlyingAgreementTargetUnitDetails: UnderlyingAgreementVariationApplySaveTargetUnitDetails;
   underlyingAgreementVariationDetails: UnderlyingAgreementVariationDetails;
-  facilities: Array<Facility>;
+  facilities: Facility[];
   targetPeriod5Details: TargetPeriod5Details;
   targetPeriod6Details: TargetPeriod6Details;
   authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence;

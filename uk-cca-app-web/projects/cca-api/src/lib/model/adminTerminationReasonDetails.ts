@@ -20,5 +20,5 @@ export interface AdminTerminationReasonDetails {
     | 'FAILURE_TO_AGREE'
     | 'FAILURE_TO_PAY';
   explanation: string;
-  relevantFiles?: Array<string>;
+  relevantFiles?: string[];
 }

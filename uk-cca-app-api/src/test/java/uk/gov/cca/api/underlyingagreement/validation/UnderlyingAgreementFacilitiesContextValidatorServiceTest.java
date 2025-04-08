@@ -166,7 +166,7 @@ class UnderlyingAgreementFacilitiesContextValidatorServiceTest {
         // Verify
         assertThat(result.isValid()).isFalse();
         assertThat((List<UnderlyingAgreementViolation>) result.getViolations()).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(
-        		UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_ATTACHMENT_TYPE.getMessage());
+        		UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_EVIDENCE_ATTACHMENT_TYPE.getMessage());
         verify(validator, times(1)).validate(facility1);
         verify(validator, times(1)).validate(facility2);
         verify(fileAttachmentService, times(1)).getFileDTO(permitFile.toString());
@@ -258,7 +258,6 @@ class UnderlyingAgreementFacilitiesContextValidatorServiceTest {
         when(validator.validate(facility2)).thenReturn(Optional.empty());
         when(facilityDataQueryService.isActiveFacility(facility1.getFacilityItem().getFacilityId())).thenReturn(true);
         when(facilityDataQueryService.isActiveFacility(facility2.getFacilityItem().getFacilityId())).thenReturn(false);
-        when(facilityDataQueryService.isActiveFacility("previousFacilityId")).thenReturn(true);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLSX.getMimeTypes().toArray()[0]).build());
 
@@ -271,7 +270,7 @@ class UnderlyingAgreementFacilitiesContextValidatorServiceTest {
                 UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ID.getMessage());
         verify(validator, times(1)).validate(facility1);
         verify(validator, times(1)).validate(facility2);
-        verify(facilityDataQueryService, times(4)).isActiveFacility(anyString());
+        verify(facilityDataQueryService, times(2)).isActiveFacility(anyString());
         verify(fileAttachmentService, times(2)).getFileDTO(evidenceFile.toString());
     }
 

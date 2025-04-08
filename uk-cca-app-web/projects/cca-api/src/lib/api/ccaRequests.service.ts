@@ -9,19 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { RequestCreateActionProcessDTO } from '../model/requestCreateActionProcessDTO';
 import { RequestCreateActionProcessResponseDTO } from '../model/requestCreateActionProcessResponseDTO';
-import { RequestDetailsDTO } from '../model/requestDetailsDTO';
-import { RequestDetailsSearchResults } from '../model/requestDetailsSearchResults';
-import { RequestSearchByAccountCriteria } from '../model/requestSearchByAccountCriteria';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -86,158 +83,6 @@ export class CcaRequestsService {
   }
 
   /**
-   * Get the workflows for the given search criteria
-   * @param requestSearchByAccountCriteria
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getCcaRequestDetailsByAccountId(
-    requestSearchByAccountCriteria: RequestSearchByAccountCriteria,
-  ): Observable<RequestDetailsSearchResults>;
-  public getCcaRequestDetailsByAccountId(
-    requestSearchByAccountCriteria: RequestSearchByAccountCriteria,
-    observe: 'response',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<RequestDetailsSearchResults>>;
-  public getCcaRequestDetailsByAccountId(
-    requestSearchByAccountCriteria: RequestSearchByAccountCriteria,
-    observe: 'events',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<RequestDetailsSearchResults>>;
-  public getCcaRequestDetailsByAccountId(
-    requestSearchByAccountCriteria: RequestSearchByAccountCriteria,
-    observe: 'body',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<RequestDetailsSearchResults>;
-  public getCcaRequestDetailsByAccountId(
-    requestSearchByAccountCriteria: RequestSearchByAccountCriteria,
-    observe: any = 'body',
-    reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<any> {
-    if (requestSearchByAccountCriteria === null || requestSearchByAccountCriteria === undefined) {
-      throw new Error(
-        'Required parameter requestSearchByAccountCriteria was null or undefined when calling getCcaRequestDetailsByAccountId.',
-      );
-    }
-
-    let headers = this.defaultHeaders;
-
-    // authentication (bearerAuth) required
-    const credential = this.configuration.lookupCredential('bearerAuth');
-    if (credential) {
-      headers = headers.set('Authorization', 'Bearer ' + credential);
-    }
-
-    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-    if (httpHeaderAcceptSelected === undefined) {
-      // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
-      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    }
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = ['application/json'];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected !== undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    let responseType_: 'text' | 'json' = 'json';
-    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-      responseType_ = 'text';
-    }
-
-    return this.httpClient.post<RequestDetailsSearchResults>(
-      `${this.configuration.basePath}/v1.0/cca-requests/workflows`,
-      requestSearchByAccountCriteria,
-      {
-        responseType: <any>responseType_,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress,
-      },
-    );
-  }
-
-  /**
-   * Get request details by id
-   * @param id The sector association id
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getCcaRequestDetailsById(id: string): Observable<RequestDetailsDTO>;
-  public getCcaRequestDetailsById(
-    id: string,
-    observe: 'response',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<RequestDetailsDTO>>;
-  public getCcaRequestDetailsById(
-    id: string,
-    observe: 'events',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<RequestDetailsDTO>>;
-  public getCcaRequestDetailsById(
-    id: string,
-    observe: 'body',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<RequestDetailsDTO>;
-  public getCcaRequestDetailsById(
-    id: string,
-    observe: any = 'body',
-    reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<any> {
-    if (id === null || id === undefined) {
-      throw new Error('Required parameter id was null or undefined when calling getCcaRequestDetailsById.');
-    }
-
-    let headers = this.defaultHeaders;
-
-    // authentication (bearerAuth) required
-    const credential = this.configuration.lookupCredential('bearerAuth');
-    if (credential) {
-      headers = headers.set('Authorization', 'Bearer ' + credential);
-    }
-
-    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-    if (httpHeaderAcceptSelected === undefined) {
-      // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
-      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    }
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    let responseType_: 'text' | 'json' = 'json';
-    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-      responseType_ = 'text';
-    }
-
-    return this.httpClient.get<RequestDetailsDTO>(
-      `${this.configuration.basePath}/v1.0/cca-requests/${encodeURIComponent(String(id))}`,
-      {
-        responseType: <any>responseType_,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress,
-      },
-    );
-  }
-
-  /**
    * Processes a cca request create action
    * @param sectorAssociationId The sector association id
    * @param requestCreateActionProcessDTO
@@ -279,7 +124,7 @@ export class CcaRequestsService {
     requestCreateActionProcessDTO: RequestCreateActionProcessDTO,
     accountId?: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorAssociationId === null || sectorAssociationId === undefined) {
@@ -295,10 +140,10 @@ export class CcaRequestsService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (sectorAssociationId !== undefined && sectorAssociationId !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>sectorAssociationId, 'sectorAssociationId');
+      queryParameters = this.addToHttpParams(queryParameters, sectorAssociationId as any, 'sectorAssociationId');
     }
     if (accountId !== undefined && accountId !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>accountId, 'accountId');
+      queryParameters = this.addToHttpParams(queryParameters, accountId as any, 'accountId');
     }
 
     let headers = this.defaultHeaders;
@@ -336,7 +181,7 @@ export class CcaRequestsService {
       requestCreateActionProcessDTO,
       {
         params: queryParameters,
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

@@ -5,11 +5,15 @@ import {
   CanActivateFacilityCheckYourAnswers,
   CanActivateFacilitySummary,
   FacilityWizardStep,
+  resetCurrentFacility,
+  setCurrentFacility,
 } from '@requests/common';
 
 export const FACILITY_ROUTES: Routes = [
   {
     path: ':facilityId',
+    canActivate: [setCurrentFacility],
+    canDeactivate: [resetCurrentFacility],
     children: [
       {
         path: FacilityWizardStep.DETAILS,

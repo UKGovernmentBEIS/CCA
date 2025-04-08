@@ -9,17 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { CaExternalContactDTO } from '../model/caExternalContactDTO';
 import { CaExternalContactRegistrationDTO } from '../model/caExternalContactRegistrationDTO';
 import { CaExternalContactsDTO } from '../model/caExternalContactsDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -111,7 +111,7 @@ export class CaExternalContactsService {
   public createCaExternalContact(
     caExternalContactRegistrationDTO: CaExternalContactRegistrationDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (caExternalContactRegistrationDTO === null || caExternalContactRegistrationDTO === undefined) {
@@ -154,7 +154,7 @@ export class CaExternalContactsService {
       `${this.configuration.basePath}/v1.0/ca-external-contacts`,
       caExternalContactRegistrationDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -191,7 +191,7 @@ export class CaExternalContactsService {
   public deleteCaExternalContactById(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -224,7 +224,7 @@ export class CaExternalContactsService {
     return this.httpClient.delete<any>(
       `${this.configuration.basePath}/v1.0/ca-external-contacts/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -269,7 +269,7 @@ export class CaExternalContactsService {
     id: number,
     caExternalContactRegistrationDTO: CaExternalContactRegistrationDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -315,7 +315,7 @@ export class CaExternalContactsService {
       `${this.configuration.basePath}/v1.0/ca-external-contacts/${encodeURIComponent(String(id))}`,
       caExternalContactRegistrationDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -352,7 +352,7 @@ export class CaExternalContactsService {
   public getCaExternalContactById(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -385,7 +385,7 @@ export class CaExternalContactsService {
     return this.httpClient.get<CaExternalContactDTO>(
       `${this.configuration.basePath}/v1.0/ca-external-contacts/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -417,7 +417,7 @@ export class CaExternalContactsService {
   ): Observable<CaExternalContactsDTO>;
   public getCaExternalContacts(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -444,7 +444,7 @@ export class CaExternalContactsService {
     }
 
     return this.httpClient.get<CaExternalContactsDTO>(`${this.configuration.basePath}/v1.0/ca-external-contacts`, {
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,

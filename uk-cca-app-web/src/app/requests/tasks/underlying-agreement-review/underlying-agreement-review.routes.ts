@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { PayloadMutatorsHandler, SideEffectsHandler } from '@netz/common/forms';
 import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/common';
 
+import { canActivateOverallDecision } from './subtasks/overall-decision/overall-decision.guard';
 import {
   providePayloadMutators,
   provideSideEffects,
@@ -56,7 +57,7 @@ export const UNDERLYING_AGREEMENT_REVIEW_ROUTES: Routes = [
       },
       {
         path: 'send-application',
-        canActivate: [isEditableSummaryRedirectGuard],
+        canActivate: [canActivateOverallDecision, isEditableSummaryRedirectGuard],
         loadChildren: () =>
           import('./subtasks/overall-decision/overall-decision.routes').then((r) => r.OVERALL_DECISION_ROUTES),
       },

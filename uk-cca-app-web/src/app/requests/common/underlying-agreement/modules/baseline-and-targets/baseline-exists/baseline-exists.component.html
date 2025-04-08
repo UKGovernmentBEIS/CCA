@@ -1,3 +1,13 @@
+@if (showNotificationBanner) {
+  <govuk-notification-banner heading="Important">
+    <h3>You can skip this section</h3>
+
+    <p id="notification-content">
+      Providing information for TP5 is optional because you are applying for a new agreement.
+    </p>
+  </govuk-notification-banner>
+}
+
 <cca-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { LinkDirective } from '@netz/govuk-components';
 import { WizardStepComponent } from '@shared/components';
 
 import { UpdateTargetUnitAccountService } from 'cca-api';
@@ -19,7 +18,7 @@ import {
   selector: 'cca-edit-administrative-contact',
   templateUrl: './edit-administrative-contact.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, AdministrativeContactInputComponent, WizardStepComponent, LinkDirective, RouterLink],
+  imports: [ReactiveFormsModule, AdministrativeContactInputComponent, WizardStepComponent, RouterLink],
   providers: [EditAdministrativeContactFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

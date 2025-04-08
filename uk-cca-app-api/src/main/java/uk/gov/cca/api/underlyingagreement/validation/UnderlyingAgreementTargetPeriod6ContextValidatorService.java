@@ -6,7 +6,7 @@ import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.DataValidator;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
-import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.AgreementCompositionType;
+import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.BaselineData;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetComposition;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod6Details;
@@ -24,12 +24,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_AGREEMENT_COMPOSITION_TYPE;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_ATTACHMENT_TYPE;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGETS;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_COMPOSITION_PERFORMANCE;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_UNIT_THROUGHPUT_MEASURED;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_UNIT_TYPE;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_THROUGHPUT_UNIT;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_CALCULATOR_ATTACHMENT_TYPE;
 
 @Service
 public class UnderlyingAgreementTargetPeriod6ContextValidatorService extends UnderlyingAgreementSectionConstraintValidatorService<TargetPeriod6Details> implements UnderlyingAgreementSectionContextValidator {
@@ -123,19 +123,22 @@ public class UnderlyingAgreementTargetPeriod6ContextValidatorService extends Und
                     || ObjectUtils.isEmpty(baselineData.getPerformance())) {
                 violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_AGREEMENT_COMPOSITION_TYPE));
             }
+            
+            if(!ObjectUtils.isEmpty(baselineData.getPerformance())) {
 
-            // Validate Performance
-            Optional.ofNullable(baselineData.getThroughput()).ifPresentOrElse(
-                    throughput -> {
-                        BigDecimal performance = throughput.signum() == 0
-                                ? BigDecimal.ZERO
-                                : baselineData.getEnergy().divide(throughput, 7, RoundingMode.HALF_UP);
-                        if(performance.compareTo(baselineData.getPerformance()) != 0) {
-                            violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_TARGET_COMPOSITION_PERFORMANCE, baselineData.getPerformance()));
-                        }
-                    },
-                    () -> violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_TARGET_COMPOSITION_PERFORMANCE))
-            );
+                // Validate Performance
+                Optional.ofNullable(baselineData.getThroughput()).ifPresentOrElse(
+                        throughput -> {
+                            BigDecimal performance = throughput.signum() == 0
+                                    ? BigDecimal.ZERO
+                                    : baselineData.getEnergy().divide(throughput, 7, RoundingMode.HALF_UP);
+                            if(performance.compareTo(baselineData.getPerformance()) != 0) {
+                                violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_TARGET_COMPOSITION_PERFORMANCE, baselineData.getPerformance()));
+                            }
+                        },
+                        () -> violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_TARGET_COMPOSITION_PERFORMANCE))
+                );
+            }
         }
     }
     
@@ -169,7 +172,7 @@ public class UnderlyingAgreementTargetPeriod6ContextValidatorService extends Und
             FileDTO file = fileAttachmentService.getFileDTO(calculatorFile.get().toString());
             if(!FileType.XLSX.getMimeTypes().contains(file.getFileType())
             		&& !FileType.XLS.getMimeTypes().contains(file.getFileType())) {
-                violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_ATTACHMENT_TYPE));
+                violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_TARGET_CALCULATOR_ATTACHMENT_TYPE));
             }
         }
     }

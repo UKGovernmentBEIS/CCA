@@ -101,7 +101,7 @@ class RequestActionFileDocumentControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(appUser, "generateRequestActionGetFileDocumentToken", String.valueOf(requestActionId));
+            .authorize(appUser, "generateRequestActionGetFileDocumentToken", String.valueOf(requestActionId), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders
             .get(BASE_PATH + "/" + requestActionId)

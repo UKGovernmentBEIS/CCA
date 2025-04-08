@@ -10,7 +10,7 @@ export function fileExtensionValidator(
   allowedMimeTypes: string[],
   message: string,
 ): ValidatorFn {
-  return (control: FormControl): { [key: string]: any } | null => {
+  return (control: FormControl): Record<string, any> | null => {
     const file = control.value;
 
     if (file) {

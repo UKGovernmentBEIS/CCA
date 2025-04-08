@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
-import { PageHeadingComponent, PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
+import { PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/components';
 
 import { SectorUserInvitationStore } from '../sector-user-invitation.store';
 

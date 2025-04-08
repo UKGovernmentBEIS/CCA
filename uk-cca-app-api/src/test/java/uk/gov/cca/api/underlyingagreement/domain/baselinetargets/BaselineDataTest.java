@@ -41,12 +41,12 @@ class BaselineDataTest {
     }
     
     @Test
-    void validate_facility_over_3_decimals_not_valid() {
+    void validate_facility_over_7_decimals_not_valid() {
         final BaselineData data = BaselineData.builder()
                 .isTwelveMonths(Boolean.TRUE)
                 .baselineDate(LocalDate.now())
                 .explanation("My explanation")
-                .energy(BigDecimal.valueOf(10.9999))
+                .energy(BigDecimal.valueOf(10.99999999))
                 .energyCarbonFactor(BigDecimal.TEN)
                 .build();
         final Set<ConstraintViolation<BaselineData>> violations = validator.validate(data);

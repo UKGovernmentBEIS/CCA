@@ -6,8 +6,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.netz.api.common.config.MapperConfig;
-import uk.gov.netz.api.common.utils.MimeTypeUtils;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
+import uk.gov.netz.api.files.common.utils.MimeTypeUtils;
 
 import java.io.IOException;
 

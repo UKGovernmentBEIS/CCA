@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 
-import { AuthService } from '@core/services/auth.service';
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { AuthService } from '@shared/services';
 
 import { TimedOutComponent } from './timed-out.component';
 
@@ -15,7 +14,7 @@ describe('TimedOutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TimedOutComponent, RouterTestingModule],
+      imports: [TimedOutComponent],
       providers: [
         { provide: AuthService, useValue: authService },
         { provide: ActivatedRoute, useValue: activatedRoute },

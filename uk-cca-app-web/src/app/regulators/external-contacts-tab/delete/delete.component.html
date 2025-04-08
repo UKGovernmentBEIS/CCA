@@ -4,15 +4,15 @@
   <govuk-warning-text assistiveText="">You will not be able to undo this action.</govuk-warning-text>
 
   <div class="govuk-button-group">
-    <button (click)="deleteExternalContact()" ccaPendingButton govukWarnButton type="button">Confirm delete</button>
-    <a govukLink fragment="external-contacts" [routerLink]="['/user/regulators']">Cancel</a>
+    <button (click)="deleteExternalContact()" netzPendingButton govukWarnButton type="button">Confirm delete</button>
+    <a class="govuk-link" fragment="external-contacts" [routerLink]="['/user/regulators']">Cancel</a>
   </div>
 } @else {
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <govuk-panel title="The external contact {{ contact.name }} has been deleted"></govuk-panel>
 
-      <a fragment="external-contacts" govukLink [routerLink]="['/user/regulators']">
+      <a fragment="external-contacts" class="govuk-link" [routerLink]="['/user/regulators']">
         Return to the Regulator users and contacts page
       </a>
     </div>

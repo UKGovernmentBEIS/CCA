@@ -25,10 +25,12 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.Un
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.UnderlyingAgreementCreateDocumentService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.UnderlyingAgreementOfficialNoticeService;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 import uk.gov.netz.api.workflow.request.flow.common.domain.DecisionNotification;
 
@@ -72,9 +74,9 @@ class UnderlyingAgreementActivatedGenerateDocumentsServiceTest {
                 .build();
 
         final Request request = Request.builder()
-                .accountId(accountId)
                 .payload(requestPayload)
                 .build();
+        addResourcesToRequest(accountId, request);
 
         UUID pdfUuid = UUID.randomUUID();
         FileInfoDTO document = FileInfoDTO.builder()
@@ -190,4 +192,14 @@ class UnderlyingAgreementActivatedGenerateDocumentsServiceTest {
         assertThat(requestPayload.getUnderlyingAgreementDocument()).isNull();
         assertThat(requestPayload.getOfficialNotice()).isNull();
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

@@ -1,5 +1,5 @@
-import { SummaryData, SummaryFactory } from '@shared/components/summary';
-import { transformAttachmentsToDownloadableFiles } from '@shared/utils';
+import { SummaryData, SummaryFactory } from '@shared/components';
+import { transformAttachmentsAndFileUUIDsToDownloadableFiles } from '@shared/utils';
 
 import { AuthorisationAndAdditionalEvidence, UnderlyingAgreementReviewDecision } from 'cca-api';
 
@@ -8,16 +8,16 @@ import { addDecisionSummaryData } from './decision-summary-data';
 
 function toSummaryData(
   authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence,
-  underlyingAgreementAttachments: { [key: string]: string },
+  underlyingAgreementAttachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
-  prefix: string = '../',
+  prefix = '../',
 ): SummaryFactory {
   return new SummaryFactory()
     .addSection('', prefix + AuthorisationAdditionalEvidenceWizardStep.PROVIDE_EVIDENCE)
     .addFileListRow(
-      'Uploaded files',
-      transformAttachmentsToDownloadableFiles(
+      'Authorisation',
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
         authorisationAndAdditionalEvidence.authorisationAttachmentIds,
         underlyingAgreementAttachments,
         downloadUrl,
@@ -25,8 +25,8 @@ function toSummaryData(
       { change: isEditable },
     )
     .addFileListRow(
-      'Uploaded files',
-      transformAttachmentsToDownloadableFiles(
+      'Additional evidence',
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
         authorisationAndAdditionalEvidence.additionalEvidenceAttachmentIds,
         underlyingAgreementAttachments,
         downloadUrl,
@@ -37,7 +37,7 @@ function toSummaryData(
 
 export function toAuthorisationAdditionalEvidenceSummaryData(
   authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence,
-  underlyingAgreementAttachments: { [key: string]: string },
+  underlyingAgreementAttachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
   prefix = '../',
@@ -52,11 +52,11 @@ export function toAuthorisationAdditionalEvidenceSummaryData(
 }
 export function toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
   authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence,
-  underlyingAgreementAttachments: { [key: string]: string },
+  underlyingAgreementAttachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
   decision: UnderlyingAgreementReviewDecision,
-  reviewAttachments: { [key: string]: string },
+  reviewAttachments: Record<string, string>,
   prefix = '../',
 ): SummaryData {
   const factory = toSummaryData(

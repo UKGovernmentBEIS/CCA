@@ -14,11 +14,10 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import { ActivatedRoute, NavigationStart, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, NavigationStart, QueryParamsHandling, Router, RouterLink } from '@angular/router';
 
 import { filter, Subscription, tap } from 'rxjs';
 
-import { ScrollService } from '../scroll';
 import { TabDirective } from './tab/tab.directive';
 import { TabBaseDirective } from './tab/tab-base.directive';
 import { TabLazyDirective } from './tab/tab-lazy.directive';
@@ -27,16 +26,27 @@ import { TabLazyDirective } from './tab/tab-lazy.directive';
   selector: 'govuk-tabs',
   standalone: true,
   imports: [NgForOf, AsyncPipe, NgTemplateOutlet, RouterLink, NgIf],
+  styles: `
+    .badge {
+      color: white;
+      background-color: red;
+      padding: 2px 10px;
+      border-radius: 50%;
+      margin-left: 5px;
+      text-decoration: none;
+    }
+  `,
   templateUrl: './tabs.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsComponent implements OnInit, AfterContentInit, OnDestroy {
   @Input() title: string;
+  @Input() queryParamsHandling: QueryParamsHandling = 'preserve';
   @ContentChildren(TabBaseDirective, { descendants: false }) tabList: QueryList<TabBaseDirective>;
   @ContentChildren(TabDirective, { descendants: false }) tabEagerList: QueryList<TabDirective>;
   @ContentChildren(TabLazyDirective, { descendants: false }) tabLazyList: QueryList<TabLazyDirective>;
   @ViewChildren('anchor') anchorList: QueryList<ElementRef<HTMLAnchorElement>>;
-  @Output() readonly selectedTab: EventEmitter<string> = new EventEmitter();
+  @Output() readonly selectedTab = new EventEmitter<string>();
 
   private shouldFocusAnchor: boolean;
   private subscriptions = new Subscription();
@@ -45,7 +55,6 @@ export class TabsComponent implements OnInit, AfterContentInit, OnDestroy {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly cdRef: ChangeDetectorRef,
-    private readonly _: ScrollService,
   ) {}
 
   ngOnInit(): void {
@@ -100,7 +109,7 @@ export class TabsComponent implements OnInit, AfterContentInit, OnDestroy {
       this.shouldFocusAnchor = true;
       this.router.navigate(['.'], {
         fragment: targetTab.id,
-        queryParamsHandling: 'preserve',
+        queryParamsHandling: this.queryParamsHandling,
         state: this.getState(),
         relativeTo: this.route,
       });

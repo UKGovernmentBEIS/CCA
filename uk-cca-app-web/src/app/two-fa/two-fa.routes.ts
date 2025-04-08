@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { AuthGuard } from '@core/guards/auth.guard';
-import { PendingRequestGuard } from '@core/guards/pending-request.guard';
+import { AuthGuard, PendingRequestGuard } from '@shared/guards';
 
 import { InvalidLinkComponent } from '../invitation/invalid-link/invalid-link.component';
 import { Change2faComponent } from './change-2fa/change-2fa.component';
@@ -13,35 +12,35 @@ import { ResetTwoFaComponent } from './reset-two-fa/reset-two-fa.component';
 export const TWO_FA_ROUTES: Routes = [
   {
     path: 'change',
-    data: { pageTitle: 'Request to change two factor authentication', breadcrumb: true },
+    data: { pageTitle: 'Request to change two factor authentication' },
     component: Change2faComponent,
     canActivate: [AuthGuard],
     canDeactivate: [PendingRequestGuard],
   },
   {
     path: 'invalid-code',
-    data: { pageTitle: 'Invalid code', breadcrumb: true },
+    data: { pageTitle: 'Invalid code' },
     canActivate: [AuthGuard],
     component: InvalidCodeComponent,
   },
   {
     path: 'request-change',
-    data: { pageTitle: 'Request to change two factor authentication', breadcrumb: true },
+    data: { pageTitle: 'Request to change two factor authentication' },
     component: Delete2faComponent,
   },
   {
     path: 'invalid-link',
-    data: { pageTitle: 'This link is invalid', breadcrumb: true },
+    data: { pageTitle: 'This link is invalid' },
     component: InvalidLinkComponent,
   },
   {
     path: 'request-2fa-reset',
-    data: { pageTitle: 'Request two factor authentication reset', breadcrumb: true },
+    data: { pageTitle: 'Request two factor authentication reset' },
     component: RequestTwoFaResetComponent,
   },
   {
     path: 'reset-2fa',
-    data: { pageTitle: 'Reset two factor authentication', breadcrumb: true },
+    data: { pageTitle: 'Reset two factor authentication' },
     canActivate: [AuthGuard],
     component: ResetTwoFaComponent,
   },

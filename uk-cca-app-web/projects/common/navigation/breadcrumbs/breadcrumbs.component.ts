@@ -1,168 +1,111 @@
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, Inject, Input } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRouteSnapshot, Data, NavigationEnd, Route, Router, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterLink } from '@angular/router';
 
-import { BehaviorSubject, filter } from 'rxjs';
-
-import { BreadcrumbsComponent as GovukBreadcrumbsComponent, LinkDirective } from '@netz/govuk-components';
-
-import { getActiveRoute } from '../navigation.util';
-import { BREADCRUMB_ITEMS } from './breadcrumbs.factory';
-import { BreadcrumbItem, RouteBreadcrumb } from './breadcrumbs.interface';
+import { filter } from 'rxjs';
+import { BreadcrumbService, Link } from './breadcrumb.service';
 
 @Component({
   selector: 'netz-breadcrumbs',
   standalone: true,
   template: `
-    <govuk-breadcrumbs *ngIf="breadcrumbs$ | async as breadcrumbs" [inverse]="inverse">
-      <ng-container *ngFor="let breadcrumb of breadcrumbs; index as i">
-        <a
-          *ngIf="breadcrumb.link; else bareText"
-          govukLink="breadcrumb"
-          [routerLink]="breadcrumb.link"
-          [queryParams]="breadcrumb.queryParams"
-          >{{ breadcrumb.text }}</a
-        >
-        <ng-template #bareText>
-          <li class="govuk-breadcrumbs__list-item" govukLink="breadcrumb">{{ breadcrumb.text }}</li>
-        </ng-template>
-      </ng-container>
-    </govuk-breadcrumbs>
+    @if (showBreadcrumb()) {
+      <div
+        class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile"
+        [class.govuk-breadcrumbs--inverse]="inverse()"
+      >
+        <ol class="govuk-breadcrumbs__list">
+          @for (breadcrumb of links(); track breadcrumb.link) {
+            <li class="govuk-breadcrumbs__list-item">
+              <a
+                class="govuk-link"
+                [routerLink]="breadcrumb.link"
+                [queryParams]="breadcrumb.queryParams"
+                [fragment]="breadcrumb.fragment"
+                >{{ breadcrumb.text }}</a
+              >
+            </li>
+          }
+        </ol>
+      </div>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [GovukBreadcrumbsComponent, AsyncPipe, NgIf, LinkDirective, RouterLink, NgFor],
+  imports: [RouterLink],
 })
 export class BreadcrumbsComponent {
-  @Input() inverse = false;
+  private readonly router = inject(Router);
+  private readonly breadcrumbsService = inject(BreadcrumbService);
 
-  constructor(
-    readonly router: Router,
-    private readonly destroy$: DestroyRef,
-    @Inject(BREADCRUMB_ITEMS) protected breadcrumbs$: BehaviorSubject<BreadcrumbItem[]>,
-  ) {
-    router.events
-      .pipe(
-        takeUntilDestroyed(this.destroy$),
-        filter((event) => event instanceof NavigationEnd),
-      )
-      .subscribe(() => {
-        const root = router.routerState.snapshot.root;
-        const activeRoute = getActiveRoute(router, true);
+  links = this.breadcrumbsService.links;
+  inverse = this.breadcrumbsService.inverse;
+  showBreadcrumb = signal(true);
 
-        if (this.hasBreadcrumb(activeRoute.data)) {
-          const breadcrumbs: BreadcrumbItem[] = [];
-          this.addBreadcrumb(root, [], breadcrumbs);
-          this.breadcrumbs$.next(breadcrumbs);
-        } else {
-          this.breadcrumbs$.next(null);
-        }
-      });
+  constructor() {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      const breadcrumbData = this.extract();
+      this.breadcrumbsService.links.set(breadcrumbData);
+    });
   }
 
-  private addBreadcrumb(route: ActivatedRouteSnapshot, parentUrl: string[], breadcrumbs: BreadcrumbItem[]): void {
-    if (route) {
-      const routeUrl = parentUrl.concat(route.url.map((url) => url.path));
+  /**
+   *
+   * @returns any breadcrumb data found in the current route tree, starting from the root route
+   */
+  private extract(): Link[] {
+    const routeData: Link[] = [];
+    let snapshot = this.router.routerState.snapshot.root;
 
-      if (route.data.breadcrumb) {
-        const breadcrumb: BreadcrumbItem = {
-          text: this.getBreadcrumbText(route.data, route.title),
-          link: this.getBreadcrumbLink(route, routeUrl),
-          queryParams: route.queryParams ?? {},
-        };
-
-        if (!this.alreadyHasBreadcrumb(breadcrumbs, breadcrumb)) {
-          breadcrumbs.push(breadcrumb);
-        }
+    while (snapshot) {
+      // feat: disable breadcrumb for the current route
+      if (snapshot.data.breadcrumb === false && isLeaf(snapshot)) {
+        return [];
       }
 
-      this.addBreadcrumb(route.firstChild, routeUrl, breadcrumbs);
-    }
-  }
-
-  private getBreadcrumbText(data: Data, title?: string): string {
-    const breadcrumb = data.breadcrumb;
-
-    return this.hasTextResolutionFunction(breadcrumb)
-      ? breadcrumb.resolveText(data)
-      : typeof breadcrumb === 'function'
-        ? breadcrumb(data)
-        : typeof breadcrumb === 'boolean'
-          ? (data.pageTitle ?? title)
-          : breadcrumb;
-  }
-
-  private getBreadcrumbLink(route: ActivatedRouteSnapshot, routeUrl: string[]): string[] {
-    let currentRoute = route;
-    let currentRouteUrl = routeUrl;
-
-    if (
-      (!this.hasComponent(route) || this.mustSkipLink(currentRoute.data)) &&
-      this.mustSkipLink(currentRoute.data) !== false
-    ) {
-      while (currentRoute.firstChild) {
-        currentRoute = currentRoute.firstChild;
-
-        if (currentRoute.routeConfig.data?.breadcrumb) {
-          break;
-        }
-
-        if (this.hasComponent(currentRoute)) {
-          currentRouteUrl = currentRouteUrl.concat(currentRoute.url.map((url) => url.path));
-          break;
-        }
-
-        currentRouteUrl = currentRouteUrl.concat(currentRoute.url.map((url) => url.path));
+      if (!snapshot.data.breadcrumb) {
+        snapshot = snapshot.firstChild;
+        continue;
       }
+
+      // if the current route is a leaf and has no url, we need to remove the last breadcrumb
+      if (isLeaf(snapshot) && !snapshot.url.length) {
+        return routeData.slice(0, -1);
+      }
+
+      // we need if a breadcrumb with the same text already exists
+      // because the Angular router transfers the data route property from the parent route to the child route
+      const text =
+        typeof snapshot.data.breadcrumb === 'function'
+          ? snapshot.data.breadcrumb(snapshot.data)
+          : snapshot.data.breadcrumb;
+
+      if (!hasText(routeData, text)) {
+        routeData.push(createLink(text, snapshot.pathFromRoot));
+      }
+
+      snapshot = snapshot.firstChild;
     }
 
-    return this.hasMoreUrlSegments(route) ? ['/' + currentRouteUrl.join('/')] : null;
+    return routeData;
   }
+}
 
-  private alreadyHasBreadcrumb(breadcrumbs: BreadcrumbItem[], breadcrumb: BreadcrumbItem): boolean {
-    return breadcrumbs.map((b) => b.text).includes(breadcrumb.text);
-  }
+function createLink(text: string, pathFromRoot: ActivatedRouteSnapshot[]): Link {
+  return {
+    text,
+    link: pathFromRoot.map((u) => u.url.toString()).join('/'),
+  };
+}
 
-  private hasMoreUrlSegments(route: ActivatedRouteSnapshot): boolean {
-    let remainingUrl = '';
-    let currentRoute = route;
-    while (currentRoute.firstChild) {
-      currentRoute = currentRoute.firstChild;
-      remainingUrl = [remainingUrl, currentRoute.url.join('')].join('');
-    }
+/**
+ * @param links - the current breadcrumb links
+ * @param t - the text to check
+ * @returns boolean
+ */
+function hasText(links: Link[], t: unknown): boolean {
+  if (typeof t !== 'string') return false;
+  return links.map((l) => l.text).includes(t);
+}
 
-    return remainingUrl.length > 0;
-  }
-
-  private hasComponent(route: ActivatedRouteSnapshot): boolean {
-    const children = route.routeConfig.children;
-    const hasChildren = children?.length > 0;
-    const childWithEmptyPath: Route = hasChildren && children.find((child) => child.path.length === 0);
-
-    return (!!route.routeConfig.component && !hasChildren) || !!childWithEmptyPath?.component;
-  }
-
-  private hasTextResolutionFunction(breadcrumb: any): boolean {
-    return (
-      typeof breadcrumb === 'object' && 'resolveText' in breadcrumb && typeof breadcrumb.resolveText === 'function'
-    );
-  }
-
-  private mustSkipLink(data: Data): boolean {
-    return (
-      typeof data.breadcrumb === 'object' &&
-      'skipLink' in data.breadcrumb &&
-      ((typeof data.breadcrumb.skipLink === 'boolean' && data.breadcrumb.skipLink === true) ||
-        (typeof data.breadcrumb.skipLink === 'function' && data.breadcrumb.skipLink(data) === true))
-    );
-  }
-
-  private hasBreadcrumb(routeData: Data): boolean {
-    if (!routeData) return false;
-    const breacrumb: RouteBreadcrumb = routeData.breadcrumb;
-    if (typeof breacrumb === 'boolean' || typeof breacrumb === 'string') return !!breacrumb;
-    if (typeof breacrumb === 'function') return !!breacrumb(routeData);
-    if (typeof breacrumb === 'object' && 'resolveText' in breacrumb && typeof breacrumb.resolveText === 'function')
-      return !!breacrumb.resolveText(routeData);
-  }
+function isLeaf(snapshot: ActivatedRouteSnapshot): boolean {
+  return !snapshot.firstChild;
 }

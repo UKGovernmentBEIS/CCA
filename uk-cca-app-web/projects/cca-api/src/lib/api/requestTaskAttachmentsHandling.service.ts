@@ -9,17 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { FileToken } from '../model/fileToken';
 import { FileUuidDTO } from '../model/fileUuidDTO';
 import { RequestTaskAttachmentActionProcessDTO } from '../model/requestTaskAttachmentActionProcessDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -130,7 +130,7 @@ export class RequestTaskAttachmentsHandlingService {
     id: number,
     attachmentUuid: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -146,7 +146,7 @@ export class RequestTaskAttachmentsHandlingService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (attachmentUuid !== undefined && attachmentUuid !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>attachmentUuid, 'attachmentUuid');
+      queryParameters = this.addToHttpParams(queryParameters, attachmentUuid as any, 'attachmentUuid');
     }
 
     let headers = this.defaultHeaders;
@@ -176,7 +176,7 @@ export class RequestTaskAttachmentsHandlingService {
       `${this.configuration.basePath}/v1.0/task-attachments/${encodeURIComponent(String(id))}`,
       {
         params: queryParameters,
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -221,7 +221,7 @@ export class RequestTaskAttachmentsHandlingService {
     requestTaskActionDetails: RequestTaskAttachmentActionProcessDTO,
     attachment: Blob,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (requestTaskActionDetails === null || requestTaskActionDetails === undefined) {
@@ -274,11 +274,11 @@ export class RequestTaskAttachmentsHandlingService {
           'requestTaskActionDetails',
           useForm
             ? new Blob([JSON.stringify(requestTaskActionDetails)], { type: 'application/json' })
-            : <any>requestTaskActionDetails,
+            : (requestTaskActionDetails as any),
         ) as any) || formParams;
     }
     if (attachment !== undefined) {
-      formParams = (formParams.append('attachment', <any>attachment) as any) || formParams;
+      formParams = (formParams.append('attachment', attachment as any) as any) || formParams;
     }
 
     let responseType_: 'text' | 'json' = 'json';
@@ -290,7 +290,7 @@ export class RequestTaskAttachmentsHandlingService {
       `${this.configuration.basePath}/v1.0/task-attachments/upload`,
       convertFormParamsToString ? formParams.toString() : formParams,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

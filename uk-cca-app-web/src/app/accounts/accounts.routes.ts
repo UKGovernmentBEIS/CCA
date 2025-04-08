@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { PendingRequestGuard } from '@core/guards/pending-request.guard';
+import { PendingRequestGuard } from '@shared/guards';
 
 import { ACTIVE_TARGET_UNIT_ROUTES } from '../sectors/sector/target-units-tab/target-unit.routes';
 

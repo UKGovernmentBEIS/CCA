@@ -14,8 +14,10 @@ import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeService;
 import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestTaskPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.Collections;
@@ -29,10 +31,10 @@ import static org.mockito.Mockito.when;
 import static uk.gov.cca.api.common.exception.CcaErrorCode.INVALID_UNDERLYING_AGREEMENT_TARGET_UNIT_SUB_SECTOR_ASSOCIATION_NOT_RELATED_TO_SECTOR_ASSOCIATION;
 
 @ExtendWith(MockitoExtension.class)
-public class UnderlyingAgreementVariationTargetUnitDetailsValidatorServiceTest {
+class UnderlyingAgreementVariationTargetUnitDetailsValidatorServiceTest {
 
     @InjectMocks
-    private UnderlyingAgreementVariationTargetUnitDetailsValidatorService validatorService;
+    private EditedUnderlyingAgreementVariationTargetUnitDetailsValidatorService validatorService;
 
     @Mock
     private DataValidator<UnderlyingAgreementTargetUnitDetails> validator;
@@ -52,8 +54,10 @@ public class UnderlyingAgreementVariationTargetUnitDetailsValidatorServiceTest {
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = UnderlyingAgreementTargetUnitDetails
                 .builder().subsectorAssociationName(subsectorAssociationName)
                 .subsectorAssociationId(subsectorAssociationId).build();
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .payload(UnderlyingAgreementVariationRequestTaskPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
                                 .underlyingAgreementTargetUnitDetails(targetUnitDetails)
@@ -86,8 +90,10 @@ public class UnderlyingAgreementVariationTargetUnitDetailsValidatorServiceTest {
         final Long accountId = 1L;
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = UnderlyingAgreementTargetUnitDetails
                 .builder().subsectorAssociationId(subsectorAssociationId).build();
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .payload(UnderlyingAgreementVariationRequestTaskPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
                                 .underlyingAgreementTargetUnitDetails(targetUnitDetails)
@@ -119,8 +125,10 @@ public class UnderlyingAgreementVariationTargetUnitDetailsValidatorServiceTest {
                 .id(subsectorAssociationId)
                 .name(subsectorAssociationName)
                 .build();
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .payload(UnderlyingAgreementVariationRequestTaskPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
                                 .underlyingAgreementTargetUnitDetails(targetUnitDetails)
@@ -143,4 +151,14 @@ public class UnderlyingAgreementVariationTargetUnitDetailsValidatorServiceTest {
         verify(targetUnitAccountQueryService, times(1)).getAccountSectorAssociationId(accountId);
         verify(sectorAssociationSchemeService, times(1)).getSubsectorAssociationInfoDTOBySectorAssociationId(sectorAssociationId);
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

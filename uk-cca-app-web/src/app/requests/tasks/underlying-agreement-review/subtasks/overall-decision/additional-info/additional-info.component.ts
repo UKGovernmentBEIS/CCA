@@ -1,16 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { TextareaComponent } from '@netz/govuk-components';
-import { OverallDecisionWizardStep } from '@requests/common';
+import { OverallDecisionWizardStep, underlyingAgreementReviewQuery } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { generateDownloadUrl } from '@shared/utils';
 
-import { OverallDecisionStore } from '../overall-decision.store';
+import { UnderlyingAgreementReviewTaskService } from '../../../services/underlying-agreement-review-task.service';
 import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } from './additional-info.provider';
 
 @Component({
@@ -19,7 +19,7 @@ import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } 
   template: `
     <cca-wizard-step
       [formGroup]="form"
-      [caption]="caption()"
+      [caption]="caption"
       heading="Provide any additional information here to support your decision (optional)"
       (formSubmit)="submit()"
     >
@@ -32,7 +32,6 @@ import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } 
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     WizardStepComponent,
-    PageHeadingComponent,
     TextareaComponent,
     ReactiveFormsModule,
     MultipleFileInputComponent,
@@ -41,28 +40,34 @@ import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } 
   providers: [provideAdditionalInfo()],
 })
 export class AdditionalInfoComponent {
-  fb = inject(FormBuilder);
-  overallDecisionStore = inject(OverallDecisionStore);
-  store = inject(RequestTaskStore);
+  private readonly requestTaskStore = inject(RequestTaskStore);
+  private readonly taskService = inject(TaskService);
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
-  taskService = inject(TaskService);
-  router = inject(Router);
-  route = inject(ActivatedRoute);
+  protected readonly form = inject<AdditionalInfoFormModel>(ADDITIONAL_INFO_FORM);
 
-  form = inject<AdditionalInfoFormModel>(ADDITIONAL_INFO_FORM);
+  protected readonly downloadUrl = generateDownloadUrl(
+    this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
+  );
 
-  caption = computed(() => (this.overallDecisionStore.determination.type === 'ACCEPTED' ? 'Accept' : 'Reject'));
-  downloadUrl = generateDownloadUrl(this.store.select(requestTaskQuery.selectRequestTaskId)().toString());
+  private readonly determination = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)();
+  protected readonly caption = this.determination.type === 'ACCEPTED' ? 'Accept' : 'Reject';
+
   submit() {
-    const files = this.form.value.files.map((f) => f.uuid);
-    this.overallDecisionStore.updateDetermination(
-      { additionalInformation: this.form.value.additionalInfo, files },
-      this.form.value.files,
-    );
+    const underlyingAgreementReviewTaskService = this.taskService as UnderlyingAgreementReviewTaskService;
 
-    this.router.navigate(['../', OverallDecisionWizardStep.CHECK_ANSWERS], {
-      relativeTo: this.route,
-      queryParamsHandling: 'preserve',
-    });
+    const files = this.form.value.files.map((f) => f.uuid);
+    underlyingAgreementReviewTaskService
+      .saveReviewDetermination({
+        additionalInformation: this.form.value.additionalInfo,
+        files,
+      })
+      .subscribe(() =>
+        this.router.navigate(['../', OverallDecisionWizardStep.CHECK_ANSWERS], {
+          relativeTo: this.activatedRoute,
+          queryParamsHandling: 'preserve',
+        }),
+      );
   }
 }

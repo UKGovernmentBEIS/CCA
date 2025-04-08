@@ -2,16 +2,16 @@ package uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.transfor
 
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
-import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.AgreementCompositionType;
+import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetComposition;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod5Details;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod6Details;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationDetails;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaReviewDecisionType;
@@ -68,17 +68,17 @@ class UnderlyingAgreementContainerMapperTest {
                 .sectorThroughputUnit("tonne")
                 .build());
     }
-    
+
     @Test
     void request_toUnderlyingAgreementContainer() {
         UUID uuid = UUID.randomUUID();
-        
-        Facility facility1 = Facility.builder().facilityItem(FacilityItem.builder()
-        		.facilityId("id1").build())
-        		.build();
-        Facility facility2 = Facility.builder().facilityItem(FacilityItem.builder()
-        		.facilityId("id2").build())
-        		.build();
+
+        Facility facility1 = Facility.builder().status(FacilityStatus.NEW).facilityItem(FacilityItem.builder()
+                        .facilityId("id1").build())
+                .build();
+        Facility facility2 = Facility.builder().status(FacilityStatus.NEW).facilityItem(FacilityItem.builder()
+                        .facilityId("id2").build())
+                .build();
 
         UnderlyingAgreement una = UnderlyingAgreement.builder()
                 .targetPeriod5Details(TargetPeriod5Details.builder().exist(false).build())
@@ -89,6 +89,17 @@ class UnderlyingAgreementContainerMapperTest {
                                 .build())
                         .build())
                 .facilities(Set.of(facility1, facility2))
+                .build();
+
+        UnderlyingAgreement proposedUna = UnderlyingAgreement.builder()
+                .targetPeriod5Details(TargetPeriod5Details.builder().exist(false).build())
+                .targetPeriod6Details(TargetPeriod6Details.builder()
+                        .targetComposition(TargetComposition.builder()
+                                .agreementCompositionType(AgreementCompositionType.ABSOLUTE)
+                                .calculatorFile(uuid)
+                                .build())
+                        .build())
+                .facilities(Set.of(facility1))
                 .build();
 
         AccountReferenceData accountData = AccountReferenceData.builder()
@@ -102,14 +113,17 @@ class UnderlyingAgreementContainerMapperTest {
                 .underlyingAgreement(UnderlyingAgreementPayload.builder()
                         .underlyingAgreement(una)
                         .build())
+                .underlyingAgreementProposed(UnderlyingAgreementPayload.builder()
+                        .underlyingAgreement(proposedUna)
+                        .build())
                 .facilitiesReviewGroupDecisions(Map.of(
-                		"id1", UnderlyingAgreementFacilityReviewDecision.builder()
-	        				.type(CcaReviewDecisionType.ACCEPTED)
-	        				.details(UnderlyingAgreementReviewDecisionDetails.builder().build()).build(),
-	    	        	"id2", UnderlyingAgreementFacilityReviewDecision.builder()
-	    	    	        .type(CcaReviewDecisionType.REJECTED)
-	    	    	        .details(UnderlyingAgreementReviewDecisionDetails.builder().build()).build()
-                		))
+                        "id1", UnderlyingAgreementFacilityReviewDecision.builder()
+                                .type(CcaReviewDecisionType.ACCEPTED)
+                                .details(UnderlyingAgreementReviewDecisionDetails.builder().build()).build(),
+                        "id2", UnderlyingAgreementFacilityReviewDecision.builder()
+                                .type(CcaReviewDecisionType.REJECTED)
+                                .details(UnderlyingAgreementReviewDecisionDetails.builder().build()).build()
+                ))
                 .build();
 
         UnderlyingAgreement unaWithoutRejectedFacilities = UnderlyingAgreement.builder()

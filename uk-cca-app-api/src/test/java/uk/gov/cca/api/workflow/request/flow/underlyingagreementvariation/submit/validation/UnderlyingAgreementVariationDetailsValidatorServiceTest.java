@@ -15,7 +15,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationModificationType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.validation.UnderlyingAgreementVariationDetailsValidatorService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.validation.EditedUnderlyingAgreementVariationDetailsValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSubmitRequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
@@ -31,10 +31,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UnderlyingAgreementVariationDetailsValidatorServiceTest {
+class UnderlyingAgreementVariationDetailsValidatorServiceTest {
 
     @InjectMocks
-    private UnderlyingAgreementVariationDetailsValidatorService service;
+    private EditedUnderlyingAgreementVariationDetailsValidatorService service;
 
     @Mock
     private DataValidator<UnderlyingAgreementVariationDetails> validator;
@@ -43,7 +43,6 @@ public class UnderlyingAgreementVariationDetailsValidatorServiceTest {
     void validate() {
         UUID att1UUID = UUID.randomUUID();
         Request request = Request.builder()
-                .accountId(1L)
                 .id("1")
                 .payload(UnderlyingAgreementVariationRequestPayload.builder().build())
                 .build();
@@ -74,7 +73,7 @@ public class UnderlyingAgreementVariationDetailsValidatorServiceTest {
         final UnderlyingAgreementVariationDetails underlyingAgreementVariationDetails =
                 requestTaskPayload.getUnderlyingAgreement().getUnderlyingAgreementVariationDetails();
 
-        final BusinessValidationResult validationResult = service.validate(requestTask);
+        final BusinessValidationResult validationResult = service.validate(requestTaskPayload);
 
         // Verify
         verify(validator, times(1)).validate(underlyingAgreementVariationDetails);
@@ -85,7 +84,6 @@ public class UnderlyingAgreementVariationDetailsValidatorServiceTest {
     void validate_empty_details() {
         UUID att1UUID = UUID.randomUUID();
         Request request = Request.builder()
-                .accountId(1L)
                 .id("1")
                 .payload(UnderlyingAgreementVariationRequestPayload.builder().build())
                 .build();
@@ -113,7 +111,7 @@ public class UnderlyingAgreementVariationDetailsValidatorServiceTest {
         final UnderlyingAgreementVariationDetails underlyingAgreementVariationDetails =
                 requestTaskPayload.getUnderlyingAgreement().getUnderlyingAgreementVariationDetails();
 
-        final BusinessValidationResult validationResult = service.validate(requestTask);
+        final BusinessValidationResult validationResult = service.validate(requestTaskPayload);
 
         // Verify
         verify(validator, times(0)).validate(underlyingAgreementVariationDetails);
@@ -124,7 +122,6 @@ public class UnderlyingAgreementVariationDetailsValidatorServiceTest {
     void validate_no_reason() {
         UUID att1UUID = UUID.randomUUID();
         Request request = Request.builder()
-                .accountId(1L)
                 .id("1")
                 .payload(UnderlyingAgreementVariationRequestPayload.builder().build())
                 .build();
@@ -156,7 +153,7 @@ public class UnderlyingAgreementVariationDetailsValidatorServiceTest {
 
         when(validator.validate(underlyingAgreementVariationDetails)).thenReturn(Optional.of(new BusinessViolation()));
 
-        final BusinessValidationResult validationResult = service.validate(requestTask);
+        final BusinessValidationResult validationResult = service.validate(requestTaskPayload);
 
         // Verify
         verify(validator, times(1)).validate(underlyingAgreementVariationDetails);

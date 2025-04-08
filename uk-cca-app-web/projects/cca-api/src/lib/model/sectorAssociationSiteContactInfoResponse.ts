@@ -12,7 +12,7 @@
 import { SectorAssociationSiteContactInfoDTO } from './sectorAssociationSiteContactInfoDTO';
 
 export interface SectorAssociationSiteContactInfoResponse {
-  siteContacts?: Array<SectorAssociationSiteContactInfoDTO>;
+  siteContacts?: SectorAssociationSiteContactInfoDTO[];
   editable?: boolean;
   totalItems?: number;
 }

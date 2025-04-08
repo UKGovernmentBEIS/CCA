@@ -32,7 +32,7 @@ describe('ProvideEvidenceDetailsComponent', () => {
       this.setInputValue('#comments', value);
     }
     get filesText() {
-      return this.queryAll<HTMLDivElement>('.moj-multi-file-upload__message');
+      return this.queryAll<HTMLDivElement>('.cca-multi-file-upload__message');
     }
 
     get submitButton() {

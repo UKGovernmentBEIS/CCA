@@ -1,14 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   toReviewTargetUnitDetailsOriginalSummaryData,
   toReviewTargetUnitDetailsSummaryData,
   underlyingAgreementQuery,
 } from '@requests/common';
-import { HighlightDiffComponent, PageHeadingComponent, SummaryComponent } from '@shared/components';
+import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
 
 @Component({
   selector: 'cca-una-summary-target-unit-details',

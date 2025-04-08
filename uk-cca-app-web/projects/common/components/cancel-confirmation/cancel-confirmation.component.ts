@@ -1,8 +1,7 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { LinkDirective, PanelComponent } from '@netz/govuk-components';
+import { PanelComponent } from '@netz/govuk-components';
 
 @Component({
   selector: 'netz-cancel-confirmation',
@@ -17,6 +16,6 @@ import { LinkDirective, PanelComponent } from '@netz/govuk-components';
     <a govukLink routerLink="/dashboard"> Return to dashboard </a>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, AsyncPipe, LinkDirective, PanelComponent],
+  imports: [RouterLink, PanelComponent],
 })
 export class CancelConfirmationComponent {}

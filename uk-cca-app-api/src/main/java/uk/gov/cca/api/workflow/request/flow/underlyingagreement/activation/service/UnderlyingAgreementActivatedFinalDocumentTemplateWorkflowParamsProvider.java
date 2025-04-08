@@ -30,22 +30,16 @@ public class UnderlyingAgreementActivatedFinalDocumentTemplateWorkflowParamsProv
 
     @Override
     public Map<String, Object> constructParams(UnderlyingAgreementRequestPayload payload) {
-		final UnderlyingAgreementPayload underlyingAgreementPayload = payload.getUnderlyingAgreement();
+		final UnderlyingAgreementPayload proposedUnderlyingAgreement = payload.getUnderlyingAgreementProposed();
 		final int version = 1;
 
 		// Add target unit details from workflow data
 		Map<String, Object> params = documentTemplateUnderlyingAgreementParamsProvider
-				.constructTargetUnitDetailsTemplateParams(underlyingAgreementPayload.getUnderlyingAgreementTargetUnitDetails(), version);
-
-    	Set<String> rejectedFacilityIds = payload.getFacilitiesReviewGroupDecisions().entrySet().stream()
-				.filter(entry -> CcaReviewDecisionType.REJECTED.equals(entry.getValue().getType()))
-            	.map(Map.Entry::getKey)
-            	.collect(Collectors.toSet());
+				.constructTargetUnitDetailsTemplateParams(proposedUnderlyingAgreement.getUnderlyingAgreementTargetUnitDetails(), version);
 
 		params.putAll(
 				documentTemplateUnderlyingAgreementParamsProvider.constructTemplateParams(
-						underlyingAgreementPayload.getUnderlyingAgreement(),
-						rejectedFacilityIds,
+						proposedUnderlyingAgreement.getUnderlyingAgreement(),
 						documentTemplateTransformationMapper.formatCurrentDate(),
 						version)
 		);

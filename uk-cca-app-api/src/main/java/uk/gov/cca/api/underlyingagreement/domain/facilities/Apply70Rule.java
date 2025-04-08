@@ -28,14 +28,14 @@ import java.util.UUID;
 public class Apply70Rule {
 
 	@NotNull
-	@DecimalMax(value = "100", inclusive = true)
-	@DecimalMin(value = "0", inclusive = true)
-	@Digits(integer = 3, fraction = 2)
+	@DecimalMax(value = "100")
+	@DecimalMin(value = "0")
+	@Digits(integer = 3, fraction = 7)
 	private BigDecimal energyConsumed;
 	
-	@DecimalMax(value = "42.9", inclusive = true)
-	@DecimalMin(value = "0", inclusive = true)
-	@Digits(integer = 2, fraction = 2)
+	@DecimalMax(value = "42.9")
+	@DecimalMin(value = "0")
+	@Digits(integer = 2, fraction = 7)
 	private BigDecimal energyConsumedProvision;
 	
 	@NotNull

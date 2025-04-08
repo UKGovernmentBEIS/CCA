@@ -9,23 +9,25 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { UnderlyingAgreementVariationPayload } from './underlyingAgreementVariationPayload';
 import { AccountReferenceData } from './accountReferenceData';
-import { Determination } from './determination';
-import { UnderlyingAgreementContainer } from './underlyingAgreementContainer';
 import { UnderlyingAgreementReviewDecision } from './underlyingAgreementReviewDecision';
 import { UnderlyingAgreementVariationFacilityReviewDecision } from './underlyingAgreementVariationFacilityReviewDecision';
-import { UnderlyingAgreementVariationPayload } from './underlyingAgreementVariationPayload';
+import { Determination } from './determination';
+import { UnderlyingAgreementContainer } from './underlyingAgreementContainer';
 
 export interface UnderlyingAgreementVariationReviewRequestTaskPayload {
   payloadType?: string;
+  sendEmailNotification?: boolean;
   accountReferenceData?: AccountReferenceData;
   originalUnderlyingAgreementContainer?: UnderlyingAgreementContainer;
   underlyingAgreement?: UnderlyingAgreementVariationPayload;
-  sectionsCompleted?: { [key: string]: string };
-  underlyingAgreementAttachments?: { [key: string]: string };
-  reviewSectionsCompleted?: { [key: string]: string };
-  reviewGroupDecisions?: { [key: string]: UnderlyingAgreementReviewDecision };
-  facilitiesReviewGroupDecisions?: { [key: string]: UnderlyingAgreementVariationFacilityReviewDecision };
-  reviewAttachments?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
+  underlyingAgreementAttachments?: Record<string, string>;
+  reviewSectionsCompleted?: Record<string, string>;
+  reviewGroupDecisions?: Record<string, UnderlyingAgreementReviewDecision>;
+  facilitiesReviewGroupDecisions?: Record<string, UnderlyingAgreementVariationFacilityReviewDecision>;
+  reviewAttachments?: Record<string, string>;
+  underlyingAgreementProposed?: UnderlyingAgreementVariationPayload;
   determination?: Determination;
 }

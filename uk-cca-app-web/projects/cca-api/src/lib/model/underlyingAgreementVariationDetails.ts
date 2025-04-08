@@ -12,7 +12,7 @@
 
 export interface UnderlyingAgreementVariationDetails {
   reason: string;
-  modifications: Array<
+  modifications: (
     | 'AMEND_OPERATOR_OR_ORGANISATION_NAME'
     | 'AMEND_OPERATOR_OR_ORGANISATION_TARGET_UNIT_ADDRESS'
     | 'AMEND_RESPONSIBLE_PERSON_PERSONAL_DETAILS'
@@ -30,5 +30,5 @@ export interface UnderlyingAgreementVariationDetails {
     | 'CHANGE_BETWEEN_RELATIVE_AND_NOVEM_TARGET_TYPES'
     | 'CHANGE_THROUGHPUT_UNIT'
     | 'ANY_CHANGES_NOT_COVERED'
-  >;
+  )[];
 }

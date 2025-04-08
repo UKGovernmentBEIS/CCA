@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -7,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EMPTY, startWith } from 'rxjs';
 
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import {
   ButtonDirective,
   ErrorSummaryComponent,
@@ -14,8 +15,6 @@ import {
   RadioOptionComponent,
   TextInputComponent,
 } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
 
 import { SectorUsersInvitationService } from 'cca-api';
 
@@ -27,7 +26,6 @@ import { ADD_SECTOR_FORM, AddSectorFormModel, AddSectorFormProvider } from './ad
   templateUrl: './add-sector-user.component.html',
   standalone: true,
   imports: [
-    JsonPipe,
     ButtonDirective,
     TextInputComponent,
     RadioComponent,

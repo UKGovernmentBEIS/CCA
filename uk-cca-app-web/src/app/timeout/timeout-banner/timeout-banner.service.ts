@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject, EMPTY, filter, map, switchMap, tap, timer } from 'rxjs';
 
-import { AuthService } from '@core/services/auth.service';
+import { AuthService } from '@shared/services';
 import { KeycloakEventType, KeycloakService } from 'keycloak-angular';
 
 import { environment } from '../../../environments/environment';

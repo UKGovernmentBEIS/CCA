@@ -6,23 +6,28 @@
   data-testid="add-targets-form"
 >
   <div class="govuk-body">
+    <p>Add improvement target for the target period</p>
+
     <div
       widthClass="govuk-!-width-one-quarter"
       formControlName="improvement"
       suffix="%"
-      label="Improvement (%)"
+      label="Percentage improvement (%)"
+      hint="Enter a number less than 100 with up to 7 decimal places without special characters"
       inputType="number"
       cca-text-input
     ></div>
+
     <section data-testid="target">
       @if (targetComposition.agreementCompositionType !== 'NOVEM') {
         <p class="govuk-label">Target ({{ baselineUnitsSuffix }})</p>
 
         @if (showTargets()) {
-          <p class="govuk-body">{{ (targets() | number: '1.0-3') + ' ' + baselineUnitsSuffix }}</p>
+          <p class="govuk-body">{{ (targets() | number: '1.0-7') + ' ' + baselineUnitsSuffix }}</p>
         }
       } @else {
-        <p class="govuk-label">Target: N/A</p>
+        <p class="govuk-label">Target ({{ baselineUnitsSuffix }})</p>
+        <span class="govuk-hint">The numerical target cannot be calculated for the Novem target type</span>
       }
     </section>
   </div>

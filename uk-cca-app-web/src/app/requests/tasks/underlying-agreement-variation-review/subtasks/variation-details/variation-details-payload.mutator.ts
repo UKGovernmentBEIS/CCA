@@ -3,11 +3,12 @@ import { map, Observable } from 'rxjs';
 import { PayloadMutator } from '@netz/common/forms';
 import {
   applyVariationDetails,
+  OVERALL_DECISION_SUBTASK,
   TaskItemStatus,
   UNAVariationReviewRequestTaskPayload,
   VARIATION_DETAILS_SUBTASK,
 } from '@requests/common';
-import produce from 'immer';
+import { produce } from 'immer';
 
 import { UnderlyingAgreementVariationDetails } from 'cca-api';
 
@@ -25,6 +26,16 @@ export class VariationDetailsPayloadMutator extends PayloadMutator {
       map((currentPayload) =>
         produce(currentPayload, (payload) => {
           payload.reviewSectionsCompleted[this.subtask] = TaskItemStatus.UNDECIDED;
+
+          delete payload.reviewSectionsCompleted[OVERALL_DECISION_SUBTASK];
+
+          if (payload.determination) {
+            delete payload.determination.type;
+
+            if (payload.determination.type === 'REJECTED') {
+              delete payload.determination.reason;
+            }
+          }
         }),
       ),
     );

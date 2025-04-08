@@ -21,17 +21,15 @@ public class TargetUnitAccountHelper {
     }
     
     public String constructSuccessMessage(TargetUnitAccountVO targetUnit) {
-        return "tu_id: " + targetUnit.getTuId()
+        return "target_unit_id: " + targetUnit.getTargetUnitId()
         + " | operator_name: " + targetUnit.getOperatorName()
-        + " | company_registration_number: " + targetUnit.getCompanyRegistrationNumber()
         + " | sector_acronym: " + targetUnit.getSectorAcronym()
         + " | sub_sector_name: " + targetUnit.getSubsectorName();
     }
 
     public String constructErrorMessage(TargetUnitAccountVO targetUnit, String errorMessage, String data) {
-        return "tu_id: " + targetUnit.getTuId()
+        return "target_unit_id: " + targetUnit.getTargetUnitId()
         + " | operator_name: " + targetUnit.getOperatorName()
-        + " | company_registration_number: " + targetUnit.getCompanyRegistrationNumber()
         + " | sector_acronym: " + targetUnit.getSectorAcronym()
         + " | sub_sector_name: " + targetUnit.getSubsectorName()
         + " | Error: " + errorMessage

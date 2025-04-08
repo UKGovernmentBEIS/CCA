@@ -1,7 +1,7 @@
 import { Observable, of } from 'rxjs';
 
-import { Attachments, transformFilesToAttachments, transformFilesToUUIDsList } from '@shared/utils';
-import produce from 'immer';
+import { transformFilesToUUIDsList } from '@shared/utils';
+import { produce } from 'immer';
 
 import { AuthorisationAndAdditionalEvidence } from 'cca-api';
 
@@ -43,15 +43,9 @@ export function applyAuthorisationAdditionalEvidence(
     additionalEvidenceAttachmentIds: transformFilesToUUIDsList(userInput.additionalEvidenceAttachmentIds) as string[],
   };
 
-  const attachments: Attachments = {
-    ...transformFilesToAttachments(userInput.authorisationAttachmentIds),
-    ...transformFilesToAttachments(userInput.additionalEvidenceAttachmentIds),
-  };
-
   return of(
     produce(currentPayload, (payload) => {
       payload.underlyingAgreement[subtask] = formData;
-      payload.underlyingAgreementAttachments = { ...payload.underlyingAgreementAttachments, ...attachments };
       payload.sectionsCompleted[subtask] = TaskItemStatus.IN_PROGRESS;
     }),
   );

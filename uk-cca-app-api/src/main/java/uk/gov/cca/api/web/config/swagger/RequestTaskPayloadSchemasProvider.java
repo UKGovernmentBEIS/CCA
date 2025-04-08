@@ -5,12 +5,16 @@ import org.springframework.stereotype.Component;
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.AdminTerminationWithdrawRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataDownloadSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.activation.domain.UnderlyingAgreementActivationRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementReviewRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.submit.domain.UnderlyingAgreementSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivationRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
+import uk.gov.netz.api.swagger.SwaggerSchemasAbstractProvider;
 import uk.gov.netz.api.workflow.request.flow.payment.domain.PaymentConfirmRequestTaskPayload;
 import uk.gov.netz.api.workflow.request.flow.payment.domain.PaymentMakeRequestTaskPayload;
 import uk.gov.netz.api.workflow.request.flow.payment.domain.PaymentTrackRequestTaskPayload;
@@ -47,6 +51,16 @@ public class RequestTaskPayloadSchemasProvider extends SwaggerSchemasAbstractPro
         addResolvedShemas(AdminTerminationSubmitRequestTaskPayload.class.getSimpleName(), AdminTerminationSubmitRequestTaskPayload.class);
 		addResolvedShemas(AdminTerminationFinalDecisionRequestTaskPayload.class.getSimpleName(), AdminTerminationFinalDecisionRequestTaskPayload.class);
 		addResolvedShemas(AdminTerminationWithdrawRequestTaskPayload.class.getSimpleName(), AdminTerminationWithdrawRequestTaskPayload.class);
+
+		// Performance data download
+		addResolvedShemas(PerformanceDataDownloadSubmitRequestTaskPayload.class.getSimpleName(), PerformanceDataDownloadSubmitRequestTaskPayload.class);
+
+		// Performance data upload
+		addResolvedShemas(PerformanceDataUploadSubmitRequestTaskPayload.class.getSimpleName(), PerformanceDataUploadSubmitRequestTaskPayload.class);
+		
+		// PAT
+		addResolvedShemas(PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class.getSimpleName(),
+				PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class);
     }
 
 }

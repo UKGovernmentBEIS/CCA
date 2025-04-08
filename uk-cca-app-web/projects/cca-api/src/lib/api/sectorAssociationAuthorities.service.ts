@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { SectorUserAuthorityUpdateWrapperDTO } from '../model/sectorUserAuthorityUpdateWrapperDTO';
 import { SectorUsersAuthoritiesInfoDTO } from '../model/sectorUsersAuthoritiesInfoDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -110,7 +110,7 @@ export class SectorAssociationAuthoritiesService {
   public deleteCurrentSectorUser(
     sectorId: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorId === null || sectorId === undefined) {
@@ -143,7 +143,7 @@ export class SectorAssociationAuthoritiesService {
     return this.httpClient.delete<any>(
       `${this.configuration.basePath}/v1.0/sector-authorities/sector-association/${encodeURIComponent(String(sectorId))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -185,7 +185,7 @@ export class SectorAssociationAuthoritiesService {
     userId: string,
     sectorId: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (userId === null || userId === undefined) {
@@ -221,7 +221,7 @@ export class SectorAssociationAuthoritiesService {
     return this.httpClient.delete<any>(
       `${this.configuration.basePath}/v1.0/sector-authorities/sector-association/${encodeURIComponent(String(sectorId))}/${encodeURIComponent(String(userId))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -258,7 +258,7 @@ export class SectorAssociationAuthoritiesService {
   public getSectorUserAuthoritiesBySectorAssociationId(
     sectorId: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorId === null || sectorId === undefined) {
@@ -293,7 +293,7 @@ export class SectorAssociationAuthoritiesService {
     return this.httpClient.get<SectorUsersAuthoritiesInfoDTO>(
       `${this.configuration.basePath}/v1.0/sector-authorities/sector-association/${encodeURIComponent(String(sectorId))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -338,7 +338,7 @@ export class SectorAssociationAuthoritiesService {
     sectorId: number,
     sectorUserAuthorityUpdateWrapperDTO: SectorUserAuthorityUpdateWrapperDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorId === null || sectorId === undefined) {
@@ -384,7 +384,7 @@ export class SectorAssociationAuthoritiesService {
       `${this.configuration.basePath}/v1.0/sector-authorities/sector-association/${encodeURIComponent(String(sectorId))}`,
       sectorUserAuthorityUpdateWrapperDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

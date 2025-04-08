@@ -19,21 +19,13 @@ export type UNARequestTaskPayload =
   | UNAVariationRequestTaskPayload
   | UNAVariationReviewRequestTaskPayload;
 
-export type UNAApplicationRequestTaskPayload = UnderlyingAgreementSubmitRequestTaskPayload & {
-  currentFacilityId?: string;
-};
+export type UNAApplicationRequestTaskPayload = UnderlyingAgreementSubmitRequestTaskPayload;
 
-export type UNAReviewRequestTaskPayload = UnderlyingAgreementReviewRequestTaskPayload & {
-  currentFacilityId?: string;
-};
+export type UNAReviewRequestTaskPayload = UnderlyingAgreementReviewRequestTaskPayload;
 
-export type UNAVariationRequestTaskPayload = UnderlyingAgreementVariationSubmitRequestTaskPayload & {
-  currentFacilityId?: string;
-};
+export type UNAVariationRequestTaskPayload = UnderlyingAgreementVariationSubmitRequestTaskPayload;
 
-export type UNAVariationReviewRequestTaskPayload = UnderlyingAgreementVariationReviewRequestTaskPayload & {
-  currentFacilityId?: string;
-};
+export type UNAVariationReviewRequestTaskPayload = UnderlyingAgreementVariationReviewRequestTaskPayload;
 
 export const UPLOAD_SECTION_ATTACHMENT_TYPE = {
   UNDERLYING_AGREEMENT_APPLICATION_SUBMIT: 'UNDERLYING_AGREEMENT_UPLOAD_SECTION_ATTACHMENT',
@@ -89,7 +81,7 @@ export const staticSections = [
   MANAGE_FACILITIES_SUBTASK,
   BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_5_DETAILS,
   BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS,
-];
+] as const;
 
 export const staticGroupDecisions = [
   'AUTHORISATION_AND_ADDITIONAL_EVIDENCE',
@@ -101,6 +93,13 @@ export const staticGroupDecisions = [
 export const staticVariationSections = [VARIATION_DETAILS_SUBTASK, ...staticSections];
 
 export const staticVariationGroupDecisions = ['VARIATION_DETAILS', ...staticGroupDecisions] as const;
+
+export enum StaticVariationGroupDecisionsEnum {
+  'AUTHORISATION_AND_ADDITIONAL_EVIDENCE' = 'authorisationAndAdditionalEvidence',
+  'TARGET_PERIOD5_DETAILS' = 'targetPeriod5Details',
+  'TARGET_PERIOD6_DETAILS' = 'targetPeriod6Details',
+  'TARGET_UNIT_DETAILS' = 'underlyingAgreementTargetUnitDetails',
+}
 
 export enum ReviewTargetUnitDetailsWizardStep {
   TARGET_UNIT_DETAILS = 'target-unit-details',

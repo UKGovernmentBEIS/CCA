@@ -8,22 +8,23 @@ import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation;
 import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.common.validation.TargetUnitDetailsValidatorService;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.List;
 
 @Service
-public class UnderlyingAgreementVariationTargetUnitDetailsValidatorService extends TargetUnitDetailsValidatorService {
+public abstract class UnderlyingAgreementVariationTargetUnitDetailsValidatorService extends TargetUnitDetailsValidatorService {
     public UnderlyingAgreementVariationTargetUnitDetailsValidatorService(DataValidator<UnderlyingAgreementTargetUnitDetails> validator, SectorAssociationSchemeService sectorAssociationSchemeService, TargetUnitAccountQueryService targetUnitAccountQueryService) {
         super(validator, sectorAssociationSchemeService, targetUnitAccountQueryService);
     }
 
+    public abstract UnderlyingAgreementVariationPayload getUnderlyingAgreementPayload(RequestTask requestTask);
+
     @Override
     public BusinessValidationResult validate(RequestTask requestTask) {
-        final UnderlyingAgreementVariationRequestTaskPayload taskPayload = (UnderlyingAgreementVariationRequestTaskPayload) requestTask.getPayload();
         final Long accountId = requestTask.getRequest().getAccountId();
-        UnderlyingAgreementTargetUnitDetails underlyingAgreementTargetUnitDetails = taskPayload.getUnderlyingAgreement().getUnderlyingAgreementTargetUnitDetails();
+        UnderlyingAgreementTargetUnitDetails underlyingAgreementTargetUnitDetails = this.getUnderlyingAgreementPayload(requestTask).getUnderlyingAgreementTargetUnitDetails();
 
         final List<UnderlyingAgreementViolation> violations = validateTargetUnitDetails(accountId, underlyingAgreementTargetUnitDetails);
 

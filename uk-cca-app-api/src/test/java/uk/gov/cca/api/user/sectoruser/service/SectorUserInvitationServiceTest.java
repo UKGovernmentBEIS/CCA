@@ -1,5 +1,22 @@
 package uk.gov.cca.api.user.sectoruser.service;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType;
+import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
+import uk.gov.cca.api.user.sectoruser.domain.SectorUserInvitationDTO;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.user.core.service.auth.UserAuthService;
+import uk.gov.netz.api.userinfoapi.AuthenticationStatus;
+import uk.gov.netz.api.userinfoapi.UserInfoDTO;
+
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -10,23 +27,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
-
-import java.util.Optional;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType;
-import uk.gov.cca.api.user.sectoruser.domain.SectorUserInvitationDTO;
-import uk.gov.netz.api.authorization.core.domain.AppUser;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.netz.api.user.core.service.auth.UserAuthService;
-import uk.gov.netz.api.userinfoapi.AuthenticationStatus;
-import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
 @ExtendWith(MockitoExtension.class)
 class SectorUserInvitationServiceTest {
@@ -46,6 +46,9 @@ class SectorUserInvitationServiceTest {
     @Mock
     private SectorUserNotificationGateway sectorUserNotificationGateway;
 
+    @Mock
+    private SectorAssociationQueryService sectorAssociationQueryService;
+
     @Test
     void inviteUserToSectorAssociationWhenUserAlreadyExists() {
         String userId = "254cad93-d1f5-4951-bb0e-e9b0a1586844";
@@ -62,8 +65,9 @@ class SectorUserInvitationServiceTest {
         when(authUserService.getUserByEmail(sectorUserInvitationDTO.getEmail())).thenReturn(Optional.of(userInfoDTO));
         when(existingSectorUserInvitationService.addExistingUserToSectorAssociation(sectorUserInvitationDTO, sectorAssociationId, userId, currentUser))
                 .thenReturn(authorityUuid);
+        when(sectorAssociationQueryService.getSectorAssociationAcronymAndName(sectorAssociationId)).thenReturn(sectorAssociationName);
 
-        service.inviteUserToSectorAssociation(sectorAssociationId, sectorAssociationName, sectorUserInvitationDTO, currentUser);
+        service.inviteUserToSectorAssociation(sectorAssociationId, sectorUserInvitationDTO, currentUser);
 
         verify(authUserService, times(1)).getUserByEmail(email);
         verify(existingSectorUserInvitationService, times(1))
@@ -88,8 +92,9 @@ class SectorUserInvitationServiceTest {
         when(authUserService.getUserByEmail(sectorUserInvitationDTO.getEmail())).thenReturn(Optional.empty());
         when(sectorUserRegistrationService.registerUserToSectorAssociationWithStatusPending(sectorUserInvitationDTO, sectorAssociationId, currentUser))
         	.thenReturn(authorityUuid);
+        when(sectorAssociationQueryService.getSectorAssociationAcronymAndName(sectorAssociationId)).thenReturn(sectorAssociationName);
 
-        service.inviteUserToSectorAssociation(sectorAssociationId, sectorAssociationName, sectorUserInvitationDTO, currentUser);
+        service.inviteUserToSectorAssociation(sectorAssociationId, sectorUserInvitationDTO, currentUser);
 
         verify(authUserService, times(1)).getUserByEmail(sectorUserInvitationDTO.getEmail());
         verify(sectorUserRegistrationService, times(1)).registerUserToSectorAssociationWithStatusPending(any(), anyLong(), any());
@@ -99,7 +104,7 @@ class SectorUserInvitationServiceTest {
     }
 
     @Test
-    void inviteUserToSectorAssociationWhenRegulatorRegisteredExists() throws Exception{
+    void inviteUserToSectorAssociationWhenRegulatorRegisteredExists() throws Exception {
         String userId = "254cad93-d1f5-4951-bb0e-e9b0a1586844";
         String userRoleCode = "regulator_administrator";
         String email = "email";
@@ -114,10 +119,11 @@ class SectorUserInvitationServiceTest {
         when(authUserService.getUserByEmail(sectorUserInvitationDTO.getEmail())).thenReturn(Optional.of(userInfoDTO));
         when(existingSectorUserInvitationService.addExistingUserToSectorAssociation(sectorUserInvitationDTO, sectorAssociationId, userId, currentUser))
         	.thenThrow(new BusinessException(ErrorCode.USER_ROLE_ALREADY_EXISTS));
+        when(sectorAssociationQueryService.getSectorAssociationAcronymAndName(sectorAssociationId)).thenReturn(sectorAssociationName);
 
         BusinessException businessException = 
-    			assertThrows(BusinessException.class, () -> service.inviteUserToSectorAssociation(sectorAssociationId, sectorAssociationName, sectorUserInvitationDTO, currentUser));
-        
+    			assertThrows(BusinessException.class, () -> service.inviteUserToSectorAssociation(sectorAssociationId, sectorUserInvitationDTO, currentUser));
+
         assertEquals(ErrorCode.USER_ROLE_ALREADY_EXISTS, businessException.getErrorCode());
 
         verify(authUserService, times(1)).getUserByEmail(email);

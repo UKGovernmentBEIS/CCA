@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use 'govuk-frontend/dist/govuk/base' as govuk;
-@import 'govuk-frontend/dist/govuk/settings/all';
+@import 'govuk-frontend/dist/govuk/settings/index';
 
 .app-related-items {
   padding-top: govuk.govuk-spacing(1);

@@ -1,0 +1,101 @@
+@if (errorMessage(); as errorMessage) {
+  @if (errorMessage === 'NO_ELIGIBLE_ACCOUNTS_FOR_TPR_REPORTING') {
+    <govuk-notification-banner>
+      <h3 class="govuk-heading-m">{{ errorMessage | errorMessageType }}</h3>
+    </govuk-notification-banner>
+    <cca-sector-association-info-summary
+      [sectorId]="sectorId()"
+      [sectorName]="sectorName()"
+      [targetPeriod]="targetPeriod()"
+    ></cca-sector-association-info-summary>
+  } @else {
+    <div #container aria-labelledby="error-summary-title" class="govuk-error-summary" role="alert" tabindex="-1">
+      <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+      <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+          <li>
+            <p class="highlight-error">{{ errorMessage | errorMessageType }}</p>
+            <p class="govuk-body">
+              You can try generating the file again. Contact
+              <a class="govuk-link" href="mailto:cca-help@environment-agency.gov.uk">
+                cca-help&#64;environment-agency.gov.uk
+              </a>
+              if you need further help.
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    @if (!zipFile()) {
+      <cca-sector-association-info-summary
+        [sectorId]="sectorId()"
+        [sectorName]="sectorName()"
+        [targetPeriod]="targetPeriod()"
+      ></cca-sector-association-info-summary>
+    }
+  }
+} @else {
+  <govuk-notification-banner type="success">
+    <h3 class="govuk-heading-m">File has been generated</h3>
+    <p>
+      Contact
+      <a class="govuk-link" href="mailto:cca-help@environment-agency.gov.uk">cca-help&#64;environment-agency.gov.uk</a>
+      if there are any problems with the file
+    </p>
+  </govuk-notification-banner>
+}
+
+<div class="govuk-body">
+  @if (zipFile() || errorsFile()) {
+    <h4 class="govuk-heading-m govuk-!-margin-bottom-6">Downloads</h4>
+
+    @if (zipFile()) {
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          <img ngSrc="/assets/images/zip-image.png" alt="Zip file" height="123" width="116" />
+        </div>
+
+        <div class="govuk-grid-column-two-thirds govuk-!-margin-top-6">
+          <a
+            routerLink="file-download/{{ zipFile().uuid }}"
+            class="govuk-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ zipFile().name }}
+          </a>
+        </div>
+
+        <span class="govuk-grid-column-two-thirds govuk-!-margin-top-1">Click link to begin your download</span>
+      </div>
+    }
+
+    @if (errorsFile()) {
+      <div class="govuk-grid-row govuk-!-margin-top-6">
+        <div class="govuk-grid-column-one-quarter">
+          <img ngSrc="/assets/images/csv-image.png" alt="CSV file" height="123" width="116" />
+        </div>
+
+        <div class="govuk-grid-column-two-thirds govuk-!-margin-top-6">
+          <a routerLink="file-download/{{ errorsFile().uuid }}" class="govuk-link" target="_blank">{{
+            errorsFile().name
+          }}</a>
+        </div>
+
+        <span class="govuk-grid-column-two-thirds govuk-!-margin-top-1">Click link to begin your download</span>
+      </div>
+    }
+
+    <div class="govuk-warning-text govuk-!-margin-top-6">
+      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+      <strong class="govuk-warning-text__text">
+        <span class="govuk-visually-hidden">Warning</span>
+        Make sure you have downloaded the files before selecting complete.
+      </strong>
+    </div>
+  }
+
+  @if (isEditable()) {
+    <button netzPendingButton govukButton type="button" (click)="onComplete()">Complete</button>
+  }
+</div>

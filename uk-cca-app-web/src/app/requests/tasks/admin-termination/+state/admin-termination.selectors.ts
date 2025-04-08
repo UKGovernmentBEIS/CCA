@@ -11,11 +11,15 @@ const selectAdminTerminationPayload: StateSelector<RequestTaskState, AdminTermin
 const selectAdminTerminationReasonDetails: StateSelector<RequestTaskState, AdminTerminationReasonDetails> =
   createDescendingSelector(selectAdminTerminationPayload, (payload) => payload.adminTerminationReasonDetails);
 
-const selectAdminTerminationSubmitAttachments: StateSelector<RequestTaskState, { [key: string]: string }> =
-  createDescendingSelector(selectAdminTerminationPayload, (payload) => payload.adminTerminationAttachments);
+const selectAdminTerminationSubmitAttachments: StateSelector<
+  RequestTaskState,
+  Record<string, string>
+> = createDescendingSelector(selectAdminTerminationPayload, (payload) => payload.adminTerminationAttachments);
 
-const selectAdminTerminationSectionsCompleted: StateSelector<RequestTaskState, { [key: string]: string }> =
-  createDescendingSelector(selectAdminTerminationPayload, (payload) => payload.sectionsCompleted);
+const selectAdminTerminationSectionsCompleted: StateSelector<
+  RequestTaskState,
+  Record<string, string>
+> = createDescendingSelector(selectAdminTerminationPayload, (payload) => payload.sectionsCompleted);
 
 export const AdminTerminationQuery = {
   selectAdminTerminationPayload,

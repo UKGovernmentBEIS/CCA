@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 export abstract class TabBaseDirective implements OnChanges {
   @Input() id: string;
   @Input() label: string;
+  @Input() badgeNumber = 0;
 
   isSelected = new BehaviorSubject<boolean>(false);
 

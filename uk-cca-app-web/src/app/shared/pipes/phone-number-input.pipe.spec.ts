@@ -1,4 +1,4 @@
-import { PhoneNumberInputPipe } from '@shared/pipes/phone-number-input.pipe';
+import { PhoneNumberInputPipe } from '@shared/pipes';
 
 describe('PhoneNumberPipe', () => {
   let pipe: PhoneNumberInputPipe;

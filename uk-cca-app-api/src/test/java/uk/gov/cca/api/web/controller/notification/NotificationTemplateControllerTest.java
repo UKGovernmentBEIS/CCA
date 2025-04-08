@@ -213,7 +213,7 @@ class NotificationTemplateControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(appUser, "getNotificationTemplateById", Long.toString(notificationTemplateId));
+            .authorize(appUser, "getNotificationTemplateById", Long.toString(notificationTemplateId), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders
             .get("/v1.0/notification-templates/" + notificationTemplateId)
@@ -257,7 +257,7 @@ class NotificationTemplateControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(appUser, "updateNotificationTemplate", "1");
+            .authorize(appUser, "updateNotificationTemplate", "1", null, null);
 
         mockMvc.perform(
             MockMvcRequestBuilders

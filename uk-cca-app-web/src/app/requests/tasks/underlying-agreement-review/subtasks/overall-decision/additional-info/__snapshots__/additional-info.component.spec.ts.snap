@@ -13,7 +13,7 @@ exports[`ExplanationComponent should match snapshot for AdditionalInfoComponent 
       novalidate=""
     >
       
-      <cca-page-heading>
+      <netz-page-heading>
         <span
           class="govuk-caption-l"
         >
@@ -25,7 +25,7 @@ exports[`ExplanationComponent should match snapshot for AdditionalInfoComponent 
         >
           Provide any additional information here to support your decision (optional)
         </h1>
-      </cca-page-heading>
+      </netz-page-heading>
       <div
         class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
         formcontrolname="additionalInfo"
@@ -63,10 +63,10 @@ exports[`ExplanationComponent should match snapshot for AdditionalInfoComponent 
         formcontrolname="files"
       >
         <div
-          class="moj-multi-file-upload moj-multi-file-upload--enhanced"
+          class="cca-multi-file-upload cca-multi-file-upload--enhanced"
         >
           <div
-            class="moj-multi-file-upload__upload"
+            class="cca-multi-file-upload__upload"
           >
             <div
               class="govuk-form-group"
@@ -88,12 +88,12 @@ exports[`ExplanationComponent should match snapshot for AdditionalInfoComponent 
               
               
               <div
-                class="moj-multi-file-upload__dropzone govuk-!-margin-top-4"
+                class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
               >
                 <input
                   accept="*/*"
                   aria-labelledby="l.files ld.files"
-                  class="govuk-file-upload moj-multi-file-upload__input"
+                  class="govuk-file-upload cca-multi-file-upload__input"
                   id="files"
                   multiple=""
                   name="files"
@@ -123,15 +123,15 @@ exports[`ExplanationComponent should match snapshot for AdditionalInfoComponent 
           </div>
           <cca-file-upload-list>
             <div
-              class="moj-multi-file__uploaded-files moj-hidden"
+              class="cca-multi-file__uploaded-files govuk-body cca-hidden"
             >
               
+              
               <dl
-                class="govuk-summary-list moj-multi-file-upload__list"
+                class="govuk-summary-list cca-multi-file-upload__list"
               >
                 
               </dl>
-              
               
               
               
@@ -143,9 +143,9 @@ exports[`ExplanationComponent should match snapshot for AdditionalInfoComponent 
         </div>
       </cca-multiple-file-input>
       <button
-        ccapendingbutton=""
         class="govuk-button"
         govukbutton=""
+        netzpendingbutton=""
         type="submit"
       >
         Continue
@@ -159,7 +159,6 @@ exports[`ExplanationComponent should match snapshot for AdditionalInfoComponent 
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

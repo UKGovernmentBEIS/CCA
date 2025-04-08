@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  logicalFilePath="v0.1.0/tpr_performance_data_ddl.xml"
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+  <changeSet id="0_1_0_TPR_ACCOUNT_PERFORMANCE_DATA_STATUS_SEQUENCE" author="vvitzilaios">
+    <createSequence
+      sequenceName="tpr_account_performance_data_status_seq"
+      minValue="0"
+      maxValue="999999999999999999"
+      incrementBy="1"
+      startValue="1"
+      cycle="false"/>
+    <rollback>
+      <sql>
+        DROP SEQUENCE IF EXISTS tpr_account_performance_data_status_seq;
+      </sql>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="0_1_0_TPR_ACCOUNT_PERFORMANCE_DATA_STATUS" author="vvitzilaios">
+    <createTable tableName="tpr_account_performance_data_status"
+      remarks="Represents account performance data status for locking and data version tracking">
+      <column name="id" type="bigint" remarks="Primary key">
+        <constraints primaryKey="true" primaryKeyName="tpr_account_performance_data_status_pk"
+          nullable="false"/>
+      </column>
+      <column name="target_period_id" type="bigint"
+        remarks="Foreign key referencing tpr_target_period">
+        <constraints foreignKeyName="target_period_id_fk" references="tpr_target_period(id)" nullable="false"/>
+      </column>
+      <column name="account_id" type="bigint" remarks="The account identifier">
+        <constraints nullable="false"/>
+      </column>
+      <column name="locked" type="boolean" defaultValueBoolean="false"
+        remarks="Flag indicating if account is locked for uploading performance data for the corresponding TP"/>
+      <column name="last_performance_data_id" type="bigint"
+        remarks="The last version of the performance data uploaded">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <rollback>
+      <sql>
+        DROP TABLE IF EXISTS tpr_account_performance_data_status CASCADE;
+      </sql>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="0_1_0_TPR_PERFORMANCE_DATA_SEQUENCE" author="vourdoukasd@unisystems.gr">
+    <createSequence
+            sequenceName="tpr_performance_data_seq"
+            minValue="0"
+            maxValue="999999999999999999"
+            incrementBy="1"
+            startValue="1"
+            cycle="false"/>
+    <rollback>
+      <sql>
+        DROP SEQUENCE IF EXISTS tpr_performance_data_seq;
+      </sql>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="0_1_0_TPR_PERFORMANCE_DATA_TABLE_creation" author="vourdoukasd@unisystems.gr">
+    <createTable tableName="tpr_performance_data"
+                 remarks="Represents performance data submission data">
+
+      <column name="id" type="bigint" remarks="Primary key">
+        <constraints primaryKey="true" primaryKeyName="tpr_performance_data_pk"
+                     nullable="false"/>
+      </column>
+      <column name="data" type="jsonb" remarks="performance data representation as json">
+        <constraints nullable="false" />
+      </column>
+      <column name="target_period_id" type="bigint"
+              remarks="Foreign key referencing tpr_target_period">
+        <constraints foreignKeyName="target_period_id_fk" references="tpr_target_period(id)" nullable="false"/>
+      </column>
+      <column name="account_id" type="bigint" remarks="The account identifier">
+        <constraints nullable="false"/>
+      </column>
+      <column name="report_version" type="int" defaultValueNumeric="1" remarks="The performance data version">
+        <constraints nullable="false"/>
+      </column>
+      <column name="submission_type" type="varchar(64)">
+        <constraints nullable="false" />
+      </column>
+      <column name="submission_date" type="timestamp" remarks="The submission date of performance data entry">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+    <sql>
+        ALTER TABLE tpr_performance_data 
+        ADD COLUMN performance_outcome varchar(64) 
+        GENERATED ALWAYS AS ((data -> 'performanceResult' ->> 'tpOutcome')::text) STORED;
+    </sql>
+    <addUniqueConstraint
+            tableName="tpr_performance_data"
+            columnNames="target_period_id, account_id, report_version"
+            constraintName="tpr_performance_data_uc"/>
+    <rollback>
+      <sql>
+        DROP TABLE IF EXISTS tpr_performance_data CASCADE;
+      </sql>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="0_1_0_TPR_PERFORMANCE_DATA_ID_FK_OF_TPR_ACCOUNT_PERFORMANCE_DATA_STATUS" author="vourdoukasd@unisystems.gr">
+    <addForeignKeyConstraint
+            baseTableName="tpr_account_performance_data_status"
+            baseColumnNames="last_performance_data_id"
+            referencedTableName="tpr_performance_data"
+            referencedColumnNames="id"
+            constraintName="last_performance_data_id_fk"
+    />
+    <rollback>
+      <sql>
+        ALTER TABLE tpr_account_performance_data_status
+        DROP CONSTRAINT last_performance_data_id_fk;
+      </sql>
+    </rollback>
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PerformanceDataDownloadConfirmationComponent should show summary values 1`] = `
+<cca-performance-data-download-confirmation
+  requestTaskStore={[Function _RequestTaskStore]}
+  zipFile={[Function Function]}
+>
+  <div
+    class="govuk-grid-row"
+  >
+    <div
+      class="govuk-grid-column-two-thirds govuk-body"
+    >
+      <govuk-panel>
+        <div
+          class="govuk-panel govuk-panel--confirmation"
+        >
+          <div
+            class="govuk-panel__body"
+          >
+            TPR spreadsheet could not be generated
+          </div>
+        </div>
+      </govuk-panel>
+      <p>
+         You can try generating the file again. Contact 
+        <a
+          class="govuk-link"
+          href="mailto:cca-help@environment-agency.gov.uk"
+        >
+           cca-help@environment-agency.gov.uk 
+        </a>
+         if you need further help. 
+      </p>
+      <a
+        class="govuk-link"
+        href="/dashboard"
+        routerlink="/dashboard"
+      >
+        Return to: Dashboard
+      </a>
+    </div>
+  </div>
+</cca-performance-data-download-confirmation>
+`;

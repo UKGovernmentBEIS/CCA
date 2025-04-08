@@ -8,6 +8,7 @@ import { EMPTY, startWith } from 'rxjs';
 
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 import { AuthStore, selectUserId } from '@netz/common/auth';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { UserFullNamePipe } from '@netz/common/pipes';
 import {
   ButtonDirective,
@@ -19,7 +20,6 @@ import {
   SortEvent,
   TableComponent,
 } from '@netz/govuk-components';
-import { PendingButtonDirective } from '@shared/directives';
 
 import {
   SectorAssociationAuthoritiesService,

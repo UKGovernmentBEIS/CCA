@@ -7,7 +7,6 @@ import { BehaviorSubject, filter } from 'rxjs';
 
 import { BackLinkComponent as GovukBackLinkComponent } from '@netz/govuk-components';
 
-import { getActiveRoute } from '../navigation.util';
 import { RouteBacklink } from './backlink.interface';
 
 @Component({
@@ -36,7 +35,10 @@ export class BackLinkComponent {
         filter((event) => event instanceof NavigationEnd),
       )
       .subscribe(() => {
-        const activeRoute = getActiveRoute(router, true);
+        let activeRoute = router.routerState.snapshot.root;
+        while (activeRoute.firstChild) {
+          activeRoute = activeRoute.firstChild;
+        }
 
         if (this.hasBackLink(activeRoute.data)) {
           this.backlink$.next({ link: this.getLink(activeRoute), route: activeRoute });

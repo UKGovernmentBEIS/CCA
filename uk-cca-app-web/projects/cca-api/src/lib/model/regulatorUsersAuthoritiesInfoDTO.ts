@@ -12,6 +12,6 @@
 import { RegulatorUserAuthorityInfoDTO } from './regulatorUserAuthorityInfoDTO';
 
 export interface RegulatorUsersAuthoritiesInfoDTO {
-  caUsers?: Array<RegulatorUserAuthorityInfoDTO>;
+  caUsers?: RegulatorUserAuthorityInfoDTO[];
   editable?: boolean;
 }

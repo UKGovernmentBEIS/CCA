@@ -9,9 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { SectorAssociationSchemeDocumentDTO } from './sectorAssociationSchemeDocumentDTO';
-import { SubsectorAssociationSchemeInfoDTO } from './subsectorAssociationSchemeInfoDTO';
 import { TargetSetDTO } from './targetSetDTO';
+import { SubsectorAssociationSchemeInfoDTO } from './subsectorAssociationSchemeInfoDTO';
+import { SectorAssociationSchemeDocumentDTO } from './sectorAssociationSchemeDocumentDTO';
 
 export interface SectorAssociationSchemeDTO {
   id: number;
@@ -19,5 +19,5 @@ export interface SectorAssociationSchemeDTO {
   targetSet?: TargetSetDTO;
   umaDate?: string;
   sectorDefinition?: string;
-  subsectorAssociationSchemes?: Array<SubsectorAssociationSchemeInfoDTO>;
+  subsectorAssociationSchemes?: SubsectorAssociationSchemeInfoDTO[];
 }

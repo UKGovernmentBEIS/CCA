@@ -6,8 +6,6 @@ import { underlyingAgreementReviewQuery } from '@requests/common';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
 
-import { OverallDecisionStore } from '../overall-decision.store';
-
 export const ADDITIONAL_INFO_FORM = new InjectionToken('ADDITIONAL_INFO_FORM');
 
 export type AdditionalInfoFormModel = FormGroup<{
@@ -18,16 +16,15 @@ export type AdditionalInfoFormModel = FormGroup<{
 export function provideAdditionalInfo(): Provider {
   return {
     provide: ADDITIONAL_INFO_FORM,
-    deps: [OverallDecisionStore, RequestTaskStore, FormBuilder, RequestTaskFileService],
+    deps: [RequestTaskStore, FormBuilder, RequestTaskFileService],
     useFactory: (
-      overallDecisionStore: OverallDecisionStore,
-      store: RequestTaskStore,
+      requestTaskStore: RequestTaskStore,
       fb: FormBuilder,
       requestTaskFileService: RequestTaskFileService,
     ) => {
-      const determination = overallDecisionStore.determination;
-      const attachments = store.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
-      const requestTaskId = store.select(requestTaskQuery.selectRequestTaskId)();
+      const determination = requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)();
+      const attachments = requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
+      const requestTaskId = requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
 
       const filesControl = requestTaskFileService.buildFormControl(
         requestTaskId,

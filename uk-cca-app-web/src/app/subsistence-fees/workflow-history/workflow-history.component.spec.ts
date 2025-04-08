@@ -1,0 +1,49 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
+
+import { ActivatedRouteStub } from '@netz/common/testing';
+import { screen } from '@testing-library/angular';
+
+import { mockEmptyRequestItems, mockRequestActions, mockWorkflowDetails } from './testing/mock-data';
+import { WorkflowHistoryComponent } from './workflow-history.component';
+
+describe('WorkflowHistoryComponent', () => {
+  let component: WorkflowHistoryComponent;
+  let fixture: ComponentFixture<WorkflowHistoryComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [WorkflowHistoryComponent],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: new ActivatedRouteStub(null, null, {
+            details: {
+              workflowDetails: mockWorkflowDetails,
+              requestItems: mockEmptyRequestItems,
+              requestActions: mockRequestActions,
+            },
+          }),
+        },
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(WorkflowHistoryComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should render workflow details heading', () => {
+    expect(screen.getByTestId('page-heading')).toHaveTextContent('S2502');
+    expect(screen.getByText('Completed with failures')).toBeVisible();
+  });
+
+  it('should render timeline events', () => {
+    expect(screen.getAllByTestId('timeline-item')).toHaveLength(3);
+  });
+});

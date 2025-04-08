@@ -121,7 +121,7 @@ class TargetUnitAccountUpdateControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "updateTargetUnitAccountSicCode", Long.toString(accountId));
+                .authorize(user, "updateTargetUnitAccountSicCode", Long.toString(accountId), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.patch(BASE_PATH + "sic")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -163,7 +163,7 @@ class TargetUnitAccountUpdateControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "updateTargetUnitAccountFinancialIndependenceStatusCode", Long.toString(accountId));
+                .authorize(user, "updateTargetUnitAccountFinancialIndependenceStatusCode", Long.toString(accountId), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.patch(BASE_PATH + "financial")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -213,7 +213,7 @@ class TargetUnitAccountUpdateControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "updateTargetUnitAccountResponsiblePerson", Long.toString(accountId));
+                .authorize(user, "updateTargetUnitAccountResponsiblePerson", Long.toString(accountId), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.patch(BASE_PATH + "responsible")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -285,7 +285,7 @@ class TargetUnitAccountUpdateControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "updateTargetUnitAccountAdministrativePerson", Long.toString(accountId));
+                .authorize(user, "updateTargetUnitAccountAdministrativePerson", Long.toString(accountId), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.patch(BASE_PATH + "administrative")
                         .contentType(MediaType.APPLICATION_JSON)

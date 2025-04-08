@@ -8,7 +8,6 @@ import { ForgotPasswordService } from 'cca-api';
 
 import { EmailSentComponent } from '../email-sent/email-sent.component';
 
-// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
 @Component({
   selector: 'cca-submit-email',
   templateUrl: './submit-email.component.html',

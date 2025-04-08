@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1wu6qib" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.27.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="PROCESS_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING" name="Performance Account Template (PAT) Data Processing" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0jekkyo</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_0lpi6k4" name="trigger performance account template data processing" camunda:asyncBefore="true" camunda:delegateExpression="#{performanceAccountTemplateProcessingTriggerHandler}">
+      <bpmn:incoming>Flow_0jekkyo</bpmn:incoming>
+      <bpmn:outgoing>Flow_0s0zu9j</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="accountIds" camunda:elementVariable="accountId" />
+    </bpmn:serviceTask>
+    <bpmn:intermediateCatchEvent id="Event_088wx5f" name="processing completed">
+      <bpmn:incoming>Flow_0s0zu9j</bpmn:incoming>
+      <bpmn:outgoing>Flow_1etgsy1</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1usn66g" messageRef="Message_0qu4j87" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:subProcess id="Activity_16k96ry" triggeredByEvent="true">
+      <bpmn:startEvent id="Event_1izrf0m" name="account template processing completed message" isInterrupting="false">
+        <bpmn:outgoing>Flow_0hq1tls</bpmn:outgoing>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_1drmfto" messageRef="Message_3h3btcu" />
+      </bpmn:startEvent>
+      <bpmn:serviceTask id="Activity_1q4stws" name="account template processing completed" camunda:delegateExpression="#{performanceAccountTemplateProcessingCompletedHandler}">
+        <bpmn:incoming>Flow_0hq1tls</bpmn:incoming>
+        <bpmn:outgoing>Flow_19tev9h</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:exclusiveGateway id="Gateway_1sr4tz1" name="account template data processing completed ?" default="Flow_0yobfps">
+        <bpmn:incoming>Flow_19tev9h</bpmn:incoming>
+        <bpmn:outgoing>Flow_1128ib6</bpmn:outgoing>
+        <bpmn:outgoing>Flow_0yobfps</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:endEvent id="Event_0v91jk3">
+        <bpmn:incoming>Flow_0yobfps</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:endEvent id="Event_0yhcv20" name="account templates processing completed">
+        <bpmn:incoming>Flow_1128ib6</bpmn:incoming>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_1exlnja" messageRef="Message_0qu4j87" camunda:delegateExpression="#{msgThrowHandler}" />
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0hq1tls" sourceRef="Event_1izrf0m" targetRef="Activity_1q4stws" />
+      <bpmn:sequenceFlow id="Flow_19tev9h" sourceRef="Activity_1q4stws" targetRef="Gateway_1sr4tz1" />
+      <bpmn:sequenceFlow id="Flow_1128ib6" name="yes" sourceRef="Gateway_1sr4tz1" targetRef="Event_0yhcv20">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${accountIds.size() == accountsCompleted}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_0yobfps" sourceRef="Gateway_1sr4tz1" targetRef="Event_0v91jk3" />
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_0s0zu9j" sourceRef="Activity_0lpi6k4" targetRef="Event_088wx5f" />
+    <bpmn:sequenceFlow id="Flow_1etgsy1" sourceRef="Event_088wx5f" targetRef="Activity_0m96kfx" />
+    <bpmn:sequenceFlow id="Flow_0jekkyo" sourceRef="StartEvent_1" targetRef="Activity_0lpi6k4" />
+    <bpmn:endEvent id="Event_18m1hwf" name="account templates processing completed" camunda:asyncBefore="true">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="processToMessageBusinessKey">${performanceAccountTemplateDataUploadRequestBusinessKey}</camunda:inputParameter>
+          <camunda:inputParameter name="variables">
+            <camunda:map>
+              <camunda:entry key="accountReports">${accountReports}</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1lk05hy</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0labmcy" messageRef="Message_1e00c2h" camunda:delegateExpression="#{msgOtherProcessHandler}" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_044jg2l" sourceRef="Activity_0m96kfx" targetRef="Activity_1syw4r4" />
+    <bpmn:serviceTask id="Activity_0m96kfx" name="account template data processing completed" camunda:asyncBefore="true" camunda:delegateExpression="#{performanceAccountTemplateDataProcessingCompletedHandler}">
+      <bpmn:incoming>Flow_1etgsy1</bpmn:incoming>
+      <bpmn:outgoing>Flow_044jg2l</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1syw4r4" name="mark as completed" camunda:delegateExpression="#{performanceAccountTemplateDataProcessingMarkAsCompletedHandler}">
+      <bpmn:incoming>Flow_044jg2l</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lk05hy</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1lk05hy" sourceRef="Activity_1syw4r4" targetRef="Event_18m1hwf" />
+  </bpmn:process>
+  <bpmn:message id="Message_3h3btcu" name="performanceAccountTemplateProcessingCompleted" />
+  <bpmn:message id="Message_0qu4j87" name="performanceAccountTemplateDataProcessingCompleted" />
+  <bpmn:message id="Message_1e00c2h" name="performanceAccountTemplateDataProcessingUploadCompleted" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PROCESS_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING">
+      <bpmndi:BPMNShape id="BPMNShape_0j4g29i" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="122" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qdyazh_di" bpmnElement="Activity_0lpi6k4">
+        <dc:Bounds x="320" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_12mkita_di" bpmnElement="Event_088wx5f">
+        <dc:Bounds x="572" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="563" y="76" width="54" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dt37u3_di" bpmnElement="Activity_16k96ry" isExpanded="true">
+        <dc:Bounds x="260" y="360" width="760" height="270" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_15568ib_di" bpmnElement="Event_1izrf0m">
+        <dc:Bounds x="350" y="452" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="327" y="377" width="85" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0itubo7_di" bpmnElement="Activity_1q4stws">
+        <dc:Bounds x="480" y="430" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1sr4tz1_di" bpmnElement="Gateway_1sr4tz1" isMarkerVisible="true">
+        <dc:Bounds x="665" y="445" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="650" y="390" width="85" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0v91jk3_di" bpmnElement="Event_0v91jk3">
+        <dc:Bounds x="852" y="532" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0f30rx9_di" bpmnElement="Event_0yhcv20">
+        <dc:Bounds x="852" y="452" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="831" y="383" width="90" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0hq1tls_di" bpmnElement="Flow_0hq1tls">
+        <di:waypoint x="386" y="470" />
+        <di:waypoint x="480" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19tev9h_di" bpmnElement="Flow_19tev9h">
+        <di:waypoint x="580" y="470" />
+        <di:waypoint x="665" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1128ib6_di" bpmnElement="Flow_1128ib6">
+        <di:waypoint x="715" y="470" />
+        <di:waypoint x="852" y="470" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="771" y="452" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yobfps_di" bpmnElement="Flow_0yobfps">
+        <di:waypoint x="690" y="495" />
+        <di:waypoint x="690" y="550" />
+        <di:waypoint x="852" y="550" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1guvpd1_di" bpmnElement="Event_18m1hwf">
+        <dc:Bounds x="1132" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1106" y="165" width="90" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00ff6ja_di" bpmnElement="Activity_0m96kfx">
+        <dc:Bounds x="760" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0ebqmdz" bpmnElement="Activity_1syw4r4">
+        <dc:Bounds x="950" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0s0zu9j_di" bpmnElement="Flow_0s0zu9j">
+        <di:waypoint x="420" y="140" />
+        <di:waypoint x="572" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1etgsy1_di" bpmnElement="Flow_1etgsy1">
+        <di:waypoint x="608" y="140" />
+        <di:waypoint x="760" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0jekkyo_di" bpmnElement="Flow_0jekkyo">
+        <di:waypoint x="188" y="140" />
+        <di:waypoint x="320" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_044jg2l_di" bpmnElement="Flow_044jg2l">
+        <di:waypoint x="860" y="140" />
+        <di:waypoint x="950" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lk05hy_di" bpmnElement="Flow_1lk05hy">
+        <di:waypoint x="1050" y="140" />
+        <di:waypoint x="1132" y="140" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

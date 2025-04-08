@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import { PROVIDE_EVIDENCE_SUBTASK, toProvideEvidenceSummaryData } from '@requests/common';
-import { PageHeadingComponent, SummaryComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { SummaryComponent } from '@shared/components';
+import { generateDownloadUrl } from '@shared/utils';
 
 import { underlyingAgreementActivationQuery } from '../../../+state/una-activation.selectors';
 

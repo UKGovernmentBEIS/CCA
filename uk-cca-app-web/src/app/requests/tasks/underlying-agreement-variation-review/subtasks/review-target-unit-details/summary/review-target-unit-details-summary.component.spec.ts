@@ -9,7 +9,7 @@ import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 
-import { mockRequestTaskState } from '../../../testing/mock-data';
+import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import ReviewTargetUnitDetailsSummaryComponent from './review-target-unit-details-summary.component';
 
 describe('ReviewTargetUnitDetailsSummaryComponent', () => {
@@ -35,7 +35,7 @@ describe('ReviewTargetUnitDetailsSummaryComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
-    store.setState(mockRequestTaskState);
+    store.setState(mockVariationReviewRequestTaskState);
 
     fixture = TestBed.createComponent(ReviewTargetUnitDetailsSummaryComponent);
     fixture.detectChanges();

@@ -1,6 +1,6 @@
 <govuk-error-summary [form]="form"></govuk-error-summary>
 
-<cca-page-heading [caption]="'Create user account'">Enter your details</cca-page-heading>
+<netz-page-heading [caption]="'Create user account'">Enter your details</netz-page-heading>
 
 <div class="govuk-body">
   <form (ngSubmit)="onSubmit()" [formGroup]="form" data-testid="invited-sector-user-details-form">
@@ -46,6 +46,6 @@
       widthClass="govuk-!-width-one-third"
     ></div>
 
-    <button ccaPendingButton govukButton type="submit">Continue</button>
+    <button netzPendingButton govukButton type="submit">Continue</button>
   </form>
 </div>

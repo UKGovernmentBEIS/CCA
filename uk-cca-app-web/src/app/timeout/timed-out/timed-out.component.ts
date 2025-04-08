@@ -4,16 +4,15 @@ import { ActivatedRoute } from '@angular/router';
 
 import { map } from 'rxjs';
 
-import { AuthService } from '@core/services/auth.service';
-import { LinkDirective } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
+import { PageHeadingComponent } from '@netz/common/components';
 import { SecondsToMinutesPipe } from '@shared/pipes';
+import { AuthService } from '@shared/services';
 
 @Component({
   selector: 'cca-timed-out',
   standalone: true,
   template: `
-    <cca-page-heading size="xl">Your session has timed out</cca-page-heading>
+    <netz-page-heading size="xl">Your session has timed out</netz-page-heading>
     <p class="govuk-body">
       @if (idle$ | async) {
         We have reset your session because you did not do anything for {{ idle$ | async | secondsToMinutes }} . We did
@@ -27,11 +26,11 @@ import { SecondsToMinutesPipe } from '@shared/pipes';
 
     <p class="govuk-body">
       If you don't want to start again, you can
-      <a govukLink href="https://www.gov.uk/">return to GOV.UK</a>
+      <a class="govuk-link" href="https://www.gov.uk/">return to GOV.UK</a>
     </p>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeadingComponent, AsyncPipe, SecondsToMinutesPipe, LinkDirective],
+  imports: [PageHeadingComponent, AsyncPipe, SecondsToMinutesPipe],
 })
 export class TimedOutComponent {
   idle$ = this.activatedRoute.queryParamMap.pipe(map((queryParamMap) => Number(queryParamMap.get('idle'))));

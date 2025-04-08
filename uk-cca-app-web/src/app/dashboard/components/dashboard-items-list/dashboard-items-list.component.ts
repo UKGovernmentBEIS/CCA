@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { ItemLinkPipe, ItemNamePipe, UserFullNamePipe } from '@netz/common/pipes';
-import { GovukTableColumn, LinkDirective, TableComponent, TagComponent } from '@netz/govuk-components';
+import { DaysRemainingPipe, ItemLinkPipe, ItemNamePipe, UserFullNamePipe } from '@netz/common/pipes';
+import { GovukTableColumn, TableComponent, TagComponent } from '@netz/govuk-components';
 
-import { ItemTargetUnitDTO } from 'cca-api';
+import { ItemDTO } from 'cca-api';
 
 import { ItemTypePipe } from '../../pipes/item-type.pipe';
 
@@ -21,11 +21,11 @@ import { ItemTypePipe } from '../../pipes/item-type.pipe';
     ItemTypePipe,
     UserFullNamePipe,
     TagComponent,
-    LinkDirective,
+    DaysRemainingPipe,
   ],
 })
 export class DashboardItemsListComponent {
-  items = input.required<ItemTargetUnitDTO[]>();
-  tableColumns = input.required<GovukTableColumn<ItemTargetUnitDTO>[]>();
+  items = input.required<ItemDTO[]>();
+  tableColumns = input.required<GovukTableColumn<ItemDTO>[]>();
   unassignedLabel = input.required<string>();
 }

@@ -10,7 +10,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
   taskId="null"
 >
   <div>
-    <cca-page-heading
+    <netz-page-heading
       caption="Authorisation and additional evidence"
     >
       <span
@@ -23,7 +23,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
       >
         Summary
       </h1>
-    </cca-page-heading>
+    </netz-page-heading>
     <cca-highlight-diff>
       <div
         class="govuk-!-display-none"
@@ -45,7 +45,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Uploaded files
+                Authorisation
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -54,7 +54,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
                 <cca-summary-download-files>
                   <a
                     class="govuk-link"
-                    govuklink=""
                     href="/tasks/null/file-download/2f611a22-bd5f-4fd4-b00f-c20bfb2706c9"
                     target="_blank"
                   >
@@ -67,7 +66,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
               >
                 <a
                   class="govuk-link"
-                  govuklink=""
                   href="/?change=true"
                 >
                   Change
@@ -82,7 +80,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Uploaded files
+                Additional evidence
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -98,7 +96,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
               >
                 <a
                   class="govuk-link"
-                  govuklink=""
                   href="/?change=true"
                 >
                   Change
@@ -128,7 +125,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Uploaded files
+                Authorisation
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -137,8 +134,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
                 <cca-summary-download-files>
                   <a
                     class="govuk-link"
-                    govuklink=""
-                    href="/tasks/null/file-download/2f611a22-bd5f-4fd4-b00f-c20bfb2706c9"
+                    href="/tasks/null/file-download/5a4b3c2d-1e2f-3g4h-5i6j-7k8l9m0n1o2p"
                     target="_blank"
                   >
                   </a>
@@ -150,7 +146,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
               >
                 <a
                   class="govuk-link"
-                  govuklink=""
                   href="/?change=true"
                 >
                   Change
@@ -165,15 +160,20 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Uploaded files
+                Additional evidence
               </dt>
               <dd
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                <span>
-                  No files provided
-                </span>
+                <cca-summary-download-files>
+                  <a
+                    class="govuk-link"
+                    href="/tasks/null/file-download/abcd1234-5678-90ef-ghij-klmnopqrstuv"
+                    target="_blank"
+                  >
+                  </a>
+                </cca-summary-download-files>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -181,7 +181,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
               >
                 <a
                   class="govuk-link"
-                  govuklink=""
                   href="/?change=true"
                 >
                   Change
@@ -194,88 +193,80 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
       <div
         class="highlight"
       >
-        <cca-summary>
-          <h2
-            class="govuk-heading-m"
-          />
-          <dl
-            class="govuk-summary-list govuk-!-margin-bottom-9"
-            govuk-summary-list=""
+        <h2
+          class="govuk-heading-m"
+        />
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+        >
+          <div
+            class="govuk-summary-list__row"
           >
-            <div
-              class="govuk-summary-list__row"
-              govuksummarylistrow=""
+            <dt
+              class="govuk-summary-list__key"
             >
-              <dt
-                class="govuk-summary-list__key"
-                govuksummarylistrowkey=""
+              Authorisation
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <a
+                class="govuk-link"
+                href="/tasks/null/file-download/2f611a22-bd5f-4fd4-b00f-c20bfb2706c9"
+                target="_blank"
+              />
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
               >
-                Uploaded files
-              </dt>
-              <dd
-                class="govuk-summary-list__value"
-                govuksummarylistrowvalue=""
-              >
-                <cca-summary-download-files>
-                  <a
-                    class="govuk-link"
-                    govuklink=""
-                    href="/tasks/null/file-download/2f611a22-bd5f-4fd4-b00f-c20bfb2706c9"
-                    target="_blank"
-                  />
-                </cca-summary-download-files>
-              </dd>
-              <dd
-                class="govuk-summary-list__actions"
-                govuksummarylistrowactions=""
-              >
-                <a
-                  class="govuk-link"
-                  govuklink=""
-                  href="/?change=true"
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Additional evidence
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <a
+                class="govuk-link"
+                href="/tasks/null/file-download/abcd1234-5678-90ef-ghij-klmnopqrstuv"
+                target="_blank"
+              />
+              <span>
+                <ins
+                  class="diffmod"
                 >
-                  Change
-                </a>
-              </dd>
-            </div>
-            <div
-              class="govuk-summary-list__row"
-              govuksummarylistrow=""
-            >
-              <dt
-                class="govuk-summary-list__key"
-                govuksummarylistrowkey=""
-              >
-                Uploaded files
-              </dt>
-              <dd
-                class="govuk-summary-list__value"
-                govuksummarylistrowvalue=""
-              >
-                <span>
                   No files provided
-                </span>
-              </dd>
-              <dd
-                class="govuk-summary-list__actions"
-                govuksummarylistrowactions=""
+                </ins>
+              </span>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
               >
-                <a
-                  class="govuk-link"
-                  govuklink=""
-                  href="/?change=true"
-                >
-                  Change
-                </a>
-              </dd>
-            </div>
-          </dl>
-        </cca-summary>
+                Change
+              </a>
+            </dd>
+          </div>
+        </dl>
       </div>
     </cca-highlight-diff>
   </div><netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

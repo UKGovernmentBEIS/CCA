@@ -2,6 +2,7 @@ package uk.gov.cca.api.underlyingagreement.domain.facilities;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +36,7 @@ public class FacilityDetails {
 	private ApplicationReasonType applicationReason;
 	
 	@Size(max = 255)
+	@Pattern(regexp = "^[A-Z0-9_]+-F\\d{5}$", message = "underlyingagreement.facilities.facilitydetails.previousFacilityId")
 	private String previousFacilityId;
 	
 	@NotNull

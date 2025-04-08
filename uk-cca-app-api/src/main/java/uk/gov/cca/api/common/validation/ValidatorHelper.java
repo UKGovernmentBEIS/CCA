@@ -7,10 +7,10 @@ import java.util.List;
 @UtilityClass
 public class ValidatorHelper {
 
-    public List<? extends BusinessViolation> extractViolations(final List<BusinessValidationResult> results) {
+    public <T extends BusinessViolation> Object[] extractViolations(final List<BusinessValidationResult> results) {
         return results.stream()
                 .filter(validationResult -> !validationResult.isValid())
                 .flatMap(validationResult -> validationResult.getViolations().stream())
-                .toList();
+                .toArray();
     }
 }

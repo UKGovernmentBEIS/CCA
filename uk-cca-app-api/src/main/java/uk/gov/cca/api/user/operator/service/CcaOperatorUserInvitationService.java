@@ -3,6 +3,7 @@ package uk.gov.cca.api.user.operator.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
 import uk.gov.cca.api.user.operator.domain.CcaOperatorUserInvitationDTO;
 import uk.gov.cca.api.user.operator.transform.OperatorUserInvitationMapper;
 import uk.gov.netz.api.account.service.validator.AccountStatus;
@@ -12,6 +13,7 @@ import uk.gov.netz.api.user.operator.domain.OperatorUserInvitationDTO;
 import uk.gov.netz.api.user.operator.service.OperatorUserNotificationGateway;
 import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -23,6 +25,7 @@ public class CcaOperatorUserInvitationService {
     private final CcaExistingOperatorUserInvitationService existingOperatorUserInvitationService;
     private final OperatorUserNotificationGateway operatorUserNotificationGateway;
     private final OperatorUserInvitationMapper operatorUserInvitationMapper;
+    private final TargetUnitAccountQueryService targetUnitAccountQueryService;
 
     /**
      * Invites a new user to join a sector with a specified role.
@@ -33,7 +36,10 @@ public class CcaOperatorUserInvitationService {
      */
     @Transactional
     @AccountStatus(expression = "{#status == 'NEW' || #status == 'LIVE'}")
-    public void inviteUserToTargetUnit(Long accountId, String targetUnitName, CcaOperatorUserInvitationDTO userRegistrationDTO, AppUser currentUser) {
+    public void inviteUserToAccount(Long accountId, CcaOperatorUserInvitationDTO userRegistrationDTO, AppUser currentUser) {
+
+        String targetUnitName = targetUnitAccountQueryService.getAccountName(accountId);
+        Objects.requireNonNull(targetUnitName);
 
         Optional<UserInfoDTO> registeredEmail = authUserService.getUserByEmail(userRegistrationDTO.getEmail());
 

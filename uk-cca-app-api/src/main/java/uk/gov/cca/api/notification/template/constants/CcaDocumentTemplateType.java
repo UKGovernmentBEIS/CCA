@@ -34,4 +34,10 @@ public class CcaDocumentTemplateType {
 
     // CR_L001_Variation_Refused.docx
     public static final String UNDERLYING_AGREEMENT_VARIATION_REJECTED = "UNDERLYING_AGREEMENT_VARIATION_REJECTED";
+
+    // SC_L002_Sector_MoA
+    public static final String SECTOR_MOA = "SECTOR_MOA";
+
+    // SC_L001_Target_Unit_MoA
+    public static final String TARGET_UNIT_MOA = "TARGET_UNIT_MOA";
 }

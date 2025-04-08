@@ -10,6 +10,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.activation.domai
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.activation.service.UnderlyingAgreementActivationService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestTaskActionHandler;
 
@@ -23,12 +24,14 @@ public class UnderlyingAgreementActivationSaveActionHandler implements RequestTa
 
 
     @Override
-    public void process(Long requestTaskId,
+    public RequestTaskPayload process(Long requestTaskId,
                         String requestTaskActionType,
                         AppUser appUser,
                         UnderlyingAgreementActivationSaveRequestTaskActionPayload payload) {
         final RequestTask requestTask = requestTaskService.findTaskById(requestTaskId);
         underlyingAgreementActivationService.applySaveAction(payload, requestTask);
+        
+        return requestTask.getPayload();
     }
 
     @Override

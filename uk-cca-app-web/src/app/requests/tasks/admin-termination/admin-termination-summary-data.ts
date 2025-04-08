@@ -1,6 +1,6 @@
 import { transformAdminTerminationReason } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { transformAttachmentsToDownloadableFiles } from '@shared/utils';
+import { transformAttachmentsAndFileUUIDsToDownloadableFiles } from '@shared/utils';
 
 import { AdminTerminationReasonDetails } from 'cca-api';
 
@@ -8,7 +8,7 @@ import { ReasonForAdminTerminationWizardStep } from './admin-termination.types';
 
 export function toAdminTerminationReasonSummaryData(
   adminTerminationReasonDetails: AdminTerminationReasonDetails,
-  adminTerminationSubmitAttachments: { [key: string]: string },
+  adminTerminationSubmitAttachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
 ): SummaryData {
@@ -23,7 +23,7 @@ export function toAdminTerminationReasonSummaryData(
     })
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsToDownloadableFiles(
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
         adminTerminationReasonDetails.relevantFiles,
         adminTerminationSubmitAttachments,
         downloadUrl,

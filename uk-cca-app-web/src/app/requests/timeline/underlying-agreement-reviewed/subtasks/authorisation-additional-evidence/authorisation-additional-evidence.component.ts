@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
-import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
 import {
   toAuthorisationAdditionalEvidenceSummaryDataWithDecision,
@@ -13,7 +13,7 @@ import { underlyingAgreementReviewedRequestActionQuery } from '../../+state/unde
 @Component({
   selector: 'cca-timeline-review-authorisation-additional-evidence',
   standalone: true,
-  imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
+  imports: [PageHeadingComponent, SummaryComponent],
   templateUrl: './authorisation-additional-evidence.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

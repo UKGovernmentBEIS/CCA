@@ -9,15 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { AdditionalNoticeRecipientDTO } from '../model/additionalNoticeRecipientDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -87,29 +87,29 @@ export class NoticeRecipientsService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getAdditionalNoticeRecipients(accountId: number): Observable<Array<AdditionalNoticeRecipientDTO>>;
+  public getAdditionalNoticeRecipients(accountId: number): Observable<AdditionalNoticeRecipientDTO[]>;
   public getAdditionalNoticeRecipients(
     accountId: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<AdditionalNoticeRecipientDTO>>>;
+  ): Observable<HttpResponse<AdditionalNoticeRecipientDTO[]>>;
   public getAdditionalNoticeRecipients(
     accountId: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<AdditionalNoticeRecipientDTO>>>;
+  ): Observable<HttpEvent<AdditionalNoticeRecipientDTO[]>>;
   public getAdditionalNoticeRecipients(
     accountId: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<AdditionalNoticeRecipientDTO>>;
+  ): Observable<AdditionalNoticeRecipientDTO[]>;
   public getAdditionalNoticeRecipients(
     accountId: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -139,10 +139,10 @@ export class NoticeRecipientsService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<AdditionalNoticeRecipientDTO>>(
+    return this.httpClient.get<AdditionalNoticeRecipientDTO[]>(
       `${this.configuration.basePath}/v1.0/account-notice/${encodeURIComponent(String(accountId))}/additional-recipients`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

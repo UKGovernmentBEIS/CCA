@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { SectorAssociationContactDTO } from '../model/sectorAssociationContactDTO';
 import { SectorAssociationDetailsUpdateDTO } from '../model/sectorAssociationDetailsUpdateDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -118,7 +118,7 @@ export class SectorAssociationDetailsUpdateService {
     id: number,
     sectorAssociationContactDTO: SectorAssociationContactDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -164,7 +164,7 @@ export class SectorAssociationDetailsUpdateService {
       `${this.configuration.basePath}/v1.0/sector-association/${encodeURIComponent(String(id))}/contact`,
       sectorAssociationContactDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -209,7 +209,7 @@ export class SectorAssociationDetailsUpdateService {
     id: number,
     sectorAssociationDetailsUpdateDTO: SectorAssociationDetailsUpdateDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -255,7 +255,7 @@ export class SectorAssociationDetailsUpdateService {
       `${this.configuration.basePath}/v1.0/sector-association/${encodeURIComponent(String(id))}/details`,
       sectorAssociationDetailsUpdateDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

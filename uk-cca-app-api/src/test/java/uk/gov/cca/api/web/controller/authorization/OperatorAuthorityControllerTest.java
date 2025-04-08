@@ -135,7 +135,7 @@ class OperatorAuthorityControllerTest {
     	when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(user, "getAccountOperatorAuthorities", String.valueOf(accountId));
+            .authorize(user, "getAccountOperatorAuthorities", String.valueOf(accountId), null, null);
         
         mockMvc.perform(
 	        		MockMvcRequestBuilders.get(BASE_PATH + ACCOUNT_OPERATOR_USERS_PATH + "/" + accountId)
@@ -191,7 +191,7 @@ class OperatorAuthorityControllerTest {
 
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(currentUser, "updateAccountOperatorAuthorities", String.valueOf(accountId));
+            .authorize(currentUser, "updateAccountOperatorAuthorities", String.valueOf(accountId), null, null);
 
         //invoke
         mockMvc.perform(
@@ -233,7 +233,7 @@ class OperatorAuthorityControllerTest {
 
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(currentUser, "deleteAccountOperatorAuthority", String.valueOf(accountId));
+            .authorize(currentUser, "deleteAccountOperatorAuthority", String.valueOf(accountId), null, null);
 
         //invoke
         mockMvc.perform(

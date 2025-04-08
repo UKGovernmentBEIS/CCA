@@ -7,17 +7,16 @@ import { Observable } from 'rxjs';
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 import { AuthStore, selectUserId } from '@netz/common/auth';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import {
   ButtonDirective,
   ErrorSummaryComponent,
-  LinkDirective,
   RadioComponent,
   RadioOptionComponent,
   TextInputComponent,
 } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
 import { PhoneInputComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives/pending-button.directive';
 
 import { CcaOperatorUserDetailsDTO, OperatorUsersService } from 'cca-api';
 
@@ -35,7 +34,6 @@ import {
   templateUrl: './edit-operator-details.component.html',
   standalone: true,
   imports: [
-    LinkDirective,
     RouterLink,
     PageHeadingComponent,
     ErrorSummaryComponent,

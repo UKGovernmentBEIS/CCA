@@ -12,9 +12,11 @@ import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsServi
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.netz.api.authorization.core.domain.dto.AuthorityRoleDTO;
 import uk.gov.netz.api.authorization.operator.service.OperatorAuthorityQueryService;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.user.core.service.auth.UserAuthService;
 import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.flow.common.domain.DecisionNotification;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestActionUserInfo;
 
@@ -57,7 +59,8 @@ class CcaRequestActionUserInfoResolverTest {
                         .signatory("regulator")
                         .build())
                 .build();
-        final Request request = Request.builder().accountId(accountId).build();
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
 
         final long sectorId = 2L;
         final TargetUnitAccountDetailsDTO accountDetails = TargetUnitAccountDetailsDTO.builder()
@@ -122,4 +125,14 @@ class CcaRequestActionUserInfoResolverTest {
         verify(userAuthService, times(1)).getUserByUserId("sector1");
         verify(userAuthService, times(1)).getUserByUserId("regulator");
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

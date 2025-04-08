@@ -2,7 +2,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
-import { ItemLinkPipe, ItemNamePipe } from '@netz/common/pipes';
+import { DaysRemainingPipe, ItemLinkPipe, ItemNamePipe } from '@netz/common/pipes';
 
 import { ItemDTO } from 'cca-api';
 
@@ -15,7 +15,7 @@ import { ItemDTO } from 'cca-api';
   standalone: true,
   templateUrl: './related-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, NgFor, RouterLink, ItemNamePipe, ItemLinkPipe],
+  imports: [NgIf, NgFor, RouterLink, ItemNamePipe, ItemLinkPipe, DaysRemainingPipe],
 })
 export class RelatedTasksComponent {
   @Input() items: ItemDTO[];

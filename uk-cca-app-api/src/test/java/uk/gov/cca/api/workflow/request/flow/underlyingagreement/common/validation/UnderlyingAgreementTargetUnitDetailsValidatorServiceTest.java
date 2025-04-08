@@ -13,8 +13,10 @@ import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeService;
 import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestTaskPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.Collections;
@@ -31,7 +33,7 @@ import static uk.gov.cca.api.common.exception.CcaErrorCode.INVALID_UNDERLYING_AG
 class UnderlyingAgreementTargetUnitDetailsValidatorServiceTest {
 
     @InjectMocks
-    private UnderlyingAgreementTargetUnitDetailsValidatorService validatorService;
+    private EditedUnderlyingAgreementTargetUnitDetailsValidatorService validatorService;
 
     @Mock
     private DataValidator<UnderlyingAgreementTargetUnitDetails> validator;
@@ -51,8 +53,10 @@ class UnderlyingAgreementTargetUnitDetailsValidatorServiceTest {
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = UnderlyingAgreementTargetUnitDetails
                 .builder().subsectorAssociationName(subsectorAssociationName)
                 .subsectorAssociationId(subsectorAssociationId).build();
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .payload(UnderlyingAgreementRequestTaskPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementPayload.builder()
                                 .underlyingAgreementTargetUnitDetails(targetUnitDetails)
@@ -85,8 +89,10 @@ class UnderlyingAgreementTargetUnitDetailsValidatorServiceTest {
         final Long accountId = 1L;
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = UnderlyingAgreementTargetUnitDetails
                 .builder().subsectorAssociationId(subsectorAssociationId).build();
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .payload(UnderlyingAgreementRequestTaskPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementPayload.builder()
                                 .underlyingAgreementTargetUnitDetails(targetUnitDetails)
@@ -118,8 +124,10 @@ class UnderlyingAgreementTargetUnitDetailsValidatorServiceTest {
                 .id(subsectorAssociationId)
                 .name(subsectorAssociationName)
                 .build();
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .payload(UnderlyingAgreementRequestTaskPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementPayload.builder()
                                 .underlyingAgreementTargetUnitDetails(targetUnitDetails)
@@ -142,4 +150,14 @@ class UnderlyingAgreementTargetUnitDetailsValidatorServiceTest {
         verify(targetUnitAccountQueryService, times(1)).getAccountSectorAssociationId(accountId);
         verify(sectorAssociationSchemeService, times(1)).getSubsectorAssociationInfoDTOBySectorAssociationId(sectorAssociationId);
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

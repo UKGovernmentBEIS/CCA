@@ -1,6 +1,6 @@
 @if (facility(); as facility) {
   <div>
-    <cca-page-heading caption="Facilities"> {{ facility.name }} ({{ facility.facilityId }}) </cca-page-heading>
+    <netz-page-heading caption="Facilities"> {{ facility.name }} ({{ facility.facilityId }}) </netz-page-heading>
 
     <ng-template #contentTpl let-showOriginal="showOriginal">
       <cca-summary [data]="showOriginal ? summaryDataOriginal() : summaryDataCurrent()" />

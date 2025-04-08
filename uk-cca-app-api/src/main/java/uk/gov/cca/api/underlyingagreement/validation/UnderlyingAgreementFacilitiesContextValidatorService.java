@@ -1,6 +1,20 @@
 package uk.gov.cca.api.underlyingagreement.validation;
 
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_EVIDENCE_ATTACHMENT_TYPE;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITIES;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ID;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_PREVIOUS_FACILITY_ID;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_UNIQUE_FACILITY_ID;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
+
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.DataValidator;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
@@ -10,18 +24,6 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.netz.api.files.attachments.service.FileAttachmentService;
 import uk.gov.netz.api.files.common.FileType;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_ATTACHMENT_TYPE;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITIES;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ID;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_PREVIOUS_FACILITY_ID;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_UNIQUE_FACILITY_ID;
 
 @Service
 public class UnderlyingAgreementFacilitiesContextValidatorService extends UnderlyingAgreementSectionConstraintValidatorService<Facility> implements UnderlyingAgreementSectionContextValidator {
@@ -57,7 +59,13 @@ public class UnderlyingAgreementFacilitiesContextValidatorService extends Underl
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
         // Validate data
-        super.validate(section).ifPresent(violations::add);
+        super.validate(section).ifPresent(violation -> {
+            List<Object> list = new ArrayList<>(Arrays.asList(violation.getData()));
+            list.add(section.getFacilityItem().getFacilityId());
+            violation.setData(list.toArray());
+            violations.add(violation);
+            }
+        );
 
         // Business validations
 		validateStatus(section, violations);
@@ -98,7 +106,7 @@ public class UnderlyingAgreementFacilitiesContextValidatorService extends Underl
 		// Validate previousFacilityId
     	Optional.ofNullable(section.getFacilityItem().getFacilityDetails().getPreviousFacilityId())
         		.ifPresent(id -> {
-        			if (!facilityDataQueryService.isActiveFacility(id)) {
+        			if (FacilityStatus.NEW.equals(section.getStatus()) && !facilityDataQueryService.isActiveFacility(id)) {
         				violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_PREVIOUS_FACILITY_ID, id));
         			}
         		});
@@ -111,7 +119,7 @@ public class UnderlyingAgreementFacilitiesContextValidatorService extends Underl
 			FileDTO evidenceFile = fileAttachmentService.getFileDTO(uuid.toString());
 			if (!FileType.XLSX.getMimeTypes().contains(evidenceFile.getFileType()) 
 					&& !FileType.XLS.getMimeTypes().contains(evidenceFile.getFileType())) {
-				violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_ATTACHMENT_TYPE));
+				violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_EVIDENCE_ATTACHMENT_TYPE));
 			}
 		});
     }

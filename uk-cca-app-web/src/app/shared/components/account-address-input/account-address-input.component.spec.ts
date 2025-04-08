@@ -4,7 +4,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
-import { AccountAddressInputComponent, createAccountAddressForm } from '@shared/components';
+import { AccountAddressInputComponent } from './account-address-input.component';
+import { createAccountAddressForm } from './account-address-input-controls';
 
 describe('AccountAddressInputComponent', () => {
   let component: AccountAddressInputComponent;

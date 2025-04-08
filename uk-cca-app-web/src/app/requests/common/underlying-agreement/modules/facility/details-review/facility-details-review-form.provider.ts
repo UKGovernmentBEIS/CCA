@@ -41,7 +41,9 @@ export const FacilityDetailsReviewFormProvider: Provider = {
     const facilityDetails = requestTaskStore.select(underlyingAgreementQuery.selectFacility(facilityId))()
       ?.facilityDetails;
 
-    const facility = requestTaskStore.select(underlyingAgreementQuery.selectFacility(facilityId))();
+    const facility = requestTaskStore
+      .select(underlyingAgreementQuery.selectManageFacilities)()
+      .facilityItems.find((f) => f.facilityId === facilityId);
 
     const address = requestTaskStore.select(underlyingAgreementQuery.selectAccountReferenceDataTargetUnitDetails)()
       .address;
@@ -53,19 +55,26 @@ export const FacilityDetailsReviewFormProvider: Provider = {
         value: facilityId,
         disabled: true,
       }),
-      name: fb.control(facility.facilityDetails.name, GovukValidators.required('Select a site name')),
-      isCoveredByUkets: fb.control(facilityDetails?.isCoveredByUkets ?? null, [
+      name: fb.control(facilityDetails.name, GovukValidators.required('Select a site name')),
+      isCoveredByUkets: fb.control(facilityDetails.isCoveredByUkets ?? null, [
         GovukValidators.required('Select yes if this facility is covered by UK ETS'),
       ]),
-      uketsId: fb.control(facilityDetails?.uketsId ?? null, [
+      uketsId: fb.control(facilityDetails.uketsId ?? null, [
         GovukValidators.required('UK ETS installation identifier cannot be blank'),
         GovukValidators.maxLength(255, `UK ETS installation identifier should not be more than 255 characters`),
       ]),
-      applicationReason: fb.control(facilityDetails?.applicationReason ?? null, [
-        GovukValidators.required('Select the reason for the application'),
-      ]),
+      applicationReason: fb.control(
+        {
+          value: facilityDetails.applicationReason ?? null,
+          disabled: facility?.status !== 'NEW',
+        },
+        [GovukValidators.required('Select the reason for the application')],
+      ),
       previousFacilityId: fb.control(
-        facilityDetails?.previousFacilityId ?? null,
+        {
+          value: facilityDetails.previousFacilityId ?? null,
+          disabled: facility?.status !== 'NEW',
+        },
         facilityIDValidators(
           'Enter the facility ID of an existing facility.',
           'The Previous facility ID must be in the same format as the facility number, like AAAA-F00001',

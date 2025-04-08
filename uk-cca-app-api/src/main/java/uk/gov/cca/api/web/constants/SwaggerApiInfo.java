@@ -338,4 +338,7 @@ public final class SwaggerApiInfo {
     public static final String UPDATE_TARGET_UNIT_ACCOUNT_ERROR_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
         "FORM1001 | Form validation failed \t\n " +
         "ACCOUNT1009 | Account status is not valid";
+    public static final String UPDATE_FACILITY_ERROR_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
+            "FORM1001 | Form validation failed \t\n " +
+            "FACILITY1000 | Facility cannot be updated";
 }

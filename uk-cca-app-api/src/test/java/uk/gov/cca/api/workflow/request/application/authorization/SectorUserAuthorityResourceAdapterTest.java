@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.account.repository.TargetUnitAccountRepository;
 import uk.gov.cca.api.authorization.ccaauth.rules.services.resource.SectorUserAuthorityResourceService;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
 import uk.gov.netz.api.authorization.core.domain.AppAuthority;
@@ -27,9 +26,6 @@ class SectorUserAuthorityResourceAdapterTest {
 
     @Mock
     private SectorUserAuthorityResourceService sectorUserAuthorityResourceService;
-
-    @Mock
-    private TargetUnitAccountRepository targetUnitAccountRepository;
 
     @Mock
     private SectorAssociationQueryService sectorAssociationQueryService;
@@ -49,17 +45,15 @@ class SectorUserAuthorityResourceAdapterTest {
         String requestTaskType1 = "requestTaskType1";
         String requestTaskType2 = "requestTaskType2";
 
-        when(targetUnitAccountRepository.findAllIdsBySectorAssociationId(sectorId1)).thenReturn(List.of(3L, 4L));
         when(sectorUserAuthorityResourceService.findUserScopedRequestTaskTypesBySectorAssociationIds(userId, Set.of(sectorId1, sectorId2)))
                 .thenReturn(Map.of(sectorId1, Set.of(requestTaskType1, requestTaskType2)));
-        when(sectorAssociationQueryService.getUserSectorAssociations(user)).thenReturn(sectors);
+        when(sectorAssociationQueryService.getUserSectorAssociationIds(user)).thenReturn(sectors);
         
         Map<Long, Set<String>> userScopedRequestTaskTypes =
         		sectorUserAuthorityResourceAdapter.getUserScopedRequestTaskTypes(user);
 
         assertThat(userScopedRequestTaskTypes).containsExactlyInAnyOrderEntriesOf(
-                Map.of(3L, Set.of(requestTaskType1, requestTaskType2),
-                        4L, Set.of(requestTaskType1, requestTaskType2))
+                Map.of(sectorId1, Set.of(requestTaskType1, requestTaskType2))
         );
     }
     
@@ -75,15 +69,13 @@ class SectorUserAuthorityResourceAdapterTest {
         String requestTaskType1 = "requestTaskType1";
         String requestTaskType2 = "requestTaskType2";
 
-        when(targetUnitAccountRepository.findAllIdsBySectorAssociationId(sectorId1)).thenReturn(List.of(3L, 4L));
         when(sectorUserAuthorityResourceService.findUserScopedRequestTaskTypesBySectorAssociationIds(userId, Set.of(sectorId1)))
                 .thenReturn(Map.of(sectorId1, Set.of(requestTaskType1, requestTaskType2)));
         Map<Long, Set<String>> userScopedRequestTaskTypes =
                 sectorUserAuthorityResourceAdapter.getUserScopedRequestTaskTypesBySector(user, sectorId1);
 
         assertThat(userScopedRequestTaskTypes).containsExactlyInAnyOrderEntriesOf(
-                Map.of(3L, Set.of(requestTaskType1, requestTaskType2),
-                        4L, Set.of(requestTaskType1, requestTaskType2))
+                Map.of(sectorId1, Set.of(requestTaskType1, requestTaskType2))
         );
     }
 }

@@ -15,6 +15,6 @@
  */
 export interface RequestNoteRequest {
   note: string;
-  files?: Array<string>;
+  files?: string[];
   requestId: string;
 }

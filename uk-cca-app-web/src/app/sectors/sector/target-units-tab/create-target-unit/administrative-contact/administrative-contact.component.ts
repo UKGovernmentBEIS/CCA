@@ -21,20 +21,22 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdministrativeContactComponent {
-  private readonly route = inject(ActivatedRoute);
+  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly store = inject(CreateTargetUnitStore);
+  private readonly createTargetUnitStore = inject(CreateTargetUnitStore);
 
-  readonly form = inject<FormGroup<AdministrativeContactDetailsFormModel>>(TARGET_UNIT_ADMINISTRATIVE_CONTACT_FORM);
+  protected readonly form = inject<FormGroup<AdministrativeContactDetailsFormModel>>(
+    TARGET_UNIT_ADMINISTRATIVE_CONTACT_FORM,
+  );
 
   onSubmitAdministrativeContact() {
-    const payload = this.form.getRawValue();
+    const formData = this.form.getRawValue();
 
-    this.store.sameAddressWithResponsiblePerson = payload.sameAddress[0];
+    this.createTargetUnitStore.sameAddressWithResponsiblePerson = formData.sameAddress[0];
 
-    delete payload.sameAddress;
+    delete formData.sameAddress;
 
-    this.store.updateState({ administrativeContactDetails: { ...payload } });
-    this.router.navigate(['..', 'summary'], { relativeTo: this.route });
+    this.createTargetUnitStore.updateState({ administrativeContactDetails: { ...formData } });
+    this.router.navigate(['..', 'summary'], { relativeTo: this.activatedRoute });
   }
 }

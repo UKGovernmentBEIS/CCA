@@ -2,10 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { LinkDirective } from '@netz/govuk-components';
-import { WizardStepComponent } from '@shared/components';
-import { ResponsiblePersonInputComponent } from '@shared/components/responsible-person-input/responsible-person-input.component';
-import { ResponsiblePersonFormModel } from '@shared/components/responsible-person-input/responsible-person-input.controls';
+import { ResponsiblePersonFormModel, ResponsiblePersonInputComponent, WizardStepComponent } from '@shared/components';
 
 import { UpdateTargetUnitAccountService } from 'cca-api';
 
@@ -19,7 +16,7 @@ import {
   selector: 'cca-edit-responsible-person',
   templateUrl: './edit-responsible-person.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, WizardStepComponent, LinkDirective, RouterLink, ResponsiblePersonInputComponent],
+  imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, ResponsiblePersonInputComponent],
   providers: [EditResponsiblePersonFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 
-import { mockRequestTaskState } from '../../../testing/mock-data';
+import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import FacilityCheckAnswersComponent from './facility-check-answers.component';
 
 describe('FacilityCheckAnswersComponent', () => {
@@ -36,7 +36,7 @@ describe('FacilityCheckAnswersComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
-    store.setState(mockRequestTaskState);
+    store.setState(mockVariationReviewRequestTaskState);
 
     fixture = TestBed.createComponent(FacilityCheckAnswersComponent);
     component = fixture.componentInstance;

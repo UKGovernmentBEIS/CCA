@@ -9,19 +9,19 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { CcaOperatorInvitedUserInfoDTO } from '../model/ccaOperatorInvitedUserInfoDTO';
 import { CcaOperatorUserRegistrationWithCredentialsDTO } from '../model/ccaOperatorUserRegistrationWithCredentialsDTO';
 import { InvitedUserCredentialsDTO } from '../model/invitedUserCredentialsDTO';
 import { OperatorUserDTO } from '../model/operatorUserDTO';
 import { TokenDTO } from '../model/tokenDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -115,7 +115,7 @@ export class OperatorUsersRegistrationService {
   public acceptAuthorityAndEnableInvitedOperatorUserWithCredentials(
     ccaOperatorUserRegistrationWithCredentialsDTO: CcaOperatorUserRegistrationWithCredentialsDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (
@@ -155,7 +155,7 @@ export class OperatorUsersRegistrationService {
       `${this.configuration.basePath}/v1.0/operator-users/registration/accept-authority-and-enable-invited-operator-with-credentials`,
       ccaOperatorUserRegistrationWithCredentialsDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -194,7 +194,7 @@ export class OperatorUsersRegistrationService {
   public acceptAuthorityAndSetCredentialsToOperatorUser(
     invitedUserCredentialsDTO: InvitedUserCredentialsDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (invitedUserCredentialsDTO === null || invitedUserCredentialsDTO === undefined) {
@@ -231,7 +231,7 @@ export class OperatorUsersRegistrationService {
       `${this.configuration.basePath}/v1.0/operator-users/registration/accept-authority-and-set-credentials-to-operator-user`,
       invitedUserCredentialsDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -268,7 +268,7 @@ export class OperatorUsersRegistrationService {
   public acceptOperatorInvitation(
     tokenDTO: TokenDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (tokenDTO === null || tokenDTO === undefined) {
@@ -303,7 +303,7 @@ export class OperatorUsersRegistrationService {
       `${this.configuration.basePath}/v1.0/operator-users/registration/accept-invitation`,
       tokenDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

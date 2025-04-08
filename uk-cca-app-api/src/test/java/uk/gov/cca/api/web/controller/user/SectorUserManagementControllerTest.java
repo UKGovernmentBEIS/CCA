@@ -145,7 +145,7 @@ public class SectorUserManagementControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "getSectorUserById", sectorAssociationId.toString());
+                .authorize(user, "getSectorUserById", sectorAssociationId.toString(), null, null);
 
         mockMvc.perform(
                         MockMvcRequestBuilders.get(BASE_PATH + "/sector-association/" + sectorAssociationId + "/" + userId)
@@ -253,7 +253,7 @@ public class SectorUserManagementControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "updateSectorUserBySectorAssociationIdAndUserId", sectorAssociationId.toString());
+                .authorize(user, "updateSectorUserBySectorAssociationIdAndUserId", sectorAssociationId.toString(), null, null);
 
         mockMvc.perform(
                         MockMvcRequestBuilders.patch(BASE_PATH + "/sector-association/" + sectorAssociationId + "/" + userId)
@@ -288,7 +288,7 @@ public class SectorUserManagementControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "resetSectorUser2Fa", sectorAssociationId.toString());
+                .authorize(user, "resetSectorUser2Fa", sectorAssociationId.toString(), null, null);
 
         mockMvc.perform(
                         MockMvcRequestBuilders.patch(BASE_PATH + "/sector-association/" + sectorAssociationId + "/" + userId + "/reset-2fa"))

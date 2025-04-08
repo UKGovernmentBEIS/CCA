@@ -18,6 +18,8 @@ import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 @NoArgsConstructor
 @Builder
 public class SectorAssociationDetailsDTO {
+	
+	private Long id;
 
     @NotNull(message = "{sectorAssociationDetails.competentAuthority.notNull}")
     private CompetentAuthorityEnum competentAuthority;

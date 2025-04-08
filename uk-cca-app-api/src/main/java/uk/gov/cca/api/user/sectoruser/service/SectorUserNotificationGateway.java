@@ -1,8 +1,14 @@
 package uk.gov.cca.api.user.sectoruser.service;
 
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Service;
 import uk.gov.cca.api.notification.mail.constants.CcaEmailNotificationTemplateConstants;
 import uk.gov.cca.api.notification.mail.constants.CcaNotificationTemplateName;
 import uk.gov.cca.api.token.CcaJwtTokenAction;
@@ -12,21 +18,16 @@ import uk.gov.netz.api.authorization.core.domain.dto.RoleDTO;
 import uk.gov.netz.api.authorization.core.service.RoleService;
 import uk.gov.netz.api.authorization.operator.domain.NewUserActivated;
 import uk.gov.netz.api.common.config.WebAppProperties;
-import uk.gov.netz.api.notification.mail.config.property.NotificationProperties;
-import uk.gov.netz.api.notification.mail.constants.EmailNotificationTemplateConstants;
-import uk.gov.netz.api.notification.mail.domain.EmailData;
-import uk.gov.netz.api.notification.mail.domain.EmailNotificationTemplateData;
-import uk.gov.netz.api.notification.mail.service.NotificationEmailService;
+import uk.gov.netz.api.notificationapi.mail.config.property.NotificationProperties;
+import uk.gov.netz.api.notificationapi.mail.domain.EmailData;
+import uk.gov.netz.api.notificationapi.mail.domain.EmailNotificationTemplateData;
+import uk.gov.netz.api.notificationapi.mail.service.NotificationEmailService;
 import uk.gov.netz.api.token.JwtProperties;
+import uk.gov.netz.api.user.NotificationTemplateConstants;
+import uk.gov.netz.api.user.NotificationTemplateName;
 import uk.gov.netz.api.user.core.domain.model.UserNotificationWithRedirectionLinkInfo;
 import uk.gov.netz.api.user.core.service.UserNotificationService;
 import uk.gov.netz.api.userinfoapi.UserInfoDTO;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static uk.gov.netz.api.notification.template.constants.NotificationTemplateName.*;
 
 @Log4j2
 @Service
@@ -53,10 +54,10 @@ public class SectorUserNotificationGateway {
         long expirationInMinutes = jwtProperties.getClaim().getUserInvitationExpIntervalMinutes();
 
         Map<String, Object> notificationParams = new HashMap<>(Map.of(
-                EmailNotificationTemplateConstants.USER_ROLE_TYPE, roleDTO.getName(),
+                NotificationTemplateConstants.USER_ROLE_TYPE, roleDTO.getName(),
                 CcaEmailNotificationTemplateConstants.SECTOR_ASSOCIATION_NAME, sectorAssociationName,
-                EmailNotificationTemplateConstants.EXPIRATION_MINUTES, expirationInMinutes,
-                EmailNotificationTemplateConstants.CONTACT_REGULATOR, notificationProperties.getEmail().getContactUsLink())
+                NotificationTemplateConstants.EXPIRATION_MINUTES, expirationInMinutes,
+                NotificationTemplateConstants.CONTACT_REGULATOR, notificationProperties.getEmail().getContactUsLink())
         );
 
         userNotificationService.notifyUserWithLink(
@@ -79,10 +80,10 @@ public class SectorUserNotificationGateway {
     public void notifyInviteeAcceptedInvitation(UserInfoDTO invitee) {
         EmailData inviteeInfo = EmailData.builder()
             .notificationTemplateData(EmailNotificationTemplateData.builder()
-                .templateName(INVITEE_INVITATION_ACCEPTED)
-                .templateParams(Map.of(EmailNotificationTemplateConstants.USER_ROLE_TYPE, "SectorUser",
-                    EmailNotificationTemplateConstants.CONTACT_REGULATOR, notificationProperties.getEmail().getContactUsLink(),
-                    EmailNotificationTemplateConstants.HOME_URL, webAppProperties.getUrl()))
+                .templateName(NotificationTemplateName.INVITEE_INVITATION_ACCEPTED)
+                .templateParams(Map.of(NotificationTemplateConstants.USER_ROLE_TYPE, "SectorUser",
+                    NotificationTemplateConstants.CONTACT_REGULATOR, notificationProperties.getEmail().getContactUsLink(),
+                    NotificationTemplateConstants.HOME_URL, webAppProperties.getUrl()))
                 .build())
             .build();
 
@@ -92,13 +93,13 @@ public class SectorUserNotificationGateway {
     public void notifyInviterAcceptedInvitation(UserInfoDTO invitee, UserInfoDTO inviter) {
         EmailData inviteeInfo = EmailData.builder()
             .notificationTemplateData(EmailNotificationTemplateData.builder()
-                .templateName(INVITER_INVITATION_ACCEPTED)
+                .templateName(NotificationTemplateName.INVITER_INVITATION_ACCEPTED)
                 .templateParams(Map.of(
-                    EmailNotificationTemplateConstants.USER_ACCOUNT_CREATED_USER_FNAME, inviter.getFirstName(),
-                    EmailNotificationTemplateConstants.USER_ACCOUNT_CREATED_USER_LNAME, inviter.getLastName(),
-                    EmailNotificationTemplateConstants.USER_INVITEE_FNAME, invitee.getFirstName(),
-                    EmailNotificationTemplateConstants.USER_INVITEE_LNAME, invitee.getLastName(),
-                    EmailNotificationTemplateConstants.CONTACT_REGULATOR, notificationProperties.getEmail().getContactUsLink()))
+                    NotificationTemplateConstants.USER_ACCOUNT_CREATED_USER_FNAME, inviter.getFirstName(),
+                    NotificationTemplateConstants.USER_ACCOUNT_CREATED_USER_LNAME, inviter.getLastName(),
+                    NotificationTemplateConstants.USER_INVITEE_FNAME, invitee.getFirstName(),
+                    NotificationTemplateConstants.USER_INVITEE_LNAME, invitee.getLastName(),
+                    NotificationTemplateConstants.CONTACT_REGULATOR, notificationProperties.getEmail().getContactUsLink()))
                 .build())
             .build();
 

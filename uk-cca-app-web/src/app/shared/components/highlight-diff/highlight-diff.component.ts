@@ -5,6 +5,7 @@ import {
   Component,
   ElementRef,
   inject,
+  SecurityContext,
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -18,7 +19,7 @@ import diff from 'html-diff-ts';
   templateUrl: './highlight-diff.component.html',
   styleUrl: './highlight-diff.component.scss',
   standalone: true,
-  // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
+
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -55,7 +56,7 @@ export class HighlightDiffComponent implements AfterViewInit {
 
     nodeParents.forEach((np) => (np.textContent = 'Change'));
 
-    this.htmlDiff = this.domSanitizer.bypassSecurityTrustHtml(parsedDiff.documentElement.innerHTML);
+    this.htmlDiff = this.domSanitizer.sanitize(SecurityContext.HTML, parsedDiff.documentElement.innerHTML);
 
     this.changeDetectorRef.detectChanges();
   }

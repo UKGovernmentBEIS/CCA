@@ -3,10 +3,10 @@
     @if (form.invalid && form.touched) {
       <govuk-error-summary [form]="form"></govuk-error-summary>
     }
-    <cca-page-heading>Activate your account</cca-page-heading>
+    <netz-page-heading>Activate your account</netz-page-heading>
     <form (ngSubmit)="submitPassword()" [formGroup]="form">
       <cca-password></cca-password>
-      <button ccaPendingButton govukButton type="submit">Submit</button>
+      <button netzPendingButton govukButton type="submit">Submit</button>
     </form>
   </div>
 </div>

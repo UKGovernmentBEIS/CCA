@@ -1,22 +1,25 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.review.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.util.CollectionUtils;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
-import uk.gov.cca.api.workflow.request.flow.common.domain.review.UnderlyingAgreementReviewDecision;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationFacilityReviewDecision;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.UnderlyingAgreementProposedPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestTaskPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationReviewGroup;
 
 import java.util.Collection;
-import java.util.EnumMap;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,19 +30,12 @@ import java.util.stream.Stream;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class UnderlyingAgreementVariationReviewRequestTaskPayload extends UnderlyingAgreementVariationRequestTaskPayload {
-
-    @Builder.Default
-    private Map<String, String> reviewSectionsCompleted = new HashMap<>();
-
-    @Builder.Default
-    private Map<UnderlyingAgreementVariationReviewGroup, UnderlyingAgreementReviewDecision> reviewGroupDecisions = new EnumMap<>(UnderlyingAgreementVariationReviewGroup.class);
-
-    @Builder.Default
-    private Map<String, UnderlyingAgreementVariationFacilityReviewDecision> facilitiesReviewGroupDecisions = new HashMap<>();
+public class UnderlyingAgreementVariationReviewRequestTaskPayload extends UnderlyingAgreementVariationRequestTaskPayload implements UnderlyingAgreementProposedPayload<UnderlyingAgreementVariationPayload> {
 
     @Builder.Default
     private Map<UUID, String> reviewAttachments = new HashMap<>();
+
+    private UnderlyingAgreementVariationPayload underlyingAgreementProposed;
 
     private Determination determination;
 
@@ -53,18 +49,27 @@ public class UnderlyingAgreementVariationReviewRequestTaskPayload extends Underl
     @Override
     public Set<UUID> getReferencedAttachmentIds() {
         final Set<UUID> reviewAttachmentIds = getReviewGroupDecisions().values().stream()
+                .filter(reviewDecision -> !ObjectUtils.isEmpty(reviewDecision.getDetails()))
                 .map(reviewDecision -> reviewDecision.getDetails().getFiles())
                 .flatMap(Set::stream)
                 .collect(Collectors.toSet());
 
         final Set<UUID> facilitiesReviewAttachmentIds = getFacilitiesReviewGroupDecisions().values().stream()
+                .filter(reviewDecision -> !ObjectUtils.isEmpty(reviewDecision.getDetails()))
                 .map(reviewDecision -> reviewDecision.getDetails().getFiles())
                 .flatMap(Set::stream)
                 .collect(Collectors.toSet());
 
-        final Set<UUID> determinationFileIds = getDetermination().getFiles();
+        Set<UUID> determinationFileIds = new HashSet<>();
+        Optional.ofNullable(getDetermination())
+                .ifPresent(d -> determinationFileIds.addAll(d.getFiles()));
 
-        return Stream.of(super.getReferencedAttachmentIds(), reviewAttachmentIds, facilitiesReviewAttachmentIds, determinationFileIds)
+        Set<UUID> proposedReferencedAttachmentIds = getUnderlyingAgreementProposed() != null ?
+                getUnderlyingAgreementProposed().getUnderlyingAgreement().getUnderlyingAgreementSectionAttachmentIds() :
+                Collections.emptySet();
+
+        return Stream.of(super.getReferencedAttachmentIds(), reviewAttachmentIds, facilitiesReviewAttachmentIds, determinationFileIds,
+                        proposedReferencedAttachmentIds)
                 .flatMap(Set::stream)
                 .collect(Collectors.toSet());
     }
@@ -76,5 +81,17 @@ public class UnderlyingAgreementVariationReviewRequestTaskPayload extends Underl
         }
         getUnderlyingAgreementAttachments().keySet().removeIf(uuids::contains);
         getReviewAttachments().keySet().removeIf(uuids::contains);
+    }
+
+    @JsonIgnore
+    @Override
+    public UnderlyingAgreementVariationPayload getProposedUnderlyingAgreement() {
+        return this.underlyingAgreementProposed;
+    }
+
+    @JsonIgnore
+    @Override
+    public UnderlyingAgreementVariationPayload getEditedUnderlyingAgreement() {
+        return super.getEditedUnderlyingAgreement();
     }
 }

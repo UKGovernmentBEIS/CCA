@@ -123,7 +123,7 @@ class RequestTaskAssignmentControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(appUser, "assignTask", "1");
+                .authorize(appUser, "assignTask", "1", null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH + ASSIGN )
                 .contentType(MediaType.APPLICATION_JSON)
@@ -161,7 +161,7 @@ class RequestTaskAssignmentControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(appUser, "getCandidateAssigneesByTaskId", "1");
+            .authorize(appUser, "getCandidateAssigneesByTaskId", "1", null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + TASK_ID + CANDIDATE_ASSIGNEES)
             .contentType(MediaType.APPLICATION_JSON))
@@ -200,7 +200,7 @@ class RequestTaskAssignmentControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(appUser, "getCandidateAssigneesByTaskType", "1");
+            .authorize(appUser, "getCandidateAssigneesByTaskType", "1", null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + TASK_ID + CANDIDATE_ASSIGNEES + "/" + taskType)
             .contentType(MediaType.APPLICATION_JSON))

@@ -12,6 +12,6 @@
 import { DocumentTemplateInfoDTO } from './documentTemplateInfoDTO';
 
 export interface DocumentTemplateSearchResults {
-  templates?: Array<DocumentTemplateInfoDTO>;
+  templates?: DocumentTemplateInfoDTO[];
   total?: number;
 }

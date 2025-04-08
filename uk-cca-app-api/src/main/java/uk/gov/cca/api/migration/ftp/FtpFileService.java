@@ -1,6 +1,5 @@
 package uk.gov.cca.api.migration.ftp;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +9,8 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import uk.gov.cca.api.migration.MigrationEndpoint;
-import uk.gov.netz.api.common.utils.MimeTypeUtils;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
+import uk.gov.netz.api.files.common.utils.MimeTypeUtils;
 
 @Log4j2
 @Service
@@ -75,6 +74,61 @@ public class FtpFileService {
             log.error("Error occurred when trying to fetch files from FTP server", e);
         } 
         return ftpFileDTOResult;
+    }
+    
+    public GenericFtpResult<Boolean> existsByPrefix(String sftpDirectory, String prefix) {
+        try {
+            boolean existsByPrefix = ftpClient.existsByPrefix(sftpDirectory, prefix);
+            return GenericFtpResult.<Boolean>builder()
+                    .data(existsByPrefix)
+                    .build();
+        } catch (FtpException e) {
+            return GenericFtpResult.<Boolean>builder()
+                    .errorReport(e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            return GenericFtpResult.<Boolean>builder()
+                    .errorReport("Error occurred when trying to fetch file from FTP server. Reason: " + e.getMessage())
+                    .build();
+        }
+    }
+    
+    public GenericFtpResult<List<String>> findFilesByPrefix(String sftpDirectory, String prefix) {
+        try {
+            List<String> matchingFilenames = ftpClient.findFilesByPrefix(sftpDirectory, prefix);
+            return GenericFtpResult.<List<String>>builder()
+                    .data(matchingFilenames)
+                    .build();
+        } catch (FtpException e) {
+            return GenericFtpResult.<List<String>>builder()
+                    .data(List.of())
+                    .errorReport(e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            return GenericFtpResult.<List<String>>builder()
+                    .data(List.of())
+                    .errorReport("Error occurred when trying to fetch file from FTP server. Reason: " + e.getMessage())
+                    .build();
+        }
+    }
+    
+    public GenericFtpResult<List<String>> listFiles(String sftpDirectory) {
+        try {
+            List<String> files = ftpClient.listFiles(sftpDirectory);
+            return GenericFtpResult.<List<String>>builder()
+                    .data(files)
+                    .build();
+        } catch (FtpException e) {
+            return GenericFtpResult.<List<String>>builder()
+                    .data(List.of())
+                    .errorReport(e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            return GenericFtpResult.<List<String>>builder()
+                    .data(List.of())
+                    .errorReport("Error occurred when trying to fetch file from FTP server. Reason: " + e.getMessage())
+                    .build();
+        }
     }
     
     private FileDTO buildFileDTO(String fileName, byte[] fileContent) {

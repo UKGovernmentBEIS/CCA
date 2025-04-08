@@ -8,14 +8,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.ContentCachingResponseWrapper;
+
 import uk.gov.netz.api.common.exception.ErrorCode;
-import uk.gov.netz.api.logging.MultiReadHttpServletRequestWrapper;
-import uk.gov.netz.api.logging.RestLoggingService;
+import uk.gov.netz.api.restlogging.MultiReadHttpServletRequestWrapper;
+import uk.gov.netz.api.restlogging.RestLoggingService;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,8 +62,9 @@ class AppErrorControllerTest {
         assertEquals(expectedErrorCode.getMessage(), errorResponse.getMessage());
         assertThat(errorResponse.getData()).isEmpty();
 
-        Mockito.verify(restLoggingService, Mockito.times(1)).logRestRequestResponse(any(MultiReadHttpServletRequestWrapper.class),
-                eq("/error"), any(ContentCachingResponseWrapper.class), eq(HttpStatus.UNAUTHORIZED), any(LocalDateTime.class));
+        verify(restLoggingService, times(1)).log(any(MultiReadHttpServletRequestWrapper.class),
+                any(ContentCachingResponseWrapper.class), any(LocalDateTime.class), eq(null), eq(null),
+                eq("/error"), eq(HttpStatus.UNAUTHORIZED));
     }
 
     @Test
@@ -82,8 +85,9 @@ class AppErrorControllerTest {
         assertEquals(expectedErrorCode.getMessage(), errorResponse.getMessage());
         assertThat(errorResponse.getData()).isEmpty();
 
-        Mockito.verify(restLoggingService, Mockito.times(1)).logRestRequestResponse(any(MultiReadHttpServletRequestWrapper.class),
-                eq("/error"), any(ContentCachingResponseWrapper.class), eq(HttpStatus.NOT_FOUND), any(LocalDateTime.class));
+        verify(restLoggingService, times(1)).log(any(MultiReadHttpServletRequestWrapper.class),
+                any(ContentCachingResponseWrapper.class), any(LocalDateTime.class), eq(null), eq(null),
+                eq("/error"), eq(HttpStatus.NOT_FOUND));
     }
 
     @Test
@@ -104,8 +108,9 @@ class AppErrorControllerTest {
         assertEquals(expectedErrorCode.getMessage(), errorResponse.getMessage());
         assertThat(errorResponse.getData()).isEmpty();
 
-        Mockito.verify(restLoggingService, Mockito.times(1)).logRestRequestResponse(any(MultiReadHttpServletRequestWrapper.class),
-                eq("/error"), any(ContentCachingResponseWrapper.class), eq(HttpStatus.METHOD_NOT_ALLOWED), any(LocalDateTime.class));
+        verify(restLoggingService, times(1)).log(any(MultiReadHttpServletRequestWrapper.class),
+                any(ContentCachingResponseWrapper.class), any(LocalDateTime.class), eq(null), eq(null),
+                eq("/error"), eq(HttpStatus.METHOD_NOT_ALLOWED));
     }
 
     @Test
@@ -126,8 +131,9 @@ class AppErrorControllerTest {
         assertEquals(expectedErrorCode.getMessage(), errorResponse.getMessage());
         assertThat(errorResponse.getData()).isEmpty();
 
-        Mockito.verify(restLoggingService, Mockito.times(1)).logRestRequestResponse(any(MultiReadHttpServletRequestWrapper.class),
-                eq("/error"), any(ContentCachingResponseWrapper.class), eq(HttpStatus.NOT_ACCEPTABLE), any(LocalDateTime.class));
+        verify(restLoggingService, times(1)).log(any(MultiReadHttpServletRequestWrapper.class),
+                any(ContentCachingResponseWrapper.class), any(LocalDateTime.class), eq(null), eq(null),
+                eq("/error"), eq(HttpStatus.NOT_ACCEPTABLE));
     }
 
     @Test
@@ -148,8 +154,9 @@ class AppErrorControllerTest {
         assertEquals(expectedErrorCode.getMessage(), errorResponse.getMessage());
         assertThat(errorResponse.getData()).isEmpty();
 
-        Mockito.verify(restLoggingService, Mockito.times(1)).logRestRequestResponse(any(MultiReadHttpServletRequestWrapper.class),
-                eq("/error"), any(ContentCachingResponseWrapper.class), eq(HttpStatus.UNSUPPORTED_MEDIA_TYPE), any(LocalDateTime.class));
+        verify(restLoggingService, times(1)).log(any(MultiReadHttpServletRequestWrapper.class),
+                any(ContentCachingResponseWrapper.class), any(LocalDateTime.class), eq(null), eq(null),
+                eq("/error"), eq(HttpStatus.UNSUPPORTED_MEDIA_TYPE));
     }
 
     @Test
@@ -170,8 +177,9 @@ class AppErrorControllerTest {
         assertEquals(expectedErrorCode.getMessage(), errorResponse.getMessage());
         assertThat(errorResponse.getData()).isEmpty();
 
-        Mockito.verify(restLoggingService, Mockito.times(1)).logRestRequestResponse(any(MultiReadHttpServletRequestWrapper.class),
-                eq("/error"), any(ContentCachingResponseWrapper.class), eq(HttpStatus.INTERNAL_SERVER_ERROR), any(LocalDateTime.class));
+        verify(restLoggingService, times(1)).log(any(MultiReadHttpServletRequestWrapper.class),
+                any(ContentCachingResponseWrapper.class), any(LocalDateTime.class), eq(null), eq(null),
+                eq("/error"), eq(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Test
@@ -192,7 +200,8 @@ class AppErrorControllerTest {
         assertEquals(expectedErrorCode.getMessage(), errorResponse.getMessage());
         assertThat(errorResponse.getData()).isEmpty();
 
-        Mockito.verify(restLoggingService, Mockito.times(1)).logRestRequestResponse(any(MultiReadHttpServletRequestWrapper.class),
-                eq("/error"), any(ContentCachingResponseWrapper.class), eq(null), any(LocalDateTime.class));
+        verify(restLoggingService, times(1)).log(any(MultiReadHttpServletRequestWrapper.class),
+                any(ContentCachingResponseWrapper.class), any(LocalDateTime.class), eq(null), eq(null),
+                eq("/error"), eq(null));
     }
 }

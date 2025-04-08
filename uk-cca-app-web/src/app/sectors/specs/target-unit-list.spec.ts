@@ -31,7 +31,7 @@ describe('Target Units List Spec', () => {
     httpTestingController.verify();
   }));
 
-  test("Main: assign a site contact to an 'Unassigned' Target Unit", async () => {
+  test("Main: assign a site contact to an 'Unassigned' Target Unit", fakeAsync(async () => {
     const sectorId = 123;
     const sectorUser = mockSectorAuthorities.authorities[0];
     const user = UserEvent.setup();
@@ -47,9 +47,9 @@ describe('Target Units List Spec', () => {
     const req = httpTestingController.expectOne(`/api/v1.0/account-site-contacts/sector-association/${sectorId}`);
     req.flush(null);
     expect(select).toHaveDisplayValue(new RegExp(transformUsername(sectorUser)));
-  });
+  }));
 
-  test('Alternative scenario 1: Un-assign a site contact from a Target Unit', async () => {
+  test('Alternative scenario 1: Un-assign a site contact from a Target Unit', fakeAsync(async () => {
     const sectorId = 123;
     const user = UserEvent.setup();
     const opts = { harness, httpTestingController, user };
@@ -63,5 +63,5 @@ describe('Target Units List Spec', () => {
     const req = httpTestingController.expectOne(`/api/v1.0/account-site-contacts/sector-association/${sectorId}`);
     req.flush(null);
     expect(select).toHaveDisplayValue(/Unassigned/);
-  });
+  }));
 });

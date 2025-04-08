@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.authorization.ccaauth.core.domain.CcaAuthority;
 import uk.gov.cca.api.authorization.ccaauth.core.domain.CcaAuthorityDetails;
 import uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType;
-import uk.gov.cca.api.authorization.ccaauth.rules.services.SectorAssociationAuthorizationResourceService;
+import uk.gov.cca.api.authorization.ccaauth.rules.services.resource.SectorAssociationAuthorizationResourceService;
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.service.SectorUserAuthorityService;
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.service.SectorUserAuthorityUpdateService;
 import uk.gov.cca.api.common.exception.CcaErrorCode;

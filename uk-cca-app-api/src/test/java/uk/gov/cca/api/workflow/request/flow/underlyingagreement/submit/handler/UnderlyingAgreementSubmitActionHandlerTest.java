@@ -15,12 +15,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
+import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementOutcome;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.submit.domain.UnderlyingAgreementSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.submit.service.UnderlyingAgreementSubmitService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.WorkflowService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 import uk.gov.netz.api.workflow.request.flow.common.domain.RequestTaskActionEmptyPayload;
 
@@ -48,14 +52,25 @@ class UnderlyingAgreementSubmitActionHandlerTest {
 
         final String processTaskId = "processTaskId";
         final Request request = Request.builder().id("1").build();
-        final RequestTask requestTask = RequestTask.builder().id(requestTaskId).request(request).processTaskId(processTaskId).build();
+        final UnderlyingAgreementSubmitRequestTaskPayload requestTaskPayload = UnderlyingAgreementSubmitRequestTaskPayload.builder()
+                .underlyingAgreement(UnderlyingAgreementPayload.builder()
+                        .underlyingAgreementTargetUnitDetails(UnderlyingAgreementTargetUnitDetails.builder().build())
+                        .build())
+                .build();
+        final RequestTask requestTask = RequestTask.builder()
+        		.id(requestTaskId)
+        		.request(request)
+        		.processTaskId(processTaskId)
+        		.payload(requestTaskPayload)
+        		.build();
 
         when(requestTaskService.findTaskById(requestTaskId)).thenReturn(requestTask);
 
         // Invoke
-        handler.process(requestTaskId, requestTaskActionType, appUser, payload);
+        RequestTaskPayload taskPayload = handler.process(requestTaskId, requestTaskActionType, appUser, payload);
 
         // Verify
+        assertThat(taskPayload).isEqualTo(requestTaskPayload);
         assertThat(request.getSubmissionDate()).isNotNull();
         verify(requestTaskService, times(1)).findTaskById(requestTaskId);
         verify(underlyingAgreementSubmitService, times(1))

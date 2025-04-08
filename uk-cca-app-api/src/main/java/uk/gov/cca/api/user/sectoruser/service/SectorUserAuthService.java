@@ -9,6 +9,7 @@ import uk.gov.cca.api.user.sectoruser.domain.SectorUserInvitationDTO;
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserRegistrationWithCredentialsDTO;
 import uk.gov.cca.api.user.sectoruser.transform.SectorUserMapper;
 import uk.gov.cca.api.user.sectoruser.transform.SectorUserRegistrationMapper;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.user.application.UserRoleTypeAuthService;
 import uk.gov.netz.api.user.core.service.auth.AuthService;
 import uk.gov.netz.api.userinfoapi.AuthenticationStatus;
@@ -32,6 +33,11 @@ public class SectorUserAuthService implements UserRoleTypeAuthService<SectorUser
     public SectorUserDTO getUserById(String userId) {
         return sectorUserMapper.toSectorUserDTO(authService.getUserRepresentationById(userId));
     }
+    
+    @Override
+	public SectorUserDTO getCurrentUserDTO(AppUser currentUser) {
+		return getUserById(currentUser.getUserId());
+	}
 
     /**
      * Registers a new user in keycloak with status {@link AuthenticationStatus#PENDING}

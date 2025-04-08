@@ -249,7 +249,7 @@ class RequestNoteControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(authUser, "uploadRequestNoteFile", "reqId");
+            .authorize(authUser, "uploadRequestNoteFile", "reqId", null, null);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.multipart(REQUEST_NOTE_CONTROLLER_PATH + "/upload/request/" + "reqId")
@@ -298,7 +298,7 @@ class RequestNoteControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(user, "updateRequestNote", "1");
+            .authorize(user, "updateRequestNote", "1", null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.put(REQUEST_NOTE_CONTROLLER_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON)

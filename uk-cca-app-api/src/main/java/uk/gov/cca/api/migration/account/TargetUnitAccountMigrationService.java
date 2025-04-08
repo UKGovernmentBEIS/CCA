@@ -9,13 +9,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
 import uk.gov.cca.api.migration.MigrationBaseService;
@@ -28,7 +29,6 @@ import uk.gov.netz.api.common.utils.ExceptionUtils;
 @Log4j2
 @Service
 @ConditionalOnAvailableEndpoint(endpoint = MigrationEndpoint.class)
-@RequiredArgsConstructor
 public class TargetUnitAccountMigrationService extends MigrationBaseService {
     
     private final JdbcTemplate migrationJdbcTemplate;
@@ -42,60 +42,79 @@ public class TargetUnitAccountMigrationService extends MigrationBaseService {
    List<Pair<Long, String>> legacyCountries = new ArrayList<>();
     
     private static final String LIVE_TARGET_UNITS_QUERY_STMT = 
-            "SELECT tu.[target_unit_pk]\r\n"
-            + "      ,tu.[tu_id]\r\n"
-            + "      ,sec.[sect_id]\r\n"
-            + "      ,subsec.[sub_sector_name]\r\n"
-            + "      ,tu.[operator_name]\r\n"
-            + "      ,tu.[company_registration_number]\r\n"
-            + "      ,tu.[sic_code]\r\n"
-            + "      ,tu.[tu_add_line1]\r\n"
-            + "      ,tu.[tu_add_line2]\r\n"
-            + "      ,tu.[tu_add_county]\r\n"
-            + "      ,tu.[tu_add_city]\r\n"
-            + "      ,tu.[tu_postcode]\r\n"
-            + "      ,tu.[tu_country]\r\n"
-            + "      ,tu.[rp_forename]\r\n"
-            + "      ,tu.[rp_surname]\r\n"
-            + "      ,tu.[rp_email]\r\n"
-            + "      ,tu.[rp_role]\r\n"
-            + "      ,tu.[rp_add_line1]\r\n"
-            + "      ,tu.[rp_add_line2]\r\n"
-            + "      ,tu.[rp_add_city]\r\n"
-            + "      ,tu.[rp_add_county]\r\n"
-            + "      ,tu.[rp_add_postcode]\r\n"
-            + "      ,tu.[rp_add_country]\r\n"
-            + "      ,tu.[ac_title]\r\n"
-            + "      ,tu.[ac_forename]\r\n"
-            + "      ,tu.[ac_surname]\r\n"
-            + "      ,tu.[ac_email]\r\n"
-            + "      ,tu.[ac_role]\r\n"
-            + "      ,tu.[ac_add_line1]\r\n"
-            + "      ,tu.[ac_add_line2]\r\n"
-            + "      ,tu.[ac_add_city]\r\n"
-            + "      ,tu.[ac_add_county]\r\n"
-            + "      ,tu.[ac_add_postcode]\r\n"
-            + "      ,tu.[ac_add_country]\r\n"
-            + "      ,tu.[ac_telephone]\r\n"
-            + "      ,tu.[currently_in_cca]\r\n"
-            + "      ,tu.[financially_independent]\r\n"
-            + "      ,tu.[agreement_version]\r\n"
-            + "      ,tu.[tu_status]\r\n"
-            + "      ,sec.[sect_id]\r\n"
-            + "      ,subsec.[sub_sector_name]\r\n"
-            + "  FROM [tbl_target_units] tu\r\n"
-            + "  join [tbl_sectors] sec on sec.sect_pk = tu.sect_id\r\n"
-            + "  left join tbl_sub_sectors subsec on subsec.sub_sector_name = tu.subsector_name\r\n"
-            + "  WHERE tu_status = 2 AND tu.currently_in_cca = 1\r\n";
+            "SELECT tu.[target_unit_pk] \r\n"
+            + "      ,tu.[tu_id] \r\n"
+            + "      ,sec.[sect_id] \r\n"
+            + "      ,tu.[subsector_name] \r\n"
+            + "      ,tu.[operator_name] \r\n"
+            + "      ,tu.[company_registration_number] \r\n"
+            + "      ,tu.[sic_code] \r\n"
+            + "      ,tu.[tu_add_line1] \r\n"
+            + "      ,tu.[tu_add_line2] \r\n"
+            + "      ,tu.[tu_add_county] \r\n"
+            + "      ,tu.[tu_add_city] \r\n"
+            + "      ,tu.[tu_postcode] \r\n"
+            + "      ,tu.[tu_country] \r\n"
+            + "      ,tu.[rp_forename] \r\n"
+            + "      ,tu.[rp_surname] \r\n"
+            + "      ,tu.[rp_email] \r\n"
+            + "      ,tu.[rp_role] \r\n"
+            + "      ,tu.[rp_add_line1] \r\n"
+            + "      ,tu.[rp_add_line2] \r\n"
+            + "      ,tu.[rp_add_city] \r\n"
+            + "      ,tu.[rp_add_county] \r\n"
+            + "      ,tu.[rp_add_postcode] \r\n"
+            + "      ,tu.[rp_add_country] \r\n"
+            + "      ,tu.[ac_title] \r\n"
+            + "      ,tu.[ac_forename] \r\n"
+            + "      ,tu.[ac_surname] \r\n"
+            + "      ,tu.[ac_email] \r\n"
+            + "      ,tu.[ac_role] \r\n"
+            + "      ,tu.[ac_add_line1] \r\n"
+            + "      ,tu.[ac_add_line2] \r\n"
+            + "      ,tu.[ac_add_city] \r\n"
+            + "      ,tu.[ac_add_county] \r\n"
+            + "      ,tu.[ac_add_postcode] \r\n"
+            + "      ,tu.[ac_add_country] \r\n"
+            + "      ,tu.[ac_telephone] \r\n"
+            + "      ,tu.[currently_in_cca] \r\n"
+            + "      ,tu.[financially_independent] \r\n"
+            + "      ,tu.[agreement_version] \r\n"
+            + "      ,tu.[tu_status] \r\n"
+            + "      ,tu.[operator_type] \r\n"
+            + "      ,sec.[sect_id] \r\n"
+            + "      ,subsec.[sub_sector_name] \r\n"
+            + "  FROM [tbl_target_units] tu \r\n"
+            + "  join [tbl_sectors] sec on sec.sect_pk = tu.sect_id \r\n"
+            + "  left join tbl_sub_sectors subsec on subsec.sub_sector_name = tu.subsector_name \r\n"
+            + "  WHERE tu_status = 2 AND tu.currently_in_cca = 1 \r\n";
     
     private static final String COUNTRIES_QUERY_STMT = 
-            "SELECT\r\n"
-            + "  [country_id]\r\n"
-            + " ,[country]\r\n"
-            + "FROM [tbl_country]\r\n"
+            "SELECT \r\n"
+            + "  [country_id] \r\n"
+            + " ,[country] \r\n"
+            + "FROM [tbl_country] \r\n"
             + "WHERE 1 = 1";
 
-    @Override
+    public TargetUnitAccountMigrationService(@Nullable @Qualifier("migrationJdbcTemplate") JdbcTemplate migrationJdbcTemplate, Validator validator,
+			TargetUnitAccountDTOBuilder targetUnitAccountDTOBuilder,
+			TargetUnitAccountCreationValidationService targetUnitAccountCreationValidationService,
+			SectorAssociationQueryService sectorAssociationQueryService,
+			SubsectorAssociationService subsectorAssociationService,
+			TargetUnitAccountCreationMigrationService targetUnitAccountCreationMigrationService,
+			List<Pair<Long, String>> legacyCountries) {
+		super();
+		this.migrationJdbcTemplate = migrationJdbcTemplate;
+		this.validator = validator;
+		this.targetUnitAccountDTOBuilder = targetUnitAccountDTOBuilder;
+		this.targetUnitAccountCreationValidationService = targetUnitAccountCreationValidationService;
+		this.sectorAssociationQueryService = sectorAssociationQueryService;
+		this.subsectorAssociationService = subsectorAssociationService;
+		this.targetUnitAccountCreationMigrationService = targetUnitAccountCreationMigrationService;
+		this.legacyCountries = legacyCountries;
+	}
+
+	@Override
     public String getResource() {
         return "target-unit-accounts";
     }
@@ -108,25 +127,25 @@ public class TargetUnitAccountMigrationService extends MigrationBaseService {
 
     @Override
     public List<String> migrate(String businessIds) {
-        final String query = TargetUnitAccountHelper.constructQuery(LIVE_TARGET_UNITS_QUERY_STMT, businessIds);
-
         List<String> results = new ArrayList<>();
+        
+        final String query = TargetUnitAccountHelper.constructQuery(LIVE_TARGET_UNITS_QUERY_STMT, businessIds);
         AtomicInteger failedCounter = new AtomicInteger(0);
         
         legacyCountries = getCountries();
         
-        List<TargetUnitAccountVO> targetUnits = migrationJdbcTemplate.query(query, new TargetUnitAccountVORowMapper());
+        List<TargetUnitAccountVO> targetUnitAccounts = migrationJdbcTemplate.query(query, new TargetUnitAccountVORowMapper());
         
-        List<TargetUnitAccountVO> sortedTargetUnits = targetUnits.stream()
+        List<TargetUnitAccountVO> sortedTargetUnitAccounts = targetUnitAccounts.stream()
                 .sorted(Comparator.comparingLong(TargetUnitAccountVO::getOriginalTuPk))
                 .toList();
         
-        for (TargetUnitAccountVO targetUnit: sortedTargetUnits) {
-            List<String> migrationResults = migrateTargetUnitAccount(targetUnit, failedCounter);
+        for (TargetUnitAccountVO account: sortedTargetUnitAccounts) {
+            List<String> migrationResults = migrateTargetUnitAccount(account, failedCounter);
             results.addAll(migrationResults);
         }
 
-        results.add("migration of target units results: " + failedCounter + "/" + targetUnits.size() + " failed");
+        results.add("migration of target units results: " + failedCounter + "/" + targetUnitAccounts.size() + " failed");
         return results;
     }
     
@@ -177,7 +196,7 @@ public class TargetUnitAccountMigrationService extends MigrationBaseService {
             failedCounter.incrementAndGet();
             
             log.error("migration of target unit: {} failed with {}",
-                    targetUnitVO.getTuId(), ExceptionUtils.getRootCause(ex).getMessage());
+                    targetUnitVO.getTargetUnitId(), ExceptionUtils.getRootCause(ex).getMessage());
             
             results.add(TargetUnitAccountHelper.constructErrorMessage(targetUnitVO,
                     ExceptionUtils.getRootCause(ex).getMessage(), null));

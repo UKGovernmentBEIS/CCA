@@ -4,9 +4,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { combineLatest, map, switchMap, take } from 'rxjs';
 
-import { ButtonDirective, LinkDirective } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
+import { ButtonDirective } from '@netz/govuk-components';
 
 import { OperatorUsersService, RegulatorUsersService, SectorUsersService } from 'cca-api';
 
@@ -15,7 +15,7 @@ import { OperatorUsersService, RegulatorUsersService, SectorUsersService } from 
   templateUrl: './reset-two-fa.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PageHeadingComponent, PendingButtonDirective, ButtonDirective, LinkDirective, RouterLink, AsyncPipe],
+  imports: [PageHeadingComponent, PendingButtonDirective, ButtonDirective, RouterLink, AsyncPipe],
 })
 export class ResetTwoFaComponent implements OnInit {
   private readonly regulatorUsersService = inject(RegulatorUsersService);

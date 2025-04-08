@@ -9,12 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RfiQuestionPayload } from './rfiQuestionPayload';
 import { RfiResponsePayload } from './rfiResponsePayload';
+import { RfiQuestionPayload } from './rfiQuestionPayload';
 
 export interface RfiResponseSubmittedRequestActionPayload {
   payloadType?: string;
   rfiQuestionPayload: RfiQuestionPayload;
   rfiResponsePayload: RfiResponsePayload;
-  rfiAttachments?: { [key: string]: string };
+  rfiAttachments?: Record<string, string>;
 }

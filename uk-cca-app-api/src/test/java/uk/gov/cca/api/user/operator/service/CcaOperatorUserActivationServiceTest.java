@@ -1,19 +1,10 @@
 package uk.gov.cca.api.user.operator.service;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType;
 import uk.gov.cca.api.authorization.ccaauth.core.service.CcaAuthorityService;
 import uk.gov.cca.api.user.operator.domain.CcaOperatorUserDTO;
@@ -23,6 +14,14 @@ import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
 import uk.gov.netz.api.user.operator.service.OperatorUserRegisterValidationService;
 import uk.gov.netz.api.user.operator.service.OperatorUserRegisteredAcceptInvitationService;
 import uk.gov.netz.api.user.operator.service.OperatorUserTokenVerificationService;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CcaOperatorUserActivationServiceTest {
@@ -65,10 +64,14 @@ class CcaOperatorUserActivationServiceTest {
         // Assert
         verify(operatorUserTokenVerificationService, times(1))
                 .verifyInvitationTokenForPendingAuthority(userRegistrationDTO.getEmailToken());
-        verify(ccaOperatorUserAuthService, times(1)).enableAndUpdateUserAndSetPassword(userRegistrationDTO, userId);
-        verify(operatorUserRegisterValidationService, times(1)).validateRegisterForAccount(userId, accountId);
+        verify(ccaOperatorUserAuthService, times(1))
+                .enableAndUpdateUserAndSetPassword(userRegistrationDTO, userId);
+        verify(operatorUserRegisterValidationService, times(1))
+                .validateRegisterForAccount(userId, accountId);
         verify(operatorUserRegisteredAcceptInvitationService, times(1))
                 .acceptAuthorityAndNotify(authorityInfo.getId());
+        verify(authorityService, times(1))
+                .updateCcaAuthorityDetailsOrganisationName(anyLong(), anyString());
     }
 
     @Test

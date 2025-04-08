@@ -6,7 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.service.TargetUnitAccountUpdateService;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
 import static org.mockito.Mockito.times;
@@ -19,15 +21,19 @@ class UnderlyingAgreementRejectedServiceTest {
 
     @InjectMocks
     UnderlyingAgreementRejectedService service;
+    
     @Mock
     private RequestService requestService;
+    
     @Mock
     private TargetUnitAccountUpdateService targetUnitAccountUpdateService;
+    
     @Test
     void reject() {
         final String requestId = "1";
         final Long accountId = 1L;
-        final Request request = Request.builder().id(requestId).accountId(accountId).build();
+        final Request request = Request.builder().id(requestId).build();
+        addResourcesToRequest(accountId, request);
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
 
@@ -37,6 +43,15 @@ class UnderlyingAgreementRejectedServiceTest {
         // Verify
         verify(targetUnitAccountUpdateService, times(1))
                 .handleTargetUnitAccountRejected(accountId);
-
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

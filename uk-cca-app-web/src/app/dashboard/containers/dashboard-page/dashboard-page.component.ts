@@ -1,16 +1,16 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
-import { combineLatest, distinctUntilChanged, filter, startWith, switchMap, takeUntil } from 'rxjs';
+import { combineLatest, distinctUntilChanged, filter, startWith, switchMap } from 'rxjs';
 
-import { DestroySubject } from '@core/services/destroy-subject.service';
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
-import { GovukTableColumn, LinkDirective, TabLazyDirective, TabsComponent } from '@netz/govuk-components';
-import { PageHeadingComponent, PaginationComponent } from '@shared/components';
+import { PageHeadingComponent } from '@netz/common/components';
+import { GovukTableColumn, TabLazyDirective, TabsComponent } from '@netz/govuk-components';
+import { PaginationComponent } from '@shared/components';
 
-import { ItemTargetUnitDTO } from 'cca-api';
+import { CcaItemDTO } from 'cca-api';
 
 import {
   DashboardStore,
@@ -24,15 +24,17 @@ import {
 import { DashboardItemsListComponent } from '../../components/dashboard-items-list';
 import { WorkflowItemsService } from '../../services/workflow-items.service';
 
-const DEFAULT_TABLE_COLUMNS: GovukTableColumn<ItemTargetUnitDTO>[] = [
+const DEFAULT_TABLE_COLUMNS: GovukTableColumn<CcaItemDTO>[] = [
   { field: 'taskType', header: 'Task', isSortable: false },
   { field: 'taskAssignee', header: 'Assigned to', isSortable: false },
   { field: 'daysRemaining', header: 'Days remaining', isSortable: false },
-  { field: 'businessId', header: `Target unit ID`, isSortable: false },
+  { field: 'businessId', header: 'Target unit ID', isSortable: false },
   { field: 'accountName', header: 'Target unit', isSortable: false },
+  { field: 'sectorAcronym', header: 'Sector ID', isSortable: false },
+  { field: 'sectorName', header: 'Sector', isSortable: false },
 ];
 
-const getTableColumns = (activeTab: WorkflowItemsAssignmentType): GovukTableColumn<ItemTargetUnitDTO>[] => {
+const getTableColumns = (activeTab: WorkflowItemsAssignmentType): GovukTableColumn<CcaItemDTO>[] => {
   const cols = DEFAULT_TABLE_COLUMNS;
 
   return cols.filter((column) => {
@@ -40,11 +42,10 @@ const getTableColumns = (activeTab: WorkflowItemsAssignmentType): GovukTableColu
   });
 };
 
-/* eslint-disable @angular-eslint/use-component-view-encapsulation */
 @Component({
   selector: 'cca-dashboard-page',
   templateUrl: './dashboard-page.component.html',
-  providers: [WorkflowItemsService, DestroySubject],
+  providers: [WorkflowItemsService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
@@ -54,7 +55,6 @@ const getTableColumns = (activeTab: WorkflowItemsAssignmentType): GovukTableColu
     NgTemplateOutlet,
     PaginationComponent,
     RouterModule,
-    LinkDirective,
     DashboardItemsListComponent,
   ],
 })
@@ -63,7 +63,7 @@ export class DashboardPageComponent implements OnInit {
   private readonly dashboardStore = inject(DashboardStore);
   private readonly authStore = inject(AuthStore);
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly destroy$ = inject(DestroySubject);
+  private readonly destroy$ = inject(DestroyRef);
 
   protected readonly pageSize = this.dashboardStore.select(selectPageSize)();
   protected readonly isLoading = signal(false);
@@ -84,7 +84,7 @@ export class DashboardPageComponent implements OnInit {
         startWith(this.role() === 'OPERATOR' ? 'assigned-to-others' : 'assigned-to-me'),
         distinctUntilChanged(),
         filter((fragment) => !!fragment),
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroy$),
       )
       .subscribe((tab: WorkflowItemsAssignmentType) => {
         this.dashboardStore.setPage(1);
@@ -97,7 +97,7 @@ export class DashboardPageComponent implements OnInit {
           this.isLoading.set(true);
           return this.workflowItemsService.getItems(activeTab, page, this.pageSize);
         }),
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroy$),
       )
       .subscribe(({ items, totalItems }) => {
         this.dashboardStore.setItems(items);

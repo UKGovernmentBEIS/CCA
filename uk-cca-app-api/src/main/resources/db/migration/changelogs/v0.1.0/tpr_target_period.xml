@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+  logicalFilePath="v0.1.0/tpr_target_period.xml"
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+  <changeSet id="0_1_0_INSERT_TPR_TARGET_PERIOD" author="vvitzilaios">
+    <sql>
+      INSERT INTO tpr_target_period
+      (id,
+       business_id,
+       name,
+       start_date,
+       end_date,
+       performance_data_template_version,
+       performance_data_start_date,
+       performance_data_end_date,
+       buy_out_start_date,
+       buy_out_end_date,
+       is_current)
+      VALUES (nextval('tpr_target_period_seq'),
+              'TP5',
+              'TP5 (2021-2022)',
+              '2021-01-01',
+              '2022-12-31',
+              null,
+              '2023-01-01',
+              '2023-05-01',
+              '2023-05-05',
+              '2023-07-01',
+              false);
+
+      INSERT INTO tpr_target_period
+      (id,
+       business_id,
+       name,
+       start_date,
+       end_date,
+       performance_data_template_version,
+       performance_data_start_date,
+       performance_data_end_date,
+       buy_out_start_date,
+       buy_out_end_date,
+       is_current)
+      VALUES (nextval('tpr_target_period_seq'),
+              'TP6',
+              'TP6 (2024)',
+              '2024-01-01',
+              '2024-12-31',
+              '6.0',
+              '2025-01-01',
+              '2025-05-01',
+              '2025-05-01',
+              '2025-07-01',
+              true);
+    </sql>
+    <rollback>
+      <sql>
+        DELETE FROM tpr_target_period WHERE business_id IN ('TP5', 'TP6');
+      </sql>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="0_1_0_UPDATE_TPR_TARGET_PERIOD_SECONDARY_REPORTING_START_DATE" author="vvitzilaios">
+    <update tableName="tpr_target_period">
+      <column name="secondary_reporting_start_date" valueDate="2023-07-02"/>
+      <where>business_id = 'TP5'</where>
+    </update>
+
+    <update tableName="tpr_target_period">
+      <column name="secondary_reporting_start_date" valueDate="2025-07-02"/>
+      <where>business_id = 'TP6'</where>
+    </update>
+
+    <rollback>
+      <update tableName="tpr_target_period">
+        <column name="secondary_reporting_start_date" valueDate="1970-01-01"/>
+        <where>business_id in ('TP5','TP6')</where>
+      </update>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>

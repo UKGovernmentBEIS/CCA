@@ -3,7 +3,9 @@
     <div class="govuk-grid-column-two-thirds">
       <govuk-panel title="The user account for {{ operator | userFullName }} has been removed"></govuk-panel>
 
-      <a fragment="users-and-contacts" govukLink [routerLink]="['../../..']"> Return to: Users and contacts page </a>
+      <a fragment="users-and-contacts" class="govuk-link" [routerLink]="['../../..']">
+        Return to: Users and contacts page
+      </a>
     </div>
   </div>
 } @else {
@@ -19,8 +21,8 @@
     <p class="govuk-body">If you need to reassign any of these tasks before removing this user, select 'Cancel'.</p>
 
     <div class="govuk-button-group">
-      <button type="button" (click)="onDeleteOperator()" ccaPendingButton govukWarnButton>Confirm removal</button>
-      <a govukLink fragment="users-and-contacts" [routerLink]="['../../..']">Cancel</a>
+      <button type="button" (click)="onDeleteOperator()" netzPendingButton govukWarnButton>Confirm removal</button>
+      <a class="govuk-link" fragment="users-and-contacts" [routerLink]="['../../..']">Cancel</a>
     </div>
   </section>
 }

@@ -19,7 +19,9 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
 import uk.gov.cca.api.workflow.request.core.domain.TargetUnitAccountDetails;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.submit.domain.UnderlyingAgreementSubmitRequestTaskPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,8 +43,8 @@ class UnderlyingAgreementSubmitInitializerTest {
         final Long accountId = 1L;
         final Request request = Request.builder()
                 .id("UNA-ADS_1T00001")
-                .accountId(accountId)
                 .build();
+        addResourcesToRequest(accountId, request);
 
         final TargetUnitAccountContactDTO responsiblePerson = TargetUnitAccountContactDTO.builder()
                 .email("xx@test.gr")
@@ -114,4 +116,14 @@ class UnderlyingAgreementSubmitInitializerTest {
         assertThat(handler.getRequestTaskTypes())
                 .containsExactly(CcaRequestTaskType.UNDERLYING_AGREEMENT_APPLICATION_SUBMIT);
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

@@ -1,0 +1,90 @@
+@if (moaDetails) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <netz-page-heading [caption]="'Target unit MoA'" size="xl" data-testid="page-heading">
+        {{ moaDetails.transactionId }}
+        <span class="govuk-tag-heading-align">
+          <govuk-tag [color]="moaDetails.paymentStatus | subsistenceFeesRunPaymentStatusTagColor" class="failure-tag">
+            {{ moaDetails.paymentStatus | subsistenceFeesRunPaymentStatus }}
+          </govuk-tag>
+        </span>
+      </netz-page-heading>
+    </div>
+  </div>
+
+  @if (data) {
+    <cca-summary [data]="data" />
+  }
+}
+
+@if (state().facilities) {
+  <div class="govuk-body">
+    <cca-utility-panel heading="Filters">
+      <form [formGroup]="searchForm" (ngSubmit)="onApplyFilters()">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third">
+            <div
+              widthClass="govuk-!-width-full"
+              formControlName="term"
+              govuk-text-input
+              label="Enter facility Id or site name"
+            ></div>
+          </div>
+
+          <div class="govuk-grid-column-one-third">
+            <div
+              govuk-select
+              widthClass="govuk-!-width-full"
+              label="Marking of facilities"
+              [options]="markingOfFacilitiesOptions"
+              formControlName="markFacilitiesStatus"
+            ></div>
+          </div>
+        </div>
+
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-quarter">
+            <button class="govuk-!-margin-right-3" netzPendingButton govukButton type="submit">Apply</button>
+            <button netzPendingButton govukSecondaryButton type="button" (click)="onClearFilters()">Clear</button>
+          </div>
+        </div>
+      </form>
+    </cca-utility-panel>
+
+    <div class="x-scroll govuk-!-margin-top-6">
+      <div class="max-content-width">
+        <div class="overflow-auto overflow-auto-table">
+          <govuk-table [columns]="tableColumns" [data]="state().facilities">
+            <ng-template let-column="column" let-row="row">
+              @switch (column.field) {
+                @case ('facilityId') {
+                  <span>{{ row[column.field] }}</span>
+                }
+
+                @case ('facilityName') {
+                  <span>{{ row[column.field] }}</span>
+                }
+
+                @case ('markFacilitiesStatus') {
+                  <div class="govuk-!-width-full">
+                    <span>{{ row[column.field] | subsistenceFeesRunMarkFacilitiesStatus }}</span>
+                  </div>
+                }
+
+                @case ('paymentDate') {
+                  <span>{{ row[column.field] | date: 'dd MMM yyyy' }}</span>
+                }
+              }
+            </ng-template>
+          </govuk-table>
+
+          <cca-pagination
+            [count]="state().totalItems"
+            (currentPageChange)="handlePageChange($event)"
+            [pageSize]="state().pageSize"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+}

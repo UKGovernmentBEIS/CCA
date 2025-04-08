@@ -5,7 +5,7 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
   id="root0"
 >
   <div>
-    <cca-page-heading>
+    <netz-page-heading>
       <span
         class="govuk-caption-l"
       >
@@ -17,7 +17,7 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
       >
         Check your answers
       </h1>
-    </cca-page-heading>
+    </netz-page-heading>
     
     <cca-highlight-diff>
       <div
@@ -47,9 +47,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
+                
+                
                  No 
-                
-                
                 
                 
                 
@@ -92,9 +92,9 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
+                
+                
                  No 
-                
-                
                 
                 
                 
@@ -113,39 +113,33 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
       <div
         class="highlight"
       >
-        <cca-summary>
-          <h2
-            class="govuk-heading-m"
-          />
-          <dl
-            class="govuk-summary-list govuk-!-margin-bottom-9"
-            govuk-summary-list=""
+        <h2
+          class="govuk-heading-m"
+        />
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+        >
+          <div
+            class="govuk-summary-list__row"
           >
-            <div
-              class="govuk-summary-list__row"
-              govuksummarylistrow=""
+            <dt
+              class="govuk-summary-list__key"
             >
-              <dt
-                class="govuk-summary-list__key"
-                govuksummarylistrowkey=""
-              >
-                Are you providing baseline and target information for TP5 (2021 to 2022)?
-              </dt>
-              <dd
-                class="govuk-summary-list__value"
-                govuksummarylistrowvalue=""
-              >
-                 No 
-              </dd>
-            </div>
-          </dl>
-        </cca-summary>
+              Are you providing baseline and target information for TP5 (2021 to 2022)?
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               No 
+            </dd>
+          </div>
+        </dl>
       </div>
     </cca-highlight-diff>
     <button
-      ccapendingbutton=""
       class="govuk-button"
       govukbutton=""
+      netzpendingbutton=""
       type="button"
     >
       Confirm and complete
@@ -156,7 +150,6 @@ exports[`CheckYourAnswersComponent should match snapshot 1`] = `
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

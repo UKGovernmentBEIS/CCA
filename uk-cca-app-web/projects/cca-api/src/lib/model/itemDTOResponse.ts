@@ -12,6 +12,6 @@
 import { ItemDTO } from './itemDTO';
 
 export interface ItemDTOResponse {
-  items?: Array<ItemDTO>;
+  items?: ItemDTO[];
   totalItems?: number;
 }

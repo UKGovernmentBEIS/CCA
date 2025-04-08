@@ -51,24 +51,29 @@ describe('Baseline and Targets calculations', () => {
 
   it('should correctly calculate baseline for RELATIVE', () => {
     const testCases = [
-      { performance: 100, improvement: 20, expectedTarget: 80 },
-      { performance: 50, improvement: 30, expectedTarget: 35 },
-      { performance: 1234, improvement: 15, expectedTarget: 1048.9 },
-      { performance: 0, improvement: 50, expectedTarget: 0 },
-      { performance: 100, improvement: 100, expectedTarget: 0 },
-      { performance: 100, improvement: -10, expectedTarget: 110 },
-      { performance: Infinity, improvement: 20, expectedTarget: Infinity },
-      { performance: 100, improvement: Infinity, expectedTarget: -Infinity },
-      { performance: NaN, improvement: 20, expectedTarget: null },
-      { performance: 100, improvement: NaN, expectedTarget: null },
-      { performance: 123456789012345, improvement: 30, expectedTarget: 86419752308641.5 },
-      { performance: 1e15, improvement: 20, expectedTarget: 8e14 },
-      { performance: 0.0001, improvement: 20, expectedTarget: 0.00008 },
-      { performance: 1e-10, improvement: 30, expectedTarget: 0 },
+      { energyOrCarbon: 100, throughput: 50, improvement: 20, expectedTarget: 1.6 },
+      { energyOrCarbon: 50, throughput: 250, improvement: 30, expectedTarget: 0.14 },
+      { energyOrCarbon: 1234, throughput: 5678, improvement: 15, expectedTarget: 0.1847305 },
+      { energyOrCarbon: 0, throughput: 100, improvement: 50, expectedTarget: 0 },
+      { energyOrCarbon: 100, throughput: 0, improvement: 100, expectedTarget: null },
+      { energyOrCarbon: 100, throughput: 100, improvement: -10, expectedTarget: 1.1 },
+      { energyOrCarbon: Infinity, throughput: Infinity, improvement: 20, expectedTarget: null },
+      { energyOrCarbon: 100, throughput: 50, improvement: Infinity, expectedTarget: -Infinity },
+      { energyOrCarbon: NaN, throughput: NaN, improvement: 20, expectedTarget: null },
+      { energyOrCarbon: 100, throughput: 50, improvement: NaN, expectedTarget: null },
+      {
+        energyOrCarbon: 123456789012345,
+        throughput: 98765432109876,
+        improvement: 30,
+        expectedTarget: 0.875,
+      },
+      { energyOrCarbon: 1e15, throughput: 1e12, improvement: 20, expectedTarget: 800 },
+      { energyOrCarbon: 0.0001, throughput: 0.0002, improvement: 20, expectedTarget: 0.4 },
+      { energyOrCarbon: 1e-10, throughput: 1e-12, improvement: 30, expectedTarget: 70 },
     ];
 
-    testCases.forEach(({ performance, improvement, expectedTarget }) => {
-      expect(calculateRelativeTarget(performance, improvement)).toEqual(expectedTarget);
+    testCases.forEach(({ energyOrCarbon, throughput, improvement, expectedTarget }) => {
+      expect(calculateRelativeTarget(energyOrCarbon, throughput, improvement)).toEqual(expectedTarget);
     });
   });
 });

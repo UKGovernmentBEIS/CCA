@@ -3,7 +3,7 @@
     <ng-template let-column="column" let-row="row">
       @switch (column.field) {
         @case ('taskType') {
-          <a [routerLink]="row | itemLink" govukLink>
+          <a [routerLink]="row | itemLink" class="govuk-link">
             {{ row[column.field] | itemName: row.requestId?.split('-')[1] }}
           </a>
 
@@ -23,7 +23,7 @@
         }
 
         @case ('daysRemaining') {
-          {{ row[column.field] }}
+          {{ row[column.field] | daysRemaining }}
         }
 
         @case ('businessId') {

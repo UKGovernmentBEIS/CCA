@@ -1,0 +1,27 @@
+<div class="govuk-width-container">
+  <netz-page-heading>Overall decision</netz-page-heading>
+
+  @if (rejectionWarning) {
+    <govuk-warning-text assistiveText="">
+      The variation can only be rejected, as no active facility remains in the agreement.
+    </govuk-warning-text>
+  }
+
+  <h2 class="govuk-heading-m">Available actions</h2>
+  <p class="govuk-body">Based on the current status of the determination</p>
+
+  <div>
+    @if (canAccept) {
+      <button netzPendingButton govukButton class="govuk-!-margin-right-2" type="button" (click)="submit('ACCEPTED')">
+        Accept
+      </button>
+    }
+
+    @if (canReject) {
+      <button netzPendingButton govukButton type="button" (click)="submit('REJECTED')">Reject</button>
+    }
+  </div>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>

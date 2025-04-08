@@ -11,6 +11,6 @@
  */
 
 export interface AuthorisationAndAdditionalEvidence {
-  authorisationAttachmentIds: Array<string>;
-  additionalEvidenceAttachmentIds?: Array<string>;
+  authorisationAttachmentIds: string[];
+  additionalEvidenceAttachmentIds?: string[];
 }

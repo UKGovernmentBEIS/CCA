@@ -7,6 +7,7 @@ import {
   FacilityItemViewModel,
   ManageFacilitiesWizardStep,
   UNARequestTaskPayload,
+  UNAVariationRequestTaskPayload,
 } from '../../underlying-agreement.types';
 
 export function manageFacilitiesNextStepPath(currentStep: string): Observable<string> {
@@ -53,6 +54,22 @@ export function applyEditFacility(
   );
 }
 
+export function applyEditFacilityVariationReviewStatusChanges(
+  currentPayload: UNARequestTaskPayload,
+  userInput: FacilityItemViewModel,
+) {
+  return of(
+    produce(currentPayload, (payload) => {
+      if (userInput.status !== 'NEW') {
+        (payload as UNAVariationRequestTaskPayload).reviewSectionsCompleted[userInput.facilityId] =
+          TaskItemStatus.UNDECIDED;
+
+        delete (payload as UNAVariationRequestTaskPayload).facilitiesReviewGroupDecisions[userInput.facilityId];
+      }
+    }),
+  );
+}
+
 export function applyAddFacility(
   currentPayload: UNARequestTaskPayload,
   subtask: string,
@@ -92,6 +109,20 @@ export function applyExcludeFacility(
             }
           : f,
       );
+    }),
+  );
+}
+
+export function applyExcludeFacilityVariationReviewStatusChanges(
+  currentPayload: UNARequestTaskPayload,
+  userInput: FacilityItemViewModel,
+) {
+  return of(
+    produce(currentPayload, (payload) => {
+      (payload as UNAVariationRequestTaskPayload).reviewSectionsCompleted[userInput.facilityId] =
+        TaskItemStatus.UNDECIDED;
+
+      delete (payload as UNAVariationRequestTaskPayload).facilitiesReviewGroupDecisions[userInput.facilityId];
     }),
   );
 }

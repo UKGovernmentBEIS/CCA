@@ -8,7 +8,7 @@ import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } f
 import { render } from '@testing-library/angular';
 import { screen } from '@testing-library/dom';
 import UserEvent from '@testing-library/user-event';
-import produce from 'immer';
+import { produce } from 'immer';
 
 import { mockRequestTaskItemDTOABSOLUTE, mockUnaRequestTaskPayloadABSOLUTE } from '../../../testing';
 import { BASELINE_AND_TARGETS_SUBTASK, BaselineAndTargetPeriodsSubtasks } from '../../../underlying-agreement.types';

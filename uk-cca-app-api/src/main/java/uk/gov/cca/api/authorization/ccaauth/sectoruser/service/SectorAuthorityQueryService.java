@@ -6,7 +6,7 @@ import uk.gov.cca.api.authorization.ccaauth.core.domain.CcaAuthority;
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.domain.SectorUserAuthoritiesDTO;
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.domain.SectorUserAuthorityDTO;
 import uk.gov.cca.api.authorization.ccaauth.core.repository.CcaAuthorityRepository;
-import uk.gov.cca.api.authorization.ccaauth.rules.services.SectorAssociationAuthorizationResourceService;
+import uk.gov.cca.api.authorization.ccaauth.rules.services.resource.SectorAssociationAuthorizationResourceService;
 import uk.gov.netz.api.authorization.core.repository.AuthorityRepository;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;

@@ -2,10 +2,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { BehaviorSubject } from 'rxjs';
-
 import { AuthStore } from '@netz/common/auth';
-import { BREADCRUMB_ITEMS, BreadcrumbItem } from '@netz/common/navigation';
+import { BreadcrumbService } from '@netz/common/navigation';
 import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
 import { KeycloakService } from 'keycloak-angular';
 
@@ -17,8 +15,8 @@ describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let page: Page;
-  let breadcrumbItem: BehaviorSubject<BreadcrumbItem[]>;
   let authStore: AuthStore;
+  let breadcrumbService: BreadcrumbService;
 
   const setUser = (roleType: UserStateDTO['roleType'], loginStatus?: UserStateDTO['status']) => {
     authStore.setUserState({ roleType, status: loginStatus });
@@ -79,7 +77,7 @@ describe('AppComponent', () => {
     authStore = TestBed.inject(AuthStore);
     authStore.setIsLoggedIn(true);
     authStore.setUserState({ roleType: 'OPERATOR', status: 'NO_AUTHORITY' });
-    breadcrumbItem = TestBed.inject(BREADCRUMB_ITEMS);
+    breadcrumbService = TestBed.inject(BreadcrumbService);
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
     page = new Page(fixture);
@@ -145,17 +143,14 @@ describe('AppComponent', () => {
   it('should display breadcrumbs', () => {
     expect(page.breadcrumbs).toEqual([]);
 
-    breadcrumbItem.next([{ text: 'Dashboard', link: ['/dashboard'] }, { text: 'Apply for a GHGE permit' }]);
+    breadcrumbService.links.set([{ text: 'Dashboard', link: ['/dashboard'] }]);
     fixture.detectChanges();
-    expect(Array.from(page.breadcrumbs).map((breacrumb) => breacrumb.textContent)).toEqual([
-      'Dashboard',
-      'Apply for a GHGE permit',
-    ]);
+    expect(Array.from(page.breadcrumbs).map((breacrumb) => breacrumb.textContent)).toEqual(['Dashboard']);
 
     expect(page.breadcrumbs[0].querySelector<HTMLAnchorElement>('a').href).toContain('/dashboard');
-    expect(page.breadcrumbs[1].querySelector<HTMLAnchorElement>('a')).toBeFalsy();
+    expect(page.breadcrumbs.length).toBe(1);
 
-    breadcrumbItem.next(null);
+    breadcrumbService.show([]);
     fixture.detectChanges();
 
     expect(page.breadcrumbs).toEqual([]);

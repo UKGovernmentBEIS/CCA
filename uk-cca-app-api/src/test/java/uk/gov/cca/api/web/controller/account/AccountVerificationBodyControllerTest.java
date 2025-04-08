@@ -114,7 +114,7 @@ class AccountVerificationBodyControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "getVerificationBodyOfAccount", Long.toString(accountId));
+                .authorize(user, "getVerificationBodyOfAccount", Long.toString(accountId), null, null);
         
         mockMvc.perform(
                 MockMvcRequestBuilders
@@ -155,7 +155,7 @@ class AccountVerificationBodyControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "getActiveVerificationBodies", Long.toString(accountId));
+                .authorize(user, "getActiveVerificationBodies", Long.toString(accountId), null, null);
         
         mockMvc.perform(
                 MockMvcRequestBuilders
@@ -197,7 +197,7 @@ class AccountVerificationBodyControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "appointVerificationBodyToAccount", String.valueOf(accountId));
+                .authorize(user, "appointVerificationBodyToAccount", String.valueOf(accountId), null, null);
         
         mockMvc.perform(
                 MockMvcRequestBuilders
@@ -240,7 +240,7 @@ class AccountVerificationBodyControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "replaceVerificationBodyToAccount", String.valueOf(accountId));
+                .authorize(user, "replaceVerificationBodyToAccount", String.valueOf(accountId), null, null);
 
         mockMvc.perform(
                 MockMvcRequestBuilders

@@ -39,6 +39,9 @@ public class UnderlyingAgreementVariationSubmitService {
         requestPayload.setSectionsCompleted(taskPayload.getSectionsCompleted());
         requestPayload.setUnderlyingAgreementAttachments(taskPayload.getAttachments());
         requestPayload.setAccountReferenceData(taskPayload.getAccountReferenceData());
+        requestPayload.setReviewGroupDecisions(taskPayload.getReviewGroupDecisions());
+        requestPayload.setFacilitiesReviewGroupDecisions(taskPayload.getFacilitiesReviewGroupDecisions());
+        requestPayload.setReviewSectionsCompleted(taskPayload.getReviewSectionsCompleted());
 
         // Add request action
         addUnderlyingAgreementVariationSubmittedRequestAction(user, taskPayload, request);

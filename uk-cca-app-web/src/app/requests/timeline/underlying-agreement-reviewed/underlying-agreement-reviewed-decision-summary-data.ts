@@ -5,7 +5,10 @@ import {
   transformUserContacts,
 } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { transformAttachmentsToDownloadableFiles, transformFileInfoToDownloadableFile } from '@shared/utils';
+import {
+  transformAttachmentsAndFileUUIDsToDownloadableFiles,
+  transformFileInfoToDownloadableFile,
+} from '@shared/utils';
 
 import {
   UnderlyingAgreementAcceptedRequestActionPayload,
@@ -36,7 +39,7 @@ function addSummaryDataToFactory(
   const decisionValue = determination.type === 'ACCEPTED' ? 'Accept' : 'Reject';
   factory
     .addSection('Decision details')
-    .addRow('Application', 'Underlying agreement application', { link: 'underlying-agreement-review' })
+    .addRow('Application', 'Underlying agreement application', { link: 'underlying-agreement-reviewed' })
 
     .addRow('Decision', decisionValue);
 
@@ -48,7 +51,11 @@ function addSummaryDataToFactory(
     .addRow('Additional information', determination?.additionalInformation)
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsToDownloadableFiles(determination.files, payload.reviewAttachments, 'file-download'),
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
+        determination.files,
+        payload.reviewAttachments,
+        'file-download',
+      ),
     );
 
   factory

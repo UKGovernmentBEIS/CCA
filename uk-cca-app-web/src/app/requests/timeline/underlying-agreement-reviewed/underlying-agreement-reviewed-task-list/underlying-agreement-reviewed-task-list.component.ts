@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
-import { PageHeadingComponent, ReturnToTaskOrActionPageComponent, TaskListComponent } from '@netz/common/components';
+import { PageHeadingComponent, TaskListComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
 import {
   UnderlyingAgreementDecisionRequestActionPayload,
@@ -12,13 +12,14 @@ import { getAllUnderlyingAgreementReviewTimelineSections } from '../underlying-a
 @Component({
   selector: 'cca-underlying-agreement-review-task-list',
   standalone: true,
-  imports: [TaskListComponent, ReturnToTaskOrActionPageComponent, PageHeadingComponent],
+  imports: [TaskListComponent, PageHeadingComponent],
   templateUrl: './underlying-agreement-reviewed-task-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementReviewedTaskListComponent {
   private readonly requestActionStore = inject(RequestActionStore);
-  sections = computed(() =>
+
+  protected readonly sections = computed(() =>
     getAllUnderlyingAgreementReviewTimelineSections(
       this.requestActionStore.select(
         underlyingAgreementRequestActionQuery.selectPayload,

@@ -4,7 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { TaskService } from '@netz/common/forms';
 import { RequestTaskStore } from '@netz/common/store';
-import { DateInputComponent, LinkDirective, TextInputComponent } from '@netz/govuk-components';
+import { DateInputComponent } from '@netz/govuk-components';
 import { MANAGE_FACILITIES_SUBTASK, ManageFacilitiesWizardStep, underlyingAgreementQuery } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 
@@ -19,14 +19,7 @@ import {
 @Component({
   selector: 'cca-facility-item-exclude',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    WizardStepComponent,
-    TextInputComponent,
-    LinkDirective,
-    RouterLink,
-    DateInputComponent,
-  ],
+  imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, DateInputComponent],
   templateUrl: './facility-item-exclude.component.html',
   providers: [FacilityItemExcludeFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,

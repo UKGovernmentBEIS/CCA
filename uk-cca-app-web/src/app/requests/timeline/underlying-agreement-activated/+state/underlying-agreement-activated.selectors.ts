@@ -20,8 +20,10 @@ const selectOfficialNotice: StateSelector<RequestActionState, FileInfoDTO> = cre
   (payload) => payload.officialNotice,
 );
 
-const selectUsersInfo: StateSelector<RequestActionState, { [p: string]: RequestActionUserInfo }> =
-  createDescendingSelector(selectPayload, (payload) => payload.usersInfo);
+const selectUsersInfo: StateSelector<
+  RequestActionState,
+  Record<string, RequestActionUserInfo>
+> = createDescendingSelector(selectPayload, (payload) => payload.usersInfo);
 
 const selectDefaultContacts: StateSelector<
   RequestActionState,
@@ -43,8 +45,10 @@ const selectUnderlyingAgreementActivationDetails: StateSelector<
   UnderlyingAgreementActivationDetails
 > = createDescendingSelector(selectPayload, (payload) => payload.underlyingAgreementActivationDetails);
 
-const selectUnderlyingAgreementActivationAttachments: StateSelector<RequestActionState, { [p: string]: string }> =
-  createDescendingSelector(selectPayload, (payload) => payload.underlyingAgreementActivationAttachments);
+const selectUnderlyingAgreementActivationAttachments: StateSelector<
+  RequestActionState,
+  Record<string, string>
+> = createDescendingSelector(selectPayload, (payload) => payload.underlyingAgreementActivationAttachments);
 
 export const underlyingAgreementActivatedQuery = {
   selectPayload,

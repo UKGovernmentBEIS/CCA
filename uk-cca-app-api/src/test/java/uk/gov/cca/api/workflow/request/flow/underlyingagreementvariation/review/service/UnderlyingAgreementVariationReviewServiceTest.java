@@ -54,7 +54,6 @@ class UnderlyingAgreementVariationReviewServiceTest {
     @InjectMocks
     private UnderlyingAgreementVariationReviewService service;
 
-
     @Test
     void saveUnderlyingAgreementVariation() {
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = UnderlyingAgreementTargetUnitDetails.builder()
@@ -84,6 +83,10 @@ class UnderlyingAgreementVariationReviewServiceTest {
                                 .underlyingAgreementTargetUnitDetails(UnderlyingAgreementTargetUnitDetails.builder().build())
                                 .underlyingAgreement(UnderlyingAgreement.builder().build())
                                 .underlyingAgreementVariationDetails(UnderlyingAgreementVariationDetails.builder().build())
+                                .build())
+                        .determination(Determination.builder()
+                                .type(DeterminationType.ACCEPTED)
+                                .additionalInformation("info")
                                 .build())
                         .build();
 
@@ -162,15 +165,61 @@ class UnderlyingAgreementVariationReviewServiceTest {
                 UnderlyingAgreementVariationSaveReviewGroupDecisionRequestTaskActionPayload.builder()
                         .payloadType(CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_GROUP_DECISION_PAYLOAD)
                         .group(UnderlyingAgreementVariationReviewGroup.TARGET_UNIT_DETAILS)
-                        .decision(UnderlyingAgreementReviewDecision.builder()
-                                .type(CcaReviewDecisionType.REJECTED).details(UnderlyingAgreementReviewDecisionDetails.builder()
-                                        .notes("notes")
-                                        .build())
+                        .decision(decision)
+                        .build();
+
+        // Invoke
+        service.saveReviewGroupDecision(payload, requestTask);
+
+        // Verify
+        assertThat(requestTask.getPayload()).isInstanceOf(UnderlyingAgreementVariationReviewRequestTaskPayload.class);
+
+        final UnderlyingAgreementVariationReviewRequestTaskPayload
+                payloadSaved = (UnderlyingAgreementVariationReviewRequestTaskPayload) requestTask.getPayload();
+
+        assertThat(payloadSaved.getReviewGroupDecisions()).containsEntry(UnderlyingAgreementVariationReviewGroup.TARGET_UNIT_DETAILS, decision);
+        assertThat(payloadSaved.getReviewSectionsCompleted())
+                .containsExactlyInAnyOrderEntriesOf(payload.getReviewSectionsCompleted());
+    }
+
+    @Test
+    void saveReviewGroupDecision_reset_determination() {
+        final UnderlyingAgreementVariationReviewRequestTaskPayload reviewRequestTaskPayload =
+                UnderlyingAgreementVariationReviewRequestTaskPayload
+                        .builder()
+                        .payloadType(CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW_PAYLOAD)
+                        .reviewSectionsCompleted(Map.of(UnderlyingAgreementTargetUnitDetails.class.getName(), "COMPLETED"))
+                        .determination(Determination.builder()
+                                .type(DeterminationType.REJECTED)
+                                .reason("My reason")
+                                .additionalInformation("Information")
+                                .files(Set.of(UUID.randomUUID()))
                                 .build())
                         .build();
 
+        final RequestTask requestTask = RequestTask.builder()
+                .payload(reviewRequestTaskPayload)
+                .request(Request.builder().build())
+                .build();
+
+        final UnderlyingAgreementReviewDecision decision = UnderlyingAgreementReviewDecision.builder()
+                .type(CcaReviewDecisionType.REJECTED)
+                .details(UnderlyingAgreementReviewDecisionDetails.builder()
+                        .notes("notes")
+                        .build())
+                .build();
+
+        final UnderlyingAgreementVariationSaveReviewGroupDecisionRequestTaskActionPayload payload =
+                UnderlyingAgreementVariationSaveReviewGroupDecisionRequestTaskActionPayload.builder()
+                        .payloadType(CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_GROUP_DECISION_PAYLOAD)
+                        .group(UnderlyingAgreementVariationReviewGroup.TARGET_UNIT_DETAILS)
+                        .decision(decision)
+                        .build();
+
+        // Invoke
         service.saveReviewGroupDecision(payload, requestTask);
 
+        // Verify
         assertThat(requestTask.getPayload()).isInstanceOf(UnderlyingAgreementVariationReviewRequestTaskPayload.class);
 
         final UnderlyingAgreementVariationReviewRequestTaskPayload
@@ -208,19 +257,13 @@ class UnderlyingAgreementVariationReviewServiceTest {
                 UnderlyingAgreementVariationSaveFacilityReviewGroupDecisionRequestTaskActionPayload.builder()
                         .payloadType(CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_SAVE_FACILITY_REVIEW_GROUP_DECISION_PAYLOAD)
                         .group("ADS-F00064")
-                        .decision(UnderlyingAgreementVariationFacilityReviewDecision.builder()
-                                .type(CcaReviewDecisionType.ACCEPTED)
-                                .changeStartDate(Boolean.TRUE)
-                                .startDate(LocalDate.now())
-                                .details(UnderlyingAgreementReviewDecisionDetails.builder()
-                                        .notes("notes")
-                                        .build())
-                                .build())
+                        .decision(decision)
                         .build();
 
-
+        // Invoke
         service.saveFacilityReviewGroupDecision(payload, requestTask);
 
+        // Verify
         assertThat(requestTask.getPayload()).isInstanceOf(UnderlyingAgreementVariationReviewRequestTaskPayload.class);
 
         final UnderlyingAgreementVariationReviewRequestTaskPayload

@@ -6,7 +6,10 @@ import {
   transformUserContacts,
 } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { transformAttachmentsToDownloadableFiles, transformFileInfoToDownloadableFile } from '@shared/utils';
+import {
+  transformAttachmentsAndFileUUIDsToDownloadableFiles,
+  transformFileInfoToDownloadableFile,
+} from '@shared/utils';
 
 import {
   AdminTerminationReasonDetails,
@@ -18,12 +21,12 @@ import {
 
 export function toAdminTerminationReasonSubmittedTimelineSummaryData(
   adminTerminationReasonDetails: AdminTerminationReasonDetails,
-  adminTerminationSubmitAttachments: { [key: string]: string },
+  adminTerminationSubmitAttachments: Record<string, string>,
   decisionNotification: CcaDecisionNotification,
   defaultContacts: DefaultNoticeRecipient[],
   officialNotice: FileInfoDTO,
   downloadUrl: string,
-  usersInfo?: { [key: string]: RequestActionUserInfo },
+  usersInfo?: Record<string, RequestActionUserInfo>,
 ): SummaryData {
   return new SummaryFactory()
     .addSection('Details')
@@ -33,7 +36,7 @@ export function toAdminTerminationReasonSubmittedTimelineSummaryData(
     .addRow('Explain why the account is being terminated', adminTerminationReasonDetails.explanation)
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsToDownloadableFiles(
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
         adminTerminationReasonDetails.relevantFiles,
         adminTerminationSubmitAttachments,
         downloadUrl,

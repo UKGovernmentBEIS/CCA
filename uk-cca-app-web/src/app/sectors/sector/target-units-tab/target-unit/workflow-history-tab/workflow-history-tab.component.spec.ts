@@ -21,7 +21,7 @@ describe('WorkflowHistoryTabComponent', () => {
       providers: [provideHttpClient(), provideHttpClientTesting()],
       configureTestBed: (testbed) => {
         requestService = {
-          getRequestDetailsByAccountId: jest.fn().mockReturnValue(of(mockRequestDetailsSearchResultsData)),
+          getRequestDetailsByResource: jest.fn().mockReturnValue(of(mockRequestDetailsSearchResultsData)),
         };
 
         testbed.overrideProvider(ActivatedRoute, { useValue: new ActivatedRouteStub({ targetUnitId: 7 }) });
@@ -30,19 +30,25 @@ describe('WorkflowHistoryTabComponent', () => {
         });
       },
     });
+
     fixture.detectChanges();
   });
+
   it('should render items when fetched', async () => {
     expect(screen.getByTestId('workflow-history-form')).toBeVisible();
-    expect(document.querySelectorAll('.search-results-list_item')).toHaveLength(20);
+    expect(document.querySelectorAll('.search-results-list_item')).toHaveLength(
+      mockRequestDetailsSearchResultsData.total,
+    );
   });
+
   it('should send a request when a checkbox is clicked', async () => {
     const user = UserEvent.setup();
-    requestService.getRequestDetailsByAccountId = jest
+    requestService.getRequestDetailsByResource = jest
       .fn()
       .mockReturnValue(of(filterByRequestType('Underlying agreement')));
 
     await user.click(screen.getByLabelText('Underlying agreement application'));
+
     mockRequestDetailsSearchResultsData.requestDetails
       .filter((d) => d.requestType === 'Underlying agreement')
       .forEach((rd) => {

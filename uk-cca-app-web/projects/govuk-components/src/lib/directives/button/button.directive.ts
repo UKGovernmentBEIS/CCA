@@ -15,9 +15,7 @@ export class ButtonDirective {
   }
 
   @HostBinding('class.govuk-button')
-  get elementClass(): boolean {
-    return true;
-  }
+  readonly elementClass = true;
 
   @HostBinding('class.govuk-button--secondary')
   get secondaryButton(): boolean {

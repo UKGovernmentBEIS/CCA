@@ -1,9 +1,12 @@
 import {
   UnderlyingAgreementAcceptedRequestActionPayload,
+  UnderlyingAgreementMigratedRequestActionPayload,
   UnderlyingAgreementPayload,
   UnderlyingAgreementRejectedRequestActionPayload,
   UnderlyingAgreementSubmittedRequestActionPayload,
+  UnderlyingAgreementVariationAcceptedRequestActionPayload,
   UnderlyingAgreementVariationPayload,
+  UnderlyingAgreementVariationRejectedRequestActionPayload,
   UnderlyingAgreementVariationSubmittedRequestActionPayload,
 } from 'cca-api';
 
@@ -11,9 +14,15 @@ export type UnderlyingAgreementDecisionRequestActionPayload =
   | UnderlyingAgreementAcceptedRequestActionPayload
   | UnderlyingAgreementRejectedRequestActionPayload;
 
+export type UnderlyingAgreementVariationDecisionRequestActionPayload =
+  | UnderlyingAgreementVariationAcceptedRequestActionPayload
+  | UnderlyingAgreementVariationRejectedRequestActionPayload;
+
 export type UnderlyingAgreementRequestActionPayload =
   | UnderlyingAgreementSubmittedRequestActionPayload
   | UnderlyingAgreementDecisionRequestActionPayload
-  | UnderlyingAgreementVariationSubmittedRequestActionPayload;
+  | UnderlyingAgreementVariationSubmittedRequestActionPayload
+  | UnderlyingAgreementVariationDecisionRequestActionPayload
+  | UnderlyingAgreementMigratedRequestActionPayload;
 
 export type UnaPayload = UnderlyingAgreementPayload | UnderlyingAgreementVariationPayload;

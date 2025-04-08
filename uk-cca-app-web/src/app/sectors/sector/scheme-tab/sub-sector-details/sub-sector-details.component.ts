@@ -2,6 +2,7 @@ import { DecimalPipe, PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { PageHeadingComponent } from '@netz/common/components';
 import {
   GovukTableColumn,
   SummaryListComponent,
@@ -10,7 +11,6 @@ import {
   SummaryListRowValueDirective,
   TableComponent,
 } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
 
 import { SubsectorAssociationSchemeDTO } from 'cca-api';
 

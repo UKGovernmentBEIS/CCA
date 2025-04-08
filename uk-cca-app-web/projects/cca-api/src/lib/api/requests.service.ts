@@ -9,20 +9,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { RequestCreateActionProcessDTO } from '../model/requestCreateActionProcessDTO';
 import { RequestCreateActionProcessResponseDTO } from '../model/requestCreateActionProcessResponseDTO';
 import { RequestCreateValidationResult } from '../model/requestCreateValidationResult';
 import { RequestDetailsDTO } from '../model/requestDetailsDTO';
 import { RequestDetailsSearchResults } from '../model/requestDetailsSearchResults';
-import { RequestSearchByAccountCriteria } from '../model/requestSearchByAccountCriteria';
+import { RequestSearchCriteria } from '../model/requestSearchCriteria';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -88,37 +88,48 @@ export class RequestsService {
 
   /**
    * Get workflows to start a task
-   * @param accountId The account id
+   * @param resourceType The resource type associated with given resource id
+   * @param resourceId The resource id for which the available workflows will be retrieved
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getAvailableAccountWorkflows(accountId: number): Observable<{ [key: string]: RequestCreateValidationResult }>;
-  public getAvailableAccountWorkflows(
-    accountId: number,
+  public getAvailableWorkflows(
+    resourceType: string,
+    resourceId: string,
+  ): Observable<Record<string, RequestCreateValidationResult>>;
+  public getAvailableWorkflows(
+    resourceType: string,
+    resourceId: string,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<HttpResponse<{ [key: string]: RequestCreateValidationResult }>>;
-  public getAvailableAccountWorkflows(
-    accountId: number,
+  ): Observable<HttpResponse<Record<string, RequestCreateValidationResult>>>;
+  public getAvailableWorkflows(
+    resourceType: string,
+    resourceId: string,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<HttpEvent<{ [key: string]: RequestCreateValidationResult }>>;
-  public getAvailableAccountWorkflows(
-    accountId: number,
+  ): Observable<HttpEvent<Record<string, RequestCreateValidationResult>>>;
+  public getAvailableWorkflows(
+    resourceType: string,
+    resourceId: string,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<{ [key: string]: RequestCreateValidationResult }>;
-  public getAvailableAccountWorkflows(
-    accountId: number,
+  ): Observable<Record<string, RequestCreateValidationResult>>;
+  public getAvailableWorkflows(
+    resourceType: string,
+    resourceId: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
   ): Observable<any> {
-    if (accountId === null || accountId === undefined) {
-      throw new Error('Required parameter accountId was null or undefined when calling getAvailableAccountWorkflows.');
+    if (resourceType === null || resourceType === undefined) {
+      throw new Error('Required parameter resourceType was null or undefined when calling getAvailableWorkflows.');
+    }
+    if (resourceId === null || resourceId === undefined) {
+      throw new Error('Required parameter resourceId was null or undefined when calling getAvailableWorkflows.');
     }
 
     let headers = this.defaultHeaders;
@@ -144,92 +155,10 @@ export class RequestsService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<{ [key: string]: RequestCreateValidationResult }>(
-      `${this.configuration.basePath}/v1.0/requests/available-workflows/permit/${encodeURIComponent(String(accountId))}`,
+    return this.httpClient.get<Record<string, RequestCreateValidationResult>>(
+      `${this.configuration.basePath}/v1.0/requests/available-workflows/${encodeURIComponent(String(resourceType))}/${encodeURIComponent(String(resourceId))}`,
       {
-        responseType: <any>responseType_,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress,
-      },
-    );
-  }
-
-  /**
-   * Get the workflows for the given search criteria
-   * @param requestSearchByAccountCriteria
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getRequestDetailsByAccountId(
-    requestSearchByAccountCriteria: RequestSearchByAccountCriteria,
-  ): Observable<RequestDetailsSearchResults>;
-  public getRequestDetailsByAccountId(
-    requestSearchByAccountCriteria: RequestSearchByAccountCriteria,
-    observe: 'response',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<RequestDetailsSearchResults>>;
-  public getRequestDetailsByAccountId(
-    requestSearchByAccountCriteria: RequestSearchByAccountCriteria,
-    observe: 'events',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<RequestDetailsSearchResults>>;
-  public getRequestDetailsByAccountId(
-    requestSearchByAccountCriteria: RequestSearchByAccountCriteria,
-    observe: 'body',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<RequestDetailsSearchResults>;
-  public getRequestDetailsByAccountId(
-    requestSearchByAccountCriteria: RequestSearchByAccountCriteria,
-    observe: any = 'body',
-    reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<any> {
-    if (requestSearchByAccountCriteria === null || requestSearchByAccountCriteria === undefined) {
-      throw new Error(
-        'Required parameter requestSearchByAccountCriteria was null or undefined when calling getRequestDetailsByAccountId.',
-      );
-    }
-
-    let headers = this.defaultHeaders;
-
-    // authentication (bearerAuth) required
-    const credential = this.configuration.lookupCredential('bearerAuth');
-    if (credential) {
-      headers = headers.set('Authorization', 'Bearer ' + credential);
-    }
-
-    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-    if (httpHeaderAcceptSelected === undefined) {
-      // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
-      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    }
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    // to determine the Content-Type header
-    const consumes: string[] = ['application/json'];
-    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-    if (httpContentTypeSelected !== undefined) {
-      headers = headers.set('Content-Type', httpContentTypeSelected);
-    }
-
-    let responseType_: 'text' | 'json' = 'json';
-    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-      responseType_ = 'text';
-    }
-
-    return this.httpClient.post<RequestDetailsSearchResults>(
-      `${this.configuration.basePath}/v1.0/requests/workflows`,
-      requestSearchByAccountCriteria,
-      {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -266,7 +195,7 @@ export class RequestsService {
   public getRequestDetailsById(
     id: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -299,7 +228,89 @@ export class RequestsService {
     return this.httpClient.get<RequestDetailsDTO>(
       `${this.configuration.basePath}/v1.0/requests/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
+  }
+
+  /**
+   * Get the workflows for the given search criteria
+   * @param requestSearchCriteria
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getRequestDetailsByResource(
+    requestSearchCriteria: RequestSearchCriteria,
+  ): Observable<RequestDetailsSearchResults>;
+  public getRequestDetailsByResource(
+    requestSearchCriteria: RequestSearchCriteria,
+    observe: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<RequestDetailsSearchResults>>;
+  public getRequestDetailsByResource(
+    requestSearchCriteria: RequestSearchCriteria,
+    observe: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<RequestDetailsSearchResults>>;
+  public getRequestDetailsByResource(
+    requestSearchCriteria: RequestSearchCriteria,
+    observe: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<RequestDetailsSearchResults>;
+  public getRequestDetailsByResource(
+    requestSearchCriteria: RequestSearchCriteria,
+    observe: any = 'body',
+    reportProgress = false,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any> {
+    if (requestSearchCriteria === null || requestSearchCriteria === undefined) {
+      throw new Error(
+        'Required parameter requestSearchCriteria was null or undefined when calling getRequestDetailsByResource.',
+      );
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (bearerAuth) required
+    const credential = this.configuration.lookupCredential('bearerAuth');
+    if (credential) {
+      headers = headers.set('Authorization', 'Bearer ' + credential);
+    }
+
+    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = ['application/json'];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
+    }
+
+    let responseType_: 'text' | 'json' = 'json';
+    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+      responseType_ = 'text';
+    }
+
+    return this.httpClient.post<RequestDetailsSearchResults>(
+      `${this.configuration.basePath}/v1.0/requests/workflows`,
+      requestSearchCriteria,
+      {
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -311,40 +322,40 @@ export class RequestsService {
   /**
    * Processes a request create action
    * @param requestCreateActionProcessDTO
-   * @param accountId The account id
+   * @param resourceId The resource id on which a request will be created (e.g accountId, CA etc.)
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public processRequestCreateAction(
     requestCreateActionProcessDTO: RequestCreateActionProcessDTO,
-    accountId?: number,
+    resourceId?: string,
   ): Observable<RequestCreateActionProcessResponseDTO>;
   public processRequestCreateAction(
     requestCreateActionProcessDTO: RequestCreateActionProcessDTO,
-    accountId: number,
+    resourceId: string,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<RequestCreateActionProcessResponseDTO>>;
   public processRequestCreateAction(
     requestCreateActionProcessDTO: RequestCreateActionProcessDTO,
-    accountId: number,
+    resourceId: string,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<RequestCreateActionProcessResponseDTO>>;
   public processRequestCreateAction(
     requestCreateActionProcessDTO: RequestCreateActionProcessDTO,
-    accountId: number,
+    resourceId: string,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<RequestCreateActionProcessResponseDTO>;
   public processRequestCreateAction(
     requestCreateActionProcessDTO: RequestCreateActionProcessDTO,
-    accountId?: number,
+    resourceId?: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (requestCreateActionProcessDTO === null || requestCreateActionProcessDTO === undefined) {
@@ -354,8 +365,8 @@ export class RequestsService {
     }
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
-    if (accountId !== undefined && accountId !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>accountId, 'accountId');
+    if (resourceId !== undefined && resourceId !== null) {
+      queryParameters = this.addToHttpParams(queryParameters, resourceId as any, 'resourceId');
     }
 
     let headers = this.defaultHeaders;
@@ -393,7 +404,7 @@ export class RequestsService {
       requestCreateActionProcessDTO,
       {
         params: queryParameters,
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

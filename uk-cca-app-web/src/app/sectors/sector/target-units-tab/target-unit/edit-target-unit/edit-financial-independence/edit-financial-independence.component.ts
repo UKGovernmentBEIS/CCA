@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { GovukSelectOption, GovukValidators, LinkDirective, SelectComponent } from '@netz/govuk-components';
+import { GovukSelectOption, GovukValidators, SelectComponent } from '@netz/govuk-components';
 import { WizardStepComponent } from '@shared/components';
 import { financialIndependenceStatusTypeMap } from '@shared/pipes';
 
@@ -14,7 +14,7 @@ import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
   selector: 'cca-edit-financial-independence',
   templateUrl: './edit-financial-independence.component.html',
   standalone: true,
-  imports: [SelectComponent, ReactiveFormsModule, WizardStepComponent, LinkDirective, RouterLink],
+  imports: [SelectComponent, ReactiveFormsModule, WizardStepComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditFinancialIndependenceComponent {

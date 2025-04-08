@@ -20,4 +20,5 @@ export interface SectorAssociationContactDTO {
   address: AddressDTO;
   phoneNumber?: string;
   email: string;
+  fullName?: string;
 }

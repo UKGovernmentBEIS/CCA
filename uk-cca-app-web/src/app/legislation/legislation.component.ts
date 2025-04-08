@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { BackToTopComponent } from '@shared/components';
-import { PageHeadingComponent } from '@shared/components';
+import { PageHeadingComponent } from '@netz/common/components';
 
 @Component({
   selector: 'cca-legislation',
   standalone: true,
   templateUrl: './legislation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeadingComponent, BackToTopComponent],
+  imports: [PageHeadingComponent],
 })
 export class LegislationComponent {}

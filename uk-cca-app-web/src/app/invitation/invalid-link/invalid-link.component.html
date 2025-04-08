@@ -1,6 +1,6 @@
 @switch (errorCode$ | async) {
   @case ('EMAIL1001') {
-    <cca-page-heading>This link has expired</cca-page-heading>
+    <netz-page-heading>This link has expired</netz-page-heading>
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
@@ -17,7 +17,7 @@
   }
 
   @default {
-    <cca-page-heading>This link is invalid</cca-page-heading>
+    <netz-page-heading>This link is invalid</netz-page-heading>
     <p class="govuk-body">Please contact your admin for access.</p>
   }
 }

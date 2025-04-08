@@ -13,5 +13,5 @@ import { UnderlyingAgreementReviewDecisionDetails } from './underlyingAgreementR
 
 export interface UnderlyingAgreementReviewDecision {
   type: 'ACCEPTED' | 'REJECTED';
-  details: UnderlyingAgreementReviewDecisionDetails;
+  details?: UnderlyingAgreementReviewDecisionDetails;
 }

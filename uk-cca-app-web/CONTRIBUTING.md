@@ -76,7 +76,6 @@ git commit --no-verify
 ## Practices
 
 The project does not use any major external library besides Angular.
-Utility libraries such as lodash are used scarcely, and should be avoided.
 
 All latest ES6 features are supported and encouraged, however Observables are used for all async operations instead of any native
 alternatives such as Promise/Timeout.

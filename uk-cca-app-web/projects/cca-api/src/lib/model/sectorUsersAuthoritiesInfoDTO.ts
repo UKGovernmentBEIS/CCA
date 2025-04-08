@@ -12,6 +12,6 @@
 import { SectorUserAuthorityInfoDTO } from './sectorUserAuthorityInfoDTO';
 
 export interface SectorUsersAuthoritiesInfoDTO {
-  authorities?: Array<SectorUserAuthorityInfoDTO>;
+  authorities?: SectorUserAuthorityInfoDTO[];
   editable?: boolean;
 }

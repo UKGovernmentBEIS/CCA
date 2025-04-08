@@ -12,6 +12,7 @@ import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
+import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.service.TargetUnitAccountCreationService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestCreateActionPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
@@ -21,10 +22,12 @@ import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.do
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.domain.TargetUnitAccountPayload;
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.transform.TargetUnitAccountPayloadMapper;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.common.domain.PhoneNumberDTO;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.workflow.request.StartProcessRequestService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestParams;
@@ -126,12 +129,16 @@ class TargetUnitAccountCreationSubmitApplicationCreateActionHandlerTest {
 
         RequestParams requestParams = RequestParams.builder()
                 .type(TARGET_UNIT_ACCOUNT_CREATION)
-                .accountId(accountId)
+                .requestResources(Map.of(
+                		ResourceType.ACCOUNT, accountId.toString(),
+                		CcaResourceType.SECTOR_ASSOCIATION, sectorAssociationId.toString()
+                		))
                 .requestPayload(requestPayload)
                 .processVars(Map.of(BpmnProcessConstants.ACCOUNT_ID, accountId))
                 .build();
 
-        Request request = Request.builder().competentAuthority(CompetentAuthorityEnum.ENGLAND).creationDate(LocalDateTime.now()).build();
+        Request request = Request.builder().creationDate(LocalDateTime.now()).build();
+        addCaResourceToRequest(CompetentAuthorityEnum.ENGLAND, request);
 
         when(targetUnitAccountPayloadMapper.toTargetUnitAccountDTO(accountPayload, sectorAssociationId, appUser.getUserId())).thenReturn(accountDTO);
         when(targetUnitAccountPayloadMapper.toTargetUnitAccountCreationRequestPayload(accountPayload, businessId, sectorAssociationId)).thenReturn(requestPayload);
@@ -192,4 +199,14 @@ class TargetUnitAccountCreationSubmitApplicationCreateActionHandlerTest {
                 .address(AccountAddressDTO.builder().build()).email("email")
                 .build();
     }
+    
+    private void addCaResourceToRequest(CompetentAuthorityEnum ca, Request request) {
+    	RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.CA)
+				.resourceId(ca.name())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

@@ -8,13 +8,13 @@ exports[`Review Target Unit Details Summary should render the summary sections a
   summaryData={[Function Array]}
 >
   <div>
-    <cca-page-heading>
+    <netz-page-heading>
       <h1
         class="govuk-heading-l"
       >
         Target unit details
       </h1>
-    </cca-page-heading>
+    </netz-page-heading>
     <cca-summary>
       <h2
         class="govuk-heading-m"
@@ -47,7 +47,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -76,7 +75,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -105,7 +103,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -134,7 +131,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -181,7 +177,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -220,7 +215,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -249,7 +243,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -278,7 +271,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -315,7 +307,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -354,7 +345,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -383,7 +373,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -414,7 +403,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/?change=true"
             >
               Change
@@ -425,7 +413,6 @@ exports[`Review Target Unit Details Summary should render the summary sections a
     </cca-summary>
   </div><netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

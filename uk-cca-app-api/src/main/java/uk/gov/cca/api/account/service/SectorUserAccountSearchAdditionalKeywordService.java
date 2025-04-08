@@ -11,6 +11,7 @@ import uk.gov.netz.api.account.service.UserRoleTypeAccountSearchService;
 import uk.gov.netz.api.account.transform.AccountSearchResultMapper;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ public class SectorUserAccountSearchAdditionalKeywordService implements UserRole
                 .getAccounts(accountSearchKeywordResults.getAccountIds())
                 .stream()
                 .map(accountSearchResultMapper::toAccountInfoDTO)
+                .sorted(Comparator.comparing(AccountSearchResultInfoDTO::getId))
                 .collect(Collectors.toList());
 
         return AccountSearchResults.builder()

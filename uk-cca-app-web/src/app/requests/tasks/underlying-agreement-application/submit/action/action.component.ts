@@ -2,17 +2,17 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { TaskService } from '@netz/common/forms';
 import { ButtonDirective } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
 
 @Component({
   selector: 'cca-una-submit-action',
   standalone: true,
   imports: [ButtonDirective, PageHeadingComponent, PendingButtonDirective, ReturnToTaskOrActionPageComponent],
   template: `
-    <cca-page-heading size="xl"> Submit to regulator </cca-page-heading>
+    <netz-page-heading size="xl"> Submit to regulator </netz-page-heading>
 
     <p class="govuk-body">Your application will be sent directly to your Regulator (Environment Agency).</p>
     <p class="govuk-body">
@@ -21,7 +21,7 @@ import { PendingButtonDirective } from '@shared/directives';
     </p>
 
     <div class="govuk-button-group">
-      <button type="button" ccaPendingButton (click)="submit()" govukButton>Confirm and send</button>
+      <button type="button" netzPendingButton (click)="submit()" govukButton>Confirm and send</button>
     </div>
 
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />

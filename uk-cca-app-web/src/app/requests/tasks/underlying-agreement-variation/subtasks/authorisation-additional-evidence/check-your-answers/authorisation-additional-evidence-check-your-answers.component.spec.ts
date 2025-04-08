@@ -58,14 +58,13 @@ describe('CheckYourAnswersComponent', () => {
   });
 
   it('should render the summary sections and rows', () => {
-    expect(screen.getByText('Authorisation and additional evidence')).toBeInTheDocument();
-
-    const authorisationAndAdditionalEvidenceHeading = screen.getAllByText('Uploaded files');
-
+    const authorisationAndAdditionalEvidenceHeadingAndSummaryKey = screen.getAllByText('Authorisation');
     expect(
-      authorisationAndAdditionalEvidenceHeading[0] && authorisationAndAdditionalEvidenceHeading[1],
-    ).toHaveTextContent('Uploaded files');
-
+      authorisationAndAdditionalEvidenceHeadingAndSummaryKey[0] &&
+        authorisationAndAdditionalEvidenceHeadingAndSummaryKey[1],
+    ).toBeInTheDocument();
+    const additionalEvidenceHeadingAndSummaryKey = screen.getAllByText('Authorisation');
+    expect(additionalEvidenceHeadingAndSummaryKey[0] && additionalEvidenceHeadingAndSummaryKey[1]).toBeInTheDocument();
     const noFilesProvided = screen.getAllByText('No files provided');
     expect(noFilesProvided[0] && noFilesProvided[1]).toHaveTextContent('No files provided');
   });

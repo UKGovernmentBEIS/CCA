@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { RequestActionDTO } from '../model/requestActionDTO';
 import { RequestActionInfoDTO } from '../model/requestActionInfoDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -110,7 +110,7 @@ export class RequestActionsService {
   public getRequestActionById(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -143,7 +143,7 @@ export class RequestActionsService {
     return this.httpClient.get<RequestActionDTO>(
       `${this.configuration.basePath}/v1.0/request-actions/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -158,29 +158,29 @@ export class RequestActionsService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getRequestActionsByRequestId(requestId: string): Observable<Array<RequestActionInfoDTO>>;
+  public getRequestActionsByRequestId(requestId: string): Observable<RequestActionInfoDTO[]>;
   public getRequestActionsByRequestId(
     requestId: string,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<RequestActionInfoDTO>>>;
+  ): Observable<HttpResponse<RequestActionInfoDTO[]>>;
   public getRequestActionsByRequestId(
     requestId: string,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<RequestActionInfoDTO>>>;
+  ): Observable<HttpEvent<RequestActionInfoDTO[]>>;
   public getRequestActionsByRequestId(
     requestId: string,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<RequestActionInfoDTO>>;
+  ): Observable<RequestActionInfoDTO[]>;
   public getRequestActionsByRequestId(
     requestId: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (requestId === null || requestId === undefined) {
@@ -189,7 +189,7 @@ export class RequestActionsService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (requestId !== undefined && requestId !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>requestId, 'requestId');
+      queryParameters = this.addToHttpParams(queryParameters, requestId as any, 'requestId');
     }
 
     let headers = this.defaultHeaders;
@@ -215,9 +215,9 @@ export class RequestActionsService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<RequestActionInfoDTO>>(`${this.configuration.basePath}/v1.0/request-actions`, {
+    return this.httpClient.get<RequestActionInfoDTO[]>(`${this.configuration.basePath}/v1.0/request-actions`, {
       params: queryParameters,
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,

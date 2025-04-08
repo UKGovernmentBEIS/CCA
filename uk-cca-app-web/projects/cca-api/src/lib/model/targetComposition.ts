@@ -17,5 +17,5 @@ export interface TargetComposition {
   isTargetUnitThroughputMeasured?: boolean;
   throughputUnit?: string;
   conversionFactor?: number;
-  conversionEvidences?: Array<string>;
+  conversionEvidences?: string[];
 }

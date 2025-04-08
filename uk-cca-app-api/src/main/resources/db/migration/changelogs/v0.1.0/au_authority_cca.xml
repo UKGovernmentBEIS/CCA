@@ -241,4 +241,84 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_add_permission_PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD" author="vourdoukasd@unisystems.gr">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD'
+            from au_role
+            where code in ('sector_user_administrator', 'sector_user_basic_user');
+        </sql>
+
+        <rollback>
+            <sql>
+                delete from au_role_permission
+                where role_id in (select id from au_role where code in('sector_user_administrator', 'sector_user_basic_user'))
+                and permission = 'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_sector_users_with_permission_PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD" author="vourdoukasd@unisystems.gr">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+                     join au_role r on au.code = r.code
+                     join au_role_permission rp on r.id = rp.role_id
+            where r.code in ('sector_user_administrator', 'sector_user_basic_user')
+              and rp.permission = 'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission
+                where permission = 'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD'
+                and authority_id in (select au.id
+                    from au_authority au
+                    join au_role r on au.code = r.code
+                    where r.code in('sector_user_administrator', 'sector_user_basic_user'));
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    
+    
+    <changeSet id="0_1_0_add_permission_PERM_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_to_sector_roles" author="P35066">
+        <sql>
+            insert into au_role_permission(id, role_id, permission)
+            select nextval('au_role_permission_seq'), id, 'PERM_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+            from au_role
+            where code in ('sector_user_administrator', 'sector_user_basic_user');
+        </sql>
+
+        <rollback>
+            <sql>
+                delete from au_role_permission
+                where role_id in (select id from au_role where code in('sector_user_administrator', 'sector_user_basic_user'))
+                and permission = 'PERM_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_sector_users_with_permission_PERM_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD" author="P35066">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+                     join au_role r on au.code = r.code
+                     join au_role_permission rp on r.id = rp.role_id
+            where r.code in ('sector_user_administrator', 'sector_user_basic_user')
+              and rp.permission = 'PERM_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission
+                where permission = 'PERM_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD'
+                and authority_id in (select au.id
+                    from au_authority au
+                    join au_role r on au.code = r.code
+                    where r.code in('sector_user_administrator', 'sector_user_basic_user'));
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

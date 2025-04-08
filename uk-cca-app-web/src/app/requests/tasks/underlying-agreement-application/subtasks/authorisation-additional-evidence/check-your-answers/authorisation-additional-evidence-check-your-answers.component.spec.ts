@@ -56,12 +56,8 @@ describe('CheckYourAnswersComponent', () => {
   });
 
   it('should render the summary sections and rows', () => {
-    expect(screen.getByText('Authorisation and additional evidence')).toBeInTheDocument();
-    const authorisationAndAdditionalEvidenceHeading = screen.getAllByText('Uploaded files');
-    expect(
-      authorisationAndAdditionalEvidenceHeading[0] && authorisationAndAdditionalEvidenceHeading[1],
-    ).toHaveTextContent('Uploaded files');
-    expect(screen.getByText('No files provided')).toBeInTheDocument();
+    expect(screen.getByText('Authorisation')).toBeInTheDocument();
+    expect(screen.getByText('Additional evidence')).toBeInTheDocument();
   });
 
   it('should contain submit button and "return to" link', () => {

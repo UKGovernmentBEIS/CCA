@@ -11,6 +11,6 @@
  */
 
 export interface RfiResponsePayload {
-  answers: Array<string>;
-  files?: Array<string>;
+  answers: string[];
+  files?: string[];
 }

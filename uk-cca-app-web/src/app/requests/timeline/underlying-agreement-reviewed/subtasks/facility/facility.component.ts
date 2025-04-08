@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
 import { toFacilitySummaryDataWithDecision, underlyingAgreementRequestActionQuery } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
@@ -11,7 +11,7 @@ import { underlyingAgreementReviewedRequestActionQuery } from '../../+state/unde
 @Component({
   selector: 'cca-timeline-review-facility',
   standalone: true,
-  imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
+  imports: [PageHeadingComponent, SummaryComponent],
   templateUrl: './facility.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

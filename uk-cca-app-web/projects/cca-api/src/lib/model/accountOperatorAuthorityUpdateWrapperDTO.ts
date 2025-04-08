@@ -15,5 +15,5 @@ import { AccountOperatorAuthorityUpdateDTO } from './accountOperatorAuthorityUpd
  * The account operator authorities to update
  */
 export interface AccountOperatorAuthorityUpdateWrapperDTO {
-  accountOperatorAuthorityUpdateList: Array<AccountOperatorAuthorityUpdateDTO>;
+  accountOperatorAuthorityUpdateList: AccountOperatorAuthorityUpdateDTO[];
 }

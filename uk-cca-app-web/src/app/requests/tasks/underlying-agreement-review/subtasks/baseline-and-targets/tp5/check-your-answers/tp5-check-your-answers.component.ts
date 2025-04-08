@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
@@ -11,9 +12,8 @@ import {
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
-import { PageHeadingComponent, SummaryComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { SummaryComponent } from '@shared/components';
+import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-check-your-answers',
@@ -27,11 +27,11 @@ import { generateDownloadUrl } from '@shared/utils/download-url-generator';
   ],
   template: `
     <div>
-      <cca-page-heading caption="TP5 (2021-2022)">Check your answers</cca-page-heading>
+      <netz-page-heading caption="TP5 (2021-2022)">Check your answers</netz-page-heading>
 
       <cca-summary [data]="summaryData" />
 
-      <button ccaPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
+      <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
     </div>
 
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />

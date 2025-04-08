@@ -12,6 +12,6 @@
 import { RequestDetailsDTO } from './requestDetailsDTO';
 
 export interface RequestDetailsSearchResults {
-  requestDetails?: Array<RequestDetailsDTO>;
+  requestDetails?: RequestDetailsDTO[];
   total?: number;
 }

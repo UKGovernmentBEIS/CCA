@@ -16,13 +16,13 @@ export interface HttpHeadersAcceptLanguageAsLocales {
   country?: string;
   variant?: string;
   script?: string;
-  unicodeLocaleAttributes?: Array<string>;
-  unicodeLocaleKeys?: Array<string>;
+  unicodeLocaleAttributes?: string[];
+  unicodeLocaleKeys?: string[];
   displayLanguage?: string;
   displayScript?: string;
   displayCountry?: string;
   displayVariant?: string;
-  extensionKeys?: Array<string>;
+  extensionKeys?: string[];
   iso3Language?: string;
   iso3Country?: string;
 }

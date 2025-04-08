@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.cca.api.common.validation.DataValidator;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
-import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.AgreementCompositionType;
+import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod5Details;
 
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGETS;

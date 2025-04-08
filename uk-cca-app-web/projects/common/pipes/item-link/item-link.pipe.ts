@@ -13,6 +13,8 @@ export class ItemLinkPipe implements PipeTransform {
       case 'UNDERLYING_AGREEMENT':
       case 'ADMIN_TERMINATION':
       case 'UNDERLYING_AGREEMENT_VARIATION':
+      case 'PERFORMANCE_DATA_DOWNLOAD':
+      case 'PERFORMANCE_DATA_UPLOAD':
         return [routerLooks + 'tasks', value.taskId];
 
       default:

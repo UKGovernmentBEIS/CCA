@@ -12,7 +12,7 @@
 import { TargetUnitAccountInfoDTO } from './targetUnitAccountInfoDTO';
 
 export interface TargetUnitAccountInfoResponseDTO {
-  accountsWithSiteContact?: Array<TargetUnitAccountInfoDTO>;
+  accountsWithSiteContact?: TargetUnitAccountInfoDTO[];
   editable?: boolean;
   totalItems?: number;
 }

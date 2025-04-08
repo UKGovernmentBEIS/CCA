@@ -9,17 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { AuthorityManagePermissionDTO } from '../model/authorityManagePermissionDTO';
-import { RegulatorUsersAuthoritiesInfoDTO } from '../model/regulatorUsersAuthoritiesInfoDTO';
 import { RegulatorUserUpdateStatusDTO } from '../model/regulatorUserUpdateStatusDTO';
+import { RegulatorUsersAuthoritiesInfoDTO } from '../model/regulatorUsersAuthoritiesInfoDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -106,7 +106,7 @@ export class RegulatorAuthoritiesService {
   ): Observable<any>;
   public deleteCurrentRegulatorUserByCompetentAuthority(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -133,7 +133,7 @@ export class RegulatorAuthoritiesService {
     }
 
     return this.httpClient.delete<any>(`${this.configuration.basePath}/v1.0/regulator-authorities`, {
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -169,7 +169,7 @@ export class RegulatorAuthoritiesService {
   public deleteRegulatorUserByCompetentAuthority(
     userId: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (userId === null || userId === undefined) {
@@ -204,7 +204,7 @@ export class RegulatorAuthoritiesService {
     return this.httpClient.delete<any>(
       `${this.configuration.basePath}/v1.0/regulator-authorities/${encodeURIComponent(String(userId))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -236,7 +236,7 @@ export class RegulatorAuthoritiesService {
   ): Observable<RegulatorUsersAuthoritiesInfoDTO>;
   public getCaRegulators(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -265,7 +265,7 @@ export class RegulatorAuthoritiesService {
     return this.httpClient.get<RegulatorUsersAuthoritiesInfoDTO>(
       `${this.configuration.basePath}/v1.0/regulator-authorities`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -297,7 +297,7 @@ export class RegulatorAuthoritiesService {
   ): Observable<AuthorityManagePermissionDTO>;
   public getCurrentRegulatorUserPermissionsByCa(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -326,7 +326,7 @@ export class RegulatorAuthoritiesService {
     return this.httpClient.get<AuthorityManagePermissionDTO>(
       `${this.configuration.basePath}/v1.0/regulator-authorities/permissions`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -340,25 +340,25 @@ export class RegulatorAuthoritiesService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getRegulatorPermissionGroupLevels(): Observable<{ [key: string]: Array<string> }>;
+  public getRegulatorPermissionGroupLevels(): Observable<Record<string, string[]>>;
   public getRegulatorPermissionGroupLevels(
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<HttpResponse<{ [key: string]: Array<string> }>>;
+  ): Observable<HttpResponse<Record<string, string[]>>>;
   public getRegulatorPermissionGroupLevels(
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<HttpEvent<{ [key: string]: Array<string> }>>;
+  ): Observable<HttpEvent<Record<string, string[]>>>;
   public getRegulatorPermissionGroupLevels(
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<{ [key: string]: Array<string> }>;
+  ): Observable<Record<string, string[]>>;
   public getRegulatorPermissionGroupLevels(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: '*/*' | 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -384,10 +384,10 @@ export class RegulatorAuthoritiesService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<{ [key: string]: Array<string> }>(
+    return this.httpClient.get<Record<string, string[]>>(
       `${this.configuration.basePath}/v1.0/regulator-authorities/permissions/group-levels`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -424,7 +424,7 @@ export class RegulatorAuthoritiesService {
   public getRegulatorUserPermissionsByCaAndId(
     userId: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (userId === null || userId === undefined) {
@@ -459,7 +459,7 @@ export class RegulatorAuthoritiesService {
     return this.httpClient.get<AuthorityManagePermissionDTO>(
       `${this.configuration.basePath}/v1.0/regulator-authorities/permissions/${encodeURIComponent(String(userId))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -475,30 +475,30 @@ export class RegulatorAuthoritiesService {
    * @param reportProgress flag to report request and response progress.
    */
   public updateCompetentAuthorityRegulatorUsersStatus(
-    regulatorUserUpdateStatusDTO: Array<RegulatorUserUpdateStatusDTO>,
+    regulatorUserUpdateStatusDTO: RegulatorUserUpdateStatusDTO[],
   ): Observable<any>;
   public updateCompetentAuthorityRegulatorUsersStatus(
-    regulatorUserUpdateStatusDTO: Array<RegulatorUserUpdateStatusDTO>,
+    regulatorUserUpdateStatusDTO: RegulatorUserUpdateStatusDTO[],
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<any>>;
   public updateCompetentAuthorityRegulatorUsersStatus(
-    regulatorUserUpdateStatusDTO: Array<RegulatorUserUpdateStatusDTO>,
+    regulatorUserUpdateStatusDTO: RegulatorUserUpdateStatusDTO[],
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<any>>;
   public updateCompetentAuthorityRegulatorUsersStatus(
-    regulatorUserUpdateStatusDTO: Array<RegulatorUserUpdateStatusDTO>,
+    regulatorUserUpdateStatusDTO: RegulatorUserUpdateStatusDTO[],
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any>;
   public updateCompetentAuthorityRegulatorUsersStatus(
-    regulatorUserUpdateStatusDTO: Array<RegulatorUserUpdateStatusDTO>,
+    regulatorUserUpdateStatusDTO: RegulatorUserUpdateStatusDTO[],
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (regulatorUserUpdateStatusDTO === null || regulatorUserUpdateStatusDTO === undefined) {
@@ -541,7 +541,7 @@ export class RegulatorAuthoritiesService {
       `${this.configuration.basePath}/v1.0/regulator-authorities`,
       regulatorUserUpdateStatusDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

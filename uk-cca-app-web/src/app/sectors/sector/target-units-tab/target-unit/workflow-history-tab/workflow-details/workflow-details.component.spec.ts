@@ -24,6 +24,7 @@ describe('WorkflowDetailsComponent', () => {
           },
         ],
       });
+
       fixture.detectChanges();
       await fixture.whenStable();
     });
@@ -54,6 +55,7 @@ describe('WorkflowDetailsComponent', () => {
           },
         ],
       });
+
       fixture.detectChanges();
       await fixture.whenStable();
     });

@@ -2,9 +2,9 @@
   <govuk-error-summary [form]="form"></govuk-error-summary>
 }
 
-<cca-page-heading size="xl">
+<netz-page-heading size="xl">
   {{ isAdd ? 'External contact details' : 'Add an external contact' }}
-</cca-page-heading>
+</netz-page-heading>
 
 <form (ngSubmit)="addExternalContact()" [formGroup]="form" id="add-external-contact">
   <div
@@ -25,7 +25,7 @@
   ></div>
   <div formControlName="description" govuk-text-input label="Description" widthClass="govuk-!-width-one-third"></div>
 
-  <button ccaPendingButton govukButton type="submit">
+  <button netzPendingButton govukButton type="submit">
     {{ isAdd | submitIfEmpty }}
   </button>
 </form>

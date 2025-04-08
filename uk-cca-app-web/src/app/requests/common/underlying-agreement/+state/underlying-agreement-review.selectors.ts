@@ -7,6 +7,7 @@ import {
 
 import { TaskItemStatus } from '../../task-item-status';
 import { UNAReviewRequestTaskPayload, UNAVariationReviewRequestTaskPayload } from '../underlying-agreement.types';
+import { overallDecisionStatus } from '../utils';
 import { underlyingAgreementQuery } from './underlying-agreement.selectors';
 
 const selectSectorAssociationId = createDescendingSelector(
@@ -15,22 +16,21 @@ const selectSectorAssociationId = createDescendingSelector(
     payload.accountReferenceData.targetUnitAccountDetails.sectorAssociationId,
 );
 
-const selectReviewAttachments: StateSelector<RequestTaskState, { [key: string]: string }> = createDescendingSelector(
+const selectReviewAttachments: StateSelector<RequestTaskState, Record<string, string>> = createDescendingSelector(
   underlyingAgreementQuery.selectPayload,
   (payload: UNAReviewRequestTaskPayload | UNAVariationReviewRequestTaskPayload) => payload.reviewAttachments,
 );
 
-const selectReviewSectionsCompleted: StateSelector<RequestTaskState, { [key: string]: string }> =
-  createDescendingSelector(
-    underlyingAgreementQuery.selectPayload,
-    (payload: UNAReviewRequestTaskPayload | UNAVariationReviewRequestTaskPayload) => payload.reviewSectionsCompleted,
-  );
+const selectReviewSectionsCompleted: StateSelector<RequestTaskState, Record<string, string>> = createDescendingSelector(
+  underlyingAgreementQuery.selectPayload,
+  (payload: UNAReviewRequestTaskPayload | UNAVariationReviewRequestTaskPayload) => payload.reviewSectionsCompleted,
+);
 
 const selectReviewSectionCompleted = (section: string) =>
   createDescendingSelector(
     underlyingAgreementQuery.selectPayload,
     (payload: UNAReviewRequestTaskPayload | UNAVariationReviewRequestTaskPayload) =>
-      payload.reviewSectionsCompleted[section],
+      payload.reviewSectionsCompleted[section] as TaskItemStatus,
   );
 
 const selectReviewSectionIsCompleted = (section: string) =>
@@ -63,9 +63,8 @@ const selectDetermination = createDescendingSelector(
   (payload: UNAReviewRequestTaskPayload | UNAVariationReviewRequestTaskPayload) => payload.determination,
 );
 
-const selectIsCompleted = createDescendingSelector(
-  underlyingAgreementQuery.selectPayload,
-  (payload: UNAReviewRequestTaskPayload | UNAVariationReviewRequestTaskPayload) => !!payload.determination,
+const selectDeterminationSubmitted = createDescendingSelector(underlyingAgreementQuery.selectPayload, (payload) =>
+  [TaskItemStatus.APPROVED, TaskItemStatus.REJECTED].includes(overallDecisionStatus(payload)),
 );
 
 export const underlyingAgreementReviewQuery = {
@@ -77,5 +76,5 @@ export const underlyingAgreementReviewQuery = {
   selectSubtaskDecision,
   selectFacilitySubtaskDecision,
   selectDetermination,
-  selectIsCompleted,
+  selectDeterminationSubmitted,
 };

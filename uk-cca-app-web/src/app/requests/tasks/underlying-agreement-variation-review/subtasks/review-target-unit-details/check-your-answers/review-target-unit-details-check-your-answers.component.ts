@@ -1,20 +1,21 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import {
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   toReviewTargetUnitDetailsSummaryDataWithDecision,
+  transform,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
-import { PageHeadingComponent } from '@shared/components';
-import { SummaryComponent } from '@shared/components/summary';
-import { PendingButtonDirective } from '@shared/directives';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
+import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-check-your-answers',
@@ -25,6 +26,8 @@ import { generateDownloadUrl } from '@shared/utils/download-url-generator';
     ButtonDirective,
     PendingButtonDirective,
     ReturnToTaskOrActionPageComponent,
+    HighlightDiffComponent,
+    NgTemplateOutlet,
   ],
   templateUrl: './review-target-unit-details-check-your-answers.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,8 +41,24 @@ export default class ReviewTargetUnitDetailsCheckYourAnswersComponent {
   private readonly downloadUrl = generateDownloadUrl(
     this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
   );
+
   private readonly attachments = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
-  protected readonly summaryData = toReviewTargetUnitDetailsSummaryDataWithDecision(
+
+  private readonly accountReferenceData = this.requestTaskStore.select(
+    underlyingAgreementQuery.selectAccountReferenceData,
+  );
+
+  private readonly originalTargetUnitDetails = transform(this.accountReferenceData());
+
+  protected readonly summaryDataOriginal = toReviewTargetUnitDetailsSummaryDataWithDecision(
+    this.originalTargetUnitDetails,
+    this.requestTaskStore.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
+    this.attachments,
+    this.downloadUrl,
+    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+  );
+
+  protected readonly summaryDataCurrent = toReviewTargetUnitDetailsSummaryDataWithDecision(
     this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
     this.requestTaskStore.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
     this.attachments,

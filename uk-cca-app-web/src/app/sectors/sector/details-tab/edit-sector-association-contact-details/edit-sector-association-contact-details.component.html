@@ -1,6 +1,6 @@
 <govuk-error-summary [form]="form"></govuk-error-summary>
 
-<cca-page-heading size="l">Change sector contact details</cca-page-heading>
+<netz-page-heading size="l">Change sector contact details</netz-page-heading>
 
 <div class="govuk-!-width-one-half">
   <form (ngSubmit)="onSubmit()" [formGroup]="form">
@@ -29,9 +29,9 @@
       <cca-county-address-input></cca-county-address-input>
     </div>
 
-    <button ccaPendingButton govukButton type="submit">Submit</button>
+    <button netzPendingButton govukButton type="submit">Submit</button>
   </form>
 </div>
 
 <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-<a govukLink [routerLink]="'../'"> Return to: {{ returnText }} </a>
+<a class="govuk-link" [routerLink]="'../'"> Return to: {{ returnText }} </a>

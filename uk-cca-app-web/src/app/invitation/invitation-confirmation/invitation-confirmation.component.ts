@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { AuthService } from '@core/services/auth.service';
 import { ButtonDirective, PanelComponent } from '@netz/govuk-components';
+import { AuthService } from '@shared/services';
 
 @Component({
   selector: 'cca-invitation-confirmation',
@@ -18,7 +18,7 @@ import { ButtonDirective, PanelComponent } from '@netz/govuk-components';
         <h3 class="govuk-heading-m">What happens next</h3>
 
         <p class="govuk-body">You can sign in to the CCA reporting service.</p>
-        <button ccaPendingButton govukButton type="button" (click)="onSignIn()">Sign in</button>
+        <button netzPendingButton govukButton type="button" (click)="onSignIn()">Sign in</button>
       </div>
     </div>
   `,
@@ -28,6 +28,7 @@ import { ButtonDirective, PanelComponent } from '@netz/govuk-components';
 })
 export class InvitationConfirmationComponent {
   private readonly authService = inject(AuthService);
+
   onSignIn() {
     this.authService.login();
   }

@@ -5,7 +5,6 @@ import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/rout
 
 import { filter, map, tap } from 'rxjs';
 
-/* eslint-disable @angular-eslint/prefer-on-push-component-change-detection */
 @Component({
   selector: 'govuk-skip-link',
   standalone: true,

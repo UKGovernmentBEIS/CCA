@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 
 import { SignalStore } from '@netz/common/store';
 
-import { RegulatorRolePermissionsDTO, RegulatorUserDTO } from 'cca-api';
+import { RegulatorCurrentUserDTO, RegulatorRolePermissionsDTO, RegulatorUserDTO } from 'cca-api';
 
 export type DetailsStoreType = {
   isEditable: boolean;
   isAdd: boolean;
-  user?: RegulatorUserDTO;
-  userPermissions?: { [key: string]: 'NONE' | 'EXECUTE' | 'VIEW_ONLY' };
+  user?: RegulatorUserDTO | RegulatorCurrentUserDTO;
+  userPermissions?: Record<string, 'NONE' | 'EXECUTE' | 'VIEW_ONLY'>;
   regulatorRoles?: RegulatorRolePermissionsDTO[];
-  permissionGroupLevels?: { [key: string]: string[] };
+  permissionGroupLevels?: Record<string, string[]>;
 };
 
 const initialState: DetailsStoreType = {

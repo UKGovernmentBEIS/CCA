@@ -21,6 +21,7 @@ import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.WorkflowService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 
@@ -65,23 +66,25 @@ class AdminTerminationSubmitNotifyOperatorActionHandlerTest {
                         .decisionNotification(decisionNotification)
                         .build();
 
+        final AdminTerminationSubmitRequestTaskPayload requestTaskPayload = AdminTerminationSubmitRequestTaskPayload.builder()
+                .payloadType(CcaRequestTaskPayloadType.ADMIN_TERMINATION_SUBMIT_PAYLOAD)
+                .adminTerminationReasonDetails(AdminTerminationReasonDetails.builder()
+                        .reason(AdminTerminationReason.DATA_NOT_PROVIDED)
+                        .build())
+                .build();
         final RequestTask requestTask = RequestTask.builder()
                 .request(Request.builder().id(requestId).build())
                 .processTaskId(processId)
-                .payload(AdminTerminationSubmitRequestTaskPayload.builder()
-                        .payloadType(CcaRequestTaskPayloadType.ADMIN_TERMINATION_SUBMIT_PAYLOAD)
-                        .adminTerminationReasonDetails(AdminTerminationReasonDetails.builder()
-                                .reason(AdminTerminationReason.DATA_NOT_PROVIDED)
-                                .build())
-                        .build())
+                .payload(requestTaskPayload)
                 .build();
 
         when(requestTaskService.findTaskById(requestTaskId)).thenReturn(requestTask);
 
         // Invoke
-        handler.process(requestTaskId, requestTaskActionType, appUser, taskActionPayload);
+        RequestTaskPayload taskPayload = handler.process(requestTaskId, requestTaskActionType, appUser, taskActionPayload);
 
         // Verify
+        assertThat(taskPayload).isEqualTo(requestTaskPayload);
         verify(requestTaskService, times(1)).findTaskById(requestTaskId);
         verify(adminTerminationSubmitNotifyOperatorValidator, times(1))
                 .validate(requestTask, taskActionPayload, appUser);

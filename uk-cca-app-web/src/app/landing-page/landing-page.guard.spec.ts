@@ -3,11 +3,10 @@ import { Router } from '@angular/router';
 
 import { lastValueFrom, of } from 'rxjs';
 
-import { ConfigStore } from '@core/config/config.store';
-import { AuthService } from '@core/services/auth.service';
-import { LatestTermsStore } from '@core/store/latest-terms.store';
 import { AuthStore } from '@netz/common/auth';
 import { MockType } from '@netz/common/testing';
+import { ConfigStore } from '@shared/config';
+import { AuthService, LatestTermsStore } from '@shared/services';
 
 import { LandingPageGuard } from './landing-page.guard';
 

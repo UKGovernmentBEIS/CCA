@@ -6,7 +6,7 @@ import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import { TextareaComponent } from '@netz/govuk-components';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { generateDownloadUrl } from '@shared/utils';
 
 import {
   REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK,

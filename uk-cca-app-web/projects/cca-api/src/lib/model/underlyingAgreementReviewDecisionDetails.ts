@@ -11,6 +11,6 @@
  */
 
 export interface UnderlyingAgreementReviewDecisionDetails {
-  notes: string;
-  files?: Array<string>;
+  notes?: string;
+  files?: string[];
 }

@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.*;
-import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
+import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.service.SectorUserAuthorityService;
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.authorization.rules.domain.Scope;
@@ -22,13 +22,10 @@ import static org.mockito.Mockito.*;
 import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 
 @ExtendWith(MockitoExtension.class)
-public class SectorUserRequestTaskRoleTypeAuthorizationQueryServiceTest {
+class SectorUserRequestTaskRoleTypeAuthorizationQueryServiceTest {
 
     @InjectMocks
     private SectorUserRequestTaskRoleTypeAuthorizationQueryService sectorUserRequestTaskRoleTypeAuthorizationQueryService;
-
-    @Mock
-    private TargetUnitAccountQueryService targetUnitAccountQueryService;
 
     @Mock
     private SectorUserAuthorityService sectorUserAuthorityService;
@@ -40,10 +37,15 @@ public class SectorUserRequestTaskRoleTypeAuthorizationQueryServiceTest {
     void findUsersWhoCanExecuteRequestTaskTypeByAccountCriteria_requiresPermission_true() {
         String requestTaskType = "requestTaskType";
         Long sectorAssociationId = 1L;
-        ResourceCriteria resourceCriteria = ResourceCriteria.builder().accountId(1L).competentAuthority(CompetentAuthorityEnum.ENGLAND).build();
+        ResourceCriteria resourceCriteria = ResourceCriteria.builder()
+        		.requestResources(Map.of(
+        			ResourceType.ACCOUNT, "100",
+	        		CcaResourceType.SECTOR_ASSOCIATION, "1",
+	        		ResourceType.CA, CompetentAuthorityEnum.ENGLAND.name())
+	        		)
+        		.build();
         List<String> users = List.of("user");
 
-        when(targetUnitAccountQueryService.getAccountSectorAssociationId(resourceCriteria.getAccountId())).thenReturn(sectorAssociationId);
         when(sectorUserAuthorityResourceService.findSectorUsersWithScopeOnResourceTypeAndSubTypeAndSectorAssociationId(ResourceType.REQUEST_TASK, requestTaskType,
                 Scope.REQUEST_TASK_EXECUTE, sectorAssociationId)).thenReturn(users);
 
@@ -52,7 +54,6 @@ public class SectorUserRequestTaskRoleTypeAuthorizationQueryServiceTest {
                         (requestTaskType, resourceCriteria, true);
 
         assertEquals(users, usersWhoCanExecuteRequestTaskTypeByAccountCriteria);
-        verify(targetUnitAccountQueryService, times(1)).getAccountSectorAssociationId(sectorAssociationId);
         verify(sectorUserAuthorityResourceService, times(1)).findSectorUsersWithScopeOnResourceTypeAndSubTypeAndSectorAssociationId(ResourceType.REQUEST_TASK, requestTaskType,
                 Scope.REQUEST_TASK_EXECUTE, sectorAssociationId);
     }
@@ -60,12 +61,16 @@ public class SectorUserRequestTaskRoleTypeAuthorizationQueryServiceTest {
     @Test
     void findUsersWhoCanExecuteRequestTaskTypeByAccountCriteria_requiresPermission_false() {
         String requestTaskType = "requestTaskType";
-        Long sectorAssociationId = 1L;
-        ResourceCriteria resourceCriteria = ResourceCriteria.builder().accountId(1L).competentAuthority(CompetentAuthorityEnum.ENGLAND).build();
+        ResourceCriteria resourceCriteria = ResourceCriteria.builder()
+        		.requestResources(Map.of(
+    	        		ResourceType.ACCOUNT, "100",
+    	        		CcaResourceType.SECTOR_ASSOCIATION, "1",
+    	        		ResourceType.CA, CompetentAuthorityEnum.ENGLAND.name())
+    	        		)
+        		.build();
         List<String> users = List.of("user");
         TargetUnitAccount targetUnitAccount = getTargetUnitAccount();
 
-        when(targetUnitAccountQueryService.getAccountSectorAssociationId(resourceCriteria.getAccountId())).thenReturn(sectorAssociationId);
         when(sectorUserAuthorityService.findActiveSectorUsersBySectorAssociationId(targetUnitAccount.getSectorAssociationId())).thenReturn(users);
 
         List<String> usersWhoCanExecuteRequestTaskTypeByAccountCriteria =
@@ -73,7 +78,6 @@ public class SectorUserRequestTaskRoleTypeAuthorizationQueryServiceTest {
                         (requestTaskType, resourceCriteria, false);
 
         assertEquals(users, usersWhoCanExecuteRequestTaskTypeByAccountCriteria);
-        verify(targetUnitAccountQueryService, times(1)).getAccountSectorAssociationId(resourceCriteria.getAccountId());
         verify(sectorUserAuthorityService, times(1)).findActiveSectorUsersBySectorAssociationId(targetUnitAccount.getSectorAssociationId());
     }
 

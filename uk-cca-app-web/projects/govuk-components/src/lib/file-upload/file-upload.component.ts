@@ -8,7 +8,6 @@ import { FormService } from '../form';
 /*
   eslint-disable
   @typescript-eslint/no-unused-vars,
-  @angular-eslint/prefer-on-push-component-change-detection,
   @typescript-eslint/no-empty-function
 */
 @Component({

@@ -116,7 +116,7 @@ class RoleControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(user, "getOperatorRoleCodes", String.valueOf(accountId));
+            .authorize(user, "getOperatorRoleCodes", String.valueOf(accountId), null, null);
 
         // Invokeact_ru_event_subscr
         mockMvc.perform(MockMvcRequestBuilders

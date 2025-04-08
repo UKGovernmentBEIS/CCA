@@ -3,7 +3,9 @@ package uk.gov.cca.api.account.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
+import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountHeaderInfoDTO;
 import uk.gov.cca.api.account.repository.TargetUnitAccountRepository;
@@ -11,7 +13,9 @@ import uk.gov.cca.api.account.transform.TargetUnitAccountMapper;
 import uk.gov.cca.api.authorization.ccaauth.rules.services.authorityinfo.providers.TargetUnitAuthorityInfoProvider;
 import uk.gov.netz.api.common.exception.BusinessException;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
@@ -30,6 +34,12 @@ public class TargetUnitAccountQueryService implements TargetUnitAuthorityInfoPro
             .collect(Collectors.toList());
     }
 
+    public Set<Long> getSectorAssociationIdsByAccountIds(List<Long> accountIds) {
+        return getAccountsByIds(accountIds).stream()
+                .map(TargetUnitAccountDTO::getSectorAssociationId)
+                .collect(Collectors.toSet());
+    }
+
     public List<TargetUnitAccount> getAccounts(List<Long> accountIds) {
         return repository.findAllByIdIn(accountIds);
     }
@@ -44,8 +54,13 @@ public class TargetUnitAccountQueryService implements TargetUnitAuthorityInfoPro
         return targetUnitAccount.getBusinessId() + " - " + targetUnitAccount.getName();
     }
 
+    @Override
     public List<Long> getAllTargetUnitAccountIdsBySectorAssociationId(Long sectorAssociationId) {
         return repository.findAllIdsBySectorAssociationId(sectorAssociationId);
+    }
+
+    public List<TargetUnitAccountBusinessInfoDTO> getAllActiveTargetUnitAccountsBusinessInfoBySectorAssociationId(Long sectorAssociationId) {
+        return repository.findAllTargetUnitAccountsBusinessInfoBySectorAssociationIdAndStatus(sectorAssociationId, TargetUnitAccountStatus.LIVE);
     }
 
     public TargetUnitAccountHeaderInfoDTO getTargetUnitAccountHeaderInfo(Long accountId) {
@@ -64,4 +79,12 @@ public class TargetUnitAccountQueryService implements TargetUnitAuthorityInfoPro
     public boolean isExistingTargetUnitAccount(String businessId) {
         return repository.existsByBusinessId(businessId);
     }
+    
+	public List<TargetUnitAccountBusinessInfoDTO> findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedDuringActivatedYearOrTerminatedBetween(
+			Long sectorAssociationId, LocalDateTime acceptedDate, LocalDateTime terminatedDateFrom,
+			LocalDateTime terminatedDateTo) {
+		return repository.findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedBetween(
+				sectorAssociationId, acceptedDate, terminatedDateFrom, terminatedDateTo);
+	}
+    		
 }

@@ -14,6 +14,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.submit.service.U
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.WorkflowService;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestTaskActionHandler;
 import uk.gov.netz.api.workflow.request.flow.common.domain.RequestTaskActionEmptyPayload;
@@ -28,7 +29,7 @@ public class UnderlyingAgreementSubmitActionHandler
     private final WorkflowService workflowService;
 
     @Override
-    public void process(Long requestTaskId, String requestTaskActionType, AppUser appUser, 
+    public RequestTaskPayload process(Long requestTaskId, String requestTaskActionType, AppUser appUser, 
     		RequestTaskActionEmptyPayload payload) {
         final RequestTask requestTask = requestTaskService.findTaskById(requestTaskId);
 
@@ -41,6 +42,8 @@ public class UnderlyingAgreementSubmitActionHandler
       // Complete task
       workflowService.completeTask(requestTask.getProcessTaskId(), 
     		  Map.of(CcaBpmnProcessConstants.UNDERLYING_AGREEMENT_OUTCOME, UnderlyingAgreementOutcome.SUBMITTED));
+      
+      return requestTask.getPayload();
     }
 
     @Override

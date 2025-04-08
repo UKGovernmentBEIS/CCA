@@ -27,6 +27,7 @@ import { DecisionWithDateFormModel } from './decision-form.type';
 class TestComponent {
   form = inject<DecisionWithDateFormModel>(DECISION_FORM_PROVIDER);
 }
+
 describe('decision with date test', () => {
   beforeEach(async () => {
     await render(TestComponent, {
@@ -37,14 +38,16 @@ describe('decision with date test', () => {
       },
     });
   });
+
   it('should display controls', () => {
     expect(screen.getByLabelText('Accepted')).toBeInTheDocument();
     expect(screen.getByLabelText('Rejected')).toBeInTheDocument();
-    expect(screen.getByLabelText('Notes')).toBeInTheDocument();
+    expect(screen.getByLabelText('Notes (optional)')).toBeInTheDocument();
     expect(screen.getByLabelText('Upload evidence (optional)')).toBeInTheDocument();
   });
+
   it('should show prepopulate form', async () => {
     expect(screen.getByLabelText('Accepted')).toBeChecked();
-    expect(screen.getByLabelText('Notes')).toHaveValue('asdasd');
+    expect(screen.getByLabelText('Notes (optional)')).toHaveValue('asdasd');
   });
 });

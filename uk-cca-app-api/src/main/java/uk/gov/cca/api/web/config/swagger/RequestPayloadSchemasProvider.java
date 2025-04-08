@@ -2,7 +2,7 @@ package uk.gov.cca.api.web.config.swagger;
 
 import org.springframework.stereotype.Component;
 
-import uk.gov.cca.api.workflow.request.flow.TestRequestPayload;
+import uk.gov.netz.api.swagger.SwaggerSchemasAbstractProvider;
 
 @Component
 public class RequestPayloadSchemasProvider extends SwaggerSchemasAbstractProvider {

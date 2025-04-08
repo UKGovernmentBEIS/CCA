@@ -1,6 +1,6 @@
-import { SummaryData, SummaryFactory } from '@shared/components/summary';
-import { OperatorTypePipe } from '@shared/pipes/operator-type.pipe';
-import { getAddressAsArray } from '@shared/utils/address';
+import { SummaryData, SummaryFactory } from '@shared/components';
+import { OperatorTypePipe } from '@shared/pipes';
+import { getAddressAsArray } from '@shared/utils';
 
 import { UnderlyingAgreementReviewDecision, UnderlyingAgreementTargetUnitDetails } from 'cca-api';
 
@@ -10,9 +10,10 @@ import { addDecisionSummaryData } from './decision-summary-data';
 function reviewTargetUnitDetailsSummaryFactor(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
   isEditable: boolean,
-  prefix: string = '../',
+  prefix = '../',
 ): SummaryFactory {
   const operatorTypePipe = new OperatorTypePipe();
+
   const factory = new SummaryFactory()
     .addSection('Target unit details', prefix + ReviewTargetUnitDetailsWizardStep?.TARGET_UNIT_DETAILS)
     .addRow('Operator name', targetUnitDetails?.operatorName, {
@@ -61,7 +62,7 @@ function reviewTargetUnitDetailsSummaryFactor(
 export function toReviewTargetUnitDetailsUNAReviewSummaryData(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
   isEditable: boolean,
-  prefix: string = '../',
+  prefix = '../',
 ): SummaryData {
   return reviewTargetUnitDetailsSummaryFactor(targetUnitDetails, isEditable, prefix).create();
 }
@@ -72,7 +73,7 @@ export function toReviewTargetUnitDetailsSummaryDataWithDecision(
   attachments: Record<string, string>,
   downloadUrl: string,
   isEditable: boolean,
-  prefix: string = '../',
+  prefix = '../',
 ): SummaryData {
   const factory = reviewTargetUnitDetailsSummaryFactor(targetUnitDetails, isEditable, prefix);
   return addDecisionSummaryData(factory, decision, attachments, isEditable, downloadUrl).create();

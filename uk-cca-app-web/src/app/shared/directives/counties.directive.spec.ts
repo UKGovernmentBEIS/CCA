@@ -5,9 +5,9 @@ import { By } from '@angular/platform-browser';
 
 import { of } from 'rxjs';
 
-import { CountyService } from '@core/services/county.service';
 import { MockType } from '@netz/common/testing';
 import { SelectComponent } from '@netz/govuk-components';
+import { CountyService } from '@shared/services';
 
 import { CountiesDirective } from './counties.directive';
 

@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { CcaOperatorUserDetailsDTO } from '../model/ccaOperatorUserDetailsDTO';
 import { OperatorUserDTO } from '../model/operatorUserDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -110,7 +110,7 @@ export class OperatorUsersService {
   public getCurrentOperatorUser(
     accountId: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -143,7 +143,7 @@ export class OperatorUsersService {
     return this.httpClient.get<CcaOperatorUserDetailsDTO>(
       `${this.configuration.basePath}/v1.0/operator-users/account/${encodeURIComponent(String(accountId))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -185,7 +185,7 @@ export class OperatorUsersService {
     accountId: number,
     userId: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -221,7 +221,7 @@ export class OperatorUsersService {
     return this.httpClient.get<CcaOperatorUserDetailsDTO>(
       `${this.configuration.basePath}/v1.0/operator-users/account/${encodeURIComponent(String(accountId))}/${encodeURIComponent(String(userId))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -263,7 +263,7 @@ export class OperatorUsersService {
     accountId: number,
     userId: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -300,7 +300,7 @@ export class OperatorUsersService {
       `${this.configuration.basePath}/v1.0/operator-users/account/${encodeURIComponent(String(accountId))}/${encodeURIComponent(String(userId))}/reset-2fa`,
       null,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -345,7 +345,7 @@ export class OperatorUsersService {
     accountId: number,
     ccaOperatorUserDetailsDTO: CcaOperatorUserDetailsDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -391,7 +391,7 @@ export class OperatorUsersService {
       `${this.configuration.basePath}/v1.0/operator-users/account/${encodeURIComponent(String(accountId))}`,
       ccaOperatorUserDetailsDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -442,7 +442,7 @@ export class OperatorUsersService {
     userId: string,
     ccaOperatorUserDetailsDTO: CcaOperatorUserDetailsDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -491,7 +491,7 @@ export class OperatorUsersService {
       `${this.configuration.basePath}/v1.0/operator-users/account/${encodeURIComponent(String(accountId))}/${encodeURIComponent(String(userId))}`,
       ccaOperatorUserDetailsDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

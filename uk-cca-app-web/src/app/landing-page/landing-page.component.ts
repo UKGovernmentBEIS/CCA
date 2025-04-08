@@ -2,11 +2,11 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { AuthService } from '@core/services/auth.service';
 import { AuthStore, selectIsLoggedIn, selectLoginStatus } from '@netz/common/auth';
-import { DestroySubject } from '@netz/common/services';
+import { PageHeadingComponent } from '@netz/common/components';
 import { GovukComponentsModule } from '@netz/govuk-components';
-import { BackToTopComponent, PageHeadingComponent, ServiceBannerComponent } from '@shared/components';
+import { BackToTopComponent, ServiceBannerComponent } from '@shared/components';
+import { AuthService } from '@shared/services';
 
 import { UserStateDTO } from 'cca-api';
 
@@ -20,7 +20,6 @@ interface ViewModel {
   standalone: true,
   templateUrl: './landing-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DestroySubject],
   imports: [
     PageHeadingComponent,
     RouterLink,

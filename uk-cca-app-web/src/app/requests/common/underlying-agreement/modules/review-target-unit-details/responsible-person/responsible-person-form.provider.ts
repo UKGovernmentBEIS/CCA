@@ -3,12 +3,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { createAccountAddressForm } from '@shared/components';
 import {
+  createAccountAddressForm,
   createResponsibleForm,
+  ResponsiblePersonFormConfig,
   ResponsiblePersonFormModel,
-} from '@shared/components/responsible-person-input/responsible-person-input.controls';
-import { ResponsiblePersonFormConfig } from '@shared/types/form-types';
+} from '@shared/components';
 
 import { underlyingAgreementQuery } from '../../../+state';
 

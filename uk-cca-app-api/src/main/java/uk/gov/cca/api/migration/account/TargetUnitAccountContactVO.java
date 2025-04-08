@@ -15,7 +15,6 @@ public class TargetUnitAccountContactVO {
     private String lastName;
     private String email;
     private String role;
-
     private String phoneNumber;
     
     private String addressLine1;

@@ -29,9 +29,6 @@ public class UnderlyingAgreementContainer {
     @Valid
     private UnderlyingAgreement underlyingAgreement;
 
-    @Builder.Default
-    private Map<String, String> sectionsCompleted = new HashMap<>();
-
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Builder.Default
     private Map<UUID, String> underlyingAgreementAttachments = new HashMap<>();

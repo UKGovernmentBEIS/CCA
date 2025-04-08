@@ -25,7 +25,7 @@ public class UnderlyingAgreementVariationActivationDefaultNoticeRecipients imple
                 (UnderlyingAgreementVariationRequestPayload) requestTask.getRequest().getPayload();
 
         return targetUnitAccountNoticeRecipients.getNoticeRecipients(accountId,
-                requestPayload.getUnderlyingAgreement().getUnderlyingAgreementTargetUnitDetails());
+                requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails());
     }
 
     @Override

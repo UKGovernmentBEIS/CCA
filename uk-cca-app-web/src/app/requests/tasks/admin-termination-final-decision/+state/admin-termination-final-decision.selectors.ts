@@ -18,14 +18,18 @@ const selectAdminTerminationFinalDecisionReasonDetails: StateSelector<
   (payload) => payload?.adminTerminationFinalDecisionReasonDetails,
 );
 
-const selectAdminTerminationFinalDecisionAttachments: StateSelector<RequestTaskState, { [key: string]: string }> =
-  createDescendingSelector(
-    selectAdminTerminationFinalDecisionPayload,
-    (payload) => payload?.adminTerminationAttachments,
-  );
+const selectAdminTerminationFinalDecisionAttachments: StateSelector<
+  RequestTaskState,
+  Record<string, string>
+> = createDescendingSelector(
+  selectAdminTerminationFinalDecisionPayload,
+  (payload) => payload?.adminTerminationAttachments,
+);
 
-const selectAdminTerminationFinalDecisionSectionsCompleted: StateSelector<RequestTaskState, { [key: string]: string }> =
-  createDescendingSelector(selectAdminTerminationFinalDecisionPayload, (payload) => payload?.sectionsCompleted);
+const selectAdminTerminationFinalDecisionSectionsCompleted: StateSelector<
+  RequestTaskState,
+  Record<string, string>
+> = createDescendingSelector(selectAdminTerminationFinalDecisionPayload, (payload) => payload?.sectionsCompleted);
 
 export const AdminTerminationFinalDecisionQuery = {
   selectAdminTerminationFinalDecisionPayload,

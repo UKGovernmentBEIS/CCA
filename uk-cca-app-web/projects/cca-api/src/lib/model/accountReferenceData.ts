@@ -9,8 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { SectorAssociationDetails } from './sectorAssociationDetails';
 import { TargetUnitAccountDetails } from './targetUnitAccountDetails';
+import { SectorAssociationDetails } from './sectorAssociationDetails';
 
 export interface AccountReferenceData {
   targetUnitAccountDetails?: TargetUnitAccountDetails;

@@ -32,13 +32,15 @@ const selectAccountReferenceDataSectorAssociationDetails: StateSelector<RequestA
     (accountReferenceData) => accountReferenceData.sectorAssociationDetails,
   );
 
-const selectAttachments: StateSelector<RequestActionState, { [key: string]: string }> = createDescendingSelector(
+const selectAttachments: StateSelector<RequestActionState, Record<string, string>> = createDescendingSelector(
   selectPayload,
   (payload) => payload.underlyingAgreementAttachments,
 );
 
-const selectUnderlyingAgreement: StateSelector<RequestActionState, UnaPayload> =
-  createDescendingSelector(selectPayload, (payload) => payload.underlyingAgreement);
+const selectUnderlyingAgreement: StateSelector<RequestActionState, UnaPayload> = createDescendingSelector(
+  selectPayload,
+  (payload) => payload.underlyingAgreement,
+);
 
 const selectUnderlyingAgreementTargetUnitDetails: StateSelector<
   RequestActionState,
@@ -82,10 +84,11 @@ const selectAuthorisationAndAdditionalEvidence: StateSelector<RequestActionState
     (underlyingAgreement) => underlyingAgreement.authorisationAndAdditionalEvidence,
   );
 
-  const selectVariationDetails: StateSelector<RequestActionState, UnderlyingAgreementVariationDetails> =
+const selectVariationDetails: StateSelector<RequestActionState, UnderlyingAgreementVariationDetails> =
   createDescendingSelector(
     selectUnderlyingAgreement,
-    (underlyingAgreement) => (underlyingAgreement as UnderlyingAgreementVariationPayload).underlyingAgreementVariationDetails,
+    (underlyingAgreement) =>
+      (underlyingAgreement as UnderlyingAgreementVariationPayload).underlyingAgreementVariationDetails,
   );
 
 export const underlyingAgreementRequestActionQuery = {

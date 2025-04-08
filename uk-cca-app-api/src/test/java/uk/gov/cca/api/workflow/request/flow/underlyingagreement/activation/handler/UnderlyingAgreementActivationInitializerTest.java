@@ -23,7 +23,6 @@ class UnderlyingAgreementActivationInitializerTest {
     void initializePayload() {
         final Request request = Request.builder()
                 .id("ADS_1-T00001-UNA")
-                .accountId(1L)
                 .build();
 
         final UnderlyingAgreementActivationRequestTaskPayload expected =

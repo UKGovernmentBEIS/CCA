@@ -1,12 +1,6 @@
 package uk.gov.cca.api.web.controller.user;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,20 +16,24 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserInvitationDTO;
+import uk.gov.cca.api.user.sectoruser.service.SectorUserInvitationService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.orchestrator.user.service.SectorUserInvitationOrchestratorService;
-import uk.gov.netz.api.security.AppSecurityComponent;
-import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
-import uk.gov.netz.api.security.AuthorizedAspect;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
+import uk.gov.netz.api.security.AuthorizedAspect;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 
 @ExtendWith(MockitoExtension.class)
 class SectorUserInvitationControllerTest {
@@ -51,7 +49,7 @@ class SectorUserInvitationControllerTest {
     private SectorUserInvitationController sectorUserInvitationController;
 
     @Mock
-    private SectorUserInvitationOrchestratorService sectorUserInvitationOrchestrator;
+    private SectorUserInvitationService sectorUserInvitationService;
 
     @Mock
     private AppUserAuthorizationService appUserAuthorizationService;
@@ -95,7 +93,7 @@ class SectorUserInvitationControllerTest {
 
         when(appUserArgumentResolver.supportsParameter(any())).thenReturn(true);
         when(appUserArgumentResolver.resolveArgument(any(), any(), any(), any())).thenReturn(currentUser);
-        doNothing().when(sectorUserInvitationOrchestrator).inviteUserToSectorAssociation(sectorAssociationId, sectorUserInvitationDTO, currentUser);
+        doNothing().when(sectorUserInvitationService).inviteUserToSectorAssociation(sectorAssociationId, sectorUserInvitationDTO, currentUser);
 
         mockMvc.perform(MockMvcRequestBuilders.post(SECTOR_USER_CONTROLLER_REGISTRATION_BASE_PATH + ADD_TO_SECTOR_ASSOCIATION_PATH + "/" + sectorAssociationId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -114,7 +112,7 @@ class SectorUserInvitationControllerTest {
         when(appUserArgumentResolver.resolveArgument(any(), any(), any(), any())).thenReturn(currentUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(currentUser, "inviteUserToSectorAssociation", sectorAssociationId.toString());
+                .authorize(currentUser, "inviteUserToSectorAssociation", sectorAssociationId.toString(), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.post(SECTOR_USER_CONTROLLER_REGISTRATION_BASE_PATH + ADD_TO_SECTOR_ASSOCIATION_PATH + "/" + sectorAssociationId)
                         .contentType(MediaType.APPLICATION_JSON)

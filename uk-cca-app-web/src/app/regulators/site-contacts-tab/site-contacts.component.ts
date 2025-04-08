@@ -15,13 +15,12 @@ import { ActivatedRoute } from '@angular/router';
 
 import { distinctUntilChanged, map, Observable, switchMap, tap } from 'rxjs';
 
-import { DestroySubject } from '@core/services/destroy-subject.service';
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
-import { transformUsername, UserFullNamePipe } from '@netz/common/pipes';
+import { PendingButtonDirective } from '@netz/common/directives';
+import { transformUsername } from '@netz/common/pipes';
 import { ButtonDirective, GovukTableColumn, SelectComponent, TableComponent } from '@netz/govuk-components';
 import { PaginationComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
 
 import {
   RegulatorAuthoritiesService,
@@ -46,7 +45,6 @@ type State = {
   templateUrl: './site-contacts.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  providers: [DestroySubject],
   imports: [
     TableComponent,
     SelectComponent,
@@ -54,7 +52,6 @@ type State = {
     PaginationComponent,
     NgTemplateOutlet,
     ButtonDirective,
-    UserFullNamePipe,
     PendingButtonDirective,
   ],
 })

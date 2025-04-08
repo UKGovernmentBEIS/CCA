@@ -1,19 +1,18 @@
 # NAVIGATION
 
-## General
+## Specs
+- Use the breadcrumb to depict where users are within a website's structure and allow them to move between levels.
 
-According to current specs, breadcrumbs should be used everywhere inside the app except for wizard steps.  
-To navigate inside wizards user should use the `< Back` links provided.  
-Keep in mind that breadcrumbs **ARE VISIBLE** inside wizards, however, their structure is not modified i.e. the last breadcrumb link is always the task/page that triggered the wizard.  
-**The only exception to the above is when we have subtasks with task lists that themselves contain wizards (e.g Permit -> Monitoring approaches).**  
-Summary pages **MUST** provide breadcrumbs (e.g. `Dashboard > Apply for an EMP > Monitoring approach`) as they are not part of the wizard.  
-`< Back` links **SHOULD NOT BE PRESENT** in the first step of a wizard (pointless) or in the summary/confirmation page.
+- The backlink component should never be used together with breadcrumbs according to the GDS guidelines. Source: [Back link](https://design-system.service.gov.uk/components/back-link/)
+
+- The breadcrumbs should end with the parent section of the current page. Source: [Breadcrumbs](https://design-system.service.gov.uk/components/breadcrumbs/) 
 
 ## Breadcrumbs
 
-Breadcrumbs can only be defined on routes data property and play upon route hierarchy.  
-Breadcrumb assembly will start from the top of the route hierarchy all the way to the bottom creating a respective breadcrumb hierarchy.  
-All routes with breadcrumbs must provide a `data: { breadcrumb: ... }` property  
+Breadcrumbs are the UI element which helps the user track their journey, usually placed close to the top of a page. Technically, we've chosen to tie breadcrumbs with routing. This mostly works.
+Below we give ways to override this behavior, in case that's needed.
+
+
 **_Example:_**
 
 ```typescript
@@ -36,89 +35,77 @@ export const ROUTES: Routes = [
     ],
   },
 ];
+Assuming the user is on the heroes route the expected output is:
+
+Home > Heroes.
+
+The url of the link is determined by the route tree. This can also be ovewritten.
+
 ```
 
-The `breadcrumb` property can be one of the following:
+The `breadcrumb` property found in each route can be one of the following:
 
 - `string`: This is for when the route's breadcrumb is a static string e.g.
+- `function`: This is for when the breacrumb text is dynamic. The function takes as input the route resolve data.
+- `false`: You can hide a breadcrumb by passing false as a value.
+
+### Examples
 
 ```typescript
-const route = {
-  path: 'heroes',
-  component: HeroesListComponent,
-  data: { breadcrumb: 'Heroes' },
-};
+export const ROUTES: Routes = [
+  {
+    path: '',
+    component: HomeComponent,
+    data: { breadcrumb: 'Home' },
+    children: [
+      {
+        path: 'heroes',
+        component: HeroListComponent,
+        children: [
+          {
+            path:':id',
+            resolve: { name: resolveHeroNameFn }
+            data: { breacrumb: (name) => `Super hero named ${name}`} // dynamically adding the breacrumb text
+          }
+        ]
+      },
+      {
+        path: 'about',
+        component: AboutComponent,
+        data: { breadcrumb: false }, // hides the breadcrumb
+      },
+    ],
+  },
+];
 ```
+You can completely overwrite the breadcrumb and add your own links. This can be done simply at the component level.
+This is mandatory when dealing with breacrumbs that include fragments and/or query params.
 
-- `boolean`: When `true` the route's breadcrumb will be the same as the `pageTitle` property from the route's data or the route's `title` property (whichever is non-null in that order). When `false`
-  the breadcrumbs **will not show at all** on the page e.g.
+breacrumb element type
+```typescript
+
+type Link = {
+  text: string;
+  link: string | string[];
+  queryParams?: Map<string, string | number>;
+  fragment?: string;
+};
+
+```
 
 ```typescript
-const route = {
-  path: 'heroes',
-  component: HeroesListComponent,
-  data: { pageTitle: 'Heroes', breadcrumb: true },
-};
+    this.breadcrumbService.show([
+      {
+        text: 'Dashboard',
+        link: ['/', 'dashboard'],
+      },
+      {
+        text: 'Subsistence fees',
+        link: ['/', 'subsistence-fees'],
+        fragment: 'sent-subsistence-fees',
+      },
+    ]);
 ```
-
-- `function`: The function must be of the form `(data: Data) => string` where `data` is the route's data. This is
-  commonly used together with a [ResolveFn](https://angular.io/api/router/ResolveFn) that can populate the route's
-  data with relevant information. You can then extract the info you need from the `Data` object to get the
-  breadcrumb _e.g._
-
-```typescript
-const resolveRequestTaskBreadcrumb = ({ taskType }: Data) => {
-  switch (taskType) {
-    case 'EMP_ISSUANCE_UKETS_APPLICATION_SUBMIT':
-      return 'Apply for an EMP';
-    case 'EMP_ISSUANCE_UKETS_APPLICATION_REVIEW':
-      return 'Review EMP application';
-    case 'EMP_ISSUANCE_UKETS_WAIT_FOR_REVIEW':
-      return 'Wait for EMP review';
-    default:
-      return null;
-  }
-};
-
-const resolveTaskType: ResolveFn = () => inject(RequestTaskStore).pipe(requestTaskQuery.selectRequestTaskType);
-
-const route = {
-  path: ':taskId',
-  data: { breadcrumb: resolveRequestTaskBreadcrumb },
-  resolve: { taskType: resolveTaskType },
-};
-```
-
-- `object`: The object must satisfy the following interface:
-
-```typescript
-import { Data } from '@angular/router';
-
-{
-  resolveText: (data: Data) => string;
-  skipLink: boolean;
-}
-```
-
-`resolveText` is a function that resolves the breadcrumb's text (exactly as in previous bullet).  
-`skipLink` is a flag that determines whether the breadcrumb should use this route's path (**false**) as link or
-use the path of the first child route that has a component (**true**). It may also be a function of the form `(data: Data) => boolean`.  
-This is useful when routes are structured in weird ways.
-
-> **NOTE**: In the unlikely event that you need custom breadcrumb management for a component you can always
-> inject the `BREADCRUMB_ITEMS` token (a simple BehaviorSubject) or the existing `BreadcrumbService` inside your component and create the breadcrumbs manually eg:
->
-> ```typescript
-> constructor(@Inject(BREADCRUMB_ITEMS) private breadcrumbs$: BehaviorSubject<BreadcrumbItem[]>) {
->   this.breadcrumbs$.next(...);
-> }
-> // OR
-> constructor(private breadcrumbService: BreadcrumbService) {
->   this.breadcrumbService.show(...);
-> }
-> ```
->
-> If you need to do this however please maintain current breadcrumb functionality patterns
 
 ---
 

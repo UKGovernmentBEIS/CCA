@@ -9,13 +9,15 @@ const selectPayload: StateSelector<RequestTaskState, UNAActivationRequestTaskPay
   (payload) => payload as UNAActivationRequestTaskPayload,
 );
 
-const selectSectionsCompleted: StateSelector<RequestTaskState, { [key: string]: string }> = createDescendingSelector(
+const selectSectionsCompleted: StateSelector<RequestTaskState, Record<string, string>> = createDescendingSelector(
   selectPayload,
   (payload) => payload.sectionsCompleted,
 );
 
-const selectUnderlyingAgreementActivationAttachments: StateSelector<RequestTaskState, { [key: string]: string }> =
-  createDescendingSelector(selectPayload, (payload) => payload?.underlyingAgreementActivationAttachments);
+const selectUnderlyingAgreementActivationAttachments: StateSelector<
+  RequestTaskState,
+  Record<string, string>
+> = createDescendingSelector(selectPayload, (payload) => payload?.underlyingAgreementActivationAttachments);
 
 const selectUnderlyingAgreementActivationDetails: StateSelector<
   RequestTaskState,

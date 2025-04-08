@@ -9,17 +9,17 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { TermsDTO } from '../model/termsDTO';
 import { UserTermsVersionDTO } from '../model/userTermsVersionDTO';
 import { UserTermsVersionUpdateDTO } from '../model/userTermsVersionUpdateDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -111,7 +111,7 @@ export class TermsAndConditionsService {
   public editUserTerms(
     userTermsVersionUpdateDTO: UserTermsVersionUpdateDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (userTermsVersionUpdateDTO === null || userTermsVersionUpdateDTO === undefined) {
@@ -152,7 +152,7 @@ export class TermsAndConditionsService {
       `${this.configuration.basePath}/v1.0/user-terms`,
       userTermsVersionUpdateDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -184,7 +184,7 @@ export class TermsAndConditionsService {
   ): Observable<TermsDTO>;
   public getLatestTerms(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -211,7 +211,7 @@ export class TermsAndConditionsService {
     }
 
     return this.httpClient.get<TermsDTO>(`${this.configuration.basePath}/v1.0/terms`, {
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -242,7 +242,7 @@ export class TermsAndConditionsService {
   ): Observable<UserTermsVersionDTO>;
   public getUserTerms(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -269,7 +269,7 @@ export class TermsAndConditionsService {
     }
 
     return this.httpClient.get<UserTermsVersionDTO>(`${this.configuration.basePath}/v1.0/user-terms`, {
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,

@@ -1,11 +1,13 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.review.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.UnderlyingAgreementReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationFacilityReviewDecision;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationReviewGroup;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class UnderlyingAgreementVariationReviewService {
 
     @Transactional
@@ -45,6 +48,7 @@ public class UnderlyingAgreementVariationReviewService {
         reviewRequestTaskPayload.setUnderlyingAgreement(underlyingAgreementPayload);
         reviewRequestTaskPayload.setSectionsCompleted(payload.getSectionsCompleted());
         reviewRequestTaskPayload.setReviewSectionsCompleted(payload.getReviewSectionsCompleted());
+        reviewRequestTaskPayload.setDetermination(payload.getDetermination());
     }
 
     @Transactional
@@ -62,7 +66,9 @@ public class UnderlyingAgreementVariationReviewService {
 
         final Map<String, String> reviewSectionsCompleted = payload.getReviewSectionsCompleted();
         taskPayload.setReviewSectionsCompleted(reviewSectionsCompleted);
-        taskPayload.setDetermination(payload.getDetermination());
+
+        final Determination determination = payload.getDetermination();
+        taskPayload.setDetermination(determination);
     }
 
     @Transactional
@@ -82,7 +88,9 @@ public class UnderlyingAgreementVariationReviewService {
 
         final Map<String, String> reviewSectionsCompleted = payload.getReviewSectionsCompleted();
         taskPayload.setReviewSectionsCompleted(reviewSectionsCompleted);
-        taskPayload.setDetermination(payload.getDetermination());
+
+        final Determination determination = payload.getDetermination();
+        taskPayload.setDetermination(determination);
     }
 
     @Transactional
@@ -93,8 +101,8 @@ public class UnderlyingAgreementVariationReviewService {
         final UnderlyingAgreementVariationReviewRequestTaskPayload taskPayload =
                 (UnderlyingAgreementVariationReviewRequestTaskPayload) requestTask.getPayload();
 
-        final Determination determination = payload.getDetermination();
-        taskPayload.setDetermination(determination);
+        taskPayload.setDetermination(payload.getDetermination());
+        taskPayload.setReviewSectionsCompleted(payload.getReviewSectionsCompleted());
     }
 
     @Transactional
@@ -118,5 +126,17 @@ public class UnderlyingAgreementVariationReviewService {
         requestPayload.setReviewAttachments(taskPayload.getReviewAttachments());
         requestPayload.setDetermination(taskPayload.getDetermination());
         requestPayload.setAccountReferenceData(taskPayload.getAccountReferenceData());
+        requestPayload.setUnderlyingAgreementProposed(taskPayload.getProposedUnderlyingAgreement());
     }
+
+    @Transactional
+    public void saveProposedUnderlyingAgreement(final UnderlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload payload,
+                                                final RequestTask requestTask) {
+
+        final UnderlyingAgreementVariationReviewRequestTaskPayload taskPayload =
+                (UnderlyingAgreementVariationReviewRequestTaskPayload) requestTask.getPayload();
+
+        taskPayload.setUnderlyingAgreementProposed(payload.getUnderlyingAgreementProposed());
+    }
+
 }

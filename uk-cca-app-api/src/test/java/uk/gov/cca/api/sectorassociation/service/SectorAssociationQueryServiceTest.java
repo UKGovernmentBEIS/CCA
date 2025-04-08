@@ -1,15 +1,10 @@
 package uk.gov.cca.api.sectorassociation.service;
 
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
-import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
-import uk.gov.cca.api.authorization.ccaauth.core.domain.AppCcaAuthority;
 import uk.gov.cca.api.authorization.ccaauth.core.service.AppUserService;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.dto.AddressDTO;
@@ -17,10 +12,12 @@ import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationInfoDTO;
-import uk.gov.cca.api.sectorassociation.transform.SectorAssociationMapper;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationInfoNameDTO;
 import uk.gov.cca.api.sectorassociation.repository.SectorAssociationRepository;
+import uk.gov.cca.api.sectorassociation.transform.SectorAssociationMapper;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
-import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 
 import java.util.List;
@@ -29,11 +26,12 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 
 @ExtendWith(MockitoExtension.class)
 class SectorAssociationQueryServiceTest {
@@ -55,7 +53,7 @@ class SectorAssociationQueryServiceTest {
         final Long sectorAssociationId = 1L;
         final SectorAssociationDTO sectorAssociationDTO = createSectorAssociationDTO();
 
-        SectorAssociation sectorAssociation = Mockito.mock(SectorAssociation.class);
+        SectorAssociation sectorAssociation = mock(SectorAssociation.class);
 
         when(sectorAssociationRepository.findById(sectorAssociationId)).thenReturn(Optional.of(sectorAssociation));
         when(sectorAssociationMapper.toSectorAssociationDTO(sectorAssociation)).thenReturn(sectorAssociationDTO);
@@ -100,7 +98,7 @@ class SectorAssociationQueryServiceTest {
     }
 
     @Test
-    void getSectorAssociationIdentifier() {
+    void getSectorAssociationAcronymAndName() {
         final Long sectorAssociationId = 1L;
 
         SectorAssociation sectorAssociation = SectorAssociation.builder()
@@ -111,75 +109,17 @@ class SectorAssociationQueryServiceTest {
 
         when(sectorAssociationRepository.findById(sectorAssociationId)).thenReturn(Optional.of(sectorAssociation));
 
-        String result = sectorAssociationQueryService.getSectorAssociationIdentifier(sectorAssociationId);
+        String result = sectorAssociationQueryService.getSectorAssociationAcronymAndName(sectorAssociationId);
 
         assertThat(result).isEqualTo(sectorAssociation.getAcronym() + " - " + sectorAssociation.getName());
         verify(sectorAssociationRepository, times(1)).findById(sectorAssociationId);
     }
 
     @Test
-    void getSectorAssociations_whenRegulatorUser() {
-        final CompetentAuthorityEnum ca = CompetentAuthorityEnum.ENGLAND;
-
-        final AppUser regulatorUser = AppUser.builder()
-                .roleType(RoleTypeConstants.REGULATOR)
-                .authorities(List.of(AppCcaAuthority.builder().competentAuthority(ca).build()))
-                .build();
-
-        final List<SectorAssociationInfoDTO> sectorAssociationsInfo = createSectorAssociationInfoList();
-
-        when(sectorAssociationRepository.findSectorAssociations(ca)).thenReturn(sectorAssociationsInfo);
-
-        final List<SectorAssociationInfoDTO> result = sectorAssociationQueryService.getSectorAssociations(regulatorUser);
-
-        AssertionsForClassTypes.assertThat(result).isEqualTo(sectorAssociationsInfo);
-
-        verify(sectorAssociationRepository, times(1)).findSectorAssociations(ca);
-
-    }
-
-    @Test
-    void getSectorAssociations_whenSectorUser() {
-        final List<SectorAssociationInfoDTO> sectorAssociationsInfo = createSectorAssociationInfoList();
-
-        final AppUser sectorUser = AppUser.builder()
-                .roleType(SECTOR_USER)
-                .authorities(List.of(
-                        AppCcaAuthority.builder().sectorAssociationId(1L).build(),
-                        AppCcaAuthority.builder().sectorAssociationId(2L).build()))
-                .build();
-
-        when(appUserService.getUserSectorAssociations(sectorUser)).thenReturn(Set.of(1L, 2L));
-        when(sectorAssociationRepository.findSectorAssociations(Set.of(1L, 2L))).thenReturn(sectorAssociationsInfo);
-
-        final List<SectorAssociationInfoDTO> result2 = sectorAssociationQueryService.getSectorAssociations(sectorUser);
-        AssertionsForClassTypes.assertThat(result2).isEqualTo(sectorAssociationsInfo);
-
-        verify(sectorAssociationRepository, times(1)).findSectorAssociations(Set.of(1L, 2L));
-    }
-
-    @Test
-    void getSectorAssociations_whenDefaultUser() {
-        final AppUser sectorUser = AppUser.builder()
-                .roleType(RoleTypeConstants.VERIFIER)
-                .authorities(List.of(
-                        AppCcaAuthority.builder().sectorAssociationId(1L).build(),
-                        AppCcaAuthority.builder().sectorAssociationId(2L).build()))
-                .build();
-
-        // Invoke
-        final List<SectorAssociationInfoDTO> result = sectorAssociationQueryService.getSectorAssociations(sectorUser);
-
-        // Verify
-        assertThat(result).isEmpty();
-        verifyNoInteractions(sectorAssociationRepository);
-    }
-
-    @Test
     void getSectorAssociationCa() {
         Long sectorAssociationId = 1L;
         CompetentAuthorityEnum competentAuthority = CompetentAuthorityEnum.ENGLAND;
-        SectorAssociation sectorAssociation = Mockito.mock(SectorAssociation.class);
+        SectorAssociation sectorAssociation = mock(SectorAssociation.class);
 
         when(sectorAssociation.getCompetentAuthority()).thenReturn(competentAuthority);
         when(sectorAssociationRepository.findById(sectorAssociationId)).thenReturn(Optional.of(sectorAssociation));
@@ -188,27 +128,6 @@ class SectorAssociationQueryServiceTest {
 
         assertEquals(competentAuthority, sectorAssociationCa);
 
-    }
-
-    @Test
-    void findSectorAssociationContactById() {
-        final long sectorAssociationId = 1L;
-        final NoticeRecipientDTO sectorContact = NoticeRecipientDTO.builder()
-                .firstName("fn")
-                .lastName("ln")
-                .email("email")
-                .type(NoticeRecipientType.ADMINISTRATIVE_CONTACT)
-                .build();
-
-        when(sectorAssociationRepository.findSectorAssociationNoticeRecipientById(sectorAssociationId))
-                .thenReturn(sectorContact);
-
-        // Invoke
-        NoticeRecipientDTO sectorAssociationContactById = sectorAssociationQueryService.getSectorAssociationNoticeRecipientById(sectorAssociationId);
-
-        // Verify
-        assertThat(sectorContact).isEqualTo(sectorAssociationContactById);
-        verify(sectorAssociationRepository, times(1)).findSectorAssociationNoticeRecipientById(sectorAssociationId);
     }
 
     @Test
@@ -258,13 +177,6 @@ class SectorAssociationQueryServiceTest {
                 .build();
     }
 
-    private static List<SectorAssociationInfoDTO> createSectorAssociationInfoList() {
-        final SectorAssociationInfoDTO.SectorAssociationInfoDTOBuilder builder = SectorAssociationInfoDTO.builder();
-        final SectorAssociationInfoDTO sector1 = builder.id(1L).sector("ADS - Aerospace").mainContact("William MacDonald").build();
-        final SectorAssociationInfoDTO sector2 = builder.id(2L).sector("AFED - Aluminium").mainContact("Sharon McBride").build();
-        return List.of(sector1, sector2);
-    }
-
     @Test
     void getSectorAssociationIdByAcronym() {
         final long sectorAssociationId = 1L;
@@ -279,5 +191,141 @@ class SectorAssociationQueryServiceTest {
         // Verify
         assertThat(actual).isEqualTo(Optional.of(sectorAssociationId));
         verify(sectorAssociationRepository, times(1)).findSectorAssociationIdByAcronym(acronym);
+    }
+
+    @Test
+    void testGetRegulatorSectorAssociations() {
+        AppUser appUser = mock(AppUser.class);
+        CompetentAuthorityEnum competentAuthority = CompetentAuthorityEnum.ENGLAND;
+        when(appUser.getCompetentAuthority()).thenReturn(competentAuthority);
+
+        List<SectorAssociationInfoDTO> expectedList = List.of(new SectorAssociationInfoDTO());
+        when(sectorAssociationRepository.findSectorAssociations(competentAuthority)).thenReturn(expectedList);
+
+        List<SectorAssociationInfoDTO> result = sectorAssociationQueryService.getRegulatorSectorAssociations(appUser);
+        assertEquals(expectedList, result);
+
+        verify(appUser).getCompetentAuthority();
+        verify(sectorAssociationRepository).findSectorAssociations(competentAuthority);
+    }
+
+    @Test
+    void testGetSectorUserSectorAssociations() {
+        AppUser appUser = mock(AppUser.class);
+        Set<Long> sectorIds = Set.of(1L, 2L, 3L);
+        List<SectorAssociationInfoDTO> expectedList = List.of(new SectorAssociationInfoDTO());
+
+        when(appUserService.getUserSectorAssociations(appUser)).thenReturn(sectorIds);
+        when(sectorAssociationRepository.findSectorAssociations(sectorIds)).thenReturn(expectedList);
+
+        List<SectorAssociationInfoDTO> result = sectorAssociationQueryService.getSectorUserSectorAssociations(appUser);
+        assertEquals(expectedList, result);
+
+        verify(appUserService).getUserSectorAssociations(appUser);
+        verify(sectorAssociationRepository).findSectorAssociations(sectorIds);
+    }
+
+    @Test
+    void testGetOperatorUserSectorAssociations() {
+
+        Set<Long> sectorAssociationsIds = Set.of(1L, 2L, 3L);
+
+        final SectorAssociationInfoDTO sectorAssociationInfoDTO = SectorAssociationInfoDTO.builder().id(1L).build();
+        List<SectorAssociationInfoDTO> expectedList = List.of(sectorAssociationInfoDTO);
+
+        when(sectorAssociationQueryService
+                        .getUserSectorAssociations(sectorAssociationsIds))
+                .thenReturn(expectedList);
+
+        List<SectorAssociationInfoDTO> result = sectorAssociationQueryService
+                .getUserSectorAssociations(sectorAssociationsIds);
+        assertEquals(expectedList, result);
+
+        verify(sectorAssociationRepository).findSectorAssociations(sectorAssociationsIds);
+    }
+
+    @Test
+    void getSectorAssociationInfoNameDTO() {
+        final long sectorAssociationId = 1L;
+        final SectorAssociation sectorAssociation = SectorAssociation.builder()
+                .id(sectorAssociationId)
+                .legalName("SectorName")
+                .acronym("acronym")
+                .build();
+        final SectorAssociationInfoNameDTO sectorAssociationInfo = SectorAssociationInfoNameDTO.builder()
+                .id(sectorAssociationId)
+                .name("SectorName")
+                .acronym("acronym")
+                .build();
+
+        when(sectorAssociationRepository.findById(sectorAssociationId))
+                .thenReturn(Optional.of(sectorAssociation));
+        when(sectorAssociationMapper.toSectorAssociationInfoNameDTO(sectorAssociation))
+                .thenReturn(sectorAssociationInfo);
+
+        // Invoke
+        sectorAssociationQueryService.getSectorAssociationInfoNameDTO(sectorAssociationId);
+
+        // Verify
+        verify(sectorAssociationRepository, times(1)).findById(sectorAssociationId);
+        verify(sectorAssociationMapper, times(1)).toSectorAssociationInfoNameDTO(sectorAssociation);
+    }
+
+    @Test
+    void getSectorAssociationInfoNameDTO_error() {
+        final long sectorAssociationId = 1L;
+
+        when(sectorAssociationRepository.findById(sectorAssociationId))
+                .thenReturn(Optional.empty());
+
+        // Invoke
+        BusinessException ex = assertThrows(BusinessException.class, () ->
+                sectorAssociationQueryService.getSectorAssociationInfoNameDTO(sectorAssociationId));
+
+        // Verify
+        assertEquals(ErrorCode.RESOURCE_NOT_FOUND, ex.getErrorCode());
+        verify(sectorAssociationRepository, times(1)).findById(sectorAssociationId);
+        verifyNoInteractions(sectorAssociationMapper);
+    }
+    
+    @Test
+    void getSectorAssociationsInfoNameDTO() {
+        final long sectorAssociationId1 = 1L;
+        final long sectorAssociationId2 = 2L;
+        final SectorAssociation sectorAssociation1 = SectorAssociation.builder()
+                .id(sectorAssociationId1)
+                .legalName("SectorName")
+                .acronym("acronym")
+                .build();
+        final SectorAssociation sectorAssociation2 = SectorAssociation.builder()
+                .id(sectorAssociationId2)
+                .legalName("SectorName2")
+                .acronym("acronym2")
+                .build();
+        final SectorAssociationInfoNameDTO sectorAssociationInfo1 = SectorAssociationInfoNameDTO.builder()
+                .id(sectorAssociationId1)
+                .name("SectorName")
+                .acronym("acronym")
+                .build();
+        final SectorAssociationInfoNameDTO sectorAssociationInfo2 = SectorAssociationInfoNameDTO.builder()
+                .id(sectorAssociationId2)
+                .name("SectorName2")
+                .acronym("acronym2")
+                .build();
+
+        when(sectorAssociationRepository.findAllByIdIn(List.of(1L, 2L)))
+                .thenReturn(List.of(sectorAssociation1, sectorAssociation2));
+        when(sectorAssociationMapper.toSectorAssociationInfoNameDTO(sectorAssociation1))
+                .thenReturn(sectorAssociationInfo1);
+        when(sectorAssociationMapper.toSectorAssociationInfoNameDTO(sectorAssociation2))
+        		.thenReturn(sectorAssociationInfo2);
+
+        // Invoke
+        sectorAssociationQueryService.getSectorAssociationsInfoNameDTO(List.of(sectorAssociationId1, sectorAssociationId2));
+
+        // Verify
+        verify(sectorAssociationRepository, times(1)).findAllByIdIn(List.of(sectorAssociationId1, sectorAssociationId2));
+        verify(sectorAssociationMapper, times(1)).toSectorAssociationInfoNameDTO(sectorAssociation1);
+        verify(sectorAssociationMapper, times(1)).toSectorAssociationInfoNameDTO(sectorAssociation2);
     }
 }

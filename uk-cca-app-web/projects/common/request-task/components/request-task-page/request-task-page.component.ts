@@ -1,4 +1,4 @@
-import { AsyncPipe, NgComponentOutlet, NgFor, NgIf } from '@angular/common';
+import { NgComponentOutlet, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,7 +11,6 @@ import {
   Type,
   ViewEncapsulation,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 import {
   PageHeadingComponent,
@@ -23,7 +22,6 @@ import {
   TimelineItemComponent,
 } from '@netz/common/components';
 import { TaskSection } from '@netz/common/model';
-import { TimelineItemLinkPipe } from '@netz/common/pipes';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 
 import { ItemDTO, RequestActionInfoDTO, RequestTaskDTO, RequestTaskItemDTO } from 'cca-api';
@@ -55,17 +53,14 @@ type ViewModel = {
   standalone: true,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    RouterLink,
     PageHeadingComponent,
     NgIf,
-    AsyncPipe,
     TaskHeaderInfoComponent,
     NgComponentOutlet,
     RelatedTasksComponent,
     TimelineComponent,
     TimelineItemComponent,
     NgFor,
-    TimelineItemLinkPipe,
     RelatedActionsComponent,
     TaskListComponent,
   ],

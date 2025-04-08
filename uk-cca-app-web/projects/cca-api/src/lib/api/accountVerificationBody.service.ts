@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { AppointVerificationBodyDTO } from '../model/appointVerificationBodyDTO';
 import { VerificationBodyNameInfoDTO } from '../model/verificationBodyNameInfoDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -118,7 +118,7 @@ export class AccountVerificationBodyService {
     id: number,
     appointVerificationBodyDTO: AppointVerificationBodyDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -164,7 +164,7 @@ export class AccountVerificationBodyService {
       `${this.configuration.basePath}/v1.0/accounts/${encodeURIComponent(String(id))}/appoint-verification-body`,
       appointVerificationBodyDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -179,29 +179,29 @@ export class AccountVerificationBodyService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getActiveVerificationBodies(id: number): Observable<Array<VerificationBodyNameInfoDTO>>;
+  public getActiveVerificationBodies(id: number): Observable<VerificationBodyNameInfoDTO[]>;
   public getActiveVerificationBodies(
     id: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<VerificationBodyNameInfoDTO>>>;
+  ): Observable<HttpResponse<VerificationBodyNameInfoDTO[]>>;
   public getActiveVerificationBodies(
     id: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<VerificationBodyNameInfoDTO>>>;
+  ): Observable<HttpEvent<VerificationBodyNameInfoDTO[]>>;
   public getActiveVerificationBodies(
     id: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<VerificationBodyNameInfoDTO>>;
+  ): Observable<VerificationBodyNameInfoDTO[]>;
   public getActiveVerificationBodies(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -231,10 +231,10 @@ export class AccountVerificationBodyService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<VerificationBodyNameInfoDTO>>(
+    return this.httpClient.get<VerificationBodyNameInfoDTO[]>(
       `${this.configuration.basePath}/v1.0/accounts/${encodeURIComponent(String(id))}/active-verification-bodies`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -271,7 +271,7 @@ export class AccountVerificationBodyService {
   public getVerificationBodyOfAccount(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -304,7 +304,7 @@ export class AccountVerificationBodyService {
     return this.httpClient.get<VerificationBodyNameInfoDTO>(
       `${this.configuration.basePath}/v1.0/accounts/${encodeURIComponent(String(id))}/verification-body`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -349,7 +349,7 @@ export class AccountVerificationBodyService {
     id: number,
     appointVerificationBodyDTO: AppointVerificationBodyDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -395,7 +395,7 @@ export class AccountVerificationBodyService {
       `${this.configuration.basePath}/v1.0/accounts/${encodeURIComponent(String(id))}/appoint-verification-body`,
       appointVerificationBodyDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

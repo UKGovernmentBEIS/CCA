@@ -9,33 +9,33 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AccountReferenceData } from './accountReferenceData';
-import { CcaDecisionNotification } from './ccaDecisionNotification';
-import { DefaultNoticeRecipient } from './defaultNoticeRecipient';
-import { Determination } from './determination';
-import { FileInfoDTO } from './fileInfoDTO';
-import { RequestActionUserInfo } from './requestActionUserInfo';
-import { UnderlyingAgreementActivationDetails } from './underlyingAgreementActivationDetails';
 import { UnderlyingAgreementFacilityReviewDecision } from './underlyingAgreementFacilityReviewDecision';
-import { UnderlyingAgreementPayload } from './underlyingAgreementPayload';
+import { RequestActionUserInfo } from './requestActionUserInfo';
+import { DefaultNoticeRecipient } from './defaultNoticeRecipient';
+import { UnderlyingAgreementActivationDetails } from './underlyingAgreementActivationDetails';
+import { AccountReferenceData } from './accountReferenceData';
 import { UnderlyingAgreementReviewDecision } from './underlyingAgreementReviewDecision';
+import { Determination } from './determination';
+import { CcaDecisionNotification } from './ccaDecisionNotification';
+import { FileInfoDTO } from './fileInfoDTO';
+import { UnderlyingAgreementPayload } from './underlyingAgreementPayload';
 
 export interface UnderlyingAgreementActivatedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
   accountReferenceData?: AccountReferenceData;
   underlyingAgreement: UnderlyingAgreementPayload;
-  underlyingAgreementAttachments?: { [key: string]: string };
+  underlyingAgreementAttachments?: Record<string, string>;
   decisionNotification: CcaDecisionNotification;
-  defaultContacts: Array<DefaultNoticeRecipient>;
-  usersInfo?: { [key: string]: RequestActionUserInfo };
+  defaultContacts: DefaultNoticeRecipient[];
+  usersInfo?: Record<string, RequestActionUserInfo>;
   officialNotice: FileInfoDTO;
   determination: Determination;
-  reviewSectionsCompleted?: { [key: string]: string };
-  reviewGroupDecisions?: { [key: string]: UnderlyingAgreementReviewDecision };
-  facilitiesReviewGroupDecisions?: { [key: string]: UnderlyingAgreementFacilityReviewDecision };
-  reviewAttachments?: { [key: string]: string };
+  reviewSectionsCompleted?: Record<string, string>;
+  reviewGroupDecisions?: Record<string, UnderlyingAgreementReviewDecision>;
+  facilitiesReviewGroupDecisions?: Record<string, UnderlyingAgreementFacilityReviewDecision>;
+  reviewAttachments?: Record<string, string>;
   underlyingAgreementDocument: FileInfoDTO;
   underlyingAgreementActivationDetails: UnderlyingAgreementActivationDetails;
-  underlyingAgreementActivationAttachments?: { [key: string]: string };
+  underlyingAgreementActivationAttachments?: Record<string, string>;
 }

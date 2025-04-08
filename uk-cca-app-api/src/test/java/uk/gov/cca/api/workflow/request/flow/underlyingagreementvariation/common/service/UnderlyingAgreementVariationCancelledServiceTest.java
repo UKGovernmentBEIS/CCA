@@ -7,7 +7,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
 import static org.mockito.Mockito.times;
@@ -16,8 +18,9 @@ import static org.mockito.Mockito.when;
 import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 
 @ExtendWith(MockitoExtension.class)
-public class UnderlyingAgreementVariationCancelledServiceTest {
-    @InjectMocks
+class UnderlyingAgreementVariationCancelledServiceTest {
+    
+	@InjectMocks
     private UnderlyingAgreementVariationCancelledService service;
 
     @Mock
@@ -34,9 +37,9 @@ public class UnderlyingAgreementVariationCancelledServiceTest {
                 .build();
 
         Request request = Request.builder()
-                .accountId(accountId)
                 .payload(payload)
                 .build();
+        addResourcesToRequest(accountId, request);
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
 
@@ -46,4 +49,14 @@ public class UnderlyingAgreementVariationCancelledServiceTest {
         verify(requestService, times(1))
                 .addActionToRequest(request, null, CcaRequestActionType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_CANCELLED, requestTaskAssignee);
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

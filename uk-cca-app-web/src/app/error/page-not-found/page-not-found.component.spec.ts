@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { PageHeadingComponent } from '@shared/components';
+import { PageHeadingComponent } from '@netz/common/components';
 
 import { PageNotFoundComponent } from './page-not-found.component';
 

@@ -6,6 +6,7 @@ import {
   AuthoritiesService,
   AuthorityManagePermissionDTO,
   RegulatorAuthoritiesService,
+  RegulatorCurrentUserDTO,
   RegulatorUserDTO,
   RegulatorUsersService,
   UsersService,
@@ -13,22 +14,20 @@ import {
 
 import { DetailsStore } from './details.store';
 
-type PermissionGroupLevels = {
-  [key in string]: string[];
-};
+type PermissionGroupLevels = Record<string, string[]>;
 
 export function fetchUserDetailsAndUpdateStore(
   isCurrentUser: boolean,
   userId: string,
   injector: Injector,
-): Observable<RegulatorUserDTO> {
+): Observable<RegulatorUserDTO | RegulatorCurrentUserDTO> {
   return runInInjectionContext(injector, () => {
     const regulatorUsersService = inject(RegulatorUsersService);
     const usersService = inject(UsersService);
     const store = inject(DetailsStore);
     return (
       isCurrentUser
-        ? (usersService.getCurrentUser() as Observable<RegulatorUserDTO>)
+        ? (usersService.getCurrentUser() as Observable<RegulatorUserDTO | RegulatorCurrentUserDTO>)
         : regulatorUsersService.getRegulatorUserByCaAndId(userId)
     ).pipe(tap((user) => store.updateState({ user })));
   });

@@ -3,8 +3,8 @@
     <div class="govuk-grid-column-one-third">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          <div class="govuk-heading-m">Workflow History</div>
-          <div class="govuk-heading-s">Type</div>
+          <h3 class="govuk-heading-m">Workflow History</h3>
+          <h3 class="govuk-heading-s">Type</h3>
 
           <div formControlName="requestTypes" class="govuk-checkboxes govuk-checkboxes--small" govuk-checkboxes>
             @for (type of workflowTypesMap | keyvalue: originalOrder; track type) {
@@ -14,7 +14,7 @@
         </div>
 
         <div class="govuk-grid-column-full">
-          <div class="govuk-heading-s">Status</div>
+          <h3 class="govuk-heading-s">Status</h3>
           <div formControlName="requestStatuses" class="govuk-checkboxes govuk-checkboxes--small" govuk-checkboxes>
             @for (status of workflowStatusesMap | keyvalue: originalOrder; track status) {
               <govuk-checkbox [value]="status.value" [label]="status.key"></govuk-checkbox>
@@ -31,7 +31,7 @@
             <li class="search-results-list_item govuk-!-margin-bottom-3">
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-three-quarters govuk-!-margin-bottom-3">
-                  <a [routerLink]="['workflow-details', workflow.id]" govukLink>{{ workflow.id }}</a>
+                  <a [routerLink]="['workflow-details', workflow.id]" class="govuk-link">{{ workflow.id }}</a>
                   <div class="govuk-!-margin-bottom-0 govuk-body">Created {{ workflow.creationDate | date }}</div>
                 </div>
 

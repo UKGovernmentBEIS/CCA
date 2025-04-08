@@ -8,7 +8,6 @@ import { startWith } from 'rxjs';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import {
-  ConditionalContentDirective,
   DetailsComponent,
   GovukSelectOption,
   RadioComponent,
@@ -16,18 +15,20 @@ import {
   SelectComponent,
   TextInputComponent,
 } from '@netz/govuk-components';
-import { FileInputComponent, MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
-import { TextInputComponent as CcaTextInputComponent } from '@shared/components/text-input/text-input.component';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import {
+  FileInputComponent,
+  MultipleFileInputComponent,
+  TextInputComponent as CcaTextInputComponent,
+  WizardStepComponent,
+} from '@shared/components';
+import { generateDownloadUrl } from '@shared/utils';
 
 import { TargetComposition } from 'cca-api';
 
 import {
   AgreementCompositionTypeEnum,
   AgreementCompositionTypePipe,
-  ApplicationReasonTypePipe,
   MeasurementTypeEnum,
-  MeasurementTypeToOptionTextPipe,
   transformMeasurementType,
 } from '../../../pipes';
 import {
@@ -52,14 +53,11 @@ import {
     WizardStepComponent,
     FileInputComponent,
     TextInputComponent,
-    MeasurementTypeToOptionTextPipe,
     SelectComponent,
-    ApplicationReasonTypePipe,
     AgreementCompositionTypePipe,
     DetailsComponent,
     MultipleFileInputComponent,
     CcaTextInputComponent,
-    ConditionalContentDirective,
     ReturnToTaskOrActionPageComponent,
   ],
   templateUrl: './target-composition.component.html',

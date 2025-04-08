@@ -12,5 +12,5 @@
 
 export interface AdminTerminationWithdrawReasonDetails {
   explanation: string;
-  relevantFiles?: Array<string>;
+  relevantFiles?: string[];
 }

@@ -19,8 +19,8 @@ export const AUTHORISATION_ADDITIONAL_EVIDENCE_ROUTES: Routes = [
         data: { backlink: '../../../', breadcrumb: false },
         canActivate: [canActivateAuthorisationAdditionalEvidenceDecision],
         loadComponent: () =>
-          import('./decision/authorization-additional-evidence-decision.component').then(
-            (c) => c.AUthorizationAdditionalEvidenceDecisionComponent,
+          import('./decision/authorisation-additional-evidence-decision.component').then(
+            (c) => c.AuthorisationAdditionalEvidenceDecisionComponent,
           ),
       },
       {

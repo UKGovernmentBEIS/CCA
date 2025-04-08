@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AuthService } from '@core/services/auth.service';
 import { mockClass } from '@netz/common/testing';
+import { AuthService } from '@shared/services';
 
 import { SectorUserInvitationStore } from '../sector-user-invitation/sector-user-invitation.store';
 import { InvitationConfirmationComponent } from './invitation-confirmation.component';

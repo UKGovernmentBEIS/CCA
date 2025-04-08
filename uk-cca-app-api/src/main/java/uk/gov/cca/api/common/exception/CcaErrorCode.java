@@ -37,8 +37,19 @@ public enum CcaErrorCode implements NetzErrorCode {
     /** Codes for Underlying Agreement Variation errors. */
     INVALID_UNDERLYING_AGREEMENT_VARIATION("UNAV1001", HttpStatus.BAD_REQUEST, "Invalid Underlying Agreement Variation"),
     INVALID_UNDERLYING_AGREEMENT_VARIATION_REVIEW("UNAV1002", HttpStatus.BAD_REQUEST, "Invalid Underlying Agreement Variation Review"),
-    INVALID_UNDERLYING_AGREEMENT_VARIATION_ACTIVATION("UNAV1003", HttpStatus.BAD_REQUEST, "Invalid Underlying Agreement Variation Activation");
-
+    INVALID_UNDERLYING_AGREEMENT_VARIATION_ACTIVATION("UNAV1003", HttpStatus.BAD_REQUEST, "Invalid Underlying Agreement Variation Activation"),
+    /** Codes for Reporting Spreadsheets Download errors. */
+    INVALID_PERFORMANCE_DATA_DOWNLOAD("TPRDL1001", HttpStatus.BAD_REQUEST, "Invalid Performance Data Download"),
+    /** Codes for Performance Data Upload errors. */
+    INVALID_PERFORMANCE_DATA_UPLOAD("TPRUL1001", HttpStatus.BAD_REQUEST, "Invalid Performance Data Upload"),
+    INVALID_PERFORMANCE_DATA_UPLOAD_FILE_TYPE("TPRUL1002", HttpStatus.BAD_REQUEST, "Invalid file type"),
+    UPLOAD_ZIP_FILE_CONTAINS_INVALID_FILE_TYPES("TPRUL1003", HttpStatus.BAD_REQUEST, "Zip file contains invalid file types"),
+    INVALID_PERFORMANCE_DATA_UPDATE_ACCOUNT_LOCKED("TPRUL1004", HttpStatus.BAD_REQUEST, "Account is locked for target period reporting"),
+    INVALID_PERFORMANCE_DATA_UPDATE_INVALID_REPORT_VERSION("TPRUL1005", HttpStatus.BAD_REQUEST, "Performance data report version is invalid"),
+    /** Codes for Subsistence Fee Run errors. */
+    SECTOR_MOA_CONTAINS_NO_FACILITIES("SFR1001", HttpStatus.BAD_REQUEST, "Sector MoA contains no facilities"),
+    TARGET_UNIT_MOA_CONTAINS_NO_FACILITIES("SFR1002", HttpStatus.BAD_REQUEST, "Target Unit MoA contains no facilities")
+    ;
 
 
     private final String code;

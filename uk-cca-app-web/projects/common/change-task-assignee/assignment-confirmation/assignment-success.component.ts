@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { LinkDirective, PanelComponent } from '@netz/govuk-components';
+import { PanelComponent } from '@netz/govuk-components';
 
 @Component({
   selector: 'netz-assignment-success',
@@ -26,7 +26,7 @@ import { LinkDirective, PanelComponent } from '@netz/govuk-components';
       </div>
     </div>
   `,
-  imports: [NgIf, AsyncPipe, PanelComponent, LinkDirective, RouterLink],
+  imports: [NgIf, PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssignmentSuccessComponent {

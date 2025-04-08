@@ -11,8 +11,8 @@
  */
 
 export interface CcaDecisionNotification {
-  operators?: Array<string>;
-  externalContacts?: Array<number>;
+  operators?: string[];
+  externalContacts?: number[];
   signatory: string;
-  sectorUsers?: Array<string>;
+  sectorUsers?: string[];
 }

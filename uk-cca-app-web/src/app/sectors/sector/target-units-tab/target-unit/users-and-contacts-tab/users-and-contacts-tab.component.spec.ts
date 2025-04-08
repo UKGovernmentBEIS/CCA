@@ -14,6 +14,7 @@ import { UsersAndContactsTabComponent } from './users-and-contacts-tab.component
 
 describe('Target unit Users component', () => {
   let operatorAuthoritiesService: jest.Mocked<Partial<OperatorAuthoritiesService>>;
+
   async function setup(mockData: OperatorAuthoritiesInfoDTO) {
     operatorAuthoritiesService = {
       getAccountOperatorAuthorities: jest.fn().mockReturnValue(of(mockData)),
@@ -28,18 +29,14 @@ describe('Target unit Users component', () => {
 
     fixture.detectChanges();
   }
+
   it('should render users', async () => {
     await setup(mockOperatorAuthorities);
     expect(screen.getByTestId('target-unit-users-form')).toBeInTheDocument();
     expect(document.querySelectorAll('.govuk-table__row')).toHaveLength(mockOperatorAuthorities.authorities.length + 1);
   });
 
-  it('should show add operator button if editable', async () => {
-    await setup(mockOperatorAuthorities);
-    expect(screen.getByText('Add a new operator')).toBeInTheDocument();
-  });
-
-  it('should NOT show add operator button if editable', async () => {
+  it('should NOT show add operator button if NOT editable (only Regulator user allowed)', async () => {
     await setup(mockOperatorAuthoritiesNotEditable);
     expect(screen.queryByText('Add a new operator')).not.toBeInTheDocument();
   });

@@ -6,3 +6,4 @@ export * from './item-name';
 export * from './status-tag';
 export * from './timeline-item-link';
 export * from './user-full-name';
+export * from './days-remaining';

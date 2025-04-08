@@ -7,7 +7,8 @@ import { EMPTY, Observable } from 'rxjs';
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 import { AuthStore, selectUserState } from '@netz/common/auth';
-import { DestroySubject } from '@netz/common/services';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import {
   ButtonDirective,
   ErrorSummaryComponent,
@@ -16,17 +17,9 @@ import {
   TableComponent,
   TextInputComponent,
 } from '@netz/govuk-components';
-import {
-  FileInputComponent,
-  PageHeadingComponent,
-  RadioOptionComponent,
-  TwoFaLinkComponent,
-  UuidFilePair,
-} from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
-import { IncludesPipe } from '@shared/pipes';
-import { SubmitIfEmptyPipe } from '@shared/pipes/submit-if-empty.pipe';
-import { omit } from 'lodash-es';
+import { FileInputComponent, RadioOptionComponent, TwoFaLinkComponent, UuidFilePair } from '@shared/components';
+import { IncludesPipe, SubmitIfEmptyPipe } from '@shared/pipes';
+import { omit } from '@shared/utils';
 
 import { RegulatorUsersService } from 'cca-api';
 
@@ -56,7 +49,6 @@ import { tableColumns, tableRows } from './permissions-table-data';
     RadioOptionComponent,
     PendingButtonDirective,
   ],
-  providers: [DestroySubject],
 })
 export class DetailsComponent {
   private readonly store = inject(DetailsStore);
@@ -148,9 +140,8 @@ export class DetailsComponent {
             );
       } else {
         const payload = { ...this.form.get('user').value, permissions: this.form.get('permissions').value };
-        const payloadWithoutSignature = omit(payload, 'signature');
 
-        op$ = this.regulatorUsersService.inviteRegulatorUserToCA(payloadWithoutSignature, signatureBlob);
+        op$ = this.regulatorUsersService.inviteRegulatorUserToCA(payload, signatureBlob);
       }
       op$
         .pipe(

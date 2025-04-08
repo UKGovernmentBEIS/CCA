@@ -1,5 +1,4 @@
 import { InjectionToken, Provider } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 
 import { AccountAddressFormModel, createAccountAddressForm } from '@shared/components';
 
@@ -11,9 +10,9 @@ export const TARGET_UNIT_OPERATOR_ADDRESS_FORM = new InjectionToken<AccountAddre
 
 export const TargetUnitOperatorAddressFormProvider: Provider = {
   provide: TARGET_UNIT_OPERATOR_ADDRESS_FORM,
-  deps: [FormBuilder, CreateTargetUnitStore],
-  useFactory: (fb: FormBuilder, store: CreateTargetUnitStore) => {
-    const addressPayload = store.state.address;
+  deps: [CreateTargetUnitStore],
+  useFactory: (createTargetUnitStore: CreateTargetUnitStore) => {
+    const addressPayload = createTargetUnitStore.state.address;
     return createAccountAddressForm(addressPayload);
   },
 };

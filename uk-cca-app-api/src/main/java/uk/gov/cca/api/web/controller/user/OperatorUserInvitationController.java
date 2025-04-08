@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.cca.api.user.operator.domain.CcaOperatorUserInvitationDTO;
+import uk.gov.cca.api.user.operator.service.CcaOperatorUserInvitationService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
-import uk.gov.cca.api.user.operator.domain.CcaOperatorUserInvitationDTO;
-import uk.gov.cca.api.web.orchestrator.user.service.OperatorInvitationOrchestratorService;
 import uk.gov.netz.api.security.Authorized;
 
 /**
@@ -32,7 +32,7 @@ import uk.gov.netz.api.security.Authorized;
 @RequiredArgsConstructor
 public class OperatorUserInvitationController {
 
-    private final OperatorInvitationOrchestratorService operatorInvitationOrchestratorService;
+    private final CcaOperatorUserInvitationService ccaOperatorUserInvitationService;
 
     @PostMapping(path = "/account/{accountId}")
     @Operation(summary = "Adds a new operator user to an account with a specified role.")
@@ -51,7 +51,7 @@ public class OperatorUserInvitationController {
             @PathVariable("accountId") @Parameter(description = "The account id") Long accountId,
             @RequestBody @Valid @Parameter(description = "The operator user account registration info", required = true)
             CcaOperatorUserInvitationDTO operatorUserInvitationDTO) {
-        operatorInvitationOrchestratorService.inviteUserToAccount(accountId, operatorUserInvitationDTO, currentUser);
+        ccaOperatorUserInvitationService.inviteUserToAccount(accountId, operatorUserInvitationDTO, currentUser);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

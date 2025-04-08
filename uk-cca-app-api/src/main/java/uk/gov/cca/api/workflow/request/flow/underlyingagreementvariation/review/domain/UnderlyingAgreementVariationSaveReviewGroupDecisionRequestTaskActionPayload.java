@@ -26,11 +26,11 @@ public class UnderlyingAgreementVariationSaveReviewGroupDecisionRequestTaskActio
     @NotNull
     private UnderlyingAgreementVariationReviewGroup group;
 
+    private Determination determination;
+
     @NotNull
     @Valid
     private UnderlyingAgreementReviewDecision decision;
-
-    private Determination determination;
 
     @Builder.Default
     private Map<String, String> reviewSectionsCompleted = new HashMap<>();

@@ -1,0 +1,25 @@
+<netz-cancel-task (cancelled)="cancel()">
+  @switch (requestTaskType) {
+    @case ('UNDERLYING_AGREEMENT_APPLICATION_SUBMIT') {
+      <cca-underlying-agreement-cancel-task />
+    }
+    @case ('UNDERLYING_AGREEMENT_APPLICATION_REVIEW') {
+      <cca-underlying-agreement-cancel-task />
+    }
+    @case ('UNDERLYING_AGREEMENT_APPLICATION_ACTIVATION') {
+      <cca-underlying-agreement-cancel-task />
+    }
+    @case ('ADMIN_TERMINATION_APPLICATION_SUBMIT') {
+      <cca-admin-termination-cancel-task />
+    }
+    @case ('UNDERLYING_AGREEMENT_VARIATION_SUBMIT') {
+      <cca-underlying-agreement-variation-cancel-task />
+    }
+    @case ('UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW') {
+      <cca-underlying-agreement-variation-cancel-task />
+    }
+    @case ('UNDERLYING_AGREEMENT_VARIATION_ACTIVATION') {
+      <cca-underlying-agreement-variation-cancel-task />
+    }
+  }
+</netz-cancel-task>

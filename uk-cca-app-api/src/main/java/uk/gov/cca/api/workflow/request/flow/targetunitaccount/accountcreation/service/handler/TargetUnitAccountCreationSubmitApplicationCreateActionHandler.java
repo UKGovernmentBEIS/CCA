@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
+import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.service.TargetUnitAccountCreationService;
 import uk.gov.cca.api.workflow.request.flow.common.actionhandler.CcaRequestCreateActionHandler;
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.domain.TargetUnitAccountCreationSubmitApplicationCreateActionPayload;
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.domain.TargetUnitAccountPayload;
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.transform.TargetUnitAccountPayloadMapper;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.StartProcessRequestService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
@@ -49,7 +51,10 @@ public class TargetUnitAccountCreationSubmitApplicationCreateActionHandler
         Request request = startProcessRequestService.startProcess(
                 RequestParams.builder()
                         .type(TARGET_UNIT_ACCOUNT_CREATION)
-                        .accountId(accountDTO.getId())
+                        .requestResources(Map.of(
+                        		ResourceType.ACCOUNT, accountDTO.getId().toString(),
+                        		CcaResourceType.SECTOR_ASSOCIATION, sectorAssociationId.toString())
+                        		)
                         .requestPayload(targetUnitAccountPayloadMapper.toTargetUnitAccountCreationRequestPayload(
                                 targetUnitAccountPayload, accountDTO.getBusinessId(), sectorAssociationId))
                         .processVars(Map.of(BpmnProcessConstants.ACCOUNT_ID, accountDTO.getId()))

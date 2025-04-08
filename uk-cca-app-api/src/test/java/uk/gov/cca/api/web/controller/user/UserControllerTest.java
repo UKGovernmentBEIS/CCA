@@ -106,15 +106,17 @@ class UserControllerTest {
             .lastName(lastName)
             .build();
 
-        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(AppUser.builder().userId(userId).build());
-        when(userServiceDelegator.getUserById(userId)).thenReturn(userDTO);
+        AppUser currentUser = AppUser.builder().userId(userId).build();
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
+        when(userServiceDelegator.getCurrentUserDTO(currentUser)).thenReturn(userDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_PATH)
+        mockMvc.perform(MockMvcRequestBuilders.get(USER_CONTROLLER_PATH + "/current")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.email").value(EMAIL))
             .andExpect(jsonPath("$.firstName").value(firstName))
             .andExpect(jsonPath("$.lastName").value(lastName));
+        verify(userServiceDelegator, times(1)).getCurrentUserDTO(currentUser);
     }
 
     @Test

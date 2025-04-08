@@ -1,11 +1,10 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
-import { ButtonDirective, LinkDirective, PanelComponent, WarningTextComponent } from '@netz/govuk-components';
-import { PendingButtonDirective } from '@shared/directives/pending-button.directive';
+import { PendingButtonDirective } from '@netz/common/directives';
+import { ButtonDirective, PanelComponent, WarningTextComponent } from '@netz/govuk-components';
 
 import { CaExternalContactsService } from 'cca-api';
 
@@ -17,15 +16,7 @@ import { ActiveExternalContactStore } from '../active-external-contact.store';
   templateUrl: './delete.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    AsyncPipe,
-    ButtonDirective,
-    PanelComponent,
-    RouterLink,
-    WarningTextComponent,
-    LinkDirective,
-    PendingButtonDirective,
-  ],
+  imports: [ButtonDirective, PanelComponent, RouterLink, WarningTextComponent, PendingButtonDirective],
 })
 export class DeleteComponent {
   private readonly externalContactsService = inject(CaExternalContactsService);

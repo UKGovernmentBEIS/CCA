@@ -9,18 +9,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
+import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.StartProcessRequestService;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestParams;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.Map;
 
 @ExtendWith(MockitoExtension.class)
 class TargetUnitAccountApplyUnderlyingAgreementServiceTest {
@@ -45,11 +49,15 @@ class TargetUnitAccountApplyUnderlyingAgreementServiceTest {
                 .status(TargetUnitAccountStatus.NEW)
                 .name("Name")
                 .operatorType(TargetUnitAccountOperatorType.LIMITED_COMPANY)
+                .sectorAssociationId(1L)
                 .build();
 
         RequestParams requestParams = RequestParams.builder()
                 .type(CcaRequestType.UNDERLYING_AGREEMENT)
-                .accountId(accountId)
+                .requestResources(Map.of(
+                		ResourceType.ACCOUNT, accountId.toString(),
+                		CcaResourceType.SECTOR_ASSOCIATION, targetUnitAccountDTO.getSectorAssociationId().toString()
+                		))
                 .requestPayload(UnderlyingAgreementRequestPayload.builder()
                         .payloadType(CcaRequestPayloadType.UNDERLYING_AGREEMENT_REQUEST_PAYLOAD)
                         .businessId(businessId)

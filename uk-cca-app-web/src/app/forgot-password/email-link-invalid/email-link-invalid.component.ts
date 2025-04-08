@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { PageHeadingComponent } from '@shared/components';
+import { PageHeadingComponent } from '@netz/common/components';
 
 @Component({
   selector: 'cca-email-link-invalid',

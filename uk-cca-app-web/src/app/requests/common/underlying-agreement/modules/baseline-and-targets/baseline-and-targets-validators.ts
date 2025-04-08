@@ -147,6 +147,7 @@ function handleNoSelected(group: AddBaselineDataFormModel): void {
     'requiredBaselineDate',
     'Enter the date when 12 months data will be available.',
   );
+
   updateControlError(
     explanationControl,
     !explanation,

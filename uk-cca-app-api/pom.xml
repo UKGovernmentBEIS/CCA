@@ -11,11 +11,35 @@
     <parent>
         <groupId>uk.gov.netz</groupId>
         <artifactId>uk-netz-app-api-parent</artifactId>
-        <version>1.1.0</version>
+        <version>1.4.0</version>
     </parent>
 
     <properties>
 		<jsch.version>0.2.20</jsch.version>
+        <netz.common.version>1.7.0</netz.common.version>
+        <netz.token.version>1.2.0</netz.token.version>
+        <netz.terms.version>1.1.0</netz.terms.version>
+        <netz.competentauthority.version>1.3.0</netz.competentauthority.version>
+        <netz.files.version>1.4.0</netz.files.version>
+        <netz.notification.version>1.2.0</netz.notification.version>
+		<netz.notificationapi.version>1.0.0</netz.notificationapi.version>
+        <netz.documenttemplate.version>1.4.0</netz.documenttemplate.version>
+        <netz.authorization.version>1.7.0</netz.authorization.version>
+        <netz.rest-logging.version>1.4.0</netz.rest-logging.version>
+        <netz.alert.version>1.1.0</netz.alert.version>
+        <netz.mireport.version>1.2.0</netz.mireport.version>
+        <netz.referencedata.version>1.1.0</netz.referencedata.version>
+        <netz.account.version>1.4.0</netz.account.version>
+        <netz.verificationbody.version>1.1.0</netz.verificationbody.version>
+        <netz.user.version>1.5.0</netz.user.version>
+        <netz.request.version>1.9.0</netz.request.version>
+        <netz.feedback.version>1.2.0</netz.feedback.version>
+        <netz.companieshouse.version>1.4.0</netz.companieshouse.version>
+        <netz.security-camunda-admin.version>1.1.0</netz.security-camunda-admin.version>
+        <netz.swagger.version>1.1.0</netz.swagger.version>
+        <netz.security.version>1.3.0</netz.security.version>
+        <netz.configuration.version>1.2.0</netz.configuration.version>
+        <netz.rest-client.version>1.0.0</netz.rest-client.version>
     </properties>
 
     <dependencies>
@@ -71,111 +95,138 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
+        
+        <!-- UK NETZ dependencies -->
         <dependency>
             <groupId>uk.gov.netz</groupId>
             <artifactId>uk-netz-app-api-common</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-token</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-terms</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-competentauthority</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-files</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-notification</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-documenttemplate</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-authorization</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-rest-logging</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-alert</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-mireport</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-referencedata</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-account</artifactId>
-            <version>1.0.0</version>
+            <version>${netz.common.version}</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.netz</groupId>
             <artifactId>uk-netz-app-api-verificationbody</artifactId>
-            <version>1.0.0</version>
+            <version>${netz.verificationbody.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-authorization</artifactId>
+            <version>${netz.authorization.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-account</artifactId>
+            <version>${netz.account.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-referencedata</artifactId>
+            <version>${netz.referencedata.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-token</artifactId>
+            <version>${netz.token.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-terms</artifactId>
+            <version>${netz.terms.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-competentauthority</artifactId>
+            <version>${netz.competentauthority.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-files</artifactId>
+            <version>${netz.files.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-notification</artifactId>
+            <version>${netz.notification.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-documenttemplate</artifactId>
+            <version>${netz.documenttemplate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-mireport</artifactId>
+            <version>${netz.mireport.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-alert</artifactId>
+            <version>${netz.alert.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-rest-logging</artifactId>
+            <version>${netz.rest-logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-notificationapi</artifactId>
+            <version>${netz.notificationapi.version}</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.netz</groupId>
             <artifactId>uk-netz-app-api-user</artifactId>
-            <version>1.0.0</version>
+            <version>${netz.user.version}</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.netz</groupId>
             <artifactId>uk-netz-app-api-request</artifactId>
-            <version>1.0.0</version>
+            <version>${netz.request.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-swagger</artifactId>
+            <version>${netz.swagger.version}</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.netz</groupId>
             <artifactId>uk-netz-app-api-feedback</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-companieshouse</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>uk-netz-app-api-security-camunda-admin</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>no.api.freemarker</groupId>
-            <artifactId>freemarker-java8</artifactId>
+            <version>${netz.feedback.version}</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.netz</groupId>
             <artifactId>uk-netz-app-api-security</artifactId>
-            <version>1.0.0</version>
+            <version>${netz.security.version}</version>
         </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-security-camunda-admin</artifactId>
+            <version>${netz.security-camunda-admin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-configuration</artifactId>
+            <version>${netz.configuration.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-rest-client</artifactId>
+            <version>${netz.rest-client.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.api.freemarker</groupId>
+            <artifactId>freemarker-java8</artifactId>
+        </dependency>
+        
         <dependency>
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
@@ -193,22 +244,8 @@
             <artifactId>liquibase-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-maven-plugin</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-admin-client</artifactId>
         </dependency>
         <dependency>
             <groupId>com.nulab-inc</groupId>
@@ -256,6 +293,18 @@
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-maven-plugin</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        
 
         <!-- xdoc report and export -->
         <dependency>
@@ -290,6 +339,11 @@
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-cloudwatch2</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.10.0</version>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
@@ -308,11 +362,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
@@ -328,16 +377,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>uk.gov.netz</groupId>
             <artifactId>uk-netz-app-api-common</artifactId>
             <classifier>tests</classifier>
             <type>test-jar</type>
-            <version>1.2.0</version>
+            <version>${netz.common.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -345,109 +389,37 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>${java.version}</release>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>${mapstruct.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok-mapstruct-binding</artifactId>
-                            <version>0.2.0</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <argLine>${failsafe.jacoco.args}</argLine>
-                </configuration>
-            </plugin>
-            <plugin>
-            <groupId>uk.gov.netz</groupId>
-            <artifactId>swagger-coverage-maven-plugin</artifactId>
-            <version>1.0.0</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>report</goal>
-                    </goals>
-                </execution>
-            </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <argLine>${surefire.jacoco.args}</argLine>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>build-info</id>
-                        <goals>
-                            <goal>build-info</goal>
-                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>uk.gov.netz</groupId>
+                <artifactId>swagger-coverage-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>report</id>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
-                <configuration>
-                    <propertyFile>src/main/resources/liquibase.properties</propertyFile>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.mysema.maven</groupId>
-                <artifactId>apt-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>process</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>target/generated-sources/java</outputDirectory>
-                            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.hibernate.orm.tooling</groupId>
                 <artifactId>hibernate-enhance-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <goals>
-                            <goal>enhance</goal>
-                        </goals>
+                        <id>enhance</id>
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>io.github.git-commit-id</groupId>
-                <artifactId>git-commit-id-maven-plugin</artifactId>
-                <configuration>
-                    <offline>true</offline>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
+    
 </project>

@@ -5,25 +5,30 @@ import { Observable, of } from 'rxjs';
 import { SideEffect, SubtaskOperation } from '@netz/common/forms';
 import { RequestTaskStore } from '@netz/common/store';
 import {
+  CurrentFacilityId,
   FACILITIES_SUBTASK,
   TaskItemStatus,
   UNAVariationRequestTaskPayload,
-  underlyingAgreementQuery,
 } from '@requests/common';
 import { produce } from 'immer';
 
 export class FacilitySubmitSideEffects extends SideEffect {
+  private readonly currentFacility = inject(CurrentFacilityId);
+
   override subtask = FACILITIES_SUBTASK;
   override on: SubtaskOperation[] = ['SUBMIT_SUBTASK'];
   override store = inject(RequestTaskStore);
   step: string;
 
   apply(currentPayload: UNAVariationRequestTaskPayload): Observable<UNAVariationRequestTaskPayload> {
-    const currentFacilityId = this.store.select(underlyingAgreementQuery.selectCurrentFacilityId)();
+    if (!this.currentFacility) throw new Error('no currentFacilityId');
 
     return of(
       produce(currentPayload, (payload) => {
-        payload.sectionsCompleted[currentFacilityId] = TaskItemStatus.COMPLETED;
+        payload.sectionsCompleted[this.currentFacility()] = TaskItemStatus.COMPLETED;
+        payload.reviewSectionsCompleted[this.currentFacility()] = TaskItemStatus.UNDECIDED;
+
+        delete payload.facilitiesReviewGroupDecisions[this.currentFacility()];
       }),
     );
   }

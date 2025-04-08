@@ -30,7 +30,7 @@ import uk.gov.netz.api.user.application.UserServiceDelegator;
 import uk.gov.netz.api.user.core.domain.dto.UserDTO;
 import uk.gov.netz.api.user.core.service.UserSignatureService;
 import uk.gov.netz.api.user.operator.domain.OperatorUserDTO;
-import uk.gov.netz.api.user.regulator.domain.RegulatorUserDTO;
+import uk.gov.netz.api.user.regulator.domain.RegulatorCurrentUserDTO;
 import uk.gov.netz.api.user.verifier.domain.VerifierUserDTO;
 
 import java.util.UUID;
@@ -53,16 +53,16 @@ public class UserController {
      *
      * @return {@link UserDTO}
      */
-    @GetMapping
+    @GetMapping(path = "/current")
     @Operation(summary = "Retrieves info of the logged in user")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(oneOf = {UserDTO.class, SectorUserDTO.class, OperatorUserDTO.class, RegulatorUserDTO.class, VerifierUserDTO.class}))})
+                    schema = @Schema(oneOf = {UserDTO.class, SectorUserDTO.class, OperatorUserDTO.class, RegulatorCurrentUserDTO.class, VerifierUserDTO.class}))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     public ResponseEntity<UserDTO> getCurrentUser(@Parameter(hidden = true) AppUser appUser) {
 
-        return new ResponseEntity<>(userServiceDelegator.getUserById(appUser.getUserId()), HttpStatus.OK);
+        return new ResponseEntity<>(userServiceDelegator.getCurrentUserDTO(appUser), HttpStatus.OK);
     }
 
     @GetMapping(path = "/signature")

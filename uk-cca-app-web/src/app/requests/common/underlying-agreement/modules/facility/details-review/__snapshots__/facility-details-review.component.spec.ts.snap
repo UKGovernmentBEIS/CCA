@@ -12,24 +12,23 @@ exports[`FacilityDetailsReviewComponent should create 1`] = `
   <cca-wizard-step
     class="ng-untouched ng-pristine ng-valid"
     data-testid="add-facility-details-form"
-    heading="Add facility details"
   >
     <form
       class="ng-untouched ng-pristine ng-valid"
       novalidate=""
     >
-      <cca-page-heading>
+      <netz-page-heading>
         <span
           class="govuk-caption-l"
         >
-          Facility 2
+          Facility 1
         </span>
         <h1
           class="govuk-heading-l"
         >
           Add facility details
         </h1>
-      </cca-page-heading>
+      </netz-page-heading>
       <div
         cca-text-input=""
         class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine"
@@ -46,7 +45,7 @@ exports[`FacilityDetailsReviewComponent should create 1`] = `
         <p
           class="govuk-body"
         >
-           ADS_53-F00007 
+           ADS_1-F00001 
         </p>
       </div>
       <div
@@ -442,9 +441,9 @@ exports[`FacilityDetailsReviewComponent should create 1`] = `
         </cca-account-address-input>
       </div>
       <button
-        ccapendingbutton=""
         class="govuk-button"
         govukbutton=""
+        netzpendingbutton=""
         type="submit"
       >
         Continue
@@ -454,7 +453,6 @@ exports[`FacilityDetailsReviewComponent should create 1`] = `
     class="govuk-footer__section-break govuk-!-margin-bottom-3"
   /><netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

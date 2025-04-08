@@ -3,10 +3,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { of, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 
+import { PageHeadingComponent } from '@netz/common/components';
 import { ActivatedRouteStub, BasePage, mockClass } from '@netz/common/testing';
-import { PageHeadingComponent, PasswordComponent, PasswordService } from '@shared/components';
+import { PasswordComponent } from '@shared/components';
 import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { RegulatorUsersRegistrationService } from 'cca-api';
@@ -21,7 +22,6 @@ describe('RegulatorInvitationComponent', () => {
   let router: Router;
   let route: ActivatedRoute;
   let regulatorUsersRegistrationService: jest.Mocked<RegulatorUsersRegistrationService>;
-  let passwordService: Partial<jest.Mocked<PasswordService>>;
   let store: InvitedRegulatorUserStore;
   class Page extends BasePage<RegulatorInvitationComponent> {
     get emailValue() {
@@ -43,14 +43,12 @@ describe('RegulatorInvitationComponent', () => {
 
   beforeEach(async () => {
     regulatorUsersRegistrationService = mockClass(RegulatorUsersRegistrationService);
-    passwordService = mockClass(PasswordService);
     const activatedRoute = new ActivatedRouteStub(undefined, { token: 'token' });
 
     await TestBed.configureTestingModule({
       imports: [RegulatorInvitationComponent, PasswordComponent, ReactiveFormsModule, PageHeadingComponent],
       providers: [
         { provide: RegulatorUsersRegistrationService, useValue: regulatorUsersRegistrationService },
-        { provide: PasswordService, useValue: passwordService },
         { provide: ActivatedRoute, useValue: activatedRoute },
         InvitedRegulatorUserStore,
         provideZxvbnServiceForPSM(),
@@ -84,8 +82,6 @@ describe('RegulatorInvitationComponent', () => {
     );
 
     const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
-    passwordService.blacklisted.mockReturnValue(of(null));
-    passwordService.strong.mockReturnValue(null);
     component.form.controls.password.setValue('ThisIsAStrongP@ssw0rd');
     component.form.get('validatePassword').setValue('ThisIsAStrongP@ssw0rd');
     page.submitButton.click();
@@ -124,8 +120,6 @@ describe('RegulatorInvitationComponent', () => {
 
     expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).not.toHaveBeenCalled();
 
-    passwordService.blacklisted.mockReturnValue(of(null));
-    passwordService.strong.mockReturnValue(null);
     page.passwordValue = 'ThisIsAStrongP@ssw0rd';
     page.repeatedPasswordValue = 'ThisIsAStrongP@ssw0rd';
     fixture.detectChanges();

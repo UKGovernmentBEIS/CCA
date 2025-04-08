@@ -13,7 +13,7 @@ import uk.gov.cca.api.account.domain.dto.TargetUnitAccountInfoResponseDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountSiteContactDTO;
 import uk.gov.cca.api.account.repository.TargetUnitAccountRepository;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaScope;
-import uk.gov.cca.api.authorization.ccaauth.rules.services.SectorAssociationAuthorizationResourceService;
+import uk.gov.cca.api.authorization.ccaauth.rules.services.resource.SectorAssociationAuthorizationResourceService;
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.service.SectorUserAuthorityService;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
@@ -26,6 +26,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType.OPERATOR;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +52,7 @@ public class TargetUnitAccountSiteContactService implements AccountCaSiteContact
     public TargetUnitAccountInfoResponseDTO getTargetUnitAccountsWithSiteContact(AppUser user, Long sectorAssociationId, final Integer page, final Integer pageSize) {
     	
         Page<TargetUnitAccountInfoDTO> accountWithSiteContactPage =
-        		getTargetUnitAccountDtosWithSiteContact(sectorAssociationId, CcaAccountContactType.TU_SITE_CONTACT, page, pageSize);
+        		getTargetUnitAccountDtosWithSiteContact(user, sectorAssociationId, CcaAccountContactType.TU_SITE_CONTACT, page, pageSize);
 
         boolean isEditable = sectorAssociationAuthorizationResourceService
                 .hasUserScopeToSectorAssociation(user, CcaScope.EDIT_SECTOR_ASSOCIATION, sectorAssociationId);
@@ -63,12 +65,23 @@ public class TargetUnitAccountSiteContactService implements AccountCaSiteContact
             .build();
     }
 
-    private Page<TargetUnitAccountInfoDTO> getTargetUnitAccountDtosWithSiteContact(Long sectorAssociationId, String siteContactType, final Integer page, final Integer pageSize) {
-        return targetUnitAccountRepository.findTargetUnitAccountsWithSiteContact(
-            PageRequest.of(page, pageSize),
-            sectorAssociationId,
-            siteContactType
-        );
+    private Page<TargetUnitAccountInfoDTO> getTargetUnitAccountDtosWithSiteContact(AppUser user,Long sectorAssociationId, String siteContactType, final Integer page, final Integer pageSize) {
+        if(user.getRoleType().equals(OPERATOR.name())){
+            return targetUnitAccountRepository.
+                    findTargetUnitAccountWithSiteContactAndAccountsIds(
+                            PageRequest.of(page, pageSize),
+                            sectorAssociationId,
+                            user.getAccounts(),
+                            siteContactType);
+        } else {
+            return targetUnitAccountRepository.findTargetUnitAccountsWithSiteContact(
+                    PageRequest.of(page, pageSize),
+                    sectorAssociationId,
+                    siteContactType
+            );
+        }
+
+
     }
 
     @Transactional

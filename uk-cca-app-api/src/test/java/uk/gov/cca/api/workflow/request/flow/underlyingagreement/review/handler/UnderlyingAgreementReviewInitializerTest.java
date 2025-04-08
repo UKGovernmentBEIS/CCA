@@ -19,7 +19,9 @@ import uk.gov.cca.api.workflow.request.core.domain.TargetUnitAccountDetails;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementReviewRequestTaskPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,9 +44,9 @@ class UnderlyingAgreementReviewInitializerTest {
 
         Request request = Request.builder()
             .id(requestId)
-            .accountId(accountId)
             .payload(requestPayload)
             .build();
+        addResourcesToRequest(accountId, request);
 
         AccountReferenceData expectedAccountData = AccountReferenceData.builder()
         		.targetUnitAccountDetails(TargetUnitAccountDetails.builder().operatorName("name").build())
@@ -67,4 +69,14 @@ class UnderlyingAgreementReviewInitializerTest {
     void getRequestTaskTypes() {
         assertEquals(initializer.getRequestTaskTypes(), Set.of(CcaRequestTaskType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW));
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

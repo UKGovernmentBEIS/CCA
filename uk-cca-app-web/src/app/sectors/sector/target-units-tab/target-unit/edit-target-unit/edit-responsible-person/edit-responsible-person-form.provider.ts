@@ -1,11 +1,7 @@
 import { InjectionToken, Provider } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 
-import { createAccountAddressForm } from '@shared/components';
-import {
-  createResponsibleForm,
-  ResponsiblePersonFormConfig,
-} from '@shared/components/responsible-person-input/responsible-person-input.controls';
+import { createAccountAddressForm, createResponsibleForm, ResponsiblePersonFormConfig } from '@shared/components';
 
 import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
 

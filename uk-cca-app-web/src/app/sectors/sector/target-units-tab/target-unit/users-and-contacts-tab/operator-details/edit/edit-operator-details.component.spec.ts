@@ -14,6 +14,7 @@ import { EditOperatorDetailsComponent } from './edit-operator-details.component'
 
 describe('EditOperatorDetailsComponent', () => {
   let store: ActiveOperatorStore;
+
   beforeEach(async () => {
     await render(EditOperatorDetailsComponent, {
       providers: [ActiveOperatorStore, provideHttpClient(), provideHttpClientTesting()],
@@ -73,6 +74,5 @@ describe('EditOperatorDetailsComponent', () => {
 
     expect(screen.getAllByText('Enter the first name')).toHaveLength(2);
     expect(screen.getAllByText('Enter the last name')).toHaveLength(2);
-    expect(screen.getAllByText('Choose your contact type')).toHaveLength(2);
   });
 });

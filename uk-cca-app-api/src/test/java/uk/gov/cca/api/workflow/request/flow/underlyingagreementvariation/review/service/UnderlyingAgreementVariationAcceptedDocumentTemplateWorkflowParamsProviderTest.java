@@ -23,7 +23,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.
 @ExtendWith(MockitoExtension.class)
 class UnderlyingAgreementVariationAcceptedDocumentTemplateWorkflowParamsProviderTest {
 
-	@InjectMocks
+    @InjectMocks
     private UnderlyingAgreementVariationAcceptedDocumentTemplateWorkflowParamsProvider provider;
 
     @Mock
@@ -32,15 +32,18 @@ class UnderlyingAgreementVariationAcceptedDocumentTemplateWorkflowParamsProvider
     @Test
     void getContextActionType() {
         assertThat(provider.getContextActionType()).isEqualTo(
-        		CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED);
+                CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED);
     }
 
     @Test
     void constructParams() {
         final int version = 100;
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = UnderlyingAgreementTargetUnitDetails.builder().build();
-    	UnderlyingAgreementVariationRequestPayload payload = UnderlyingAgreementVariationRequestPayload.builder()
+        UnderlyingAgreementVariationRequestPayload payload = UnderlyingAgreementVariationRequestPayload.builder()
                 .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
+                        .underlyingAgreementTargetUnitDetails(targetUnitDetails)
+                        .build())
+                .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                         .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                         .build())
                 .underlyingAgreementVersion(version)

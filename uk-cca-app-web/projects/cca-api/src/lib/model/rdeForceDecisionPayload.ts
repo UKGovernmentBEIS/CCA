@@ -13,5 +13,5 @@
 export interface RdeForceDecisionPayload {
   decision: 'ACCEPTED' | 'REJECTED';
   evidence: string;
-  files?: Array<string>;
+  files?: string[];
 }

@@ -4,10 +4,10 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
-import { ButtonDirective, ErrorSummaryComponent, LinkDirective, TextInputComponent } from '@netz/govuk-components';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
+import { ButtonDirective, ErrorSummaryComponent, TextInputComponent } from '@netz/govuk-components';
 import { CountyAddressInputComponent } from '@shared/components';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
 
 import { SectorAssociationDetailsUpdateService } from 'cca-api';
 
@@ -25,7 +25,6 @@ import {
   templateUrl: './edit-sector-association-details.component.html',
   standalone: true,
   imports: [
-    LinkDirective,
     RouterLink,
     PageHeadingComponent,
     ErrorSummaryComponent,

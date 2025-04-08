@@ -169,7 +169,7 @@ class AccountNoteControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(user, "getNotesByAccountId", Long.toString(1L));
+            .authorize(user, "getNotesByAccountId", Long.toString(1L), null, null);
 
         mockMvc.perform(
                 MockMvcRequestBuilders
@@ -271,7 +271,7 @@ class AccountNoteControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(authUser, "uploadAccountNoteFile", "1");
+            .authorize(authUser, "uploadAccountNoteFile", "1", null, null);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.multipart(ACCOUNT_NOTE_CONTROLLER_PATH + "/upload/account/" + 1)
@@ -320,7 +320,7 @@ class AccountNoteControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(user, "updateAccountNote", "1");
+            .authorize(user, "updateAccountNote", "1", null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.put(ACCOUNT_NOTE_CONTROLLER_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON)

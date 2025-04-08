@@ -4,24 +4,18 @@ import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFor
 
 import { BehaviorSubject, combineLatest, filter, map, merge, Observable, startWith, tap, withLatestFrom } from 'rxjs';
 
-import { ErrorMessageComponent, FormService, LinkDirective } from '@netz/govuk-components';
+import { ErrorMessageComponent, FormService } from '@netz/govuk-components';
 
 import { FileUploadListComponent } from '../file-upload-list/file-upload-list.component';
 import { LabelSizeType } from '../text-input/label-size.type';
 import { FileUploadService } from './file-upload.service';
 import { FileUpload, FileUploadEvent } from './file-upload-event';
 
-/*
-  eslint-disable
-  @typescript-eslint/no-empty-function
- */
-// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
 @Component({
   selector: 'cca-file-input',
   templateUrl: './file-input.component.html',
-  styleUrl: '../multiple-file-input/multiple-file-input.component.scss',
-  imports: [FileUploadListComponent, ErrorMessageComponent, AsyncPipe, LinkDirective],
   standalone: true,
+  imports: [FileUploadListComponent, ErrorMessageComponent, AsyncPipe],
 })
 export class FileInputComponent implements OnInit, ControlValueAccessor {
   private readonly ngControl = inject(NgControl, { self: true, optional: true });

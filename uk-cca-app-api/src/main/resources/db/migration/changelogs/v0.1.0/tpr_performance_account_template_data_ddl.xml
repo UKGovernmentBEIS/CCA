@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	logicalFilePath="v0.1.0/tpr_performance_account_template_data_ddl.xml"
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+	<changeSet id="0_1_0_tpr_performance_account_template_data_sequence"
+		author="P35066">
+		<createSequence
+			sequenceName="tpr_performance_account_template_data_seq"
+			minValue="0"
+			maxValue="999999999999999999"
+			incrementBy="1"
+			startValue="1"
+			cycle="false" />
+		<rollback>
+			<sql>
+				DROP SEQUENCE IF EXISTS
+				tpr_performance_account_template_data_seq;
+			</sql>
+		</rollback>
+	</changeSet>
+
+
+	<changeSet id="0_1_0_tpr_performance_account_template_data_table_create"
+		author="P35066">
+		<createTable tableName="tpr_performance_account_template_data">
+			<column name="id" type="bigint" remarks="Primary key">
+				<constraints primaryKey="true"
+					primaryKeyName="tpr_performance_acc_templ_data_pk"
+					nullable="false" />
+			</column>
+			<column name="data" type="jsonb"
+				remarks="data representation as json">
+				<constraints nullable="false" />
+			</column>
+			<column name="account_id" type="bigint" remarks="The account id">
+				<constraints nullable="false" />
+			</column>
+			<column name="target_period_id" type="bigint"
+				remarks="Foreign key referencing tpr_target_period">
+				<constraints foreignKeyName="target_period_id_fk"
+					references="tpr_target_period(id)" nullable="false" />
+			</column>
+			<column name="target_period_year" type="int"
+				remarks="The target period year">
+				<constraints nullable="false" />
+			</column>
+			<column name="submission_date" type="timestamp"
+				remarks="The submission date">
+				<constraints nullable="false" />
+			</column>
+			<column name="submission_type" type="varchar(64)">
+				<constraints nullable="false" />
+			</column>
+			<column name="report_version" type="int"
+				remarks="The performance account template data version">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<addUniqueConstraint
+			tableName="tpr_performance_account_template_data"
+			columnNames="account_id, target_period_year"
+			constraintName="tpr_performance_acc_templ_data_uc" />
+			
+		<sql>
+	        ALTER TABLE tpr_performance_account_template_data 
+			ADD CONSTRAINT report_version_positive_val 
+			CHECK (report_version > 0) NOT VALID;
+	    </sql>
+		
+		<rollback>
+			<sql>
+				DROP TABLE IF EXISTS tpr_performance_account_template_data
+				CASCADE;
+			</sql>
+		</rollback>
+	</changeSet>
+
+</databaseChangeLog>

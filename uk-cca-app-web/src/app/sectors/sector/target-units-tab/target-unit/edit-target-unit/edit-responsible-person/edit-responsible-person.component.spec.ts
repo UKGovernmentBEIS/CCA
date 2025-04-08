@@ -5,8 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { CountryService } from '@core/services/country.service';
 import { ActivatedRouteStub, BasePage, mockClass } from '@netz/common/testing';
+import { CountryService } from '@shared/services';
 
 import { UpdateTargetUnitAccountService } from 'cca-api';
 

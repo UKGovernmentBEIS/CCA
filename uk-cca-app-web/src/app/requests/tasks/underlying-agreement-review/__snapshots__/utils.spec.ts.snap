@@ -1,0 +1,626 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createProposedUnderlyingAgreementPayload should create the correct payload when all decisions are accepted: una-with-initial-facilities 1`] = `
+{
+  "authorisationAndAdditionalEvidence": {
+    "additionalEvidenceAttachmentIds": [],
+    "authorisationAttachmentIds": [
+      "2f611a22-bd5f-4fd4-b00f-c20bfb2706c9",
+    ],
+  },
+  "facilities": [
+    {
+      "apply70Rule": {
+        "energyConsumed": 50,
+        "energyConsumedEligible": 70,
+        "energyConsumedProvision": 40,
+        "evidenceFile": "evidenceFile",
+      },
+      "eligibilityDetailsAndAuthorisation": {
+        "adjacentFacilityId": "ADS_1-F11111",
+        "agreementType": "ENVIRONMENTAL_PERMITTING_REGULATIONS",
+        "authorisationNumber": "authorisation",
+        "erpAuthorisationExists": true,
+        "isConnectedToExistingFacility": true,
+        "permitFile": "permitFile",
+        "regulatorName": "ENVIRONMENT_AGENCY",
+      },
+      "facilityContact": {
+        "address": {
+          "city": "Facility Contact City",
+          "country": "GR",
+          "line1": "Facility Contact Line1",
+          "line2": "Facility Contact Line2",
+          "postcode": "Facility Contact 14",
+        },
+        "email": "facility@email.com",
+        "firstName": "FacilityFirst",
+        "lastName": "FacilityLast",
+        "phoneNumber": {
+          "countryCode": "44",
+          "number": "1234567890",
+        },
+      },
+      "facilityDetails": {
+        "applicationReason": "NEW_AGREEMENT",
+        "facilityAddress": {
+          "city": "Facility City",
+          "country": "GR",
+          "line1": "Facility Line1",
+          "line2": "Facility Line2",
+          "postcode": "Facility 14",
+        },
+        "isCoveredByUkets": false,
+        "name": "Facility 1",
+      },
+      "facilityExtent": {
+        "activitiesDescriptionFile": "activitiesDescriptionFile",
+        "annotatedSitePlansFile": "annotatedSitePlansFile",
+        "areActivitiesClaimed": true,
+        "eligibleProcessFile": "eligibleProcessFile",
+        "manufacturingProcessFile": "manufacturingProcessFile",
+        "processFlowFile": "processFlowFile",
+      },
+      "facilityId": "ADS_1-F00001",
+      "status": "NEW",
+    },
+    {
+      "apply70Rule": {
+        "energyConsumed": 50,
+        "energyConsumedEligible": 70,
+        "energyConsumedProvision": 40,
+        "evidenceFile": "evidenceFile",
+      },
+      "eligibilityDetailsAndAuthorisation": {
+        "adjacentFacilityId": "ADS_1-F11111",
+        "agreementType": "ENVIRONMENTAL_PERMITTING_REGULATIONS",
+        "authorisationNumber": "authorisation",
+        "erpAuthorisationExists": true,
+        "isConnectedToExistingFacility": true,
+        "permitFile": "permitFile",
+        "regulatorName": "ENVIRONMENT_AGENCY",
+      },
+      "facilityContact": {
+        "address": {
+          "city": "Facility Contact City",
+          "country": "GR",
+          "line1": "Facility Contact Line1",
+          "line2": "Facility Contact Line2",
+          "postcode": "Facility Contact 14",
+        },
+        "email": "facility@email.com",
+        "firstName": "FacilityFirst",
+        "lastName": "FacilityLast",
+        "phoneNumber": {
+          "countryCode": "44",
+          "number": "1234567890",
+        },
+      },
+      "facilityDetails": {
+        "applicationReason": "NEW_AGREEMENT",
+        "facilityAddress": {
+          "city": "Facility City",
+          "country": "GR",
+          "line1": "Facility Line1",
+          "line2": "Facility Line2",
+          "postcode": "Facility 14",
+        },
+        "isCoveredByUkets": false,
+        "name": "Facility 2",
+      },
+      "facilityExtent": {
+        "activitiesDescriptionFile": "activitiesDescriptionFile",
+        "annotatedSitePlansFile": "annotatedSitePlansFile",
+        "areActivitiesClaimed": true,
+        "eligibleProcessFile": "eligibleProcessFile",
+        "manufacturingProcessFile": "manufacturingProcessFile",
+        "processFlowFile": "processFlowFile",
+      },
+      "facilityId": "ADS_1-F00002",
+      "status": "LIVE",
+    },
+  ],
+  "targetPeriod5Details": {
+    "details": {
+      "baselineData": {
+        "baselineDate": "2020-12-12T00:00:00.000Z",
+        "energy": 100,
+        "energyCarbonFactor": 1,
+        "explanation": "test",
+        "greenfieldEvidences": [
+          "f8dff40f-3fb7-4368-8723-244661fb686f",
+        ],
+        "isTwelveMonths": false,
+        "performance": 10,
+        "throughput": 10,
+        "usedReportingMechanism": true,
+      },
+      "targetComposition": {
+        "agreementCompositionType": "RELATIVE",
+        "calculatorFile": "1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb",
+        "conversionEvidences": [
+          "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
+        ],
+        "conversionFactor": 1,
+        "isTargetUnitThroughputMeasured": true,
+        "measurementType": "ENERGY_KWH",
+        "throughputUnit": "GJ",
+      },
+      "targets": {
+        "improvement": 0.1,
+        "target": 9,
+      },
+    },
+    "exist": true,
+  },
+  "targetPeriod6Details": {
+    "baselineData": {
+      "baselineDate": "2020-12-12T00:00:00.000Z",
+      "energy": 100,
+      "energyCarbonFactor": 1,
+      "explanation": "test",
+      "greenfieldEvidences": [
+        "f8dff40f-3fb7-4368-8723-244661fb686f",
+      ],
+      "isTwelveMonths": false,
+      "performance": 10,
+      "throughput": 10,
+      "usedReportingMechanism": true,
+    },
+    "targetComposition": {
+      "agreementCompositionType": "RELATIVE",
+      "calculatorFile": "1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb",
+      "conversionEvidences": [
+        "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
+      ],
+      "conversionFactor": 1,
+      "isTargetUnitThroughputMeasured": true,
+      "measurementType": "ENERGY_KWH",
+      "throughputUnit": "GJ",
+    },
+    "targets": {
+      "improvement": 0.1,
+      "target": 9,
+    },
+  },
+  "underlyingAgreementTargetUnitDetails": {
+    "isCompanyRegistrationNumber": true,
+    "operatorAddress": {
+      "city": "una operator addr city",
+      "country": "una operator addr country",
+      "line1": "una operator addr line 1",
+      "postcode": "una operator addr postcode",
+    },
+    "operatorName": "operator name",
+    "operatorType": "PARTNERSHIP",
+    "responsiblePersonDetails": {
+      "address": {
+        "city": "una resp addr line city",
+        "country": "una resp addr country",
+        "county": "una resp addr county",
+        "line1": "una resp addr line 1",
+        "line2": "una resp addr line 2",
+        "postcode": "una resp addr line postcode",
+      },
+      "email": "test@test.com",
+      "firstName": "test 1",
+      "lastName": "test 2",
+    },
+  },
+}
+`;
+
+exports[`createProposedUnderlyingAgreementPayload should create the correct payload when all decisions are rejected: una-without-facilities 1`] = `
+{
+  "authorisationAndAdditionalEvidence": {
+    "additionalEvidenceAttachmentIds": [],
+    "authorisationAttachmentIds": [
+      "2f611a22-bd5f-4fd4-b00f-c20bfb2706c9",
+    ],
+  },
+  "facilities": [],
+  "targetPeriod5Details": {
+    "details": {
+      "baselineData": {
+        "baselineDate": "2020-12-12T00:00:00.000Z",
+        "energy": 100,
+        "energyCarbonFactor": 1,
+        "explanation": "test",
+        "greenfieldEvidences": [
+          "f8dff40f-3fb7-4368-8723-244661fb686f",
+        ],
+        "isTwelveMonths": false,
+        "performance": 10,
+        "throughput": 10,
+        "usedReportingMechanism": true,
+      },
+      "targetComposition": {
+        "agreementCompositionType": "RELATIVE",
+        "calculatorFile": "1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb",
+        "conversionEvidences": [
+          "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
+        ],
+        "conversionFactor": 1,
+        "isTargetUnitThroughputMeasured": true,
+        "measurementType": "ENERGY_KWH",
+        "throughputUnit": "GJ",
+      },
+      "targets": {
+        "improvement": 0.1,
+        "target": 9,
+      },
+    },
+    "exist": true,
+  },
+  "targetPeriod6Details": {
+    "baselineData": {
+      "baselineDate": "2020-12-12T00:00:00.000Z",
+      "energy": 100,
+      "energyCarbonFactor": 1,
+      "explanation": "test",
+      "greenfieldEvidences": [
+        "f8dff40f-3fb7-4368-8723-244661fb686f",
+      ],
+      "isTwelveMonths": false,
+      "performance": 10,
+      "throughput": 10,
+      "usedReportingMechanism": true,
+    },
+    "targetComposition": {
+      "agreementCompositionType": "RELATIVE",
+      "calculatorFile": "1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb",
+      "conversionEvidences": [
+        "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
+      ],
+      "conversionFactor": 1,
+      "isTargetUnitThroughputMeasured": true,
+      "measurementType": "ENERGY_KWH",
+      "throughputUnit": "GJ",
+    },
+    "targets": {
+      "improvement": 0.1,
+      "target": 9,
+    },
+  },
+  "underlyingAgreementTargetUnitDetails": {
+    "isCompanyRegistrationNumber": true,
+    "operatorAddress": {
+      "city": "una operator addr city",
+      "country": "una operator addr country",
+      "line1": "una operator addr line 1",
+      "postcode": "una operator addr postcode",
+    },
+    "operatorName": "operator name",
+    "operatorType": "PARTNERSHIP",
+    "responsiblePersonDetails": {
+      "address": {
+        "city": "una resp addr line city",
+        "country": "una resp addr country",
+        "county": "una resp addr county",
+        "line1": "una resp addr line 1",
+        "line2": "una resp addr line 2",
+        "postcode": "una resp addr line postcode",
+      },
+      "email": "test@test.com",
+      "firstName": "test 1",
+      "lastName": "test 2",
+    },
+  },
+}
+`;
+
+exports[`createProposedUnderlyingAgreementPayload should handle mixed decisions correctly: mixed-decisions 1`] = `
+{
+  "authorisationAndAdditionalEvidence": {
+    "additionalEvidenceAttachmentIds": [],
+    "authorisationAttachmentIds": [
+      "2f611a22-bd5f-4fd4-b00f-c20bfb2706c9",
+    ],
+  },
+  "facilities": [
+    {
+      "apply70Rule": {
+        "energyConsumed": 50,
+        "energyConsumedEligible": 70,
+        "energyConsumedProvision": 40,
+        "evidenceFile": "evidenceFile",
+      },
+      "eligibilityDetailsAndAuthorisation": {
+        "adjacentFacilityId": "ADS_1-F11111",
+        "agreementType": "ENVIRONMENTAL_PERMITTING_REGULATIONS",
+        "authorisationNumber": "authorisation",
+        "erpAuthorisationExists": true,
+        "isConnectedToExistingFacility": true,
+        "permitFile": "permitFile",
+        "regulatorName": "ENVIRONMENT_AGENCY",
+      },
+      "facilityContact": {
+        "address": {
+          "city": "Facility Contact City",
+          "country": "GR",
+          "line1": "Facility Contact Line1",
+          "line2": "Facility Contact Line2",
+          "postcode": "Facility Contact 14",
+        },
+        "email": "facility@email.com",
+        "firstName": "FacilityFirst",
+        "lastName": "FacilityLast",
+        "phoneNumber": {
+          "countryCode": "44",
+          "number": "1234567890",
+        },
+      },
+      "facilityDetails": {
+        "applicationReason": "NEW_AGREEMENT",
+        "facilityAddress": {
+          "city": "Facility City",
+          "country": "GR",
+          "line1": "Facility Line1",
+          "line2": "Facility Line2",
+          "postcode": "Facility 14",
+        },
+        "isCoveredByUkets": false,
+        "name": "Facility 1",
+      },
+      "facilityExtent": {
+        "activitiesDescriptionFile": "activitiesDescriptionFile",
+        "annotatedSitePlansFile": "annotatedSitePlansFile",
+        "areActivitiesClaimed": true,
+        "eligibleProcessFile": "eligibleProcessFile",
+        "manufacturingProcessFile": "manufacturingProcessFile",
+        "processFlowFile": "processFlowFile",
+      },
+      "facilityId": "ADS_1-F00001",
+      "status": "NEW",
+    },
+  ],
+  "targetPeriod5Details": {
+    "details": {
+      "baselineData": {
+        "baselineDate": "2020-12-12T00:00:00.000Z",
+        "energy": 100,
+        "energyCarbonFactor": 1,
+        "explanation": "test",
+        "greenfieldEvidences": [
+          "f8dff40f-3fb7-4368-8723-244661fb686f",
+        ],
+        "isTwelveMonths": false,
+        "performance": 10,
+        "throughput": 10,
+        "usedReportingMechanism": true,
+      },
+      "targetComposition": {
+        "agreementCompositionType": "RELATIVE",
+        "calculatorFile": "1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb",
+        "conversionEvidences": [
+          "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
+        ],
+        "conversionFactor": 1,
+        "isTargetUnitThroughputMeasured": true,
+        "measurementType": "ENERGY_KWH",
+        "throughputUnit": "GJ",
+      },
+      "targets": {
+        "improvement": 0.1,
+        "target": 9,
+      },
+    },
+    "exist": true,
+  },
+  "targetPeriod6Details": {
+    "baselineData": {
+      "baselineDate": "2020-12-12T00:00:00.000Z",
+      "energy": 100,
+      "energyCarbonFactor": 1,
+      "explanation": "test",
+      "greenfieldEvidences": [
+        "f8dff40f-3fb7-4368-8723-244661fb686f",
+      ],
+      "isTwelveMonths": false,
+      "performance": 10,
+      "throughput": 10,
+      "usedReportingMechanism": true,
+    },
+    "targetComposition": {
+      "agreementCompositionType": "RELATIVE",
+      "calculatorFile": "1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb",
+      "conversionEvidences": [
+        "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
+      ],
+      "conversionFactor": 1,
+      "isTargetUnitThroughputMeasured": true,
+      "measurementType": "ENERGY_KWH",
+      "throughputUnit": "GJ",
+    },
+    "targets": {
+      "improvement": 0.1,
+      "target": 9,
+    },
+  },
+  "underlyingAgreementTargetUnitDetails": {
+    "isCompanyRegistrationNumber": true,
+    "operatorAddress": {
+      "city": "una operator addr city",
+      "country": "una operator addr country",
+      "line1": "una operator addr line 1",
+      "postcode": "una operator addr postcode",
+    },
+    "operatorName": "operator name",
+    "operatorType": "PARTNERSHIP",
+    "responsiblePersonDetails": {
+      "address": {
+        "city": "una resp addr line city",
+        "country": "una resp addr country",
+        "county": "una resp addr county",
+        "line1": "una resp addr line 1",
+        "line2": "una resp addr line 2",
+        "postcode": "una resp addr line postcode",
+      },
+      "email": "test@test.com",
+      "firstName": "test 1",
+      "lastName": "test 2",
+    },
+  },
+}
+`;
+
+exports[`createProposedUnderlyingAgreementPayload should transform target unit details when TARGET_UNIT_DETAILS is REJECTED: target-unit-details-rejected 1`] = `
+{
+  "authorisationAndAdditionalEvidence": {
+    "additionalEvidenceAttachmentIds": [],
+    "authorisationAttachmentIds": [
+      "2f611a22-bd5f-4fd4-b00f-c20bfb2706c9",
+    ],
+  },
+  "facilities": [
+    {
+      "apply70Rule": {
+        "energyConsumed": 50,
+        "energyConsumedEligible": 70,
+        "energyConsumedProvision": 40,
+        "evidenceFile": "evidenceFile",
+      },
+      "eligibilityDetailsAndAuthorisation": {
+        "adjacentFacilityId": "ADS_1-F11111",
+        "agreementType": "ENVIRONMENTAL_PERMITTING_REGULATIONS",
+        "authorisationNumber": "authorisation",
+        "erpAuthorisationExists": true,
+        "isConnectedToExistingFacility": true,
+        "permitFile": "permitFile",
+        "regulatorName": "ENVIRONMENT_AGENCY",
+      },
+      "facilityContact": {
+        "address": {
+          "city": "Facility Contact City",
+          "country": "GR",
+          "line1": "Facility Contact Line1",
+          "line2": "Facility Contact Line2",
+          "postcode": "Facility Contact 14",
+        },
+        "email": "facility@email.com",
+        "firstName": "FacilityFirst",
+        "lastName": "FacilityLast",
+        "phoneNumber": {
+          "countryCode": "44",
+          "number": "1234567890",
+        },
+      },
+      "facilityDetails": {
+        "applicationReason": "NEW_AGREEMENT",
+        "facilityAddress": {
+          "city": "Facility City",
+          "country": "GR",
+          "line1": "Facility Line1",
+          "line2": "Facility Line2",
+          "postcode": "Facility 14",
+        },
+        "isCoveredByUkets": false,
+        "name": "Facility 1",
+      },
+      "facilityExtent": {
+        "activitiesDescriptionFile": "activitiesDescriptionFile",
+        "annotatedSitePlansFile": "annotatedSitePlansFile",
+        "areActivitiesClaimed": true,
+        "eligibleProcessFile": "eligibleProcessFile",
+        "manufacturingProcessFile": "manufacturingProcessFile",
+        "processFlowFile": "processFlowFile",
+      },
+      "facilityId": "ADS_1-F00001",
+      "status": "NEW",
+    },
+  ],
+  "targetPeriod5Details": {
+    "details": {
+      "baselineData": {
+        "baselineDate": "2020-12-12T00:00:00.000Z",
+        "energy": 100,
+        "energyCarbonFactor": 1,
+        "explanation": "test",
+        "greenfieldEvidences": [
+          "f8dff40f-3fb7-4368-8723-244661fb686f",
+        ],
+        "isTwelveMonths": false,
+        "performance": 10,
+        "throughput": 10,
+        "usedReportingMechanism": true,
+      },
+      "targetComposition": {
+        "agreementCompositionType": "RELATIVE",
+        "calculatorFile": "1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb",
+        "conversionEvidences": [
+          "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
+        ],
+        "conversionFactor": 1,
+        "isTargetUnitThroughputMeasured": true,
+        "measurementType": "ENERGY_KWH",
+        "throughputUnit": "GJ",
+      },
+      "targets": {
+        "improvement": 0.1,
+        "target": 9,
+      },
+    },
+    "exist": true,
+  },
+  "targetPeriod6Details": {
+    "baselineData": {
+      "baselineDate": "2020-12-12T00:00:00.000Z",
+      "energy": 100,
+      "energyCarbonFactor": 1,
+      "explanation": "test",
+      "greenfieldEvidences": [
+        "f8dff40f-3fb7-4368-8723-244661fb686f",
+      ],
+      "isTwelveMonths": false,
+      "performance": 10,
+      "throughput": 10,
+      "usedReportingMechanism": true,
+    },
+    "targetComposition": {
+      "agreementCompositionType": "RELATIVE",
+      "calculatorFile": "1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb",
+      "conversionEvidences": [
+        "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
+      ],
+      "conversionFactor": 1,
+      "isTargetUnitThroughputMeasured": true,
+      "measurementType": "ENERGY_KWH",
+      "throughputUnit": "GJ",
+    },
+    "targets": {
+      "improvement": 0.1,
+      "target": 9,
+    },
+  },
+  "underlyingAgreementTargetUnitDetails": {
+    "companyRegistrationNumber": "test",
+    "isCompanyRegistrationNumber": true,
+    "operatorAddress": {
+      "city": "accountrefdata operator address city",
+      "country": "accountrefdata operator address country",
+      "county": "accountrefdata operator address county",
+      "line1": "accountrefdata operator address line 1",
+      "line2": "accountrefdata operator address line 2",
+      "postcode": "accountrefdata operator address postcode",
+    },
+    "operatorName": "test",
+    "operatorType": "LIMITED_COMPANY",
+    "registrationNumberMissingReason": undefined,
+    "responsiblePersonDetails": {
+      "address": {
+        "city": "accountrefdata resp pers city",
+        "country": "accountrefdata resp pers country",
+        "county": "accountrefdata resp pers county",
+        "line1": "accountrefdata resp pers line 1",
+        "line2": "accountrefdata resp pers line 2",
+        "postcode": "accountrefdata resp postcode",
+      },
+      "email": "test@test.com",
+      "firstName": "resp person firstname",
+      "lastName": "resp person lastname",
+    },
+    "subsectorAssociationId": undefined,
+    "subsectorAssociationName": "SUBSECTOR_2",
+  },
+}
+`;

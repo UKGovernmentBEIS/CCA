@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 
 import { PayloadMutatorsHandler, SideEffectsHandler } from '@netz/common/forms';
-import { isEditableSummaryRedirectGuard } from '@requests/common';
+import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/common';
 
+import { canActivateVariationOverallDecision } from './subtasks/overall-decision/overall-decision.guard';
 import {
   providePayloadMutators,
   provideSideEffects,
@@ -58,6 +59,21 @@ export const UNDERLYING_AGREEMENT_VARIATION_REVIEW_ROUTES: Routes = [
         loadChildren: () =>
           import('./subtasks/authorisation-additional-evidence/authorisation-additional-evidence.routes').then(
             (r) => r.AUTHORISATION_ADDITIONAL_EVIDENCE_ROUTES,
+          ),
+      },
+      {
+        path: 'send-application',
+        canActivate: [canActivateVariationOverallDecision, isEditableSummaryRedirectGuard],
+        loadChildren: () =>
+          import('./subtasks/overall-decision/overall-decision.routes').then((r) => r.OVERALL_DECISION_ROUTES),
+      },
+      {
+        path: 'notify-operator',
+        title: 'Notify operator of decision',
+        canActivate: [isEditableGuard],
+        loadChildren: () =>
+          import('./notify-operator/notify-operator.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_REVIEW_NOTIFY_OPERATOR_ROUTES,
           ),
       },
     ],

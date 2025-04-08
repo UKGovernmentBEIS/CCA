@@ -35,7 +35,7 @@ describe('FacilityApplyRuleComponent', () => {
       return this.getInputValue('#energyConsumedProvision');
     }
     get filesText() {
-      return this.queryAll<HTMLDivElement>('.moj-multi-file-upload__message');
+      return this.queryAll<HTMLDivElement>('.cca-multi-file-upload__message');
     }
 
     get submitButton() {
@@ -84,16 +84,11 @@ describe('FacilityApplyRuleComponent', () => {
     fixture.detectChanges();
 
     expect(taskServiceSpy).toHaveBeenCalledWith(FACILITIES_SUBTASK, FacilityWizardStep.APPLY_RULE, route, {
-      facility: {
-        facilityId: 'ADS_1-F00001',
-        apply70Rule: {
-          energyConsumed: 90,
-          energyConsumedEligible: 100,
-          evidenceFile: 'evidenceFile',
-        },
-      },
-      attachments: {
-        evidenceFile: 'evidenceFile.xlsx',
+      facilityId: 'ADS_1-F00001',
+      apply70Rule: {
+        energyConsumed: 90,
+        energyConsumedEligible: 100,
+        evidenceFile: 'evidenceFile',
       },
     });
   });

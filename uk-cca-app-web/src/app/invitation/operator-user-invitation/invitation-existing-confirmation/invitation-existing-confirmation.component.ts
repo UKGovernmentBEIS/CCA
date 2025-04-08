@@ -1,8 +1,7 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ButtonDirective, LinkDirective, PanelComponent } from '@netz/govuk-components';
+import { PanelComponent } from '@netz/govuk-components';
 
 import { OperatorUserInvitationStore } from '../store';
 
@@ -14,12 +13,12 @@ import { OperatorUserInvitationStore } from '../store';
       <div class="govuk-grid-column-two-thirds">
         <govuk-panel> You have been added as an operator user for {{ storeUser.accountName }} </govuk-panel>
 
-        <a govukLink [routerLink]="['/dashboard']" [replaceUrl]="true">Go to my dashboard</a>
+        <a class="govuk-link" [routerLink]="['/dashboard']" [replaceUrl]="true">Go to my dashboard</a>
       </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PanelComponent, ButtonDirective, LinkDirective, RouterLink, JsonPipe],
+  imports: [PanelComponent, RouterLink],
 })
 export class InvitationExistingConfirmationComponent {
   private readonly store = inject(OperatorUserInvitationStore);

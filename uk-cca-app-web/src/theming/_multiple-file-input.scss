@@ -1,0 +1,70 @@
+.cca-multi-file-upload {
+  margin-bottom: 40px;
+}
+
+.cca-multi-file-upload--enhanced .cca-multi-file-upload__button {
+  display: none;
+}
+
+.cca-multi-file-upload__dropzone {
+  outline: 3px dashed govuk-colour('black');
+  display: flex;
+  text-align: center;
+  padding: govuk-spacing(9) govuk-spacing(3);
+  transition:
+    outline-offset 0.1s ease-in-out,
+    background-color 0.1s linear;
+}
+
+.cca-multi-file-upload__dropzone label {
+  margin-bottom: 0;
+  display: inline-block;
+  width: auto;
+}
+
+.cca-multi-file-upload__dropzone p {
+  margin-bottom: 0;
+  margin-right: 10px;
+  padding-top: 7px;
+}
+
+.cca-multi-file-upload__dropzone [type='file'] {
+  position: absolute;
+  left: -9999em;
+}
+
+.cca-multi-file-upload--dragover {
+  background: #b1b4b6;
+  outline-color: #6f777b;
+}
+
+.cca-multi-file-upload--focused {
+  background-color: $govuk-focus-colour;
+  color: $govuk-focus-text-colour;
+  box-shadow:
+    0 -2px $govuk-focus-colour,
+    0 4px $govuk-focus-text-colour;
+  outline: none;
+}
+
+.cca-multi-file-upload__error {
+  color: govuk-colour('red');
+  font-weight: bold;
+}
+
+.cca-multi-file-upload__success {
+  color: govuk-colour('green');
+  font-weight: bold;
+}
+
+.cca-multi-file-upload__error svg {
+  fill: currentColor;
+  float: left;
+  margin-right: govuk-spacing(2);
+}
+
+.cca-multi-file-upload__success svg {
+  fill: currentColor;
+  float: left;
+  margin-right: govuk-spacing(2);
+}

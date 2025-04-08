@@ -1,9 +1,16 @@
 <div>
-  <cca-page-heading caption="Target unit details">Check your answers</cca-page-heading>
+  <netz-page-heading caption="Target unit details">Check your answers</netz-page-heading>
 
-  <cca-summary [data]="summaryData" />
+  <ng-template #contentTpl let-showOriginal="showOriginal">
+    <cca-summary [data]="showOriginal ? summaryDataOriginal : summaryDataCurrent" />
+  </ng-template>
 
-  <button ccaPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
+  <cca-highlight-diff>
+    <ng-container slot="previous" *ngTemplateOutlet="contentTpl; context: { showOriginal: true }"></ng-container>
+    <ng-container slot="current" *ngTemplateOutlet="contentTpl; context: { showOriginal: false }"></ng-container>
+  </cca-highlight-diff>
+
+  <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
 </div>
 
 <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />

@@ -19,5 +19,5 @@ export interface VerificationBodyUpdateDTO {
   name: string;
   accreditationReferenceNumber: string;
   address: AddressDTO;
-  emissionTradingSchemes: Array<string>;
+  emissionTradingSchemes: string[];
 }

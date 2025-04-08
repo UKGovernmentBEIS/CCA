@@ -7,6 +7,7 @@ import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.Adm
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.service.AdminTerminationWithdrawService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestTaskActionHandler;
 
@@ -22,12 +23,14 @@ public class AdminTerminationWithdrawSaveActionHandler implements RequestTaskAct
 
 
     @Override
-    public void process(Long requestTaskId,
+    public RequestTaskPayload process(Long requestTaskId,
                         String requestTaskActionType,
                         AppUser appUser,
                         AdminTerminationWithdrawSaveRequestTaskActionPayload payload) {
         final RequestTask requestTask = requestTaskService.findTaskById(requestTaskId);
         adminTerminationWithdrawService.applySaveAction(payload, requestTask);
+        
+        return requestTask.getPayload();
     }
 
     @Override

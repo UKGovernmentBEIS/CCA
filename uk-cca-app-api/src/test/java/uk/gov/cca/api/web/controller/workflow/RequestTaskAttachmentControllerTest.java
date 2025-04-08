@@ -151,7 +151,7 @@ class RequestTaskAttachmentControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(authUser, "uploadRequestTaskAttachment", String.valueOf(requestTaskId));
+            .authorize(authUser, "uploadRequestTaskAttachment", String.valueOf(requestTaskId), null, null);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.multipart(BASE_PATH + "/upload")
@@ -191,7 +191,7 @@ class RequestTaskAttachmentControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(appUser, "generateRequestTaskGetFileAttachmentToken", String.valueOf(requestTaskId));
+            .authorize(appUser, "generateRequestTaskGetFileAttachmentToken", String.valueOf(requestTaskId), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders
             .get(BASE_PATH + "/" + requestTaskId)

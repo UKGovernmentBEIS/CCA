@@ -1,0 +1,237 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent should match snapshot 1`] = `
+<div
+  id="root0"
+>
+  <cca-summary>
+    <h2
+      class="govuk-heading-m"
+    >
+      Decision details
+    </h2>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Application
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          
+          <a
+            class="govuk-link"
+            href="/"
+          >
+            Underlying agreement variation
+          </a>
+          
+          
+          
+          
+          
+        </dd>
+        
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Decision
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          
+          
+           Accept 
+          
+          
+          
+          
+        </dd>
+        
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Additional information
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          
+          
+           My info 
+          
+          
+          
+          
+        </dd>
+        
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Uploaded files
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            No files provided
+          </span>
+          
+          
+          
+          
+        </dd>
+        
+      </div>
+      
+      
+      
+    </dl>
+    <h2
+      class="govuk-heading-m"
+    >
+      Recipients
+    </h2>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Users
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          
+          
+           test test, Responsible person, test@test.com 
+          
+          <br />
+          
+          
+           test test, Administrative contact, test@test.com 
+          
+          <br />
+          
+          
+           Fred_2 William_2, Sector contact, fredwilliam_2@agindustries.org.uk 
+          
+          
+          
+          
+        </dd>
+        
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Name and signature on the official notice
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          
+          
+           Regulator 2 
+          
+          
+          
+          
+        </dd>
+        
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Official notice
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          
+          <cca-summary-download-files>
+            <a
+              class="govuk-link"
+              href="/"
+              target="_blank"
+            >
+              underlying-agreement.pdf
+            </a>
+            <br />
+            
+            <a
+              class="govuk-link"
+              href="/"
+              target="_blank"
+            >
+              Underlying agreement rejection notice.pdf
+            </a>
+            
+            
+          </cca-summary-download-files>
+          
+          
+          
+        </dd>
+        
+      </div>
+      
+      
+      
+    </dl>
+    
+  </cca-summary>
+</div>
+`;

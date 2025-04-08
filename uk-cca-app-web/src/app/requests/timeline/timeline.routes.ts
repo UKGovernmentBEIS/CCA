@@ -59,10 +59,10 @@ export const TIMELINE_ROUTES: Routes = [
           ),
       },
       {
-        path: 'underlying-agreement-review',
+        path: 'underlying-agreement-reviewed',
         loadChildren: () =>
           import('./underlying-agreement-reviewed/underlying-agreement-reviewed.routes').then(
-            (r) => r.UNDERLYING_AGREEMENT_REVIEW_TIMELINE_ROUTES,
+            (r) => r.UNDERLYING_AGREEMENT_REVIEWED_TIMELINE_ROUTES,
           ),
       },
       {
@@ -73,12 +73,19 @@ export const TIMELINE_ROUTES: Routes = [
           ),
       },
       {
+        path: 'underlying-agreement-variation-reviewed',
+        loadChildren: () =>
+          import('./underlying-agreement-variation-reviewed/underlying-agreement-variation-reviewed.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_VARIATION_REVIEWED_TIMELINE_ROUTES,
+          ),
+      },
+      {
         path: 'file-download/:uuid',
-        loadComponent: () => import('@shared/components/file-download/file-download.component'),
+        loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },
       {
         path: 'file-download/:fileType/:uuid',
-        loadComponent: () => import('@shared/components/file-download/file-download.component'),
+        loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },
     ],
   },

@@ -10,6 +10,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.SendReminderNotificationService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestType;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
@@ -45,7 +46,7 @@ class UnderlyingAgreementVariationSecondReminderDateReachedHandlerTest {
 
         final Request request = Request.builder()
                 .id(requestId)
-                .type(RequestType.builder().code(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION).build())
+                .type(RequestType.builder().code(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION).resourceType(ResourceType.ACCOUNT).build())
                 .payload(payload).build();
 
         when(execution.getVariable(BpmnProcessConstants.REQUEST_ID)).thenReturn(requestId);

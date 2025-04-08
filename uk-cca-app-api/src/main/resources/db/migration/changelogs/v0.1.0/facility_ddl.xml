@@ -103,4 +103,140 @@
             <dropColumn columnName="charge_start_date" tableName="facility_data"/>
         </rollback>
     </changeSet>
+
+    <changeSet id="0_1_0_FACILITY_ADDRESS_SEQUENCE" author="p70311">
+        <createSequence sequenceName="facility_address_seq" minValue="1" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS facility_address_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_FACILITY_ADDRESS_CREATE_TABLE" author="P70311">
+        <comment>Create facility address table</comment>
+        <createTable tableName="facility_address" remarks="Represents the facility address">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="facility_address_pk" nullable="false"/>
+            </column>
+            <column name="line1" type="text" remarks="The line 1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="line2" type="text" remarks="The line 2">
+                <constraints nullable="true"/>
+            </column>
+            <column name="city" type="text" remarks="The city">
+                <constraints nullable="false"/>
+            </column>
+            <column name="postcode" type="text" remarks="The postcode">
+                <constraints nullable="false"/>
+            </column>
+            <column name="county" type="text" remarks="The county">
+                <constraints nullable="true"/>
+            </column>
+            <column name="country" type="text" remarks="The country">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS facility_address CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_FACILITY_DATA_ADD_NEW_COLUMNS" author="P70311">
+        <addColumn tableName="facility_data">
+            <column name="site_name" type="text" remarks="Site Name as defined in the most recently activated UnA"/>
+        </addColumn>
+        <addColumn tableName="facility_data">
+            <column name="scheme_exit_date" type="date" remarks="Scheme Exit Date determines whether the facility will be invoiced for subsistence fees"/>
+        </addColumn>
+        <addColumn tableName="facility_data">
+            <column name="address_id" type="bigint" remarks="The facility address id">
+                <constraints foreignKeyName="facility_data_facility_address_fk" references="facility_address(id)" nullable="true"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn columnName="site_name" tableName="facility_data"/>
+            <dropColumn columnName="scheme_exit_date" tableName="facility_data"/>
+            <dropColumn columnName="address_id" tableName="facility_data"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_migrate_facility_name_address_from_una_and_set_scheme_exit_date_from_closed_date" author="apostolouk@unisystems.gr">
+    <comment>Use temporary column in facility_address to facilitate migration of data from una</comment>
+        <sql>
+            alter table facility_address
+            add column temp_facility_id varchar(20);
+
+            insert into facility_address (id, line1, line2, city, postcode, county, country, temp_facility_id)
+			select
+				nextval('facility_address_seq'),
+				facilities ->'facilityDetails'->'facilityAddress'->> 'line1',
+				facilities ->'facilityDetails'->'facilityAddress'->> 'line2',
+				facilities ->'facilityDetails'->'facilityAddress'->> 'city',
+				facilities ->'facilityDetails'->'facilityAddress'->> 'postcode',
+				facilities ->'facilityDetails'->'facilityAddress'->> 'county',
+				facilities ->'facilityDetails'->'facilityAddress'->> 'country',
+				facilities ->>'facilityId'
+			from underlying_agreement una, jsonb_array_elements(una.data->'underlyingAgreement'->'facilities') facilities;
+
+			update facility_data
+			set site_name = facilities ->'facilityDetails'->>'name', scheme_exit_date = closed_date, address_id = fa.id
+			from underlying_agreement una, jsonb_array_elements(una.data->'underlyingAgreement'->'facilities') facilities, facility_address fa
+			where facility_id = facilities ->>'facilityId'
+			and fa.temp_facility_id = facility_id ;
+
+            alter table facility_address
+            drop column temp_facility_id;
+        </sql>
+    </changeSet>
+    
+    <changeSet id="0_1_0_migrate_facility_data_for_excluded_facilities" author="loukerip@unisystems.gr">
+    <comment>Use temporary column in facility_address to facilitate migration of data</comment>
+        <sql>
+            alter table facility_address
+            add column temp_facility_id varchar(20);
+
+            insert into facility_address (id, line1, line2, city, postcode, county, country, temp_facility_id)
+			select
+				nextval('facility_address_seq'),
+				facilities ->'facilityDetails'->'facilityAddress'->> 'line1',
+				facilities ->'facilityDetails'->'facilityAddress'->> 'line2',
+				facilities ->'facilityDetails'->'facilityAddress'->> 'city',
+				facilities ->'facilityDetails'->'facilityAddress'->> 'postcode',
+				facilities ->'facilityDetails'->'facilityAddress'->> 'county',
+				facilities ->'facilityDetails'->'facilityAddress'->> 'country',
+				facilities ->>'facilityId'
+			from request r, request_action ra, jsonb_array_elements(ra.payload ->'underlyingAgreement'->'facilities') facilities
+			where facilities ->>'status' = 'EXCLUDED'
+			and r.id = ra.request_id
+			and ra.type in ('UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACCEPTED')
+			and r.status = 'APPROVED';
+
+			update facility_data
+			set site_name = facilities ->'facilityDetails'->>'name', scheme_exit_date = closed_date, address_id = fa.id
+			from request r, request_action ra, jsonb_array_elements(ra.payload ->'underlyingAgreement'->'facilities') facilities, facility_address fa
+			where facility_id = facilities ->>'facilityId'
+			and fa.temp_facility_id = facility_id
+			and facilities ->>'status' = 'EXCLUDED'
+			and r.id = ra.request_id
+			and ra.type in ('UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACCEPTED')
+			and r.status = 'APPROVED';
+
+            alter table facility_address
+            drop column temp_facility_id;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_FACILITY_DATA_ALTER_COLUMNS_TO_NOT_NULL" author="P70311">
+        <addNotNullConstraint tableName="facility_data" columnName="site_name"/>
+        <addNotNullConstraint tableName="facility_data" columnName="address_id"/>
+        <rollback>
+            <dropNotNullConstraint tableName="facility_data" columnName="site_name"/>
+            <dropNotNullConstraint tableName="facility_data" columnName="address_id"/>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

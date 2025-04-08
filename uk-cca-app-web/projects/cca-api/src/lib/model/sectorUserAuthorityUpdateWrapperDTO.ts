@@ -15,5 +15,5 @@ import { SectorUserAuthorityUpdateDTO } from './sectorUserAuthorityUpdateDTO';
  * The sector user authority to update
  */
 export interface SectorUserAuthorityUpdateWrapperDTO {
-  sectorUserAuthorityUpdateDTOList: Array<SectorUserAuthorityUpdateDTO>;
+  sectorUserAuthorityUpdateDTOList: SectorUserAuthorityUpdateDTO[];
 }

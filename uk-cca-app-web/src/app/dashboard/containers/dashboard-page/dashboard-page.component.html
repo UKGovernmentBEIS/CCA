@@ -1,4 +1,4 @@
-<cca-page-heading size="xl">Tasks</cca-page-heading>
+<netz-page-heading size="xl">Tasks</netz-page-heading>
 
 <govuk-tabs>
   @if (role() !== 'OPERATOR') {
@@ -29,12 +29,14 @@
   <h2 class="govuk-heading-m">{{ header }}</h2>
 
   @if (activeTab() === tab && !isLoading()) {
-    <div>
-      <cca-dashboard-items-list
-        [items]="items()"
-        [tableColumns]="tableColumns()"
-        [unassignedLabel]="unassigned"
-      ></cca-dashboard-items-list>
+    <div class="x-scroll">
+      <div class="max-content-width">
+        <cca-dashboard-items-list
+          [items]="items()"
+          [tableColumns]="tableColumns()"
+          [unassignedLabel]="unassigned"
+        ></cca-dashboard-items-list>
+      </div>
     </div>
   }
 

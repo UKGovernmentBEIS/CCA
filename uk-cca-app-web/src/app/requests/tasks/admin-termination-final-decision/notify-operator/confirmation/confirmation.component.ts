@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { LinkDirective, PanelComponent } from '@netz/govuk-components';
+import { PanelComponent } from '@netz/govuk-components';
 
 import { AdminTerminationFinalDecisionQuery } from '../../+state/admin-termination-final-decision.selectors';
 
@@ -20,12 +20,12 @@ import { AdminTerminationFinalDecisionQuery } from '../../+state/admin-terminati
 
         <p>The selected users will receive an email notification of your decision.</p>
 
-        <a govukLink routerLink="/dashboard" [replaceUrl]="true"> Return to: Dashboard </a>
+        <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true"> Return to: Dashboard </a>
       </div>
     </div>
   `,
   standalone: true,
-  imports: [PanelComponent, LinkDirective, RouterLink],
+  imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ConfirmationComponent {

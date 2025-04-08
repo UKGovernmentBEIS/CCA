@@ -10,7 +10,6 @@ import { GovukTextWidthClass } from './select.type';
 
 /*
   eslint-disable
-  @angular-eslint/prefer-on-push-component-change-detection,
   @typescript-eslint/no-empty-function,
   @angular-eslint/component-selector
 */

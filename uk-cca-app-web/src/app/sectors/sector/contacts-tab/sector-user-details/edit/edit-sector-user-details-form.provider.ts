@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { GovukValidators } from '@netz/govuk-components';
 import { phoneInputValidators } from '@shared/components';
-import { textFieldValidators } from '@shared/validators/validators';
+import { textFieldValidators } from '@shared/validators';
 
 import { ActiveSectorUserStore } from '../../active-sector-user.store';
 

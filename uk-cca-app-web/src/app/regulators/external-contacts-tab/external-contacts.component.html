@@ -10,7 +10,7 @@
     @switch (column.field) {
       @case ('name') {
         @if (isEditable()) {
-          <a [routerLink]="['external-contacts', row.id]" govukLink>
+          <a [routerLink]="['external-contacts', row.id]" class="govuk-link">
             {{ row[column.field] }}
           </a>
         } @else {
@@ -18,11 +18,11 @@
         }
       }
       @case ('email') {
-        <a govukLink href="mailto:{{ row[column.field] }}">{{ row[column.field] }}</a>
+        <a class="govuk-link" href="mailto:{{ row[column.field] }}">{{ row[column.field] }}</a>
       }
       @case (null) {
         @if (isEditable()) {
-          <a [routerLink]="['external-contacts', row.id, 'delete']" govukLink>Delete</a>
+          <a [routerLink]="['external-contacts', row.id, 'delete']" class="govuk-link">Delete</a>
         }
       }
       @default {

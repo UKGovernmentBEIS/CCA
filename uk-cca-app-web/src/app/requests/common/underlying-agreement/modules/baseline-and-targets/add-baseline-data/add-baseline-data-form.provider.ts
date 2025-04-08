@@ -45,9 +45,11 @@ export const AddBaselineDataFormProvider: Provider = {
     const isTargetPeriodFive = targetPeriod === BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_5_DETAILS;
 
     const baselineData = requestTaskStore.select(underlyingAgreementQuery.selectBaselineData(isTargetPeriodFive))();
+
     const targetComposition = requestTaskStore.select(
       underlyingAgreementQuery.selectTargetComposition(isTargetPeriodFive),
     )();
+
     const attachments = requestTaskStore.select(underlyingAgreementQuery.selectAttachments)();
 
     const greenfieldEvidencesFilesControl = requestTaskFileService.buildFormControl(
@@ -72,10 +74,19 @@ export const AddBaselineDataFormProvider: Provider = {
         }),
         explanation: fb.control(baselineData?.explanation ?? null),
         greenfieldEvidences: greenfieldEvidencesFilesControl,
-        energy: fb.control(baselineData?.energy ?? null, { updateOn: 'change' }),
+        energy: fb.control(baselineData?.energy ?? null, {
+          validators: [GovukValidators.maxDecimalsValidator(7)],
+          updateOn: 'change',
+        }),
         usedReportingMechanism: fb.control(baselineData?.usedReportingMechanism ?? null),
-        throughput: fb.control(baselineData?.throughput ?? null, { updateOn: 'change' }),
-        energyCarbonFactor: fb.control(baselineData?.energyCarbonFactor ?? null),
+        throughput: fb.control(baselineData?.throughput ?? null, {
+          validators: [GovukValidators.maxDecimalsValidator(7)],
+          updateOn: 'change',
+        }),
+        energyCarbonFactor: fb.control(baselineData?.energyCarbonFactor ?? null, {
+          validators: [GovukValidators.maxDecimalsValidator(7)],
+          updateOn: 'change',
+        }),
       },
       {
         validators: addBaselineDataConditionallyRequiredFieldsValidator(targetComposition?.agreementCompositionType),

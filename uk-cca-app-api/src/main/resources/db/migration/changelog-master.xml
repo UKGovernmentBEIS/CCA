@@ -8,6 +8,8 @@
 	<include file="changelogs/v0.1.0/db_modules.xml" relativeToChangelogFile="true" />
 
     <include file="db/migration/changelogs/terms.xml" />
+	
+	<include file="db/migration/changelogs/changelog_configuration_ddl.xml" />
 
     <include file="db/migration/changelogs/changelog_alert_ddl.xml" />
 

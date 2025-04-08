@@ -1,26 +1,25 @@
-import { ChangeDetectorRef, Directive, OnInit } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, Directive, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { distinctUntilChanged, takeUntil } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs';
 
-import { DestroySubject } from '@core/services/destroy-subject.service';
 import { TextInputComponent } from '@netz/govuk-components';
 
 @Directive({
   selector: 'govuk-text-input[ccaAsyncValidationField],[govuk-text-input][ccaAsyncValidationField]',
-  providers: [DestroySubject],
   standalone: true,
 })
 export class AsyncValidationFieldDirective implements OnInit {
   constructor(
     private readonly textInputComponent: TextInputComponent,
     private readonly cdRef: ChangeDetectorRef,
-    private readonly destroy$: DestroySubject,
+    private readonly destroy$: DestroyRef,
   ) {}
 
   ngOnInit(): void {
     this.textInputComponent.control.statusChanges
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroy$),
         distinctUntilChanged(
           (previousState, currentState) => previousState === currentState && previousState !== 'PENDING',
         ),

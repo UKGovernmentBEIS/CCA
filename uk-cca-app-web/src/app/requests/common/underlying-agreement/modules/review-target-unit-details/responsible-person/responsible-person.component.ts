@@ -4,9 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
-import { WizardStepComponent } from '@shared/components';
-import { ResponsiblePersonInputComponent } from '@shared/components/responsible-person-input/responsible-person-input.component';
-import { ResponsiblePersonFormModel } from '@shared/components/responsible-person-input/responsible-person-input.controls';
+import { ResponsiblePersonFormModel, ResponsiblePersonInputComponent, WizardStepComponent } from '@shared/components';
 
 import {
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,

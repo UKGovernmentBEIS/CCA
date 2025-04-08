@@ -9,7 +9,7 @@
     <div class="govuk-body" style="display: flex">
       <div [options]="createUserTypeOptions" formControlName="userType" govuk-select></div>
 
-      <button ccaPendingButton govukButton type="submit" class="govuk-!-margin-left-3">Continue</button>
+      <button netzPendingButton govukButton type="submit" class="govuk-!-margin-left-3">Continue</button>
     </div>
   </form>
 
@@ -46,7 +46,7 @@
         @switch (column.field) {
           @case ('name') {
             @if (isEditable() || row.userId === userId()) {
-              <a [routerLink]="['sector-user', row.userId]" govukLink>{{ row | userFullName }}</a>
+              <a [routerLink]="['sector-user', row.userId]" class="govuk-link">{{ row | userFullName }}</a>
             } @else {
               {{ row | userFullName }}
             }
@@ -62,7 +62,6 @@
 
           @case ('status') {
             @if (row[column.field] !== 'PENDING') {
-
               @if (isEditable()) {
                 <div
                   [options]="row[column.field] === 'ACCEPTED' ? authorityStatusesAccepted : authorityStatuses"
@@ -92,7 +91,7 @@
 
   @if (isEditable() && authorities()?.length > 0) {
     <div class="govuk-button-group">
-      <button ccaPendingButton govukButton type="submit">Save</button>
+      <button netzPendingButton govukButton type="submit">Save</button>
       <button (click)="refresh()" govukSecondaryButton type="button">Discard changes</button>
     </div>
   }

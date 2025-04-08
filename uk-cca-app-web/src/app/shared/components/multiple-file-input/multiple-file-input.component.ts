@@ -21,17 +21,11 @@ import { FileUploadService } from '../file-input/file-upload.service';
 import { FileUpload, FileUploadEvent } from '../file-input/file-upload-event';
 import { FileUploadListComponent } from '../file-upload-list/file-upload-list.component';
 
-/*
-  eslint-disable
-  @typescript-eslint/no-empty-function
- */
-// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
 @Component({
   selector: 'cca-multiple-file-input[baseDownloadUrl]',
   templateUrl: './multiple-file-input.component.html',
-  styleUrl: './multiple-file-input.component.scss',
-  imports: [FileUploadListComponent, AsyncPipe, ErrorMessageComponent],
   standalone: true,
+  imports: [FileUploadListComponent, AsyncPipe, ErrorMessageComponent],
 })
 export class MultipleFileInputComponent implements ControlValueAccessor, OnInit {
   private readonly ngControl = inject(NgControl, { self: true, optional: true });
@@ -93,7 +87,7 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
       this.fileUploadService.uploadProgress$.pipe(
         withLatestFrom(this.value$),
         filter(([uploadEvent, value]) => value?.some(({ file }) => file === uploadEvent.file)),
-        tap(([{ progress, ...uploadEvent }, value]) => {
+        tap(([uploadEvent, value]) => {
           if (uploadEvent.uuid) {
             value.splice(
               value.findIndex((upload) => upload.file === uploadEvent.file),

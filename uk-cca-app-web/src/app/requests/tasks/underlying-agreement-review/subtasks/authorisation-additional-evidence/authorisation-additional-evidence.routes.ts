@@ -20,7 +20,7 @@ export const AUTHORISATION_ADDITIONAL_EVIDENCE_ROUTES: Routes = [
         canActivate: [canActivateAuthorisationAdditionalEvidenceDecision],
         loadComponent: () =>
           import('./decision/authorization-additional-evidence-decision.component').then(
-            (c) => c.AUthorizationAdditionalEvidenceDecisionComponent,
+            (c) => c.AuthorizationAdditionalEvidenceDecisionComponent,
           ),
       },
       {

@@ -1,0 +1,16 @@
+<h3 class="govuk-heading-s">Performance report</h3>
+<div [formGroup]="form" data-testid="performance report component">
+  <div
+    widthClass="govuk-!-width-one-quarter"
+    label="Select the period"
+    [options]="targetPeriodsOptions"
+    formControlName="targetPeriodType"
+    govuk-select
+  ></div>
+</div>
+@if (performanceReport()) {
+  <cca-summary [data]="accountPerformanceDataSummaryData()"></cca-summary>
+  <a class="govuk-link" [routerLink]="[targetPeriodValue(), 'submitted-report']">View details</a>
+} @else {
+  <p class="govuk-body">There are no reports for the selected period.</p>
+}

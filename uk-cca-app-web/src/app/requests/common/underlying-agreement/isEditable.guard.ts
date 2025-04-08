@@ -13,6 +13,7 @@ export const isEditableSummaryRedirectGuard: CanActivateFn = (
   if (isEditable) return true;
   return createUrlTreeFromSnapshot(route, ['summary']);
 };
+
 export const isEditableGuard: CanActivateFn = () => {
   const store = inject(RequestTaskStore);
   const isEditable = store.select(requestTaskQuery.selectIsEditable)();

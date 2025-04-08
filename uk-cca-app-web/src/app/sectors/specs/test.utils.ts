@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { HttpTestingController, TestRequest } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { screen } from '@testing-library/dom';
@@ -30,6 +30,7 @@ export async function navigateToAddOperatorUser({ user, harness }: Opts) {
   await user.click(screen.getByText('Add a new operator'));
   expect(screen.getByTestId('add-operator-form')).toBeVisible();
 }
+
 export async function navigateToTargetUnitUsers({ user, harness, httpTestingController }: Opts, accountId: number) {
   expect(screen.getByTestId('target-unit')).toBeVisible();
   await user.click(screen.getByText('Users and contacts'));
@@ -39,11 +40,11 @@ export async function navigateToTargetUnitUsers({ user, harness, httpTestingCont
   req.flush(mockOperatorAuthorities);
   expect(document.getElementById('users-and-contacts')).toBeVisible();
 }
+
 export async function navigateToTargetUnit(sectorId: number, targetUnitName: string, opts: Opts) {
   const { user, harness, httpTestingController } = opts;
   await navigateToTargetUnits(sectorId, opts);
   await user.click(screen.getByText(targetUnitName));
-  await harness.fixture.whenStable();
 
   const req = httpTestingController.expectOne('/api/v1.0/target-unit-accounts/1');
   req.flush(mockTargetUnitAccount(sectorId));
@@ -55,9 +56,8 @@ export async function navigateToTargetUnit(sectorId: number, targetUnitName: str
 export async function navigateToTargetUnits(id: number, { harness, httpTestingController }: Opts) {
   const user = UserEvent.setup();
   harness.navigateByUrl(`/${id}`, SectorComponent);
-  await harness.fixture.whenStable();
   let req: TestRequest | null;
-
+  tick();
   req = httpTestingController.expectOne(`/api/v1.0/sector-association/${id}`);
   req.flush(mockSectorDetails);
   await harness.fixture.whenStable();
@@ -78,9 +78,8 @@ export async function navigateToTargetUnits(id: number, { harness, httpTestingCo
 export async function navigateToContacts(id: number, { harness, httpTestingController }: Opts) {
   const user = UserEvent.setup();
   harness.navigateByUrl(`/${id}`, SectorComponent);
-  await harness.fixture.whenStable();
+  tick();
   let req: TestRequest | null;
-
   req = httpTestingController.expectOne(`/api/v1.0/sector-association/${id}`);
   req.flush(mockSectorDetails);
   await harness.fixture.whenStable();
@@ -100,7 +99,6 @@ export async function navigateToAddSector(
 ) {
   await user.selectOptions(document.getElementById('userType'), roleValue);
   await user.click(screen.getByText('Continue'));
-  await harness.fixture.whenStable();
 
   const req = httpTestingController.expectOne(`/api/v1.0/sector-authorities/sector-association/${id}`);
   req.flush(mockSectorAuthorities);

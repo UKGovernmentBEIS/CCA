@@ -3,18 +3,17 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { Observable, tap } from 'rxjs';
 
-import { AuthService } from '@core/services/auth.service';
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 import { AuthStore, selectUserId } from '@netz/common/auth';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { UserFullNamePipe } from '@netz/common/pipes';
-import { ButtonDirective, LinkDirective, PanelComponent, WarningTextComponent } from '@netz/govuk-components';
-import { PendingButtonDirective } from '@shared/directives';
+import { ButtonDirective, PanelComponent, WarningTextComponent } from '@netz/govuk-components';
+import { AuthService } from '@shared/services';
 
 import { SectorAssociationAuthoritiesService } from 'cca-api';
 
-import { saveNotFoundUserError } from 'src/app/sectors/error/business-error';
-
+import { saveNotFoundUserError } from '../../../../error/business-error';
 import { SectorRouteData } from '../../../types';
 
 @Component({
@@ -26,7 +25,6 @@ import { SectorRouteData } from '../../../types';
     PanelComponent,
     UserFullNamePipe,
     ButtonDirective,
-    LinkDirective,
     RouterLink,
     PendingButtonDirective,
   ],

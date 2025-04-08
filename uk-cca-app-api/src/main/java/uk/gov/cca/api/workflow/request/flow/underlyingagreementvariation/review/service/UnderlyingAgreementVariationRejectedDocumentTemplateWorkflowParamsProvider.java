@@ -28,7 +28,7 @@ public class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsP
 
         // Add target unit details from workflow data
         Map<String, Object> params = documentTemplateUnderlyingAgreementParamsProvider
-                .constructTargetUnitDetailsTemplateParams(payload.getUnderlyingAgreement().getUnderlyingAgreementTargetUnitDetails(), version);
+                .constructTargetUnitDetailsTemplateParams(payload.getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails(), version);
 
         params.put("reason", payload.getDetermination().getReason());
 

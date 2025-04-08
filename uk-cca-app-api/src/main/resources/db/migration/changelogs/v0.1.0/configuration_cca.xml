@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/configuration_cca.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+        
+    <changeSet id="0_1_0_initialize_ui_features" author="loukerip">
+        <sql>
+            insert into configuration(key, value, type) values 
+            ('ui.features.unaHideNotifyOperator', false, 'BOOLEAN'),
+            ('ui.features.feesInvoicesHideMenu', true, 'BOOLEAN');
+        </sql>
+        <rollback>
+            delete from configuration where key IN ('ui.features.unaHideNotifyOperator', 'ui.features.feesInvoicesHideMenu');
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_modify_config_param_to_hide_subsistence_fees_menu" author="loukerip">
+	    <sql>
+		    update configuration
+		    set key = 'ui.features.subsistenceFeesHideMenu'
+		    where key = 'ui.features.feesInvoicesHideMenu';
+	    </sql>
+	    <rollback>
+		    update configuration
+		    set key = 'ui.features.feesInvoicesHideMenu'
+		    where key = 'ui.features.subsistenceFeesHideMenu';
+	    </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_show_subsistenceFees_menu" author="loukerip">
+        <sql>
+            update configuration
+            set value = 'false'
+            where key = 'ui.features.subsistenceFeesHideMenu';
+        </sql>
+        <rollback>
+            update configuration
+            set value = 'true'
+            where key = 'ui.features.subsistenceFeesHideMenu';
+        </rollback>
+    </changeSet>
+        
+</databaseChangeLog>

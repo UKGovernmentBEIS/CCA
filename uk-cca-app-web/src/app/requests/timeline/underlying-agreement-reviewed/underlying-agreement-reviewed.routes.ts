@@ -1,7 +1,7 @@
-export const UNDERLYING_AGREEMENT_REVIEW_TIMELINE_ROUTES = [
+export const UNDERLYING_AGREEMENT_REVIEWED_TIMELINE_ROUTES = [
   {
     path: '',
-    data: { backlink: '../' },
+    data: { backlink: false },
     loadComponent: () =>
       import('./underlying-agreement-reviewed-task-list/underlying-agreement-reviewed-task-list.component').then(
         (c) => c.UnderlyingAgreementReviewedTaskListComponent,

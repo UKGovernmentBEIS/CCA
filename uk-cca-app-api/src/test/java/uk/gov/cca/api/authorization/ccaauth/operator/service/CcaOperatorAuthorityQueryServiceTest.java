@@ -6,12 +6,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.authorization.ccaauth.core.domain.AppCcaAuthority;
 import uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission;
 import uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType;
 import uk.gov.cca.api.authorization.ccaauth.core.repository.CcaAuthorityRepository;
 import uk.gov.cca.api.authorization.ccaauth.operator.domain.OperatorAuthoritiesDTO;
 import uk.gov.cca.api.authorization.ccaauth.operator.domain.OperatorAuthorityDTO;
+import uk.gov.netz.api.authorization.core.domain.AppAuthority;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
 import uk.gov.netz.api.authorization.rules.domain.Scope;
@@ -20,7 +20,9 @@ import uk.gov.netz.api.authorization.rules.services.resource.AccountAuthorizatio
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,10 +42,11 @@ class CcaOperatorAuthorityQueryServiceTest {
         String roleCode = "operator_basic_user";
         String roleName = "Operator";
         String userId = "userId";
-        AppCcaAuthority appAuthority = AppCcaAuthority.builder()
+        AppAuthority appAuthority = AppAuthority.builder()
                 .accountId(accountId)
                 .permissions(List.of(CcaPermission.PERM_USER_READONLY))
                 .build();
+
         AppUser appUser = AppUser.builder()
                 .userId(userId)
                 .roleType(OPERATOR)

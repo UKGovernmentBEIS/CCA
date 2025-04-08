@@ -20,7 +20,7 @@ export function createAdministrativeForm(
   fb: FormBuilder,
   administrativeContactDetails: TargetUnitAccountContactDTO,
   sameAddress: boolean,
-  disabledForEdit?: boolean,
+  isEditable?: boolean,
 ): FormGroup<AdministrativeContactDetailsFormModel> {
   const addressFormGroup = createAccountAddressForm(administrativeContactDetails?.address);
 
@@ -42,7 +42,7 @@ export function createAdministrativeForm(
       ),
       phoneNumber: fb.control(administrativeContactDetails?.phoneNumber ?? null, phoneInputValidators),
       address: addressFormGroup,
-      ...(disabledForEdit ? {} : { sameAddress: fb.control([sameAddress]) }),
+      ...(isEditable ? {} : { sameAddress: fb.control([sameAddress]) }),
     },
     { updateOn: 'change' },
   );

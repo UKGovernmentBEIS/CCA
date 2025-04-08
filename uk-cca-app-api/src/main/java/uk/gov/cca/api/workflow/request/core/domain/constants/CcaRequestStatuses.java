@@ -6,5 +6,7 @@ import lombok.experimental.UtilityClass;
 public class CcaRequestStatuses {
 
     public final String CANCELLED = "CANCELLED";
+    public final String MIGRATED = "MIGRATED";
+    public final String COMPLETED_WITH_FAILURES = "COMPLETED_WITH_FAILURES";
 
 }

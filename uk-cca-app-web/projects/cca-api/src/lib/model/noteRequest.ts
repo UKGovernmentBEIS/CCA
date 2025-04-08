@@ -15,5 +15,5 @@
  */
 export interface NoteRequest {
   note: string;
-  files?: Array<string>;
+  files?: string[];
 }

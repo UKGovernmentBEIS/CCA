@@ -17,7 +17,7 @@ public class TargetUnitAccountVORowMapper implements RowMapper<TargetUnitAccount
                 .addressLine1(rs.getString("rp_add_line1"))
                 .addressLine2(rs.getString("rp_add_line2"))
                 .city(rs.getString("rp_add_city"))
-                .county(rs.getString("ac_add_county"))
+                .county(rs.getString("rp_add_county"))
                 .postcode(rs.getString("rp_add_postcode"))
                 .country(rs.getLong("rp_add_country"))
                 .build();
@@ -40,7 +40,7 @@ public class TargetUnitAccountVORowMapper implements RowMapper<TargetUnitAccount
                 .originalTuPk(rs.getLong("target_unit_pk"))
                 .sectorAcronym(rs.getString("sect_id"))
                 .subsectorName(rs.getString("sub_sector_name"))
-                .tuId(rs.getString("tu_id"))
+                .targetUnitId(rs.getString("tu_id"))
                 .operatorName(rs.getString("operator_name"))
                 .companyRegistrationNumber(rs.getString("company_registration_number"))
                 .sicCode(rs.getLong("sic_code") != 0L ? String.valueOf(rs.getLong("sic_code")) : null)
@@ -52,6 +52,8 @@ public class TargetUnitAccountVORowMapper implements RowMapper<TargetUnitAccount
                 .country(rs.getLong("tu_country"))
                 .responsiblePerson(responsiblePerson)
                 .administrativeContact(administrativeContact)
+                .operatorType(rs.getString("operator_type"))
+                .financiallyIndependent(rs.getBoolean("financially_independent"))
                 .build();
                         
     }

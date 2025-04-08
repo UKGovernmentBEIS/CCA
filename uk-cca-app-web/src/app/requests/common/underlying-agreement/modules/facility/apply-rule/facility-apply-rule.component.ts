@@ -7,10 +7,9 @@ import { ActivatedRoute } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import { RequestTaskStore } from '@netz/common/store';
-import { DateInputComponent, DetailsComponent, TextInputComponent } from '@netz/govuk-components';
+import { DateInputComponent, TextInputComponent } from '@netz/govuk-components';
 import { FileInputComponent, WizardStepComponent } from '@shared/components';
-import { TextInputComponent as CcaTextInputComponent } from '@shared/components/text-input/text-input.component';
-import { transformFilesToAttachments, transformFilesToUUIDsList } from '@shared/utils';
+import { transformFilesToUUIDsList } from '@shared/utils';
 
 import { Apply70Rule } from 'cca-api';
 
@@ -30,10 +29,8 @@ import {
     WizardStepComponent,
     ReactiveFormsModule,
     FileInputComponent,
-    DetailsComponent,
     TextInputComponent,
     DateInputComponent,
-    CcaTextInputComponent,
     DecimalPipe,
     ReturnToTaskOrActionPageComponent,
   ],
@@ -90,21 +87,16 @@ export class FacilityApplyRuleComponent {
   }
 
   onSubmit() {
-    const payload = this.requestTaskStore.select(underlyingAgreementQuery.selectPayload)();
-    this.requestTaskStore.setPayload({ ...payload, currentFacilityId: this.facilityId });
-
+    const facility = {
+      facilityId: this.facilityId,
+      apply70Rule: {
+        ...this.form.value,
+        energyConsumedEligible: this.energyConsumedEligible(),
+        evidenceFile: transformFilesToUUIDsList(this.form.value.evidenceFile),
+      },
+    };
     this.taskService
-      .saveSubtask(FACILITIES_SUBTASK, FacilityWizardStep.APPLY_RULE, this.activatedRoute, {
-        facility: {
-          facilityId: this.facilityId,
-          apply70Rule: {
-            ...this.form.value,
-            energyConsumedEligible: this.energyConsumedEligible(),
-            evidenceFile: transformFilesToUUIDsList(this.form.value.evidenceFile),
-          },
-        },
-        attachments: transformFilesToAttachments([this.form.value.evidenceFile]),
-      })
+      .saveSubtask(FACILITIES_SUBTASK, FacilityWizardStep.APPLY_RULE, this.activatedRoute, facility)
       .subscribe();
   }
 }

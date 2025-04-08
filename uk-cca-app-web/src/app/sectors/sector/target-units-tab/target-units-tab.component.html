@@ -5,7 +5,6 @@
 <form [formGroup]="targetUnitsForm" id="target-units-form" (ngSubmit)="onSubmit()">
   <govuk-table
     [columns]="targetUnitsColumns"
-    (sort)="sortBy($event)"
     [data]="targetUnits()"
     formArrayName="targetUnits"
     data-testid="target-unit-list"
@@ -14,7 +13,7 @@
       <div [formGroupName]="index" class="cell-container">
         @switch (column.field) {
           @case ('accountName') {
-            <a [routerLink]="['target-units', row.accountId]" govukLink>{{ row[column.field] }}</a>
+            <a [routerLink]="['target-units', row.accountId]" class="govuk-link">{{ row[column.field] }}</a>
           }
 
           @case ('businessId') {
@@ -51,7 +50,7 @@
 
   @if (editable() && targetUnits()?.length > 0) {
     <div class="govuk-button-group">
-      <button ccaPendingButton govukButton type="submit">Save</button>
+      <button netzPendingButton govukButton type="submit">Save</button>
       <button (click)="refresh()" govukSecondaryButton type="button">Discard changes</button>
     </div>
   }

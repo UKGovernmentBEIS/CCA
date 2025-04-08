@@ -1,9 +1,25 @@
-import { TaskItem, TaskSection } from '@netz/common/model';
-import { UNAVariationRequestTaskPayload } from '@requests/common';
+import { TaskSection } from '@netz/common/model';
+import { transformFacilities, UNAVariationRequestTaskPayload } from '@requests/common';
 
 const routePrefix = 'underlying-agreement-variation-submitted';
 
 export function getAllUnderlyingAgreementVariationSections(payload: UNAVariationRequestTaskPayload): TaskSection[] {
+  const facilities = transformFacilities(
+    payload?.underlyingAgreement?.facilities,
+    ['NEW', 'LIVE'],
+    null,
+    routePrefix,
+    '',
+  );
+
+  const excludedFacilities = transformFacilities(
+    payload?.underlyingAgreement?.facilities,
+    ['EXCLUDED'],
+    null,
+    routePrefix,
+    '',
+  );
+
   return [
     {
       title: 'Variation details',
@@ -33,8 +49,12 @@ export function getAllUnderlyingAgreementVariationSections(payload: UNAVariation
           link: `${routePrefix}/manage-facilities`,
           linkText: 'Manage facilities list',
         },
-        ...getAllFacilities(payload),
+        ...facilities,
       ],
+    },
+    {
+      title: 'Excluded Facilities',
+      tasks: [...excludedFacilities],
     },
     {
       title: 'Baseline and Targets',
@@ -61,15 +81,5 @@ export function getAllUnderlyingAgreementVariationSections(payload: UNAVariation
         },
       ],
     },
-  ];
-}
-
-function getAllFacilities(payload: UNAVariationRequestTaskPayload): TaskItem[] {
-  return (
-    payload?.underlyingAgreement?.facilities?.map((facility) => ({
-      status: '',
-      link: `${routePrefix}/facility/${facility.facilityId}`,
-      linkText: `${facility.facilityDetails.name} (${facility.facilityId})`,
-    })) ?? []
-  );
+  ].filter((item) => item.tasks.length > 0);
 }

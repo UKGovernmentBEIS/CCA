@@ -5,7 +5,10 @@ import {
   transformUserContacts,
 } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { transformAttachmentsToDownloadableFiles, transformFileInfoToDownloadableFile } from '@shared/utils';
+import {
+  transformAttachmentsAndFileUUIDsToDownloadableFiles,
+  transformFileInfoToDownloadableFile,
+} from '@shared/utils';
 
 import {
   AdminTerminationFinalDecisionReasonDetails,
@@ -17,12 +20,12 @@ import {
 
 export function toAdminTerminationFinalDecisionSubmittedTimelineSummaryData(
   adminTerminationFinalDecisionReasonDetails: AdminTerminationFinalDecisionReasonDetails,
-  adminTerminationFinalDecisionAttachments: { [key: string]: string },
+  adminTerminationFinalDecisionAttachments: Record<string, string>,
   decisionNotification: CcaDecisionNotification,
   defaultContacts: DefaultNoticeRecipient[],
   officialNotice: FileInfoDTO,
   downloadUrl: string,
-  usersInfo?: { [key: string]: RequestActionUserInfo },
+  usersInfo?: Record<string, RequestActionUserInfo>,
 ): SummaryData {
   return new SummaryFactory()
     .addSection('Details')
@@ -40,7 +43,7 @@ export function toAdminTerminationFinalDecisionSubmittedTimelineSummaryData(
     })
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsToDownloadableFiles(
+      transformAttachmentsAndFileUUIDsToDownloadableFiles(
         adminTerminationFinalDecisionReasonDetails.relevantFiles,
         adminTerminationFinalDecisionAttachments,
         downloadUrl,

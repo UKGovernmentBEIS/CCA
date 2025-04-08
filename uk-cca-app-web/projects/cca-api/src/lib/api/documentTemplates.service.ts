@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { DocumentTemplateDTO } from '../model/documentTemplateDTO';
 import { DocumentTemplateSearchResults } from '../model/documentTemplateSearchResults';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -138,7 +138,7 @@ export class DocumentTemplatesService {
     size: number,
     term?: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (page === null || page === undefined) {
@@ -150,13 +150,13 @@ export class DocumentTemplatesService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (term !== undefined && term !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>term, 'term');
+      queryParameters = this.addToHttpParams(queryParameters, term as any, 'term');
     }
     if (page !== undefined && page !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>page, 'page');
+      queryParameters = this.addToHttpParams(queryParameters, page as any, 'page');
     }
     if (size !== undefined && size !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>size, 'size');
+      queryParameters = this.addToHttpParams(queryParameters, size as any, 'size');
     }
 
     let headers = this.defaultHeaders;
@@ -186,7 +186,7 @@ export class DocumentTemplatesService {
       `${this.configuration.basePath}/v1.0/document-templates`,
       {
         params: queryParameters,
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -223,7 +223,7 @@ export class DocumentTemplatesService {
   public getDocumentTemplateById(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -256,7 +256,7 @@ export class DocumentTemplatesService {
     return this.httpClient.get<DocumentTemplateDTO>(
       `${this.configuration.basePath}/v1.0/document-templates/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -298,7 +298,7 @@ export class DocumentTemplatesService {
     id: number,
     file: Blob,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -344,7 +344,7 @@ export class DocumentTemplatesService {
     }
 
     if (file !== undefined) {
-      formParams = (formParams.append('file', <any>file) as any) || formParams;
+      formParams = (formParams.append('file', file as any) as any) || formParams;
     }
 
     let responseType_: 'text' | 'json' = 'json';
@@ -356,7 +356,7 @@ export class DocumentTemplatesService {
       `${this.configuration.basePath}/v1.0/document-templates/${encodeURIComponent(String(id))}`,
       convertFormParamsToString ? formParams.toString() : formParams,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

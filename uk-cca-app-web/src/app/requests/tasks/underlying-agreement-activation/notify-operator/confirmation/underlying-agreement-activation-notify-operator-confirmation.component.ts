@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { LinkDirective, PanelComponent } from '@netz/govuk-components';
+import { PanelComponent } from '@netz/govuk-components';
 
 @Component({
   selector: 'cca-underlying-agreement-activation-notify-operator-confirmation',
@@ -9,12 +9,12 @@ import { LinkDirective, PanelComponent } from '@netz/govuk-components';
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds govuk-body">
         <govuk-panel>Underlying agreement activated and sent to operator</govuk-panel>
-        <a govukLink routerLink="/dashboard" [replaceUrl]="true"> Return to: Dashboard </a>
+        <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true"> Return to: Dashboard </a>
       </div>
     </div>
   `,
   standalone: true,
-  imports: [PanelComponent, LinkDirective, RouterLink],
+  imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class UnderlyingAgreementActivationNotifyOperatorConfirmationComponent {}

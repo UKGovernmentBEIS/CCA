@@ -9,20 +9,20 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { FileToken } from '../model/fileToken';
 import { FileUuidDTO } from '../model/fileUuidDTO';
 import { NoteRequest } from '../model/noteRequest';
 import { RequestNoteDto } from '../model/requestNoteDto';
 import { RequestNoteRequest } from '../model/requestNoteRequest';
 import { RequestNoteResponse } from '../model/requestNoteResponse';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -128,7 +128,7 @@ export class RequestNotesService {
   public createRequestNote(
     requestNoteRequest: RequestNoteRequest,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (requestNoteRequest === null || requestNoteRequest === undefined) {
@@ -166,7 +166,7 @@ export class RequestNotesService {
     }
 
     return this.httpClient.post<any>(`${this.configuration.basePath}/v1.0/request-notes`, requestNoteRequest, {
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -202,7 +202,7 @@ export class RequestNotesService {
   public deleteRequestNote(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -235,7 +235,7 @@ export class RequestNotesService {
     return this.httpClient.delete<any>(
       `${this.configuration.basePath}/v1.0/request-notes/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -277,7 +277,7 @@ export class RequestNotesService {
     requestId: string,
     uuid: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (requestId === null || requestId === undefined) {
@@ -291,7 +291,7 @@ export class RequestNotesService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (uuid !== undefined && uuid !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>uuid, 'uuid');
+      queryParameters = this.addToHttpParams(queryParameters, uuid as any, 'uuid');
     }
 
     let headers = this.defaultHeaders;
@@ -321,7 +321,7 @@ export class RequestNotesService {
       `${this.configuration.basePath}/v1.0/request-notes/${encodeURIComponent(String(requestId))}/files`,
       {
         params: queryParameters,
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -368,7 +368,7 @@ export class RequestNotesService {
     page: number,
     size: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (requestId === null || requestId === undefined) {
@@ -383,13 +383,13 @@ export class RequestNotesService {
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
     if (requestId !== undefined && requestId !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>requestId, 'requestId');
+      queryParameters = this.addToHttpParams(queryParameters, requestId as any, 'requestId');
     }
     if (page !== undefined && page !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>page, 'page');
+      queryParameters = this.addToHttpParams(queryParameters, page as any, 'page');
     }
     if (size !== undefined && size !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, <any>size, 'size');
+      queryParameters = this.addToHttpParams(queryParameters, size as any, 'size');
     }
 
     let headers = this.defaultHeaders;
@@ -417,7 +417,7 @@ export class RequestNotesService {
 
     return this.httpClient.get<RequestNoteResponse>(`${this.configuration.basePath}/v1.0/request-notes`, {
       params: queryParameters,
-      responseType: <any>responseType_,
+      responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,
       headers: headers,
       observe: observe,
@@ -453,7 +453,7 @@ export class RequestNotesService {
   public getRequestNote(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -486,7 +486,7 @@ export class RequestNotesService {
     return this.httpClient.get<RequestNoteDto>(
       `${this.configuration.basePath}/v1.0/request-notes/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -528,7 +528,7 @@ export class RequestNotesService {
     id: number,
     noteRequest: NoteRequest,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -572,7 +572,7 @@ export class RequestNotesService {
       `${this.configuration.basePath}/v1.0/request-notes/${encodeURIComponent(String(id))}`,
       noteRequest,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -614,7 +614,7 @@ export class RequestNotesService {
     requestId: string,
     file: Blob,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (requestId === null || requestId === undefined) {
@@ -660,7 +660,7 @@ export class RequestNotesService {
     }
 
     if (file !== undefined) {
-      formParams = (formParams.append('file', <any>file) as any) || formParams;
+      formParams = (formParams.append('file', file as any) as any) || formParams;
     }
 
     let responseType_: 'text' | 'json' = 'json';
@@ -672,7 +672,7 @@ export class RequestNotesService {
       `${this.configuration.basePath}/v1.0/request-notes/upload/request/${encodeURIComponent(String(requestId))}`,
       convertFormParamsToString ? formParams.toString() : formParams,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

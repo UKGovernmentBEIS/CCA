@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { toVariationDetailsSummaryData, underlyingAgreementVariationQuery } from '@requests/common';
-import { PageHeadingComponent, SummaryComponent } from '@shared/components';
+import { SummaryComponent } from '@shared/components';
 
 @Component({
   selector: 'cca-variation-details-summary',

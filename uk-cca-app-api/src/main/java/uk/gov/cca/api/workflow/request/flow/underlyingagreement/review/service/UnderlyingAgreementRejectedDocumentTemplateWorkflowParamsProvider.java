@@ -2,7 +2,6 @@ package uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.DocumentTemplateUnderlyingAgreementParamsProvider;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
@@ -26,7 +25,7 @@ public class UnderlyingAgreementRejectedDocumentTemplateWorkflowParamsProvider i
     public Map<String, Object> constructParams(UnderlyingAgreementRequestPayload payload) {
         // Add target unit details from workflow data
         Map<String, Object> params = documentTemplateUnderlyingAgreementParamsProvider
-                .constructTargetUnitDetailsTemplateParams(payload.getUnderlyingAgreement().getUnderlyingAgreementTargetUnitDetails());
+                .constructTargetUnitDetailsTemplateParams(payload.getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails());
 
         params.put("reason", payload.getDetermination().getReason());
 

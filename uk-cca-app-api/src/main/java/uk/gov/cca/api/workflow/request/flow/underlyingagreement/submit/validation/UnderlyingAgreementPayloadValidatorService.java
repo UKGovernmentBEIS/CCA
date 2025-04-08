@@ -10,7 +10,7 @@ import uk.gov.cca.api.common.validation.ValidatorHelper;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.transform.UnderlyingAgreementContainerMapper;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.UnderlyingAgreementTargetUnitDetailsValidatorService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.EditedUnderlyingAgreementTargetUnitDetailsValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.submit.domain.UnderlyingAgreementSubmitRequestTaskPayload;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
@@ -22,7 +22,7 @@ import java.util.List;
 public class UnderlyingAgreementPayloadValidatorService {
 
     private final UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
-    private final UnderlyingAgreementTargetUnitDetailsValidatorService underlyingAgreementTargetUnitDetailsValidatorService;
+    private final EditedUnderlyingAgreementTargetUnitDetailsValidatorService underlyingAgreementTargetUnitDetailsValidatorService;
     private static final UnderlyingAgreementContainerMapper UNDERLYING_AGREEMENT_CONTAINER_MAPPER = Mappers.getMapper(UnderlyingAgreementContainerMapper.class);
 
     public void validate(RequestTask requestTask) {

@@ -30,7 +30,7 @@ describe('Update sector user role spec', () => {
     httpMock.verify();
   }));
 
-  it("Main: Update User type from ‘Basic User' to 'Administrator User’", async () => {
+  it("Main: Update User type from ‘Basic User' to 'Administrator User’", fakeAsync(async () => {
     const sectorId = 231;
     const user = UserEvent.setup();
 
@@ -44,9 +44,9 @@ describe('Update sector user role spec', () => {
     const req = httpMock.expectOne(`/api/v1.0/sector-authorities/sector-association/${sectorId}`);
     req.flush(null);
     expect(document.getElementById('authorities.1.userType')).toHaveValue('0: sector_user_administrator');
-  });
+  }));
 
-  it('should discard changes', async () => {
+  it('should discard changes', fakeAsync(async () => {
     const sectorId = 231;
     const user = UserEvent.setup();
     await navigateToContacts(sectorId, { harness, httpTestingController: httpMock, user });
@@ -62,9 +62,9 @@ describe('Update sector user role spec', () => {
     req.flush(JSON.parse(JSON.stringify(mockSectorAuthorities)));
     harness.detectChanges();
     expect(document.getElementById('authorities.1.userType')).toHaveValue('0: sector_user_administrator');
-  });
+  }));
 
-  it("Alternative scenario 1: Update User type from ‘Administrator User' (not unique Sector Administrator) to 'Basic User’", async () => {
+  it("Alternative scenario 1: Update User type from ‘Administrator User' (not unique Sector Administrator) to 'Basic User’", fakeAsync(async () => {
     const sectorId = 231;
     const user = UserEvent.setup();
 
@@ -75,9 +75,9 @@ describe('Update sector user role spec', () => {
     const req = httpMock.expectOne(`/api/v1.0/sector-authorities/sector-association/${sectorId}`);
     req.flush(null);
     expect(document.getElementById('authorities.1.userType')).toHaveValue('1: sector_user_basic_user');
-  });
+  }));
 
-  it("Alternative scenario 2: Update User type from ‘Administrator User' (unique Sector Administrator) to 'Basic User’", async () => {
+  it("Alternative scenario 2: Update User type from ‘Administrator User' (unique Sector Administrator) to 'Basic User’", fakeAsync(async () => {
     const sectorId = 231;
     const user = UserEvent.setup();
 
@@ -92,5 +92,5 @@ describe('Update sector user role spec', () => {
     harness.detectChanges();
     expect(document.querySelector('.govuk-error-summary')).toBeVisible();
     expect(screen.getByText('At least one sector admin should exist in sector association')).toBeVisible();
-  });
+  }));
 });

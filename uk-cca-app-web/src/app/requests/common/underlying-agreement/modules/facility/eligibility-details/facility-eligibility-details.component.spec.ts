@@ -13,7 +13,7 @@ import { mockRequestTaskItemDTO } from '../../../testing';
 import { FACILITIES_SUBTASK, FacilityWizardStep } from '../../../underlying-agreement.types';
 import { FacilityEligibilityDetailsComponent } from './facility-eligibility-details.component';
 
-describe('FacilityContactDetailsComponent', () => {
+describe('FacilityEligibilityDetailsComponent', () => {
   let component: FacilityEligibilityDetailsComponent;
   let fixture: ComponentFixture<FacilityEligibilityDetailsComponent>;
   let store: RequestTaskStore;
@@ -28,15 +28,19 @@ describe('FacilityContactDetailsComponent', () => {
     get isConnectedToExistingFacilityRadios() {
       return this.queryAll<HTMLInputElement>('input[name$="isConnectedToExistingFacility"]');
     }
+
     get agreementTypeSelect(): string {
       return this.getInputValue('#agreementType');
     }
+
     get erpAuthorisationExistsRadios() {
       return this.queryAll<HTMLInputElement>('input[name$="erpAuthorisationExists"]');
     }
+
     get regulatorNameSelect(): string {
       return this.getInputValue('#regulatorName');
     }
+
     get authorisationNumber() {
       return this.getInputValue('#authorisationNumber');
     }
@@ -95,15 +99,12 @@ describe('FacilityContactDetailsComponent', () => {
     fixture.detectChanges();
 
     expect(taskServiceSpy).toHaveBeenCalledWith(FACILITIES_SUBTASK, FacilityWizardStep.ELIGIBILITY_DETAILS, route, {
-      facility: {
-        facilityId: 'ADS_1-F00001',
-        eligibilityDetailsAndAuthorisation: {
-          isConnectedToExistingFacility: false,
-          agreementType: 'ENVIRONMENTAL_PERMITTING_REGULATIONS',
-          erpAuthorisationExists: false,
-        },
+      facilityId: 'ADS_1-F00001',
+      eligibilityDetailsAndAuthorisation: {
+        isConnectedToExistingFacility: false,
+        agreementType: 'ENVIRONMENTAL_PERMITTING_REGULATIONS',
+        erpAuthorisationExists: false,
       },
-      attachments: {},
     });
   });
 });

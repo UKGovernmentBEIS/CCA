@@ -3,7 +3,6 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { DestroySubject } from '@core/services/destroy-subject.service';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { render, screen } from '@testing-library/angular';
 
@@ -24,7 +23,6 @@ async function createComponent(mockService: MockService) {
         }),
       },
       { provide: TargetUnitAccountInfoViewService, useValue: mockService },
-      DestroySubject,
     ],
   });
 }

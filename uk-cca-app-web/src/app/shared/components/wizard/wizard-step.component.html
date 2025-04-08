@@ -3,17 +3,17 @@
     <govuk-error-summary [form]="formGroup"></govuk-error-summary>
   }
 
-  <cca-page-heading [caption]="caption">{{ heading }}</cca-page-heading>
+  <netz-page-heading [caption]="caption">{{ heading }}</netz-page-heading>
 
   <ng-content></ng-content>
 
   @if (!hideSubmit) {
-    <button ccaPendingButton govukButton type="submit">{{ submitText }}</button>
+    <button netzPendingButton govukButton type="submit">{{ submitText }}</button>
   }
 
   @if (showCancelLink) {
     <div>
-      <a govukLink [routerLink]="cancelLinkPath">Cancel</a>
+      <a class="govuk-link" [routerLink]="cancelLinkPath">Cancel</a>
     </div>
   }
 </form>

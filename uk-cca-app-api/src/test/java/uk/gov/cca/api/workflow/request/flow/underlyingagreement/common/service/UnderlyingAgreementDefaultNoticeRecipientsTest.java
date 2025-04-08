@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
@@ -14,7 +13,9 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTar
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.TargetUnitAccountNoticeRecipients;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 
 import java.util.List;
 
@@ -44,13 +45,16 @@ class UnderlyingAgreementDefaultNoticeRecipientsTest {
                                 .build())
                         .build();
         final Request request = Request.builder()
-                .accountId(accountId)
                 .payload(UnderlyingAgreementRequestPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementPayload.builder()
                                 .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                                 .build())
+                        .underlyingAgreementProposed(UnderlyingAgreementPayload.builder()
+                                .underlyingAgreementTargetUnitDetails(targetUnitDetails)
+                                .build())
                         .build())
                 .build();
+        addResourcesToRequest(accountId, request);
 
         final List<DefaultNoticeRecipient> defaultNoticeRecipients = List.of(
                 DefaultNoticeRecipient.builder()
@@ -86,4 +90,14 @@ class UnderlyingAgreementDefaultNoticeRecipientsTest {
         assertThat(service.getType())
                 .isEqualTo(CcaRequestType.UNDERLYING_AGREEMENT);
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

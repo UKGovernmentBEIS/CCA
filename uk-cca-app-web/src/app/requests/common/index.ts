@@ -4,4 +4,6 @@ export * from './underlying-agreement';
 export * from './task-item-status';
 export * from './timeline-underlying-agreement';
 export * from './task-common.providers';
+export * from './performance-data';
 export * from './testing';
+export * from './utils';

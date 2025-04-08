@@ -13,7 +13,8 @@ import { UnderlyingAgreementActivationDetails } from './underlyingAgreementActiv
 
 export interface UnderlyingAgreementActivationRequestTaskPayload {
   payloadType?: string;
+  sendEmailNotification?: boolean;
   underlyingAgreementActivationDetails?: UnderlyingAgreementActivationDetails;
-  sectionsCompleted?: { [key: string]: string };
-  underlyingAgreementActivationAttachments?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
+  underlyingAgreementActivationAttachments?: Record<string, string>;
 }

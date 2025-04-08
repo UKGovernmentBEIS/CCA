@@ -15,6 +15,5 @@ export interface UnderlyingAgreementContainer {
   sectorMeasurementType: 'ENERGY_KWH' | 'ENERGY_MWH' | 'ENERGY_GJ' | 'CARBON_KG' | 'CARBON_TONNE';
   sectorThroughputUnit?: string;
   underlyingAgreement: UnderlyingAgreement;
-  sectionsCompleted?: { [key: string]: string };
-  underlyingAgreementAttachments?: { [key: string]: string };
+  underlyingAgreementAttachments?: Record<string, string>;
 }

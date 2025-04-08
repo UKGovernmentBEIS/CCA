@@ -5,14 +5,14 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
   id="root0"
 >
   <div>
-    <cca-page-heading>
+    <netz-page-heading>
       
       <h1
         class="govuk-heading-l"
       >
         Variation details
       </h1>
-    </cca-page-heading>
+    </netz-page-heading>
     <cca-summary>
       <h2
         class="govuk-heading-m"
@@ -37,9 +37,9 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             class="pre-wrap govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              Amend the 70% rule evaluation for one or more facilities 
-            
-            
             
             
             
@@ -51,7 +51,6 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/details?change=true"
             >
               Change
@@ -73,9 +72,9 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             class="pre-wrap govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              change the throughput unit 
-            
-            
             
             
             
@@ -87,7 +86,6 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/details?change=true"
             >
               Change
@@ -109,9 +107,9 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             class="pre-wrap govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
+            
              Variation reason 
-            
-            
             
             
             
@@ -123,7 +121,6 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
           >
             <a
               class="govuk-link"
-              govuklink=""
               href="/details?change=true"
             >
               Change
@@ -145,14 +142,14 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
         novalidate=""
       >
         
-        <cca-page-heading>
+        <netz-page-heading>
           
           <h1
             class="govuk-heading-l"
           >
             
           </h1>
-        </cca-page-heading>
+        </netz-page-heading>
         <cca-decision>
           <h2
             class="govuk-heading-m"
@@ -251,28 +248,19 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
             formcontrolname="notes"
             govuk-textarea=""
-            hint="The operator cannot view this"
-            label="Notes"
+            label="Notes (optional)"
           >
             <label
               class="govuk-label"
               for="notes"
               id="l.notes"
             >
-               Notes
+               Notes (optional)
 
             </label>
-            <div
-              class="govuk-hint"
-              id="notes-hint"
-            >
-               The operator cannot view this
-
-            </div>
             
             
             <textarea
-              aria-describedby="notes-hint"
               class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-valid"
               id="notes"
               name="notes"
@@ -286,10 +274,10 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             label="Upload evidence (optional)"
           >
             <div
-              class="moj-multi-file-upload moj-multi-file-upload--enhanced"
+              class="cca-multi-file-upload cca-multi-file-upload--enhanced"
             >
               <div
-                class="moj-multi-file-upload__upload"
+                class="cca-multi-file-upload__upload"
               >
                 <div
                   class="govuk-form-group"
@@ -311,12 +299,12 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
                   
                   
                   <div
-                    class="moj-multi-file-upload__dropzone govuk-!-margin-top-4"
+                    class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
                   >
                     <input
                       accept="*/*"
                       aria-labelledby="l.files ld.files"
-                      class="govuk-file-upload moj-multi-file-upload__input"
+                      class="govuk-file-upload cca-multi-file-upload__input"
                       id="files"
                       multiple=""
                       name="files"
@@ -346,15 +334,15 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
               </div>
               <cca-file-upload-list>
                 <div
-                  class="moj-multi-file__uploaded-files moj-hidden"
+                  class="cca-multi-file__uploaded-files govuk-body cca-hidden"
                 >
                   
+                  
                   <dl
-                    class="govuk-summary-list moj-multi-file-upload__list"
+                    class="govuk-summary-list cca-multi-file-upload__list"
                   >
                     
                   </dl>
-                  
                   
                   
                   
@@ -367,9 +355,9 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
           </cca-multiple-file-input>
         </cca-decision>
         <button
-          ccapendingbutton=""
           class="govuk-button"
           govukbutton=""
+          netzpendingbutton=""
           type="submit"
         >
           Continue
@@ -384,7 +372,6 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
   />
   <netz-return-to-task-or-action-page>
     <a
-      class="govuk-link"
       govuklink=""
       href="/undefined"
     >

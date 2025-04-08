@@ -3,9 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { BasePage } from '@netz/common/testing';
-import { NestedMessageValidationError } from '@shared/components';
 
 import { CsvErrorSummaryComponent } from './csv-error-summary.component';
+import { NestedMessageValidationError } from './nested-message-validation-error.interface';
 
 describe('CsvErrorSummaryComponent', () => {
   let component: CsvErrorSummaryComponent;

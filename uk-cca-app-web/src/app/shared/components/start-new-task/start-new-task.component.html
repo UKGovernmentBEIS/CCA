@@ -1,0 +1,37 @@
+@if (availableWorkflows(); as availableWorkflows) {
+  <netz-page-heading>Start a new task</netz-page-heading>
+
+  @if (availableWorkflows?.length > 0) {
+    @for (workflow of availableWorkflows; track workflow) {
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds govuk-!-margin-top-5">
+          <h2 data-testid="h2-heading" class="govuk-heading-m">{{ workflow.title }}</h2>
+
+          @if (!workflow.errors.length) {
+            @if (workflow.hint) {
+              <p class="govuk-hint">{{ workflow.hint }}</p>
+            }
+
+            <button (click)="onRequestButtonClick(workflow.type)" netzPendingButton govukButton type="button">
+              {{ workflow.button }}
+            </button>
+          } @else {
+            <ul class="govuk-list">
+              @for (error of workflow.errors; track error) {
+                <li>
+                  {{ error }}
+                </li>
+              }
+            </ul>
+          }
+          <hr />
+        </div>
+      </div>
+    }
+    <a class="govuk-link" routerLink="../"> Return to: {{ returnTo }} </a>
+  } @else {
+    <ul class="govuk-list">
+      <li data-testId="no-workflows">No tasks are currently available.</li>
+    </ul>
+  }
+}

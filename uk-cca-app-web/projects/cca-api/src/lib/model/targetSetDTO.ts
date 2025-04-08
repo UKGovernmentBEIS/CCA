@@ -16,5 +16,5 @@ export interface TargetSetDTO {
   targetCurrencyType: string;
   throughputUnit?: string;
   energyOrCarbonUnit: string;
-  targetCommitments?: Array<TargetCommitmentDTO>;
+  targetCommitments?: TargetCommitmentDTO[];
 }

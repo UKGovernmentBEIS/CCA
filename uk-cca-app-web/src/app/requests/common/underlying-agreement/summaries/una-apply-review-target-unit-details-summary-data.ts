@@ -1,6 +1,6 @@
-import { SummaryData, SummaryFactory } from '@shared/components/summary';
-import { OperatorTypePipe } from '@shared/pipes/operator-type.pipe';
-import { getAddressAsArray } from '@shared/utils/address';
+import { SummaryData, SummaryFactory } from '@shared/components';
+import { OperatorTypePipe } from '@shared/pipes';
+import { getAddressAsArray } from '@shared/utils';
 
 import { AccountReferenceData, UnderlyingAgreementTargetUnitDetails } from 'cca-api';
 
@@ -10,7 +10,7 @@ export function toReviewTargetUnitDetailsSummaryData(
   accountReferenceData: AccountReferenceData,
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
   isEditable: boolean,
-  prefix: string = '../',
+  prefix = '../',
 ): SummaryData {
   const operatorTypePipe = new OperatorTypePipe();
 
@@ -51,7 +51,7 @@ export function toReviewTargetUnitDetailsSummaryData(
 export function toReviewTargetUnitDetailsOriginalSummaryData(
   accountReferenceData: AccountReferenceData,
   isEditable: boolean,
-  prefix: string = '../',
+  prefix = '../',
 ): SummaryData {
   const operatorTypePipe = new OperatorTypePipe();
 

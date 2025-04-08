@@ -4,10 +4,12 @@ import { fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
+import { AuthStore } from '@netz/common/auth';
 import { screen } from '@testing-library/dom';
 import UserEvent from '@testing-library/user-event';
 
 import { SECTORS_ROUTES } from '../sectors.routes';
+import { mockAuthState } from './fixtures/mock';
 import { navigateToAddOperatorUser, navigateToTargetUnit, navigateToTargetUnitUsers } from './test.utils';
 
 describe('Add operator Spec', () => {
@@ -17,6 +19,7 @@ describe('Add operator Spec', () => {
 
   let httpTestingController: HttpTestingController;
   let harness: RouterTestingHarness;
+  let authStore: AuthStore;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -24,6 +27,9 @@ describe('Add operator Spec', () => {
     });
 
     httpTestingController = TestBed.inject(HttpTestingController);
+    authStore = TestBed.inject(AuthStore);
+    authStore.setState(mockAuthState);
+
     await TestBed.compileComponents();
     harness = await RouterTestingHarness.create();
   });
@@ -45,7 +51,7 @@ describe('Add operator Spec', () => {
     return opts;
   }
 
-  test('Main scenario: Add a new Operator user to the Target Unit account', async () => {
+  test('Main scenario: Add a new Operator user to the Target Unit account', fakeAsync(async () => {
     const { user, harness, httpTestingController } = await setup();
     await user.type(screen.getByLabelText('First name'), 'Operator');
     await user.type(screen.getByLabelText('Last name'), 'User');
@@ -59,9 +65,9 @@ describe('Add operator Spec', () => {
     harness.detectChanges();
 
     expect(screen.getByTestId('confirmation-screen')).toBeInTheDocument();
-  });
+  }));
 
-  test('Alternative scenario 4: User does not enter mandatory fields', async () => {
+  test('Alternative scenario 4: User does not enter mandatory fields', fakeAsync(async () => {
     const { user } = await setup();
     await user.type(screen.getByLabelText('First name'), 'Operator');
     await user.click(screen.getByText('Submit'));
@@ -70,9 +76,9 @@ describe('Add operator Spec', () => {
     expect(document.querySelector('.govuk-error-summary')).toBeInTheDocument();
     expect(screen.getAllByText('Enter your last name')).toHaveLength(2);
     expect(screen.getAllByText('Enter your email')).toHaveLength(2);
-  });
+  }));
 
-  test('Alternative scenario 5: User does not provide valid user email', async () => {
+  test('Alternative scenario 5: User does not provide valid user email', fakeAsync(async () => {
     const { user } = await setup();
     await user.type(screen.getByLabelText('First name'), 'Operator');
     await user.type(screen.getByLabelText('Last name'), 'User');
@@ -82,5 +88,5 @@ describe('Add operator Spec', () => {
 
     expect(document.querySelector('.govuk-error-summary')).toBeInTheDocument();
     expect(screen.getAllByText('Enter an email address in the correct format, like name@example.com')).toHaveLength(2);
-  });
+  }));
 });

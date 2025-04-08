@@ -130,7 +130,7 @@ class ItemControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(appUser, "getItemsByRequest", String.valueOf(requestId));
+                .authorize(appUser, "getItemsByRequest", requestId, null, null);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .get(BASE_PATH + "/" + requestId)

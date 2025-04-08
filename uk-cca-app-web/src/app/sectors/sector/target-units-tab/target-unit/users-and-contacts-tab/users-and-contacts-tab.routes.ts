@@ -27,9 +27,7 @@ export const USERS_AND_CONTACTS_ROUTES: Routes = [
             path: '',
             data: {
               pageTitle: 'Operator details',
-              breadcrumb: {
-                resolveText: ({ operatorDetails }) => `${operatorDetails.firstName} ${operatorDetails.lastName}`,
-              },
+              breadcrumb: ({ operatorDetails }) => `${operatorDetails.firstName} ${operatorDetails.lastName}`,
             },
             loadComponent: () =>
               import('./operator-details/operator-details.component').then((c) => c.OperatorDetailsComponent),

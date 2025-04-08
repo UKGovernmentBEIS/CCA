@@ -5,7 +5,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.netz.api.notification.mail.constants.EmailNotificationTemplateConstants.USER_ROLE_TYPE;
 
 import java.util.Map;
 
@@ -25,10 +24,10 @@ import uk.gov.cca.api.user.CcaNavigationOutcomes;
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserInvitationDTO;
 import uk.gov.netz.api.authorization.core.domain.dto.RoleDTO;
 import uk.gov.netz.api.authorization.core.service.RoleService;
-import uk.gov.netz.api.notification.mail.config.property.NotificationProperties;
-import uk.gov.netz.api.notification.mail.constants.EmailNotificationTemplateConstants;
+import uk.gov.netz.api.notificationapi.mail.config.property.NotificationProperties;
 import uk.gov.netz.api.token.JwtProperties;
 import uk.gov.netz.api.token.JwtTokenAction;
+import uk.gov.netz.api.user.NotificationTemplateConstants;
 import uk.gov.netz.api.user.core.domain.model.UserNotificationWithRedirectionLinkInfo;
 import uk.gov.netz.api.user.core.service.UserNotificationService;
 
@@ -88,10 +87,10 @@ class SectorUserNotificationGatewayTest {
         assertThat(notificationInfo.getLinkPath()).isEqualTo(CcaNavigationOutcomes.SECTOR_USER_REGISTRATION_INVITATION_ACCEPTED_URL);
         assertThat(notificationInfo.getNotificationParams()).containsExactlyInAnyOrderEntriesOf(
                 Map.of(
-                        USER_ROLE_TYPE, roleDTO.getName(),
+                        NotificationTemplateConstants.USER_ROLE_TYPE, roleDTO.getName(),
                         CcaEmailNotificationTemplateConstants.SECTOR_ASSOCIATION_NAME, sectorAssociationName,
-                        EmailNotificationTemplateConstants.EXPIRATION_MINUTES, 60L,
-                        EmailNotificationTemplateConstants.CONTACT_REGULATOR, helpdesk
+                        NotificationTemplateConstants.EXPIRATION_MINUTES, 60L,
+                        NotificationTemplateConstants.CONTACT_REGULATOR, helpdesk
                 ));
         assertThat(notificationInfo.getTokenParams())
                 .isEqualTo(expectedInvitationLinkTokenParams(CcaJwtTokenAction.SECTOR_USER_INVITATION, authorityUuid, expirationInterval));

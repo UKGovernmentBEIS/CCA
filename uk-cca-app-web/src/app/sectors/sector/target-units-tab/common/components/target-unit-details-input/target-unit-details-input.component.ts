@@ -1,11 +1,9 @@
 import { Component, input, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 
 import {
   ConditionalContentDirective,
   GovukSelectOption,
-  LinkDirective,
   RadioComponent,
   RadioOptionComponent,
   SelectComponent,
@@ -16,7 +14,6 @@ import { existingControlContainer } from '@shared/providers';
 
 import { SubsectorAssociationSchemeInfoDTO } from 'cca-api';
 
-// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
 @Component({
   selector: 'cca-target-unit-details-input',
   templateUrl: './target-unit-details-input.component.html',
@@ -27,8 +24,6 @@ import { SubsectorAssociationSchemeInfoDTO } from 'cca-api';
     RadioComponent,
     RadioOptionComponent,
     ConditionalContentDirective,
-    LinkDirective,
-    RouterLink,
     SelectComponent,
   ],
   viewProviders: [existingControlContainer],

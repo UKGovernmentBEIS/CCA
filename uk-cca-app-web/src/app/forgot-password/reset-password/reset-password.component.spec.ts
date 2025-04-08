@@ -1,17 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
 import { PageNotFoundComponent } from '@error/page-not-found/page-not-found.component';
-import { BasePage, mockClass, MockType } from '@netz/common/testing';
+import { BasePage, MockType } from '@netz/common/testing';
+import { screen } from '@testing-library/dom';
+import UserEvent from '@testing-library/user-event';
 import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { ForgotPasswordService } from 'cca-api';
 
-import { PasswordService } from '../../shared/components/password/password.service';
 import { ResetPasswordStore } from '../store/reset-password.store';
 import { ResetPasswordComponent } from './reset-password.component';
 
@@ -20,7 +20,6 @@ describe('ResetPasswordComponent', () => {
   let fixture: ComponentFixture<ResetPasswordComponent>;
   let page: Page;
   let router: Router;
-  let passwordService: jest.Mocked<PasswordService>;
   let resetPasswordStore: ResetPasswordStore;
 
   class Page extends BasePage<ResetPasswordComponent> {
@@ -50,21 +49,16 @@ describe('ResetPasswordComponent', () => {
   };
 
   beforeEach(async () => {
-    passwordService = mockClass(PasswordService);
-
     await TestBed.configureTestingModule({
-      imports: [
-        ResetPasswordComponent,
-        RouterTestingModule.withRoutes([
+      imports: [ResetPasswordComponent],
+      providers: [
+        provideRouter([
           { path: 'error/404', component: PageNotFoundComponent },
           { path: '', component: ResetPasswordComponent },
           { path: '**', redirectTo: '' },
         ]),
-      ],
-      providers: [
         ResetPasswordStore,
         { provide: ForgotPasswordService, useValue: forgotPasswordService },
-        { provide: PasswordService, useValue: passwordService },
         provideZxvbnServiceForPSM(),
       ],
     }).compileComponents();
@@ -75,7 +69,6 @@ describe('ResetPasswordComponent', () => {
     fixture = TestBed.createComponent(ResetPasswordComponent);
     component = fixture.componentInstance;
     page = new Page(fixture);
-    passwordService.blacklisted.mockReturnValue(of(null));
     resetPasswordStore = TestBed.inject(ResetPasswordStore);
 
     resetPasswordStore.setState({
@@ -99,9 +92,9 @@ describe('ResetPasswordComponent', () => {
     expect(page.repeatedPasswordValue).toEqual('password');
   });
 
-  it('should submit only if form valid', () => {
+  it('should submit only if form valid', async () => {
+    const user = UserEvent.setup();
     const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
-
     page.passwordValue = '';
     page.repeatedPasswordValue = '';
     page.submitButton.click();
@@ -115,8 +108,9 @@ describe('ResetPasswordComponent', () => {
     page.passwordValue = 'ThisIsAStrongP@ssw0rd';
     page.repeatedPasswordValue = 'ThisIsAStrongP@ssw0rd';
 
-    page.submitButton.click();
-    fixture.detectChanges();
+    await user.click(page.submitButton);
+
+    screen.debug();
     expect(navigateSpy).toHaveBeenCalled();
   });
 

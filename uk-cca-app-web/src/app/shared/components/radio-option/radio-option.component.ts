@@ -4,11 +4,10 @@ import { ControlValueAccessor, NgControl, ReactiveFormsModule, UntypedFormContro
 import { FormService } from '@netz/govuk-components';
 
 /* eslint-disable
-   @angular-eslint/prefer-on-push-component-change-detection,
    @typescript-eslint/no-empty-function,
-   @typescript-eslint/no-unused-vars
 */
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'div[cca-radio-option]',
   templateUrl: './radio-option.component.html',
   standalone: true,

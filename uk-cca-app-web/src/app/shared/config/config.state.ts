@@ -1,0 +1,23 @@
+export const FEATURES = ['terms', 'unaHideNotifyOperator', 'subsistenceFeesHideMenu'] as const;
+export type FeatureName = (typeof FEATURES)[number];
+export type FeaturesConfig = Partial<Record<FeatureName, boolean>>;
+
+export interface ConfigState {
+  features?: FeaturesConfig;
+  analytics?: {
+    gtmContainerId: string;
+  };
+  keycloakServerUrl?: string;
+  subsistenceFeesRunTriggerDate?: string;
+}
+
+export const initialState: ConfigState = {
+  features: {
+    unaHideNotifyOperator: false,
+    subsistenceFeesHideMenu: false,
+  },
+  analytics: {
+    gtmContainerId: '',
+  },
+  subsistenceFeesRunTriggerDate: '',
+};

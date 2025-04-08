@@ -1,20 +1,19 @@
 package uk.gov.cca.api.web.orchestrator.account.service;
 
-import static uk.gov.cca.api.account.domain.TargetUnitAccountStatus.LIVE;
-import static uk.gov.cca.api.account.domain.TargetUnitAccountStatus.TERMINATED;
-
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-
-import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.account.service.TargetUnitAccountService;
 import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.service.SubsectorAssociationService;
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementQueryService;
 import uk.gov.cca.api.web.orchestrator.account.dto.TargetUnitAccountDetailsResponseDTO;
+
+import java.util.List;
+
+import static uk.gov.cca.api.account.domain.TargetUnitAccountStatus.LIVE;
+import static uk.gov.cca.api.account.domain.TargetUnitAccountStatus.TERMINATED;
 
 @Service
 @RequiredArgsConstructor
@@ -47,4 +46,5 @@ public class TargetUnitAccountQueryServiceOrchestrator {
 
         return responseDTO;
     }
+
 }

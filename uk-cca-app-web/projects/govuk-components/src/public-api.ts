@@ -4,7 +4,6 @@
 
 export * from './lib/accordion';
 export * from './lib/back-link';
-export * from './lib/breadcrumbs';
 export * from './lib/checkboxes';
 export * from './lib/cookies-pop-up';
 export * from './lib/date-input';

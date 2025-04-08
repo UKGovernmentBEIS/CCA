@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { ButtonDirective } from '@netz/govuk-components';
 import {
   BaselineAndTargetPeriodsSubtasks,
   DECISION_FORM_PROVIDER,
@@ -16,8 +15,8 @@ import {
   toBaselineAndTargetsSummaryData,
   underlyingAgreementQuery,
 } from '@requests/common';
-import { PageHeadingComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { SummaryComponent, WizardStepComponent } from '@shared/components';
+import { generateDownloadUrl } from '@shared/utils';
 
 import { UnderlyingAgreementReviewTaskService } from '../../../../services/underlying-agreement-review-task.service';
 
@@ -29,14 +28,13 @@ import { UnderlyingAgreementReviewTaskService } from '../../../../services/under
     SummaryComponent,
     DecisionComponent,
     ReactiveFormsModule,
-    ButtonDirective,
     WizardStepComponent,
     ReturnToTaskOrActionPageComponent,
   ],
   providers: [decisionFormProvider('TARGET_PERIOD5_DETAILS')],
   template: `
     <div>
-      <cca-page-heading caption="TP5 (2021-2022)">Baseline and targets</cca-page-heading>
+      <netz-page-heading caption="TP5 (2021-2022)">Baseline and targets</netz-page-heading>
 
       <cca-summary [data]="summaryData" />
       <cca-wizard-step [formGroup]="form" (formSubmit)="submit()">

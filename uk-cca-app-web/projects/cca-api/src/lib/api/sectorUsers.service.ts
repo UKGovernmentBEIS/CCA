@@ -9,15 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { SectorUserAuthorityDetailsDTO } from '../model/sectorUserAuthorityDetailsDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -109,7 +109,7 @@ export class SectorUsersService {
   public getCurrentSectorUser(
     sectorAssociationId: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorAssociationId === null || sectorAssociationId === undefined) {
@@ -144,7 +144,7 @@ export class SectorUsersService {
     return this.httpClient.get<SectorUserAuthorityDetailsDTO>(
       `${this.configuration.basePath}/v1.0/sector-users/sector-association/${encodeURIComponent(String(sectorAssociationId))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -186,7 +186,7 @@ export class SectorUsersService {
     sectorAssociationId: number,
     userId: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorAssociationId === null || sectorAssociationId === undefined) {
@@ -222,7 +222,7 @@ export class SectorUsersService {
     return this.httpClient.get<SectorUserAuthorityDetailsDTO>(
       `${this.configuration.basePath}/v1.0/sector-users/sector-association/${encodeURIComponent(String(sectorAssociationId))}/${encodeURIComponent(String(userId))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -264,7 +264,7 @@ export class SectorUsersService {
     sectorAssociationId: number,
     userId: string,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorAssociationId === null || sectorAssociationId === undefined) {
@@ -301,7 +301,7 @@ export class SectorUsersService {
       `${this.configuration.basePath}/v1.0/sector-users/sector-association/${encodeURIComponent(String(sectorAssociationId))}/${encodeURIComponent(String(userId))}/reset-2fa`,
       null,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -346,7 +346,7 @@ export class SectorUsersService {
     sectorAssociationId: number,
     sectorUserAuthorityDetailsDTO: SectorUserAuthorityDetailsDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorAssociationId === null || sectorAssociationId === undefined) {
@@ -394,7 +394,7 @@ export class SectorUsersService {
       `${this.configuration.basePath}/v1.0/sector-users/sector-association/${encodeURIComponent(String(sectorAssociationId))}/sector-user`,
       sectorUserAuthorityDetailsDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -445,7 +445,7 @@ export class SectorUsersService {
     userId: string,
     sectorUserAuthorityDetailsDTO: SectorUserAuthorityDetailsDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (sectorAssociationId === null || sectorAssociationId === undefined) {
@@ -498,7 +498,7 @@ export class SectorUsersService {
       `${this.configuration.basePath}/v1.0/sector-users/sector-association/${encodeURIComponent(String(sectorAssociationId))}/${encodeURIComponent(String(userId))}`,
       sectorUserAuthorityDetailsDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

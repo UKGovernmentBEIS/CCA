@@ -33,6 +33,13 @@ export class ItemNamePipe implements PipeTransform {
         return 'Application for underlying agreement variation sent for review';
       case 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_ACTIVATION':
         return 'Application to vary underlying agreement sent for review';
+      case 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION':
+        return 'Upload target unit assent on variation';
+
+      case 'PERFORMANCE_DATA_DOWNLOAD_SUBMIT':
+        return 'Download target period reporting (TPR) spreadsheets';
+      case 'PERFORMANCE_DATA_UPLOAD_SUBMIT':
+        return 'Target period reporting (TPR) spreadsheets upload';
 
       default:
         return null;

@@ -1,17 +1,18 @@
 import { DatePipe } from '@angular/common';
 
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { financialIndependenceStatusTypeMap } from '@shared/pipes';
-import { operatorTypeMap } from '@shared/pipes';
-import { getAddressAsArray } from '@shared/utils/address';
-import { transformFileInfoToDownloadableFile } from '@shared/utils/file-attachments-transformations';
-import { transformPhoneNumber } from '@shared/utils/phone';
+import { financialIndependenceStatusTypeMap, operatorTypeMap } from '@shared/pipes';
 
 import { TargetUnitAccountDetailsResponseDTO } from 'cca-api';
+
+import { getAddressAsArray } from '../../address';
+import { transformFileInfoToDownloadableFile } from '../../file-attachments-transformations';
+import { transformPhoneNumber } from '../../phone';
 
 export function toTargetUnitDetailsSummaryData(
   details: TargetUnitAccountDetailsResponseDTO,
   isEditable: boolean,
+  isFinancialIndependenceEditable: boolean,
   downloadURL: string,
 ): SummaryData {
   if (!details) {
@@ -40,7 +41,7 @@ export function toTargetUnitDetailsSummaryData(
     .addRow(
       'Status',
       financialIndependenceStatusTypeMap[details.targetUnitAccountDetails.financialIndependenceStatus],
-      { change: isEditable, appendChangeParam: false },
+      { change: isFinancialIndependenceEditable, appendChangeParam: false },
     )
 
     .addSection('Operator address')

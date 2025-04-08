@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 
-import { catchError, map, Observable, of, throwError } from 'rxjs';
+import { catchError, Observable, of, throwError } from 'rxjs';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, catchTaskReassignedBadRequest, ErrorCodes } from '@error/business-errors';
@@ -23,18 +23,15 @@ export class WithdrawAdminTerminationTaskApiService extends TaskApiService {
   private readonly businessErrorService = inject(BusinessErrorService);
 
   save(payload: AdminTerminationWithdrawRequestTaskPayload): Observable<AdminTerminationWithdrawRequestTaskPayload> {
-    return this.service
-      .processRequestTaskAction(this.createSaveAction(payload))
-      .pipe(
-        catchError((err) => {
-          if (err.code === ErrorCode.NOTFOUND1001) {
-            this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
-          }
-          return throwError(() => err);
-        }),
-        this.pendingRequestService.trackRequest(),
-      )
-      .pipe(map(() => payload));
+    return this.service.processRequestTaskAction(this.createSaveAction(payload)).pipe(
+      catchError((err) => {
+        if (err.code === ErrorCode.NOTFOUND1001) {
+          this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
+        }
+        return throwError(() => err);
+      }),
+      this.pendingRequestService.trackRequest(),
+    );
   }
 
   submit(): Observable<void> {

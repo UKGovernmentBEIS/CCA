@@ -11,6 +11,6 @@
  */
 
 export interface RfiQuestionPayload {
-  questions: Array<string>;
-  files?: Array<string>;
+  questions: string[];
+  files?: string[];
 }

@@ -124,16 +124,13 @@ const mockUnderlyingAgreement: UnderlyingAgreementPayload = {
   },
 };
 
-const mockUnderlyingAgreementVariation: UnderlyingAgreementVariationPayload = 
-{ ...mockUnderlyingAgreement, 
-  underlyingAgreementVariationDetails:{
+const mockUnderlyingAgreementVariation: UnderlyingAgreementVariationPayload = {
+  ...mockUnderlyingAgreement,
+  underlyingAgreementVariationDetails: {
     reason: 'No reason',
-    modifications: [
-      "AMEND_OPERATOR_OR_ORGANISATION_NAME",
-      "STRUCTURAL_CHANGE"
-  ]
-  }
-}
+    modifications: ['AMEND_OPERATOR_OR_ORGANISATION_NAME', 'STRUCTURAL_CHANGE'],
+  },
+};
 
 const mockPayload: UnderlyingAgreementSubmittedRequestActionPayload = {
   payloadType: 'UNDERLYING_AGREEMENT_SUBMITTED_PAYLOAD',
@@ -207,8 +204,10 @@ const mockPayload: UnderlyingAgreementSubmittedRequestActionPayload = {
   },
 };
 
-const mockVariationPayload: UnderlyingAgreementVariationSubmittedRequestActionPayload = 
-{ ...mockPayload, underlyingAgreement: mockUnderlyingAgreementVariation};
+const mockVariationPayload: UnderlyingAgreementVariationSubmittedRequestActionPayload = {
+  ...mockPayload,
+  underlyingAgreement: mockUnderlyingAgreementVariation,
+};
 
 export const mockUnderlyingAgreementSubmittedRequestAction: RequestActionDTO = {
   id: 14,

@@ -6,7 +6,6 @@ import { AccountAddressInputComponent } from '@shared/components';
 import { PhoneInputComponent } from '@shared/components';
 import { existingControlContainer } from '@shared/providers';
 
-// eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
 @Component({
   selector: 'cca-administrative-contact-input',
   templateUrl: './administrative-contact-input.component.html',

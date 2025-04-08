@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchTaskReassignedBadRequest } from '@error/business-errors';
@@ -8,7 +8,7 @@ import { catchNotFoundRequest, ErrorCode } from '@error/not-found-error';
 import { TaskApiService } from '@netz/common/forms';
 import { PendingRequestService } from '@netz/common/services';
 import { requestTaskQuery } from '@netz/common/store';
-import { requestTaskReassignedError, taskNotFoundError } from '@shared/errors/request-task-error';
+import { requestTaskReassignedError, taskNotFoundError } from '@shared/errors';
 
 import {
   RequestTaskActionPayload,
@@ -25,18 +25,15 @@ export class UnderlyingAgreementVariationApiService extends TaskApiService {
   save(
     payload: UnderlyingAgreementVariationSubmitRequestTaskPayload,
   ): Observable<UnderlyingAgreementVariationSubmitRequestTaskPayload> {
-    return this.service
-      .processRequestTaskAction(this.createSaveAction(payload))
-      .pipe(
-        catchError((err) => {
-          if (err.code === ErrorCode.NOTFOUND1001) {
-            this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
-          }
-          return throwError(() => err);
-        }),
-        this.pendingRequestService.trackRequest(),
-      )
-      .pipe(map(() => payload));
+    return this.service.processRequestTaskAction(this.createSaveAction(payload)).pipe(
+      catchError((err) => {
+        if (err.code === ErrorCode.NOTFOUND1001) {
+          this.businessErrorService.showErrorForceNavigation(taskNotFoundError);
+        }
+        return throwError(() => err);
+      }),
+      this.pendingRequestService.trackRequest(),
+    );
   }
 
   submit(): Observable<void> {
@@ -64,7 +61,14 @@ export class UnderlyingAgreementVariationApiService extends TaskApiService {
     requestTaskActionPayload: UnderlyingAgreementVariationSaveRequestTaskActionPayload;
   } {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
-    const { underlyingAgreement, sectionsCompleted } = payload;
+
+    const {
+      underlyingAgreement,
+      sectionsCompleted,
+      facilitiesReviewGroupDecisions,
+      reviewGroupDecisions,
+      reviewSectionsCompleted,
+    } = payload;
 
     return {
       requestTaskId,
@@ -80,6 +84,9 @@ export class UnderlyingAgreementVariationApiService extends TaskApiService {
           },
         },
         sectionsCompleted,
+        facilitiesReviewGroupDecisions,
+        reviewGroupDecisions,
+        reviewSectionsCompleted,
       },
     };
   }

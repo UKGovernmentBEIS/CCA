@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { map, takeUntil } from 'rxjs';
+import { map } from 'rxjs';
 
-import { DestroySubject } from '@netz/common/services';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { ButtonDirective, GovukValidators, TextInputComponent } from '@netz/govuk-components';
-import { PageHeadingComponent, PaginationComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives/pending-button.directive';
+import { PaginationComponent } from '@shared/components';
 
 import { AccountSearchResultInfoDTO, TargetUnitAccountInfoViewService } from 'cca-api';
 
@@ -34,14 +35,13 @@ type AccountSearchState = {
     AccountsListComponent,
     PaginationComponent,
   ],
-  providers: [DestroySubject],
 })
 export class AccountSearchComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly targetUnitAccountInfoViewService = inject(TargetUnitAccountInfoViewService);
-  private readonly destroy$ = inject(DestroySubject);
+  private readonly destroy$ = inject(DestroyRef);
   private previousTerm: string | null = null;
   private previousPage: number | null = null;
 
@@ -74,7 +74,7 @@ export class AccountSearchComponent implements OnInit {
           page: +params.get('page') || 1,
           pageSize: this.pageSize,
         })),
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroy$),
       )
       .subscribe(({ term, page }) => {
         this.searchForm.get('term').setValue(term, { emitEvent: false });
@@ -90,7 +90,7 @@ export class AccountSearchComponent implements OnInit {
   fetchAccounts(term: string, page: number): void {
     this.targetUnitAccountInfoViewService
       .searchUserAccounts(page - 1, this.pageSize, term)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroy$))
       .subscribe({
         next: ({ accounts, total }) => {
           this.state.update((state) => ({

@@ -36,7 +36,7 @@ export class FileValidators {
     };
   }
 
-  static validContentTypes(types: string[], message: string = 'has an invalid type'): MessageValidatorFn {
+  static validContentTypes(types: string[], message = 'has an invalid type'): MessageValidatorFn {
     return ({ value }: { value: FileUploadEvent | FileUploadEvent[] }) => {
       const valueIsArray = value && value instanceof Array && value.length > 0;
       const values: FileUploadEvent[] = (valueIsArray ? value : [value]) as FileUploadEvent[];

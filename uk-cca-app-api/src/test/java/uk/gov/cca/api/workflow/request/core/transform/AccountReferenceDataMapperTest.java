@@ -7,9 +7,10 @@ import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
-import uk.gov.cca.api.common.domain.MeasurementType;
-import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationMeasurementInfoDTO;
-import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountUpdateDTO;
+import uk.gov.cca.api.workflow.request.core.domain.TargetUnitAccountDetails;
+import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
+import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitResponsiblePerson;
 import uk.gov.netz.api.common.domain.PhoneNumberDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,10 +21,6 @@ class AccountReferenceDataMapperTest {
 
     @Test
     void toAccountReferenceData() {
-        final String subsectorAssociationName = "SubSectorName";
-        final MeasurementType measurementType = MeasurementType.CARBON_KG;
-        final String throughputUnit = "tonne";
-        
         final TargetUnitAccountDetailsDTO targetUnitAccountDetailsDTO = TargetUnitAccountDetailsDTO.builder()
                 .id(1L)
                 .name("Test Account")
@@ -35,28 +32,16 @@ class AccountReferenceDataMapperTest {
                 .companyRegistrationNumber("6566-6963-8521")
                 .responsiblePerson(getResponsiblePersonDTO())
                 .build();
-        
-		final SectorAssociationMeasurementInfoDTO sectorAssociationMeasurementInfoDTO = SectorAssociationMeasurementInfoDTO
-				.builder()
-				.subsectorAssociationName(subsectorAssociationName)
-				.measurementUnit(measurementType.getUnit())
-				.throughputUnit(throughputUnit)
-				.build();
 
-        final AccountReferenceData result = mapper.toAccountReferenceData(targetUnitAccountDetailsDTO, sectorAssociationMeasurementInfoDTO);
+        final TargetUnitAccountDetails result = mapper.toTargetUnitAccountDetails(targetUnitAccountDetailsDTO);
 
-        assertThat(result.getSectorAssociationDetails().getSubsectorAssociationName()).isEqualTo(subsectorAssociationName);
-        assertThat(result.getSectorAssociationDetails().getMeasurementType()).isEqualTo(measurementType);
-        assertThat(result.getSectorAssociationDetails().getThroughputUnit()).isEqualTo(throughputUnit);
-        assertThat(result.getTargetUnitAccountDetails().getOperatorType()).isEqualTo(targetUnitAccountDetailsDTO.getOperatorType());
-        assertThat(result.getTargetUnitAccountDetails().getCompanyRegistrationNumber()).isEqualTo(targetUnitAccountDetailsDTO.getCompanyRegistrationNumber());
-        assertThat(result.getTargetUnitAccountDetails().getResponsiblePerson().getFirstName()).isEqualTo(targetUnitAccountDetailsDTO.getResponsiblePerson().getFirstName());
-        assertThat(result.getTargetUnitAccountDetails().getAdministrativeContactDetails().getJobTitle()).isEqualTo(targetUnitAccountDetailsDTO.getResponsiblePerson().getJobTitle());
-        assertThat(result.getTargetUnitAccountDetails().getSectorAssociationId()).isEqualTo(targetUnitAccountDetailsDTO.getSectorAssociationId());
-        assertThat(result.getTargetUnitAccountDetails().getSubsectorAssociationId()).isEqualTo(targetUnitAccountDetailsDTO.getSubsectorAssociationId());
-
-
-}
+        assertThat(result.getOperatorType()).isEqualTo(targetUnitAccountDetailsDTO.getOperatorType());
+        assertThat(result.getCompanyRegistrationNumber()).isEqualTo(targetUnitAccountDetailsDTO.getCompanyRegistrationNumber());
+        assertThat(result.getResponsiblePerson().getFirstName()).isEqualTo(targetUnitAccountDetailsDTO.getResponsiblePerson().getFirstName());
+        assertThat(result.getAdministrativeContactDetails().getJobTitle()).isEqualTo(targetUnitAccountDetailsDTO.getResponsiblePerson().getJobTitle());
+        assertThat(result.getSectorAssociationId()).isEqualTo(targetUnitAccountDetailsDTO.getSectorAssociationId());
+        assertThat(result.getSubsectorAssociationId()).isEqualTo(targetUnitAccountDetailsDTO.getSubsectorAssociationId());
+    }
 
     @NotNull
     private static TargetUnitAccountContactDTO getAdministrativeContactDetailsDTO() {
@@ -72,4 +57,28 @@ class AccountReferenceDataMapperTest {
                 .phoneNumber(PhoneNumberDTO.builder().countryCode("code").number("number").build()).build();
     }
 
+    @Test
+    void toTargetUnitAccountDTO_with_Target_Unit_Details() {
+        Long sectorAssociationId = 1L;
+
+        final UnderlyingAgreementTargetUnitDetails actual = UnderlyingAgreementTargetUnitDetails
+                .builder()
+                .operatorName("name")
+                .operatorAddress(AccountAddressDTO.builder().postcode("CB111").build())
+                .responsiblePersonDetails(UnderlyingAgreementTargetUnitResponsiblePerson.builder().email("email@email.com").build())
+                .operatorType(TargetUnitAccountOperatorType.PARTNERSHIP)
+                .companyRegistrationNumber("companyRegistrationNumber")
+                .isCompanyRegistrationNumber(Boolean.TRUE)
+                .registrationNumberMissingReason("reason")
+                .subsectorAssociationName("name")
+                .subsectorAssociationId(sectorAssociationId)
+                .build();
+
+        TargetUnitAccountUpdateDTO result = mapper.toTargetUnitAccountUpdateDTO(actual);
+
+        assertThat(actual.getResponsiblePersonDetails().getEmail()).isEqualTo(result.getResponsiblePerson().getEmail());
+        assertThat(actual.getOperatorAddress().getPostcode()).isEqualTo(result.getOperatorAddress().getPostcode());
+        assertThat(actual.getOperatorType()).isEqualTo(result.getOperatorType());
+        assertThat(actual.getRegistrationNumberMissingReason()).isEqualTo(result.getRegistrationNumberMissingReason());
+    }
 }

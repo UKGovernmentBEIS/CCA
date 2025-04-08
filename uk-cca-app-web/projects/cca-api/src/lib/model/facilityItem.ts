@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { FacilityDetails } from './facilityDetails';
 import { Apply70Rule } from './apply70Rule';
 import { EligibilityDetailsAndAuthorisation } from './eligibilityDetailsAndAuthorisation';
-import { FacilityDetails } from './facilityDetails';
-import { FacilityExtent } from './facilityExtent';
 import { TargetUnitAccountContactDTO } from './targetUnitAccountContactDTO';
+import { FacilityExtent } from './facilityExtent';
 
 export interface FacilityItem {
   facilityId: string;

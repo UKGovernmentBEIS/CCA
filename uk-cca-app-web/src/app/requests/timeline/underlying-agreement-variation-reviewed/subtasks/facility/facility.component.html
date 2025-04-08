@@ -1,0 +1,7 @@
+@if (facility(); as facility) {
+  <div>
+    <netz-page-heading>{{ facility.facilityDetails.name }} ({{ facility.facilityId }})</netz-page-heading>
+
+    <cca-summary [data]="summaryData()" />
+  </div>
+}

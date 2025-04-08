@@ -9,14 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AccountReferenceData } from './accountReferenceData';
 import { UnderlyingAgreementVariationPayload } from './underlyingAgreementVariationPayload';
+import { AccountReferenceData } from './accountReferenceData';
 
 export interface UnderlyingAgreementVariationSubmittedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
   accountReferenceData?: AccountReferenceData;
   underlyingAgreement?: UnderlyingAgreementVariationPayload;
-  sectionsCompleted?: { [key: string]: string };
-  underlyingAgreementAttachments?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
+  underlyingAgreementAttachments?: Record<string, string>;
 }

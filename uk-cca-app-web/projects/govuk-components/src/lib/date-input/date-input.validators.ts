@@ -5,12 +5,12 @@ type DateInput = Partial<{ year: number; month: number; day: number }>;
 // @dynamic
 export class DateInputValidators {
   static dateFieldValidator(identifier: string, min: number, max: number): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null =>
+    return (control: AbstractControl): Record<string, boolean> | null =>
       control.value && (control.value < min || control.value > max) ? { [identifier]: true } : null;
   }
 
   static minMaxDateValidator(min: Date, max: Date): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null =>
+    return (control: AbstractControl): Record<string, boolean> | null =>
       control.value && min && control.value < min
         ? { minDate: true }
         : control.value && max && control.value > max
@@ -37,7 +37,6 @@ export class DateInputValidators {
   };
 
   static isLeapYear(year: number): boolean {
-    // eslint-disable-next-line no-bitwise
     return !(year & 3 || (!(year % 25) && year & 15));
   }
 

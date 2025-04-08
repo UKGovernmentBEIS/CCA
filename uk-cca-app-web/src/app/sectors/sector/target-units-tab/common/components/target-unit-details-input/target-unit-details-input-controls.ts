@@ -19,44 +19,44 @@ export function createTargetUnitAccountDetailsForm(
   fb: FormBuilder,
   targetUnitAccountDetails: TargetUnitAccountPayload,
   subSectors: SubsectorAssociationSchemeInfoDTO[],
-  disabledForEdit?: boolean,
+  isEditable?: boolean,
 ): FormGroup<TargetUnitCreationFormModel> {
   const group = fb.group<TargetUnitCreationFormModel>(
     {
       operatorType: fb.control(
         {
           value: targetUnitAccountDetails?.operatorType,
-          disabled: disabledForEdit,
+          disabled: isEditable,
         },
         [GovukValidators.required('You must select an operator type')],
       ),
       name: fb.control(
         {
           value: targetUnitAccountDetails?.name,
-          disabled: disabledForEdit,
+          disabled: isEditable,
         },
         textFieldValidators('operator name'),
       ),
       isCompanyRegistrationNumber: fb.control(
         {
-          value: disabledForEdit
+          value: isEditable
             ? !!targetUnitAccountDetails?.companyRegistrationNumber
             : targetUnitAccountDetails?.isCompanyRegistrationNumber !== false,
-          disabled: disabledForEdit,
+          disabled: isEditable,
         },
         [GovukValidators.required('You must select an option')],
       ),
       companyRegistrationNumber: fb.control(
         {
           value: targetUnitAccountDetails?.companyRegistrationNumber,
-          disabled: disabledForEdit,
+          disabled: isEditable,
         },
         textFieldValidators('registration number'),
       ),
       registrationNumberMissingReason: fb.control(
         {
           value: targetUnitAccountDetails?.registrationNumberMissingReason,
-          disabled: disabledForEdit,
+          disabled: isEditable,
         },
         textFieldValidators('reason for not having registration number'),
       ),
@@ -71,7 +71,7 @@ export function createTargetUnitAccountDetailsForm(
       fb.control(
         {
           value: targetUnitAccountDetails?.subsectorAssociationId,
-          disabled: disabledForEdit,
+          disabled: isEditable,
         },
         subSectors.length ? [GovukValidators.required('You must select a subsector')] : null,
       ),

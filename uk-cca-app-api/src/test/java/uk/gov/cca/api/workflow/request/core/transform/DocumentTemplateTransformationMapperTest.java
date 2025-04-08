@@ -42,7 +42,7 @@ class DocumentTemplateTransformationMapperTest {
         when(countryService.getReferenceData())
                 .thenReturn(List.of(Country.builder().code("GR").name("Greece").build()));
 
-        final String expected = "Line 1\nLine 2\nCity\ncode\nCounty\nGreece";
+        final String expected = "Line 1\nLine 2\nCity\nCounty\ncode\nGreece";
 
         // Invoke
         String actual = documentTemplateTransformationMapper.constructAccountAddressDTO(address);
@@ -62,7 +62,7 @@ class DocumentTemplateTransformationMapperTest {
                 .postcode("code")
                 .build();
 
-        final String expected = "Line 1\nLine 2\nCity\ncode\nCounty";
+        final String expected = "Line 1\nLine 2\nCity\nCounty\ncode";
 
         // Invoke
         String actual = documentTemplateTransformationMapper.constructAddressDTO(address);

@@ -9,18 +9,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { TargetUnitAccountContactDTO } from '../model/targetUnitAccountContactDTO';
 import { UpdateTargetUnitAccountFinancialIndependenceStatusCodeDTO } from '../model/updateTargetUnitAccountFinancialIndependenceStatusCodeDTO';
 import { UpdateTargetUnitAccountResponsiblePersonDTO } from '../model/updateTargetUnitAccountResponsiblePersonDTO';
 import { UpdateTargetUnitAccountSicCodeDTO } from '../model/updateTargetUnitAccountSicCodeDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -120,7 +120,7 @@ export class UpdateTargetUnitAccountService {
     accountId: number,
     targetUnitAccountContactDTO: TargetUnitAccountContactDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -168,7 +168,7 @@ export class UpdateTargetUnitAccountService {
       `${this.configuration.basePath}/v1.0/target-unit-accounts/${encodeURIComponent(String(accountId))}/update/administrative`,
       targetUnitAccountContactDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -213,7 +213,7 @@ export class UpdateTargetUnitAccountService {
     accountId: number,
     updateTargetUnitAccountFinancialIndependenceStatusCodeDTO: UpdateTargetUnitAccountFinancialIndependenceStatusCodeDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -264,7 +264,7 @@ export class UpdateTargetUnitAccountService {
       `${this.configuration.basePath}/v1.0/target-unit-accounts/${encodeURIComponent(String(accountId))}/update/financial`,
       updateTargetUnitAccountFinancialIndependenceStatusCodeDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -309,7 +309,7 @@ export class UpdateTargetUnitAccountService {
     accountId: number,
     updateTargetUnitAccountResponsiblePersonDTO: UpdateTargetUnitAccountResponsiblePersonDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -360,7 +360,7 @@ export class UpdateTargetUnitAccountService {
       `${this.configuration.basePath}/v1.0/target-unit-accounts/${encodeURIComponent(String(accountId))}/update/responsible`,
       updateTargetUnitAccountResponsiblePersonDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -405,7 +405,7 @@ export class UpdateTargetUnitAccountService {
     accountId: number,
     updateTargetUnitAccountSicCodeDTO: UpdateTargetUnitAccountSicCodeDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
@@ -453,7 +453,7 @@ export class UpdateTargetUnitAccountService {
       `${this.configuration.basePath}/v1.0/target-unit-accounts/${encodeURIComponent(String(accountId))}/update/sic`,
       updateTargetUnitAccountSicCodeDTO,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,

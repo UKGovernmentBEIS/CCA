@@ -1,16 +1,15 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { BasePage } from '@netz/common/testing';
-import { GovukValidators, TextInputComponent } from '@netz/govuk-components';
-import { CountyAddressInputComponent } from '@shared/components';
-import { createCountyAddressControl } from '@shared/components';
-import { PhoneInputComponent } from '@shared/components';
-import { phoneInputValidators } from '@shared/components';
+import { GovukValidators } from '@netz/govuk-components';
 
+import { createCountyAddressControl } from '../county-address-input/create-county-address-controls';
+import { phoneInputValidators } from '../phone-input/phone-input.validators';
 import { UserInputComponent } from './user-input.component';
 
 describe('UserInputComponent', () => {
@@ -93,13 +92,7 @@ describe('UserInputComponent', () => {
         <cca-user-input formGroupName="user" phoneType="full"></cca-user-input>
       </form>
     `,
-    imports: [
-      UserInputComponent,
-      TextInputComponent,
-      PhoneInputComponent,
-      CountyAddressInputComponent,
-      ReactiveFormsModule,
-    ],
+    imports: [UserInputComponent, ReactiveFormsModule],
   })
   class TestComponent {
     nationalForm = new FormGroup({
@@ -137,6 +130,7 @@ describe('UserInputComponent', () => {
         postcode: '12345',
       }),
     });
+
     fullForm = new FormGroup({
       user: new FormGroup({
         firstName: new FormControl(null, {
@@ -158,7 +152,7 @@ describe('UserInputComponent', () => {
           ],
         }),
         phoneNumber: new FormControl(
-          { value: <any>{ countryCode: '44', number: null } },
+          { value: { countryCode: '44', number: null } as any },
           { validators: [GovukValidators.empty('Enter your phone number'), ...phoneInputValidators] },
         ),
         mobileNumber: new FormControl(null, { validators: phoneInputValidators }),
@@ -170,7 +164,8 @@ describe('UserInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestComponent, HttpClientTestingModule],
+      imports: [TestComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
   });
 

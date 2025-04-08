@@ -1,11 +1,13 @@
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { GovukValidators } from '@netz/govuk-components';
-import { AccountAddressFormModel, phoneInputValidators } from '@shared/components';
-import { FormControlConfig } from '@shared/types/form-types';
-import { CCAGovukValidators, textFieldValidators } from '@shared/validators/validators';
+import { FormControlConfig } from '@shared/types';
+import { CCAGovukValidators, textFieldValidators } from '@shared/validators';
 
 import { TargetUnitAccountContactDTO } from 'cca-api';
+
+import { AccountAddressFormModel } from '../account-address-input/account-address-input-controls';
+import { phoneInputValidators } from '../phone-input/phone-input.validators';
 
 export type ResponsiblePersonFormModel = {
   email: FormControl<TargetUnitAccountContactDTO['email']>;

@@ -17,5 +17,5 @@ export interface VerificationBodyDTO {
   accreditationReferenceNumber?: string;
   status?: 'ACTIVE' | 'PENDING' | 'DISABLED';
   address?: AddressDTO;
-  emissionTradingSchemes?: Array<string>;
+  emissionTradingSchemes?: string[];
 }

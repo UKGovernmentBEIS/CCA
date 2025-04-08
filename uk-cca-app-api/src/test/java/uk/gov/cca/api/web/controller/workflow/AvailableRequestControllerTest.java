@@ -71,20 +71,21 @@ class AvailableRequestControllerTest {
     }
 
     @Test
-    void getAvailableAccountWorkflows() throws Exception {
-        final Long accountId = 1L;
+    void getAvailableWorkflows() throws Exception {
+        final String resourceId = "1";
+        final String resourceType = "SECTOR_ASSOCIATION";
         final AppUser appUser = AppUser.builder().userId("id").build();
         final Map<String, RequestCreateValidationResult> results =
                 Map.of("DUMMY_REQUEST_CREATE_ACTION_TYPE",
                         RequestCreateValidationResult.builder().valid(true).build());
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        when(availableRequestService.getAvailableAccountWorkflows(accountId, appUser)).thenReturn(results);
+        when(availableRequestService.getAvailableWorkflows(resourceId, resourceType, appUser)).thenReturn(results);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/permit/" + accountId))
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + resourceType + "/" + resourceId))
                 .andExpect(status().isOk())
                 .andExpect(content().string("{\"DUMMY_REQUEST_CREATE_ACTION_TYPE\":{\"valid\":true}}"));
 
-        verify(availableRequestService, times(1)).getAvailableAccountWorkflows(accountId, appUser);
+        verify(availableRequestService, times(1)).getAvailableWorkflows(resourceId, resourceType, appUser);
     }
 }

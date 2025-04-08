@@ -11,6 +11,6 @@
  */
 
 export interface AuthorityManagePermissionDTO {
-  permissions?: { [key: string]: 'NONE' | 'VIEW_ONLY' | 'EXECUTE' };
+  permissions?: Record<string, 'NONE' | 'VIEW_ONLY' | 'EXECUTE'>;
   editable?: boolean;
 }

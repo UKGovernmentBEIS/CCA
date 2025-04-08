@@ -2,12 +2,11 @@ package uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
 import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
-import uk.gov.cca.api.workflow.request.flow.common.service.notification.TargetUnitAccountNoticeRecipients;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.RequestDefaultNoticeRecipients;
+import uk.gov.cca.api.workflow.request.flow.common.service.notification.TargetUnitAccountNoticeRecipients;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 
@@ -24,7 +23,7 @@ public class UnderlyingAgreementVariationDefaultNoticeRecipients implements Requ
         final Long accountId = request.getAccountId();
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails =
                 ((UnderlyingAgreementVariationRequestPayload) request.getPayload())
-                        .getUnderlyingAgreement()
+                        .getUnderlyingAgreementProposed()
                         .getUnderlyingAgreementTargetUnitDetails();
 
         return targetUnitAccountNoticeRecipients.getDefaultNoticeRecipients(accountId, targetUnitDetails);

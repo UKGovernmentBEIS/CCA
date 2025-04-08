@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
@@ -16,10 +15,10 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaNotifyOperatorForDecisionRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTargetUnitDetails;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.UnderlyingAgreementTargetUnitDetailsValidatorService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.EditedUnderlyingAgreementTargetUnitDetailsValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementReviewRequestTaskPayload;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
@@ -47,13 +46,14 @@ class UnderlyingAgreementReviewValidatorServiceTest {
     private UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
 
     @Mock
-    private UnderlyingAgreementTargetUnitDetailsValidatorService underlyingAgreementTargetUnitDetailsValidatorService;
+    private EditedUnderlyingAgreementTargetUnitDetailsValidatorService editedUnderlyingAgreementTargetUnitDetailsValidatorService;
+
+    @Mock
+    private ProposedUnderlyingAgreementTargetUnitDetailsValidatorService proposedUnderlyingAgreementTargetUnitDetailsValidatorService;
 
     @Mock
     private UnderlyingAgreementReviewNotifyOperatorValidator underlyingAgreementReviewNotifyOperatorValidator;
 
-    @Mock
-    private UnderlyingAgreementReviewDeterminationDecisionsValidator determinationDecisionsValidator;
     @Test
     void validate() {
         final Set<Facility> facilities = Set.of(Facility.builder()
@@ -77,11 +77,20 @@ class UnderlyingAgreementReviewValidatorServiceTest {
                         .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                         .underlyingAgreement(underlyingAgreement)
                         .build())
+                .underlyingAgreementProposed(UnderlyingAgreementPayload.builder()
+                        .underlyingAgreementTargetUnitDetails(targetUnitDetails)
+                        .underlyingAgreement(underlyingAgreement)
+                        .build())
                 .build();
         final RequestTask requestTask = RequestTask.builder()
                 .request(Request.builder()
                         .payload(UnderlyingAgreementRequestPayload.builder()
                                 .underlyingAgreement(UnderlyingAgreementPayload.builder()
+                                        .underlyingAgreement(UnderlyingAgreement.builder()
+                                                .facilities(facilities)
+                                                .build())
+                                        .build())
+                                .underlyingAgreementProposed(UnderlyingAgreementPayload.builder()
                                         .underlyingAgreement(UnderlyingAgreement.builder()
                                                 .facilities(facilities)
                                                 .build())
@@ -98,9 +107,9 @@ class UnderlyingAgreementReviewValidatorServiceTest {
         validationResults.add(BusinessValidationResult.valid());
         when(underlyingAgreementValidatorService.getValidationResults(unaContainer))
                 .thenReturn(validationResults);
-        when(underlyingAgreementTargetUnitDetailsValidatorService.validate(requestTask))
+        when(editedUnderlyingAgreementTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
-        when(determinationDecisionsValidator.validateOverallDecision(taskPayload))
+        when(proposedUnderlyingAgreementTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
         when(underlyingAgreementReviewNotifyOperatorValidator.validate(requestTask, actionPayload, appUser))
                 .thenReturn(validationResults);
@@ -109,12 +118,12 @@ class UnderlyingAgreementReviewValidatorServiceTest {
         validatorService.validate(requestTask, actionPayload, appUser);
 
         // Verify
-        verify(underlyingAgreementValidatorService, times(1))
+        verify(underlyingAgreementValidatorService, times(2))
                 .getValidationResults(unaContainer);
-        verify(underlyingAgreementTargetUnitDetailsValidatorService, times(1))
+        verify(editedUnderlyingAgreementTargetUnitDetailsValidatorService, times(1))
                 .validate(requestTask);
-        verify(determinationDecisionsValidator, times(1))
-                .validateOverallDecision(taskPayload);
+        verify(proposedUnderlyingAgreementTargetUnitDetailsValidatorService, times(1))
+                .validate(requestTask);
         verify(underlyingAgreementReviewNotifyOperatorValidator, times(1))
                 .validate(requestTask, actionPayload, appUser);
     }
@@ -138,6 +147,10 @@ class UnderlyingAgreementReviewValidatorServiceTest {
                 .build();
         UnderlyingAgreementReviewRequestTaskPayload taskPayload = UnderlyingAgreementReviewRequestTaskPayload.builder()
                 .underlyingAgreement(UnderlyingAgreementPayload.builder()
+                        .underlyingAgreementTargetUnitDetails(targetUnitDetails)
+                        .underlyingAgreement(underlyingAgreement)
+                        .build())
+                .underlyingAgreementProposed(UnderlyingAgreementPayload.builder()
                         .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                         .underlyingAgreement(underlyingAgreement)
                         .build())
@@ -165,9 +178,9 @@ class UnderlyingAgreementReviewValidatorServiceTest {
         validationResults.add(BusinessValidationResult.valid());
         when(underlyingAgreementValidatorService.getValidationResults(unaContainer))
                 .thenReturn(validationResults);
-        when(underlyingAgreementTargetUnitDetailsValidatorService.validate(requestTask))
+        when(editedUnderlyingAgreementTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
-        when(determinationDecisionsValidator.validateOverallDecision(taskPayload))
+        when(proposedUnderlyingAgreementTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
         when(underlyingAgreementReviewNotifyOperatorValidator.validate(requestTask, actionPayload, appUser))
                 .thenReturn(validationResults);
@@ -178,12 +191,12 @@ class UnderlyingAgreementReviewValidatorServiceTest {
 
         // Verify
         assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.INVALID_UNDERLYING_AGREEMENT_REVIEW);
-        verify(underlyingAgreementValidatorService, times(1))
+        verify(underlyingAgreementValidatorService, times(2))
                 .getValidationResults(unaContainer);
-        verify(underlyingAgreementTargetUnitDetailsValidatorService, times(1))
+        verify(editedUnderlyingAgreementTargetUnitDetailsValidatorService, times(1))
                 .validate(requestTask);
-        verify(determinationDecisionsValidator, times(1))
-                .validateOverallDecision((UnderlyingAgreementReviewRequestTaskPayload)requestTask.getPayload());
+        verify(proposedUnderlyingAgreementTargetUnitDetailsValidatorService, times(1))
+                .validate(requestTask);
         verify(underlyingAgreementReviewNotifyOperatorValidator, times(1))
                 .validate(requestTask, actionPayload, appUser);
     }

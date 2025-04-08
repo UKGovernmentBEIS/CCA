@@ -106,7 +106,7 @@ class NoticeRecipientsControllerTest {
         when(noticeRecipientsServiceOrchestrator.getAdditionalNoticeRecipients(user, accountId))
                 .thenReturn(list);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(NOTICE_RECIPIENTS_CONTROLLER_PATH + accountId + "/additional-recipients/" )
+        mockMvc.perform(MockMvcRequestBuilders.get(NOTICE_RECIPIENTS_CONTROLLER_PATH + accountId + "/additional-recipients" )
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
@@ -131,7 +131,7 @@ class NoticeRecipientsControllerTest {
                 .when(roleAuthorizationService)
                 .evaluate(user,new String[] {RoleTypeConstants.REGULATOR});
 
-        mockMvc.perform(MockMvcRequestBuilders.get(NOTICE_RECIPIENTS_CONTROLLER_PATH + accountId + "/additional-recipients/" )
+        mockMvc.perform(MockMvcRequestBuilders.get(NOTICE_RECIPIENTS_CONTROLLER_PATH + accountId + "/additional-recipients" )
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
 

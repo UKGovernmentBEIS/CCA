@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 
-import { mockRequestTaskState } from '../../../testing/mock-data';
+import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import AuthorisationAdditionalEvidenceSummaryComponent from './authorisation-additional-evidence-summary.component';
 
 describe('AuthorisationAdditionalEvidenceSummaryComponent', () => {
@@ -23,7 +23,7 @@ describe('AuthorisationAdditionalEvidenceSummaryComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
-    store.setState(mockRequestTaskState);
+    store.setState(mockVariationReviewRequestTaskState);
 
     fixture = TestBed.createComponent(AuthorisationAdditionalEvidenceSummaryComponent);
     component = fixture.componentInstance;

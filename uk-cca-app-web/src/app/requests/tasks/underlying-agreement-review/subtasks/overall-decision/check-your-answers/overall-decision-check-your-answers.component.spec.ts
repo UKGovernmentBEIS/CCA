@@ -8,10 +8,9 @@ import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } f
 import { mockUNAReviewRequestTaskState } from '@requests/common';
 import { render } from '@testing-library/angular';
 
-import { OverallDecisionStore } from '../overall-decision.store';
 import { OverallDecisionCheckYourAnswersComponent } from './overall-decision-check-your-answers.component';
 
-describe('ExplanationComponent', () => {
+describe('CheckYourAnswersComponent', () => {
   let store: RequestTaskStore;
   const unaTaskService: Partial<jest.Mocked<TaskService>> = {
     saveSubtask: jest.fn().mockReturnValue(of({})),
@@ -22,7 +21,6 @@ describe('ExplanationComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        OverallDecisionStore,
         RequestTaskStore,
         { provide: TaskService, useValue: unaTaskService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
@@ -30,12 +28,6 @@ describe('ExplanationComponent', () => {
       ],
       configureTestBed: (testbed) => {
         store = testbed.inject(RequestTaskStore);
-        const overallDecisionStore = testbed.inject(OverallDecisionStore);
-        overallDecisionStore.updateDetermination({
-          type: 'REJECTED',
-          reason: 'reject reason',
-          additionalInformation: 'some addition info',
-        });
         store.setState(mockUNAReviewRequestTaskState);
       },
     });

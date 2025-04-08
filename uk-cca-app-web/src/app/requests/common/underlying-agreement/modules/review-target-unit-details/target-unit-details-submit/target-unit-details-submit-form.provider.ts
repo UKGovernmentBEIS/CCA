@@ -16,6 +16,7 @@ export type TargetUnitDetailsSubmitFormModel = {
   operatorType: FormControl<'LIMITED_COMPANY' | 'PARTNERSHIP' | 'SOLE_TRADER' | 'NONE'>;
   companyRegistrationNumber: FormControl<string | null>;
   subsectorAssociationName?: FormControl<string | null>;
+  subsectorAssociationId?: FormControl<number | null>;
 };
 
 export const TargetUnitDetailsSubmitFormProvider = {
@@ -24,6 +25,7 @@ export const TargetUnitDetailsSubmitFormProvider = {
   useFactory: (fb: FormBuilder, store: RequestTaskStore) => {
     const updatePayload = store.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)();
     const readonlyPayload = store.select(underlyingAgreementQuery.selectAccountReferenceData)();
+
     return fb.group<TargetUnitDetailsSubmitFormModel>({
       operatorName: fb.control({
         value: updatePayload.operatorName,
@@ -39,6 +41,10 @@ export const TargetUnitDetailsSubmitFormProvider = {
       }),
       subsectorAssociationName: fb.control({
         value: readonlyPayload?.sectorAssociationDetails?.subsectorAssociationName,
+        disabled: true,
+      }),
+      subsectorAssociationId: fb.control({
+        value: readonlyPayload?.targetUnitAccountDetails?.subsectorAssociationId,
         disabled: true,
       }),
     });

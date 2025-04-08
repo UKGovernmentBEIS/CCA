@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +19,10 @@ public class DataValidator<T> {
     private final Validator validator;
 
     public Optional<BusinessViolation> validate(T section) {
+        return this.validate(section, this::constructViolationData);
+    }
+
+    public Optional<BusinessViolation> validate(T section, Function<Set<ConstraintViolation<T>>, List<String>> constructViolationData) {
         if(ObjectUtils.isEmpty(section)){
             return Optional.empty();
         }
@@ -27,7 +32,7 @@ public class DataValidator<T> {
         if (!constraintViolations.isEmpty()) {
             BusinessViolation violation = new BusinessViolation(
                     section.getClass().getName(),
-                    constructViolationData(constraintViolations));
+                    constructViolationData.apply(constraintViolations).toArray());
 
             return Optional.of(violation);
         }

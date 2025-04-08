@@ -8,7 +8,7 @@ import { TaskService } from '@netz/common/forms';
 import { RequestTaskStore } from '@netz/common/store';
 import { DetailsComponent, RadioComponent, RadioOptionComponent } from '@netz/govuk-components';
 import { FileInputComponent, WizardStepComponent } from '@shared/components';
-import { transformFilesToAttachments, transformFilesToUUIDsList } from '@shared/utils';
+import { transformFilesToUUIDsList } from '@shared/utils';
 
 import { FacilityExtent } from 'cca-api';
 
@@ -74,31 +74,19 @@ export class FacilityExtentComponent {
   }
 
   onSubmit() {
-    const payload = this.requestTaskStore.select(underlyingAgreementQuery.selectPayload)();
-    this.requestTaskStore.setPayload({ ...payload, currentFacilityId: this.facilityId });
-
+    const facility = {
+      facilityId: this.facilityId,
+      facilityExtent: {
+        ...this.form.value,
+        manufacturingProcessFile: transformFilesToUUIDsList(this.form.value.manufacturingProcessFile),
+        processFlowFile: transformFilesToUUIDsList(this.form.value.processFlowFile),
+        annotatedSitePlansFile: transformFilesToUUIDsList(this.form.value.annotatedSitePlansFile),
+        eligibleProcessFile: transformFilesToUUIDsList(this.form.value.eligibleProcessFile),
+        activitiesDescriptionFile: transformFilesToUUIDsList(this.form.value?.activitiesDescriptionFile),
+      },
+    };
     this.taskService
-      .saveSubtask(FACILITIES_SUBTASK, FacilityWizardStep.EXTENT, this.activatedRoute, {
-        facility: {
-          facilityId: this.facilityId,
-
-          facilityExtent: {
-            ...this.form.value,
-            manufacturingProcessFile: transformFilesToUUIDsList(this.form.value.manufacturingProcessFile),
-            processFlowFile: transformFilesToUUIDsList(this.form.value.processFlowFile),
-            annotatedSitePlansFile: transformFilesToUUIDsList(this.form.value.annotatedSitePlansFile),
-            eligibleProcessFile: transformFilesToUUIDsList(this.form.value.eligibleProcessFile),
-            activitiesDescriptionFile: transformFilesToUUIDsList(this.form.value?.activitiesDescriptionFile),
-          },
-        },
-        attachments: {
-          ...transformFilesToAttachments([this.form.value.manufacturingProcessFile]),
-          ...transformFilesToAttachments([this.form.value.processFlowFile]),
-          ...transformFilesToAttachments([this.form.value.annotatedSitePlansFile]),
-          ...transformFilesToAttachments([this.form.value.eligibleProcessFile]),
-          ...transformFilesToAttachments([this.form.value.activitiesDescriptionFile]),
-        },
-      })
+      .saveSubtask(FACILITIES_SUBTASK, FacilityWizardStep.EXTENT, this.activatedRoute, facility)
       .subscribe();
   }
 }

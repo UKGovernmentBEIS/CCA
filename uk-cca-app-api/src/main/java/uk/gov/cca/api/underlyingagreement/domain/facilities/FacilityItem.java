@@ -3,6 +3,7 @@ package uk.gov.cca.api.underlyingagreement.domain.facilities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,7 @@ public class FacilityItem {
 
     @NotNull
     @Size(max = 255)
+    @Pattern(regexp = "^[A-Z0-9_]+-F\\d{5}$", message = "underlyingagreement.facilities.facilityId")
     private String facilityId;
 
     @NotNull

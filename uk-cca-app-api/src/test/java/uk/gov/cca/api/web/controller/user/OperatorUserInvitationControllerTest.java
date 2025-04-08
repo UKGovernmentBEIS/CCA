@@ -17,9 +17,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
 import uk.gov.cca.api.user.operator.domain.CcaOperatorUserInvitationDTO;
+import uk.gov.cca.api.user.operator.service.CcaOperatorUserInvitationService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.orchestrator.user.service.OperatorInvitationOrchestratorService;
 import uk.gov.netz.api.security.AppSecurityComponent;
 import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
 import uk.gov.netz.api.security.AuthorizedAspect;
@@ -46,7 +46,7 @@ class OperatorUserInvitationControllerTest {
     private OperatorUserInvitationController operatorUserInvitationController;
 
     @Mock
-    private OperatorInvitationOrchestratorService operatorInvitationOrchestratorService;
+    private CcaOperatorUserInvitationService ccaOperatorUserInvitationService;
 
     @Mock
     private AppUserAuthorizationService appUserAuthorizationService;
@@ -90,7 +90,7 @@ class OperatorUserInvitationControllerTest {
 
         when(appUserArgumentResolver.supportsParameter(any())).thenReturn(true);
         when(appUserArgumentResolver.resolveArgument(any(), any(), any(), any())).thenReturn(currentUser);
-        doNothing().when(operatorInvitationOrchestratorService).inviteUserToAccount(accountId, operatorUserInvitationDTO, currentUser);
+        doNothing().when(ccaOperatorUserInvitationService).inviteUserToAccount(accountId, operatorUserInvitationDTO, currentUser);
 
         mockMvc.perform(MockMvcRequestBuilders.post(OPERATOR_USER_CONTROLLER_REGISTRATION_BASE_PATH + ADD_TO_ACCOUNT_PATH + "/" + accountId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +109,7 @@ class OperatorUserInvitationControllerTest {
         when(appUserArgumentResolver.resolveArgument(any(), any(), any(), any())).thenReturn(currentUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(currentUser, "inviteOperatorUserToAccount", accountId.toString());
+                .authorize(currentUser, "inviteOperatorUserToAccount", accountId.toString(), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.post(OPERATOR_USER_CONTROLLER_REGISTRATION_BASE_PATH + ADD_TO_ACCOUNT_PATH + "/" + accountId)
                         .contentType(MediaType.APPLICATION_JSON)

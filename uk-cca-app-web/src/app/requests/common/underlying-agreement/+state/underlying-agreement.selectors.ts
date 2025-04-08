@@ -36,13 +36,15 @@ const selectAccountReferenceDataTargetUnitDetails: StateSelector<RequestTaskStat
     (accountReferenceData) => accountReferenceData.targetUnitAccountDetails,
   );
 
-const selectSectionsCompleted: StateSelector<RequestTaskState, { [key: string]: string }> = createDescendingSelector(
+const selectSectionsCompleted: StateSelector<RequestTaskState, Record<string, string>> = createDescendingSelector(
   selectPayload,
   (payload) => payload.sectionsCompleted,
 );
 
-const selectUnderlyingAgreementSubmitAttachments: StateSelector<RequestTaskState, { [key: string]: string }> =
-  createDescendingSelector(selectPayload, (payload) => payload?.underlyingAgreementAttachments);
+const selectUnderlyingAgreementSubmitAttachments: StateSelector<
+  RequestTaskState,
+  Record<string, string>
+> = createDescendingSelector(selectPayload, (payload) => payload?.underlyingAgreementAttachments);
 
 const selectStatusForSubtask = (subtask: string): StateSelector<RequestTaskState, TaskItemStatus> => {
   return createDescendingSelector(
@@ -51,7 +53,7 @@ const selectStatusForSubtask = (subtask: string): StateSelector<RequestTaskState
   );
 };
 
-const selectAttachments: StateSelector<RequestTaskState, { [key: string]: string }> = createDescendingSelector(
+const selectAttachments: StateSelector<RequestTaskState, Record<string, string>> = createDescendingSelector(
   selectPayload,
   (payload) => payload.underlyingAgreementAttachments,
 );
@@ -86,11 +88,6 @@ const selectFacility = (facilityId: string): StateSelector<RequestTaskState, Fac
     underlyingAgreement?.facilities ? underlyingAgreement.facilities.find((f) => f.facilityId === facilityId) : null,
   );
 };
-
-const selectCurrentFacilityId: StateSelector<RequestTaskState, string> = createDescendingSelector(
-  selectPayload,
-  (payload) => payload?.currentFacilityId,
-);
 
 const selectAuthorisationAndAdditionalEvidence: StateSelector<RequestTaskState, AuthorisationAndAdditionalEvidence> =
   createDescendingSelector(
@@ -136,7 +133,6 @@ export const underlyingAgreementQuery = {
   selectUnderlyingAgreementTargetUnitDetails,
   selectManageFacilities,
   selectFacility,
-  selectCurrentFacilityId,
   selectAuthorisationAndAdditionalEvidence,
   selectTargetPeriodDetails,
   selectTargetPeriodExists,

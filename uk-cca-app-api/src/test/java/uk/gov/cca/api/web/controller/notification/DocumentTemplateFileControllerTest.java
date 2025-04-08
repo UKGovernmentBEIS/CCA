@@ -104,7 +104,7 @@ class DocumentTemplateFileControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
             .when(appUserAuthorizationService)
-            .authorize(appUser, "generateGetDocumentTemplateFileToken", String.valueOf(documentTemplateId));
+            .authorize(appUser, "generateGetDocumentTemplateFileToken", String.valueOf(documentTemplateId), null, null);
 
         mockMvc.perform(MockMvcRequestBuilders
             .get(DOCUMENT_TEMPLATE_FILES_CONTROLLER_PATH + "/" + documentTemplateId)

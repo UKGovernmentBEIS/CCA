@@ -2,9 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { WizardStepComponent } from '@shared/components';
-import { ResponsiblePersonInputComponent } from '@shared/components/responsible-person-input/responsible-person-input.component';
-import { ResponsiblePersonFormModel } from '@shared/components/responsible-person-input/responsible-person-input.controls';
+import { ResponsiblePersonFormModel, ResponsiblePersonInputComponent, WizardStepComponent } from '@shared/components';
 
 import { CreateTargetUnitStore } from '../create-target-unit.store';
 import {
@@ -21,29 +19,32 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResponsiblePersonComponent {
-  private readonly route = inject(ActivatedRoute);
+  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly store = inject(CreateTargetUnitStore);
+  private readonly createTargetUnitStore = inject(CreateTargetUnitStore);
 
-  readonly form = inject<FormGroup<ResponsiblePersonFormModel>>(TARGET_UNIT_RESPONSIBLE_PERSON_FORM);
+  protected readonly form = inject<FormGroup<ResponsiblePersonFormModel>>(TARGET_UNIT_RESPONSIBLE_PERSON_FORM);
 
   onSubmitResponsiblePerson() {
     const payload = this.form.getRawValue();
-    this.store.sameAddressWithOperator = payload.sameAddress[0];
+
+    this.createTargetUnitStore.sameAddressWithOperator = payload.sameAddress[0];
+
     delete payload.sameAddress;
 
-    this.store.updateState({ responsiblePerson: { ...payload } });
+    this.createTargetUnitStore.updateState({ responsiblePerson: { ...payload } });
 
-    if (this.store.sameAddressWithResponsiblePerson) {
-      this.store.sameAddressWithResponsiblePerson = false;
-      this.store.updateState({
+    if (this.createTargetUnitStore.sameAddressWithResponsiblePerson) {
+      this.createTargetUnitStore.sameAddressWithResponsiblePerson = false;
+
+      this.createTargetUnitStore.updateState({
         administrativeContactDetails: {
-          ...this.store.state.administrativeContactDetails,
+          ...this.createTargetUnitStore.state.administrativeContactDetails,
           address: null,
         },
       });
     }
 
-    this.router.navigate(['..', 'administrative-contact'], { relativeTo: this.route });
+    this.router.navigate(['..', 'administrative-contact'], { relativeTo: this.activatedRoute });
   }
 }

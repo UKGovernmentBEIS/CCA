@@ -1,15 +1,14 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { EMPTY } from 'rxjs';
 
-import { AuthService } from '@core/services/auth.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
-import { ErrorSummaryComponent, GovukValidators, LinkDirective, TextInputComponent } from '@netz/govuk-components';
+import { ErrorSummaryComponent, GovukValidators, TextInputComponent } from '@netz/govuk-components';
 import { BackToTopComponent } from '@shared/components';
 import { WizardStepComponent } from '@shared/components';
+import { AuthService } from '@shared/services';
 
 import { ForgotPasswordService } from 'cca-api';
 
@@ -24,10 +23,8 @@ import { ResetPasswordStore } from '../store/reset-password.store';
     ErrorSummaryComponent,
     ReactiveFormsModule,
     WizardStepComponent,
-    AsyncPipe,
     RouterLink,
     BackToTopComponent,
-    LinkDirective,
     TextInputComponent,
   ],
 })

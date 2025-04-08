@@ -7,6 +7,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { initializeAdminTerminationPayload } from './admin-termination/admin-termination-payload-initializer';
 import { initializeAdminTerminationFinalDecisionPayload } from './admin-termination-final-decision/admin-termination-final-decision-payload-initializer';
 import { initializeUnderlyingAgreementSubmitPayload } from './underlying-agreement-application/underlying-agreement-application-payload-initializer';
+import { initializeUnderlyingAgreementVariationSubmitPayload } from './underlying-agreement-variation/underlying-agreement-variation-payload-initializer';
 import { initializeWithdrawAdminTerminationPayload } from './withdraw-admin-termination/withdraw-admin-termination-payload-initializer';
 
 export const initializePayloadGuard = () => {
@@ -21,6 +22,11 @@ export const initializePayloadGuard = () => {
         case 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT':
           store.setPayload(initializeUnderlyingAgreementSubmitPayload(payload));
           break;
+
+        case 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT':
+          store.setPayload(initializeUnderlyingAgreementVariationSubmitPayload(payload));
+          break;
+
         case 'ADMIN_TERMINATION_APPLICATION_SUBMIT':
           store.setPayload(initializeAdminTerminationPayload(payload));
           break;

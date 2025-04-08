@@ -13,6 +13,7 @@ import { OperatorDetailsComponent } from './operator-details.component';
 describe('OperatorDetailsComponent', () => {
   let componentFixture: ComponentFixture<OperatorDetailsComponent>;
   let store: ActiveOperatorStore;
+
   beforeEach(async () => {
     const { fixture } = await render(OperatorDetailsComponent, {
       providers: [
@@ -77,7 +78,7 @@ describe('OperatorDetailsComponent', () => {
     ]);
   });
 
-  it('should render 7 change links (editable contact type)', () => {
-    expect(screen.getAllByText(/Change/i)).toHaveLength(7);
+  it('should render 6 change links (non-editable contact type)', () => {
+    expect(screen.getAllByText(/Change/i)).toHaveLength(6);
   });
 });

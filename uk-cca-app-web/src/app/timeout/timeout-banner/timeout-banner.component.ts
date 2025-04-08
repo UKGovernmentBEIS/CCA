@@ -1,23 +1,20 @@
 import { AsyncPipe, DOCUMENT } from '@angular/common';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   ElementRef,
   Inject,
   Input,
   OnInit,
   Renderer2,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { takeUntil } from 'rxjs';
-
-import { DestroySubject } from '@core/services/destroy-subject.service';
+import { PageHeadingComponent } from '@netz/common/components';
 import { ButtonDirective } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
 import { SecondsToMinutesPipe } from '@shared/pipes';
-import dialogPolyfill from 'dialog-polyfill';
 
 import { TimeoutBannerService } from './timeout-banner.service';
 
@@ -27,12 +24,11 @@ import { TimeoutBannerService } from './timeout-banner.service';
   templateUrl: './timeout-banner.component.html',
   styleUrl: './timeout-banner.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DestroySubject],
   imports: [PageHeadingComponent, AsyncPipe, SecondsToMinutesPipe, ButtonDirective],
 })
-export class TimeoutBannerComponent implements OnInit, AfterViewInit {
+export class TimeoutBannerComponent implements OnInit {
   @Input() timeOffsetSeconds: number;
-  @ViewChild('modal') readonly modal: ElementRef<HTMLDialogElement>;
+  readonly modal = viewChild<ElementRef<HTMLDialogElement>>('modal');
 
   private overlayClass = 'govuk-timeout-warning-overlay';
   private lastFocusedElement = null;
@@ -41,38 +37,33 @@ export class TimeoutBannerComponent implements OnInit, AfterViewInit {
     @Inject(DOCUMENT) private readonly document: Document,
     readonly timeoutBannerService: TimeoutBannerService,
     private readonly renderer: Renderer2,
-    private readonly destroy$: DestroySubject,
+    private readonly destroy$: DestroyRef,
   ) {}
 
   ngOnInit(): void {
-    this.timeoutBannerService.isVisible$.pipe(takeUntil(this.destroy$)).subscribe((isVisible) => {
+    this.timeoutBannerService.isVisible$.pipe(takeUntilDestroyed(this.destroy$)).subscribe((isVisible) => {
       isVisible ? this.showDialog() : this.hideDialog();
     });
   }
-
-  ngAfterViewInit(): void {
-    dialogPolyfill.registerDialog(this.modal.nativeElement);
-  }
-
   isDialogOpen(): boolean {
-    return this.modal && this.modal.nativeElement.getAttribute('open') === '';
+    return this.modal().nativeElement && this.modal().nativeElement.getAttribute('open') === '';
   }
 
   showDialog(): void {
     if (!this.isDialogOpen()) {
       this.renderer.addClass(this.document.body, this.overlayClass);
       this.saveLastFocusedElement();
-      (<any>this.modal.nativeElement).showModal();
-      this.modal.nativeElement.setAttribute('tabindex', '-1');
-      this.modal.nativeElement.focus();
+      this.modal().nativeElement.showModal();
+      this.modal().nativeElement.setAttribute('tabindex', '-1');
+      this.modal().nativeElement.focus();
     }
   }
 
   hideDialog(): void {
     if (this.isDialogOpen()) {
       this.renderer.removeClass(this.document.body, this.overlayClass);
-      this.modal.nativeElement.removeAttribute('tabindex');
-      (<any>this.modal.nativeElement).close();
+      this.modal().nativeElement.removeAttribute('tabindex');
+      this.modal().nativeElement.close();
       this.setFocusOnLastFocusedElement();
     }
   }

@@ -6,4 +6,6 @@ import lombok.experimental.UtilityClass;
 public class CcaResourceType {
 	
     public static final String SECTOR_ASSOCIATION = "SECTOR_ASSOCIATION";
+
+    public static final String FACILITY = "FACILITY";
 }

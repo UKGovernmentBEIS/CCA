@@ -99,12 +99,12 @@ class CcaAuthorityRepositoryIT extends AbstractContainerBaseTest {
 
         List<CcaAuthorityWithPermissionDTO> authorities = repo.findActiveAuthoritiesWithAssignedPermissionsByUserId(userId);
 
-        assertThat(authorities).hasSize(2);
-        assertThat(authorities).containsExactlyInAnyOrder(expectedAuthority1, expectedAuthority2);
+        assertThat(authorities).hasSize(2)
+                .containsExactlyInAnyOrder(expectedAuthority1, expectedAuthority2);
     }
 
     @Test
-    public void existsOtherSectorUserAdmin_True() {
+    void existsOtherSectorUserAdmin_True() {
         String userId = "userId";
 
         CcaAuthority authority1 = CcaAuthority.builder()
@@ -136,7 +136,7 @@ class CcaAuthorityRepositoryIT extends AbstractContainerBaseTest {
     }
 
     @Test
-    public void existsOtherSectorUserAdmin_False() {
+    void existsOtherSectorUserAdmin_False() {
         String userId = "userId";
 
         CcaAuthority authority1 = CcaAuthority.builder()
@@ -187,28 +187,24 @@ class CcaAuthorityRepositoryIT extends AbstractContainerBaseTest {
             .build();
 
         Role r1 = Role.builder()
-            .id(1L)
             .name("Administrator User")
             .code("regulator_administrator")
             .type(REGULATOR)
             .build();
 
         Role r2 = Role.builder()
-            .id(2L)
             .name("Administrator User")
             .code("sector_user_administrator")
             .type(SECTOR_USER)
             .build();
 
         Role r3 = Role.builder()
-            .id(3L)
             .name("Basic User")
             .code("sector_user_basic_user")
             .type(SECTOR_USER)
             .build();
 
         Role r4 = Role.builder()
-            .id(4L)
             .name("Operator")
             .code("operator_basic_user")
             .type(OPERATOR)
@@ -217,16 +213,15 @@ class CcaAuthorityRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(authority1);
         entityManager.persist(authority2);
         entityManager.persist(authority3);
-        entityManager.merge(r1);
-        entityManager.merge(r2);
-        entityManager.merge(r3);
-        entityManager.merge(r4);
+        entityManager.persist(r1);
+        entityManager.persist(r2);
+        entityManager.persist(r3);
+        entityManager.persist(r4);
 
         entityManager.flush();
 
         List<String> sectorUsers = repo.findActiveSectorUsersBySectorAssociationId(sectorAssociationId);
 
-        assertThat(sectorUsers).hasSize(1);
-        assertThat(sectorUsers).containsExactlyInAnyOrder("user2");
+        assertThat(sectorUsers).hasSize(1).containsExactlyInAnyOrder("user2");
     }
 }

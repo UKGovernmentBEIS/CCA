@@ -2,10 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { ButtonDirective } from '@netz/govuk-components';
 import {
   DECISION_FORM_PROVIDER,
   DecisionWithDateComponent,
@@ -15,8 +14,8 @@ import {
   toFacilitySummaryData,
   underlyingAgreementQuery,
 } from '@requests/common';
-import { PageHeadingComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { SummaryComponent, WizardStepComponent } from '@shared/components';
+import { generateDownloadUrl } from '@shared/utils';
 
 import { UnderlyingAgreementReviewTaskService } from '../../../services/underlying-agreement-review-task.service';
 
@@ -25,7 +24,7 @@ import { UnderlyingAgreementReviewTaskService } from '../../../services/underlyi
   template: `
     @if (facility(); as facility) {
       <div>
-        <cca-page-heading>{{ facility.facilityDetails.name }} ({{ facility.facilityId }})</cca-page-heading>
+        <netz-page-heading>{{ facility.facilityDetails.name }} ({{ facility.facilityId }})</netz-page-heading>
 
         <cca-summary [data]="summaryData()" />
         <cca-wizard-step [formGroup]="form" (formSubmit)="submit()">
@@ -41,7 +40,6 @@ import { UnderlyingAgreementReviewTaskService } from '../../../services/underlyi
   imports: [
     SummaryComponent,
     PageHeadingComponent,
-    ButtonDirective,
     ReactiveFormsModule,
     DecisionWithDateComponent,
     WizardStepComponent,
@@ -65,6 +63,7 @@ export class FacilityDecisionComponent {
   private readonly downloadUrl = generateDownloadUrl(
     this.store.select(requestTaskQuery.selectRequestTaskId)().toString(),
   );
+
   protected readonly summaryData = computed(() =>
     toFacilitySummaryData(
       this.store.select(underlyingAgreementQuery.selectFacility(this.facilityId))(),
@@ -74,6 +73,7 @@ export class FacilityDecisionComponent {
       { changeName: true },
     ),
   );
+
   submit() {
     (this.taskService as UnderlyingAgreementReviewTaskService)
       .saveFacilityDecision(this.form.value, this.facilityId)

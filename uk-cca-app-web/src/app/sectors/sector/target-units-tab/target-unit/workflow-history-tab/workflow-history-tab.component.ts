@@ -1,4 +1,4 @@
-import { DatePipe, I18nSelectPipe, KeyValuePipe } from '@angular/common';
+import { DatePipe, KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -6,13 +6,12 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { combineLatest, map } from 'rxjs';
 
-import { GovukDatePipe } from '@netz/common/pipes';
-import { CheckboxComponent, CheckboxesComponent, LinkDirective } from '@netz/govuk-components';
+import { CheckboxComponent, CheckboxesComponent } from '@netz/govuk-components';
 import { PaginationComponent } from '@shared/components';
 import { RequestStatusTagColorPipe, WorkflowStatusPipe } from '@shared/pipes';
 import { HistoryCategory } from '@shared/types';
 
-import { RequestSearchByAccountCriteria, RequestsService } from 'cca-api';
+import { RequestSearchCriteria, RequestsService } from 'cca-api';
 
 import {
   originalOrder,
@@ -23,33 +22,30 @@ import {
 
 @Component({
   selector: 'cca-workflow-history-tab',
+  templateUrl: './workflow-history-tab.component.html',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     CheckboxComponent,
     CheckboxesComponent,
     KeyValuePipe,
-    LinkDirective,
-    GovukDatePipe,
-    I18nSelectPipe,
     DatePipe,
     PaginationComponent,
     RequestStatusTagColorPipe,
     WorkflowStatusPipe,
     RouterLink,
   ],
-  templateUrl: './workflow-history-tab.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowHistoryTabComponent implements OnInit {
   private readonly requestsService = inject(RequestsService);
-  private readonly route = inject(ActivatedRoute);
+  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
 
-  private readonly targetUnitAccountId = this.route.snapshot.paramMap.get('targetUnitId');
+  private readonly targetUnitAccountId = this.activatedRoute.snapshot.paramMap.get('targetUnitId');
 
   readonly state = signal<WorkflowHistoryTabState>({
-    currentPage: +this.route.snapshot.queryParamMap.get('page') || 1,
+    currentPage: +this.activatedRoute.snapshot.queryParamMap.get('page') || 1,
     workflowsHistory: null,
     totalItems: 0,
     requestTypes: [],
@@ -59,18 +55,18 @@ export class WorkflowHistoryTabComponent implements OnInit {
   readonly pageSize = 30;
   readonly originalOrder = originalOrder;
 
-  searchForm = this.fb.group({
+  readonly searchForm = this.fb.group({
     requestTypes: this.fb.control<string[]>([]),
     requestStatuses: this.fb.control<string[]>([]),
   });
 
-  formData = toSignal(this.searchForm.valueChanges, { initialValue: this.searchForm.value });
-  currentPage = computed(() => this.state().currentPage);
-  workflowsHistory = computed(() => this.state().workflowsHistory?.requestDetails);
-  currentPage$ = toObservable(this.currentPage);
-  formData$ = toObservable(this.formData);
+  readonly formData = toSignal(this.searchForm.valueChanges, { initialValue: this.searchForm.value });
+  readonly currentPage = computed(() => this.state().currentPage);
+  readonly workflowsHistory = computed(() => this.state().workflowsHistory?.requestDetails);
+  readonly currentPage$ = toObservable(this.currentPage);
+  readonly formData$ = toObservable(this.formData);
 
-  count = computed(() => this.state().totalItems);
+  readonly count = computed(() => this.state().totalItems);
 
   readonly workflowTypesMap = workflowTypesMap;
   readonly workflowStatusesMap = workflowStatusesMap;
@@ -104,8 +100,9 @@ export class WorkflowHistoryTabComponent implements OnInit {
   }
 
   private fetchWorkflows(targetUnitAccountId: string) {
-    const requestSearchByAccountCriteria: RequestSearchByAccountCriteria = {
-      accountId: Number(targetUnitAccountId),
+    const requestSearchCriteria: RequestSearchCriteria = {
+      resourceType: 'ACCOUNT', // Available options at NETZ's `ResourceType` and CCA's `CcaResourceType`
+      resourceId: targetUnitAccountId,
       requestTypes: this.state().requestTypes,
       requestStatuses: this.state().requestStatuses,
       historyCategory: HistoryCategory.UNA,
@@ -114,7 +111,7 @@ export class WorkflowHistoryTabComponent implements OnInit {
     };
 
     return this.requestsService
-      .getRequestDetailsByAccountId(requestSearchByAccountCriteria)
+      .getRequestDetailsByResource(requestSearchCriteria)
       .pipe(map((requestDetailsSearchResults) => ({ requestDetailsSearchResults })));
   }
 

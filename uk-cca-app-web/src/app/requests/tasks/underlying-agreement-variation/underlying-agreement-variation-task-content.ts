@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 
-import { TaskItem, TaskSection } from '@netz/common/model';
+import { TaskSection } from '@netz/common/model';
 import { RequestTaskPageContentFactory } from '@netz/common/request-task';
 import { RequestTaskStore } from '@netz/common/store';
 import {
@@ -10,11 +10,10 @@ import {
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   staticVariationSections,
   TaskItemStatus,
+  transformFacilities,
   UNAVariationRequestTaskPayload,
   VARIATION_DETAILS_SUBTASK,
 } from '@requests/common';
-
-import { Facility } from 'cca-api';
 
 const routePrefix = 'underlying-agreement-variation';
 
@@ -28,6 +27,24 @@ export const underlyingAgreementVariationTaskContent: RequestTaskPageContentFact
 };
 
 export function getAllUnderlyingAgreementVariationSections(payload: UNAVariationRequestTaskPayload): TaskSection[] {
+  const facilities = transformFacilities(
+    payload?.underlyingAgreement?.facilities,
+    ['NEW', 'LIVE'],
+    payload?.sectionsCompleted,
+    routePrefix,
+    'summary',
+    TaskItemStatus.NOT_STARTED,
+  );
+
+  const excludedFacilities = transformFacilities(
+    payload?.underlyingAgreement?.facilities,
+    ['EXCLUDED'],
+    payload?.sectionsCompleted,
+    routePrefix,
+    'summary',
+    TaskItemStatus.NOT_STARTED,
+  );
+
   return [
     {
       title: 'Variation details',
@@ -57,12 +74,12 @@ export function getAllUnderlyingAgreementVariationSections(payload: UNAVariation
           link: `${routePrefix}/manage-facilities`,
           linkText: 'Manage facilities list',
         },
-        ...getAllFacilities(payload, ['NEW', 'LIVE']),
+        ...facilities,
       ],
     },
     {
       title: 'Excluded facilities',
-      tasks: [...getAllFacilities(payload, ['EXCLUDED'])],
+      tasks: excludedFacilities,
     },
     {
       title: 'Baseline and Targets',
@@ -104,18 +121,6 @@ export function getAllUnderlyingAgreementVariationSections(payload: UNAVariation
       ],
     },
   ].filter((item) => item.tasks.length > 0);
-}
-
-function getAllFacilities(payload: UNAVariationRequestTaskPayload, statuses: Facility['status'][]): TaskItem[] {
-  return (
-    payload?.underlyingAgreement?.facilities
-      ?.filter((facility) => statuses.includes(facility.status))
-      ?.map((facility) => ({
-        status: payload?.sectionsCompleted?.[facility.facilityId] ?? TaskItemStatus.NOT_STARTED,
-        link: `${routePrefix}/facility/${facility.facilityId}/summary`,
-        linkText: `${facility.facilityDetails.name} (${facility.facilityId})`,
-      })) ?? []
-  );
 }
 
 function allSectionsCompleted(payload: UNAVariationRequestTaskPayload): boolean {

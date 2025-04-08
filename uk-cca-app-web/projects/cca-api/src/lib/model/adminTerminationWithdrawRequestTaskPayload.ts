@@ -13,7 +13,8 @@ import { AdminTerminationWithdrawReasonDetails } from './adminTerminationWithdra
 
 export interface AdminTerminationWithdrawRequestTaskPayload {
   payloadType?: string;
+  sendEmailNotification?: boolean;
   adminTerminationWithdrawReasonDetails?: AdminTerminationWithdrawReasonDetails;
-  sectionsCompleted?: { [key: string]: string };
-  adminTerminationAttachments?: { [key: string]: string };
+  sectionsCompleted?: Record<string, string>;
+  adminTerminationAttachments?: Record<string, string>;
 }

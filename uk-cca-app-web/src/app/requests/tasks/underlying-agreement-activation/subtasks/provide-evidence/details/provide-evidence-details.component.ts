@@ -8,7 +8,7 @@ import { TextareaComponent } from '@netz/govuk-components';
 import { PROVIDE_EVIDENCE_SUBTASK, ProvideEvidenceWizardStep } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
 import { transformFilesToAttachments, transformFilesToUUIDsList } from '@shared/utils';
-import { generateDownloadUrl } from '@shared/utils/download-url-generator';
+import { generateDownloadUrl } from '@shared/utils';
 
 import {
   PROVIDE_EVIDENCE_DETAILS_FORM,

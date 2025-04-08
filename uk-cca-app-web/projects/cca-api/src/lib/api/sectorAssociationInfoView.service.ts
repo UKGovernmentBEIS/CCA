@@ -9,16 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { SectorAssociationInfoDTO } from '../model/sectorAssociationInfoDTO';
 import { SectorAssociationResponseDTO } from '../model/sectorAssociationResponseDTO';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -110,7 +110,7 @@ export class SectorAssociationInfoViewService {
   public getSectorAssociationById(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -143,7 +143,7 @@ export class SectorAssociationInfoViewService {
     return this.httpClient.get<SectorAssociationResponseDTO>(
       `${this.configuration.basePath}/v1.0/sector-association/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -157,25 +157,25 @@ export class SectorAssociationInfoViewService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getSectorAssociations(): Observable<Array<SectorAssociationInfoDTO>>;
+  public getSectorAssociations(): Observable<SectorAssociationInfoDTO[]>;
   public getSectorAssociations(
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<SectorAssociationInfoDTO>>>;
+  ): Observable<HttpResponse<SectorAssociationInfoDTO[]>>;
   public getSectorAssociations(
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<SectorAssociationInfoDTO>>>;
+  ): Observable<HttpEvent<SectorAssociationInfoDTO[]>>;
   public getSectorAssociations(
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<SectorAssociationInfoDTO>>;
+  ): Observable<SectorAssociationInfoDTO[]>;
   public getSectorAssociations(
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     let headers = this.defaultHeaders;
@@ -201,15 +201,12 @@ export class SectorAssociationInfoViewService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<SectorAssociationInfoDTO>>(
-      `${this.configuration.basePath}/v1.0/sector-association/`,
-      {
-        responseType: <any>responseType_,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress,
-      },
-    );
+    return this.httpClient.get<SectorAssociationInfoDTO[]>(`${this.configuration.basePath}/v1.0/sector-association/`, {
+      responseType: responseType_ as any,
+      withCredentials: this.configuration.withCredentials,
+      headers: headers,
+      observe: observe,
+      reportProgress: reportProgress,
+    });
   }
 }

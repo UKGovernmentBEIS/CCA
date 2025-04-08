@@ -1,8 +1,7 @@
-import { SectorUserRoleCode } from '@shared/pipes';
+import { SectorUserRoleCode, transformNoticeRecipientsType } from '@shared/pipes';
 
 import { CcaDecisionNotification, DefaultNoticeRecipient, RequestActionUserInfo } from 'cca-api';
 
-import { transformNoticeRecipientsType } from '../pipes';
 import { NotifyOperatorOfDecisionFormModel } from './notify-operator-of-decision-form.provider';
 
 export function toDecisionNotification(
@@ -10,6 +9,7 @@ export function toDecisionNotification(
 ): CcaDecisionNotification {
   const operators = notifyPayload.additionalUsersNotified.filter((u) => u.type === 'OPERATOR');
   const sectorUsers = notifyPayload.additionalUsersNotified.filter((u) => u.type === 'SECTOR_USER');
+
   return {
     operators: operators.map((u) => u.userId),
     externalContacts: notifyPayload.externalContactsNotified,
@@ -19,7 +19,7 @@ export function toDecisionNotification(
 }
 
 export function extractSignatoryUserFromUsersInfo(
-  usersInfo: { [key: string]: RequestActionUserInfo },
+  usersInfo: Record<string, RequestActionUserInfo>,
   signatory: CcaDecisionNotification['signatory'],
 ): string {
   const signatoryUserId = Object.keys(usersInfo).find((key) => key === signatory);
@@ -28,7 +28,7 @@ export function extractSignatoryUserFromUsersInfo(
 }
 
 export function extractSectorUsersFromUsersInfo(
-  usersInfo: { [key: string]: RequestActionUserInfo },
+  usersInfo: Record<string, RequestActionUserInfo>,
   sectorUsers: CcaDecisionNotification['sectorUsers'],
 ): string[] {
   const users = sectorUsers?.map((su) => usersInfo[su]) ?? [];
@@ -36,7 +36,7 @@ export function extractSectorUsersFromUsersInfo(
 }
 
 export function extractOperatorUsersFromUsersInfo(
-  usersInfo: { [key: string]: RequestActionUserInfo },
+  usersInfo: Record<string, RequestActionUserInfo>,
   operatorUsers: CcaDecisionNotification['operators'],
 ): string[] {
   const users = operatorUsers?.map((su) => usersInfo[su]) ?? [];

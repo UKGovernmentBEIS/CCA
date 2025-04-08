@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { GovukValidators } from '@netz/govuk-components';
 import { AddressFormModel, createCountyAddressControl } from '@shared/components';
-import { CCAGovukValidators, textFieldValidators } from '@shared/validators/validators';
+import { CCAGovukValidators, textFieldValidators } from '@shared/validators';
 
 import { ActiveSectorStore } from '../../active-sector.store';
 

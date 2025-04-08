@@ -117,7 +117,6 @@ exports[`UnderlyingAgreementActivatedComponent should match snapshot 1`] = `
           <cca-summary-download-files>
             <a
               class="govuk-link"
-              govuklink=""
               href="/"
               target="_blank"
             >
@@ -126,7 +125,6 @@ exports[`UnderlyingAgreementActivatedComponent should match snapshot 1`] = `
             <br />
             <a
               class="govuk-link"
-              govuklink=""
               href="/"
               target="_blank"
             >

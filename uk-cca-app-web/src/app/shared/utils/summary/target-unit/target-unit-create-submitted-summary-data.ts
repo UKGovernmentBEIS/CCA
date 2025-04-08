@@ -3,9 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { transformOperatorType } from '@shared/pipes';
-import { transformPhoneNumber } from '@shared/utils/phone';
 
 import { AccountAddressDTO, SectorAssociationSchemeDTO, TargetUnitAccountPayload } from 'cca-api';
+
+import { transformPhoneNumber } from '../../phone';
 
 export function toTargetUnitCreateSubmittedSummaryData(payload: TargetUnitAccountPayload): SummaryData {
   const subSectors = (inject(ActivatedRoute).snapshot.data?.subSectorScheme as SectorAssociationSchemeDTO)

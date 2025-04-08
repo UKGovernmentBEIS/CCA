@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { PendingRequestGuard } from '@core/guards/pending-request.guard';
+import { PendingRequestGuard } from '@shared/guards';
 
 import { InvitedRegulatorUserStore } from './invited-regulator-user.store';
 import { RegulatorInvitationGuard } from './regulator-invitation.guard';

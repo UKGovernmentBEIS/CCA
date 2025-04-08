@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PerformanceDataDownloadGeneratingComponent should show summary values 1`] = `
+<cca-performance-data-download-generating>
+  <govuk-notification-banner>
+    <div
+      aria-labelledby="govuk-notification-banner-title"
+      class="govuk-notification-banner"
+      role="region"
+    >
+      <div
+        class="govuk-notification-banner__header"
+      >
+        <h2
+          class="govuk-notification-banner__title"
+          id="govuk-notification-banner-title"
+        >
+          Important
+        </h2>
+      </div>
+      <div
+        class="govuk-notification-banner__content"
+      >
+        <h3
+          class="govuk-heading-m"
+        >
+          Files are being generated
+        </h3>
+        <span
+          class="govuk-body"
+        >
+           This may take several minutes to complete. 
+          <br />
+           You can wait or return to the dashboard and click on the task to continue. 
+        </span>
+      </div>
+    </div>
+  </govuk-notification-banner><a
+    class="govuk-link"
+    href="/dashboard"
+    routerlink="/dashboard"
+  >
+    Return to: Dashboard
+  </a>
+</cca-performance-data-download-generating>
+`;

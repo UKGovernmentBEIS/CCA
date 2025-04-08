@@ -26,8 +26,8 @@ public class UnderlyingAgreementVariationAcceptedDocumentTemplateWorkflowParamsP
 	public Map<String, Object> constructParams(UnderlyingAgreementVariationRequestPayload payload) {
 		final int version = payload.getUnderlyingAgreementVersion();
 
-		// Add target unit details from workflow data
+		// Add target unit details from final workflow data
 		return documentTemplateUnderlyingAgreementParamsProvider
-				.constructTargetUnitDetailsTemplateParams(payload.getUnderlyingAgreement().getUnderlyingAgreementTargetUnitDetails(), version);
+				.constructTargetUnitDetailsTemplateParams(payload.getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails(), version);
 	}
 }

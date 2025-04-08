@@ -19,7 +19,6 @@ import { RadioOptionComponent } from './radio-option/radio-option.component';
 
 /*
   eslint-disable
-  @angular-eslint/prefer-on-push-component-change-detection,
   @angular-eslint/component-selector
  */
 @Component({

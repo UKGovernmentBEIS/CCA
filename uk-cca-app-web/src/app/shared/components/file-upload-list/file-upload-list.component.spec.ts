@@ -42,19 +42,19 @@ describe('FileUploadListComponent', () => {
     }
 
     get hidden() {
-      return this.query<HTMLDivElement>('.moj-hidden');
+      return this.query<HTMLDivElement>('.cca-hidden');
     }
 
     get rows() {
-      return this.queryAll<HTMLDivElement>('.moj-multi-file-upload__row');
+      return this.queryAll<HTMLDivElement>('.cca-multi-file-upload__row');
     }
 
     get files() {
-      return this.queryAll<HTMLDataElement>('.moj-multi-file-upload__message');
+      return this.queryAll<HTMLDataElement>('.cca-multi-file-upload__message');
     }
 
     get deleteButtons() {
-      return this.queryAll<HTMLButtonElement>('.moj-multi-file-upload__delete');
+      return this.queryAll<HTMLButtonElement>('.cca-multi-file-upload__delete');
     }
   }
 

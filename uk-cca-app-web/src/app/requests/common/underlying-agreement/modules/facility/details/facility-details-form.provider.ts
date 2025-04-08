@@ -66,16 +66,26 @@ export const FacilityDetailsFormProvider: Provider = {
         GovukValidators.required('UK ETS installation identifier cannot be blank'),
         GovukValidators.maxLength(255, `UK ETS installation identifier should not be more than 255 characters`),
       ]),
-      applicationReason: fb.control(facilityDetails?.applicationReason ?? null, [
-        GovukValidators.required('Select the reason for the application'),
-      ]),
+      applicationReason: fb.control(
+        {
+          value: facilityDetails?.applicationReason ?? null,
+          disabled: facility?.status !== 'NEW',
+        },
+        [GovukValidators.required('Select the reason for the application')],
+      ),
       previousFacilityId: fb.control(
-        facilityDetails?.previousFacilityId ?? null,
-        facilityIDValidators(
-          'Enter the facility ID of an existing facility.',
-          'The Previous facility ID must be in the same format as the facility number, like AAAA-F00001',
-        ),
-        [facilityExistenceValidator(facilityService)],
+        {
+          value: facilityDetails?.previousFacilityId ?? null,
+          disabled: facility?.status !== 'NEW',
+        },
+        {
+          validators: facilityIDValidators(
+            'Enter the facility ID of an existing facility.',
+            'The Previous facility ID must be in the same format as the facility number, like AAAA-F00001',
+          ),
+          asyncValidators: [facilityExistenceValidator(facilityService)],
+          updateOn: 'submit',
+        },
       ),
       sameAddress: fb.control([false]),
       facilityAddress: addressFormGroup,

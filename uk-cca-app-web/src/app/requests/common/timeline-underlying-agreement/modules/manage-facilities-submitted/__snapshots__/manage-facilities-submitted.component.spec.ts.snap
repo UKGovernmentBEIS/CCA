@@ -6,13 +6,13 @@ exports[`ManageFacilitiesComponent should show summary values: manage-facilities
   requestActionStore={[Function _RequestActionStore]}
 >
   <div>
-    <cca-page-heading>
+    <netz-page-heading>
       <h1
         class="govuk-heading-l"
       >
         Manage facilities list
       </h1>
-    </cca-page-heading>
+    </netz-page-heading>
     <h2
       class="govuk-heading-m"
     >

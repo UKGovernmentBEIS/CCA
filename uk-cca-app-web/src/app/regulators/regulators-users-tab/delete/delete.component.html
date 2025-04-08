@@ -6,15 +6,15 @@
   <p class="govuk-body">You may cancel and manually re-assign tasks before attempting to delete this user.</p>
 
   <div class="govuk-button-group">
-    <button type="button" (click)="deleteRegulator()" ccaPendingButton govukWarnButton>Confirm deletion</button>
-    <a govukLink fragment="regulator-users" [routerLink]="['/user/regulators']">Cancel</a>
+    <button type="button" (click)="deleteRegulator()" netzPendingButton govukWarnButton>Confirm deletion</button>
+    <a class="govuk-link" fragment="regulator-users" [routerLink]="['/user/regulators']">Cancel</a>
   </div>
 } @else {
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <govuk-panel title="The user account of {{ regulator | userFullName }} has been deleted"></govuk-panel>
 
-      <a fragment="regulator-users" govukLink [routerLink]="['/user/regulators']">
+      <a fragment="regulator-users" class="govuk-link" [routerLink]="['/user/regulators']">
         Return to the Regulator users page
       </a>
     </div>

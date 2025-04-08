@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { first, map, of, switchMap } from 'rxjs';
 
-import { AuthService } from '@core/services/auth.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
+import { AuthService } from '@shared/services';
 
 import { UsersSecuritySetupService } from 'cca-api';
 

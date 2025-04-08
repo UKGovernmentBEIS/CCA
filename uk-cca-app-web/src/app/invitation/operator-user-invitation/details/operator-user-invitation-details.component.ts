@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { BreadcrumbService } from '@netz/common/navigation';
 import {
   ButtonDirective,
@@ -10,8 +12,7 @@ import {
   RadioOptionComponent,
   TextInputComponent,
 } from '@netz/govuk-components';
-import { PageHeadingComponent, PhoneInputComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
+import { PhoneInputComponent } from '@shared/components';
 
 import { OPERATOR_USER_INVITATION_FORM, OperatorUserInviteFormModel } from '../form.provider';
 import { OperatorUserInvitationStore } from '../store';

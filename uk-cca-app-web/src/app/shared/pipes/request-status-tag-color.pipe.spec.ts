@@ -23,10 +23,22 @@ describe('RequestStatusTagColorPipe', () => {
     expect(pipe.transform('CANCELLED')).toBe('grey');
   });
 
+  it('should return grey for cancelled status', () => {
+    expect(pipe.transform('Closed')).toBe('grey');
+    expect(pipe.transform('closed')).toBe('grey');
+    expect(pipe.transform('CLOSED')).toBe('grey');
+  });
+
   it('should return green for completed status', () => {
     expect(pipe.transform('Completed')).toBe('green');
     expect(pipe.transform('completed')).toBe('green');
     expect(pipe.transform('COMPLETED')).toBe('green');
+  });
+
+  it('should return green for completed status', () => {
+    expect(pipe.transform('Migrated')).toBe('green');
+    expect(pipe.transform('migrated')).toBe('green');
+    expect(pipe.transform('MIGRATED')).toBe('green');
   });
 
   it('should return blue for in progress status', () => {

@@ -1,0 +1,143 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VariationDetailsComponent should match snapshot 1`] = `
+<cca-timeline-variation-details
+  requestActionStore={[Function _RequestActionStore]}
+  summaryData={[Function Function]}
+>
+  <div>
+    <netz-page-heading>
+      <h1
+        class="govuk-heading-l"
+      >
+        Variation details
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      <h2
+        class="govuk-heading-m"
+      >
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Target Unit/Facility changes
+          </dt>
+          <dd
+            class="pre-wrap govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             Amend the 70% rule evaluation for one or more facilities 
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Amend the target currency to
+          </dt>
+          <dd
+            class="pre-wrap govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             change the throughput unit 
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Explain what you are changing and the reason for the changes
+          </dt>
+          <dd
+            class="pre-wrap govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             Variation reason 
+          </dd>
+        </div>
+      </dl>
+      <h2
+        class="govuk-heading-m"
+      >
+        Decision Summary
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Decision status
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             Accepted 
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Notes
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             test 
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Uploaded files
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              No files provided
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </cca-summary>
+  </div>
+</cca-timeline-variation-details>
+`;

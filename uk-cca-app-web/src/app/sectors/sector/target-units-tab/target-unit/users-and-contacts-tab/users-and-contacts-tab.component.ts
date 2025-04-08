@@ -3,7 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
-import { AuthStore, selectUserId } from '@netz/common/auth';
+import { AuthStore, selectUserId, selectUserRoleType } from '@netz/common/auth';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { UserFullNamePipe } from '@netz/common/pipes';
 import {
   ButtonDirective,
@@ -14,7 +15,6 @@ import {
   SortEvent,
   TableComponent,
 } from '@netz/govuk-components';
-import { PendingButtonDirective } from '@shared/directives/pending-button.directive';
 
 import {
   AccountOperatorAuthorityUpdateDTO,
@@ -47,21 +47,28 @@ export type TargetUnitUserFormModel = FormGroup<{
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersAndContactsTabComponent {
-  private readonly route = inject(ActivatedRoute);
+  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly authStore = inject(AuthStore);
   private readonly operatorAuthorities = inject(OperatorAuthoritiesService);
 
-  _users = signal<SectorUserAuthorityInfoDTO[]>([]);
-  sorting = signal<SortEvent | null>(null);
-  isEditable = signal(false);
-  readonly currentUserId = this.authStore.select(selectUserId);
+  private _users = signal<SectorUserAuthorityInfoDTO[]>([]);
 
-  usersForm = this.fb.group({ users: this.fb.array<TargetUnitUserFormModel>([]) });
-  targetUnitId = this.route.snapshot.paramMap.get('targetUnitId');
+  readonly sorting = signal<SortEvent | null>(null);
+  readonly isEditable = signal(false);
+
+  readonly currentUserId = this.authStore.select(selectUserId);
+  readonly roleType = this.authStore.select(selectUserRoleType);
+
+  readonly usersForm = this.fb.group({ users: this.fb.array<TargetUnitUserFormModel>([]) });
+  readonly targetUnitId = this.activatedRoute.snapshot.paramMap.get('targetUnitId');
 
   get usersFormArray() {
     return this.usersForm.controls.users;
+  }
+
+  constructor() {
+    this.refresh();
   }
 
   readonly users = computed(() => {
@@ -76,7 +83,7 @@ export class UsersAndContactsTabComponent {
     });
   });
 
-  targetUnitUsersColumns: GovukTableColumn[] = [
+  readonly targetUnitUsersColumns: GovukTableColumn[] = [
     { field: 'name', header: 'Name', isSortable: true },
     { field: 'roleName', header: 'User type' },
     { field: 'contactType', header: 'Contact type' },
@@ -84,17 +91,16 @@ export class UsersAndContactsTabComponent {
     { field: 'deleteBtn', header: 'Actions' },
   ];
 
-  authorityStatuses: GovukSelectOption[] = [
+  readonly authorityStatuses: GovukSelectOption[] = [
     { text: 'Active', value: 'ACTIVE' },
     { text: 'Disabled', value: 'DISABLED' },
   ];
-  authorityStatusesAccepted: GovukSelectOption[] = [
+
+  readonly authorityStatusesAccepted: GovukSelectOption[] = [
     { text: 'Accepted', value: 'ACCEPTED' },
     { text: 'Active', value: 'ACTIVE' },
   ];
-  constructor() {
-    this.refresh();
-  }
+
   refresh() {
     this.operatorAuthorities.getAccountOperatorAuthorities(+this.targetUnitId).subscribe((r) => {
       this._users.set(r.authorities);
@@ -106,18 +112,21 @@ export class UsersAndContactsTabComponent {
   sortBy(sorting: SortEvent) {
     this.sorting.set(sorting);
   }
+
   onSave() {
     const payload: AccountOperatorAuthorityUpdateDTO[] = this.usersFormArray.value.map((u) => ({
       userId: u.userId,
       authorityStatus: u.status,
       roleCode: u.userType,
     }));
+
     this.operatorAuthorities
       .updateAccountOperatorAuthorities(+this.targetUnitId, {
         accountOperatorAuthorityUpdateList: payload,
       })
       .subscribe();
   }
+
   private patchUsersForm(users: OperatorAuthorityInfoDTO[]): void {
     users.forEach((user, index) => {
       this.usersForm.controls.users.setControl(

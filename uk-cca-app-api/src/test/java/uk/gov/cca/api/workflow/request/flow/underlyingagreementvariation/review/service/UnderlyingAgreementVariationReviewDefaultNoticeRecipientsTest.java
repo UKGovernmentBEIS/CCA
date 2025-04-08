@@ -14,7 +14,9 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementTar
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.TargetUnitAccountNoticeRecipients;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.List;
@@ -44,8 +46,10 @@ class UnderlyingAgreementVariationReviewDefaultNoticeRecipientsTest {
                                 .email("ResEmail")
                                 .build())
                         .build();
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
         final RequestTask requestTask = RequestTask.builder()
-                .request(Request.builder().accountId(accountId).build())
+                .request(request)
                 .payload(UnderlyingAgreementVariationReviewRequestTaskPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
                                 .underlyingAgreementTargetUnitDetails(targetUnitDetails)
@@ -90,4 +94,14 @@ class UnderlyingAgreementVariationReviewDefaultNoticeRecipientsTest {
         assertThat(service.getType())
                 .isEqualTo(CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW);
     }
+    
+    private void addResourcesToRequest(Long accountId, Request request) {
+		RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId(accountId.toString())
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+	}
 }

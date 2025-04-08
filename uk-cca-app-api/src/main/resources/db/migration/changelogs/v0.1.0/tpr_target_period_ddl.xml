@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+  logicalFilePath="v0.1.0/tpr_target_period_ddl.xml"
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+  <changeSet id="0_1_0_TPR_TARGET_PERIOD_SEQUENCE" author="vvitzilaios">
+    <createSequence sequenceName="tpr_target_period_seq" minValue="0" maxValue="999999999999999999"
+      incrementBy="1" startValue="1" cycle="false"/>
+    <rollback>
+      <sql>
+        DROP SEQUENCE IF EXISTS tpr_target_period_seq;
+      </sql>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="0_1_0_TPR_TARGET_PERIOD" author="vvitzilaios">
+    <comment>Target Period Table. All end dates (deadlines) are inclusive</comment>
+    <createTable tableName="tpr_target_period" remarks="Represents the target period milestones">
+      <column name="id" type="bigint" remarks="Primary key">
+        <constraints primaryKey="true" primaryKeyName="tpr_target_period_pk" nullable="false"/>
+      </column>
+      <column name="business_id" type="varchar(64)" remarks="Represents the target period id">
+        <constraints unique="true" uniqueConstraintName="tpr_target_period_businessId_uq"
+          nullable="false"/>
+      </column>
+      <column name="name" type="varchar(255)" remarks="Represents the target period name">
+        <constraints nullable="false"/>
+      </column>
+      <column name="start_date" type="date" remarks="Represents the target period start date">
+        <constraints nullable="false"/>
+      </column>
+      <column name="end_date" type="date" remarks="Represents the target period deadline">
+        <constraints nullable="false"/>
+      </column>
+      <column name="performance_data_template_version" type="varchar(64)"
+        remarks="Represents report template version">
+      </column>
+      <column name="performance_data_start_date" type="date"
+        remarks="Represents the reporting period start date">
+        <constraints nullable="false"/>
+      </column>
+      <column name="performance_data_end_date" type="date"
+        remarks="Represents the reporting period deadline">
+        <constraints nullable="false"/>
+      </column>
+      <column name="buy_out_start_date" type="date" remarks="Represents the buyout start date">
+        <constraints nullable="false"/>
+      </column>
+      <column name="buy_out_end_date" type="date" remarks="Represents the buyout deadline">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_current" type="boolean" defaultValueBoolean="false"
+        remarks="Represents the current Target Period"/>
+    </createTable>
+    <rollback>
+      <sql>
+        DROP TABLE IF EXISTS tpr_target_period CASCADE;
+      </sql>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="0_1_0_TPR_TARGET_PERIOD_ADD_SECONDARY_REPORTING_START_DATE" author="vvitzilaios">
+    <addColumn tableName="tpr_target_period">
+      <column name="secondary_reporting_start_date" type="date"
+        remarks="The date that marks the secondary reporting period" defaultValue="1970-01-01">
+        <constraints nullable="false"/>
+      </column>
+    </addColumn>
+    <rollback>
+      <dropColumn tableName="tpr_target_period" columnName="secondary_reporting_start_date"/>
+    </rollback>
+  </changeSet>
+
+</databaseChangeLog>

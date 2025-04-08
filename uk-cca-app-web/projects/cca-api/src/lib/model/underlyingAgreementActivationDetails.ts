@@ -11,6 +11,6 @@
  */
 
 export interface UnderlyingAgreementActivationDetails {
-  evidenceFiles: Array<string>;
+  evidenceFiles: string[];
   comments?: string;
 }

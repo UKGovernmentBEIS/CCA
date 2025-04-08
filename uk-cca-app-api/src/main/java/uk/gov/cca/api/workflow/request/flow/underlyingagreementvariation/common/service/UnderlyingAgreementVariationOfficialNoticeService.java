@@ -67,5 +67,17 @@ public class UnderlyingAgreementVariationOfficialNoticeService {
 
         ccaOfficialNoticeSendService.sendOfficialNotice(attachments, request,
         		ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification));
-    }  
+    }
+
+    public CompletableFuture<FileInfoDTO> generateActivatedOfficialNotice(final String requestId) {
+        final Request request = requestService.findRequestById(requestId);
+        final UnderlyingAgreementVariationRequestPayload requestPayload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();
+        final CcaDecisionNotification decisionNotification = requestPayload.getDecisionNotification();
+
+        return ccaFileDocumentGeneratorService.generateAsync(request,
+                decisionNotification,
+                CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED,
+                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_ACTIVATED,
+                "Activated underlying agreement cover letter.pdf");
+    }
 }

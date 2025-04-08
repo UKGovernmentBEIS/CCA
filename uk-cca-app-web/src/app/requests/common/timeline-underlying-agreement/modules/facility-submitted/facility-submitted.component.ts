@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
-import { PageHeadingComponent, SummaryComponent } from '@shared/components';
+import { SummaryComponent } from '@shared/components';
 
 import { toFacilitySummaryData } from '../../../underlying-agreement';
 import { underlyingAgreementRequestActionQuery } from '../../+state';

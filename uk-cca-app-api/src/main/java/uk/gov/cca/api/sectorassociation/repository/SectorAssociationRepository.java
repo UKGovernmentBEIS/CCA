@@ -7,15 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationInfoDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSiteContactInfoDTO;
+import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSiteContactInfoDTO;
-import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 
 @Repository
 public interface SectorAssociationRepository extends JpaRepository<SectorAssociation, Long> {
@@ -46,10 +45,6 @@ public interface SectorAssociationRepository extends JpaRepository<SectorAssocia
     @Transactional(readOnly = true)
     @Query(name = SectorAssociation.NAMED_QUERY_FIND_SECTOR_ASSOCIATION_ACRONYM_BY_ID)
     String findSectorAssociationAcronymById(Long id);
-
-    @Transactional(readOnly = true)
-    @Query(name = SectorAssociation.NAMED_QUERY_FIND_SECTOR_ASSOCIATION_NOTICE_RECIPIENT_BY_ID)
-    NoticeRecipientDTO findSectorAssociationNoticeRecipientById(Long id);
     
     @Transactional(readOnly = true)
     @Query(name = SectorAssociation.NAMED_QUERY_FIND_SECTOR_ASSOCIATION_ID_BY_ACRONYM)

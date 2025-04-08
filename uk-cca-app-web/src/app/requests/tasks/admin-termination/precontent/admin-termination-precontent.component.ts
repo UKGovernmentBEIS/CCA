@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective, NotificationBannerComponent } from '@netz/govuk-components';
 import { TaskItemStatus } from '@requests/common';
-import { PendingButtonDirective } from '@shared/directives';
 
 import { AdminTerminationQuery } from '../+state/admin-termination.selectors';
 import { REASON_FOR_ADMIN_TERMINATION_SUBTASK } from '../admin-termination.types';

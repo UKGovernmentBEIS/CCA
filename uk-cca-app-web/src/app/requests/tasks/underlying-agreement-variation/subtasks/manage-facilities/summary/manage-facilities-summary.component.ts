@@ -3,10 +3,11 @@ import { ChangeDetectionStrategy, Component, computed, inject, Signal, signal } 
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { ButtonDirective, ErrorSummaryComponent, LinkDirective } from '@netz/govuk-components';
+import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
 import {
   atLeastOneActiveValidator,
   FacilityItemListComponent,
@@ -16,8 +17,7 @@ import {
   underlyingAgreementQuery,
   underlyingAgreementVariationQuery,
 } from '@requests/common';
-import { HighlightDiffComponent, PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives';
+import { HighlightDiffComponent } from '@shared/components';
 
 import { UnderlyingAgreementContainer } from 'cca-api';
 
@@ -25,7 +25,6 @@ import { UnderlyingAgreementContainer } from 'cca-api';
   selector: 'cca-una-manage-facilities-summary',
   standalone: true,
   imports: [
-    LinkDirective,
     PageHeadingComponent,
     RouterLink,
     ButtonDirective,

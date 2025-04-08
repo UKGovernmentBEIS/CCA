@@ -9,17 +9,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
-
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParameterCodec } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../configuration';
-import { CustomHttpParameterCodec } from '../encoder';
 import { NoticeRecipientDTO } from '../model/noticeRecipientDTO';
 import { RequestTaskActionProcessDTO } from '../model/requestTaskActionProcessDTO';
 import { RequestTaskItemDTO } from '../model/requestTaskItemDTO';
+import { RequestTaskPayload } from '../model/requestTaskPayload';
+
 import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 @Injectable({
   providedIn: 'root',
@@ -89,29 +90,29 @@ export class TasksService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getDefaultNoticeRecipients(id: number): Observable<Array<NoticeRecipientDTO>>;
+  public getDefaultNoticeRecipients(id: number): Observable<NoticeRecipientDTO[]>;
   public getDefaultNoticeRecipients(
     id: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<Array<NoticeRecipientDTO>>>;
+  ): Observable<HttpResponse<NoticeRecipientDTO[]>>;
   public getDefaultNoticeRecipients(
     id: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<Array<NoticeRecipientDTO>>>;
+  ): Observable<HttpEvent<NoticeRecipientDTO[]>>;
   public getDefaultNoticeRecipients(
     id: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<Array<NoticeRecipientDTO>>;
+  ): Observable<NoticeRecipientDTO[]>;
   public getDefaultNoticeRecipients(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -141,10 +142,10 @@ export class TasksService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<Array<NoticeRecipientDTO>>(
+    return this.httpClient.get<NoticeRecipientDTO[]>(
       `${this.configuration.basePath}/v1.0/tasks/${encodeURIComponent(String(id))}/default-recipients`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -181,7 +182,7 @@ export class TasksService {
   public getTaskItemInfoById(
     id: number,
     observe: any = 'body',
-    reportProgress: boolean = false,
+    reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (id === null || id === undefined) {
@@ -214,7 +215,7 @@ export class TasksService {
     return this.httpClient.get<RequestTaskItemDTO>(
       `${this.configuration.basePath}/v1.0/tasks/${encodeURIComponent(String(id))}`,
       {
-        responseType: <any>responseType_,
+        responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,
         observe: observe,
@@ -229,30 +230,32 @@ export class TasksService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public processRequestTaskAction(requestTaskActionProcessDTO: RequestTaskActionProcessDTO): Observable<any>;
+  public processRequestTaskAction(
+    requestTaskActionProcessDTO: RequestTaskActionProcessDTO,
+  ): Observable<RequestTaskPayload>;
   public processRequestTaskAction(
     requestTaskActionProcessDTO: RequestTaskActionProcessDTO,
     observe: 'response',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<any>>;
+    options?: { httpHeaderAccept?: 'application/json' | '*/*' },
+  ): Observable<HttpResponse<RequestTaskPayload>>;
   public processRequestTaskAction(
     requestTaskActionProcessDTO: RequestTaskActionProcessDTO,
     observe: 'events',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<any>>;
+    options?: { httpHeaderAccept?: 'application/json' | '*/*' },
+  ): Observable<HttpEvent<RequestTaskPayload>>;
   public processRequestTaskAction(
     requestTaskActionProcessDTO: RequestTaskActionProcessDTO,
     observe: 'body',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<any>;
+    options?: { httpHeaderAccept?: 'application/json' | '*/*' },
+  ): Observable<RequestTaskPayload>;
   public processRequestTaskAction(
     requestTaskActionProcessDTO: RequestTaskActionProcessDTO,
     observe: any = 'body',
-    reportProgress: boolean = false,
-    options?: { httpHeaderAccept?: 'application/json' },
+    reportProgress = false,
+    options?: { httpHeaderAccept?: 'application/json' | '*/*' },
   ): Observable<any> {
     if (requestTaskActionProcessDTO === null || requestTaskActionProcessDTO === undefined) {
       throw new Error(
@@ -271,7 +274,7 @@ export class TasksService {
     let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
+      const httpHeaderAccepts: string[] = ['application/json', '*/*'];
       httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     }
     if (httpHeaderAcceptSelected !== undefined) {
@@ -290,12 +293,16 @@ export class TasksService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.post<any>(`${this.configuration.basePath}/v1.0/tasks/actions`, requestTaskActionProcessDTO, {
-      responseType: <any>responseType_,
-      withCredentials: this.configuration.withCredentials,
-      headers: headers,
-      observe: observe,
-      reportProgress: reportProgress,
-    });
+    return this.httpClient.post<RequestTaskPayload>(
+      `${this.configuration.basePath}/v1.0/tasks/actions`,
+      requestTaskActionProcessDTO,
+      {
+        responseType: responseType_ as any,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
   }
 }

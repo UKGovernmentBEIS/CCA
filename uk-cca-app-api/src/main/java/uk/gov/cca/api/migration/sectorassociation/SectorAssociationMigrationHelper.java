@@ -14,8 +14,10 @@ public class SectorAssociationMigrationHelper {
     
     public String constructQuery(String query, String acronyms) {
         return ObjectUtils.isEmpty(acronyms) ? query
-                : String.format(query + " and sect_id IN (%s)", Arrays.stream(acronyms.split(",")).filter(Objects::nonNull)
-                        .map(acronym -> "'" + acronym.trim() + "'").collect(Collectors.joining(",")));
+                : String.format(query + " and sect_id IN (%s)", Arrays.stream(acronyms.split(","))
+                        .filter(Objects::nonNull)
+                        .map(acronym -> "'" + acronym.trim() + "'")
+                        .collect(Collectors.joining(",")));
     }
 
     public static String createErrorMessageForDuplicateAcronym(List<SectorAssociationVO> sectorVOs) {

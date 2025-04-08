@@ -31,8 +31,10 @@ const selectDefaultContacts: StateSelector<RequestActionState, DefaultNoticeReci
   (payload: UnderlyingAgreementDecisionRequestActionPayload) => payload.defaultContacts,
 );
 
-const selectRequestActionUserInfo: StateSelector<RequestActionState, { [key: string]: RequestActionUserInfo }> =
-  createDescendingSelector(selectPayload, (payload) => payload.usersInfo);
+const selectRequestActionUserInfo: StateSelector<
+  RequestActionState,
+  Record<string, RequestActionUserInfo>
+> = createDescendingSelector(selectPayload, (payload) => payload.usersInfo);
 
 const selectOfficialNotice: StateSelector<RequestActionState, FileInfoDTO> = createDescendingSelector(
   selectPayload,
@@ -44,11 +46,13 @@ const selectDetermination: StateSelector<RequestActionState, Determination> = cr
   (payload: UnderlyingAgreementDecisionRequestActionPayload) => payload.determination,
 );
 
-const selectReviewSectionsCompleted: StateSelector<RequestActionState, { [key: string]: string }> =
-  createDescendingSelector(
-    selectPayload,
-    (payload: UnderlyingAgreementDecisionRequestActionPayload) => payload.reviewSectionsCompleted,
-  );
+const selectReviewSectionsCompleted: StateSelector<
+  RequestActionState,
+  Record<string, string>
+> = createDescendingSelector(
+  selectPayload,
+  (payload: UnderlyingAgreementDecisionRequestActionPayload) => payload.reviewSectionsCompleted,
+);
 
 const selectSubtaskDecision = (group: UnderlyingAgreementSaveReviewGroupDecisionRequestTaskActionPayload['group']) =>
   createDescendingSelector(
@@ -62,7 +66,7 @@ const selectFacilitySubtaskDecision = (facility: string) =>
     (payload: UnderlyingAgreementDecisionRequestActionPayload) => payload.facilitiesReviewGroupDecisions[facility],
   );
 
-const selectReviewAttachments: StateSelector<RequestActionState, { [key: string]: string }> = createDescendingSelector(
+const selectReviewAttachments: StateSelector<RequestActionState, Record<string, string>> = createDescendingSelector(
   selectPayload,
   (payload: UnderlyingAgreementDecisionRequestActionPayload) => payload.reviewAttachments,
 );

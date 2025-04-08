@@ -7,6 +7,8 @@ import { map } from 'rxjs';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { ErrorCodes } from '@error/business-errors';
+import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import {
   ButtonDirective,
   ErrorSummaryComponent,
@@ -14,8 +16,6 @@ import {
   RadioOptionComponent,
   TextInputComponent,
 } from '@netz/govuk-components';
-import { PageHeadingComponent } from '@shared/components';
-import { PendingButtonDirective } from '@shared/directives/pending-button.directive';
 
 import { CcaOperatorUserInvitationDTO, OperatorUsersInvitationService } from 'cca-api';
 

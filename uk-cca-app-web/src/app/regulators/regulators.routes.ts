@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
-import { PendingRequestGuard } from '@core/guards/pending-request.guard';
+import { PendingRequestGuard } from '@shared/guards';
 
 import { ActiveExternalContactStore } from './external-contacts-tab/active-external-contact.store';
 import { DeleteComponent as DeleteExternalContactComponent } from './external-contacts-tab/delete/delete.component';

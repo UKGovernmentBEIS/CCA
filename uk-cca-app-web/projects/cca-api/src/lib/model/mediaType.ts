@@ -13,7 +13,7 @@
 export interface MediaType {
   type?: string;
   subtype?: string;
-  parameters?: { [key: string]: string };
+  parameters?: Record<string, string>;
   qualityValue?: number;
   wildcardType?: boolean;
   wildcardSubtype?: boolean;
