@@ -17,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.files.attachments.service.FileAttachmentTokenService;
@@ -26,7 +26,7 @@ import uk.gov.netz.api.token.FileToken;
 
 @ExtendWith(MockitoExtension.class)
 
-public class AccountPerformanceDataStatusAttachmentServiceTest {
+class AccountPerformanceDataStatusAttachmentServiceTest {
 
 	@InjectMocks
 	private AccountPerformanceDataStatusAttachmentService accountPerformanceDataStatusAttachmentService;
@@ -44,20 +44,20 @@ public class AccountPerformanceDataStatusAttachmentServiceTest {
 		final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
 		final UUID fileAttachmentUuid = UUID.randomUUID();
 
-		final FileInfoDTO performanceReport = FileInfoDTO.builder().uuid(fileAttachmentUuid.toString()).build();
+		final FileInfoDTO performanceDataReport = FileInfoDTO.builder().uuid(fileAttachmentUuid.toString()).build();
 
 		final FileToken fileToken = FileToken.builder().token("token").build();
 
-		when(accountPerformanceDataStatusQueryService.getAccountPerformanceReportAttachment(accountId,
-				targetPeriodType)).thenReturn(performanceReport);
+		when(accountPerformanceDataStatusQueryService.getAccountPerformanceDataReportAttachment(accountId,
+				targetPeriodType)).thenReturn(performanceDataReport);
 		when(fileAttachmentTokenService.generateGetFileAttachmentToken(fileAttachmentUuid.toString()))
 				.thenReturn(fileToken);
 
-		final FileToken result = accountPerformanceDataStatusAttachmentService.generateGetFileAttachmentToken(accountId,
+		final FileToken result = accountPerformanceDataStatusAttachmentService.generateGetAccountPerformanceDataReportAttachmentToken(accountId,
 				targetPeriodType, fileAttachmentUuid);
 
 		assertEquals(result, fileToken);
-		verify(accountPerformanceDataStatusQueryService, times(1)).getAccountPerformanceReportAttachment(accountId,
+		verify(accountPerformanceDataStatusQueryService, times(1)).getAccountPerformanceDataReportAttachment(accountId,
 				targetPeriodType);
 		verify(fileAttachmentTokenService, times(1)).generateGetFileAttachmentToken(fileAttachmentUuid.toString());
 	}
@@ -70,17 +70,17 @@ public class AccountPerformanceDataStatusAttachmentServiceTest {
 		final UUID fileAttachmentUuid = UUID.randomUUID();
 		final UUID actualFileAttachmentUuid = UUID.randomUUID();
 
-		final FileInfoDTO performanceReport = FileInfoDTO.builder().uuid(actualFileAttachmentUuid.toString()).build();
+		final FileInfoDTO performanceDataReport = FileInfoDTO.builder().uuid(actualFileAttachmentUuid.toString()).build();
 
-		when(accountPerformanceDataStatusQueryService.getAccountPerformanceReportAttachment(accountId,
-				targetPeriodType)).thenReturn(performanceReport);
+		when(accountPerformanceDataStatusQueryService.getAccountPerformanceDataReportAttachment(accountId,
+				targetPeriodType)).thenReturn(performanceDataReport);
 
 		BusinessException businessException = assertThrows(BusinessException.class,
-				() -> accountPerformanceDataStatusAttachmentService.generateGetFileAttachmentToken(accountId,
+				() -> accountPerformanceDataStatusAttachmentService.generateGetAccountPerformanceDataReportAttachmentToken(accountId,
 						targetPeriodType, fileAttachmentUuid));
 
 		assertThat(businessException.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
-		verify(accountPerformanceDataStatusQueryService, times(1)).getAccountPerformanceReportAttachment(accountId,
+		verify(accountPerformanceDataStatusQueryService, times(1)).getAccountPerformanceDataReportAttachment(accountId,
 				targetPeriodType);
 		verifyNoInteractions(fileAttachmentTokenService);
 	}
@@ -92,15 +92,15 @@ public class AccountPerformanceDataStatusAttachmentServiceTest {
 		final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
 		final UUID fileAttachmentUuid = UUID.randomUUID();
 
-		when(accountPerformanceDataStatusQueryService.getAccountPerformanceReportAttachment(accountId,
+		when(accountPerformanceDataStatusQueryService.getAccountPerformanceDataReportAttachment(accountId,
 				targetPeriodType)).thenThrow(new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
 
 		BusinessException businessException = assertThrows(BusinessException.class,
-				() -> accountPerformanceDataStatusAttachmentService.generateGetFileAttachmentToken(accountId,
+				() -> accountPerformanceDataStatusAttachmentService.generateGetAccountPerformanceDataReportAttachmentToken(accountId,
 						targetPeriodType, fileAttachmentUuid));
 
 		assertThat(businessException.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
-		verify(accountPerformanceDataStatusQueryService, times(1)).getAccountPerformanceReportAttachment(accountId,
+		verify(accountPerformanceDataStatusQueryService, times(1)).getAccountPerformanceDataReportAttachment(accountId,
 				targetPeriodType);
 		verifyNoInteractions(fileAttachmentTokenService);
 	}

@@ -12,9 +12,17 @@ import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-una-summary-target-unit-details',
+  template: `
+    <div>
+      <netz-page-heading>Target unit details</netz-page-heading>
+      <cca-summary [data]="summaryData" />
+    </div>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
-  templateUrl: './review-target-unit-details-summary.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ReviewTargetUnitDetailsSummaryComponent {

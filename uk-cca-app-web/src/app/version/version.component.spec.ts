@@ -10,9 +10,7 @@ describe('VersionComponent', () => {
     await TestBed.configureTestingModule({
       imports: [VersionComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(VersionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

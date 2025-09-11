@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.dto.*;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeDocumentService;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeService;
@@ -19,6 +21,7 @@ import uk.gov.netz.api.token.FileToken;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
@@ -26,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class SectorAssociationSchemeControllerTest {
+class SectorAssociationSchemeControllerTest {
 
     private static final String CONTROLLER_PATH = "/v1.0/sector-association/{sectorId}/scheme";
 
@@ -42,7 +45,7 @@ public class SectorAssociationSchemeControllerTest {
     private SectorAssociationSchemeDocumentService sectorAssociationSchemeDocumentService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new ExceptionControllerAdvice())
                 .build();
@@ -51,31 +54,41 @@ public class SectorAssociationSchemeControllerTest {
     @Test
     void getSectorAssociationSchemeBySectorAssociationIdWithoutTargetSet() throws Exception {
         Long sectorAssociationId = 1L;
-        SectorAssociationSchemeDTO sectorAssociationSchemeDTO = createSectorAssociationSchemeDTOWithoutTargetSet();
+        SectorAssociationSchemesDTO sectorAssociationSchemesDTO = SectorAssociationSchemesDTO.builder()
+        		.sectorAssociationSchemeMap(Map.of(SchemeVersion.CCA_2, createSectorAssociationSchemeDTOWithoutTargetSet())) 
+        		.subsectorAssociations(Collections.singletonList(SubsectorAssociationInfoDTO.builder()
+        				.name("name")
+                        .build()))
+        		.build();
 
-        when(sectorAssociationSchemeService.getSectorAssociationSchemeBySectorAssociationId(sectorAssociationId)).thenReturn(sectorAssociationSchemeDTO);
+        when(sectorAssociationSchemeService.getSectorAssociationSchemesBySectorAssociationId(sectorAssociationId)).thenReturn(sectorAssociationSchemesDTO);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get(CONTROLLER_PATH.replace("{sectorId}", sectorAssociationId.toString()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(sectorAssociationSchemeService, times(1)).getSectorAssociationSchemeBySectorAssociationId(sectorAssociationId);
+        verify(sectorAssociationSchemeService, times(1)).getSectorAssociationSchemesBySectorAssociationId(sectorAssociationId);
     }
 
     @Test
     void getSectorAssociationSchemeBySectorAssociationIdWithoutSubsectors() throws Exception {
         Long sectorAssociationId = 1L;
-        SectorAssociationSchemeDTO sectorAssociationSchemeDTO = createSectorAssociationSchemeDTOWithoutSubsectors();
+        SectorAssociationSchemesDTO sectorAssociationSchemesDTO = SectorAssociationSchemesDTO.builder()
+        		.sectorAssociationSchemeMap(Map.of(SchemeVersion.CCA_2, createSectorAssociationSchemeDTOWithoutSubsectors())) 
+        		.subsectorAssociations(Collections.singletonList(SubsectorAssociationInfoDTO.builder()
+        				.name("name")
+                        .build()))
+        		.build();
 
-        when(sectorAssociationSchemeService.getSectorAssociationSchemeBySectorAssociationId(sectorAssociationId)).thenReturn(sectorAssociationSchemeDTO);
+        when(sectorAssociationSchemeService.getSectorAssociationSchemesBySectorAssociationId(sectorAssociationId)).thenReturn(sectorAssociationSchemesDTO);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get(CONTROLLER_PATH.replace("{sectorId}", sectorAssociationId.toString()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(sectorAssociationSchemeService, times(1)).getSectorAssociationSchemeBySectorAssociationId(sectorAssociationId);
+        verify(sectorAssociationSchemeService, times(1)).getSectorAssociationSchemesBySectorAssociationId(sectorAssociationId);
     }
 
 
@@ -106,11 +119,6 @@ public class SectorAssociationSchemeControllerTest {
                         .fileType(".pdf")
                         .fileSize(1)
                         .build())
-                .subsectorAssociationSchemes(Collections.singletonList(SubsectorAssociationSchemeInfoDTO.builder()
-                        .subsectorAssociation(SubsectorAssociationDTO.builder()
-                                .name("name")
-                                .build())
-                        .build()))
                 .sectorDefinition("This is the sector definition")
                 .umaDate(LocalDate.now())
                 .build();

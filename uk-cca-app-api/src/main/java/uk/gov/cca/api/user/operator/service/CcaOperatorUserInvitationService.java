@@ -38,7 +38,7 @@ public class CcaOperatorUserInvitationService {
     @AccountStatus(expression = "{#status == 'NEW' || #status == 'LIVE'}")
     public void inviteUserToAccount(Long accountId, CcaOperatorUserInvitationDTO userRegistrationDTO, AppUser currentUser) {
 
-        String targetUnitName = targetUnitAccountQueryService.getAccountName(accountId);
+        String targetUnitName = targetUnitAccountQueryService.getAccountBusinessIdAndName(accountId);
         Objects.requireNonNull(targetUnitName);
 
         Optional<UserInfoDTO> registeredEmail = authUserService.getUserByEmail(userRegistrationDTO.getEmail());

@@ -25,13 +25,9 @@ export function LandingPageGuard(): Observable<boolean | UrlTree> {
       const termsFeatureEnabled = configStore.select(selectIsFeatureEnabled('terms'));
       const latestTerms = latestTermsStore.state;
 
-      if (!authStore.select(selectIsLoggedIn)()) {
-        return true;
-      }
+      if (!authStore.select(selectIsLoggedIn)()) return true;
 
-      if (!userRoleType) {
-        return true;
-      }
+      if (!userRoleType) return true;
 
       if (termsFeatureEnabled && latestTerms.version !== userTerms.termsVersion) {
         return router.parseUrl('terms');
@@ -41,9 +37,7 @@ export function LandingPageGuard(): Observable<boolean | UrlTree> {
         return router.parseUrl('dashboard');
       }
 
-      if (hasNoAuthority(userState) || shouldShowDisabled(userState) || statusAccepted(userState)) {
-        return true;
-      }
+      if (hasNoAuthority(userState) || shouldShowDisabled(userState) || statusAccepted(userState)) return true;
 
       return router.parseUrl('dashboard');
     }),

@@ -1,0 +1,42 @@
+@if (errorType(); as errorType) {
+  <div #container aria-labelledby="error-summary-title" class="govuk-error-summary" role="alert" tabindex="-1">
+    <h2 class="govuk-error-summary__title" id="error-summary-title">There is a problem</h2>
+    <div class="govuk-error-summary__body">
+      <ul class="govuk-list govuk-error-summary__list">
+        <li>
+          <p class="highlight-error">{{ errorType | patErrorType }}</p>
+          <p>
+            There was a problem with the upload, contact
+            <a class="govuk-link" href="mailto:cca-help@environment-agency.gov.uk"
+              >cca-help&#64;environment-agency.gov.uk</a
+            >.
+          </p>
+        </li>
+      </ul>
+    </div>
+  </div>
+} @else {
+  <govuk-notification-banner type="success">
+    <h3 class="govuk-heading-m">Files have been uploaded</h3>
+    <p>
+      Contact
+      <a class="govuk-link" href="mailto:cca-help@environment-agency.gov.uk">cca-help&#64;environment-agency.gov.uk</a>
+      if you think there is a problem.
+    </p>
+  </govuk-notification-banner>
+}
+
+<cca-summary [data]="summaryData" />
+
+@if (csvReportFile) {
+  <div class="govuk-warning-text govuk-!-margin-top-6">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+      <span class="govuk-visually-hidden">Warning</span>
+      To view the details of all successful uploads and any error messages, download the submission summary file before
+      selecting Complete
+    </strong>
+  </div>
+}
+
+<button netzPendingButton govukButton type="button" (click)="onComplete()">Complete</button>

@@ -3,6 +3,7 @@ package uk.gov.cca.api.sectorassociation.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 
 @Entity
 @Getter
@@ -33,12 +34,7 @@ public class SubsectorAssociationScheme {
     @Column(name = "id")
     private Long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sector_association_scheme_id")
-    private SectorAssociationScheme sectorAssociationScheme;
-
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "subsector_association_id")
     @NotNull
     private SubsectorAssociation subsectorAssociation;
@@ -47,4 +43,9 @@ public class SubsectorAssociationScheme {
     @JoinColumn(name = "target_set_id")
     @NotNull
     private TargetSet targetSet;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "scheme_version")
+    @NotNull
+    private SchemeVersion schemeVersion;
 }

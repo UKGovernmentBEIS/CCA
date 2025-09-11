@@ -1,6 +1,5 @@
 package uk.gov.cca.api.web.controller.notification;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +20,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.cca.api.web.orchestrator.template.dto.DocumentTemplateViewDTO;
+import uk.gov.cca.api.web.orchestrator.template.service.DocumentTemplateQueryServiceOrchestrator;
+import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateInfoDTO;
 import uk.gov.netz.api.security.AppSecurityComponent;
 import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
 import uk.gov.netz.api.security.AuthorizedAspect;
@@ -46,6 +48,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -66,6 +69,9 @@ class DocumentTemplateControllerTest {
 
     @Mock
     private DocumentTemplateQueryService documentTemplateQueryService;
+    
+    @Mock
+    private DocumentTemplateQueryServiceOrchestrator documentTemplateQueryServiceOrchestrator;
 
     @Mock
     private DocumentTemplateUpdateService documentTemplateUpdateService;
@@ -80,7 +86,7 @@ class DocumentTemplateControllerTest {
     private AppUserAuthorizationService appUserAuthorizationService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedRoleAspect
             authorizedRoleAspect = new AuthorizedRoleAspect(roleAuthorizationService, authorizationAspectUserResolver);
@@ -117,12 +123,12 @@ class DocumentTemplateControllerTest {
         DocumentTemplateSearchCriteria searchCriteria = DocumentTemplateSearchCriteria.builder()
             .competentAuthority(ca)
             .term("term")
-            .paging(PagingRequest.builder().pageNumber(0L).pageSize(30L).build())
+            .paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
             .build();
 
         List<DocumentTemplateInfoDTO> documentTemplates = List.of(
-            new DocumentTemplateInfoDTO(1L, "template1", "Workflow Name", LocalDateTime.now()),
-            new DocumentTemplateInfoDTO(2L, "template2", "Workflow Name", LocalDateTime.now())
+            new DocumentTemplateInfoDTO(1L, "template1", null, "Workflow Name", LocalDateTime.now()),
+            new DocumentTemplateInfoDTO(2L, "template2", null, "Workflow Name", LocalDateTime.now())
         );
         DocumentTemplateSearchResults results = DocumentTemplateSearchResults.builder()
             .templates(documentTemplates)
@@ -155,7 +161,7 @@ class DocumentTemplateControllerTest {
             .build();
         DocumentTemplateSearchCriteria searchCriteria = DocumentTemplateSearchCriteria.builder()
             .term("term")
-            .paging(PagingRequest.builder().pageNumber(0L).pageSize(30L).build())
+            .paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
@@ -184,7 +190,15 @@ class DocumentTemplateControllerTest {
             .name(documentTemplateName)
             .build();
 
-        when(documentTemplateQueryService.getDocumentTemplateDTOById(documentTemplateId)).thenReturn(documentTemplateDTO);
+        NotificationTemplateInfoDTO notificationTemplateInfoDTO =
+                new NotificationTemplateInfoDTO(1L, "name", OPERATOR, "Multiple workflows", LocalDateTime.now());
+                
+        DocumentTemplateViewDTO documentTemplateViewDTO = DocumentTemplateViewDTO.builder()
+                .documentTemplate(documentTemplateDTO)
+                .notificationTemplate(notificationTemplateInfoDTO)
+                .build();
+
+        when(documentTemplateQueryServiceOrchestrator.getDocumentTemplateDTOById(documentTemplateId)).thenReturn(documentTemplateViewDTO);
 
         mockMvc.perform(MockMvcRequestBuilders
             .get("/v1.0/document-templates/" + documentTemplateId)
@@ -193,7 +207,7 @@ class DocumentTemplateControllerTest {
             .andExpect(jsonPath("$.id").value(documentTemplateId))
             .andExpect(jsonPath("$.name").value(documentTemplateName));
 
-        verify(documentTemplateQueryService, times(1)).getDocumentTemplateDTOById(documentTemplateId);
+        verify(documentTemplateQueryServiceOrchestrator, times(1)).getDocumentTemplateDTOById(documentTemplateId);
     }
 
     @Test
@@ -214,7 +228,7 @@ class DocumentTemplateControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verifyNoInteractions(documentTemplateQueryService);
+        verifyNoInteractions(documentTemplateQueryServiceOrchestrator);
     }
 
     @Test
@@ -273,8 +287,7 @@ class DocumentTemplateControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/v1.0/document-templates/" + documentTemplateId))
             .andExpect(
-                result -> Assertions.assertTrue(
-                    result.getResolvedException() instanceof MissingServletRequestPartException))
+                result -> assertInstanceOf(MissingServletRequestPartException.class, result.getResolvedException()))
             .andExpect(status().isBadRequest());
     }
 

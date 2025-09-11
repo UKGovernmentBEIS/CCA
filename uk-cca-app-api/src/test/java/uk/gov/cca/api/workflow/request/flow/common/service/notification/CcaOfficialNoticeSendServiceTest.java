@@ -18,7 +18,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.service.SectorReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.UnderlyingAgreementDefaultNoticeRecipients;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.service.UnderlyingAgreementDefaultNoticeRecipients;
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
@@ -230,7 +230,7 @@ class CcaOfficialNoticeSendServiceTest {
         verify(notificationEmailService, times(1))
                 .notifyRecipients(
                         emailData,
-                        List.of("responsiblePerson@test.com", "administrative@test.com"),
+                        List.of("administrative@test.com", "responsiblePerson@test.com"),
                         List.of("sector1@example.com", "sector@test.com"),
                         List.of());
     }

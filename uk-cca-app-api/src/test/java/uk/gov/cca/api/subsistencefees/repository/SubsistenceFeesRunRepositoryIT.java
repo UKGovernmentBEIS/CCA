@@ -23,7 +23,6 @@ import uk.gov.netz.api.common.AbstractContainerBaseTest;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.List;
@@ -47,7 +46,7 @@ class SubsistenceFeesRunRepositoryIT extends AbstractContainerBaseTest {
     private final LocalDateTime submissionDate = LocalDateTime.of(2025, 4, 1, 12, 22, 44);
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         Year chargingYear = Year.of(2025);
         // Set up subsistence fees runs
         SubsistenceFeesRun run1 = SubsistenceFeesRun.builder()
@@ -308,19 +307,17 @@ class SubsistenceFeesRunRepositoryIT extends AbstractContainerBaseTest {
 
     	Optional<SubsistenceFeesRunDetailsInfo> resultInfo = repository.findSubsistenceFeesRunDetailsById(7L);
 
-        assertThat(resultInfo).isNotEmpty();
-        assertThat(resultInfo.get()).isEqualTo(detailsInfo);
+        assertThat(resultInfo).contains(detailsInfo);
 
         SubsistenceFeesRunMoaDetailsInfo moaDetailsInfo = new SubsistenceFeesRunMoaDetailsInfo(new BigDecimal("301.00"), 2L, 1L);
 
     	Optional<SubsistenceFeesRunMoaDetailsInfo> moaResultInfo = repository.findSubsistenceFeesRunMoaDetailsById(7L);
 
-        assertThat(moaResultInfo).isNotEmpty();
-        assertThat(moaResultInfo.get()).isEqualTo(moaDetailsInfo);
+        assertThat(moaResultInfo).contains(moaDetailsInfo);
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         repository.deleteAll();
         flushAndClear();
     }

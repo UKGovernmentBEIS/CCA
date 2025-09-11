@@ -21,7 +21,7 @@ export interface TargetUnitAccountDetailsDTO {
   operatorType?: 'LIMITED_COMPANY' | 'PARTNERSHIP' | 'SOLE_TRADER' | 'NONE';
   companyRegistrationNumber?: string;
   registrationNumberMissingReason?: string;
-  sicCode?: string;
+  sicCodes?: string[];
   sectorAssociationId?: number;
   subsectorAssociationId?: number;
   financialIndependenceStatus?: 'NON_FINANCIALLY_INDEPENDENT' | 'FINANCIALLY_INDEPENDENT';

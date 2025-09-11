@@ -72,7 +72,7 @@ class ItemAssignedToOthersControllerTest {
     private RoleAuthorizationService roleAuthorizationService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         List<ItemAssignedToOthersService> services = List.of(itemAssignedToOthersOperatorService, itemAssignedToOthersRegulatorService, itemAssignedToOthersSectorUserService);
         ItemAssignedToOthersController itemController = new ItemAssignedToOthersController(services);
 
@@ -104,7 +104,7 @@ class ItemAssignedToOthersControllerTest {
         ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().totalItems(1L).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        when(itemAssignedToOthersOperatorService.getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build()))
+        when(itemAssignedToOthersOperatorService.getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build()))
                 .thenReturn(itemDTOResponse);
         when(itemAssignedToOthersOperatorService.getRoleType()).thenReturn(OPERATOR);
 
@@ -114,7 +114,7 @@ class ItemAssignedToOthersControllerTest {
             .andExpect(status().isOk());
 
         verify(itemAssignedToOthersOperatorService, times(1))
-                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
         verify(itemAssignedToOthersRegulatorService, never())
                 .getItemsAssignedToOthers(any(), any(PagingRequest.class));
         verify(itemAssignedToOthersSectorUserService, never())
@@ -127,7 +127,7 @@ class ItemAssignedToOthersControllerTest {
         ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().totalItems(1L).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        when(itemAssignedToOthersRegulatorService.getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build()))
+        when(itemAssignedToOthersRegulatorService.getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build()))
                 .thenReturn(itemDTOResponse);
         when(itemAssignedToOthersOperatorService.getRoleType()).thenReturn(OPERATOR);
         when(itemAssignedToOthersRegulatorService.getRoleType()).thenReturn(REGULATOR);
@@ -140,7 +140,7 @@ class ItemAssignedToOthersControllerTest {
         verify(itemAssignedToOthersOperatorService, never())
                 .getItemsAssignedToOthers(any(), any(PagingRequest.class));
         verify(itemAssignedToOthersRegulatorService, times(1))
-                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
         verify(itemAssignedToOthersSectorUserService, never())
 				.getItemsAssignedToOthers(any(), any(PagingRequest.class));
     }
@@ -151,7 +151,7 @@ class ItemAssignedToOthersControllerTest {
         ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().totalItems(1L).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        when(itemAssignedToOthersSectorUserService.getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build()))
+        when(itemAssignedToOthersSectorUserService.getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build()))
                 .thenReturn(itemDTOResponse);
         when(itemAssignedToOthersSectorUserService.getRoleType()).thenReturn(SECTOR_USER);
         when(itemAssignedToOthersOperatorService.getRoleType()).thenReturn(OPERATOR);
@@ -163,7 +163,7 @@ class ItemAssignedToOthersControllerTest {
             .andExpect(status().isOk());
 
         verify(itemAssignedToOthersSectorUserService, times(1))
-                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
         verify(itemAssignedToOthersRegulatorService, never())
                 .getItemsAssignedToOthers(any(), any(PagingRequest.class));
         verify(itemAssignedToOthersOperatorService, never())

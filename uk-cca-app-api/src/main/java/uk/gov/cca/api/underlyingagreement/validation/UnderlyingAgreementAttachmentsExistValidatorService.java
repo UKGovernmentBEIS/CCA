@@ -20,7 +20,7 @@ public class UnderlyingAgreementAttachmentsExistValidatorService implements Unde
     private final FileAttachmentService fileAttachmentService;
 
     @Override
-    public BusinessValidationResult validate(UnderlyingAgreementContainer container) {
+    public BusinessValidationResult validate(UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
         Optional<UnderlyingAgreementViolation> optViolation =
                 validateFilesExist(
                         container.getUnderlyingAgreement().getUnderlyingAgreementSectionAttachmentIds(),

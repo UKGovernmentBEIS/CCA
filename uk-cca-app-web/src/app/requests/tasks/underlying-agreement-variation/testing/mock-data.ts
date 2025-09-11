@@ -490,7 +490,7 @@ export const mockUnderlyingAgreementVariation: UnderlyingAgreementVariationPaylo
     },
     operatorType: 'LIMITED_COMPANY',
     isCompanyRegistrationNumber: true,
-    companyRegistrationNumber: '1111',
+    companyRegistrationNumber: '11112222',
   },
   facilities,
   targetPeriod5Details: {
@@ -593,7 +593,7 @@ export const mockUnderlyingAgreementVariationOriginal: UnderlyingAgreementPayloa
 export const mockTargetUnitDetails: TargetUnitAccountDetails = {
   operatorName: 'test',
   operatorType: 'LIMITED_COMPANY',
-  companyRegistrationNumber: 'test',
+  companyRegistrationNumber: 'test1234',
   address: {
     line1: 'accountrefdata operator address line 1',
     line2: 'accountrefdata operator address line 2',
@@ -641,11 +641,18 @@ export const mockTargetUnitDetails: TargetUnitAccountDetails = {
 };
 
 export const mockOriginalUnderlyingAgreementContainer: UnderlyingAgreementContainer = {
-  sectorMeasurementType: 'ENERGY_KWH',
+  schemeDataMap: {
+    ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+  },
   underlyingAgreement: mockUnderlyingAgreementVariationOriginal,
   underlyingAgreementAttachments: {
     '061b1268-57ac-4b16-890f-36211d37686a': 'sample_profile.bmp',
     '3fec47fe-f7c0-4d88-af52-bae6a38442cd': 'sample_profile1.png',
+    '7d9e456f-2211-4abc-8d5e-12a34b567c89': 'target_calculator_original.xlsx',
+    '9a8b7c6d-5e4f-3g2h-1i0j-k9l8m7n6o5p4': 'conversion_evidence_original.pdf',
+    '123e4567-e89b-12d3-a456-426614174000': 'greenfield_evidence_original.pdf',
+    '5a4b3c2d-1e2f-3g4h-5i6j-7k8l9m0n1o2p': 'authorisation_original.pdf',
+    'abcd1234-5678-90ef-ghij-klmnopqrstuv': 'additional_evidence_original.pdf',
   },
 };
 
@@ -655,7 +662,9 @@ export const mockUnaVariationRequestTaskPayload: UNAVariationRequestTaskPayload 
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
   underlyingAgreement: mockUnderlyingAgreementVariation,
@@ -663,12 +672,10 @@ export const mockUnaVariationRequestTaskPayload: UNAVariationRequestTaskPayload 
     underlyingAgreementTargetUnitDetails: 'IN_PROGRESS',
   },
   underlyingAgreementAttachments: {
-    manufacturingProcessFile: 'manufacturingProcessFile.xlsx',
-    processFlowFile: 'processFlowFile.xlsx',
-    annotatedSitePlansFile: 'annotatedSitePlansFile.xlsx',
-    eligibleProcessFile: 'eligibleProcessFile.xlsx',
-    activitiesDescriptionFile: 'activitiesDescriptionFile.xlsx',
-    evidenceFile: 'evidenceFile.xlsx',
+    '1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb': 'target_calculator_tp6.xlsx',
+    '1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb': 'conversion_evidence_tp6.pdf',
+    'f8dff40f-3fb7-4368-8723-244661fb686f': 'greenfield_evidence_tp6.pdf',
+    '2f611a22-bd5f-4fd4-b00f-c20bfb2706c9': 'authorisation_document.pdf',
   },
   originalUnderlyingAgreementContainer: mockOriginalUnderlyingAgreementContainer,
 };

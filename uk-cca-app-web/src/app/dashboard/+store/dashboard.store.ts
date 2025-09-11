@@ -32,7 +32,7 @@ export class DashboardStore extends SignalStore<DashboardState> {
   setTotal(total: number) {
     this.setState(
       produce(this.state, (state) => {
-        state.total = total;
+        state.totalItems = total;
       }),
     );
   }
@@ -41,6 +41,14 @@ export class DashboardStore extends SignalStore<DashboardState> {
     this.setState(
       produce(this.state, (state) => {
         state.paging = { ...this.state.paging, page };
+      }),
+    );
+  }
+
+  setPageSize(pageSize: number) {
+    this.setState(
+      produce(this.state, (state) => {
+        state.paging = { ...this.state.paging, pageSize };
       }),
     );
   }

@@ -3,31 +3,34 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
-import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
-import { toOverallDecisionSummaryData, underlyingAgreementReviewQuery } from '@requests/common';
+import {
+  OVERALL_DECISION_SUBTASK,
+  TaskItemStatus,
+  TasksApiService,
+  toOverallDecisionSummaryData,
+  underlyingAgreementReviewQuery,
+} from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
+import { produce } from 'immer';
 
-import { UnderlyingAgreementVariationReviewTaskService } from '../../../services/underlying-agreement-variation-review-task.service';
+import { createSaveDeterminationActionDTO } from '../../../transform';
 
 @Component({
   selector: 'cca-overall-decision-check-your-answers',
-  standalone: true,
   template: `
     <div>
       <netz-page-heading [caption]="caption">Check your answers</netz-page-heading>
-
       <cca-summary [data]="summaryData" />
-
       <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
     </div>
 
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-    <netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>
+    <netz-return-to-task-or-action-page />
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     SummaryComponent,
     PageHeadingComponent,
@@ -35,10 +38,11 @@ import { UnderlyingAgreementVariationReviewTaskService } from '../../../services
     PendingButtonDirective,
     ReturnToTaskOrActionPageComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverallDecisionCheckYourAnswersComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
-  private readonly taskService = inject(TaskService);
+  private readonly tasksApiService = inject(TasksApiService);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -60,8 +64,23 @@ export class OverallDecisionCheckYourAnswersComponent {
   );
 
   onSubmit() {
-    (this.taskService as UnderlyingAgreementVariationReviewTaskService)
-      .submitReviewDetermination(this.determination)
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+
+    const currentReviewSectionsCompleted = this.requestTaskStore.select(
+      underlyingAgreementReviewQuery.selectReviewSectionsCompleted,
+    )();
+
+    // Mark overall decision with final status based on determination type
+    const taskItemStatus = this.determination.type === 'ACCEPTED' ? TaskItemStatus.ACCEPTED : TaskItemStatus.REJECTED;
+
+    const reviewSectionsCompleted = produce(currentReviewSectionsCompleted, (draft) => {
+      draft[OVERALL_DECISION_SUBTASK] = taskItemStatus;
+    });
+
+    const dto = createSaveDeterminationActionDTO(requestTaskId, this.determination, reviewSectionsCompleted);
+
+    this.tasksApiService
+      .saveRequestTaskAction(dto)
       .subscribe(() => this.router.navigate(['../../../'], { relativeTo: this.activatedRoute }));
   }
 }

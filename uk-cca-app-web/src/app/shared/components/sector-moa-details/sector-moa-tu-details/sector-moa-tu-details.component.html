@@ -1,0 +1,143 @@
+@if (state().moaTUDetails; as moaTUDetails) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <netz-page-heading [caption]="'Target unit'" size="xl" data-testid="page-heading">
+        {{ moaTUDetails?.businessId }}
+      </netz-page-heading>
+    </div>
+  </div>
+
+  @if (summaryData()) {
+    <cca-summary [data]="summaryData()" />
+  }
+}
+
+@if (state().facilities) {
+  <cca-utility-panel heading="Filters">
+    <form [formGroup]="searchForm" (ngSubmit)="onApplyFilters()">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <div
+            widthClass="govuk-!-width-full"
+            formControlName="term"
+            govuk-text-input
+            label="Enter facility Id or site name"
+          ></div>
+        </div>
+
+        <div class="govuk-grid-column-one-third">
+          <div
+            govuk-select
+            widthClass="govuk-!-width-full"
+            label="Marking of facilities"
+            [options]="markingOfFacilitiesOptions"
+            formControlName="markFacilitiesStatus"
+          ></div>
+        </div>
+      </div>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          <button class="govuk-!-margin-right-3" netzPendingButton govukButton type="submit">Apply</button>
+          <button netzPendingButton govukSecondaryButton type="button" (click)="onClearFilters()">Clear</button>
+        </div>
+      </div>
+    </form>
+  </cca-utility-panel>
+
+  @if (hasSelectableRows()) {
+    <div class="govuk-grid-row govuk-!-margin-top-6">
+      <div class="govuk-grid-column-one-half selection-text">
+        <p>{{ this.state().selectedFacilities.size }} selected facilities</p>
+      </div>
+
+      <div class="govuk-grid-column-one-half selection-actions">
+        <button
+          govukSecondaryButton
+          type="button"
+          [disabled]="this.state().selectedFacilities.size === 0"
+          (click)="onMark('paid')"
+        >
+          Mark as paid
+        </button>
+
+        <button
+          govukSecondaryButton
+          type="button"
+          [disabled]="this.state().selectedFacilities.size === 0"
+          (click)="onMark('in-progress')"
+        >
+          Mark as in progress
+        </button>
+
+        @if (state().userRoleType === 'REGULATOR') {
+          <button
+            govukSecondaryButton
+            type="button"
+            [disabled]="this.state().selectedFacilities.size === 0"
+            (click)="onMark('cancelled')"
+          >
+            Mark as cancelled
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <div class="x-scroll govuk-!-margin-top-6">
+    <div class="max-content-width">
+      <div class="overflow-auto overflow-auto-table">
+        <cca-table
+          [columns]="tableColumns"
+          [data]="tableData()"
+          [selectedRows]="this.state().selectedFacilities"
+          [showSelectAllCheckbox]="hasSelectableRows()"
+          (rowSelectionChange)="onSelectChange($event)"
+          (allRowsSelectionChange)="onSelectWholePageChange($event)"
+        >
+          <ng-template let-column="column" let-row="row">
+            @switch (column.field) {
+              @case ('facilityId') {
+                <span>{{ row[column.field] }}</span>
+              }
+
+              @case ('facilityName') {
+                <span>{{ row[column.field] }}</span>
+              }
+
+              @case ('markFacilitiesStatus') {
+                <div class="govuk-!-width-full">
+                  <span>{{ row[column.field] | status }}</span>
+                </div>
+              }
+
+              @case ('paymentDate') {
+                <span>{{ row[column.field] | date: 'dd MMM yyyy' }}</span>
+              }
+
+              @case ('markingHistory') {
+                @if (row['hasHistory']) {
+                  <a
+                    [routerLink]="['mark-facilities', 'history', row['moaFacilityId']]"
+                    [relativeTo]="activatedRoute"
+                    class="govuk-link"
+                  >
+                    View history
+                  </a>
+                }
+              }
+            }
+          </ng-template>
+        </cca-table>
+
+        <cca-pagination
+          [count]="state().totalFacilityItems"
+          [currentPage]="currentPage()"
+          [pageSize]="pageSize()"
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        />
+      </div>
+    </div>
+  </div>
+}

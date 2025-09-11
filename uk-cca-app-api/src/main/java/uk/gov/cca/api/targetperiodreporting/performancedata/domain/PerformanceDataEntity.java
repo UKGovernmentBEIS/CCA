@@ -28,7 +28,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriod;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 
 @Getter
 @Setter

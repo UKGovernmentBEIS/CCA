@@ -10,7 +10,13 @@ import { toSummaryData } from './operator-details-summary-helper';
 
 @Component({
   selector: 'cca-operator-details',
-  templateUrl: './operator-details.component.html',
+  template: `
+    @if (operatorUserDetails) {
+      <netz-page-heading>{{ operatorUserDetails.firstName }} {{ operatorUserDetails.lastName }}</netz-page-heading>
+      <cca-summary [data]="summaryData" />
+      <a class="govuk-link" routerLink="/2fa/change" fragment="target-units"> Reset two factor authentication </a>
+    }
+  `,
   standalone: true,
   imports: [RouterLink, PageHeadingComponent, SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,7 +27,7 @@ export class OperatorDetailsComponent {
 
   private readonly roleType = this.authStore.select(selectUserRoleType);
 
-  readonly operatorUserDetails = this.activeOperatorStore.state.details;
+  protected readonly operatorUserDetails = this.activeOperatorStore.state.details;
 
-  readonly summaryData = toSummaryData(this.operatorUserDetails, this.roleType() === 'REGULATOR');
+  protected readonly summaryData = toSummaryData(this.operatorUserDetails, this.roleType() === 'REGULATOR');
 }

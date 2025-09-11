@@ -1,0 +1,578 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FacilityExtentComponent should show form values 1`] = `
+<cca-facility-extent
+  activatedRoute={[Function Object]}
+  activitiesClaimedExists={[Function Function]}
+  facility={[Function Function]}
+  facilityId={[Function String]}
+  form={[Function FormGroup]}
+  isActivitiesDescriptionFileExist={[Function Function]}
+  router={[Function _Router]}
+  store={[Function Object]}
+  tasksApiService={[Function Object]}
+>
+  <cca-wizard-step
+    class="ng-untouched ng-pristine ng-valid"
+    data-testid="facility-extent-form"
+    heading="Extent of the facility"
+  >
+    <form
+      class="ng-untouched ng-pristine ng-valid"
+      novalidate=""
+    >
+      <netz-page-heading>
+        <h1
+          class="govuk-heading-l"
+        >
+          Extent of the facility
+        </h1>
+      </netz-page-heading>
+      <div
+        class="govuk-!-width-two-thirds"
+      >
+        <p>
+          Provide information on the activities carried out and the energy used at the facility.
+        </p>
+        <govuk-details
+          summary="More information on the extent of the facility"
+        >
+          <details
+            class="govuk-details"
+          >
+            <summary
+              class="govuk-details__summary"
+            >
+              <span
+                class="govuk-details__summary-text"
+              >
+                More information on the extent of the facility
+              </span>
+            </summary>
+            <div
+              class="govuk-details__text"
+            >
+              <p>
+                To determine the improvement target for each facility included in an agreement, we need to know:
+              </p>
+              <ul>
+                <li>
+                  the boundary which encloses the land used in connection with the operation of the installation
+                </li>
+                <li>
+                   the different categories of activities carried out on the site that consume energy, i.e.: 
+                  <ul>
+                    <li>
+                      eligible
+                    </li>
+                    <li>
+                      directly associated
+                    </li>
+                    <li>
+                      ineligible
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  how much of the energy used on site can be included in the eligible facility (the 70% rule)
+                </li>
+                <li>
+                   whether the eligible facility includes plant carrying out an activity listed in The Greenhouse Gas Emissions Trading Scheme Order 2020 
+                </li>
+              </ul>
+              <p>
+                 The sections of the form below require you to upload the evidence we need to understand the extent of the facility. 
+              </p>
+              <p>
+                The evidence you provide should be consistent between each of the relevant sections.
+              </p>
+            </div>
+          </details>
+        </govuk-details>
+        <h2
+          class="govuk-heading-m"
+        >
+          Manufacturing process
+        </h2>
+        <cca-file-input
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="manufacturingProcessFile"
+          hint="Upload a description of the manufacturing processes that consume energy on the site, ensuring you include all eligible, ineligible and directly associated activities"
+          label="Manufacturing process description"
+        >
+          <div
+            class="cca-multi-file-upload cca-multi-file-upload--enhanced"
+          >
+            <label
+              class="govuk-label"
+              for="manufacturingProcessFile"
+              id="l.manufacturingProcessFile"
+            >
+              Manufacturing process description
+            </label>
+            <span
+              class="govuk-hint govuk-!-display-block"
+              id="manufacturingProcessFile-hint"
+            >
+              Upload a description of the manufacturing processes that consume energy on the site, ensuring you include all eligible, ineligible and directly associated activities
+            </span>
+            <input
+              accept="*/*"
+              class="govuk-file-upload"
+              id="manufacturingProcessFile"
+              name="manufacturingProcessFile"
+              type="file"
+            />
+            <cca-file-upload-list>
+              <div
+                class="cca-multi-file__uploaded-files"
+              >
+                <div
+                  class="govuk-summary-list"
+                >
+                  <div
+                    aria-live="polite"
+                    class="govuk-summary-list__value cca-multi-file-upload__message"
+                  >
+                    <span
+                      class="cca-multi-file-upload__filename"
+                    >
+                      <a
+                        class="govuk-link"
+                        href="/"
+                        target="_blank"
+                      >
+                        manufacturingProcessFile.xlsx
+                      </a>
+                    </span>
+                    <span
+                      class="cca-multi-file-upload__progress"
+                    >
+                    </span>
+                  </div>
+                  <div
+                    class="govuk-summary-list__actions cca-multi-file-upload__actions"
+                  >
+                    <button
+                      class="govuk-!-margin-bottom-0 govuk-button govuk-button--secondary"
+                      govuksecondarybutton=""
+                      name="delete"
+                      type="button"
+                    >
+                       Delete 
+                      <span
+                        class="govuk-visually-hidden"
+                      >
+                        manufacturingProcessFile.xlsx
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </cca-file-upload-list>
+          </div>
+        </cca-file-input>
+        <cca-file-input
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="processFlowFile"
+          hint="Upload a process flow map identifying all the eligible, ineligible and directly associated activities that consume energy on the site and the interactions between these"
+          label="Process flow maps"
+        >
+          <div
+            class="cca-multi-file-upload cca-multi-file-upload--enhanced"
+          >
+            <label
+              class="govuk-label"
+              for="processFlowFile"
+              id="l.processFlowFile"
+            >
+              Process flow maps
+            </label>
+            <span
+              class="govuk-hint govuk-!-display-block"
+              id="processFlowFile-hint"
+            >
+              Upload a process flow map identifying all the eligible, ineligible and directly associated activities that consume energy on the site and the interactions between these
+            </span>
+            <input
+              accept="*/*"
+              class="govuk-file-upload"
+              id="processFlowFile"
+              name="processFlowFile"
+              type="file"
+            />
+            <cca-file-upload-list>
+              <div
+                class="cca-multi-file__uploaded-files"
+              >
+                <div
+                  class="govuk-summary-list"
+                >
+                  <div
+                    aria-live="polite"
+                    class="govuk-summary-list__value cca-multi-file-upload__message"
+                  >
+                    <span
+                      class="cca-multi-file-upload__filename"
+                    >
+                      <a
+                        class="govuk-link"
+                        href="/"
+                        target="_blank"
+                      >
+                        processFlowFile.xlsx
+                      </a>
+                    </span>
+                    <span
+                      class="cca-multi-file-upload__progress"
+                    >
+                    </span>
+                  </div>
+                  <div
+                    class="govuk-summary-list__actions cca-multi-file-upload__actions"
+                  >
+                    <button
+                      class="govuk-!-margin-bottom-0 govuk-button govuk-button--secondary"
+                      govuksecondarybutton=""
+                      name="delete"
+                      type="button"
+                    >
+                       Delete 
+                      <span
+                        class="govuk-visually-hidden"
+                      >
+                        processFlowFile.xlsx
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </cca-file-upload-list>
+          </div>
+        </cca-file-input>
+        <cca-file-input
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="annotatedSitePlansFile"
+          hint="Upload a plan showing the extent of the entire site/eligible facility and highlight areas on the plan where eligible, ineligible and directly associated activities consuming energy are located"
+          label="Annotated site plans"
+        >
+          <div
+            class="cca-multi-file-upload cca-multi-file-upload--enhanced"
+          >
+            <label
+              class="govuk-label"
+              for="annotatedSitePlansFile"
+              id="l.annotatedSitePlansFile"
+            >
+              Annotated site plans
+            </label>
+            <span
+              class="govuk-hint govuk-!-display-block"
+              id="annotatedSitePlansFile-hint"
+            >
+              Upload a plan showing the extent of the entire site/eligible facility and highlight areas on the plan where eligible, ineligible and directly associated activities consuming energy are located
+            </span>
+            <input
+              accept="*/*"
+              class="govuk-file-upload"
+              id="annotatedSitePlansFile"
+              name="annotatedSitePlansFile"
+              type="file"
+            />
+            <cca-file-upload-list>
+              <div
+                class="cca-multi-file__uploaded-files"
+              >
+                <div
+                  class="govuk-summary-list"
+                >
+                  <div
+                    aria-live="polite"
+                    class="govuk-summary-list__value cca-multi-file-upload__message"
+                  >
+                    <span
+                      class="cca-multi-file-upload__filename"
+                    >
+                      <a
+                        class="govuk-link"
+                        href="/"
+                        target="_blank"
+                      >
+                        annotatedSitePlansFile.xlsx
+                      </a>
+                    </span>
+                    <span
+                      class="cca-multi-file-upload__progress"
+                    >
+                    </span>
+                  </div>
+                  <div
+                    class="govuk-summary-list__actions cca-multi-file-upload__actions"
+                  >
+                    <button
+                      class="govuk-!-margin-bottom-0 govuk-button govuk-button--secondary"
+                      govuksecondarybutton=""
+                      name="delete"
+                      type="button"
+                    >
+                       Delete 
+                      <span
+                        class="govuk-visually-hidden"
+                      >
+                        annotatedSitePlansFile.xlsx
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </cca-file-upload-list>
+          </div>
+        </cca-file-input>
+        <h2
+          class="govuk-heading-m"
+        >
+          Eligible process
+        </h2>
+        <cca-file-input
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="eligibleProcessFile"
+          hint="Upload a description of the plant or processes in which you carry out one or more activities that are described in the schedule to the sector umbrella agreement. Your description should include any sub-sectors, where applicable"
+          label="Eligible process description"
+        >
+          <div
+            class="cca-multi-file-upload cca-multi-file-upload--enhanced"
+          >
+            <label
+              class="govuk-label"
+              for="eligibleProcessFile"
+              id="l.eligibleProcessFile"
+            >
+              Eligible process description
+            </label>
+            <span
+              class="govuk-hint govuk-!-display-block"
+              id="eligibleProcessFile-hint"
+            >
+              Upload a description of the plant or processes in which you carry out one or more activities that are described in the schedule to the sector umbrella agreement. Your description should include any sub-sectors, where applicable
+            </span>
+            <input
+              accept="*/*"
+              class="govuk-file-upload"
+              id="eligibleProcessFile"
+              name="eligibleProcessFile"
+              type="file"
+            />
+            <cca-file-upload-list>
+              <div
+                class="cca-multi-file__uploaded-files"
+              >
+                <div
+                  class="govuk-summary-list"
+                >
+                  <div
+                    aria-live="polite"
+                    class="govuk-summary-list__value cca-multi-file-upload__message"
+                  >
+                    <span
+                      class="cca-multi-file-upload__filename"
+                    >
+                      <a
+                        class="govuk-link"
+                        href="/"
+                        target="_blank"
+                      >
+                        eligibleProcessFile.xlsx
+                      </a>
+                    </span>
+                    <span
+                      class="cca-multi-file-upload__progress"
+                    >
+                    </span>
+                  </div>
+                  <div
+                    class="govuk-summary-list__actions cca-multi-file-upload__actions"
+                  >
+                    <button
+                      class="govuk-!-margin-bottom-0 govuk-button govuk-button--secondary"
+                      govuksecondarybutton=""
+                      name="delete"
+                      type="button"
+                    >
+                       Delete 
+                      <span
+                        class="govuk-visually-hidden"
+                      >
+                        eligibleProcessFile.xlsx
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </cca-file-upload-list>
+          </div>
+        </cca-file-input>
+        <h2
+          class="govuk-heading-m"
+        >
+          Directly associated activities
+        </h2>
+        <div
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="areActivitiesClaimed"
+          govuk-radio=""
+          legend="Are any directly associated activities claimed?"
+        >
+          <div
+            class="govuk-form-group"
+          >
+            <fieldset
+              class="govuk-fieldset"
+              govukfieldset=""
+              id="areActivitiesClaimed"
+            >
+              <legend
+                class="govuk-fieldset__legend"
+                govuklegend=""
+                id="l.areActivitiesClaimed"
+              >
+                 Are any directly associated activities claimed? 
+              </legend>
+              <div
+                class="govuk-radios govuk-radios--inline"
+              >
+                <div
+                  class="govuk-radios__item"
+                >
+                  <input
+                    class="govuk-radios__input"
+                    id="areActivitiesClaimed-option0"
+                    name="areActivitiesClaimed"
+                    type="radio"
+                    value="true"
+                  />
+                  <label
+                    class="govuk-label govuk-radios__label"
+                    for="areActivitiesClaimed-option0"
+                  >
+                     Yes 
+                  </label>
+                </div>
+                <div
+                  class="govuk-radios__item"
+                >
+                  <input
+                    class="govuk-radios__input"
+                    id="areActivitiesClaimed-option1"
+                    name="areActivitiesClaimed"
+                    type="radio"
+                    value="false"
+                  />
+                  <label
+                    class="govuk-label govuk-radios__label"
+                    for="areActivitiesClaimed-option1"
+                  >
+                     No 
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <cca-file-input
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="activitiesDescriptionFile"
+          hint="Upload a description of the activities consuming energy that have a technical connection with, and serve the eligible activities on the site"
+          label="Directly associated activities description"
+        >
+          <div
+            class="cca-multi-file-upload cca-multi-file-upload--enhanced"
+          >
+            <label
+              class="govuk-label"
+              for="activitiesDescriptionFile"
+              id="l.activitiesDescriptionFile"
+            >
+              Directly associated activities description
+            </label>
+            <span
+              class="govuk-hint govuk-!-display-block"
+              id="activitiesDescriptionFile-hint"
+            >
+              Upload a description of the activities consuming energy that have a technical connection with, and serve the eligible activities on the site
+            </span>
+            <input
+              accept="*/*"
+              class="govuk-file-upload"
+              id="activitiesDescriptionFile"
+              name="activitiesDescriptionFile"
+              type="file"
+            />
+            <cca-file-upload-list>
+              <div
+                class="cca-multi-file__uploaded-files"
+              >
+                <div
+                  class="govuk-summary-list"
+                >
+                  <div
+                    aria-live="polite"
+                    class="govuk-summary-list__value cca-multi-file-upload__message"
+                  >
+                    <span
+                      class="cca-multi-file-upload__filename"
+                    >
+                      <a
+                        class="govuk-link"
+                        href="/"
+                        target="_blank"
+                      >
+                        activitiesDescriptionFile.xlsx
+                      </a>
+                    </span>
+                    <span
+                      class="cca-multi-file-upload__progress"
+                    >
+                    </span>
+                  </div>
+                  <div
+                    class="govuk-summary-list__actions cca-multi-file-upload__actions"
+                  >
+                    <button
+                      class="govuk-!-margin-bottom-0 govuk-button govuk-button--secondary"
+                      govuksecondarybutton=""
+                      name="delete"
+                      type="button"
+                    >
+                       Delete 
+                      <span
+                        class="govuk-visually-hidden"
+                      >
+                        activitiesDescriptionFile.xlsx
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </cca-file-upload-list>
+          </div>
+        </cca-file-input>
+      </div>
+      <button
+        class="govuk-button"
+        govukbutton=""
+        netzpendingbutton=""
+        type="submit"
+      >
+        Continue
+      </button>
+    </form>
+  </cca-wizard-step><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><a
+    class="govuk-link"
+    href="/"
+  >
+     Return to: Manage facilities 
+  </a>
+</cca-facility-extent>
+`;

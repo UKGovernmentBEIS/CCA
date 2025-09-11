@@ -62,12 +62,12 @@ export class SectorContactsTabComponent implements OnInit {
   private readonly router = inject(Router);
 
   private readonly sectorId = +this.route.snapshot.paramMap.get('sectorId');
-  private sectorUsersAuthorities = signal<SectorUsersAuthoritiesInfoDTO | null>(null);
+  private readonly sectorUsersAuthorities = signal<SectorUsersAuthoritiesInfoDTO | null>(null);
 
-  readonly isEditable = computed(() => this.sectorUsersAuthorities()?.editable);
-  readonly userId = this.authStore.select(selectUserId);
+  protected readonly isEditable = computed(() => this.sectorUsersAuthorities()?.editable);
+  protected readonly userId = this.authStore.select(selectUserId);
 
-  readonly authorities = computed(() => {
+  protected readonly authorities = computed(() => {
     const sorting = this.sorting();
     const authorities: SectorUserAuthorityInfoDTO[] = this.sectorUsersAuthorities()?.authorities;
 
@@ -79,24 +79,24 @@ export class SectorContactsTabComponent implements OnInit {
     });
   });
 
-  sorting = signal<SortEvent | null>(null);
+  private readonly sorting = signal<SortEvent | null>(null);
 
-  createUserTypeOptions: GovukSelectOption<string>[] = [
+  protected readonly createUserTypeOptions: GovukSelectOption<string>[] = [
     { text: 'Administrator user', value: 'sector_user_administrator' },
     { text: 'Basic user', value: 'sector_user_basic_user' },
   ];
 
-  authorityStatuses: GovukSelectOption<string>[] = [
+  protected readonly authorityStatuses: GovukSelectOption<string>[] = [
     { text: 'Active', value: 'ACTIVE' },
     { text: 'Disabled', value: 'DISABLED' },
   ];
 
-  authorityStatusesAccepted: GovukSelectOption<string>[] = [
+  protected readonly authorityStatusesAccepted: GovukSelectOption<string>[] = [
     { text: 'Accepted', value: 'ACCEPTED' },
     { text: 'Active', value: 'ACTIVE' },
   ];
 
-  sectorContactUsersColumns: GovukTableColumn[] = [
+  protected readonly sectorContactUsersColumns: GovukTableColumn[] = [
     { field: 'name', header: 'Name', isSortable: true },
     { field: 'userType', header: 'User type' },
     { field: 'contactType', header: 'Contact type' },
@@ -104,12 +104,12 @@ export class SectorContactsTabComponent implements OnInit {
     { field: 'deleteBtn', header: 'Actions' },
   ];
 
-  nonEditableCols: GovukTableColumn[] = this.sectorContactUsersColumns.slice(0, -1);
+  protected readonly nonEditableCols: GovukTableColumn[] = this.sectorContactUsersColumns.slice(0, -1);
 
-  createUserForm = this.fb.group({ userType: this.createUserTypeOptions[0].value });
-  authoritiesForm = this.fb.group({ authorities: this.fb.array<SectorAuthorityFormModel>([]) });
-  status = toSignal(this.authoritiesForm.statusChanges.pipe(startWith(this.authoritiesForm.status)));
-  authoritiesFormValue = toSignal(this.authoritiesArray.valueChanges);
+  protected readonly createUserForm = this.fb.group({ userType: this.createUserTypeOptions[0].value });
+  protected readonly authoritiesForm = this.fb.group({ authorities: this.fb.array<SectorAuthorityFormModel>([]) });
+
+  protected readonly status = toSignal(this.authoritiesForm.statusChanges.pipe(startWith(this.authoritiesForm.status)));
 
   get authoritiesArray() {
     return this.authoritiesForm.controls.authorities;
@@ -128,9 +128,6 @@ export class SectorContactsTabComponent implements OnInit {
       this.sectorUsersAuthorities.set(usersAuthorities);
       patchAuthoritiesForm(usersAuthorities.authorities, this.authoritiesForm, this.fb);
     });
-  }
-  private fetchSectorUsersAuthorities() {
-    return this.sectorAssociationAuthoritiesService.getSectorUserAuthoritiesBySectorAssociationId(this.sectorId);
   }
 
   onSelectUserType() {
@@ -177,5 +174,9 @@ export class SectorContactsTabComponent implements OnInit {
         }),
       )
       .subscribe();
+  }
+
+  private fetchSectorUsersAuthorities() {
+    return this.sectorAssociationAuthoritiesService.getSectorUserAuthoritiesBySectorAssociationId(this.sectorId);
   }
 }

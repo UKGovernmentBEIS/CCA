@@ -1,27 +1,10 @@
 import { Routes } from '@angular/router';
 
-import { PayloadMutatorsHandler, SideEffectsHandler } from '@netz/common/forms';
 import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/common';
-
-import { canActivateVariationOverallDecision } from './subtasks/overall-decision/overall-decision.guard';
-import {
-  providePayloadMutators,
-  provideSideEffects,
-  provideStepFlowManagers,
-  provideTaskServices,
-} from './underlying-agreement-variation-review.providers';
 
 export const UNDERLYING_AGREEMENT_VARIATION_REVIEW_ROUTES: Routes = [
   {
     path: '',
-    providers: [
-      SideEffectsHandler,
-      PayloadMutatorsHandler,
-      provideTaskServices(),
-      providePayloadMutators(),
-      provideSideEffects(),
-      provideStepFlowManagers(),
-    ],
     children: [
       {
         path: 'variation-details',
@@ -44,14 +27,12 @@ export const UNDERLYING_AGREEMENT_VARIATION_REVIEW_ROUTES: Routes = [
       {
         path: 'target-period-5',
         canActivate: [isEditableSummaryRedirectGuard],
-        loadChildren: () =>
-          import('./subtasks/baseline-and-targets/tp5/tp5.routes').then((r) => r.TARGET_PERIOD_5_ROUTES),
+        loadChildren: () => import('./subtasks/tp5/tp5.routes').then((r) => r.TARGET_PERIOD_5_ROUTES),
       },
       {
         path: 'target-period-6',
         canActivate: [isEditableSummaryRedirectGuard],
-        loadChildren: () =>
-          import('./subtasks/baseline-and-targets/tp6/tp6.routes').then((r) => r.TARGET_PERIOD_6_ROUTES),
+        loadChildren: () => import('./subtasks/tp6/tp6.routes').then((r) => r.TARGET_PERIOD_6_ROUTES),
       },
       {
         path: 'authorisation-additional-evidence',
@@ -63,7 +44,7 @@ export const UNDERLYING_AGREEMENT_VARIATION_REVIEW_ROUTES: Routes = [
       },
       {
         path: 'send-application',
-        canActivate: [canActivateVariationOverallDecision, isEditableSummaryRedirectGuard],
+        canActivate: [isEditableSummaryRedirectGuard],
         loadChildren: () =>
           import('./subtasks/overall-decision/overall-decision.routes').then((r) => r.OVERALL_DECISION_ROUTES),
       },

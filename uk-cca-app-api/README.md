@@ -74,6 +74,15 @@ Documentation can be found at
 - https://camunda.com/platform/tasklist/
 - https://github.com/camunda/camunda-bpm-platform/tree/master/webapps
 
+## Companies House
+
+TODO: Add more information once the Companies House is integrated with the application.
+
+Snapshots of the Companies House DB can be found here:
+https://download.companieshouse.gov.uk/en_output.html 
+in CSV format.
+This can be imported to a postgres DB (use the multiple smaller files) and used for bulk operations as an alternative to using multiple different APIs and/or bypassing the API rate limiting.
+
 
 # Use in a New project
 - Change banner.txt

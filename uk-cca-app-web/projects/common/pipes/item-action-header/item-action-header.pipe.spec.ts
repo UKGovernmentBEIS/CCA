@@ -118,7 +118,18 @@ describe('ItemActionHeaderPipe', () => {
         type: 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_CANCELLED',
       }),
     ).toEqual('Underlying agreement variation application cancelled by John Bolt');
-
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING_SUBMITTED',
+      }),
+    ).toEqual('Performance report submitted by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED',
+      }),
+    ).toEqual('PAT report submitted by John Bolt');
     expect(
       pipe.transform({
         ...baseRequestAction,
@@ -149,6 +160,37 @@ describe('ItemActionHeaderPipe', () => {
         type: 'TARGET_UNIT_MOA_GENERATED',
       }),
     ).toEqual('Subsistence fees payment request received');
+
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'BUY_OUT_SURPLUS_RUN_SUBMITTED',
+      }),
+    ).toEqual('Buy-out and surplus batch run submitted by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'BUY_OUT_SURPLUS_RUN_COMPLETED',
+      }),
+    ).toEqual('Buy-out and surplus batch run completed');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'BUY_OUT_SURPLUS_RUN_COMPLETED_WITH_FAILURES',
+      }),
+    ).toEqual('Buy-out and surplus batch run completed with failures');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'TP6_BUY_OUT_ACCOUNT_PROCESSING_SUBMITTED',
+      }),
+    ).toEqual('Buy-out fee calculated');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'TP6_SURPLUS_ACCOUNT_PROCESSING_SUBMITTED',
+      }),
+    ).toEqual('Surplus calculated');
   });
 
   it('should display the approved application title', () => {

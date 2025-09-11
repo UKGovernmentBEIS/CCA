@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class TargetSetIT extends AbstractContainerBaseTest {
+class TargetSetIT extends AbstractContainerBaseTest {
 
     @Autowired
     private EntityManager entityManager;

@@ -22,6 +22,7 @@ describe('EditResponsiblePersonComponent', () => {
   let page: Page;
   let activatedRoute: ActivatedRouteStub;
   let store: ActiveTargetUnitStore;
+
   const updateTargetUnitAccountService = mockClass(UpdateTargetUnitAccountService);
   updateTargetUnitAccountService.updateTargetUnitAccountResponsiblePerson.mockReturnValue(of({}));
 
@@ -29,6 +30,7 @@ describe('EditResponsiblePersonComponent', () => {
     get jobTitleValue() {
       return this.getInputValue('#jobTitle');
     }
+
     set jobTitleValue(value: string) {
       this.setInputValue('#jobTitle', value);
     }
@@ -44,6 +46,7 @@ describe('EditResponsiblePersonComponent', () => {
 
   beforeEach(async () => {
     activatedRoute = new ActivatedRouteStub({ targetUnitId: '1' });
+
     await TestBed.configureTestingModule({
       imports: [EditResponsiblePersonComponent],
       providers: [
@@ -55,11 +58,10 @@ describe('EditResponsiblePersonComponent', () => {
         { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     }).compileComponents();
+
     store = TestBed.inject(ActiveTargetUnitStore);
     store.setState({ targetUnitAccountDetails: mockTargetUnitAccountDetails });
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(EditResponsiblePersonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

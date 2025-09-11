@@ -3,29 +3,29 @@
 
   <div class="govuk-body">
     @if (timeoutBannerService.timeExtensionAllowed$ | async) {
-      <div aria-hidden="true" aria-relevant="additions">
+      <p aria-hidden="true" aria-relevant="additions">
         You must select "Continue" within the next
         {{ timeoutBannerService.timeOffsetSeconds | secondsToMinutes }} to stay signed in to the Manage your Energy
         Savings Opportunity Scheme reporting service. You will be automatically signed out if you do not respond, and
         your progress will not be saved.
-      </div>
+      </p>
 
-      <div class="govuk-visually-hidden" role="status">
+      <p class="govuk-visually-hidden" role="status">
         We will reset your application if you do not respond in
         {{ timeoutBannerService.timeOffsetSeconds | secondsToMinutes }}. We do this to keep your information secure.
-      </div>
+      </p>
     } @else {
-      <div aria-hidden="true" aria-relevant="additions">
+      <p aria-hidden="true" aria-relevant="additions">
         You will be automatically signed out of the the Manage your Energy Savings Opportunity Scheme reporting service
         within the next
         {{ timeoutBannerService.timeOffsetSeconds | secondsToMinutes }}. Your progress will not be saved. Select
         "Continue" to complete and save any unfinished work before you are automatically signed out.
-      </div>
+      </p>
 
-      <div class="govuk-visually-hidden" role="status">
+      <p class="govuk-visually-hidden" role="status">
         We will reset your application in
         {{ timeoutBannerService.timeOffsetSeconds | secondsToMinutes }}. We do this to keep your information secure.
-      </div>
+      </p>
     }
   </div>
 

@@ -1,5 +1,5 @@
 @if (form.invalid && form.touched) {
-  <govuk-error-summary [form]="form"></govuk-error-summary>
+  <govuk-error-summary [form]="form" />
 }
 
 <netz-page-heading size="xl">
@@ -23,6 +23,7 @@
     label="Email address"
     widthClass="govuk-!-width-one-third"
   ></div>
+
   <div formControlName="description" govuk-text-input label="Description" widthClass="govuk-!-width-one-third"></div>
 
   <button netzPendingButton govukButton type="submit">

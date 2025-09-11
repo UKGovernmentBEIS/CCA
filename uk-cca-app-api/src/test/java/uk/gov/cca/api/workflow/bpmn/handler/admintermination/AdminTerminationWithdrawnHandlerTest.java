@@ -14,7 +14,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminTerminationWithdrawnHandlerTest {
+class AdminTerminationWithdrawnHandlerTest {
 
     @InjectMocks
     private AdminTerminationWithdrawnHandler handler;

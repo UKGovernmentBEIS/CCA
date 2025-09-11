@@ -1,27 +1,11 @@
 import { Routes } from '@angular/router';
 
-import { PayloadMutatorsHandler, SideEffectsHandler } from '@netz/common/forms';
 import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/common';
-
-import { canActivateOverallDecision } from './subtasks/overall-decision/overall-decision.guard';
-import {
-  providePayloadMutators,
-  provideSideEffects,
-  provideStepFlowManagers,
-  provideTaskServices,
-} from './underlying-agreement-review.providers';
 
 export const UNDERLYING_AGREEMENT_REVIEW_ROUTES: Routes = [
   {
     path: '',
-    providers: [
-      SideEffectsHandler,
-      PayloadMutatorsHandler,
-      provideTaskServices(),
-      providePayloadMutators(),
-      provideSideEffects(),
-      provideStepFlowManagers(),
-    ],
+    providers: [],
     children: [
       {
         path: 'review-target-unit-details',
@@ -32,8 +16,9 @@ export const UNDERLYING_AGREEMENT_REVIEW_ROUTES: Routes = [
           ),
       },
       {
-        path: 'facility',
-        loadChildren: () => import('./subtasks/facility/facility.routes').then((r) => r.FACILITY_ROUTES),
+        path: 'manage-facilities',
+        loadChildren: () =>
+          import('./subtasks/manage-facilities/manage-facilities.routes').then((r) => r.MANAGE_FACILITIES_ROUTES),
       },
       {
         path: 'authorisation-additional-evidence',
@@ -44,20 +29,8 @@ export const UNDERLYING_AGREEMENT_REVIEW_ROUTES: Routes = [
           ),
       },
       {
-        path: 'target-period-5',
-        canActivate: [isEditableSummaryRedirectGuard],
-        loadChildren: () =>
-          import('./subtasks/baseline-and-targets/tp5/tp5.routes').then((r) => r.TARGET_PERIOD_5_ROUTES),
-      },
-      {
-        path: 'target-period-6',
-        canActivate: [isEditableSummaryRedirectGuard],
-        loadChildren: () =>
-          import('./subtasks/baseline-and-targets/tp6/tp6.routes').then((r) => r.TARGET_PERIOD_6_ROUTES),
-      },
-      {
         path: 'send-application',
-        canActivate: [canActivateOverallDecision, isEditableSummaryRedirectGuard],
+        canActivate: [isEditableSummaryRedirectGuard],
         loadChildren: () =>
           import('./subtasks/overall-decision/overall-decision.routes').then((r) => r.OVERALL_DECISION_ROUTES),
       },
@@ -68,6 +41,14 @@ export const UNDERLYING_AGREEMENT_REVIEW_ROUTES: Routes = [
         loadChildren: () =>
           import('./notify-operator/notify-operator.routes').then(
             (r) => r.UNDERLYING_AGREEMENT_REVIEW_NOTIFY_OPERATOR_ROUTES,
+          ),
+      },
+      {
+        path: 'send-for-peer-review',
+        canActivate: [isEditableGuard],
+        loadChildren: () =>
+          import('./send-for-peer-review/underlying-agreement-review-send-for-peer-review.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_REVIEW_SEND_FOR_PEER_REVIEW_ROUTES,
           ),
       },
     ],

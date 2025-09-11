@@ -9,7 +9,14 @@ import { RequestsService } from 'cca-api';
 
 @Component({
   selector: 'cca-new-subsistence-fees-payment-request',
-  templateUrl: './new-subsistence-fees-payment-request.component.html',
+  template: `
+    <netz-page-heading caption="Subsistence fees">New payment request</netz-page-heading>
+
+    <div class="govuk-!-width-two-thirds">
+      <p>You are about to send payment requests for subsistence fees to all eligible sectors and target units.</p>
+      <button govukButton netzPendingButton (click)="onCreateNewPaymentRequest()">Send payment requests</button>
+    </div>
+  `,
   standalone: true,
   imports: [PageHeadingComponent, ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,

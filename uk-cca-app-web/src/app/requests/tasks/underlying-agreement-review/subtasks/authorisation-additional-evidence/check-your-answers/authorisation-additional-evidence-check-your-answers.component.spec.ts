@@ -5,10 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { mockUNAReviewRequestTaskState } from '@requests/common';
+import { mockUNAReviewRequestTaskState, TasksApiService } from '@requests/common';
 import { screen } from '@testing-library/angular';
 import UserEvent from '@testing-library/user-event';
 
@@ -20,10 +19,12 @@ describe('CheckYourAnswersComponent', () => {
   let store: RequestTaskStore;
 
   const route = new ActivatedRouteStub();
-  const taskService: Partial<jest.Mocked<TaskService>> = {
-    submitSubtask: jest.fn().mockReturnValue(of({})),
+
+  const tasksApiService: Partial<jest.Mocked<TasksApiService>> = {
+    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
   };
-  const submitSubtaskSpy = jest.spyOn(taskService, 'submitSubtask');
+
+  const saveRequestTaskActionSpy = jest.spyOn(tasksApiService, 'saveRequestTaskAction');
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -31,7 +32,7 @@ describe('CheckYourAnswersComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: TaskService, useValue: taskService },
+        { provide: TasksApiService, useValue: tasksApiService },
         { provide: ActivatedRoute, useValue: route },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Review application for underlying agreement' },
@@ -66,9 +67,9 @@ describe('CheckYourAnswersComponent', () => {
     expect(screen.getByText('Return to: Review application for underlying agreement')).toBeInTheDocument();
   });
 
-  it('should submit form and call submitSubtask method', async () => {
+  it('should submit form and call saveRequestTaskAction method', async () => {
     const user = UserEvent.setup();
     await user.click(screen.getByText('Confirm and complete'));
-    expect(submitSubtaskSpy).toHaveBeenCalledTimes(1);
+    expect(saveRequestTaskActionSpy).toHaveBeenCalledTimes(1);
   });
 });

@@ -12,10 +12,12 @@ import { AvailableActionsComponent } from './available-actions.component';
 
 describe('ExplanationComponent', () => {
   let store: RequestTaskStore;
+  let container: Element;
+
   const unaTaskService: Partial<jest.Mocked<TaskService>> = {
     saveSubtask: jest.fn().mockReturnValue(of({})),
   };
-  let container: Element;
+
   beforeEach(async () => {
     const result = await render(AvailableActionsComponent, {
       providers: [
@@ -31,8 +33,10 @@ describe('ExplanationComponent', () => {
         store.setState(mockUNAReviewRequestTaskState);
       },
     });
+
     container = result.container;
   });
+
   it('should match snapshot for AvailableActionsComponent', async () => {
     expect(container).toMatchSnapshot();
   });

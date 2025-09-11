@@ -16,7 +16,7 @@ class OperatorAuthorityMapperTest {
     private OperatorAuthorityMapper mapper;
 
     @BeforeEach
-    public void init() {
+    void init() {
         mapper = Mappers.getMapper(OperatorAuthorityMapper.class);
     }
 

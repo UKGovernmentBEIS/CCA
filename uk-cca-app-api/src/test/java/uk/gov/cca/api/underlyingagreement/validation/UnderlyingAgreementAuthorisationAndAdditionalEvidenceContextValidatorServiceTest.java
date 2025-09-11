@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.DataValidator;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
@@ -43,7 +44,7 @@ class UnderlyingAgreementAuthorisationAndAdditionalEvidenceContextValidatorServi
                 .thenReturn(Optional.empty());
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(SchemeVersion.CCA_3));
 
 
         assertThat(result.isValid()).isTrue();
@@ -63,7 +64,7 @@ class UnderlyingAgreementAuthorisationAndAdditionalEvidenceContextValidatorServi
                 .build();
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(SchemeVersion.CCA_3));
 
         assertThat(result.isValid()).isFalse();
 

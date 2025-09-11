@@ -17,7 +17,9 @@ describe('RegulatorUsersComponent', () => {
     getCaRegulators: jest.fn().mockReturnValue(of(mockRegulatorsRouteData.regulators)),
     updateCompetentAuthorityRegulatorUsersStatus: jest.fn().mockReturnValue(of(null)),
   };
+
   const updateSpy = jest.spyOn(regulatorAuthoritiesService, 'updateCompetentAuthorityRegulatorUsersStatus');
+
   beforeEach(async () => {
     const component = await render(RegulatorsUsersComponent, {
       configureTestBed: (testbed) => {
@@ -36,15 +38,19 @@ describe('RegulatorUsersComponent', () => {
         },
       ],
     });
+
     component.fixture.detectChanges();
   });
+
   it('should render', () => {
     expect(document.getElementById('regulators-form')).toBeInTheDocument();
   });
+
   it('should have as many rows as regulators', async () => {
     const rows = screen.getAllByRole('row');
     expect(rows).toHaveLength(mockRegulatorsRouteData.regulators.caUsers.length + 1);
   });
+
   it('should edit a regulator and save', async () => {
     const user = UserEvent.setup();
     const select = document.getElementById('regulatorsArray.1.authorityStatus');

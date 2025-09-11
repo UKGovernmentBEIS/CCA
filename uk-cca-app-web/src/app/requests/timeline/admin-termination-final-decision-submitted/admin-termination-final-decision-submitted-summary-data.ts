@@ -5,10 +5,7 @@ import {
   transformUserContacts,
 } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
-import {
-  transformAttachmentsAndFileUUIDsToDownloadableFiles,
-  transformFileInfoToDownloadableFile,
-} from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 
 import {
   AdminTerminationFinalDecisionReasonDetails,
@@ -29,40 +26,34 @@ export function toAdminTerminationFinalDecisionSubmittedTimelineSummaryData(
 ): SummaryData {
   return new SummaryFactory()
     .addSection('Details')
-    .addRow(
+    .addTextAreaRow(
       'Decision',
       adminTerminationFinalDecisionReasonDetails.finalDecisionType === 'TERMINATE_AGREEMENT'
         ? 'Terminate agreement'
         : 'Withdraw termination',
-      {
-        prewrap: true,
-      },
     )
-    .addRow('Explain reason', adminTerminationFinalDecisionReasonDetails.explanation, {
-      prewrap: true,
-    })
+    .addTextAreaRow('Explain reason', adminTerminationFinalDecisionReasonDetails.explanation)
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsAndFileUUIDsToDownloadableFiles(
-        adminTerminationFinalDecisionReasonDetails.relevantFiles,
-        adminTerminationFinalDecisionAttachments,
+      fileUtils.toDownloadableFiles(
+        fileUtils.extractAttachments(
+          adminTerminationFinalDecisionReasonDetails.relevantFiles,
+          adminTerminationFinalDecisionAttachments,
+        ),
         downloadUrl,
       ),
     )
+
     .addSection('Official notice recipients')
-    .addRow(
-      'Users',
-      [
-        ...transformUserContacts(defaultContacts),
-        ...extractSectorUsersFromUsersInfo(usersInfo, decisionNotification.sectorUsers),
-        ...extractOperatorUsersFromUsersInfo(usersInfo, decisionNotification.operators),
-      ],
-      { prewrap: true },
-    )
+    .addTextAreaRow('Users', [
+      ...transformUserContacts(defaultContacts),
+      ...extractSectorUsersFromUsersInfo(usersInfo, decisionNotification.sectorUsers),
+      ...extractOperatorUsersFromUsersInfo(usersInfo, decisionNotification.operators),
+    ])
     .addRow(
       'Name and signature on the official notice',
       extractSignatoryUserFromUsersInfo(usersInfo, decisionNotification.signatory),
     )
-    .addFileListRow('Official notice', transformFileInfoToDownloadableFile(officialNotice, downloadUrl))
+    .addFileListRow('Official notice', fileUtils.toDownloadableDocument([officialNotice], downloadUrl))
     .create();
 }

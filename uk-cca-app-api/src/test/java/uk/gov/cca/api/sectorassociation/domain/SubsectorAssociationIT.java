@@ -11,6 +11,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import uk.gov.netz.api.common.AbstractContainerBaseTest;
+import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,16 +19,47 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class SubsectorAssociationIT extends AbstractContainerBaseTest {
+class SubsectorAssociationIT extends AbstractContainerBaseTest {
 
     @Autowired
     private EntityManager entityManager;
 
     @Test
     void testSubsectorAssociationPersistence() {
-        SubsectorAssociation subsectorAssociation = SubsectorAssociation.builder()
-                .name("name")
+    	Location location = Location.builder()
+                .postcode("12345")
+                .line1("123 Main St")
+                .city("Springfield")
+                .county("CountyName")
                 .build();
+    	
+    	SectorAssociationContact contact = SectorAssociationContact.builder()
+                .title("Mr.")
+                .firstName("John")
+                .lastName("Doe")
+                .jobTitle("Director")
+                .organisationName("Acme Corp")
+                .phoneNumber("123456789")
+                .email("john.doe@example.com")
+                .location(location)
+                .build();
+    	
+    	SectorAssociation sectorAssociation = SectorAssociation.builder()
+    			.competentAuthority(CompetentAuthorityEnum.ENGLAND)
+    			.name("name")
+    			.acronym("acronym")
+    			.legalName("legal name")
+    			.energyEprFactor("energyEprFactor")
+    			.location(location)
+    			.sectorAssociationContact(contact)
+    			.build();
+    	
+    	entityManager.persist(sectorAssociation);
+    			
+    	SubsectorAssociation subsectorAssociation = SubsectorAssociation.builder()
+    		.name("name")
+    		.sectorAssociation(sectorAssociation)
+            .build();
 
         entityManager.persist(subsectorAssociation);
         entityManager.flush();

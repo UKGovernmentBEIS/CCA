@@ -15,7 +15,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminTerminationCancelledServiceTest {
+class AdminTerminationCancelledServiceTest {
 
     @Mock
     private RequestService requestService;
@@ -24,7 +24,7 @@ public class AdminTerminationCancelledServiceTest {
     private AdminTerminationCancelledService service;
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         String requestId = "ACCT_1-ATER-1";
         String regulatorAssignee = UUID.randomUUID().toString();
 

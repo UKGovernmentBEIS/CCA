@@ -4,11 +4,11 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { WizardStepComponent } from '@shared/components';
 
-import { SectorAssociationSchemeDTO } from 'cca-api';
+import { SectorAssociationSchemesDTO } from 'cca-api';
 
 import { ActiveSectorStore } from '../../active-sector.store';
 import { TargetUnitDetailsInputComponent } from '../common/components/target-unit-details-input/target-unit-details-input.component';
-import { TargetUnitCreationFormModel } from '../common/components/target-unit-details-input/target-unit-details-input-controls';
+import { TargetUnitCreationFormModel } from '../common/types';
 import { CreateTargetUnitStore } from './create-target-unit.store';
 import { TARGET_UNIT_CREATION_FORM, TargetUnitCreationFormProvider } from './create-target-unit-form.provider';
 
@@ -28,13 +28,20 @@ export class CreateTargetUnitComponent {
 
   protected readonly form = inject<FormGroup<TargetUnitCreationFormModel>>(TARGET_UNIT_CREATION_FORM);
 
-  protected readonly subSectors = (this.activatedRoute.snapshot.data.subSectorScheme as SectorAssociationSchemeDTO)
-    .subsectorAssociationSchemes;
+  protected readonly subSectors = (this.activatedRoute.snapshot.data.subSectorScheme as SectorAssociationSchemesDTO)
+    .subsectorAssociations;
 
   onSubmitTargetUnit() {
     this.createTargetUnitStore.updateState({
       ...this.form.value,
+      isCompanyRegistrationNumber: this.form.value.isCompanyRegistrationNumber,
+      companyRegistrationNumber: this.form.value.companyRegistrationNumber,
+      registrationNumberMissingReason: this.form.value.registrationNumberMissingReason,
+      sicCodes: this.form.value.sicCodes.filter((val) => !!val),
       competentAuthority: this.activeSector.sectorAssociationDetails.competentAuthority,
+      subsectorAssociationName: this.subSectors.find(
+        (subsector) => subsector.id === this.form.get('subsectorAssociationId')?.value,
+      )?.name,
     });
 
     this.router.navigate(['..', 'operator-address'], { relativeTo: this.activatedRoute });

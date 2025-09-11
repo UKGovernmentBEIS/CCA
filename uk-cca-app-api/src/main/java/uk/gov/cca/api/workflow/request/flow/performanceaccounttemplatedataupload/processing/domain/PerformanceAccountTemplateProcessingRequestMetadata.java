@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
 import uk.gov.netz.api.workflow.request.core.domain.RequestMetadata;
 
@@ -21,6 +21,9 @@ public class PerformanceAccountTemplateProcessingRequestMetadata extends Request
 	private String parentRequestId;
 	
 	private SectorAssociationInfo sectorAssociationInfo;
+	private String sectorUserAssignee;
+	
+	private Long accountId;
 	private String accountBusinessId;
 	private TargetPeriodType targetPeriodType;
 	private Year targetPeriodYear;

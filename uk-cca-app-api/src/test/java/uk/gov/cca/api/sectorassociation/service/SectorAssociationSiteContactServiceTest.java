@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import uk.gov.cca.api.sectorassociation.domain.Location;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociationContact;
@@ -34,7 +35,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class SectorAssociationSiteContactServiceTest {
+class SectorAssociationSiteContactServiceTest {
 
     @Mock
     private SectorAssociationRepository sectorAssociationRepository;
@@ -60,14 +61,14 @@ public class SectorAssociationSiteContactServiceTest {
         List<SectorAssociationSiteContactInfoDTO> contacts = List.of(sectorAssociationSiteContactInfoDTO);
 
         Page<SectorAssociationSiteContactInfoDTO> contactInfoPage =
-            new PageImpl<>(contacts, PageRequest.of(0, 10), contacts.size());
+            new PageImpl<>(contacts, PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "acronym")), contacts.size());
 
         SectorAssociationSiteContactInfoResponse expected = SectorAssociationSiteContactInfoResponse.builder()
             .siteContacts(contacts).editable(true).totalItems(1L).build();
 
 
         when(sectorAssociationRepository.findSectorAssociationsSiteContactsByCA(user.getCompetentAuthority(),
-            PageRequest.of(0, 10))).thenReturn(contactInfoPage);
+            PageRequest.of(0, 10, Sort.by( "acronym")))).thenReturn(contactInfoPage);
 
 
         when(compAuthAuthorizationResourceService.hasUserScopeToCompAuth(user, Scope.EDIT_USER)).thenReturn(true);

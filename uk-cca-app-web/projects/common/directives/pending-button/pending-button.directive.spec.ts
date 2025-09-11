@@ -6,7 +6,7 @@ import { timer } from 'rxjs';
 
 import { PendingRequestService } from '@netz/common/services';
 import { BasePage } from '@netz/common/testing';
-import { ButtonDirective, GovukComponentsModule } from '@netz/govuk-components';
+import { ButtonDirective } from '@netz/govuk-components';
 
 import { PendingButtonDirective } from './pending-button.directive';
 
@@ -37,7 +37,7 @@ describe('PendingButtonDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GovukComponentsModule, PendingButtonDirective],
+      imports: [PendingButtonDirective],
     }).compileComponents();
   });
 

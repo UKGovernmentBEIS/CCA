@@ -34,7 +34,7 @@ const underlyingAgreementTargetUnitDetails: UnderlyingAgreementTargetUnitDetails
   responsiblePersonDetails: responsiblePersonDetails,
   operatorType: 'LIMITED_COMPANY',
   isCompanyRegistrationNumber: true,
-  companyRegistrationNumber: 'test',
+  companyRegistrationNumber: 'test1234',
 };
 
 const facilityDetails: FacilityDetails = {
@@ -174,10 +174,10 @@ const determination: Determination = {
 };
 
 const reviewSectionsCompleted = {
-  'ADS_2-F00029': 'APPROVED',
-  targetPeriod5Details: 'APPROVED',
-  targetPeriod6Details: 'APPROVED',
-  authorisationAndAdditionalEvidence: 'APPROVED',
+  'ADS_2-F00029': 'ACCEPTED',
+  targetPeriod5Details: 'ACCEPTED',
+  targetPeriod6Details: 'ACCEPTED',
+  authorisationAndAdditionalEvidence: 'ACCEPTED',
   underlyingAgreementTargetUnitDetails: 'REJECTED',
 };
 
@@ -223,7 +223,10 @@ const underlyingAgreementPayload: UnderlyingAgreementDecisionRequestActionPayloa
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+        ['CCA_3']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
   payloadType: 'UNDERLYING_AGREEMENT_REJECTED_PAYLOAD',

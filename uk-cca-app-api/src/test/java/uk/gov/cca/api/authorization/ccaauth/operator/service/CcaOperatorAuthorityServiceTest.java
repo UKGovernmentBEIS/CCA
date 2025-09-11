@@ -1,7 +1,6 @@
 package uk.gov.cca.api.authorization.ccaauth.operator.service;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.*;
@@ -69,19 +68,6 @@ class CcaOperatorAuthorityServiceTest {
     @Mock
     private ApplicationEventPublisher eventPublisher;
 
-    private Authority authority;
-    private String userId = "testUserId";
-    private Long accountId = 123L;
-
-    @BeforeEach
-    public void setUp() {
-        userId = "testUserId";
-        accountId = 1L;
-        authority = new Authority();
-        authority.setAccountId(accountId);
-        authority.setId(1L);
-    }
-
 
     @Test
     void createPendingAuthorityForOperator_pending_authority_exists() {
@@ -89,6 +75,7 @@ class CcaOperatorAuthorityServiceTest {
         String roleCode = "roleCode";
         String userId = "userId";
         String authorityUuid = "uuid";
+
         AppUser modificationUser = AppUser.builder().userId("current_user_id").build();
         Authority existingAuthority = createAuthority(userId, roleCode, accountId, AuthorityStatus.PENDING, authorityUuid);
         CcaAuthorityDetails existingAuthorityDetails = CcaAuthorityDetails.builder()
@@ -184,7 +171,11 @@ class CcaOperatorAuthorityServiceTest {
     }
 
     @Test
-    public void testDeleteAccountOperatorAuthority() {
+    void testDeleteAccountOperatorAuthority() {
+        Long accountId = 1L;
+        String userId = "userId";
+        Authority authority = new Authority();
+        authority.setAccountId(accountId);
         authority.setId(1L); // Set some dummy ID
 
         when(authorityRepository.findByUserId(userId)).thenReturn(List.of(authority));
@@ -196,7 +187,7 @@ class CcaOperatorAuthorityServiceTest {
     }
 
     @Test
-    public void testGetOperatorUserAuthorityDetails() {
+    void testGetOperatorUserAuthorityDetails() {
         String userId = "testUserId";
         Long accountId = 123L;
 
@@ -218,7 +209,7 @@ class CcaOperatorAuthorityServiceTest {
     }
 
     @Test
-    public void testGetOperatorUserAuthorityDetails_AuthorityNotFound() {
+    void testGetOperatorUserAuthorityDetails_AuthorityNotFound() {
         String userId = "someUserId";
         Long accountId = 123L;
 

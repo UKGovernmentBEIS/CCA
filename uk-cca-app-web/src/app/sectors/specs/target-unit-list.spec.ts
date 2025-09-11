@@ -44,7 +44,7 @@ describe('Target Units List Spec', () => {
     await user.selectOptions(select, `1: ${sectorUserId}`);
     await user.click(screen.getByText('Save'));
 
-    const req = httpTestingController.expectOne(`/api/v1.0/account-site-contacts/sector-association/${sectorId}`);
+    const req = httpTestingController.expectOne(`/api/v1.0/sector-association/${sectorId}/target-unit-accounts/`);
     req.flush(null);
     expect(select).toHaveDisplayValue(new RegExp(transformUsername(sectorUser)));
   }));
@@ -60,7 +60,7 @@ describe('Target Units List Spec', () => {
     await user.selectOptions(select, `0: null`);
     await user.click(screen.getByText('Save'));
 
-    const req = httpTestingController.expectOne(`/api/v1.0/account-site-contacts/sector-association/${sectorId}`);
+    const req = httpTestingController.expectOne(`/api/v1.0/sector-association/${sectorId}/target-unit-accounts/`);
     req.flush(null);
     expect(select).toHaveDisplayValue(/Unassigned/);
   }));

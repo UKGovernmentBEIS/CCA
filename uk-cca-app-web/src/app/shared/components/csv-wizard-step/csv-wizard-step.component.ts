@@ -13,6 +13,7 @@ import { CsvErrorSummaryComponent } from '../csv-error-summary/csv-error-summary
 
 @Component({
   selector: 'cca-csv-wizard-step',
+  templateUrl: './csv-wizard-step.component.html',
   standalone: true,
   imports: [
     RouterLink,
@@ -24,7 +25,6 @@ import { CsvErrorSummaryComponent } from '../csv-error-summary/csv-error-summary
     CsvErrorSummaryComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  templateUrl: './csv-wizard-step.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CsvWizardStepComponent {

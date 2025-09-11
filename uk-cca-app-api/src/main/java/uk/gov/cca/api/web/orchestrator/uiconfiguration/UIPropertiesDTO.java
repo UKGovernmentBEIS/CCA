@@ -19,6 +19,7 @@ public class UIPropertiesDTO {
     private Map<String, String> analytics;
     private String keycloakServerUrl;
     private LocalDate subsistenceFeesRunTriggerDate;
+    private LocalDate underlyingAgreementSchemeParticipationFlagCutOffDate;
     
     @With
     private List<NotificationAlertDTO> notificationAlerts;

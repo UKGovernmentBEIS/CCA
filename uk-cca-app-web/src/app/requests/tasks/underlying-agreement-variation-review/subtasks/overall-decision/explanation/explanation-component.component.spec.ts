@@ -12,10 +12,12 @@ import { ExplanationComponentComponent } from './explanation-component.component
 
 describe('ExplanationComponent', () => {
   let store: RequestTaskStore;
+  let container: Element;
+
   const unaTaskService: Partial<jest.Mocked<TaskService>> = {
     saveSubtask: jest.fn().mockReturnValue(of({})),
   };
-  let container: Element;
+
   beforeEach(async () => {
     const result = await render(ExplanationComponentComponent, {
       providers: [
@@ -31,8 +33,10 @@ describe('ExplanationComponent', () => {
         store.setState(mockVariationReviewRequestTaskState);
       },
     });
+
     container = result.container;
   });
+
   it('should match snapshot for ExplanationComponent', async () => {
     expect(container).toMatchSnapshot();
   });

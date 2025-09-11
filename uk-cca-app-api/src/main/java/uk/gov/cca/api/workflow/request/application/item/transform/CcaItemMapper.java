@@ -28,7 +28,7 @@ public interface CcaItemMapper {
 	@Mapping(target = "taskType", source = "item.taskType.code")
     @Mapping(target = "itemAssignee.taskAssignee", source = "taskAssignee")
     @Mapping(target = "itemAssignee.taskAssigneeType", source = "taskAssigneeType")
-    @Mapping(target = "daysRemaining", expression = "java(uk.gov.netz.api.workflow.utils.DateUtils.getDaysRemaining(item.getPauseDate(), item.getTaskDueDate()))")
+    @Mapping(target = "daysRemaining", expression = "java(uk.gov.netz.api.common.utils.DateUtils.getDaysRemaining(item.getPauseDate(), item.getTaskDueDate()))")
     CcaItemDTO itemToCcaItemDTO(
     		Item item, UserInfoDTO taskAssignee, String taskAssigneeType, ItemTargetUnitAccountDTO account, ItemSectorDTO sector);
 }

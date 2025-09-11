@@ -9,6 +9,7 @@ import { UnderlyingAgreementVariationConfirmationComponent } from './underlying-
 
 @Component({
   selector: 'cca-cancel-task',
+  templateUrl: './cancel-confirmation.component.html',
   standalone: true,
   imports: [
     UnderlyingAgreementCancelTaskConfirmationComponent,
@@ -16,10 +17,10 @@ import { UnderlyingAgreementVariationConfirmationComponent } from './underlying-
     UnderlyingAgreementVariationSubmitConfirmationComponent,
     UnderlyingAgreementVariationConfirmationComponent,
   ],
-  templateUrl: './cancel-confirmation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CancelTaskConfirmationComponent {
   private readonly store = inject(RequestTaskStore);
-  requestTaskType = this.store.select(requestTaskQuery.selectRequestTaskType)();
+
+  protected readonly requestTaskType = this.store.select(requestTaskQuery.selectRequestTaskType)();
 }

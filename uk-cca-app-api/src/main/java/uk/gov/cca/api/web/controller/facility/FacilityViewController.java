@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.cca.api.facility.domain.dto.FacilityDataDetailsDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilitySearchCriteria;
-import uk.gov.cca.api.facility.domain.dto.FacilitySearchResults;
-import uk.gov.cca.api.facility.service.FacilityDataQueryService;
-import uk.gov.cca.api.facility.service.FacilitySearchService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityInfoDTO;
+import uk.gov.cca.api.web.orchestrator.facility.dto.FacilitySearchResults;
+import uk.gov.cca.api.web.orchestrator.facility.service.FacilityInfoServiceOrchestrator;
+import uk.gov.cca.api.web.orchestrator.facility.service.FacilitySearchServiceOrchestrator;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.security.Authorized;
 
@@ -37,25 +37,27 @@ import static uk.gov.cca.api.web.constants.SwaggerApiInfo.OK;
 @RequestMapping(path = "/v1.0/facilities/")
 @RequiredArgsConstructor
 @Tag(name = "Facility info view")
+// TODO: to be moved under Account and renamed accordingly
 public class FacilityViewController {
 
-    private final FacilitySearchService facilitySearchService;
-    private final FacilityDataQueryService facilityDataQueryService;
+    private final FacilityInfoServiceOrchestrator facilityInfoServiceOrchestrator;
+    private final FacilitySearchServiceOrchestrator facilitySearchServiceOrchestrator;
 
     @GetMapping(path = "/account/{accountId}")
     @Operation(summary = "Retrieves the current account facilities")
     @ApiResponse(responseCode = "200", description = OK, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = FacilitySearchResults.class))})
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#accountId")
     public ResponseEntity<FacilitySearchResults> searchFacilities(
             @PathVariable("accountId") @Parameter(description = "The account id") Long accountId,
             @RequestParam(value = "term", required = false) @Size(min = 3, max = 256) @Parameter(name = "term", description = "The term to search") String term,
-            @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Long page,
-            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}") Long pageSize
+            @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Integer page,
+            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}") Integer pageSize
     ) {
         return new ResponseEntity<>(
-                facilitySearchService.searchFacilities(
+                facilitySearchServiceOrchestrator.searchFacilities(
                         accountId,
                         FacilitySearchCriteria.builder()
                                 .term(term)
@@ -66,7 +68,7 @@ public class FacilityViewController {
     @GetMapping(path = "/{facilityId}")
     @Operation(summary = "Retrieves the facility details")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
-            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = FacilityDataDetailsDTO.class))})
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = FacilityInfoDTO.class))})
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND,
@@ -74,8 +76,8 @@ public class FacilityViewController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#facilityId")
-    public ResponseEntity<FacilityDataDetailsDTO> getFacilityDetailsById(
+    public ResponseEntity<FacilityInfoDTO> getFacilityDetailsById(
             @PathVariable("facilityId") @Parameter(description = "The facility id") String facilityId) {
-        return new ResponseEntity<>(facilityDataQueryService.getFacilityData(facilityId), HttpStatus.OK);
+        return new ResponseEntity<>(facilityInfoServiceOrchestrator.getFacilityInfo(facilityId), HttpStatus.OK);
     }
 }

@@ -1,0 +1,56 @@
+@if (selectedTargetUnit()) {
+  <netz-page-heading size="l" data-testid="page-heading" class="govuk-!-margin-bottom-6">
+    Are you sure you want to mark {{ selectedTargetUnit().businessId }}
+    and all its facilities as Cancelled for this subsistence fees payment request?
+  </netz-page-heading>
+
+  <p>
+    This means that no payment is expected in this batch.<br />
+    The target unit and all its facilities will be included in the next subsistence fee payment request unless you
+    change the facilities exit date.
+  </p>
+
+  <dl govuk-summary-list>
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Sector</dt>
+      <dd govukSummaryListRowValue>{{ state().sectorMoaDetails.businessId }} - {{ state().sectorMoaDetails.name }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Target unit ID</dt>
+      <dd govukSummaryListRowValue>{{ selectedTargetUnit().businessId }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Target unit name</dt>
+      <dd govukSummaryListRowValue>{{ selectedTargetUnit().name }}</dd>
+    </div>
+  </dl>
+} @else {
+  <netz-page-heading size="l" data-testid="page-heading" class="govuk-!-margin-bottom-6">
+    Are you sure you want to mark the {{ selectedTUsCount() }} selected target units and all their facilities as
+    Cancelled for this subsistence fees payment request?
+  </netz-page-heading>
+
+  <p>
+    This means that no payment is expected in this batch.<br />
+    The target unit and all its facilities will be included in the next subsistence fee payment request unless you
+    change the facilities exit date.
+  </p>
+
+  <dl govuk-summary-list>
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Sector</dt>
+      <dd govukSummaryListRowValue>{{ state().sectorMoaDetails.businessId }} - {{ state().sectorMoaDetails.name }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Selected target units</dt>
+      <dd govukSummaryListRowValue>{{ selectedTUsCount() }}</dd>
+    </div>
+  </dl>
+}
+
+<govuk-warning-text assistiveText=""> You will not be able to undo this action. </govuk-warning-text>
+
+<button netzPendingButton govukWarnButton type="button" (click)="onSubmit()">Mark as cancelled</button>

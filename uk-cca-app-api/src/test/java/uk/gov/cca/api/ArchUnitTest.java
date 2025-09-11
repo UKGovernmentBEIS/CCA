@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
-import static java.util.stream.Collectors.toList;
 import static uk.gov.cca.api.ArchUnitTest.BASE_PACKAGE;
 import static uk.gov.cca.api.ArchUnitTest.COMMON_BASE_PACKAGE;
 
@@ -42,13 +41,14 @@ public class ArchUnitTest {
     static final String ACCOUNT_TARGET_UNIT_PACKAGE = BASE_PACKAGE + ".account..";
     static final String SECTOR_ASSOCIATION_PACKAGE = BASE_PACKAGE + ".sectorassociation..";
     static final String FACILITY_PACKAGE = BASE_PACKAGE + ".facility..";
-    static final String TARGET_PERIOD_PACKAGE = BASE_PACKAGE + ".targetperiod..";
+    static final String TARGET_PERIOD_PACKAGE = BASE_PACKAGE + ".targetperiodreporting.targetperiod..";
     static final String PERFORMANCE_DATA_PACKAGE = BASE_PACKAGE + ".targetperiodreporting.performancedata..";
     static final String PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PACKAGE = BASE_PACKAGE + ".targetperiodreporting.performanceaccounttemplatedata..";
     static final String UNA_PACKAGE = BASE_PACKAGE + ".underlyingagreement..";
     static final String SUBSISTENCE_FEES_PACKAGE = BASE_PACKAGE + ".subsistencefees..";
-    static final String BUY_OUT_SURPLUS_PACKAGE = BASE_PACKAGE + ".buyoutsurplus..";
+    static final String BUY_OUT_SURPLUS_PACKAGE = BASE_PACKAGE + ".targetperiodreporting.buyoutsurplus..";
     static final String WORKFLOW_CCA_PACKAGE = BASE_PACKAGE + ".workflow..";
+    static final String FACILITY_CERTIFICATION_PACKAGE = BASE_PACKAGE + ".targetperiodreporting.facilitycertification..";
 
     static final String WEB_PACKAGE = BASE_PACKAGE + ".web..";
 
@@ -76,6 +76,7 @@ public class ArchUnitTest {
             BUY_OUT_SURPLUS_PACKAGE,
             SUBSISTENCE_FEES_PACKAGE,
             WORKFLOW_CCA_PACKAGE,
+            FACILITY_CERTIFICATION_PACKAGE,
 
             WEB_PACKAGE
     );
@@ -393,7 +394,8 @@ public class ArchUnitTest {
                             CA_PACKAGE,
                             FILES_PACKAGE,
                             TOKEN_PACKAGE,
-                            TARGET_PERIOD_PACKAGE
+                            TARGET_PERIOD_PACKAGE,
+                            PERFORMANCE_DATA_PACKAGE
                             ));
     
     @ArchTest
@@ -415,6 +417,21 @@ public class ArchUnitTest {
                             TOKEN_PACKAGE,
                             FACILITY_PACKAGE
                             ));
+
+    @ArchTest
+    public static final ArchRule facilityCertificationPackageChecks =
+            noClasses().that()
+                    .resideInAPackage(FACILITY_CERTIFICATION_PACKAGE)
+                    .should().dependOnClassesThat()
+                    .resideInAnyPackage(except(
+                            FACILITY_CERTIFICATION_PACKAGE,
+                            COMMON_PACKAGE,
+                            COMMON_CCA_PACKAGE,
+                            AUTHORIZATION_PACKAGE,
+                            CA_PACKAGE,
+                            FACILITY_PACKAGE,
+                            TARGET_PERIOD_PACKAGE
+                    ));
     
     @ArchTest
     public static final ArchRule workflowCcaPackageChecks =
@@ -443,12 +460,13 @@ public class ArchUnitTest {
                             PERFORMANCE_DATA_PACKAGE,
                             PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PACKAGE,
                             BUY_OUT_SURPLUS_PACKAGE,
+                            FACILITY_CERTIFICATION_PACKAGE,
                             SUBSISTENCE_FEES_PACKAGE));
     
     private static String[] except(String... packages) {
         return ALL_PACKAGES.stream()
                 .filter(p -> !Arrays.asList(packages).contains(p))
-                .collect(toList())
+                .toList()
                 .toArray(String[]::new);
     }
 }

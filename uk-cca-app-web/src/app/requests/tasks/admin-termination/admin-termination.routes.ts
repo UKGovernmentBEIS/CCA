@@ -41,6 +41,15 @@ export const ADMIN_TERMINATION_ROUTES: Routes = [
           ),
       },
       {
+        path: 'send-for-peer-review',
+        title: 'Send for peer review',
+        canActivate: [isEditableGuard],
+        loadChildren: () =>
+          import('./send-for-peer-review/admin-termination-send-for-peer-review.routes').then(
+            (r) => r.ADMIN_TERMINATION_SEND_FOR_PEER_REVIEW_ROUTES,
+          ),
+      },
+      {
         path: '**',
         redirectTo: '/dashboard',
       },

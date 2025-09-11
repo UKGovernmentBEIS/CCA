@@ -58,21 +58,21 @@ class TargetUnitAccountUpdateServiceTest {
         TargetUnitAccount account = TargetUnitAccount.builder()
                 .id(accountId)
                 .status(TargetUnitAccountStatus.NEW)
-                .sicCode("000")
+                .sicCodes(List.of("000"))
                 .build();
 
         final UpdateTargetUnitAccountSicCodeDTO sicCodeDTO = UpdateTargetUnitAccountSicCodeDTO.builder()
-                .sicCode("111")
+                .sicCodes(List.of("111"))
                 .build();
 
         when(targetUnitAccountRepository.findById(accountId))
                 .thenReturn(Optional.of(account));
 
         // Invoke
-        targetUnitAccountUpdateService.updateTargetUnitAccountSicCode(accountId, sicCodeDTO);
+        targetUnitAccountUpdateService.updateTargetUnitAccountSicCodes(accountId, sicCodeDTO);
 
         // Verify
-        assertThat(account.getSicCode()).isEqualTo("111");
+        assertThat(account.getSicCodes()).isEqualTo(List.of("111"));
         verify(targetUnitAccountRepository).findById(accountId);
     }
 
@@ -81,7 +81,7 @@ class TargetUnitAccountUpdateServiceTest {
         final long accountId = 1L;
 
         final UpdateTargetUnitAccountSicCodeDTO sicCodeDTO = UpdateTargetUnitAccountSicCodeDTO.builder()
-                .sicCode("111")
+                .sicCodes(List.of("111"))
                 .build();
 
         when(targetUnitAccountRepository.findById(accountId))
@@ -89,7 +89,7 @@ class TargetUnitAccountUpdateServiceTest {
 
         // Invoke
         BusinessException ex = assertThrows(BusinessException.class,
-                () -> targetUnitAccountUpdateService.updateTargetUnitAccountSicCode(accountId, sicCodeDTO));
+                () -> targetUnitAccountUpdateService.updateTargetUnitAccountSicCodes(accountId, sicCodeDTO));
 
         // Verify
         assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);

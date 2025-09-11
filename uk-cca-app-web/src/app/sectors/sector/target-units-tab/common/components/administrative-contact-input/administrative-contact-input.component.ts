@@ -21,5 +21,5 @@ import { existingControlContainer } from '@shared/providers';
   viewProviders: [existingControlContainer],
 })
 export class AdministrativeContactInputComponent {
-  sameAddressExists = input(true);
+  protected readonly sameAddressExists = input(true);
 }

@@ -24,10 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.cca.api.web.orchestrator.template.dto.DocumentTemplateViewDTO;
+import uk.gov.cca.api.web.orchestrator.template.service.DocumentTemplateQueryServiceOrchestrator;
 import uk.gov.cca.api.web.util.FileDtoMapper;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.domain.PagingRequest;
-import uk.gov.netz.api.documenttemplate.domain.dto.DocumentTemplateDTO;
 import uk.gov.netz.api.documenttemplate.domain.dto.DocumentTemplateSearchCriteria;
 import uk.gov.netz.api.documenttemplate.domain.dto.DocumentTemplateSearchResults;
 import uk.gov.netz.api.documenttemplate.service.DocumentTemplateQueryService;
@@ -37,6 +38,7 @@ import uk.gov.netz.api.security.Authorized;
 import uk.gov.netz.api.security.AuthorizedRole;
 
 import java.io.IOException;
+import java.util.List;
 
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
@@ -48,8 +50,9 @@ public class DocumentTemplateController {
 
     private final DocumentTemplateQueryService documentTemplateQueryService;
     private final DocumentTemplateUpdateService documentTemplateUpdateService;
+    private final DocumentTemplateQueryServiceOrchestrator documentTemplateQueryServiceOrchestrator;
     private final FileDtoMapper fileDtoMapper = Mappers.getMapper(FileDtoMapper.class);
-
+    
     @GetMapping(path = "/v1.0/document-templates")
     @Operation(summary = "Retrieves the document templates associated with current user")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
@@ -61,25 +64,27 @@ public class DocumentTemplateController {
     @AuthorizedRole(roleType = REGULATOR)
     public ResponseEntity<DocumentTemplateSearchResults> getCurrentUserDocumentTemplates(
             @Parameter(hidden = true) AppUser appUser,
+            @RequestParam(value = "roleTypes", required = false) @Parameter(name = "roleTypes", description = "The list of role types", example = "OPERATOR") List<String> roleTypes,
             @RequestParam(value = "term", required = false) @Size(min = 3, max = 256) @Parameter(name = "term", description = "The term to search") String term,
-            @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Long page,
-            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}")  Long pageSize
+            @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Integer page,
+            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}")  Integer pageSize
     ) {
         return new ResponseEntity<>(
-            documentTemplateQueryService.getDocumentTemplatesBySearchCriteria(
-                DocumentTemplateSearchCriteria.builder()
-                    .competentAuthority(appUser.getCompetentAuthority())
-                    .term(term)
-                    .paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
-                    .build()
-            ),
-            HttpStatus.OK);
+                documentTemplateQueryService.getDocumentTemplatesBySearchCriteria(
+                        DocumentTemplateSearchCriteria.builder()
+                                .competentAuthority(appUser.getCompetentAuthority())
+                                .roleTypes(roleTypes)
+                                .term(term)
+                                .paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
+                                .build()
+                ),
+                HttpStatus.OK);
     }
-
+    
     @GetMapping(path = "/v1.0/document-templates/{id}")
     @Operation(summary = "Retrieves the document template with the provided id")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
-            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = DocumentTemplateDTO.class))})
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = DocumentTemplateViewDTO.class))})
     @ApiResponse(responseCode = "400", description = SwaggerApiInfo.GET_DOCUMENT_TEMPLATE_BY_ID_BAD_REQUEST,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
@@ -89,9 +94,9 @@ public class DocumentTemplateController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#id")
-    public ResponseEntity<DocumentTemplateDTO> getDocumentTemplateById(
+    public ResponseEntity<DocumentTemplateViewDTO> getDocumentTemplateById(
             @Parameter(description = "The document template id") @PathVariable("id") Long id) {
-        return new ResponseEntity<>(documentTemplateQueryService.getDocumentTemplateDTOById(id), HttpStatus.OK);
+        return new ResponseEntity<>(documentTemplateQueryServiceOrchestrator.getDocumentTemplateDTOById(id), HttpStatus.OK);
     }
 
     @PostMapping(path = "/v1.0/document-templates/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})

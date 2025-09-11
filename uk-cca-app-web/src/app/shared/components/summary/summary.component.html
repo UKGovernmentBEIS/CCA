@@ -1,41 +1,61 @@
-@for (section of displayData(); track section.header) {
-  <h2 class="govuk-heading-m">{{ section.header }}</h2>
-  <dl govuk-summary-list [attr.data-testid]="section.opts?.testid">
-    @for (row of section.data; track row.value) {
-      <div govukSummaryListRow>
-        <dt govukSummaryListRowKey>{{ row.key }}</dt>
-        <dd govukSummaryListRowValue [ngClass]="{ 'pre-wrap': !!row.prewrap }">
-          @if (row.isFileList) {
-            @if (!row.value.length) {
-              <span>No files provided</span>
-            } @else {
-              <cca-summary-download-files [files]="$any(row.value)" />
-            }
-          } @else {
-            @for (value of row.value; track value; let last = $last) {
-              @if (row.link) {
-                <a class="govuk-link" [routerLink]="row.link">{{ value }}</a>
-              } @else {
-                {{ value }}
-              }
-              @if (!last) {
-                <br />
-              }
-            }
-          }
-        </dd>
+@for (section of displayData(); track $index) {
+  @if (section.header) {
+    <h2 [classList]="section.opts?.headerClasses">{{ section.header }}</h2>
+  }
 
-        @if (row.change) {
-          <dd govukSummaryListRowActions>
-            <a
-              class="govuk-link"
-              [routerLink]="row.changeLink || section.changeLink"
-              [queryParams]="row | parseQueryParams"
-              >Change</a
-            >
+  @if (section.data?.length) {
+    <dl govuk-summary-list [attr.data-testid]="section.opts?.testid">
+      @for (row of section.data; track row.value) {
+        <div govukSummaryListRow>
+          <dt govukSummaryListRowKey>{{ row.key }}</dt>
+          <dd govukSummaryListRowValue [class.pre-line]="!!row.preline">
+            @if (row.isFileList) {
+              @if (!row.value.length) {
+                <span>No files provided</span>
+              } @else {
+                <cca-summary-download-files [files]="$any(row.value)" />
+              }
+            } @else if (row.isLinkList) {
+              @for (value of row.value; track value; let last = $last) {
+                <a class="govuk-link" [routerLink]="value['link']">{{ value['text'] }}</a>
+
+                @if (!last) {
+                  <br />
+                }
+              }
+            } @else {
+              @for (value of row.value; track value; let last = $last) {
+                @if (row.link) {
+                  <a class="govuk-link" [routerLink]="row.link">{{ value }}</a>
+                } @else {
+                  {{ value }}
+                }
+
+                @if (!last) {
+                  <br />
+                }
+              }
+            }
           </dd>
-        }
-      </div>
-    }
-  </dl>
+
+          @if (row.change) {
+            <dd govukSummaryListRowActions>
+              <a
+                class="govuk-link"
+                [routerLink]="row.changeLink || section.changeLink"
+                [queryParams]="row | parseQueryParams"
+                >Change</a
+              >
+            </dd>
+          }
+
+          @if (row.action) {
+            <dd govukSummaryListRowActions>
+              <a class="govuk-link" [routerLink]="row.actionLink">{{ row.action }}</a>
+            </dd>
+          }
+        </div>
+      }
+    </dl>
+  }
 }

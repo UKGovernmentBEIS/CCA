@@ -119,19 +119,19 @@ describe('CheckboxesComponent', () => {
     getAllCheckboxes()[0].triggerEventHandler('blur', {});
     fixture.detectChanges();
 
-    expect(component.options.get(0).isTouched).toBeTruthy();
+    expect(component.options().at(0).isTouched).toBeTruthy();
     expect(component.control.touched).toBeFalsy();
 
     getAllCheckboxes()[1].triggerEventHandler('blur', {});
     fixture.detectChanges();
 
-    expect(component.options.get(1).isTouched).toBeTruthy();
+    expect(component.options().at(1).isTouched).toBeTruthy();
     expect(component.control.touched).toBeFalsy();
 
     getAllCheckboxes()[2].triggerEventHandler('blur', {});
     fixture.detectChanges();
 
-    expect(component.options.get(2).isTouched).toBeTruthy();
+    expect(component.options().at(2).isTouched).toBeTruthy();
     expect(component.control.touched).toBeTruthy();
   });
 
@@ -172,14 +172,14 @@ describe('CheckboxesComponent', () => {
   });
 
   it('should display a simple legend', () => {
-    expect(element.querySelector('legend').textContent).toEqual('Some options');
+    expect(element.querySelector('legend').textContent.trim()).toEqual('Some options');
   });
 
   it('should display a simple hint', () => {
-    expect(element.querySelector('.govuk-hint').textContent).toEqual('Choose an option');
+    expect(element.querySelector('.govuk-hint').textContent.trim()).toEqual('Choose an option');
   });
 
   it('should display a custom legend', () => {
-    expect(element.querySelectorAll('legend')[1].textContent).toEqual('Some extra options');
+    expect(element.querySelectorAll('legend')[1].textContent.trim()).toEqual('Some extra options');
   });
 });

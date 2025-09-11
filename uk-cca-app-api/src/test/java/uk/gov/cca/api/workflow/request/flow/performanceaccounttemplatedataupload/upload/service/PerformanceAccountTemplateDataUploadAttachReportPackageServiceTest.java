@@ -46,6 +46,6 @@ class PerformanceAccountTemplateDataUploadAttachReportPackageServiceTest {
 		verify(requestTaskService, times(1)).findTaskById(requestTaskId);
 		
 		assertThat(payload.getUploadAttachments()).hasSize(1);
-		assertThat(payload.getUploadAttachments().get(UUID.fromString(attachmentUuid))).isEqualTo(filename);
+		assertThat(payload.getUploadAttachments()).containsEntry(UUID.fromString(attachmentUuid), filename);
 	}
 }

@@ -26,11 +26,14 @@
       </ul>
     </nav>
   </div>
+
   @if (currentSection === 'performance') {
     <div class="govuk-grid-column-three-quarters govuk-!-margin-top-5">
       <cca-performance-report />
     </div>
   } @else {
-    <p>not yet implemented</p>
+    <div class="govuk-grid-column-three-quarters govuk-!-margin-top-5">
+      <cca-pat-report />
+    </div>
   }
 </div>

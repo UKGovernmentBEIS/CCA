@@ -79,15 +79,15 @@ class ItemAssignedToOthersSectorUserServiceTest {
         when(itemRequestResourcesService.getItemRequestResources(expectedItemPage)).thenReturn(expectedItemRequestResources);
         doReturn(expectedItemPage).when(itemRepository).findItems(
         		appUser.getUserId(), ItemAssignmentType.OTHERS, scopedRequestTaskTypes, PagingRequest.builder()
-	        		.pageNumber(0L)
-	        		.pageSize(10L)
+	        		.pageNumber(0)
+	        		.pageSize(10)
 	        		.build());
         doReturn(expectedItemDTOResponse).when(itemResponseService)
         	.toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
 
         // Invoke
         ItemDTOResponse actualItemDTOResponse = itemService
-                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+                .getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
 
         // Assert
         assertEquals(expectedItemDTOResponse, actualItemDTOResponse);
@@ -96,8 +96,8 @@ class ItemAssignedToOthersSectorUserServiceTest {
                 .getUserScopedRequestTaskTypes(appUser);
         verify(itemRepository, times(1)).findItems(
         		appUser.getUserId(), ItemAssignmentType.OTHERS, scopedRequestTaskTypes, PagingRequest.builder()
-	        		.pageNumber(0L)
-	        		.pageSize(10L)
+	        		.pageNumber(0)
+	        		.pageSize(10)
 	        		.build());
         verify(itemResponseService, times(1)).toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
     }
@@ -114,7 +114,7 @@ class ItemAssignedToOthersSectorUserServiceTest {
         .thenReturn(scopedRequestTaskTypes);
 
 		// Invoke
-		ItemDTOResponse actualItemDTOResponse = itemService.getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+		ItemDTOResponse actualItemDTOResponse = itemService.getItemsAssignedToOthers(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
 		
 		// Assert
 		assertThat(actualItemDTOResponse).isEqualTo(ItemDTOResponse.emptyItemDTOResponse());

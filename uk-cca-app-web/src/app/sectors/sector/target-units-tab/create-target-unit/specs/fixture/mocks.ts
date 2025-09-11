@@ -44,7 +44,7 @@ export const mockCreateTargetUnitState: TargetUnitAccountPayload = {
   operatorType: 'LIMITED_COMPANY',
   companyRegistrationNumber: '12345',
   registrationNumberMissingReason: null,
-  sicCode: '54321',
+  sicCodes: ['54321'],
   subsectorAssociationId: 150,
   address: {
     city: 'City',

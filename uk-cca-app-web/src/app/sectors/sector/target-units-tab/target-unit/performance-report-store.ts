@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 
 import { SignalStore } from '@netz/common/store';
 
-import { AccountPerformanceDataStatusInfoDTO, AccountPerformanceReportDetailsDTO } from 'cca-api';
+import { AccountPerformanceDataReportDetailsDTO, AccountPerformanceDataStatusInfoDTO } from 'cca-api';
 
 export interface AccountPerformanceDataReportState {
   statusInfo: AccountPerformanceDataStatusInfoDTO;
-  reportDetails: AccountPerformanceReportDetailsDTO;
+  reportDetails: AccountPerformanceDataReportDetailsDTO;
 }
 
 const initialState: AccountPerformanceDataReportState = {

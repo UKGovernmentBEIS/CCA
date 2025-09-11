@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_09hc6y8" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0">
+  <bpmn:process id="PROCESS_FACILITY_CERTIFICATION_RUN_INITIATE" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:startEvent id="initiate">
+      <bpmn:outgoing>Flow_0dxofed</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0mqsv8a">
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">0 30 23 1/1 * ? *</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0dxofed" sourceRef="initiate" targetRef="Activity_08agzh7" />
+    <bpmn:endEvent id="Event_1xbvtyg">
+      <bpmn:incoming>Flow_1occees</bpmn:incoming>
+      <bpmn:incoming>Flow_0gc3thr</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_08agzh7" name="verify execution date" camunda:delegateExpression="#{facilityCertificationRunInitiateHandler}">
+      <bpmn:incoming>Flow_0dxofed</bpmn:incoming>
+      <bpmn:outgoing>Flow_15hjera</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_0pywbfn" name="check if current date" default="Flow_0gc3thr">
+      <bpmn:incoming>Flow_15hjera</bpmn:incoming>
+      <bpmn:outgoing>Flow_1heawl6</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0gc3thr</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_15hjera" sourceRef="Activity_08agzh7" targetRef="Gateway_0pywbfn" />
+    <bpmn:serviceTask id="Activity_0t7or05" name="create facility certification run" camunda:delegateExpression="#{facilityCertificationRunInitiateCreateHandler}">
+      <bpmn:incoming>Flow_1heawl6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1occees</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1occees" sourceRef="Activity_0t7or05" targetRef="Event_1xbvtyg" />
+    <bpmn:sequenceFlow id="Flow_1heawl6" sourceRef="Gateway_0pywbfn" targetRef="Activity_0t7or05">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${facilityCertificationRunInitiateFlag}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0gc3thr" sourceRef="Gateway_0pywbfn" targetRef="Event_1xbvtyg" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PROCESS_FACILITY_CERTIFICATION_RUN_INITIATE">
+      <bpmndi:BPMNShape id="Event_0hciwmu_di" bpmnElement="initiate">
+        <dc:Bounds x="132" y="112" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xbvtyg_di" bpmnElement="Event_1xbvtyg">
+        <dc:Bounds x="712" y="112" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1akheqa_di" bpmnElement="Activity_08agzh7">
+        <dc:Bounds x="220" y="90" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1h1r8mf" bpmnElement="Gateway_0pywbfn" isMarkerVisible="true">
+        <dc:Bounds x="405" y="105" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="394" y="165" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_11qiahf" bpmnElement="Activity_0t7or05">
+        <dc:Bounds x="530" y="90" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0dxofed_di" bpmnElement="Flow_0dxofed">
+        <di:waypoint x="168" y="130" />
+        <di:waypoint x="220" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15hjera_di" bpmnElement="Flow_15hjera">
+        <di:waypoint x="320" y="130" />
+        <di:waypoint x="405" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1occees_di" bpmnElement="Flow_1occees">
+        <di:waypoint x="630" y="130" />
+        <di:waypoint x="712" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1heawl6_di" bpmnElement="Flow_1heawl6">
+        <di:waypoint x="455" y="130" />
+        <di:waypoint x="530" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0gc3thr_di" bpmnElement="Flow_0gc3thr">
+        <di:waypoint x="430" y="105" />
+        <di:waypoint x="430" y="40" />
+        <di:waypoint x="730" y="40" />
+        <di:waypoint x="730" y="112" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

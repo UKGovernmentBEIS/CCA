@@ -15,7 +15,9 @@ import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -28,6 +30,10 @@ import uk.gov.netz.api.account.domain.Account;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.annotations.Type;
+
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 
 @Getter
 @Setter
@@ -58,21 +64,15 @@ import java.util.List;
                 + "where tu.sectorAssociationId = :sectorAssociationId "
     ),
     @NamedQuery(
-            name = TargetUnitAccount.NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNTS_BUSINESS_INFO_BY_SECTOR_ASSOCIATION_AND_STATUS,
-            query = "select new uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO(tu.id, tu.businessId) "
-                    + "from TargetUnitAccount tu "
-                    + "where tu.sectorAssociationId = :sectorAssociationId and tu.status = :status "
-    ),
-    @NamedQuery(
             name = TargetUnitAccount.NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNTS_ACTIVATED_BEFORE_WITH_STATUS_ACTIVE_OR_TERMINATED_BETWEEN,
-            query = "select new uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO(tu.id, tu.businessId) "
+            query = "select new uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO(tu.id, tu.businessId, tu.name) "
                     + "from TargetUnitAccount tu "
             		+ "where tu.sectorAssociationId = :sectorAssociationId "
                     + "and tu.acceptedDate <= :acceptedDate "
                     + "and (tu.status = uk.gov.cca.api.account.domain.TargetUnitAccountStatus.LIVE "
-                    + "		or (tu.status = uk.gov.cca.api.account.domain.TargetUnitAccountStatus.TERMINATED and "
-                    + "			 tu.terminatedDate >= :terminatedDateFrom and tu.terminatedDate < :terminatedDateTo "
-                    + "			)"
+                    + " or (tu.status = uk.gov.cca.api.account.domain.TargetUnitAccountStatus.TERMINATED and "
+                    + "     tu.terminatedDate >= :terminatedDateFrom and tu.terminatedDate < :terminatedDateTo "
+                    + "     ) "
                     + ") "
     ),
     @NamedQuery(
@@ -84,38 +84,18 @@ import java.util.List;
                 + "and contacts = :userId "
     ),
     @NamedQuery(
-            name = TargetUnitAccount.NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNTS_WITH_SITE_CONTACT_BY_SECTOR_ASSOCIATION,
-            query = "select new uk.gov.cca.api.account.domain.dto.TargetUnitAccountInfoDTO(tu.id, tu.businessId, tu.name, tu.status, VALUE(contacts)) "
-                + "from TargetUnitAccount tu "
-                + "left join tu.contacts contacts on KEY(contacts) = :contactType "
-                + "where tu.sectorAssociationId = :sectorAssociationId "
-                + "order by tu.businessId "
-    ),
-    @NamedQuery(
             name = TargetUnitAccount.NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNT_NOTICE_RECIPIENTS_BY_ACCOUNT_ID,
             query = "select new uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO(tuac.firstName , tuac.lastName, tuac.email, tuac.contactType) "
                 + "from TargetUnitAccount atu "
                 + "left join TargetUnitAccountContact tuac on atu.id = tuac.targetUnitAccount.id "
                 + "where atu.id = :accountId "
     ),
-    @NamedQuery(
-            name = TargetUnitAccount.NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNTS_WITH_SITE_CONTACT_BY_SECTOR_ASSOCIATION_AND_ACCOUNTS_IDS,
-            query = "select new uk.gov.cca.api.account.domain.dto.TargetUnitAccountInfoDTO(tu.id, tu.businessId, tu.name, tu.status, VALUE(contacts)) "
-                    + "from TargetUnitAccount tu "
-                    + "left join tu.contacts contacts on KEY(contacts) = :contactType "
-                    + "where tu.sectorAssociationId = :sectorAssociationId "
-                    + "and tu.id in (:accountsIds)"
-                    + "order by tu.businessId "
-    )
 })
 public class TargetUnitAccount extends Account {
 
-    public static final String NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNTS_WITH_SITE_CONTACT_BY_SECTOR_ASSOCIATION = "TargetUnitAccount.findTargetUnitAccountWithSiteContactBySectorAssociationId";
     public static final String NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNT_IDS_BY_SECTOR_ASSOCIATION = "TargetUnitAccount.findAllIdsBySectorAssociationId";
-    public static final String NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNTS_BUSINESS_INFO_BY_SECTOR_ASSOCIATION_AND_STATUS = "TargetUnitAccount.findAllTargetUnitAccountsBusinessInfoBySectorAssociationIdAndStatus";
     public static final String NAMED_QUERY_FIND_ACCOUNTS_BY_CONTACT_TYPE_AND_USER_ID_AND_SECTOR_ASSOCIATION = "TargetUnitAccount.findTargetUnitAccountsByContactTypeAndUserIdAndSectorAsssociationId";
     public static final String NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNT_NOTICE_RECIPIENTS_BY_ACCOUNT_ID = "TargetUnitAccount.findTargetUnitAccountNoticeRecipientsByAccountId";
-    public static final String NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNTS_WITH_SITE_CONTACT_BY_SECTOR_ASSOCIATION_AND_ACCOUNTS_IDS = "TargetUnitAccount.findTargetUnitAccountWithSiteContactBySectorAssociationIdAndAccountId";
 	public static final String NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNTS_ACTIVATED_BEFORE_WITH_STATUS_ACTIVE_OR_TERMINATED_BETWEEN = "TargetUnitAccount.findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedDuringActivatedYearOrTerminatedBetween";
 
     @Enumerated(EnumType.STRING)
@@ -146,8 +126,10 @@ public class TargetUnitAccount extends Account {
     @Column(name = "registration_number_missing_reason")
     private String registrationNumberMissingReason;
 
-    @Column(name = "sic_code")
-    private String sicCode;
+    @Column(name = "sic_code", columnDefinition = "jsonb")
+    @Type(JsonType.class)
+    @Size(max = 4)
+    private List<@NotBlank String> sicCodes;
 
     /** The user id */
     @Column(name = "created_by")

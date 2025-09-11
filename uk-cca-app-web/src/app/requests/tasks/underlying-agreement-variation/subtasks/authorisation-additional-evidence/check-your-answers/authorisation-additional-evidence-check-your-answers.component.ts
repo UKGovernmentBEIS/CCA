@@ -4,20 +4,28 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
-import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import {
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
+  TaskItemStatus,
+  TasksApiService,
   toAuthorisationAdditionalEvidenceSummaryData,
   underlyingAgreementQuery,
   underlyingAgreementVariationQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
+import { produce } from 'immer';
+
+import { UnderlyingAgreementVariationSubmitRequestTaskPayload } from 'cca-api';
+
+import { createRequestTaskActionProcessDTO, toUnderlyingAgreementVariationSavePayload } from '../../../transform';
+import { extractReviewProps, resetReviewSection } from '../../../utils';
 
 @Component({
   selector: 'cca-check-your-answers',
+  templateUrl: './authorisation-additional-evidence-check-your-answers.component.html',
   standalone: true,
   imports: [
     ButtonDirective,
@@ -28,14 +36,13 @@ import { generateDownloadUrl } from '@shared/utils';
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
-  templateUrl: './authorisation-additional-evidence-check-your-answers.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class AuthorisationAdditionalEvidenceCheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly router = inject(Router);
-  private readonly taskService = inject(TaskService);
+  private readonly tasksApiService = inject(TasksApiService);
 
   private readonly taskId = this.activatedRoute.snapshot.paramMap.get('taskId');
 
@@ -56,8 +63,31 @@ export default class AuthorisationAdditionalEvidenceCheckYourAnswersComponent {
   );
 
   onSubmit() {
-    this.taskService
-      .submitSubtask(AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK)
-      .subscribe(() => this.router.navigate(['../../..'], { relativeTo: this.activatedRoute, replaceUrl: true }));
+    const payload = this.requestTaskStore.select(
+      requestTaskQuery.selectRequestTaskPayload,
+    )() as UnderlyingAgreementVariationSubmitRequestTaskPayload;
+
+    const actionPayload = toUnderlyingAgreementVariationSavePayload(payload);
+
+    const currentSectionsCompleted =
+      this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)() || {};
+
+    const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
+      draft[AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK] = TaskItemStatus.COMPLETED;
+    });
+
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+
+    const reviewProps = extractReviewProps(this.requestTaskStore);
+    const resetedProps = resetReviewSection(reviewProps, AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK);
+
+    const dto = createRequestTaskActionProcessDTO(requestTaskId, actionPayload, sectionsCompleted, {
+      ...reviewProps,
+      ...resetedProps,
+    });
+
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
+      this.router.navigate(['../../..'], { relativeTo: this.activatedRoute, replaceUrl: true });
+    });
   }
 }

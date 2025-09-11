@@ -1,5 +1,5 @@
 import { AsyncPipe, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, Input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRouteSnapshot, Data, NavigationEnd, Router } from '@angular/router';
 
@@ -11,31 +11,28 @@ import { RouteBacklink } from './backlink.interface';
 
 @Component({
   selector: 'netz-back-link',
+  template: ` @if (backlink$ | async; as backlink) {
+    <govuk-back-link [link]="backlink.link" [route]="backlink.route" [inverse]="inverse()" />
+  }`,
   standalone: true,
-  template: ` <govuk-back-link
-    *ngIf="backlink$ | async as backlink"
-    [link]="backlink.link"
-    [route]="backlink.route"
-    [inverse]="inverse"
-  ></govuk-back-link>`,
+  imports: [GovukBackLinkComponent, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [GovukBackLinkComponent, NgIf, AsyncPipe],
 })
 export class BackLinkComponent {
-  @Input() inverse = false;
-  protected backlink$ = new BehaviorSubject<{ link: string; route: ActivatedRouteSnapshot }>(null);
+  private readonly router = inject(Router);
 
-  constructor(
-    readonly router: Router,
-    private readonly destroy$: DestroyRef,
-  ) {
-    router.events
+  readonly inverse = input(false);
+
+  protected readonly backlink$ = new BehaviorSubject<{ link: string; route: ActivatedRouteSnapshot }>(null);
+
+  constructor() {
+    this.router.events
       .pipe(
-        takeUntilDestroyed(this.destroy$),
+        takeUntilDestroyed(),
         filter((event) => event instanceof NavigationEnd),
       )
       .subscribe(() => {
-        let activeRoute = router.routerState.snapshot.root;
+        let activeRoute = this.router.routerState.snapshot.root;
         while (activeRoute.firstChild) {
           activeRoute = activeRoute.firstChild;
         }

@@ -14,7 +14,7 @@ import { WorkflowTaskHeaderComponent } from './workflow-task-header.component';
 
 describe('WorkflowTaskHeaderComponent', () => {
   describe('with requestTaskStore requestInfo data inside a workflow', () => {
-    let requestTaskStore;
+    let requestTaskStore: RequestTaskStore;
     let targetUnitAccountInfoViewService: jest.Mocked<Partial<TargetUnitAccountInfoViewService>>;
 
     beforeEach(async () => {
@@ -41,6 +41,7 @@ describe('WorkflowTaskHeaderComponent', () => {
       const taskHeaderName = screen.getByTestId('name');
       const taskHeaderBusinessId = screen.getByTestId('businessId');
       const taskHeaderStatus = screen.getByTestId('status');
+
       expect(taskHeaderName).toBeInTheDocument();
       expect(taskHeaderBusinessId).toBeInTheDocument();
       expect(taskHeaderStatus).toBeInTheDocument();
@@ -69,6 +70,7 @@ describe('WorkflowTaskHeaderComponent', () => {
 
       requestTaskStore = TestBed.inject(RequestTaskStore);
       requestTaskStore.setRequestTaskItem({});
+
       fixture.detectChanges();
       await fixture.whenStable();
     });

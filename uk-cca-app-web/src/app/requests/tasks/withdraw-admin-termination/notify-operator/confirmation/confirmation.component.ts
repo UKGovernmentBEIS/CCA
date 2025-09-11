@@ -7,7 +7,7 @@ import { PanelComponent } from '@netz/govuk-components';
   selector: 'cca-confirmation',
   template: `
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds govuk-body">
+      <div class="govuk-grid-column-two-thirds">
         <govuk-panel>Admin termination withdrawal notice sent to operator</govuk-panel>
 
         <p>The admin termination agreement has been withdrawn.</p>

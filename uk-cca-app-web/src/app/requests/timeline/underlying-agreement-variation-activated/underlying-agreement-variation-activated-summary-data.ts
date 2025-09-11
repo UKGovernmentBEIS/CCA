@@ -5,30 +5,27 @@ import {
   transformUserContacts,
 } from '@requests/common';
 import { SummaryFactory } from '@shared/components';
-import {
-  transformAttachmentsAndFileUUIDsToDownloadableFiles,
-  transformFileInfoToDownloadableFile,
-} from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 
 import { UnderlyingAgreementVariationActivatedRequestActionPayload } from 'cca-api';
 
 export function toUnderlyingAgreementVariationActivatedSummaryData(
   payload: UnderlyingAgreementVariationActivatedRequestActionPayload,
 ) {
-  const factory = new SummaryFactory();
-  factory
+  return new SummaryFactory()
     .addSection('Details')
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsAndFileUUIDsToDownloadableFiles(
-        payload.underlyingAgreementActivationDetails.evidenceFiles,
-        payload.underlyingAgreementActivationAttachments,
+      fileUtils.toDownloadableFiles(
+        fileUtils.extractAttachments(
+          payload.underlyingAgreementActivationDetails.evidenceFiles,
+          payload.underlyingAgreementActivationAttachments,
+        ),
         'file-download',
       ),
     )
-    .addRow('Comments', payload.underlyingAgreementActivationDetails.comments);
+    .addRow('Comments', payload.underlyingAgreementActivationDetails.comments)
 
-  factory
     .addSection('Recipients')
     .addRow('Users', [
       ...transformUserContacts(payload.defaultContacts),
@@ -41,10 +38,7 @@ export function toUnderlyingAgreementVariationActivatedSummaryData(
     )
     .addFileListRow(
       'Official notice',
-      transformFileInfoToDownloadableFile(
-        [payload.underlyingAgreementDocument, payload.officialNotice],
-        'file-download',
-      ),
-    );
-  return factory.create();
+      fileUtils.toDownloadableDocument([payload.underlyingAgreementDocument, payload.officialNotice], 'file-download'),
+    )
+    .create();
 }

@@ -39,7 +39,7 @@ public class SubsistenceFeesRepositoryUtils {
 				jpaQuery = jpaQuery.having(currentTotalAmount(facility).lt(moa.regulatorReceivedAmount));
 				break;
 			case PaymentStatus.PAID:
-				jpaQuery = jpaQuery.having(currentTotalAmount(facility).eq(moa.regulatorReceivedAmount));
+				jpaQuery = jpaQuery.having(moa.regulatorReceivedAmount.gt(BigDecimal.ZERO)).having(currentTotalAmount(facility).eq(moa.regulatorReceivedAmount));
 				break;
 			case PaymentStatus.AWAITING_PAYMENT:
 				jpaQuery = jpaQuery.having(currentTotalAmount(facility).gt(moa.regulatorReceivedAmount));

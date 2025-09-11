@@ -5,7 +5,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
 
-   <changeSet id="0_1_0_drop_ca_reporting_views" author="P70453" runOrder="first" runAlways="true">
+    <changeSet id="0_1_0_drop_ca_reporting_views" author="P70453" runOrder="first" runAlways="true">
         <validCheckSum>ANY</validCheckSum>
         <sql>
             drop view if exists sch_report_ea.request_task_visit cascade;
@@ -26,7 +26,7 @@
             drop view if exists sch_report_ea.account cascade;
             drop view if exists sch_report_ea.verification_body_emission_trading_scheme cascade;
             drop view if exists sch_report_ea.verification_body cascade;
-            
+
             drop view if exists sch_report_ea.account_address cascade;
             drop view if exists sch_report_ea.account_target_unit cascade;
             drop view if exists sch_report_ea.account_target_unit_contact cascade;
@@ -42,9 +42,18 @@
             drop view if exists sch_report_ea.target_commitment cascade;
             drop view if exists sch_report_ea.target_set cascade;
             drop view if exists sch_report_ea.underlying_agreement cascade;
-            
+
             drop view if exists sch_report_ea.tpr_target_period cascade;
+            drop view if exists sch_report_ea.tpr_performance_account_template_data cascade;
             drop view if exists sch_report_ea.tpr_account_performance_data_status cascade;
+            drop view if exists sch_report_ea.tpr_performance_data cascade;
+            drop view if exists sch_report_ea.tpr_buy_out_surplus_exclusion cascade;
+            drop view if exists sch_report_ea.tpr_buy_out_surplus_transaction cascade;
+            drop view if exists sch_report_ea.tpr_buy_out_surplus_processed_data cascade;
+            drop view if exists sch_report_ea.tpr_surplus cascade;
+            drop view if exists sch_report_ea.tpr_certification_period cascade;
+            drop view if exists sch_report_ea.tpr_facility_certification cascade;
+            drop view if exists sch_report_ea.tpr_buy_out_surplus_transaction_history cascade;
         </sql>
         <rollback>
         </rollback>
@@ -82,14 +91,23 @@
 			create or replace view sch_report_ea.sector_association_contact as select s.* from sector_association_contact s where exists (select null from sector_association a where a.sector_association_contact_id = s.id and a.competent_authority = 'ENGLAND');
 			create or replace view sch_report_ea.location as select s.* from location s where exists (select null from sector_association a where a.location_id = s.id and a.competent_authority = 'ENGLAND');
 			create or replace view sch_report_ea.sector_association_scheme as select s.* from sector_association_scheme s where exists (select null from sector_association a where a.id = s.sector_association_id and a.competent_authority = 'ENGLAND');
-			create or replace view sch_report_ea.subsector_association as select s.* from subsector_association s where exists (select null from sector_association a inner join sector_association_scheme sas on a.id = sas.sector_association_id inner join subsector_association_scheme ssas on sas.id = ssas.sector_association_scheme_id where ssas.subsector_association_id = s.id and a.competent_authority = 'ENGLAND');
-			create or replace view sch_report_ea.subsector_association_scheme as select s.* from subsector_association_scheme s where exists (select null from sector_association a inner join sector_association_scheme sas on a.id = sas.sector_association_id where sas.id = s.sector_association_scheme_id and a.competent_authority = 'ENGLAND');
+			create or replace view sch_report_ea.subsector_association as select s.* from subsector_association s where exists (select null from sector_association a where a.id = s.sector_association_id and a.competent_authority = 'ENGLAND');
+			create or replace view sch_report_ea.subsector_association_scheme as select s.* from subsector_association_scheme s where exists (select null from sector_association a inner join subsector_association sa on a.id = sa.sector_association_id where sa.id = s.subsector_association_id and a.competent_authority = 'ENGLAND');
 			create or replace view sch_report_ea.target_set as select s.* from target_set s where exists (select null from sector_association a inner join sector_association_scheme sas on a.id = sas.sector_association_id where sas.target_set_id = s.id and a.competent_authority = 'ENGLAND');
 			create or replace view sch_report_ea.target_commitment as select s.* from target_commitment s where exists (select null from sector_association a inner join sector_association_scheme sas on a.id = sas.sector_association_id inner join target_set ts on sas.target_set_id = ts.id where sas.target_set_id = s.target_set_id and a.competent_authority = 'ENGLAND');
 			create or replace view sch_report_ea.underlying_agreement as select s.* from underlying_agreement s where exists (select null from account a where a.id = s.account_id and a.competent_authority = 'ENGLAND');
-        	
+
         	create or replace view sch_report_ea.tpr_target_period as select tpr.* from tpr_target_period tpr;
+            create or replace view sch_report_ea.tpr_performance_account_template_data as select tpatd.* from tpr_performance_account_template_data tpatd where exists (select null from account a where a.id = tpatd.account_id and a.competent_authority = 'ENGLAND');
         	create or replace view sch_report_ea.tpr_account_performance_data_status as select apds.* from tpr_account_performance_data_status apds where exists (select null from account a where a.id = apds.account_id and a.competent_authority = 'ENGLAND');
+        	create or replace view sch_report_ea.tpr_performance_data as select tpd.* from tpr_performance_data tpd where exists (select null from account a where a.id = tpd.account_id and a.competent_authority = 'ENGLAND');
+        	create or replace view sch_report_ea.tpr_buy_out_surplus_exclusion as select tbose.* from tpr_buy_out_surplus_exclusion tbose where exists (select null from account a where a.id = tbose.account_id and a.competent_authority = 'ENGLAND');
+        	create or replace view sch_report_ea.tpr_buy_out_surplus_transaction as select tbos.* from tpr_buy_out_surplus_transaction tbos where exists (select null from account a, tpr_performance_data tpd where tpd.id = tbos.performance_data_id and a.id = tpd.account_id and a.competent_authority = 'ENGLAND');
+            create or replace view sch_report_ea.tpr_buy_out_surplus_processed_data as select tbosp.* from tpr_buy_out_surplus_processed_data tbosp where exists (select null from account a, tpr_performance_data tpd where tpd.id = tbosp.performance_data_id and a.id = tpd.account_id and a.competent_authority = 'ENGLAND');
+        	create or replace view sch_report_ea.tpr_surplus as select ts.* from tpr_surplus ts where exists (select null from account a where a.id = ts.account_id and a.competent_authority = 'ENGLAND');
+            create or replace view sch_report_ea.tpr_certification_period as select cp.* from tpr_certification_period cp;
+            create or replace view sch_report_ea.tpr_facility_certification as select fc.* from tpr_facility_certification fc where exists (select null from facility_data fd join account a on fd.account_id = a.id where fc.facility_id = fd.id and a.competent_authority = 'ENGLAND');
+            create or replace view sch_report_ea.tpr_buy_out_surplus_transaction_history as select tbosh.* from tpr_buy_out_surplus_transaction_history tbosh  where exists (select null from account a, tpr_performance_data tpd, tpr_buy_out_surplus_transaction tbos where tbosh.buy_out_surplus_transaction_id = tbos.id and tpd.id = tbos.performance_data_id and a.id = tpd.account_id and a.competent_authority = 'ENGLAND');
         </sql>
         <rollback/>
     </changeSet>

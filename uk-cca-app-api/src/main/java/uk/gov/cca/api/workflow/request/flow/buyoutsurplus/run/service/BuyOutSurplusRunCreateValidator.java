@@ -3,9 +3,9 @@ package uk.gov.cca.api.workflow.request.flow.buyoutsurplus.run.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiod.domain.dto.TargetPeriodDTO;
-import uk.gov.cca.api.targetperiod.service.TargetPeriodService;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.run.domain.BuyOutSurplusRunCreateActionPayload;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;

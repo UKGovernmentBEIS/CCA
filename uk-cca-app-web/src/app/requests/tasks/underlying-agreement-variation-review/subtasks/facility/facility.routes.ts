@@ -3,19 +3,14 @@ import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import {
-  FacilityWizardReviewStep,
+  FacilityWizardStep,
   isEditableSummaryRedirectGuard,
   resetCurrentFacility,
   setCurrentFacility,
   underlyingAgreementQuery,
 } from '@requests/common';
 
-import {
-  canActivateFacility,
-  canActivateFacilityCheckYourAnswers,
-  canActivateFacilityDecision,
-  canActivateFacilitySummary,
-} from './facility.guard';
+import { facilityRedirectGuard } from './facility-redirect.guard';
 
 export const FACILITY_ROUTES: Routes = [
   {
@@ -24,68 +19,66 @@ export const FACILITY_ROUTES: Routes = [
     canDeactivate: [resetCurrentFacility],
     children: [
       {
-        path: FacilityWizardReviewStep.DETAILS,
+        path: '',
+        canActivate: [facilityRedirectGuard],
+        children: [],
+      },
+      {
+        path: FacilityWizardStep.DETAILS,
         title: 'Add facility details',
         data: { backlink: '../../../../', breadcrumb: false },
-        canActivate: [canActivateFacility],
-        loadComponent: () => import('@requests/common').then((c) => c.FacilityDetailsReviewComponent),
+        loadComponent: () => import('./details/facility-details.component').then((c) => c.FacilityDetailsComponent),
       },
       {
-        path: FacilityWizardReviewStep.CONTACT_DETAILS,
+        path: FacilityWizardStep.CONTACT_DETAILS,
         title: 'Add facility contact details',
-        data: { backlink: `../${FacilityWizardReviewStep.DETAILS}`, breadcrumb: false },
-        canActivate: [canActivateFacility],
-        loadComponent: () => import('@requests/common').then((m) => m.FacilityContactDetailsComponent),
+        data: { backlink: `../${FacilityWizardStep.DETAILS}`, breadcrumb: false },
+        loadComponent: () =>
+          import('./contact-details/facility-contact-details.component').then((c) => c.FacilityContactDetailsComponent),
       },
       {
-        path: FacilityWizardReviewStep.ELIGIBILITY_DETAILS,
+        path: FacilityWizardStep.ELIGIBILITY_DETAILS,
         title: 'Add CCA eligibility details and authorisation',
-        data: { backlink: `../${FacilityWizardReviewStep.CONTACT_DETAILS}`, breadcrumb: false },
-        canActivate: [canActivateFacility],
-        loadComponent: () => import('@requests/common').then((m) => m.FacilityEligibilityDetailsComponent),
+        data: { backlink: `../${FacilityWizardStep.CONTACT_DETAILS}`, breadcrumb: false },
+        loadComponent: () =>
+          import('./eligibility-details/facility-eligibility-details.component').then(
+            (c) => c.FacilityEligibilityDetailsComponent,
+          ),
       },
       {
-        path: FacilityWizardReviewStep.EXTENT,
+        path: FacilityWizardStep.EXTENT,
         title: 'Extent of the facility',
-        data: { backlink: `../${FacilityWizardReviewStep.ELIGIBILITY_DETAILS}`, breadcrumb: false },
-        canActivate: [canActivateFacility],
-        loadComponent: () => import('@requests/common').then((m) => m.FacilityExtentComponent),
+        data: { backlink: `../${FacilityWizardStep.ELIGIBILITY_DETAILS}`, breadcrumb: false },
+        loadComponent: () => import('./extent/facility-extent.component').then((c) => c.FacilityExtentComponent),
       },
       {
-        path: FacilityWizardReviewStep.APPLY_RULE,
+        path: FacilityWizardStep.APPLY_RULE,
         title: 'Apply the 70% rule',
-        data: { backlink: `../${FacilityWizardReviewStep.EXTENT}`, breadcrumb: false },
-        canActivate: [canActivateFacility],
-        loadComponent: () => import('@requests/common').then((m) => m.FacilityApplyRuleComponent),
+        data: { backlink: `../${FacilityWizardStep.EXTENT}`, breadcrumb: false },
+        loadComponent: () =>
+          import('./apply-rule/facility-apply-rule.component').then((c) => c.FacilityApplyRuleComponent),
       },
       {
-        path: FacilityWizardReviewStep.DECISION,
+        path: 'decision',
         title: (route: ActivatedRouteSnapshot) => {
           const store = inject(RequestTaskStore);
           const facility = store.select(underlyingAgreementQuery.selectFacility(route.params.facilityId))();
           return facility.facilityDetails.name;
         },
         data: { backlink: '../../../../', breadcrumb: false },
-        canActivate: [canActivateFacilityDecision],
         loadComponent: () => import('./decision/facility-decision.component').then((c) => c.FacilityDecisionComponent),
       },
       {
-        path: FacilityWizardReviewStep.CHECK_YOUR_ANSWERS,
+        path: 'check-your-answers',
         title: 'Check your answers',
         data: { backlink: '../../../../', breadcrumb: false },
-        canActivate: [canActivateFacilityCheckYourAnswers],
         loadComponent: () => import('./check-answers/facility-check-answers.component'),
       },
       {
-        path: FacilityWizardReviewStep.SUMMARY,
+        path: 'summary',
         title: 'Summary details',
         data: { backlink: '../../../../', breadcrumb: false },
-        canActivate: [canActivateFacilitySummary],
         loadComponent: () => import('./summary/facility-summary.component'),
-      },
-      {
-        path: '**',
-        redirectTo: FacilityWizardReviewStep.DECISION,
       },
     ],
   },

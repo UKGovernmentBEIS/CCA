@@ -15,6 +15,7 @@ export function ExternalContactDetailsGuard(route: ActivatedRouteSnapshot) {
   const caExternalContactsService = inject(CaExternalContactsService);
   const store = inject(ActiveExternalContactStore);
   const businessErrorService = inject(BusinessErrorService);
+
   return caExternalContactsService.getCaExternalContactById(Number(route.paramMap.get('userId'))).pipe(
     tap((ec) => store.setState(ec)),
     map(() => true),

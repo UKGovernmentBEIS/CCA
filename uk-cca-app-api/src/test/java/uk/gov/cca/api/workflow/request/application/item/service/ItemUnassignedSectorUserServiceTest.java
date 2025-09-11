@@ -74,13 +74,13 @@ class ItemUnassignedSectorUserServiceTest {
         when(sectorUserAuthorityResourceAdapter.getUserScopedRequestTaskTypes(appUser))
                 .thenReturn(scopedRequestTaskTypes);
         when(itemRequestResourcesService.getItemRequestResources(expectedItemPage)).thenReturn(expectedItemRequestResources);
-        when(itemRepository.findItems(appUser.getUserId(), ItemAssignmentType.UNASSIGNED, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0L).pageSize(10L).build()))
+        when(itemRepository.findItems(appUser.getUserId(), ItemAssignmentType.UNASSIGNED, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0).pageSize(10).build()))
                 .thenReturn(expectedItemPage);
         when(itemResponseService.toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser))
                 .thenReturn(expectedItemDTOResponse);
 
         // Invoke
-        ItemDTOResponse actualResponse = itemService.getUnassignedItems(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+        ItemDTOResponse actualResponse = itemService.getUnassignedItems(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
 
         // Assert
         assertThat(actualResponse).isEqualTo(expectedItemDTOResponse);
@@ -100,7 +100,7 @@ class ItemUnassignedSectorUserServiceTest {
                 .thenReturn(scopedRequestTaskTypes);
 
         // Invoke
-        ItemDTOResponse actualResponse = itemService.getUnassignedItems(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+        ItemDTOResponse actualResponse = itemService.getUnassignedItems(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
 
         // Assert
         assertThat(actualResponse).isEqualTo(ItemDTOResponse.emptyItemDTOResponse());
@@ -127,13 +127,13 @@ class ItemUnassignedSectorUserServiceTest {
         when(sectorUserAuthorityResourceAdapter.getUserScopedRequestTaskTypes(appUser))
                 .thenReturn(scopedRequestTaskTypes);
         when(itemRequestResourcesService.getItemRequestResources(itemPage)).thenReturn(expectedItemRequestResources);
-        when(itemRepository.findItems(appUser.getUserId(), ItemAssignmentType.UNASSIGNED, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0L).pageSize(10L).build()))
+        when(itemRepository.findItems(appUser.getUserId(), ItemAssignmentType.UNASSIGNED, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0).pageSize(10).build()))
                 .thenReturn(itemPage);
         when(itemResponseService.toItemDTOResponse(itemPage, expectedItemRequestResources, appUser))
                 .thenReturn(expectedItemDTOResponse);
 
         // Invoke
-        ItemDTOResponse actualResponse = itemService.getUnassignedItems(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+        ItemDTOResponse actualResponse = itemService.getUnassignedItems(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
 
         // Assert
         assertThat(actualResponse).isEqualTo(expectedItemDTOResponse);

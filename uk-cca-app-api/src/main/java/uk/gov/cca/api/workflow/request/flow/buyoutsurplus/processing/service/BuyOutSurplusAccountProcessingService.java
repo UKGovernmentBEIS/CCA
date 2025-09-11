@@ -7,9 +7,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.cca.api.workflow.bpmn.exception.BpmnExecutionException;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusAccountProcessingException;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusAccountState;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.validation.BuyOutSurplusViolation;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
@@ -26,7 +28,7 @@ public class BuyOutSurplusAccountProcessingService {
     @Transactional(rollbackFor = BpmnExecutionException.class, propagation = Propagation.REQUIRES_NEW)
     public void doProcess(String requestId, BuyOutSurplusAccountState accountState) throws BpmnExecutionException {
         try {
-            final Request request = requestService.findRequestById(requestId);
+            Request request = requestService.findRequestById(requestId);
             final BuyOutSurplusAccountProcessingRequestMetadata metadata =
                     (BuyOutSurplusAccountProcessingRequestMetadata) request.getMetadata();
 
@@ -34,12 +36,27 @@ public class BuyOutSurplusAccountProcessingService {
             BuyOutSurplusAccountProcessingTargetPeriodService buyOutService = buyOutSurplusAccountProcessingTargetPeriodServices.stream()
                     .filter(service -> service.getType().equals(metadata.getTargetPeriodType()))
                     .findFirst().orElseThrow();
-            buyOutService.processBuyOutSurplus(accountState);
+            buyOutService.processBuyOutSurplus(request, accountState);
 
+        } catch (BuyOutSurplusAccountProcessingException e) {
+            log.error(e.getMessage(), e);
+            throw new BpmnExecutionException(e.getMessage(), List.of(e.getError().getMessage()));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new BpmnExecutionException(e.getMessage(), List.of(
                     BuyOutSurplusViolation.BuyOutSurplusViolationMessage.PROCESS_FAILED.getMessage()));
         }
+    }
+
+    @Transactional
+    public void complete(String requestId, BuyOutSurplusAccountState accountState) {
+        Request request = requestService.findRequestById(requestId);
+
+        BuyOutSurplusAccountProcessingRequestPayload requestPayload =
+                (BuyOutSurplusAccountProcessingRequestPayload) request.getPayload();
+
+        accountState.setSucceeded(true);
+        accountState.setTransactionCode(requestPayload.getBuyOutSurplus().getTransactionCode());
+        accountState.setPaymentStatus(requestPayload.getBuyOutSurplus().getPaymentStatus());
     }
 }

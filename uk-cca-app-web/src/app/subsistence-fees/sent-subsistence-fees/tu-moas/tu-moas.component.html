@@ -1,54 +1,62 @@
-<h2 class="govuk-heading-m">Target unit MoAs ({{ subFeesDetails?.targetUnitMoasCount }})</h2>
-<p>The listed MoAs have been sent to target units that are not financially managed by the sector.</p>
+@if (subFeesDetails(); as subFeesDetails) {
+  <h2 class="govuk-heading-m">Target unit MoAs ({{ subFeesDetails?.targetUnitMoasCount }})</h2>
+  <p>The listed MoAs have been sent to target units that are not financially managed by the sector.</p>
 
-@if (subFeesDetails?.targetUnitMoasCount > 0) {
-  <div class="x-scroll govuk-!-margin-top-6">
-    <div class="max-content-width">
-      <div class="overflow-auto overflow-auto-table">
-        <govuk-table [columns]="tableColumns" [data]="state().subsistenceFeesMoas">
-          <ng-template let-column="column" let-row="row">
-            @switch (column.field) {
-              @case ('transactionId') {
-                <a [routerLink]="['tu-moas', row['moaId'], 'details']" [relativeTo]="activatedRoute" class="govuk-link">
-                  {{ row[column.field] }}
-                </a>
+  @if (subFeesDetails?.targetUnitMoasCount > 0) {
+    <div class="x-scroll govuk-!-margin-top-6">
+      <div class="max-content-width">
+        <div class="overflow-auto overflow-auto-table">
+          <govuk-table [columns]="tableColumns" [data]="state().subsistenceFeesMoas">
+            <ng-template let-column="column" let-row="row">
+              @switch (column.field) {
+                @case ('transactionId') {
+                  <a
+                    [routerLink]="['tu-moas', row['moaId'], 'details']"
+                    [relativeTo]="activatedRoute"
+                    class="govuk-link"
+                  >
+                    {{ row[column.field] }}
+                  </a>
+                }
+
+                @case ('businessId') {
+                  <span>{{ row[column.field] }}</span>
+                }
+
+                @case ('paymentStatus') {
+                  <govuk-tag [color]="row[column.field] | statusColor: 'grey'" class="tag-width">
+                    {{ row[column.field] | status }}
+                  </govuk-tag>
+                }
+
+                @case ('markFacilitiesStatus') {
+                  <div class="govuk-!-width-full">
+                    <span>{{ row[column.field] | status }}</span>
+                  </div>
+                }
+
+                @case ('currentTotalAmount') {
+                  <span>{{ row[column.field] | number }}</span>
+                }
+
+                @case ('outstandingTotalAmount') {
+                  <span>{{ row[column.field] | number }}</span>
+                }
               }
+            </ng-template>
+          </govuk-table>
 
-              @case ('businessId') {
-                <span>{{ row[column.field] }}</span>
-              }
-
-              @case ('paymentStatus') {
-                <govuk-tag [color]="row[column.field] | subsistenceFeesRunPaymentStatusTagColor" class="failure-tag">
-                  {{ row[column.field] | subsistenceFeesRunPaymentStatus }}
-                </govuk-tag>
-              }
-
-              @case ('markFacilitiesStatus') {
-                <div class="govuk-!-width-full">
-                  <span>{{ row[column.field] | subsistenceFeesRunMarkFacilitiesStatus }}</span>
-                </div>
-              }
-
-              @case ('currentTotalAmount') {
-                <span>{{ row[column.field] | number }}</span>
-              }
-
-              @case ('outstandingTotalAmount') {
-                <span>{{ row[column.field] | number }}</span>
-              }
-            }
-          </ng-template>
-        </govuk-table>
-
-        <cca-pagination
-          [count]="state().totalItems"
-          (currentPageChange)="handlePageChange($event)"
-          [pageSize]="state().pageSize"
-        />
+          <cca-pagination
+            [count]="state().totalItems"
+            [currentPage]="state().currentPage"
+            [pageSize]="state().pageSize"
+            (pageChange)="onPageChange($event)"
+            (pageSizeChange)="onPageSizeChange($event)"
+          />
+        </div>
       </div>
     </div>
-  </div>
-} @else {
-  <p class="govuk-!-margin-top-6">No target unit MoAs were sent during this payment request.</p>
+  } @else {
+    <p class="govuk-!-margin-top-6">No target unit MoAs were sent during this payment request.</p>
+  }
 }

@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.migration.MigrationBaseService;
 import uk.gov.cca.api.migration.MigrationConstants;
 import uk.gov.cca.api.migration.MigrationEndpoint;
@@ -82,7 +84,10 @@ public class SectorAssociationSchemeDocumentMigrationService extends MigrationBa
         
         try {
             SectorAssociationScheme scheme = sectorAssociationSchemeRepository
-                    .findSectorAssociationSchemeBySectorAssociationId(sectorId)
+                    .findSectorAssociationSchemesBySectorAssociationId(sectorId)
+                    .stream()
+                    .filter(s -> SchemeVersion.CCA_2.equals(s.getSchemeVersion()))
+                    .findFirst()
                     .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
             
             SectorAssociationSchemeDocument schemeDocument = scheme.getUmbrellaAgreement();

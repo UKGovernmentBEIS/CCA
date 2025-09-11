@@ -11,9 +11,10 @@ import { catchNotFoundRequest, ErrorCode } from '@error/not-found-error';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DetailsComponent, GovukSelectOption, SelectComponent } from '@netz/govuk-components';
 import { PerformanceDataDownloadPayload, PerformanceDataTargetPeriodEnum } from '@requests/common';
+import { UploadProcessingComponent } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
 import { requestTaskReassignedError, taskNotFoundError } from '@shared/errors';
-import { transformFilesToUUIDsList } from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 
 import { RequestTaskActionPayload, TasksService } from 'cca-api';
 
@@ -24,10 +25,10 @@ import {
   UploadProcessPerformanceDataFormModel,
 } from './performance-data-upload-process-form.provider';
 import { PerformanceDataUploadProcessedComponent } from './processed/performance-data-upload-processed.component';
-import { PerformanceDataUploadProcessingComponent } from './processing/performance-data-upload-processing.component';
 
 @Component({
   selector: 'cca-performance-data-upload',
+  templateUrl: './performance-data-upload-process.component.html',
   standalone: true,
   imports: [
     WizardStepComponent,
@@ -37,10 +38,9 @@ import { PerformanceDataUploadProcessingComponent } from './processing/performan
     DetailsComponent,
     MultipleFileInputComponent,
     RouterLink,
-    PerformanceDataUploadProcessingComponent,
+    UploadProcessingComponent,
     PerformanceDataUploadProcessedComponent,
   ],
-  templateUrl: './performance-data-upload-process.component.html',
   providers: [PerformanceDataUploadProcessFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -49,19 +49,31 @@ export class PerformanceDataUploadProcessComponent implements OnInit {
   private readonly tasksService = inject(TasksService);
   private readonly businessErrorService = inject(BusinessErrorService);
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly taskId = +this.activatedRoute.snapshot.paramMap.get('taskId');
   private readonly destroyRef = inject(DestroyRef);
+
+  protected readonly form = inject<UploadProcessPerformanceDataFormModel>(UPLOAD_PROCESS_PERFORMANCE_DATA_FORM);
+
+  private readonly taskId = +this.activatedRoute.snapshot.paramMap.get('taskId');
   private readonly interval = 10000; // ms
-  readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
-  readonly form = inject<UploadProcessPerformanceDataFormModel>(UPLOAD_PROCESS_PERFORMANCE_DATA_FORM);
-  readonly performanceDataUpload = this.requestTaskStore.select(performanceDataUploadQuery.selectPerformanceDataUpload);
-  readonly processCompleted = this.requestTaskStore.select(performanceDataUploadQuery.selectProcessCompleted);
-  readonly targetPeriodsOptions: GovukSelectOption<PerformanceDataTargetPeriodEnum.TP6>[] = [
+
+  protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
+
+  protected readonly performanceDataUpload = this.requestTaskStore.select(
+    performanceDataUploadQuery.selectPerformanceDataUpload,
+  );
+
+  protected readonly processCompleted = this.requestTaskStore.select(performanceDataUploadQuery.selectProcessCompleted);
+
+  protected readonly targetPeriodsOptions: GovukSelectOption<PerformanceDataTargetPeriodEnum.TP6>[] = [
     {
       value: PerformanceDataTargetPeriodEnum.TP6,
       text: PerformanceDataTargetPeriodEnum.TP6,
     },
   ];
+
+  ngOnInit() {
+    if (this.processCompleted() === false) this.fetchTaskItemInfo().subscribe();
+  }
 
   onSubmit() {
     this.tasksService
@@ -73,7 +85,7 @@ export class PerformanceDataUploadProcessComponent implements OnInit {
           ...{
             performanceDataUpload: {
               performanceDataTargetPeriodType: this.form.value.targetPeriodType,
-              reportPackages: transformFilesToUUIDsList(this.form.value.uploadedFiles),
+              reportPackages: fileUtils.toUUIDs(this.form.value.uploadedFiles),
             },
           },
         } as RequestTaskActionPayload,
@@ -90,12 +102,6 @@ export class PerformanceDataUploadProcessComponent implements OnInit {
         this.requestTaskStore.setPayload(response);
         this.fetchTaskItemInfo().subscribe();
       });
-  }
-
-  ngOnInit(): void {
-    if (this.processCompleted() === false) {
-      this.fetchTaskItemInfo().subscribe();
-    }
   }
 
   private fetchTaskItemInfo(): Observable<unknown> {

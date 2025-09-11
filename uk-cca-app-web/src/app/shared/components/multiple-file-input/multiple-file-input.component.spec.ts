@@ -51,7 +51,7 @@ describe('MultipleFileInputComponent', () => {
     }
 
     get deleteButtons() {
-      return this.queryAll<HTMLButtonElement>('.cca-multi-file-upload__delete');
+      return this.queryAll<HTMLButtonElement>('button[name="delete"]');
     }
 
     set files(file: File[]) {

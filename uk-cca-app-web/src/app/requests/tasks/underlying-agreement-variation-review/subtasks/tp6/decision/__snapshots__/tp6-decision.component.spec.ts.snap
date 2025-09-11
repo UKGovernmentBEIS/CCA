@@ -1,0 +1,1940 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TP6DecisionComponent should match snapshot 1`] = `
+<div
+  id="root0"
+>
+  <div>
+    <netz-page-heading
+      caption="Baseline and targets"
+    >
+      <span
+        class="govuk-caption-l"
+      >
+        Baseline and targets
+      </span>
+      
+      <h1
+        class="govuk-heading-l"
+      >
+        TP6(2024)
+      </h1>
+    </netz-page-heading>
+    
+    <cca-highlight-diff>
+      <div
+        class="govuk-!-display-none"
+      >
+        <cca-summary>
+          <h2
+            class="govuk-heading-m"
+          >
+            Target composition
+          </h2>
+          
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Target calculator file
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <span>
+                  No files provided
+                </span>
+                
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Energy or carbon units used by the sector
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 Energy (kWh) 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Energy or carbon units used by the target unit
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 Energy (kWh) 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Target type for agreement composition
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 Relative 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Target unit throughput has a unit of
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 GJ 
+                
+                
+                
+                
+              </dd>
+              
+              
+            </div>
+            
+            
+            
+          </dl>
+          
+          <h2
+            class="govuk-heading-m"
+          >
+            Details of baseline data
+          </h2>
+          
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Is at least 12 months of consecutive baseline data available?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 No 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Enter the date that 12 months of data will be available.
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 12 Dec 2020 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Explain how the target unit fits the greenfield criteria
+              </dt>
+              <dd
+                class="pre-line govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 test 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Evidence
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <span>
+                  No files provided
+                </span>
+                
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Baseline kWh for the target facility
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 100 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 Yes 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Baseline throughput (GJ)
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 10 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Performance (kWh/GJ)
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 10 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Baseline energy to carbon factor (kgC/kWh)
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 1 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            
+            
+            
+          </dl>
+          
+          <h2
+            class="govuk-heading-m"
+          >
+            Targets
+          </h2>
+          
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Improvement (%)
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 0.1 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-targets?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Target (kWh/GJ)
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 9 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-targets?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            
+            
+            
+          </dl>
+          
+          
+        </cca-summary>
+        
+      </div>
+      <div
+        class="govuk-!-display-none"
+      >
+        <cca-summary>
+          <h2
+            class="govuk-heading-m"
+          >
+            Target composition
+          </h2>
+          
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Target calculator file
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <span>
+                  No files provided
+                </span>
+                
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Energy or carbon units used by the sector
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 Energy (kWh) 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Energy or carbon units used by the target unit
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 Energy (kWh) 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Target type for agreement composition
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 Relative 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Target unit throughput has a unit of
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 GJ 
+                
+                
+                
+                
+              </dd>
+              
+              
+            </div>
+            
+            
+            
+          </dl>
+          
+          <h2
+            class="govuk-heading-m"
+          >
+            Details of baseline data
+          </h2>
+          
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Is at least 12 months of consecutive baseline data available?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 No 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Enter the date that 12 months of data will be available.
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 12 Dec 2020 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Explain how the target unit fits the greenfield criteria
+              </dt>
+              <dd
+                class="pre-line govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 test 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Evidence
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <span>
+                  No files provided
+                </span>
+                
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Baseline kWh for the target facility
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 100 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 Yes 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Baseline throughput (GJ)
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 10 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Performance (kWh/GJ)
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 10 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Baseline energy to carbon factor (kgC/kWh)
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 1 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-baseline-data?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            
+            
+            
+          </dl>
+          
+          <h2
+            class="govuk-heading-m"
+          >
+            Targets
+          </h2>
+          
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            govuk-summary-list=""
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Improvement (%)
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 0.1 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-targets?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Target (kWh/GJ)
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                 9 
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/add-targets?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            
+            
+            
+          </dl>
+          
+          
+        </cca-summary>
+        
+      </div>
+      <div
+        class="highlight"
+      >
+        <h2
+          class="govuk-heading-m"
+        >
+          Target composition
+        </h2>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+        >
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Target calculator file
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <span>
+                No files provided
+              </span>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/target-composition?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Energy or carbon units used by the sector
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Energy (kWh) 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/target-composition?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Energy or carbon units used by the target unit
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Energy (kWh) 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/target-composition?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Target type for agreement composition
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Relative 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/target-composition?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Target unit throughput has a unit of
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               GJ 
+            </dd>
+          </div>
+        </dl>
+        <h2
+          class="govuk-heading-m"
+        >
+          Details of baseline data
+        </h2>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+        >
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Is at least 12 months of consecutive baseline data available?
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               No 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/add-baseline-data?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Enter the date that 12 months of data will be available.
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               12 Dec 2020 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/add-baseline-data?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Explain how the target unit fits the greenfield criteria
+            </dt>
+            <dd
+              class="pre-line govuk-summary-list__value"
+            >
+               test 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/add-baseline-data?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Evidence
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <span>
+                No files provided
+              </span>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/add-baseline-data?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Baseline kWh for the target facility
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               100 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/add-baseline-data?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               Yes 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/add-baseline-data?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Baseline throughput (GJ)
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               10 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/add-baseline-data?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Performance (kWh/GJ)
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               10 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/add-baseline-data?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Baseline energy to carbon factor (kgC/kWh)
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               1 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/add-baseline-data?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+        </dl>
+        <h2
+          class="govuk-heading-m"
+        >
+          Targets
+        </h2>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+        >
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Improvement (%)
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               0.1 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/add-targets?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Target (kWh/GJ)
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               9 
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/add-targets?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </cca-highlight-diff>
+    <cca-wizard-step
+      class="ng-untouched ng-pristine ng-valid"
+    >
+      <form
+        class="ng-untouched ng-pristine ng-valid"
+        novalidate=""
+      >
+        
+        <netz-page-heading>
+          
+          <h1
+            class="govuk-heading-l"
+          >
+            
+          </h1>
+        </netz-page-heading>
+        <cca-decision>
+          <h2
+            class="govuk-heading-m"
+          >
+            What is your decision on the information submitted?
+          </h2>
+          <span
+            class="govuk-hint"
+          >
+            Use your judgement to make minor changes within the details if needed
+          </span>
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="type"
+            govuk-radio=""
+          >
+            <div
+              class="govuk-form-group"
+            >
+              <fieldset
+                class="govuk-fieldset"
+                govukfieldset=""
+                id="type"
+              >
+                <legend
+                  class="govuk-fieldset__legend"
+                  govuklegend=""
+                  id="l.type"
+                >
+                  
+                  
+                </legend>
+                
+                
+                <div
+                  class="govuk-radios"
+                >
+                  
+                  <div
+                    class="govuk-radios__item"
+                  >
+                    <input
+                      class="govuk-radios__input"
+                      id="type-option0"
+                      name="type"
+                      type="radio"
+                      value="ACCEPTED"
+                    />
+                    <label
+                      class="govuk-label govuk-radios__label"
+                      for="type-option0"
+                    >
+                       Accepted 
+                      
+                      
+                    </label>
+                    
+                  </div>
+                  
+                  
+                  
+                  
+                  <div
+                    class="govuk-radios__item"
+                  >
+                    <input
+                      class="govuk-radios__input"
+                      id="type-option1"
+                      name="type"
+                      type="radio"
+                      value="REJECTED"
+                    />
+                    <label
+                      class="govuk-label govuk-radios__label"
+                      for="type-option1"
+                    >
+                       Rejected 
+                      
+                      
+                    </label>
+                    
+                  </div>
+                  
+                  
+                  
+                  
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="notes"
+            govuk-textarea=""
+            label="Notes (optional)"
+          >
+            <label
+              class="govuk-label"
+              for="notes"
+              id="l.notes"
+            >
+               Notes (optional)
+
+            </label>
+            
+            
+            <textarea
+              class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-valid"
+              id="notes"
+              name="notes"
+              rows="5"
+            />
+            
+          </div>
+          <cca-multiple-file-input
+            class="ng-untouched ng-pristine ng-valid"
+            formcontrolname="files"
+            label="Upload evidence (optional)"
+          >
+            <div
+              class="cca-multi-file-upload cca-multi-file-upload--enhanced"
+            >
+              <div
+                class="govuk-form-group"
+              >
+                <label
+                  class="govuk-label govuk-label--m"
+                  for="files"
+                  id="l.files"
+                >
+                  Upload evidence (optional)
+                </label>
+                <span
+                  class="govuk-hint"
+                  id="files-hint-file-size"
+                >
+                   Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
+                </span>
+                
+                
+                
+                <div
+                  class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
+                >
+                  <input
+                    accept="*/*"
+                    aria-labelledby="l.files ld.files"
+                    class="govuk-file-upload cca-multi-file-upload__input"
+                    id="files"
+                    multiple=""
+                    name="files"
+                    type="file"
+                  />
+                  <p
+                    class="govuk-body"
+                  >
+                    Drag and drop files here or
+                  </p>
+                  <label
+                    class="govuk-button govuk-button--secondary"
+                    for="files"
+                    id="ld.files"
+                  >
+                     Choose files 
+                  </label>
+                  <div
+                    aria-live="polite"
+                    class="govuk-visually-hidden"
+                    role="status"
+                  >
+                    
+                  </div>
+                </div>
+              </div>
+              <cca-file-upload-list>
+                <div
+                  class="cca-multi-file__uploaded-files cca-hidden"
+                >
+                  
+                  
+                  <dl
+                    class="govuk-summary-list"
+                  >
+                    
+                  </dl>
+                  
+                  
+                  
+                  
+                  
+                </div>
+                
+              </cca-file-upload-list>
+            </div>
+          </cca-multiple-file-input>
+        </cca-decision>
+        <button
+          class="govuk-button"
+          govukbutton=""
+          netzpendingbutton=""
+          type="submit"
+        >
+          Continue
+        </button>
+        
+        
+      </form>
+    </cca-wizard-step>
+  </div>
+  <hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  />
+  <netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Review underlying agreement variation 
+    </a>
+  </netz-return-to-task-or-action-page>
+</div>
+`;

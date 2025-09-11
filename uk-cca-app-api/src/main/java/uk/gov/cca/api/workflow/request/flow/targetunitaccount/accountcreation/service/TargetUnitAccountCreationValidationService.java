@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
-import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeService;
+import uk.gov.cca.api.sectorassociation.service.SubsectorAssociationService;
 import uk.gov.netz.api.common.exception.BusinessException;
 
 import java.util.List;
@@ -18,10 +18,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TargetUnitAccountCreationValidationService {
 
-    private final SectorAssociationSchemeService sectorAssociationSchemeService;
+    private final SubsectorAssociationService subsectorAssociationService;
 
     public void validate(@Valid TargetUnitAccountDTO accountDTO) {
-        List<Long> subsectorAssociationIds = sectorAssociationSchemeService
+        List<Long> subsectorAssociationIds = subsectorAssociationService
                 .getSubsectorAssociationIdsBySectorAssociationId(accountDTO.getSectorAssociationId());
 
         if (CollectionUtils.isEmpty(subsectorAssociationIds)) {

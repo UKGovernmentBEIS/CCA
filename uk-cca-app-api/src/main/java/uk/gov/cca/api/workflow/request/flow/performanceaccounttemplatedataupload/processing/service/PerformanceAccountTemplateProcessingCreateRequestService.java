@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.service.PerformanceAccountTemplateDataQueryService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
@@ -24,6 +25,7 @@ import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestParams;
 public class PerformanceAccountTemplateProcessingCreateRequestService {
 
 	private final RequestService requestService;
+	private final PerformanceAccountTemplateDataQueryService performanceAccountTemplateDataQueryService;
 	private final StartProcessRequestService startProcessRequestService;
 	private final RequestCreateAccountAndSectorResourcesService requestCreateAccountAndSectorResourcesService;
 	
@@ -34,7 +36,8 @@ public class PerformanceAccountTemplateProcessingCreateRequestService {
 		final PerformanceAccountTemplateDataProcessingRequestPayload parentRequestPayload =
 				(PerformanceAccountTemplateDataProcessingRequestPayload) parentRequest.getPayload();
 		
-		int nextReportVersion = 1; //TODO find next report version by accountReport.accountId and parentRequestPayload.targetPeriodYear
+		int nextReportVersion = performanceAccountTemplateDataQueryService
+				.calculateNextReportVersion(accountReport.getAccountId(), parentRequestPayload.getTargetPeriodYear());
 		
 		final RequestParams requestParams = RequestParams.builder()
 				.type(CcaRequestType.PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING)
@@ -43,6 +46,8 @@ public class PerformanceAccountTemplateProcessingCreateRequestService {
 				.requestMetadata(PerformanceAccountTemplateProcessingRequestMetadata.builder()
 						.type(CcaRequestMetadataType.PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING)
 						.sectorAssociationInfo(parentRequestPayload.getSectorAssociationInfo())
+						.sectorUserAssignee(parentRequestPayload.getSectorUserAssignee())
+						.accountId(accountReport.getAccountId())
 						.accountBusinessId(accountReport.getAccountBusinessId())
 						.targetPeriodType(parentRequestPayload.getTargetPeriodType())
 						.targetPeriodYear(parentRequestPayload.getTargetPeriodYear())

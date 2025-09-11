@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -34,6 +36,8 @@ describe('LandingPageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [LandingPageComponent, PageHeadingComponent, BackToTopComponent],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         { provide: KeycloakService, useValue: mockKeycloakService },
         { provide: UsersService, useValue: mockUsersService },
         { provide: AuthoritiesService, useValue: mockAuthorityService },
@@ -44,9 +48,7 @@ describe('LandingPageComponent', () => {
 
     authStore = TestBed.inject(AuthStore);
     authStore.setIsLoggedIn(false);
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(LandingPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

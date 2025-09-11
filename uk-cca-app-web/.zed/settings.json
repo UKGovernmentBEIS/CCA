@@ -5,23 +5,26 @@
 {
   "languages": {
     "HTML": {
-      "format_on_save": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "language_servers": ["angular", "..."]
+    },
+    "JavaScript": {
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
       }
     },
     "TypeScript": {
-      "format_on_save": {
-        "external": {
-          "command": "prettier",
-          "arguments": ["--stdin-filepath", "{buffer_path}"]
-        }
-      },
+      "formatter": "prettier",
+      "format_on_save": "on",
+      "language_servers": ["...", "angular"],
       "code_actions_on_format": {
         "source.fixAll.eslint": true
       }
     }
-  }
+  },
+  "hour_format": "hour24",
+  "minimap": { "show": "always" }
 }

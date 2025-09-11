@@ -12,7 +12,7 @@ import { CreateTargetUnitStore } from '../create-target-unit.store';
       <div class="govuk-grid-column-two-thirds">
         <govuk-panel>Target unit {{ operatorName }} created</govuk-panel>
         <h3 class="govuk-heading-m">What happens next</h3>
-        <p class="govuk-body">You can now apply for an underlying agreement.</p>
+        <p>You can now apply for an underlying agreement.</p>
         <a class="govuk-link" [routerLink]="['/']" [replaceUrl]="true">Return to: your tasks</a>
       </div>
     </div>

@@ -38,15 +38,14 @@ exports[`ExplanationComponent should match snapshot for ExplanationComponent 1`]
           for="reason"
           id="l.reason"
         >
-           Insert text details
+           
 
         </label>
         <div
           class="govuk-hint"
           id="reason-hint"
         >
-           This will be included in the official notice.
-
+           This will be included in the official notice. 
         </div>
         
         
@@ -76,7 +75,7 @@ exports[`ExplanationComponent should match snapshot for ExplanationComponent 1`]
   />
   <netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Review application for underlying agreement 

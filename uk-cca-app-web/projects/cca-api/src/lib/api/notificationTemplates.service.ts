@@ -14,9 +14,9 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParam
 import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { NotificationTemplateDTO } from '../model/notificationTemplateDTO';
 import { NotificationTemplateSearchResults } from '../model/notificationTemplateSearchResults';
 import { NotificationTemplateUpdateDTO } from '../model/notificationTemplateUpdateDTO';
+import { NotificationTemplateViewDTO } from '../model/notificationTemplateViewDTO';
 
 import { BASE_PATH } from '../variables';
 import { Configuration } from '../configuration';
@@ -85,60 +85,55 @@ export class NotificationTemplatesService {
 
   /**
    * Retrieves the notification templates associated with current user
-   * @param role The role type
    * @param page The page number starting from zero
    * @param size The page size
+   * @param roleTypes The list of role types
    * @param term The term to search
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public getCurrentUserNotificationTemplates(
-    role: string,
     page: number,
     size: number,
+    roleTypes?: string[],
     term?: string,
   ): Observable<NotificationTemplateSearchResults>;
   public getCurrentUserNotificationTemplates(
-    role: string,
     page: number,
     size: number,
+    roleTypes: string[],
     term: string,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<NotificationTemplateSearchResults>>;
   public getCurrentUserNotificationTemplates(
-    role: string,
     page: number,
     size: number,
+    roleTypes: string[],
     term: string,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<NotificationTemplateSearchResults>>;
   public getCurrentUserNotificationTemplates(
-    role: string,
     page: number,
     size: number,
+    roleTypes: string[],
     term: string,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<NotificationTemplateSearchResults>;
   public getCurrentUserNotificationTemplates(
-    role: string,
     page: number,
     size: number,
+    roleTypes?: string[],
     term?: string,
     observe: any = 'body',
     reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
-    if (role === null || role === undefined) {
-      throw new Error(
-        'Required parameter role was null or undefined when calling getCurrentUserNotificationTemplates.',
-      );
-    }
     if (page === null || page === undefined) {
       throw new Error(
         'Required parameter page was null or undefined when calling getCurrentUserNotificationTemplates.',
@@ -151,8 +146,10 @@ export class NotificationTemplatesService {
     }
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
-    if (role !== undefined && role !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, role as any, 'role');
+    if (roleTypes) {
+      roleTypes.forEach((element) => {
+        queryParameters = this.addToHttpParams(queryParameters, element as any, 'roleTypes');
+      });
     }
     if (term !== undefined && term !== null) {
       queryParameters = this.addToHttpParams(queryParameters, term as any, 'term');
@@ -206,25 +203,25 @@ export class NotificationTemplatesService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getNotificationTemplateById(id: number): Observable<NotificationTemplateDTO>;
+  public getNotificationTemplateById(id: number): Observable<NotificationTemplateViewDTO>;
   public getNotificationTemplateById(
     id: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<NotificationTemplateDTO>>;
+  ): Observable<HttpResponse<NotificationTemplateViewDTO>>;
   public getNotificationTemplateById(
     id: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<NotificationTemplateDTO>>;
+  ): Observable<HttpEvent<NotificationTemplateViewDTO>>;
   public getNotificationTemplateById(
     id: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<NotificationTemplateDTO>;
+  ): Observable<NotificationTemplateViewDTO>;
   public getNotificationTemplateById(
     id: number,
     observe: any = 'body',
@@ -258,7 +255,7 @@ export class NotificationTemplatesService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<NotificationTemplateDTO>(
+    return this.httpClient.get<NotificationTemplateViewDTO>(
       `${this.configuration.basePath}/v1.0/notification-templates/${encodeURIComponent(String(id))}`,
       {
         responseType: responseType_ as any,

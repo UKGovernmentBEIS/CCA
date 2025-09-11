@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'cca-admin-termination-cancel-task',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="govuk-warning-text">
       <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
@@ -14,6 +12,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     </div>
     <div class="govuk-hint">Your task and all its data will be deleted permanently.</div>
   `,
-  imports: [],
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminTerminationCancelTaskComponent {}

@@ -5,7 +5,7 @@
       <ul class="govuk-list govuk-error-summary__list">
         <li>
           <p class="highlight-error">{{ errorMessage | errorMessageType }}</p>
-          <p class="govuk-body">
+          <p>
             There was a problem with the upload, contact
             <a class="govuk-link" href="mailto:cca-help@environment-agency.gov.uk"
               >cca-help&#64;environment-agency.gov.uk</a
@@ -18,6 +18,10 @@
 } @else {
   <govuk-notification-banner type="success">
     <h3 class="govuk-heading-m">Files have been uploaded</h3>
+    <p>
+      Please check the summary below for details on the number of files uploaded successfully and the number of files
+      that contained errors.
+    </p>
     <p>
       Contact
       <a class="govuk-link" href="mailto:cca-help@environment-agency.gov.uk">cca-help&#64;environment-agency.gov.uk</a>

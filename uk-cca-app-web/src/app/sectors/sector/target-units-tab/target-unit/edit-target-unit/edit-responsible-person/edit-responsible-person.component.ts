@@ -25,9 +25,10 @@ export class EditResponsiblePersonComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly store = inject(ActiveTargetUnitStore);
-  readonly form = inject<FormGroup<ResponsiblePersonFormModel>>(EDIT_TARGET_UNIT_RESPONSIBLE_PERSON_FORM);
 
-  accountDetails = this.store.state;
+  protected readonly form = inject<FormGroup<ResponsiblePersonFormModel>>(EDIT_TARGET_UNIT_RESPONSIBLE_PERSON_FORM);
+
+  protected readonly accountDetails = this.store.state;
 
   onSubmit() {
     this.updateTargetUnitAccountService

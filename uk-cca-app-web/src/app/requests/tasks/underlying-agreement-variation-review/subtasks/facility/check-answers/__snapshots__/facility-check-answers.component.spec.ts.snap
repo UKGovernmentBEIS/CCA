@@ -7,11 +7,11 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
   downloadUrl={[Function String]}
   facility={[Function Function]}
   facilityId={[Function String]}
-  requestTaskStore={[Function _RequestTaskStore]}
   router={[Function _Router]}
+  store={[Function _RequestTaskStore]}
   summaryDataCurrent={[Function Function]}
   summaryDataOriginal={[Function Function]}
-  taskService={[Function Object]}
+  tasksApiService={[Function TasksApiService]}
 >
   <div>
     <netz-page-heading>
@@ -31,10 +31,6 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
         class="govuk-!-display-none"
       >
         <cca-summary>
-          <h2
-            class="govuk-heading-m"
-          >
-          </h2>
           <dl
             class="govuk-summary-list govuk-!-margin-bottom-9"
             govuk-summary-list=""
@@ -74,6 +70,23 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
+                Facility ID
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 ADS_1-F00001 
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
                 Site name
               </dt>
               <dd
@@ -91,24 +104,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Facility code
-              </dt>
-              <dd
-                class="govuk-summary-list__value"
-                govuksummarylistrowvalue=""
-              >
-                 ADS_1-F00001 
-              </dd>
-            </div>
-            <div
-              class="govuk-summary-list__row"
-              govuksummarylistrow=""
-            >
-              <dt
-                class="govuk-summary-list__key"
-                govuksummarylistrowkey=""
-              >
-                Is this facility covered by UK ETS?
+                Are the activities carried out in this facility included in the UK ETS?
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -169,7 +165,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 New agreement 
+                 New entrant 
               </dd>
             </div>
             <div
@@ -199,7 +195,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
                 Facility address
               </dt>
               <dd
-                class="pre-wrap govuk-summary-list__value"
+                class="pre-line govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
                  Facility Line1 
@@ -329,7 +325,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
                 Contact address
               </dt>
               <dd
-                class="pre-wrap govuk-summary-list__value"
+                class="pre-line govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
                  Facility Contact Line1 
@@ -574,14 +570,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                <cca-summary-download-files>
-                  <a
-                    class="govuk-link"
-                    href="/tasks/20/file-download/permitFile"
-                    target="_blank"
-                  >
-                  </a>
-                </cca-summary-download-files>
+                <span>
+                  No files provided
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -1073,10 +1064,6 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
         class="govuk-!-display-none"
       >
         <cca-summary>
-          <h2
-            class="govuk-heading-m"
-          >
-          </h2>
           <dl
             class="govuk-summary-list govuk-!-margin-bottom-9"
             govuk-summary-list=""
@@ -1116,6 +1103,23 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
+                Facility ID
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                 ADS_1-F00001 
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
                 Site name
               </dt>
               <dd
@@ -1133,24 +1137,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Facility code
-              </dt>
-              <dd
-                class="govuk-summary-list__value"
-                govuksummarylistrowvalue=""
-              >
-                 ADS_1-F00001 
-              </dd>
-            </div>
-            <div
-              class="govuk-summary-list__row"
-              govuksummarylistrow=""
-            >
-              <dt
-                class="govuk-summary-list__key"
-                govuksummarylistrowkey=""
-              >
-                Is this facility covered by UK ETS?
+                Are the activities carried out in this facility included in the UK ETS?
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -1211,7 +1198,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 New agreement 
+                 New entrant 
               </dd>
             </div>
             <div
@@ -1241,7 +1228,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
                 Facility address
               </dt>
               <dd
-                class="pre-wrap govuk-summary-list__value"
+                class="pre-line govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
                  Facility Line1 
@@ -1371,7 +1358,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
                 Contact address
               </dt>
               <dd
-                class="pre-wrap govuk-summary-list__value"
+                class="pre-line govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
                  Facility Contact Line1 
@@ -1616,14 +1603,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                <cca-summary-download-files>
-                  <a
-                    class="govuk-link"
-                    href="/tasks/20/file-download/permitFile"
-                    target="_blank"
-                  >
-                  </a>
-                </cca-summary-download-files>
+                <span>
+                  No files provided
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -2114,9 +2096,6 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
       <div
         class="highlight"
       >
-        <h2
-          class="govuk-heading-m"
-        />
         <dl
           class="govuk-summary-list govuk-!-margin-bottom-9"
         >
@@ -2149,6 +2128,20 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             <dt
               class="govuk-summary-list__key"
             >
+              Facility ID
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+               ADS_1-F00001 
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
               Site name
             </dt>
             <dd
@@ -2163,21 +2156,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             <dt
               class="govuk-summary-list__key"
             >
-              Facility code
-            </dt>
-            <dd
-              class="govuk-summary-list__value"
-            >
-               ADS_1-F00001 
-            </dd>
-          </div>
-          <div
-            class="govuk-summary-list__row"
-          >
-            <dt
-              class="govuk-summary-list__key"
-            >
-              Is this facility covered by UK ETS?
+              Are the activities carried out in this facility included in the UK ETS?
             </dt>
             <dd
               class="govuk-summary-list__value"
@@ -2229,7 +2208,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             <dd
               class="govuk-summary-list__value"
             >
-               New agreement 
+               New entrant 
             </dd>
           </div>
           <div
@@ -2254,7 +2233,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
               Facility address
             </dt>
             <dd
-              class="pre-wrap govuk-summary-list__value"
+              class="pre-line govuk-summary-list__value"
             >
                Facility Line1 
               <br />
@@ -2367,7 +2346,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
               Contact address
             </dt>
             <dd
-              class="pre-wrap govuk-summary-list__value"
+              class="pre-line govuk-summary-list__value"
             >
                Facility Contact Line1 
               <br />
@@ -2578,11 +2557,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             <dd
               class="govuk-summary-list__value"
             >
-              <a
-                class="govuk-link"
-                href="/tasks/20/file-download/permitFile"
-                target="_blank"
-              />
+              <span>
+                No files provided
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -3010,7 +2987,7 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
     class="govuk-footer__section-break govuk-!-margin-bottom-3"
   /><netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Review underlying agreement variation 

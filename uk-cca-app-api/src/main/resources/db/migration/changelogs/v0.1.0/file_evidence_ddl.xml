@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="changelog_file_evidence.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+
+    <changeSet id="0_1_0_FILE_EVIDENCE_CREATE_SEQUENCE" author="P70311">
+        <createSequence sequenceName="file_evidence_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS file_evidence_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_FILE_EVIDENCE_CREATE_TABLE" author="P70311">
+        <createTable tableName="file_evidence" remarks="The table that contain evidence files">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="file_evidence_pk" nullable="false"/>
+            </column>
+            <column name="uuid" type="varchar(255)" remarks="The file evidence uuid">
+                <constraints nullable="false" unique="true" uniqueConstraintName="file_evidence_uuid_uq" />
+            </column>
+            <column name="file_name" type="varchar(255)" remarks="The file name">
+                <constraints nullable="false" />
+            </column>
+            <column name="file_content" type="bytea" remarks="The evidence binary content">
+                <constraints nullable="false" />
+            </column>
+            <column name="file_size" type="bigint" remarks="The size of the file in bytes">
+                <constraints nullable="false" />
+            </column>
+            <column name="file_type" type="varchar(255)" remarks="The mime type of the file">
+                <constraints nullable="false" />
+            </column>
+            <column name="status" type="varchar(255)" remarks="The status of the evidence file">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_by" type="varchar(255)" remarks="The creator of the entry">
+                <constraints nullable="false" />
+            </column>
+            <column name="last_updated_on" type="timestamp" remarks="When the evidence last updated">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS file_evidence CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

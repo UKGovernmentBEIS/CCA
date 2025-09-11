@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 
 import { CurrentFacilityId } from '@requests/common';
 
-import { FacilityDataDetailsDTO, FacilityInfoViewService } from 'cca-api';
+import { FacilityInfoDTO, FacilityInfoViewService } from 'cca-api';
 
-export const FacilityDetailsResolver = (): Observable<FacilityDataDetailsDTO> => {
+export const FacilityDetailsResolver = (): Observable<FacilityInfoDTO> => {
   const currentFacility = inject(CurrentFacilityId);
   if (!currentFacility) throw new Error('no currentFacilityId');
 

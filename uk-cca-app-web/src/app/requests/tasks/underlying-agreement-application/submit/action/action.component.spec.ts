@@ -1,10 +1,12 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { TaskService } from '@netz/common/forms';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub, MockType } from '@netz/common/testing';
+import { TasksApiService } from '@requests/common';
 import { screen } from '@testing-library/angular';
 import UserEvent from '@testing-library/user-event';
 
@@ -14,18 +16,28 @@ describe('UnderlyingAgreementSubmitActionComponent', () => {
   let component: UnderlyingAgreementSubmitActionComponent;
   let fixture: ComponentFixture<UnderlyingAgreementSubmitActionComponent>;
   let router: Router;
-
-  const activatedRoute = new ActivatedRouteStub();
-
-  const tasksService: MockType<TaskService> = {
-    submit: jest.fn().mockReturnValue(of({})),
-  };
+  let tasksApiService: MockType<TasksApiService>;
 
   beforeEach(async () => {
+    const requestTaskStore = {
+      select: jest.fn().mockImplementation((selector) => {
+        if (selector === requestTaskQuery.selectRequestTaskId) {
+          return () => 123;
+        }
+        return () => ({});
+      }),
+    };
+
+    tasksApiService = {
+      saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    };
+
     await TestBed.configureTestingModule({
       providers: [
-        { provide: TaskService, useValue: tasksService },
-        { provide: ActivatedRoute, useValue: activatedRoute },
+        provideHttpClient(),
+        { provide: TasksApiService, useValue: tasksApiService },
+        { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
+        { provide: RequestTaskStore, useValue: requestTaskStore },
       ],
     }).compileComponents();
 
@@ -49,11 +61,18 @@ describe('UnderlyingAgreementSubmitActionComponent', () => {
 
   it('should submit and navigate to confirmation page', async () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
-    const tasksServiceSpy = jest.spyOn(tasksService, 'submit');
+    const tasksApiServiceSpy = jest.spyOn(tasksApiService, 'saveRequestTaskAction');
     const user = UserEvent.setup();
     await user.click(screen.getByText('Confirm and send'));
 
-    expect(tasksServiceSpy).toHaveBeenCalledTimes(1);
+    expect(tasksApiServiceSpy).toHaveBeenCalledTimes(1);
+    expect(tasksApiServiceSpy).toHaveBeenCalledWith({
+      requestTaskId: 123,
+      requestTaskActionType: 'UNDERLYING_AGREEMENT_SUBMIT_APPLICATION',
+      requestTaskActionPayload: {
+        payloadType: 'EMPTY_PAYLOAD',
+      },
+    });
     expect(navigateSpy).toHaveBeenCalledWith(['confirmation'], expect.anything());
   });
 });

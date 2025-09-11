@@ -1,14 +1,29 @@
 import { DownloadableFile } from '@shared/utils';
 
-import { SummaryData, SummarySection } from './type';
+import { LinkList, SummaryData, SummarySection } from './type';
 
 export class SummaryFactory {
   private readonly _data: SummaryData = [];
 
-  addSection(header: string, changeLink = '', opts: SummaryData[number]['opts'] = {}) {
+  addSection(
+    header: string,
+    changeLink = '',
+    opts: SummaryData[number]['opts'] = {
+      headerClasses: ['govuk-heading-m'],
+    },
+  ) {
     this._data.push({ data: [], header, changeLink, opts });
     return this;
   }
+
+  /**
+   * Used when you want to add a section that with a non-bold header.
+   */
+  addPlainTextSection(text: string) {
+    this._data.push({ data: [], header: text, changeLink: '', opts: { headerClasses: ['govuk-body'] } });
+    return this;
+  }
+
   /**
    *
    * @param key
@@ -43,6 +58,18 @@ export class SummaryFactory {
     opts: Omit<SummarySection, 'key' | 'value'> = {},
   ) {
     return this.addRow(key, value, { isFileList: true, ...opts });
+  }
+
+  addLinkListRow(key: SummarySection['key'], value: LinkList, opts: Omit<SummarySection, 'key' | 'value'> = {}) {
+    return this.addRow(key, value, { isLinkList: true, ...opts });
+  }
+
+  addTextAreaRow(
+    key: SummarySection['key'],
+    value: SummarySection['value'],
+    opts: Omit<SummarySection, 'key' | 'value'> = {},
+  ) {
+    return this.addRow(key, value, { preline: true, ...opts });
   }
 
   create() {

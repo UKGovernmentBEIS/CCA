@@ -12,10 +12,12 @@ import { AdditionalInfoComponent } from './additional-info.component';
 
 describe('AdditionalInfoComponent', () => {
   let store: RequestTaskStore;
+  let container: Element;
+
   const unaTaskService: Partial<jest.Mocked<TaskService>> = {
     saveSubtask: jest.fn().mockReturnValue(of({})),
   };
-  let container: Element;
+
   beforeEach(async () => {
     const result = await render(AdditionalInfoComponent, {
       providers: [
@@ -31,8 +33,10 @@ describe('AdditionalInfoComponent', () => {
         store.setState(mockVariationReviewRequestTaskState);
       },
     });
+
     container = result.container;
   });
+
   it('should match snapshot for AdditionalInfoComponent', async () => {
     expect(container).toMatchSnapshot();
   });

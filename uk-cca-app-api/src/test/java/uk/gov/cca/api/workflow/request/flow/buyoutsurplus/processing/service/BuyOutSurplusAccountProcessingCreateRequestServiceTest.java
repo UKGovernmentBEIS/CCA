@@ -8,12 +8,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusAccountState;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestMetadata;
@@ -58,8 +60,18 @@ class BuyOutSurplusAccountProcessingCreateRequestServiceTest {
         final BuyOutSurplusAccountState buyOutSurplusAccountState = BuyOutSurplusAccountState.builder().accountId(accountId).build();
         final String parentRequestId = "BS-TP6010";
         final String parentRequestBusinessKey = "bk-BS-TP6010";
+        final String submitterId = "regulator";
 
+        final TargetPeriodDTO targetPeriodDetails = TargetPeriodDTO.builder()
+                .businessId(targetPeriodType)
+                .isCurrent(true)
+                .build();
         final Request parentRequest = Request.builder()
+                .payload(BuyOutSurplusRunRequestPayload.builder()
+                        .submitterId(submitterId)
+                        .targetPeriodDetails(targetPeriodDetails)
+                        .buyOutSurplusAccountStates(Map.of(accountId, buyOutSurplusAccountState))
+                        .build())
                 .metadata(BuyOutSurplusRunRequestMetadata.builder()
                         .targetPeriodType(targetPeriodType)
                         .build())
@@ -77,6 +89,8 @@ class BuyOutSurplusAccountProcessingCreateRequestServiceTest {
                 .requestResources(requestResources)
                 .requestPayload(BuyOutSurplusAccountProcessingRequestPayload.builder()
                         .payloadType(CcaRequestPayloadType.BUY_OUT_SURPLUS_ACCOUNT_PROCESSING_PAYLOAD)
+                        .submitterId(submitterId)
+                        .targetPeriodDetails(targetPeriodDetails)
                         .accountDetails(accountDetails)
                         .build())
                 .requestMetadata(BuyOutSurplusAccountProcessingRequestMetadata.builder()
@@ -98,7 +112,7 @@ class BuyOutSurplusAccountProcessingCreateRequestServiceTest {
                 .thenReturn(requestResources);
 
         // Invoke
-        buyOutSurplusAccountProcessingCreateRequestService.createRequest(buyOutSurplusAccountState, parentRequestId, parentRequestBusinessKey);
+        buyOutSurplusAccountProcessingCreateRequestService.createRequest(accountId, parentRequestId, parentRequestBusinessKey);
 
         // Verify
         verify(requestService, times(1)).findRequestById(parentRequestId);

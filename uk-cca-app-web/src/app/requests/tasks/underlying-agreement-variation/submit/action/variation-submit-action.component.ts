@@ -4,19 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
-import { TaskService } from '@netz/common/forms';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective, WarningTextComponent } from '@netz/govuk-components';
+import { TasksApiService } from '@requests/common';
+
+import { createSubmitActionDTO } from '../../transform';
 
 @Component({
   selector: 'cca-una-variation-submit-action',
-  standalone: true,
-  imports: [
-    ButtonDirective,
-    PageHeadingComponent,
-    PendingButtonDirective,
-    WarningTextComponent,
-    ReturnToTaskOrActionPageComponent,
-  ],
   template: `
     <netz-page-heading size="xl">Send variation application to regulator</netz-page-heading>
 
@@ -24,7 +19,7 @@ import { ButtonDirective, WarningTextComponent } from '@netz/govuk-components';
       You will not be able to make any changes until the regulator has completed the review.
     </govuk-warning-text>
 
-    <p class="govuk-body">
+    <p>
       By selecting 'Confirm and send' you confirm that the information in your variation application is correct to the
       best of your knowledge.
     </p>
@@ -34,18 +29,30 @@ import { ButtonDirective, WarningTextComponent } from '@netz/govuk-components';
     </div>
 
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-    <netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>
+    <netz-return-to-task-or-action-page />
   `,
+  standalone: true,
+  imports: [
+    ButtonDirective,
+    PageHeadingComponent,
+    PendingButtonDirective,
+    WarningTextComponent,
+    ReturnToTaskOrActionPageComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VariationSubmitActionComponent {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly tasksService = inject(TaskService);
+  private readonly tasksApiService = inject(TasksApiService);
+  private readonly store = inject(RequestTaskStore);
 
   submit() {
-    this.tasksService
-      .submit()
+    const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
+    const dto = createSubmitActionDTO(requestTaskId);
+
+    this.tasksApiService
+      .saveRequestTaskAction(dto)
       .subscribe(() => this.router.navigate(['confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true }));
   }
 }

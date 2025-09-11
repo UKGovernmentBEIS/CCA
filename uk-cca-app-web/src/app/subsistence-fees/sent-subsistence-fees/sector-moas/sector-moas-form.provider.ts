@@ -1,5 +1,6 @@
 import { InjectionToken, Provider } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 import { GovukValidators } from '@netz/govuk-components';
 
@@ -13,7 +14,7 @@ export type SectorMoasFormModel = FormGroup<{
   markFacilitiesStatus: FormControl<SubsistenceFeesMoaSearchCriteria['markFacilitiesStatus']>;
 }>;
 
-export const INITIAL_VALUES = {
+export const INITIAL_FORM_VALUES = {
   term: null,
   paymentStatus: null,
   markFacilitiesStatus: null,
@@ -21,15 +22,19 @@ export const INITIAL_VALUES = {
 
 export const SectorMoasFormProvider: Provider = {
   provide: SECTOR_MOAS_FORM,
-  deps: [FormBuilder],
-  useFactory: (fb: FormBuilder) => {
+  deps: [FormBuilder, ActivatedRoute],
+  useFactory: (fb: FormBuilder, activatedRoute: ActivatedRoute) => {
+    const queryParamMap = activatedRoute.snapshot.queryParamMap;
+
     return fb.group({
-      term: fb.control<string | null>(null, [
+      term: fb.control<string | null>(queryParamMap.get('term') || INITIAL_FORM_VALUES.term, [
         GovukValidators.minLength(3, 'Enter at least 3 characters'),
         GovukValidators.maxLength(255, 'Enter up to 255 characters'),
       ]),
-      paymentStatus: fb.control<string | null>(null),
-      markFacilitiesStatus: fb.control<string | null>(null),
+      paymentStatus: fb.control<string | null>(queryParamMap.get('paymentStatus') || INITIAL_FORM_VALUES.paymentStatus),
+      markFacilitiesStatus: fb.control<string | null>(
+        queryParamMap.get('markFacilitiesStatus') || INITIAL_FORM_VALUES.markFacilitiesStatus,
+      ),
     });
   },
 };

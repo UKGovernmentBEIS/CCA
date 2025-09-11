@@ -1,0 +1,24 @@
+<netz-page-heading caption="Buy-out and surplus">New buy-out and surplus batch</netz-page-heading>
+
+<div class="govuk-!-width-two-thirds">
+  @switch (errorCode) {
+    @case ('inProgress') {
+      <span data-testid="in-progress-error">
+        Buy-out and surplus batch is
+        <a [routerLink]="['/', 'buyout-surplus']" fragment="workflow-history" [replaceUrl]="true" class="govuk-link"
+          >in progress</a
+        >, you cannot initiate a new one until it has finished
+      </span>
+    }
+
+    @case ('unavailable') {
+      <span data-testid="unavailable-error">New buy-out and surplus batch is not available</span>
+    }
+  }
+
+  <div class="govuk-!-margin-top-9">
+    <a class="govuk-link" [routerLink]="['/', 'buyout-surplus']" [replaceUrl]="true" class="govuk-link">
+      Return to: Buy-out and surplus
+    </a>
+  </div>
+</div>

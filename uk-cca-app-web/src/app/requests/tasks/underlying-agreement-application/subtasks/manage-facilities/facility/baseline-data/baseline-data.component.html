@@ -1,0 +1,121 @@
+@if (facility(); as facility) {
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    [caption]="facility?.facilityDetails?.name"
+    heading="Baseline data"
+    data-testid="baseline-data-form"
+  >
+    <div class="govuk-!-margin-top-9 govuk-!-width-two-thirds">
+      <section>
+        <div
+          formControlName="isTwelveMonths"
+          [isInline]="true"
+          govuk-radio
+          legend="Is at least 12 months of consecutive baseline data available?"
+        >
+          <govuk-radio-option [value]="true" [label]="'Yes'" />
+          <govuk-radio-option [value]="false" [label]="'No'" />
+        </div>
+      </section>
+
+      @if (twelveMonthsSelected()) {
+        <section>
+          <div
+            formControlName="baselineDate"
+            govuk-date-input
+            [label]="
+              isTwelveMonthsValue()
+                ? 'Start date of the baseline'
+                : 'Enter the date that 12 months of data will be available.'
+            "
+            size="normal"
+            [hint]="
+              isTwelveMonthsValue() ? 'The period should be from 2022 or the nearest available year to this.' : null
+            "
+          ></div>
+        </section>
+
+        @if (!isTwelveMonthsValue()) {
+          <section>
+            <h2>Greenfield site evidence</h2>
+
+            <div
+              formControlName="explanation"
+              label="Explain how the target unit fits the greenfield criteria"
+              hint="You must meet the greenfield criteria to continue with this application."
+              govuk-textarea
+              [rows]="'5'"
+              [maxLength]="10000"
+            ></div>
+
+            <div>
+              <cca-multiple-file-input
+                [baseDownloadUrl]="downloadUrl"
+                label="Upload evidence (optional)"
+                hint="Upload any evidence supporting the target unit's greenfield status."
+                formControlName="greenfieldEvidences"
+              />
+            </div>
+          </section>
+        } @else if (baselineDateValue() && dateIsGreaterThanStartOf2022()) {
+          <div
+            formControlName="explanation"
+            label="Explain why you are using a different baseline year."
+            govuk-textarea
+            [rows]="'5'"
+            [maxLength]="10000"
+          ></div>
+        }
+
+        <section>
+          <h2>
+            {{
+              isTwelveMonthsValue()
+                ? 'Representative and consecutive 12 month period'
+                : 'Estimated baseline for representative and consecutive 12 month period'
+            }}
+          </h2>
+
+          <div
+            widthClass="govuk-!-width-one-half"
+            formControlName="energy"
+            [suffix]="targetComposition.measurementType | measurementTypeToUnit"
+            [label]="
+              'Enter the baseline ' +
+              (targetComposition.measurementType | measurementTypeToUnit) +
+              ' for the target facility'
+            "
+            hint="Enter a number up to 7 decimals, without alpha or special characters"
+            inputType="number"
+            govuk-text-input
+          ></div>
+
+          <div
+            formControlName="usedReportingMechanism"
+            [isInline]="true"
+            govuk-radio
+            legend="Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities
+             in the target unit using combined heat and power (CHP)?"
+            hint="If yes, the adjusted throughput should be entered and used in calculating targets."
+          >
+            <govuk-radio-option [value]="true" [label]="'Yes'" />
+            <govuk-radio-option [value]="false" [label]="'No'" />
+          </div>
+
+          <div
+            widthClass="govuk-!-width-one-half"
+            formControlName="energyCarbonFactor"
+            suffix="kgC/kWh"
+            label="Baseline energy to carbon factor (kgC/kWh)"
+            inputType="number"
+            govuk-text-input
+          ></div>
+        </section>
+      }
+    </div>
+  </cca-wizard-step>
+}
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" [routerLink]="['../../']"> Return to: Manage facilities </a>

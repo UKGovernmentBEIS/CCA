@@ -1,4 +1,4 @@
-import { Directive, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Directive, HostBinding, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   ControlContainer,
   ControlValueAccessor,
@@ -16,9 +16,10 @@ import { FormService } from './form.service';
 export abstract class FormInput implements ControlValueAccessor, OnInit, OnDestroy {
   @HostBinding('class.govuk-!-display-block') readonly govukDisplayBlock = true;
   @HostBinding('class.govuk-form-group') readonly govukFormGroupClass = true;
+
   protected readonly destroy$ = new Subject<void>();
   private isSubmitted = false;
-
+  private cdr = inject(ChangeDetectorRef);
   protected constructor(
     private readonly ngControl: NgControl,
     private readonly formService: FormService,
@@ -51,7 +52,10 @@ export abstract class FormInput implements ControlValueAccessor, OnInit, OnDestr
   }
 
   ngOnInit(): void {
-    this.form?.ngSubmit.pipe(takeUntil(this.destroy$)).subscribe(() => (this.isSubmitted = true));
+    this.form?.ngSubmit.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.isSubmitted = true;
+      this.cdr?.markForCheck();
+    });
   }
 
   ngOnDestroy(): void {

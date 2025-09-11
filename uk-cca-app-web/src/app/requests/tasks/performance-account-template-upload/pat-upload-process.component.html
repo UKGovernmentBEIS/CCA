@@ -1,0 +1,53 @@
+@if (processingStatus() === 'NOT_STARTED_YET') {
+  <cca-wizard-step (formSubmit)="onSubmit()" [formGroup]="form">
+    <div
+      widthClass="govuk-!-width-one-quarter"
+      label="Select the target period you are uploading"
+      [options]="targetPeriodsOptions"
+      formControlName="targetPeriodType"
+      govuk-select
+    ></div>
+
+    <govuk-details summary="Help with uploading" data-testid="pat-upload-details">
+      <p>To upload your Performance Account Template (PAT) spreadsheets:</p>
+      <ul>
+        <li>Complete the green and yellow shaded cells in a copy of the PAT spreadsheet for each target unit</li>
+        <li>
+          Save the spreadsheet as an XLSX file type, with a name that complies with the guidance you received from
+          DESNZ, for example ABC-T00001_PAT_TP6_V1
+        </li>
+        <li>
+          Add the completed PAT spreadsheets to a ZIP file. Each ZIP file must be less than 20MB and only contain XLSX
+          files
+        </li>
+        <li>Upload the ZIP files on this page</li>
+        <li>Select 'Continue'</li>
+      </ul>
+    </govuk-details>
+
+    <cca-multiple-file-input
+      baseDownloadUrl="file-download"
+      [listTitle]="'Uploaded files'"
+      label="Upload a file"
+      hint="The selected file must be a ZIP smaller than 20MB.
+      You can upload multiple .zip files in the same session but you will have to wait for all the uploads to be processed
+      before you can continue."
+      formControlName="uploadedFiles"
+    />
+
+    <p class="govuk-hint govuk-!-static-margin-bottom-9 govuk-!-static-margin-top-9">
+      Select "Continue" when all the files have been added.
+    </p>
+  </cca-wizard-step>
+}
+
+@if (processingStatus() === 'IN_PROGRESS') {
+  <cca-upload-processing />
+}
+
+@if (processingStatus() === 'COMPLETED') {
+  <cca-pat-processed />
+}
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true">Return to: Dashboard</a>

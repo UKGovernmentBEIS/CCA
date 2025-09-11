@@ -55,7 +55,7 @@ class RequestTaskReleaseControllerTest {
     private RequestTaskReleaseService requestTaskReleaseService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
 

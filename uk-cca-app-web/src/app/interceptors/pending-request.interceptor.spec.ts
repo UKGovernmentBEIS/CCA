@@ -13,6 +13,7 @@ describe('PendingRequestInterceptor', () => {
   beforeEach(async () => {
     pendingRequestService = TestBed.inject(PendingRequestService);
   });
+
   function intercept(req: HttpRequest<unknown>, next: HttpHandlerFn) {
     return TestBed.runInInjectionContext(() => PendingRequestInterceptor(req, next));
   }

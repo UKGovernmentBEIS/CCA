@@ -1,11 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
-import { BasePage, mockClass } from '@netz/common/testing';
+import { ActivatedRouteStub, BasePage, mockClass } from '@netz/common/testing';
 
 import { UsersSecuritySetupService } from 'cca-api';
 
@@ -16,24 +15,30 @@ describe('Change2faComponent', () => {
   let fixture: ComponentFixture<Change2faComponent>;
   let page: Page;
   let router: Router;
+
   const usersSecuritySetupService = mockClass(UsersSecuritySetupService);
 
   class Page extends BasePage<Change2faComponent> {
     get passwordValue() {
       return this.getInputValue('#password');
     }
+
     set passwordValue(value: string) {
       this.setInputValue('#password', value);
     }
+
     get submitButton() {
       return this.query<HTMLButtonElement>('button[type="submit"]');
     }
+
     get errorSummary() {
       return this.query<HTMLDivElement>('.govuk-error-summary');
     }
+
     get errorSummaryList() {
       return Array.from(this.errorSummary.querySelectorAll('a')).map((anchor) => anchor.textContent.trim());
     }
+
     get confirmationPanel() {
       return this.query<HTMLDivElement>('.govuk-panel');
     }
@@ -41,13 +46,14 @@ describe('Change2faComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, Change2faComponent],
-      providers: [{ provide: UsersSecuritySetupService, useValue: usersSecuritySetupService }],
+      imports: [Change2faComponent],
+      providers: [
+        { provide: UsersSecuritySetupService, useValue: usersSecuritySetupService },
+        { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
+      ],
       declarations: [],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(Change2faComponent);
     component = fixture.componentInstance;
     page = new Page(fixture);

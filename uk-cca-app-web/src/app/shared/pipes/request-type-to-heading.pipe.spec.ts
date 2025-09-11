@@ -1,4 +1,7 @@
-import { PerformanceDataSpreadsheetProcessingRequestMetadata } from 'cca-api';
+import {
+  PerformanceAccountTemplateProcessingRequestMetadata,
+  PerformanceDataSpreadsheetProcessingRequestMetadata,
+} from 'cca-api';
 
 import { RequestTypeToHeadingPipe } from './request-type-to-heading.pipe';
 
@@ -14,6 +17,7 @@ describe('RequestTypeToHeadingPipe', () => {
     expect(pipe.transform('TARGET_UNIT_MOA')).toEqual('Subsistence fees');
     expect(pipe.transform('UNDERLYING_AGREEMENT')).toEqual('Underlying agreement');
     expect(pipe.transform('ADMIN_TERMINATION')).toEqual('Admin termination');
+    expect(pipe.transform('BUY_OUT_SURPLUS_ACCOUNT_PROCESSING')).toEqual('Buy-out and surplus');
   });
 
   it('should transform PERFORMANCE_DATA_SPREADSHEET_PROCESSING with metadata', () => {
@@ -23,5 +27,14 @@ describe('RequestTypeToHeadingPipe', () => {
 
     const result = pipe.transform('PERFORMANCE_DATA_SPREADSHEET_PROCESSING', metadata);
     expect(result).toBe('Report Submission TP6');
+  });
+
+  it('should transform PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING with metadata', () => {
+    const metadata: PerformanceAccountTemplateProcessingRequestMetadata = {
+      targetPeriodType: 'TP6',
+    };
+
+    const result = pipe.transform('PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING', metadata);
+    expect(result).toBe('PAT Report Submission TP6 Final');
   });
 });

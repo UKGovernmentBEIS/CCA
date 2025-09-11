@@ -11,6 +11,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import uk.gov.cca.api.common.domain.MeasurementType;
+import uk.gov.cca.api.common.domain.SchemeData;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.migration.MigrationEndpoint;
 import uk.gov.cca.api.migration.MigrationUtil;
 import uk.gov.cca.api.migration.underlyingagreement.UnderlyingAgreementMigrationContainer;
@@ -50,8 +52,11 @@ public class UnderlyingAgreementDetailsMigrationService {
             migrationContainerMap.get(targetUnitId).setConsolidationNumber(details.getConsolidationNumber());
             migrationContainerMap.get(targetUnitId).setActivationDate(details.getActivationDate());
             MeasurementType sectorMeasurementType = MigrationUtil.getMeasurementType(details.getSectorEnergyOrCarbonUnit());
-            migrationContainerMap.get(targetUnitId).getUnderlyingAgreementContainer().setSectorMeasurementType(sectorMeasurementType);
-            migrationContainerMap.get(targetUnitId).getUnderlyingAgreementContainer().setSectorThroughputUnit(details.getSectorThroughputUnit());
+            migrationContainerMap.get(targetUnitId).getUnderlyingAgreementContainer().setSchemeDataMap(
+            		Map.of(SchemeVersion.CCA_2, SchemeData.builder()
+            				.sectorMeasurementType(sectorMeasurementType)
+                    		.sectorThroughputUnit(details.getSectorThroughputUnit())
+                    		.build()));
         });
     }
 

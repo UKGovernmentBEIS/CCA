@@ -14,7 +14,16 @@ import { underlyingAgreementVariationActivationQuery } from '../../../+state/una
 
 @Component({
   selector: 'cca-provide-evidence-check-answers',
-  templateUrl: './provide-evidence-check-answers.component.html',
+  template: `
+    <div>
+      <netz-page-heading caption="Evidence">Check your answers</netz-page-heading>
+      <cca-summary [data]="summaryData()" />
+      <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
+    </div>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [
     SummaryComponent,

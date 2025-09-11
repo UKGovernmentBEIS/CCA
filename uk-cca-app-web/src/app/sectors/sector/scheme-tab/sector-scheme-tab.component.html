@@ -1,78 +1,20 @@
-@if (sectorScheme(); as scheme) {
-  <h2 class="govuk-heading-m">Umbrella</h2>
+<div class="govuk-!-margin-bottom-9">
+  <h2 class="govuk-heading-m">Scheme</h2>
 
-  <dl govuk-summary-list data-testid="umbrella-list">
-    <div govukSummaryListRow>
-      <dt govukSummaryListRowKey>Current umbrella agreement</dt>
-      <dd govukSummaryListRowValue>
-        <a [routerLink]="['sector-documents', scheme.umbrellaAgreement.uuid]" class="govuk-link" target="_blank">
-          {{ scheme.umbrellaAgreement.fileName }} ({{ scheme.umbrellaAgreement.fileType }},
-          {{ scheme.umbrellaAgreement.fileSize }}KB)
-        </a>
-      </dd>
-    </div>
-  </dl>
+  <cca-summary [data]="schemeSummaryData()" />
+</div>
 
-  <div class="govuk-!-margin-bottom-9">
-    <h2 class="govuk-heading-m">Target currency</h2>
+<h2 class="govuk-heading-m">Subsectors</h2>
 
-    @if (subSectors().length) {
-      <p>You can see more information in the subsector's details.</p>
-    } @else {
-      <dl govuk-summary-list data-testid="target-list">
-        <div govukSummaryListRow>
-          <dt govukSummaryListRowKey>Target type</dt>
-          <dd govukSummaryListRowValue>{{ scheme.targetSet.targetCurrencyType }}</dd>
-        </div>
-
-        @if (['Absolute', 'Relative'].includes(scheme.targetSet.targetCurrencyType)) {
-          <div govukSummaryListRow>
-            <dt govukSummaryListRowKey>Throughput unit</dt>
-            <dd govukSummaryListRowValue>{{ scheme.targetSet.throughputUnit }}</dd>
-          </div>
-        }
-
-        <div govukSummaryListRow>
-          <dt govukSummaryListRowKey>Energy or Carbon unit</dt>
-          <dd govukSummaryListRowValue>{{ scheme.targetSet.energyOrCarbonUnit }}</dd>
-        </div>
-      </dl>
-    }
-  </div>
-
-  <div class="govuk-!-margin-bottom-9">
-    <h2 class="govuk-heading-m">Sector commitment</h2>
-
-    @if (subSectors().length) {
-      <p>You can see more information in the subsector's details.</p>
-    } @else {
-      <govuk-table [columns]="sectorCommitmentColumns" [data]="sectorCommitment()">
-        <ng-template let-column="column" let-index="index" let-row="row">
-          @if (column.field === 'targetPeriod') {
-            <strong>{{ row[column.field] }}</strong>
-          } @else {
-            @if (row[column.field]) {
-              {{ row[column.field] | number: '1.5' : 'en-GB' | percent: '1.0-3' : 'en-GB' }}
-            } @else {
-              N/A
-            }
-          }
-        </ng-template>
-      </govuk-table>
-    }
-  </div>
-
-  <h2 class="govuk-heading-m">Subsectors</h2>
-
-  @if (subSectors().length) {
-    <govuk-table [columns]="subsectorsColumns" [data]="subSectors()" (sort)="sortBy($event)">
-      <ng-template let-column="column" let-index="index" let-row="row">
-        @if (column.field === 'name') {
-          <a [routerLink]="'subsector/' + row.id" class="govuk-link">{{ row['subsectorAssociation'][column.field] }}</a>
-        }
-      </ng-template>
-    </govuk-table>
-  } @else {
-    <p>No sub-sectors to show.</p>
-  }
+@if (subSectors().length) {
+  <p>You can find more information about currency and sector commitment in the subsector’s details.</p>
+  <govuk-table [columns]="subsectorsColumns" [data]="subSectors()" (sort)="sortBy($event)">
+    <ng-template let-column="column" let-index="index" let-row="row">
+      @if (column.field === 'name') {
+        <a [routerLink]="'subsector/' + row.id" class="govuk-link">{{ row[column.field] }}</a>
+      }
+    </ng-template>
+  </govuk-table>
+} @else {
+  <p>No sub-sectors to show.</p>
 }

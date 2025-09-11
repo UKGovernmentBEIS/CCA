@@ -21,13 +21,13 @@ import { ConfigStore } from '../config/config.store';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  authStore = inject(AuthStore);
-  configStore = inject(ConfigStore);
-  keycloakService = inject(KeycloakService);
-  usersService = inject(UsersService);
-  authorityService = inject(AuthoritiesService);
-  termsAndConditionsService = inject(TermsAndConditionsService);
-  route = inject(ActivatedRoute);
+  private readonly authStore = inject(AuthStore);
+  private readonly configStore = inject(ConfigStore);
+  private readonly keycloakService = inject(KeycloakService);
+  private readonly usersService = inject(UsersService);
+  private readonly authorityService = inject(AuthoritiesService);
+  private readonly termsAndConditionsService = inject(TermsAndConditionsService);
+  private readonly route = inject(ActivatedRoute);
 
   login(options?: KeycloakLoginOptions): Promise<void> {
     let leaf = this.route.snapshot;

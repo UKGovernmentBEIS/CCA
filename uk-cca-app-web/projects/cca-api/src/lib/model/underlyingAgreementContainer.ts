@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { SchemeData } from './schemeData';
 import { UnderlyingAgreement } from './underlyingAgreement';
 
 export interface UnderlyingAgreementContainer {
-  sectorMeasurementType: 'ENERGY_KWH' | 'ENERGY_MWH' | 'ENERGY_GJ' | 'CARBON_KG' | 'CARBON_TONNE';
-  sectorThroughputUnit?: string;
+  schemeDataMap: Record<string, SchemeData>;
   underlyingAgreement: UnderlyingAgreement;
   underlyingAgreementAttachments?: Record<string, string>;
 }

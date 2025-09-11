@@ -7,7 +7,14 @@ import { BehaviorSubject } from 'rxjs';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
-import { GovukComponentsModule, GovukValidators } from '@netz/govuk-components';
+import {
+  ErrorSummaryComponent,
+  GovukValidators,
+  PanelComponent,
+  RadioComponent,
+  RadioOptionComponent,
+  TextareaComponent,
+} from '@netz/govuk-components';
 
 import { UserFeedbackDto, UsersService } from 'cca-api';
 
@@ -16,16 +23,26 @@ type RateWithoutNotApplicable = Exclude<Rate, 'NOT_APPLICABLE_NOT_USED_YET'>;
 
 @Component({
   selector: 'cca-feedback',
-  standalone: true,
   templateUrl: './feedback.component.html',
+  standalone: true,
+  imports: [
+    PageHeadingComponent,
+    AsyncPipe,
+    ReactiveFormsModule,
+    PendingButtonDirective,
+    PanelComponent,
+    ErrorSummaryComponent,
+    RadioComponent,
+    RadioOptionComponent,
+    TextareaComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeadingComponent, GovukComponentsModule, AsyncPipe, ReactiveFormsModule, PendingButtonDirective],
 })
 export class FeedbackComponent implements OnInit {
-  feedbackSent$ = new BehaviorSubject<boolean>(null);
-  isErrorSummaryDisplayed = new BehaviorSubject<boolean>(false);
+  protected readonly feedbackSent$ = new BehaviorSubject<boolean>(null);
+  protected readonly isErrorSummaryDisplayed = new BehaviorSubject<boolean>(false);
 
-  feedbackForm: UntypedFormGroup = this.fb.group({
+  protected readonly feedbackForm: UntypedFormGroup = this.fb.group({
     userRegistrationRate: [
       null,
       { validators: GovukValidators.required('Select a rating for user registration'), updateOn: 'change' },
@@ -80,7 +97,7 @@ export class FeedbackComponent implements OnInit {
     improvementSuggestion: [null],
   });
 
-  rateOptions: Rate[] = [
+  protected readonly rateOptions: Rate[] = [
     'VERY_SATISFIED',
     'SATISFIED',
     'NEITHER_SATISFIED_NOR_DISSATISFIED',
@@ -89,7 +106,7 @@ export class FeedbackComponent implements OnInit {
     'NOT_APPLICABLE_NOT_USED_YET',
   ];
 
-  rateOptionsWithoutNotApplicable: RateWithoutNotApplicable[] = [
+  protected readonly rateOptionsWithoutNotApplicable: RateWithoutNotApplicable[] = [
     'VERY_SATISFIED',
     'SATISFIED',
     'NEITHER_SATISFIED_NOR_DISSATISFIED',
@@ -112,7 +129,7 @@ export class FeedbackComponent implements OnInit {
     private readonly destroy$: DestroyRef,
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.feedbackForm
       .get('userRegistrationRate')
       .valueChanges.pipe(takeUntilDestroyed(this.destroy$))

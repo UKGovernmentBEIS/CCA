@@ -1,11 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ActivatedRouteStub } from '@netz/common/testing';
 
 import { BasePage } from '../../testing';
 import { RelatedTasksComponent } from './related-tasks.component';
 
 describe('RelatedTasksComponent', () => {
   let component: RelatedTasksComponent;
+  let componentRef: ComponentRef<RelatedTasksComponent>;
   let fixture: ComponentFixture<RelatedTasksComponent>;
   let page: Page;
 
@@ -17,7 +20,7 @@ describe('RelatedTasksComponent', () => {
       return this.queryAll('.govuk-heading-s').map((el) => el.textContent.trim());
     }
     get daysRemaining() {
-      return this.queryAll('.govuk-body').map((el) => el.textContent.trim());
+      return this.queryAll('p[data-testid="days-remaining"]').map((el) => el.textContent.trim());
     }
     get links() {
       return this.queryAll<HTMLLinkElement>('a');
@@ -26,21 +29,20 @@ describe('RelatedTasksComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      providers: [{ provide: ActivatedRoute, useValue: new ActivatedRouteStub() }],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(RelatedTasksComponent);
     component = fixture.componentInstance;
-    component.items = [
+    componentRef = fixture.componentRef;
+    componentRef.setInput('items', [
       {
         requestType: 'DUMMY_REQUEST_TYPE',
         taskType: 'DUMMY_REQUEST_TASK_TYPE2',
         taskId: 1,
         daysRemaining: 13,
       },
-    ];
+    ]);
     page = new Page(fixture);
     fixture.detectChanges();
   });

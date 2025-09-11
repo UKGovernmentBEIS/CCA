@@ -10,22 +10,37 @@ import { PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/c
 
 import { ForgotPasswordService } from 'cca-api';
 
-import { ResetPasswordStore } from '../store/reset-password.store';
+import { ResetPasswordStore } from '../+store/reset-password.store';
 
 @Component({
   selector: 'cca-reset-password',
-  templateUrl: './reset-password.component.html',
-  providers: [passwordFormFactory],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        @if (isSummaryDisplayed) {
+          <govuk-error-summary [form]="form" />
+        }
+
+        <form (ngSubmit)="submitPassword()" [formGroup]="form">
+          <h2 class="govuk-heading-l">Reset your password</h2>
+          <p>Enter your new password</p>
+          <cca-password [passwordLabel]="passwordLabel" [confirmPasswordLabel]="newPasswordLabel" />
+          <button govukButton type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  `,
   standalone: true,
   imports: [ErrorSummaryComponent, PasswordComponent, ButtonDirective, ReactiveFormsModule],
+  providers: [passwordFormFactory],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordComponent implements OnInit {
-  isSummaryDisplayed = false;
-  passwordLabel = 'New password';
-  newPasswordLabel = 'Confirm new password';
-  token: string;
-  email: string;
+  protected isSummaryDisplayed = false;
+  protected readonly passwordLabel = 'New password';
+  protected readonly newPasswordLabel = 'Confirm new password';
+  protected token: string;
+  protected readonly email: string;
 
   constructor(
     @Inject(PASSWORD_FORM) readonly form: UntypedFormGroup,
@@ -35,8 +50,9 @@ export class ResetPasswordComponent implements OnInit {
     private readonly forgotPasswordService: ForgotPasswordService,
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.token = this.route.snapshot.queryParamMap.get('token');
+
     this.forgotPasswordService
       .verifyToken({ token: this.token })
       .pipe(

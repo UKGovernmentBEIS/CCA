@@ -14,15 +14,15 @@ import { PanelComponent } from '@netz/govuk-components';
         <ng-container *ngIf="user() as user; else unassigned">
           <govuk-panel title="The task has been reassigned to">{{ user }}</govuk-panel>
           <h3 class="govuk-heading-m">What happens next</h3>
-          <p class="govuk-body">The task will appear in the dashboard of the person it has been assigned to</p>
+          <p>The task will appear in the dashboard of the person it has been assigned to</p>
         </ng-container>
         <ng-template #unassigned>
           <govuk-panel title="This task has been unassigned"></govuk-panel>
           <h3 class="govuk-heading-m">What happens next</h3>
-          <p class="govuk-body">The task will appear in the unassigned tab of your dashboard</p>
+          <p>The task will appear in the unassigned tab of your dashboard</p>
         </ng-template>
 
-        <a govukLink routerLink="/dashboard">Return to dashboard</a>
+        <a class="govuk-link" routerLink="/dashboard">Return to dashboard</a>
       </div>
     </div>
   `,

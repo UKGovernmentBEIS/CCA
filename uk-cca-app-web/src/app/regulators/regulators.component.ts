@@ -9,8 +9,23 @@ import { SiteContactsComponent } from './site-contacts-tab/site-contacts.compone
 
 @Component({
   selector: 'cca-regulators',
-  templateUrl: './regulators.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <netz-page-heading size="xl">Regulator users and contacts</netz-page-heading>
+
+    <govuk-tabs>
+      <ng-template govukTabLazy id="regulator-users" label="Regulator users">
+        <cca-regulators-users />
+      </ng-template>
+
+      <ng-template govukTabLazy id="site-contacts" label="Site contacts">
+        <cca-site-contacts />
+      </ng-template>
+
+      <ng-template govukTabLazy id="external-contacts" label="External contacts">
+        <cca-external-contacts />
+      </ng-template>
+    </govuk-tabs>
+  `,
   standalone: true,
   imports: [
     PageHeadingComponent,
@@ -20,5 +35,6 @@ import { SiteContactsComponent } from './site-contacts-tab/site-contacts.compone
     ExternalContactsComponent,
     SiteContactsComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegulatorsComponent {}

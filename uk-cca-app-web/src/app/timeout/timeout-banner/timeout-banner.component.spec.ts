@@ -9,6 +9,7 @@ describe('TimeoutBannerComponent', () => {
   const originalConsole = console;
   let component: TimeoutBannerComponent;
   let fixture: ComponentFixture<TimeoutBannerComponent>;
+
   const timeoutBannerService: Partial<jest.Mocked<TimeoutBannerService>> = {
     isVisible$: new BehaviorSubject<boolean>(false),
     extendSession: jest.fn().mockImplementation(),
@@ -19,13 +20,12 @@ describe('TimeoutBannerComponent', () => {
   beforeEach(async () => {
     console.error = jest.fn();
     console.warn = jest.fn();
+
     await TestBed.configureTestingModule({
       imports: [TimeoutBannerComponent],
       providers: [{ provide: TimeoutBannerService, useValue: timeoutBannerService }],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TimeoutBannerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -41,8 +41,10 @@ describe('TimeoutBannerComponent', () => {
 
   it('should open dialog', fakeAsync(() => {
     timeoutBannerService.isVisible$.next(true);
+
     tick();
     fixture.detectChanges();
+
     expect(component.isDialogOpen()).toBeTruthy();
   }));
 

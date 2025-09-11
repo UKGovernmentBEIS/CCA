@@ -63,9 +63,11 @@ export function createAggregateSelector<S, SL = any>(...args): StateSelector<S, 
 export abstract class SignalStore<T> {
   private readonly injector = inject(Injector);
   private readonly _state: WritableSignal<T>;
+  private readonly _initialState: T;
 
-  protected constructor(protected readonly initialState: T) {
+  protected constructor(initialState: T) {
     this._state = signal(initialState);
+    this._initialState = structuredClone(initialState);
   }
 
   get state(): T {
@@ -93,6 +95,6 @@ export abstract class SignalStore<T> {
   }
 
   reset(): void {
-    this.setState(this.initialState);
+    this.setState(structuredClone(this._initialState));
   }
 }

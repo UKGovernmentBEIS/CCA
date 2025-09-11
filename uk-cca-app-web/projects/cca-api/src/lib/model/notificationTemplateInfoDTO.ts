@@ -13,6 +13,7 @@
 export interface NotificationTemplateInfoDTO {
   id?: number;
   name?: string;
+  roleType?: string;
   workflow?: string;
   lastUpdatedDate?: string;
 }

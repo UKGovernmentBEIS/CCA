@@ -49,9 +49,7 @@ describe('BooleanRadioGroupComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TestComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     hostComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(BooleanRadioGroupComponent)).componentInstance;

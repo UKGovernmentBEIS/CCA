@@ -1,0 +1,47 @@
+<govuk-table [columns]="tableColumns" [data]="state().performanceDataReportItems">
+  <ng-template let-column="column" let-row="row">
+    @switch (column.field) {
+      @case ('targetUnitAccountBusinessId') {
+        <a
+          [routerLink]="['/target-unit-accounts', row.accountId]"
+          [fragment]="'reports'"
+          [queryParams]="{ section: 'performance' }"
+          [replaceUrl]="true"
+          class="govuk-link"
+        >
+          {{ row[column.field] }}
+        </a>
+      }
+
+      @case ('submissionDate') {
+        <span>{{ row[column.field] | govukDate: 'date' }}</span>
+      }
+
+      @case ('performanceOutcome') {
+        <span>{{ row[column.field] | performanceOutcome }}</span>
+      }
+
+      @case ('submissionType') {
+        <span>{{ row[column.field] | titlecase }}</span>
+      }
+
+      @case ('locked') {
+        <span>{{ row[column.field] ? 'Y' : 'N' }}</span>
+      }
+
+      @default {
+        <span>{{ row[column.field] }}</span>
+      }
+    }
+  </ng-template>
+</govuk-table>
+
+<cca-pagination
+  [count]="state().totalItems"
+  [currentPage]="state().currentPage"
+  [pageSize]="state().pageSize"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+/>
+
+<button govukButton type="button" (click)="exportToXlsx()">Download to spreadsheet</button>

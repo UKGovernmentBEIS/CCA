@@ -9,7 +9,6 @@ import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.account.repository.TargetUnitAccountRepository;
 import uk.gov.cca.api.account.transform.TargetUnitAccountMapper;
-import uk.gov.netz.api.account.repository.AccountSearchRepository;
 import uk.gov.netz.api.account.service.AccountSearchAdditionalKeywordService;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
@@ -26,7 +25,6 @@ public class TargetUnitAccountService {
     private final TargetUnitAccountRepository targetUnitAccountRepository;
     private final TargetUnitAccountMapper targetUnitAccountMapper;
     private final AccountSearchAdditionalKeywordService accountSearchAdditionalKeywordService;
-    private final AccountSearchRepository accountSearchRepository;
 
     @Transactional
     public TargetUnitAccountDTO createTargetUnitAccount(TargetUnitAccountDTO accountDTO, Long accountId, String businessId) {
@@ -56,7 +54,7 @@ public class TargetUnitAccountService {
 
     @Transactional
     public void deleteTargetUnitAccount(Long accountId) {
-        accountSearchRepository.deleteAllByAccountId(accountId);
+    	accountSearchAdditionalKeywordService.deleteAllByAccountId(accountId);
         targetUnitAccountRepository.deleteById(accountId);
     }
 }

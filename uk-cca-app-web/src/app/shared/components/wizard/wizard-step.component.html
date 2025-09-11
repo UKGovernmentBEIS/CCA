@@ -1,11 +1,11 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
   @if (isSummaryDisplayedSubject | async) {
-    <govuk-error-summary [form]="formGroup"></govuk-error-summary>
+    <govuk-error-summary [form]="formGroup" />
   }
 
   <netz-page-heading [caption]="caption">{{ heading }}</netz-page-heading>
 
-  <ng-content></ng-content>
+  <ng-content />
 
   @if (!hideSubmit) {
     <button netzPendingButton govukButton type="submit">{{ submitText }}</button>

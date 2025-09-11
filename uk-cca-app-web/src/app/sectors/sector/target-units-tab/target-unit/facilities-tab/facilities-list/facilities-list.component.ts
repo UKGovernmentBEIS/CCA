@@ -1,32 +1,28 @@
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { map } from 'rxjs';
+import { map, switchMap } from 'rxjs';
 
 import { PendingButtonDirective } from '@netz/common/directives';
 import {
   ButtonDirective,
   GovukTableColumn,
   GovukValidators,
-  SortEvent,
+  type SortEvent,
   TableComponent,
   TagComponent,
   TextInputComponent,
 } from '@netz/govuk-components';
 import { PaginationComponent } from '@shared/components';
-import { FacilityStatusPipe } from '@shared/pipes';
+import { StatusPipe } from '@shared/pipes';
 
-import { FacilityInfoViewService, FacilitySearchResultInfoDTO, FacilitySearchResults } from 'cca-api';
+import { CertificationPeriodViewInfoService, FacilityInfoViewService, type FacilitySearchResults } from 'cca-api';
 
-type State = {
-  currentPage: number;
-  facilities: FacilitySearchResultInfoDTO[];
-  searchTerm: string;
-  totalItems: number;
-};
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 50;
 
 @Component({
   selector: 'cca-facilities-list',
@@ -41,140 +37,143 @@ type State = {
     PendingButtonDirective,
     PaginationComponent,
     TableComponent,
-    FacilityStatusPipe,
+    StatusPipe,
     DatePipe,
     TitleCasePipe,
   ],
+  providers: [DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FacilitiesListComponent implements OnInit {
+export class FacilitiesListComponent {
   private readonly fb = inject(FormBuilder);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly facilityInfoViewService = inject(FacilityInfoViewService);
-  private readonly destroy$ = inject(DestroyRef);
+  private readonly certificationPeriodViewInfoService = inject(CertificationPeriodViewInfoService);
+  private readonly datePipe = inject(DatePipe);
+
+  private readonly certificationPeriod = toSignal(
+    this.certificationPeriodViewInfoService.getCurrentCertificationPeriod(),
+  );
 
   private readonly sorting = signal<SortEvent>({ column: 'id', direction: 'ascending' });
   private readonly targetUnitId = +this.activatedRoute.snapshot.paramMap.get('targetUnitId');
-  private readonly page = +this.activatedRoute.snapshot.queryParamMap.get('page') || 1;
 
-  private previousTerm: string | null = null;
-  private previousPage: number | null = null;
+  private readonly queryParams = toSignal(this.activatedRoute.queryParamMap);
 
-  protected readonly pageSize = 30;
+  protected readonly tableColumns = computed<GovukTableColumn[]>(() => {
+    const period = this.certificationPeriod();
+    const range =
+      period?.startDate && period?.endDate
+        ? `${this.datePipe.transform(period.startDate, 'd/M/yy')} – ${this.datePipe.transform(
+            period.endDate,
+            'd/M/yy',
+          )}`
+        : '';
 
-  protected readonly form = this.fb.group({
+    return [
+      { field: 'id', header: 'ID' },
+      { field: 'siteName', header: 'Site name', widthClass: 'govuk-!-width-one-third' },
+      { field: 'status', header: 'Status' },
+      { field: 'schemeExitDate', header: 'Scheme exit date' },
+      {
+        field: 'certificationStatus',
+        header: `Certified status${range ? ' ' + range : ''}`,
+      },
+    ];
+  });
+
+  readonly form = this.fb.group({
     term: this.fb.control<string | null>(null, [
       GovukValidators.minLength(3, 'Enter at least 3 characters'),
       GovukValidators.maxLength(256, 'Enter up to 256 characters'),
     ]),
   });
 
-  protected readonly tableColumns: GovukTableColumn[] = [
-    { field: 'id', header: 'ID' },
-    {
-      field: 'siteName',
-      header: 'Site name',
-      widthClass: 'govuk-!-width-one-third',
-    },
-    { field: 'status', header: 'Status' },
-    { field: 'schemeExitDate', header: 'Scheme exit date' },
-    // TODO: check if the `Certified status` header can be populated with different types
-    // of input, i.e. to contain a second line with a date range
-    { field: 'certifiedStatus', header: 'Certified status' },
-  ];
-
-  protected readonly state = signal<State>({
-    currentPage: this.page,
-    facilities: [],
-    searchTerm: '',
-    totalItems: 0,
+  readonly currentPage = computed(() => {
+    const params = this.queryParams();
+    return +params?.get('page') || DEFAULT_PAGE;
   });
 
-  protected readonly currentPage = computed(() => this.state().currentPage);
-  protected readonly count = computed(() => this.state().totalItems);
+  readonly pageSize = computed(() => {
+    const params = this.queryParams();
+    return +params?.get('pageSize') || DEFAULT_PAGE_SIZE;
+  });
 
-  protected readonly facilities = computed(() => {
-    const facs = this.state()?.facilities;
+  readonly searchTerm = computed(() => {
+    const params = this.queryParams();
+    return params?.get('term')?.trim() || null;
+  });
+
+  protected readonly facilitiesData = toSignal(
+    this.activatedRoute.queryParamMap.pipe(
+      map((params) => ({
+        page: +params.get('page') || DEFAULT_PAGE,
+        pageSize: +params.get('pageSize') || DEFAULT_PAGE_SIZE,
+        term: params.get('term')?.trim() || null,
+      })),
+      switchMap(({ page, pageSize, term }) => {
+        this.form.get('term')?.setValue(term, { emitEvent: false });
+
+        return this.facilityInfoViewService.searchFacilities(this.targetUnitId, page - 1, pageSize, term);
+      }),
+    ),
+    { initialValue: { facilities: [], total: 0 } as FacilitySearchResults },
+  );
+
+  readonly state = computed(() => ({
+    facilities: this.facilitiesData()?.facilities || [],
+    totalItems: this.facilitiesData()?.total || 0,
+  }));
+
+  readonly facilities = computed(() => {
+    const facs = this.state().facilities;
     const sorting = this.sorting();
 
-    if (!sorting) return facs;
+    if (!sorting || !facs?.length) return facs;
 
-    return facs?.sort((a, b) => {
-      const diff = a[sorting.column].localeCompare(b[sorting.column], 'en-GB', {
+    return [...facs].sort((a, b) => {
+      const aValue = a[sorting.column];
+      const bValue = b[sorting.column];
+
+      if (aValue == null && bValue == null) return 0;
+      if (aValue == null) return sorting.direction === 'ascending' ? 1 : -1;
+      if (bValue == null) return sorting.direction === 'ascending' ? -1 : 1;
+
+      const diff = String(aValue).localeCompare(String(bValue), 'en-GB', {
         numeric: true,
         sensitivity: 'base',
       });
 
-      return diff * (sorting.direction === 'ascending' ? 1 : -1);
+      return sorting.direction === 'ascending' ? diff : -diff;
     });
   });
-
-  ngOnInit() {
-    this.activatedRoute.queryParamMap
-      .pipe(
-        map((params) => ({
-          term: params.get('term')?.trim() || null,
-          page: +params.get('page') || 1,
-          pageSize: this.pageSize,
-        })),
-        takeUntilDestroyed(this.destroy$),
-      )
-      .subscribe(({ term, page }) => {
-        this.form.get('term').setValue(term, { emitEvent: false });
-        this.state.update((state) => ({
-          ...state,
-          searchTerm: term,
-          currentPage: page,
-        }));
-
-        if (this.previousPage !== page || term !== this.previousTerm) {
-          this.fetchFacilities(term, page);
-        }
-
-        this.previousTerm = term;
-        this.previousPage = page;
-      });
-  }
 
   onSearch() {
     if (this.form.invalid) return;
 
-    const term = this.form.value.term || null;
-    const page = this.state().currentPage;
+    const term = this.form.value.term?.trim();
+    if (!term) return;
 
-    if (term === this.previousTerm && page === this.previousPage) return;
+    this.handleQueryParamsNavigation({ term });
+  }
 
-    // handles when someone searches and isn't on page 1.
-    if (term !== this.previousTerm && page > 1) this.handlePageChange(1);
+  onPageChange(page: number): void {
+    if (page === this.currentPage()) return;
+    this.handleQueryParamsNavigation({ page });
+  }
 
+  onPageSizeChange(pageSize: number) {
+    if (pageSize === this.pageSize()) return;
+    this.handleQueryParamsNavigation({ pageSize });
+  }
+
+  private handleQueryParamsNavigation(pagination: Partial<{ page: number; pageSize: number; term: string }>) {
     this.router.navigate([], {
-      queryParams: {
-        term: term,
-        page: null,
-      },
-      fragment: 'facilities',
+      queryParams: { ...pagination },
       queryParamsHandling: 'merge',
       relativeTo: this.activatedRoute,
+      fragment: 'facilities',
     });
-
-    this.fetchFacilities(term, this.state().currentPage);
-    this.previousTerm = term;
-    this.previousPage = page;
   }
-
-  handlePageChange(page: number): void {
-    this.state.update((state) => ({ ...state, currentPage: page }));
-  }
-
-  private fetchFacilities(term: string, page: number) {
-    this.facilityInfoViewService
-      .searchFacilities(this.targetUnitId, page - 1, this.pageSize, term)
-      .pipe(takeUntilDestroyed(this.destroy$))
-      .subscribe(this.updateState);
-  }
-
-  private updateState = ({ facilities, total }: FacilitySearchResults): void => {
-    this.state.update((state) => ({ ...state, facilities, totalItems: total }));
-  };
 }

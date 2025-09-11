@@ -19,9 +19,9 @@ import { NestedMessageValidationError } from './nested-message-validation-error.
 
 @Component({
   selector: 'cca-csv-error-summary',
+  templateUrl: './csv-error-summary.component.html',
   standalone: true,
   imports: [AsyncPipe, DetailsComponent],
-  templateUrl: './csv-error-summary.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CsvErrorSummaryComponent implements OnChanges, AfterViewInit {
@@ -59,12 +59,8 @@ export class CsvErrorSummaryComponent implements OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.container?.nativeElement?.scrollIntoView) {
-      this.container.nativeElement.scrollIntoView();
-    }
-    if (this.container?.nativeElement?.focus) {
-      this.container.nativeElement.focus();
-    }
+    if (this.container?.nativeElement?.scrollIntoView) this.container.nativeElement.scrollIntoView();
+    if (this.container?.nativeElement?.focus) this.container.nativeElement.focus();
   }
 
   private getAbstractControlErrors(control: AbstractControl, path: string[] = []): NestedMessageValidationError[] {
@@ -88,6 +84,7 @@ export class CsvErrorSummaryComponent implements OnChanges, AfterViewInit {
         path: this.formService.getIdentifier(path),
         ...errors[key],
       }));
+
       return childControlErrors.concat(errorEntries);
     }
 

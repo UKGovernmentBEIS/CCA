@@ -9,6 +9,7 @@ import uk.gov.cca.api.migration.MigrationConstants;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociationScheme;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociationSchemeDocument;
+import uk.gov.cca.api.sectorassociation.domain.SubsectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.SubsectorAssociationScheme;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDocumentDTO;
@@ -30,7 +31,6 @@ public interface SectorAssociationMigrationMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "targetSet.id", ignore = true)
-    @Mapping(target = "subsectorAssociationSchemes", ignore = true)
     SectorAssociationScheme toSectorAssociationScheme(SectorAssociationSchemeDTO sectorAssociationSchemeDTO, SectorAssociation sectorAssociation);
 
     @AfterMapping
@@ -42,9 +42,9 @@ public interface SectorAssociationMigrationMapper {
     }
     
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "sectorAssociationScheme.targetSet", ignore = true)
     @Mapping(target = "targetSet", source = "subsectorAssociationSchemeDTO.targetSet")
-    SubsectorAssociationScheme toSubsectorAssociationScheme(SubsectorAssociationSchemeDTO subsectorAssociationSchemeDTO, SectorAssociationScheme sectorAssociationScheme);
+    @Mapping(target = "subsectorAssociation", source = "newSubsector")
+    SubsectorAssociationScheme toSubsectorAssociationScheme(SubsectorAssociationSchemeDTO subsectorAssociationSchemeDTO, SubsectorAssociation newSubsector);
     
     @AfterMapping
     default void setTargetSet(@MappingTarget SubsectorAssociationScheme subsectorAssociationScheme) {

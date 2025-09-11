@@ -12,7 +12,7 @@ class SectorUserMapperTest {
     private SectorUserMapper mapper;
 
     @BeforeEach
-    public void init() {
+    void init() {
         mapper = Mappers.getMapper(SectorUserMapper.class);
     }
 

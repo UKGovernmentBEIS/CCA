@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -37,10 +38,11 @@ class SectorAssociationRepositoryIT extends AbstractContainerBaseTest {
 
     @Test
     void whenFindDetailedContactInfo_thenReturnPageOfSiteContactInfoDTOs() {
-        SectorAssociation savedAssociation = createSectorAssociation("ADS");
+        SectorAssociation savedAssociation1 = createSectorAssociation("ADS_2");
+        SectorAssociation savedAssociation2 = createSectorAssociation("ADS_1");
         flushAndClear();
 
-        Pageable pageable = PageRequest.of(0, 5);
+        Pageable pageable = PageRequest.of(0, 5, Sort.by("acronym"));
 
         Page<SectorAssociationSiteContactInfoDTO> result = repository.findSectorAssociationsSiteContactsByCA(
             CompetentAuthorityEnum.ENGLAND, pageable);
@@ -48,7 +50,9 @@ class SectorAssociationRepositoryIT extends AbstractContainerBaseTest {
         assertThat(result).isNotNull();
         assertThat(result.getContent()).isNotEmpty();
         assertThat(result.getContent().getFirst().getSectorName()).isEqualTo(
-            savedAssociation.getAcronym() + " - " + savedAssociation.getName());
+            savedAssociation2.getAcronym() + " - " + savedAssociation2.getName());
+        assertThat(result.getContent().getLast().getSectorName()).isEqualTo(
+            savedAssociation1.getAcronym() + " - " + savedAssociation1.getName());
     }
 
     @Test

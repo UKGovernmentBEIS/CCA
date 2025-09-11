@@ -11,9 +11,12 @@ import { getAllUnderlyingAgreementReviewTimelineSections } from '../underlying-a
 
 @Component({
   selector: 'cca-underlying-agreement-review-task-list',
+  template: `
+    <netz-page-heading> Underlying agreement application</netz-page-heading>
+    <netz-task-list [sections]="sections()" />
+  `,
   standalone: true,
   imports: [TaskListComponent, PageHeadingComponent],
-  templateUrl: './underlying-agreement-reviewed-task-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementReviewedTaskListComponent {

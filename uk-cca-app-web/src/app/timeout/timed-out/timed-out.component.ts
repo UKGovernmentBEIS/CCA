@@ -10,10 +10,9 @@ import { AuthService } from '@shared/services';
 
 @Component({
   selector: 'cca-timed-out',
-  standalone: true,
   template: `
     <netz-page-heading size="xl">Your session has timed out</netz-page-heading>
-    <p class="govuk-body">
+    <p>
       @if (idle$ | async) {
         We have reset your session because you did not do anything for {{ idle$ | async | secondsToMinutes }} . We did
         this to keep your information secure.
@@ -24,16 +23,19 @@ import { AuthService } from '@shared/services';
 
     <button type="button" class="govuk-button" (click)="onSignInAgain()">Sign in again</button>
 
-    <p class="govuk-body">
+    <p>
       If you don't want to start again, you can
       <a class="govuk-link" href="https://www.gov.uk/">return to GOV.UK</a>
     </p>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [PageHeadingComponent, AsyncPipe, SecondsToMinutesPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimedOutComponent {
-  idle$ = this.activatedRoute.queryParamMap.pipe(map((queryParamMap) => Number(queryParamMap.get('idle'))));
+  protected readonly idle$ = this.activatedRoute.queryParamMap.pipe(
+    map((queryParamMap) => Number(queryParamMap.get('idle'))),
+  );
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,

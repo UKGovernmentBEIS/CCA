@@ -1,30 +1,21 @@
-import {
-  canActivateReviewCheckYourAnswers,
-  canActivateReviewDecision,
-  canActivateReviewSummary,
-  canActivateReviewWizardStep,
-  REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
-  ReviewTargetUnitDetailsReviewWizardStep,
-} from '@requests/common';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot } from '@angular/router';
 
-export const canActivateTargetUnitDetails = canActivateReviewWizardStep(
-  'TARGET_UNIT_DETAILS',
-  REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
-  ReviewTargetUnitDetailsReviewWizardStep,
-);
+import { RequestTaskStore } from '@netz/common/store';
+import { REVIEW_TARGET_UNIT_DETAILS_SUBTASK, underlyingAgreementReviewQuery } from '@requests/common';
 
-export const canActivateTargetUnitDetailsCheckYourAnswers = canActivateReviewCheckYourAnswers(
-  'TARGET_UNIT_DETAILS',
-  ReviewTargetUnitDetailsReviewWizardStep,
-);
+export const reviewTargetUnitDetailsRedirectGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+  const store = inject(RequestTaskStore);
 
-export const canActivateTargetUnitDetailsSummary = canActivateReviewSummary(
-  'TARGET_UNIT_DETAILS',
-  REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
-  ReviewTargetUnitDetailsReviewWizardStep,
-);
-export const canActivateTargetUnitDetailsDecision = canActivateReviewDecision(
-  'TARGET_UNIT_DETAILS',
-  REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
-  ReviewTargetUnitDetailsReviewWizardStep,
-);
+  const reviewSectionCompleted = store.select(
+    underlyingAgreementReviewQuery.selectReviewSectionIsCompleted(REVIEW_TARGET_UNIT_DETAILS_SUBTASK),
+  )();
+
+  const decision = store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))();
+
+  if (!reviewSectionCompleted && !decision) return createUrlTreeFromSnapshot(route, ['decision']);
+  if (!reviewSectionCompleted && decision) return createUrlTreeFromSnapshot(route, ['check-your-answers']);
+  if (reviewSectionCompleted && decision) return createUrlTreeFromSnapshot(route, ['summary']);
+
+  return false;
+};

@@ -1,4 +1,4 @@
-import { AsyncPipe, NgForOf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -14,12 +14,14 @@ describe('TabLazyDirective', () => {
 
   @Component({
     standalone: true,
-    imports: [TabsComponent, TabLazyDirective, AsyncPipe, NgForOf],
+    imports: [TabsComponent, TabLazyDirective, AsyncPipe],
     template: `
       <govuk-tabs>
-        <ng-template govukTabLazy *ngFor="let tab of tabsLazy$ | async" [id]="tab.id" [label]="tab.label">
-          {{ tab.body }}
-        </ng-template>
+        @for (tab of tabsLazy$ | async; track tab) {
+          <ng-template govukTabLazy [id]="tab.id" [label]="tab.label">
+            {{ tab.body }}
+          </ng-template>
+        }
         <ng-template govukTabLazy id="lazy3" label="Lazy 3"> Lazy 3</ng-template>
       </govuk-tabs>
     `,

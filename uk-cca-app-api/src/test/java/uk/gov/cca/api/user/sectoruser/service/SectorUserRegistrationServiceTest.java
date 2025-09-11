@@ -31,7 +31,6 @@ class SectorUserRegistrationServiceTest {
         String userId = "userId";
         String email = "email";
         Long sectorAssociationId = 1L;
-        String sectorAssociationName = "sectorAssociationName";
         String authorityUuid = "authorityUuid";
         AppUser currentUser = createAppUser("current_user_id", REGULATOR);
         SectorUserInvitationDTO sectorUserInvitationDTO = createSectorUserInvitationDTO(email, roleCode);

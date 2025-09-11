@@ -48,7 +48,7 @@ class UserSecuritySetupControllerTest {
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(userSecuritySetupController)
             .setValidator(validator)
             .setControllerAdvice(new ExceptionControllerAdvice())

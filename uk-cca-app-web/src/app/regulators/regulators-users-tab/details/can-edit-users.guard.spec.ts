@@ -25,6 +25,7 @@ describe('CanEditUsersGuard', () => {
   let authoritiesService: Partial<jest.Mocked<AuthoritiesService>> = {};
   let regulatorAuthoritiesService: Partial<jest.Mocked<RegulatorAuthoritiesService>> = {};
   let regulatorUserService: Partial<jest.Mocked<RegulatorUsersService>> = {};
+
   const usersService: Partial<jest.Mocked<UsersService>> = {};
 
   const regulatorUserId = '12309123';

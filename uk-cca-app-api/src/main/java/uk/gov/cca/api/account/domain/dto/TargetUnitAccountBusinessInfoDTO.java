@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class TargetUnitAccountBusinessInfoDTO {
     private Long accountId;
     private String businessId;
+    private String name;
 }

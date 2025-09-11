@@ -5,12 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.admintermination.common.service.AdminTerminationOfficialNoticeService;
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.AdminTerminationWithdrawReasonDetails;
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.AdminTerminationWithdrawSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
@@ -32,7 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminTerminationWithdrawSubmittedServiceTest {
+class AdminTerminationWithdrawSubmittedServiceTest {
 
     @InjectMocks
     private AdminTerminationWithdrawSubmittedService adminTerminationWithdrawSubmittedService;
@@ -47,7 +45,7 @@ public class AdminTerminationWithdrawSubmittedServiceTest {
     private CcaOfficialNoticeSendService ccaOfficialNoticeSendService;
 
     @Mock
-    private AdminTerminationOfficialNoticeService adminTerminationOfficialNoticeService;
+    private AdminTerminationWithdrawnOfficialNoticeService adminTerminationWithdrawnOfficialNoticeService;
 
     @Test
     void submit() {
@@ -96,7 +94,7 @@ public class AdminTerminationWithdrawSubmittedServiceTest {
         when(requestService.findRequestById(requestId)).thenReturn(request);
         when(ccaRequestActionUserInfoResolver.getUsersInfo(ccaDecisionNotification, request)).thenReturn(usersInfo);
         when(ccaOfficialNoticeSendService.getOfficialNoticeToDefaultRecipients(request)).thenReturn(defaultContacts);
-        when(adminTerminationOfficialNoticeService.generateWithdrawOfficialNotice(request)).thenReturn(file);
+        when(adminTerminationWithdrawnOfficialNoticeService.generateOfficialNotice(request)).thenReturn(file);
 
         // Invoke
         adminTerminationWithdrawSubmittedService.submit(requestId);
@@ -108,11 +106,11 @@ public class AdminTerminationWithdrawSubmittedServiceTest {
                 .getUsersInfo(ccaDecisionNotification, request);
         verify(ccaOfficialNoticeSendService, times(1))
                 .getOfficialNoticeToDefaultRecipients(request);
-        verify(adminTerminationOfficialNoticeService, times(1))
-                .generateWithdrawOfficialNotice(request);
+        verify(adminTerminationWithdrawnOfficialNoticeService, times(1))
+                .generateOfficialNotice(request);
         verify(requestService, times(1))
                 .addActionToRequest(request, actionPayload, CcaRequestActionType.ADMIN_TERMINATION_WITHDRAW_APPLICATION_SUBMITTED, regulator);
-        verify(adminTerminationOfficialNoticeService, times(1))
+        verify(adminTerminationWithdrawnOfficialNoticeService, times(1))
                 .sendOfficialNotice(request, file, ccaDecisionNotification);
     }
 }

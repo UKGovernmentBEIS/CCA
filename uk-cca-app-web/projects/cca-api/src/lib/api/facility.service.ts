@@ -152,38 +152,40 @@ export class FacilityService {
   }
 
   /**
-   * Checks if facility ID exists
+   * Checks if facility ID exists and returns scheme versions
    * @param facilityId The facility ID to check
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public isActiveFacility(facilityId: string): Observable<boolean>;
-  public isActiveFacility(
+  public getActiveFacilityParticipatingSchemeVersions(facilityId: string): Observable<string[]>;
+  public getActiveFacilityParticipatingSchemeVersions(
     facilityId: string,
     observe: 'response',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<HttpResponse<boolean>>;
-  public isActiveFacility(
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<string[]>>;
+  public getActiveFacilityParticipatingSchemeVersions(
     facilityId: string,
     observe: 'events',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<HttpEvent<boolean>>;
-  public isActiveFacility(
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<string[]>>;
+  public getActiveFacilityParticipatingSchemeVersions(
     facilityId: string,
     observe: 'body',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<boolean>;
-  public isActiveFacility(
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<string[]>;
+  public getActiveFacilityParticipatingSchemeVersions(
     facilityId: string,
     observe: any = 'body',
     reportProgress = false,
-    options?: { httpHeaderAccept?: '*/*' | 'application/json' },
+    options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (facilityId === null || facilityId === undefined) {
-      throw new Error('Required parameter facilityId was null or undefined when calling isActiveFacility.');
+      throw new Error(
+        'Required parameter facilityId was null or undefined when calling getActiveFacilityParticipatingSchemeVersions.',
+      );
     }
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
@@ -202,7 +204,7 @@ export class FacilityService {
     let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['*/*', 'application/json'];
+      const httpHeaderAccepts: string[] = ['application/json'];
       httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     }
     if (httpHeaderAcceptSelected !== undefined) {
@@ -214,7 +216,7 @@ export class FacilityService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<boolean>(`${this.configuration.basePath}/v1.0/facility/facilityId`, {
+    return this.httpClient.get<string[]>(`${this.configuration.basePath}/v1.0/facility/facilityId`, {
       params: queryParameters,
       responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,

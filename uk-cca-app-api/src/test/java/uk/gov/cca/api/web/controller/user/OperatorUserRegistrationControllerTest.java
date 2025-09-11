@@ -21,8 +21,6 @@ import uk.gov.cca.api.user.operator.service.CcaOperatorUserActivationService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.netz.api.security.AppSecurityComponent;
-import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
 import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
 import uk.gov.netz.api.user.core.domain.enumeration.UserInvitationStatus;
@@ -61,7 +59,7 @@ class OperatorUserRegistrationControllerTest {
     private ObjectMapper mapper;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))

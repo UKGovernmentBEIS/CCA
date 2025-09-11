@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class SectorAssociationIT extends AbstractContainerBaseTest {
+class SectorAssociationIT extends AbstractContainerBaseTest {
 
     @Autowired
     private EntityManager em;

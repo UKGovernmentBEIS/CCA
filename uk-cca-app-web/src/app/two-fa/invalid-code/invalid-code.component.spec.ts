@@ -13,9 +13,7 @@ describe('InvalidCodeComponent', () => {
       declarations: [],
       providers: [provideRouter([])],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(InvalidCodeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

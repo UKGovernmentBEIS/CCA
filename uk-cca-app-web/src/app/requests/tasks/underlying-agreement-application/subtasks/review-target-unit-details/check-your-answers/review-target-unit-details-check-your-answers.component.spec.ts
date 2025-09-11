@@ -1,45 +1,89 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { REVIEW_TARGET_UNIT_DETAILS_SUBTASK, TasksApiService } from '@requests/common';
+import { screen, waitFor } from '@testing-library/angular';
 import UserEvent from '@testing-library/user-event';
 
 import { mockRequestTaskState } from '../../../testing/mock-data';
-import ReviewTargetUnitDetailsCheckYourAnswersComponent from './review-target-unit-details-check-your-answers.component';
+import { ReviewTargetUnitDetailsCheckYourAnswersComponent } from './review-target-unit-details-check-your-answers.component';
 
 describe('CheckYourAnswersComponent', () => {
   let component: ReviewTargetUnitDetailsCheckYourAnswersComponent;
   let fixture: ComponentFixture<ReviewTargetUnitDetailsCheckYourAnswersComponent>;
   let store: RequestTaskStore;
+  let router: Router;
 
   const route = new ActivatedRouteStub();
-  const taskService: Partial<jest.Mocked<TaskService>> = {
-    submitSubtask: jest.fn().mockReturnValue(of({})),
+
+  const tasksApiService = {
+    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
   };
-  const submitSubtaskSpy = jest.spyOn(taskService, 'submitSubtask');
+
+  const saveRequestTaskActionSpy = jest.spyOn(tasksApiService, 'saveRequestTaskAction');
+
+  const enhancedMockState = {
+    ...mockRequestTaskState,
+    payload: {
+      underlyingAgreement: {
+        underlyingAgreementTargetUnitDetails: {
+          operatorName: 'Test Operator',
+          operatorAddress: {
+            line1: '123 Test Street',
+            town: 'Test Town',
+            postcode: 'TE1 1ST',
+            country: 'GB',
+          },
+          responsiblePersonDetails: {
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'john@example.com',
+            address: {
+              line1: '123 Test Street',
+              town: 'Test Town',
+              postcode: 'TE1 1ST',
+              country: 'GB',
+            },
+          },
+        },
+      },
+    },
+    requestTaskId: 123,
+    sectionsCompleted: { [REVIEW_TARGET_UNIT_DETAILS_SUBTASK]: 'IN_PROGRESS' },
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReviewTargetUnitDetailsCheckYourAnswersComponent],
+      imports: [ReviewTargetUnitDetailsCheckYourAnswersComponent, RouterModule.forRoot([])],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: TaskService, useValue: taskService },
+        { provide: TasksApiService, useValue: tasksApiService },
         { provide: ActivatedRoute, useValue: route },
+        {
+          provide: Router,
+          useValue: {
+            navigate: jest.fn(),
+            url: '/test/check-your-answers',
+            events: of({}),
+            createUrlTree: () => ({}),
+            serializeUrl: () => '',
+          },
+        },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Apply for underlying agreement' },
       ],
     }).compileComponents();
 
+    router = TestBed.inject(Router);
     store = TestBed.inject(RequestTaskStore);
-    store.setState(mockRequestTaskState);
+    store.setState(enhancedMockState);
 
     fixture = TestBed.createComponent(ReviewTargetUnitDetailsCheckYourAnswersComponent);
     component = fixture.componentInstance;
@@ -59,9 +103,23 @@ describe('CheckYourAnswersComponent', () => {
     expect(fixture).toMatchSnapshot();
   });
 
-  it('should submit form and call submitSubtask method', async () => {
+  it('should submit form and call saveRequestTaskAction with completed section', async () => {
+    saveRequestTaskActionSpy.mockClear();
+    saveRequestTaskActionSpy.mockReturnValue(of({}));
+
     const user = UserEvent.setup();
-    await user.click(screen.getByText('Confirm and complete'));
-    expect(submitSubtaskSpy).toHaveBeenCalledTimes(1);
+    const confirmButton = screen.getByText('Confirm and complete');
+    await user.click(confirmButton);
+
+    await waitFor(() => {
+      expect(saveRequestTaskActionSpy).toHaveBeenCalledTimes(1);
+    });
+
+    // Verify the sections completed was updated
+    const callArg = saveRequestTaskActionSpy.mock.calls[0][0];
+    expect(callArg.requestTaskActionPayload.sectionsCompleted[REVIEW_TARGET_UNIT_DETAILS_SUBTASK]).toBe('COMPLETED');
+
+    // Verify navigation to summary page
+    expect(router.navigate).toHaveBeenCalledWith(['../../..'], { relativeTo: route });
   });
 });

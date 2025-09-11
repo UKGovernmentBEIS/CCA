@@ -395,5 +395,28 @@
             </sql>
         </rollback>
     </changeSet>
+    
+    <changeSet id="0_1_0_TARGET_UNIT_ACCOUNT_ADD_LEADING_ZEROES_TO_REG_NUMBERS_WITH_LESS_THAN_8_CHARS" author="apostolouk@unisystems.gr">
+        <sql>
+        <![CDATA[
+            update account_target_unit
+			set company_registration_number = lpad(company_registration_number, 8, '0')
+			where length(company_registration_number) < 8;
+		]]>
+        </sql>
+    </changeSet>
+    
+    <changeSet id="0_1_0_TARGET_UNIT_ACCOUNT_CHANGE_SIC_CODE_TO_JSON" author="apostolouk@unisystems.gr">
+        <sql>
+            ALTER TABLE account_target_unit ALTER sic_code TYPE JSONB 
+			USING (CASE WHEN sic_code is not null THEN jsonb_build_array(sic_code)::JSONB ELSE null END);
+        </sql>
+        <rollback>
+            <sql>
+                ALTER TABLE account_target_unit ALTER sic_code TYPE varchar(255) 
+                using (case when sic_code is not null then (sic_code ->> 0)::text else null end);
+            </sql>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>

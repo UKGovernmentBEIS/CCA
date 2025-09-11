@@ -9,12 +9,12 @@ import { PageHeadingComponent } from '@netz/common/components';
 @Component({
   selector: 'cca-invalid-link',
   templateUrl: './invalid-link.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [PageHeadingComponent, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvalidLinkComponent {
-  errorCode$ = this.route.queryParamMap.pipe(map((queryParamMap) => queryParamMap.get('code')));
+  protected readonly errorCode$ = this.route.queryParamMap.pipe(map((queryParamMap) => queryParamMap.get('code')));
 
   constructor(private readonly route: ActivatedRoute) {}
 }

@@ -36,7 +36,11 @@ function toSummaryData(user: InvitedSectorUserExtended): SummaryData {
 
 @Component({
   selector: 'cca-sector-user-invitation-summary',
-  templateUrl: './sector-user-invitation-summary.component.html',
+  template: `
+    <netz-page-heading [caption]="'Create user account'">Check your answers</netz-page-heading>
+    <cca-summary [data]="summaryData" />
+    <button netzPendingButton govukButton type="button" (click)="onSaveUserInvitationDetails()">Submit</button>
+  `,
   standalone: true,
   imports: [SummaryComponent, PageHeadingComponent, ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,

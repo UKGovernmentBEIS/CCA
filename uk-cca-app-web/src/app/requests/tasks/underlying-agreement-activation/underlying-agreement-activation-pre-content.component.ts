@@ -12,11 +12,9 @@ import { underlyingAgreementActivationQuery } from './+state/una-activation.sele
   selector: 'cca-underlying-agreement-activation-pre-content',
   template: `
     @if (isTaskCompleted() && isEditable) {
-      <div class="govuk-body">
-        <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
-          Notify operator of decision
-        </button>
-      </div>
+      <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
+        Notify operator of decision
+      </button>
     }
   `,
   standalone: true,

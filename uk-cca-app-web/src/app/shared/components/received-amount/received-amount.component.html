@@ -1,0 +1,82 @@
+<netz-page-heading caption="Change">Received amount</netz-page-heading>
+
+@if (state(); as state) {
+  <dl govuk-summary-list>
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Sector</dt>
+      <dd govukSummaryListRowValue>{{ state.businessId }} - {{ state.name }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Transaction ID</dt>
+      <dd govukSummaryListRowValue>{{ state.transactionId }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Current total amount (GBP)</dt>
+      <dd govukSummaryListRowValue>{{ state.currentTotalAmount | number }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Current received amount (GBP)</dt>
+      <dd govukSummaryListRowValue>{{ state.receivedAmount | number }}</dd>
+    </div>
+  </dl>
+
+  <div class="govuk-!-width-two-thirds">
+    <govuk-details summary="Received amount change history" data-testid="history-details">
+      @for (historyList of state.receivedAmountHistoryList; track historyList.id) {
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-1" data-testid="amount-header">
+          Amount {{ +historyList.transactionAmount > 0 ? 'added' : 'subtracted' }}
+          {{
+            +historyList.transactionAmount > 0
+              ? (historyList.transactionAmount | number)
+              : (historyList.transactionAmount.split('-')[1] | number)
+          }}
+          GBP by "{{ historyList.submitter }}"
+        </h3>
+
+        <p class="govuk-!-margin-bottom-1">{{ historyList.submissionDate | govukDate: 'datetime' }}</p>
+        <a [routerLink]="['history-details', historyList.id]" [relativeTo]="activatedRoute" class="govuk-link"
+          >View details</a
+        >
+        <hr class="govuk-footer__section-break govuk-!-margin-top-3 govuk-!-margin-bottom-3" />
+      } @empty {
+        <p>No received amount change history available.</p>
+      }
+    </govuk-details>
+  </div>
+}
+
+<cca-wizard-step (formSubmit)="onSubmit()" [formGroup]="form" data-testid="payment-received-amount-form">
+  <div class="govuk-!-width-two-thirds">
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Add or subtract a payment from received amount</h2>
+
+    <div class="row-flex govuk-!-margin-right-3">
+      <div
+        [options]="changeTypeOptions"
+        formControlName="changeType"
+        label="Change type"
+        class="govuk-!-margin-right-3"
+        govuk-select
+      ></div>
+
+      <div
+        formControlName="transactionAmount"
+        govuk-text-input
+        inputType="number"
+        label="Amount (GBP)"
+        data-testid="transaction-amount-input"
+      ></div>
+    </div>
+
+    <div formControlName="comments" govuk-textarea label="Comments (optional)" labelSize="small"></div>
+
+    <cca-multiple-file-input
+      [baseDownloadUrl]="'./evidence-file-download/attachment/'"
+      [listTitle]="'Uploaded files'"
+      label="Upload payment evidence (optional)"
+      formControlName="evidenceFiles"
+    />
+  </div>
+</cca-wizard-step>

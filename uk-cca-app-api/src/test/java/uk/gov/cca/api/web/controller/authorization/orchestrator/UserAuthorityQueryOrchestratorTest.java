@@ -11,10 +11,7 @@ import uk.gov.netz.api.authorization.core.domain.dto.AuthorityDTO;
 import uk.gov.netz.api.authorization.core.service.AuthorityService;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.user.core.service.auth.UserAuthService;
-import uk.gov.netz.api.userinfoapi.AuthenticationStatus;
-import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;

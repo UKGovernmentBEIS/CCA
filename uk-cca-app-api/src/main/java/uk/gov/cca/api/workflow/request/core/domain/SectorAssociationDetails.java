@@ -1,10 +1,13 @@
 package uk.gov.cca.api.workflow.request.core.domain;
 
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.cca.api.common.domain.MeasurementType;
+import uk.gov.cca.api.common.domain.SchemeData;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 
 @Data
 @NoArgsConstructor
@@ -13,6 +16,6 @@ import uk.gov.cca.api.common.domain.MeasurementType;
 public class SectorAssociationDetails {
 
     private String subsectorAssociationName;
-    private MeasurementType measurementType;
-    private String throughputUnit;
+    private Map<SchemeVersion, SchemeData> schemeDataMap;
+    
 }

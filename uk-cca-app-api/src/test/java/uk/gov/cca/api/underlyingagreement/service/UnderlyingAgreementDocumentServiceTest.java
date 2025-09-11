@@ -21,11 +21,11 @@ import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDTO;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.files.documents.service.FileDocumentTokenService;
-import uk.gov.netz.api.token.FileToken;;
+import uk.gov.netz.api.token.FileToken;
 
 
 @ExtendWith(MockitoExtension.class)
-public class UnderlyingAgreementDocumentServiceTest {
+class UnderlyingAgreementDocumentServiceTest {
     @InjectMocks
     private UnderlyingAgreementDocumentService underlyingAgreementDocumentService;
 

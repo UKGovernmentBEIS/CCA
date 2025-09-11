@@ -8,7 +8,7 @@ import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 
 public interface PerformanceDataSpreadsheetProcessingExtractDataService<T extends PerformanceData> {
 
-    T extractData(Long accountId, PerformanceDataSpreadsheetProcessingRequestMetadata metadata, FileDTO file) throws Exception;
+    T extractData(PerformanceDataSpreadsheetProcessingRequestMetadata metadata, FileDTO file) throws Exception;
 
     PerformanceDataCalculatedMetrics extractCalculatedData(T performanceData);
 

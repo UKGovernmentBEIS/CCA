@@ -15,7 +15,15 @@ import { generateDownloadUrl } from '@shared/utils';
   selector: 'cca-authorisation-additional-evidence-summary',
   standalone: true,
   imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
-  templateUrl: './authorisation-additional-evidence-summary.component.html',
+  template: `
+    <div>
+      <netz-page-heading caption="Authorisation and additional evidence">Summary</netz-page-heading>
+      <cca-summary [data]="summaryData" />
+    </div>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class AuthorisationAdditionalEvidenceSummaryComponent {

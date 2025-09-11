@@ -25,7 +25,6 @@ import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesSearchCriteria;
 import uk.gov.cca.api.subsistencefees.domain.dto.transform.SubsistenceFeesMoaTargetUnitSearchResultInfo;
 import uk.gov.cca.api.subsistencefees.domain.dto.transform.SubsistenceFeesMoaTargetUnitSearchResultsInfo;
 import uk.gov.cca.api.subsistencefees.repository.SubsistenceFeesMoaTargetUnitRepository;
-import uk.gov.cca.api.subsistencefees.transform.SubsistenceFeesMapper;
 import uk.gov.netz.api.common.domain.PagingRequest;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,16 +35,13 @@ class SubsistenceFeesMoaTargetUnitQueryServiceTest {
 
     @Mock
     private SubsistenceFeesMoaTargetUnitRepository subsistenceFeesMoaTargetUnitRepository;
-
-    @Mock
-    private SubsistenceFeesMapper subsistenceFeesMapper;
     
     @Test
     void getSubsistenceFeesMoaTargetUnits() {
     	final String businessId = "businessId";
     	final String name = "name";
-    	final long page = 0;
-        final long pageSize = 30;
+    	final int page = 0;
+        final int pageSize = 30;
         PagingRequest pagingRequest = PagingRequest.builder().pageNumber(page).pageSize(pageSize).build();
         SubsistenceFeesSearchCriteria criteria = SubsistenceFeesSearchCriteria.builder()
         		.paging(pagingRequest)

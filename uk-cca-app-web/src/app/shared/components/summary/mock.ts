@@ -6,7 +6,7 @@ export const summaryData: SummaryData = [
     data: [
       { key: 'Name', value: ['John Doe'] },
       { key: 'Email', value: ['john.doe@example.com'], change: true },
-      { key: 'Phone', value: ['+123456789'], prewrap: true },
+      { key: 'Phone', value: ['+123456789'], preline: true },
     ],
     changeLink: '/change-personal-info',
   },
@@ -15,7 +15,7 @@ export const summaryData: SummaryData = [
     data: [
       { key: 'Street', value: ['123 Main St'] },
       { key: 'City', value: ['Anytown'], change: true },
-      { key: 'Postal Code', value: ['12345'], prewrap: true },
+      { key: 'Postal Code', value: ['12345'], preline: true },
     ],
     changeLink: '/change-address',
   },
@@ -35,7 +35,7 @@ export const summaryDataNoChangeParam: SummaryData = [
     data: [
       { key: 'Name', value: ['John Doe'] },
       { key: 'Email', value: ['john.doe@example.com'], change: true, appendChangeParam: false },
-      { key: 'Phone', value: ['+123456789'], prewrap: true, appendChangeParam: false },
+      { key: 'Phone', value: ['+123456789'], preline: true, appendChangeParam: false },
     ],
     changeLink: '/change-personal-info',
   },

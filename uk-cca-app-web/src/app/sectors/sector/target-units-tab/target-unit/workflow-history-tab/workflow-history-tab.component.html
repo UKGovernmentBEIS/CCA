@@ -1,4 +1,4 @@
-<form [formGroup]="searchForm" data-testid="workflow-history-form">
+<form [formGroup]="filtersForm" data-testid="workflow-history-form">
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-third">
       <div class="govuk-grid-row">
@@ -7,8 +7,8 @@
           <h3 class="govuk-heading-s">Type</h3>
 
           <div formControlName="requestTypes" class="govuk-checkboxes govuk-checkboxes--small" govuk-checkboxes>
-            @for (type of workflowTypesMap | keyvalue: originalOrder; track type) {
-              <govuk-checkbox [value]="type.value" [label]="type.key"></govuk-checkbox>
+            @for (type of workflowTypesMap | keyvalue; track type) {
+              <govuk-checkbox [value]="type.value" [label]="type.key" />
             }
           </div>
         </div>
@@ -16,8 +16,8 @@
         <div class="govuk-grid-column-full">
           <h3 class="govuk-heading-s">Status</h3>
           <div formControlName="requestStatuses" class="govuk-checkboxes govuk-checkboxes--small" govuk-checkboxes>
-            @for (status of workflowStatusesMap | keyvalue: originalOrder; track status) {
-              <govuk-checkbox [value]="status.value" [label]="status.key"></govuk-checkbox>
+            @for (status of workflowStatusesMap | keyvalue; track status) {
+              <govuk-checkbox [value]="status.value" [label]="status.key" />
             }
           </div>
         </div>
@@ -32,17 +32,43 @@
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-three-quarters govuk-!-margin-bottom-3">
                   <a [routerLink]="['workflow-details', workflow.id]" class="govuk-link">{{ workflow.id }}</a>
-                  <div class="govuk-!-margin-bottom-0 govuk-body">Created {{ workflow.creationDate | date }}</div>
+
+                  @if (workflow?.requestType === 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING') {
+                    <div class="govuk-!-margin-bottom-0">
+                      TPR Version:
+                      {{
+                        workflow?.requestMetadata?.['targetPeriodType']
+                          | tprVersion: workflow?.requestMetadata?.['performanceDataReportVersion']
+                      }}
+                      ({{ workflow?.requestMetadata?.['tpOutcome'] | performanceOutcome }})
+                    </div>
+
+                    @if (workflow?.requestMetadata?.['transactionId']) {
+                      <div class="govuk-!-margin-bottom-0">
+                        Transaction ID: {{ workflow?.requestMetadata?.['transactionId'] }}
+                      </div>
+                    }
+                  }
+
+                  <div class="govuk-!-margin-bottom-0">Created {{ workflow.creationDate | date }}</div>
                 </div>
 
                 <div class="govuk-grid-column-one-quarter">
                   <span
                     class="search-results-list_item_status govuk-!-margin-top-2 govuk-tag govuk-tag--{{
-                      workflow.requestStatus | requestStatusTagColor
+                      workflow.requestStatus | statusColor: 'grey'
                     }}"
                   >
-                    <strong>{{ workflow.requestStatus | workflowStatus }}</strong>
+                    <strong>{{ workflow.requestStatus | status }}</strong>
                   </span>
+                </div>
+              </div>
+            </li>
+          } @empty {
+            <li class="search-results-list_item govuk-!-margin-bottom-3">
+              <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                  <div class="govuk-!-margin-bottom-0">No workflow history found</div>
                 </div>
               </div>
             </li>
@@ -51,10 +77,12 @@
       </div>
 
       <cca-pagination
-        [count]="count()"
-        (currentPageChange)="handlePageChange($event)"
-        [pageSize]="pageSize"
-      ></cca-pagination>
+        [count]="state().totalItems"
+        [currentPage]="state().currentPage"
+        [pageSize]="state().pageSize"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      />
     </div>
   </div>
 </form>

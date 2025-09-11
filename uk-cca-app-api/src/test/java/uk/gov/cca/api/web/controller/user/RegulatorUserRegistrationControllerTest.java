@@ -51,7 +51,7 @@ class RegulatorUserRegistrationControllerTest {
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(regulatorUserRegistrationController)
             .setControllerAdvice(new ExceptionControllerAdvice())

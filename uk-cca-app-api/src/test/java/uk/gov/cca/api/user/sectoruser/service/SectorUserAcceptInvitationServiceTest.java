@@ -23,7 +23,7 @@ import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
 import uk.gov.netz.api.user.core.domain.enumeration.UserInvitationStatus;
 
 @ExtendWith(MockitoExtension.class)
-public class SectorUserAcceptInvitationServiceTest {
+class SectorUserAcceptInvitationServiceTest {
 
     @InjectMocks
     private SectorUserAcceptInvitationService sectorUserAcceptInvitationService;

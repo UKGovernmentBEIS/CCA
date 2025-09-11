@@ -2,7 +2,7 @@ import { Observable, of } from 'rxjs';
 
 import { PayloadMutator } from '@netz/common/forms';
 import { TaskItemStatus } from '@requests/common';
-import { transformFilesToUUIDsList } from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 import { produce } from 'immer';
 
 import { AdminTerminationFinalDecisionReasonDetails, AdminTerminationFinalDecisionRequestTaskPayload } from 'cca-api';
@@ -30,7 +30,7 @@ export class AdminTerminationFinalDecisionPayloadMutator extends PayloadMutator 
     } else {
       const formData: AdminTerminationFinalDecisionReasonDetails = {
         ...userInput,
-        relevantFiles: transformFilesToUUIDsList(userInput.relevantFiles) as string[],
+        relevantFiles: fileUtils.toUUIDs(userInput.relevantFiles),
       };
 
       return of(

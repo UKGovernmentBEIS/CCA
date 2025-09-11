@@ -47,7 +47,7 @@ class SubsistenceFeesMoaRepositoryIT extends AbstractContainerBaseTest {
     private final LocalDateTime submissionDate = LocalDateTime.of(2025, 4, 1, 12, 22, 44);
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
     	// Persist sector associations
     	SectorAssociation sector1 = createSectorAssociation("name", "acronym1");
     	SectorAssociation sector2 = createSectorAssociation("name", "acronym2");
@@ -209,17 +209,15 @@ class SubsistenceFeesMoaRepositoryIT extends AbstractContainerBaseTest {
 
     	Optional<SubsistenceFeesMoaDetails> result1 = repository.getMoaDetailsById(1L);
 
-    	assertThat(result1).isNotEmpty();
-        assertThat(result1.get()).isEqualTo(details1);
+        assertThat(result1).contains(details1);
         
         Optional<SubsistenceFeesMoaDetails> result2 = repository.getMoaDetailsById(3L);
 
-    	assertThat(result2).isNotEmpty();
-        assertThat(result2.get()).isEqualTo(details2);
+        assertThat(result2).contains(details2);
     }
     
     @AfterEach
-    public void flushAndClear() {
+    void flushAndClear() {
     	entityManager.flush();
         entityManager.clear();
     }

@@ -1,12 +1,12 @@
 @if (status() === 'INVALID' && authoritiesForm.touched) {
-  <govuk-error-summary [form]="authoritiesForm"></govuk-error-summary>
+  <govuk-error-summary [form]="authoritiesForm" />
 }
 
 @if (isEditable()) {
-  <p class="govuk-body">Add a new user</p>
+  <p>Add a new user</p>
 
   <form [formGroup]="createUserForm" (ngSubmit)="onSelectUserType()" data-testid="sector-user-type-form">
-    <div class="govuk-body" style="display: flex">
+    <div style="display: flex">
       <div [options]="createUserTypeOptions" formControlName="userType" govuk-select></div>
 
       <button netzPendingButton govukButton type="submit" class="govuk-!-margin-left-3">Continue</button>
@@ -42,7 +42,7 @@
     formArrayName="authorities"
   >
     <ng-template let-column="column" let-index="index" let-row="row">
-      <div [formGroupName]="index" class="cell-container">
+      <div [formGroupName]="index">
         @switch (column.field) {
           @case ('name') {
             @if (isEditable() || row.userId === userId()) {

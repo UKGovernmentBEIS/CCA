@@ -55,7 +55,7 @@ class SubsistenceFeesMoaCustomRepositoryIT extends AbstractContainerBaseTest {
     private final LocalDateTime submissionDate = LocalDateTime.of(2025, 4, 1, 12, 22, 44);
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
     	// Persist sector associations
     	SectorAssociation sector1 = createSectorAssociation("name", "acronym1");
     	SectorAssociation sector2 = createSectorAssociation("name", "acronym2");
@@ -209,7 +209,7 @@ class SubsistenceFeesMoaCustomRepositoryIT extends AbstractContainerBaseTest {
     @Test
     @Order(1)
     void findBySearchCriteriaForRegulator_noCriteria() {
-    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0L).pageSize(50L).build();
+    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0).pageSize(50).build();
     	SubsistenceFeesMoaSearchCriteria criteria = SubsistenceFeesMoaSearchCriteria.builder()
     			.moaType(MoaType.SECTOR_MOA)
     			.paging(pagingRequest)
@@ -232,7 +232,7 @@ class SubsistenceFeesMoaCustomRepositoryIT extends AbstractContainerBaseTest {
     @Test
     @Order(2)
     void findBySearchCriteria_term_in_name_and_facilities_status() {
-    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0L).pageSize(50L).build();
+    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0).pageSize(50).build();
     	SubsistenceFeesMoaSearchCriteria criteria = SubsistenceFeesMoaSearchCriteria.builder()
     			.moaType(MoaType.SECTOR_MOA)
     			.term("nam")
@@ -255,7 +255,7 @@ class SubsistenceFeesMoaCustomRepositoryIT extends AbstractContainerBaseTest {
     @Test
     @Order(3)
     void findBySearchCriteria_paymentStatus() {
-    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0L).pageSize(50L).build();
+    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0).pageSize(50).build();
     	SubsistenceFeesMoaSearchCriteria criteria = SubsistenceFeesMoaSearchCriteria.builder()
     			.moaType(MoaType.SECTOR_MOA)
     			.paymentStatus(PaymentStatus.OVERPAID)
@@ -277,7 +277,7 @@ class SubsistenceFeesMoaCustomRepositoryIT extends AbstractContainerBaseTest {
     @Test
     @Order(4)
     void findBySearchCriteriaForSectorUser_noCriteria() {
-    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0L).pageSize(50L).build();
+    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0).pageSize(50).build();
     	SubsistenceFeesMoaSearchCriteria criteria = SubsistenceFeesMoaSearchCriteria.builder()
     			.paging(pagingRequest)
     			.build();
@@ -297,7 +297,7 @@ class SubsistenceFeesMoaCustomRepositoryIT extends AbstractContainerBaseTest {
     @Test
     @Order(5)
     void findBySearchCriteriaForSectorUser_term_not_in_transaction_id_() {
-    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0L).pageSize(50L).build();
+    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0).pageSize(50).build();
     	SubsistenceFeesMoaSearchCriteria criteria = SubsistenceFeesMoaSearchCriteria.builder()
     			.moaType(MoaType.SECTOR_MOA)
     			.term("nam")
@@ -316,7 +316,7 @@ class SubsistenceFeesMoaCustomRepositoryIT extends AbstractContainerBaseTest {
     }
     
     @AfterEach
-    public void flushAndClear() {
+    void flushAndClear() {
     	entityManager.flush();
         entityManager.clear();
     }

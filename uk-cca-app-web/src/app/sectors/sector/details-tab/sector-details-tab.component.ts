@@ -28,8 +28,8 @@ import { SectorEnergyEprFactorPipe } from '../pipes/sector-energy-epr-factor.pip
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorDetailsTabComponent {
-  sectorDetails = inject(ActiveSectorStore).state;
-  changeLink = this.sectorDetails.editable;
+  protected readonly sectorDetails = inject(ActiveSectorStore).state;
 
-  queryParams: Params = { change: true };
+  protected readonly changeLink = this.sectorDetails.editable;
+  protected readonly queryParams: Params = { change: true };
 }

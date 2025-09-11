@@ -27,7 +27,8 @@ public class ReviewDeterminationViolation extends BusinessViolation {
     public enum ReviewDeterminationViolationMessage {
         INVALID_DETERMINATION_DATA("Invalid determination data"),
         INVALID_REVIEW_DECISION_DATA("Invalid review decision data"),
-        INVALID_FACILITY_REVIEW_DECISION_DATA("Invalid facility review decision data");
+        INVALID_FACILITY_REVIEW_DECISION_DATA("Invalid facility review decision data"),
+        ATTACHMENT_NOT_FOUNT("Attachment not found");
 
         private final String message;
 

@@ -1,46 +1,27 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
-import { of } from 'rxjs';
-
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { mockFacilitiesList, mockSentSubsistenceFeesDetails, mockTuMoaDetails } from '@shared/components';
 
-import { SubsistenceFeesMoAInfoViewService, SubsistenceFeesMoATargetUnitInfoViewService } from 'cca-api';
-
-import {
-  mockFacilitiesList,
-  mockSentSubsistenceFeesDetails,
-  mockTargetUnitFacilitiesListSearchResult,
-  mockTuMoaDetails,
-} from '../../testing/mock-data';
 import { TuMoaDetailsComponent } from './tu-moa-details.component';
-import { toTuMoaDetailsSummary } from './tu-moa-details-summary';
+import { TuMoaDetailsStore } from './tu-moa-details.store';
 
 describe('TuMoaDetailsComponent', () => {
   let component: TuMoaDetailsComponent;
   let fixture: ComponentFixture<TuMoaDetailsComponent>;
-  let subsistenceFeesMoAInfoViewService: Partial<jest.Mocked<SubsistenceFeesMoAInfoViewService>>;
-  let subsistenceFeesMoATargetUnitInfoViewService: Partial<jest.Mocked<SubsistenceFeesMoATargetUnitInfoViewService>>;
+  let tuMoaDetailsStore: TuMoaDetailsStore;
 
   beforeEach(async () => {
-    subsistenceFeesMoAInfoViewService = {
-      getSubsistenceFeesMoaDetailsById: jest.fn().mockReturnValue(of(mockTuMoaDetails)),
-    };
-
-    subsistenceFeesMoATargetUnitInfoViewService = {
-      getSubsistenceFeesMoaFacilities: jest.fn().mockReturnValue(of(mockTargetUnitFacilitiesListSearchResult)),
-    };
-
     await TestBed.configureTestingModule({
       imports: [TuMoaDetailsComponent],
       providers: [
+        TuMoaDetailsStore,
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: SubsistenceFeesMoAInfoViewService, useValue: subsistenceFeesMoAInfoViewService },
-        { provide: SubsistenceFeesMoATargetUnitInfoViewService, useValue: subsistenceFeesMoATargetUnitInfoViewService },
         {
           provide: ActivatedRoute,
           useValue: new ActivatedRouteStub(null, null, {
@@ -50,9 +31,17 @@ describe('TuMoaDetailsComponent', () => {
       ],
     }).compileComponents();
 
+    tuMoaDetailsStore = TestBed.inject(TuMoaDetailsStore);
+    tuMoaDetailsStore.setState({
+      userRoleType: 'REGULATOR',
+      totalFacilityItems: 0,
+      moaTUDetails: mockTuMoaDetails,
+      facilities: mockFacilitiesList,
+      selectedFacilities: new Map(),
+    });
+
     fixture = TestBed.createComponent(TuMoaDetailsComponent);
     component = fixture.componentInstance;
-    component.data = toTuMoaDetailsSummary(mockTuMoaDetails);
     fixture.detectChanges();
   });
 
@@ -61,14 +50,17 @@ describe('TuMoaDetailsComponent', () => {
   });
 
   it('should display the correct data', () => {
-    const detailsValues = screen
-      .getAllByText((_, el) => el.tagName.toLowerCase() === 'dl')
-      .map((el) => [
-        Array.from(el.querySelectorAll('dt')).map((dt) => dt.textContent.trim()),
-        Array.from(el.querySelectorAll('dd'))
-          .filter((dt) => dt.textContent.trim() !== 'Change')
-          .map((dt) => dt.textContent.trim()),
-      ]);
+    const definitionLists = fixture.debugElement.queryAll(By.css('dl'));
+
+    const detailsValues = definitionLists.map((dl) => {
+      const terms = dl.queryAll(By.css('dt')).map((dt) => dt.nativeElement.textContent.trim());
+      const descriptions = dl
+        .queryAll(By.css('dd'))
+        .filter((dd) => dd.nativeElement.textContent.trim() !== 'Change')
+        .map((dd) => dd.nativeElement.textContent.trim());
+
+      return [terms, descriptions];
+    });
 
     expect(detailsValues).toEqual([
       [
@@ -90,8 +82,9 @@ describe('TuMoaDetailsComponent', () => {
           '2025 Target Unit MoA - ADS_53-T00001 - CCATM01200.pdf',
           '27 Feb 2025',
           'Awaiting payment',
-          '370',
-          '0',
+          '185',
+          '0 out of 2',
+          'Mark all as paid',
           '370',
           '370',
           '0',
@@ -101,15 +94,6 @@ describe('TuMoaDetailsComponent', () => {
   });
 
   it('should populate with correct number of table rows', () => {
-    component.state.set({
-      currentPage: 0,
-      pageSize: 30,
-      facilities: mockFacilitiesList,
-      totalItems: mockFacilitiesList.length,
-    });
-
-    fixture.detectChanges();
-
-    expect(document.querySelectorAll('.govuk-table__row')).toHaveLength(component.state().totalItems + 1);
+    expect(document.querySelectorAll('.govuk-table__row')).toHaveLength(component.state().facilities.length + 1);
   });
 });

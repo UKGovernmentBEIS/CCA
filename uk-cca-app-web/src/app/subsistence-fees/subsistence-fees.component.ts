@@ -28,24 +28,26 @@ import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-his
 })
 export class SubsistenceFeesComponent implements OnInit {
   private readonly router = inject(Router);
-  private readonly subsistenceFeesStore = inject(SubsistenceFeesStore);
+  private readonly store = inject(SubsistenceFeesStore);
 
-  readonly badgeNumber = computed(() => this.subsistenceFeesStore.stateAsSignal().badgeNumber);
-  readonly isValidChargeDate = computed(() => this.subsistenceFeesStore.stateAsSignal().isValidChargeDate);
-  readonly isActivePolling = computed(() => this.subsistenceFeesStore.stateAsSignal().runInProgress);
+  protected readonly state = this.store.stateAsSignal;
 
-  readonly canInitiateSubsistenceRun = computed(() => this.isValidChargeDate() && !this.isActivePolling());
+  protected readonly badgeNumber = computed(() => this.state().badgeNumber);
+  protected readonly isValidChargeDate = computed(() => this.state().isValidChargeDate);
+  protected readonly isActivePolling = computed(() => this.state().runInProgress);
+
+  protected readonly canInitiateSubsistenceRun = computed(() => this.isValidChargeDate() && !this.isActivePolling());
 
   /**
    * Initiates the valid date period for the payment requests and the polling mechanism.
    */
   ngOnInit() {
-    this.subsistenceFeesStore
+    this.store
       .checkForPendingSubsistenceRun()
       .pipe(
         tap((isInProgress) => {
           if (isInProgress) {
-            this.subsistenceFeesStore.updateState({ runInProgress: true, badgeNumber: 1 });
+            this.store.updateState({ runInProgress: true, badgeNumber: 1 });
           }
         }),
       )

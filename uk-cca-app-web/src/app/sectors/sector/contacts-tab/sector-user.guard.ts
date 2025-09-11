@@ -12,11 +12,13 @@ import { ActiveSectorUserStore } from './active-sector-user.store';
 export const SectorUserGuard: CanActivateFn = (route) => {
   const sectorUsersService = inject(SectorUsersService);
   const sectorAssociationAuthoritiesService = inject(SectorAssociationAuthoritiesService);
+  const store = inject(ActiveSectorUserStore);
+
+  const currentUserId = inject(AuthStore).select(selectUserId);
+
   const sectorId = +route.paramMap.get('sectorId');
   const sectorUserId = route.paramMap.get('sectorUserId');
-  const currentUserId = inject(AuthStore).select(selectUserId);
   const isCurrentUser = currentUserId() === sectorUserId;
-  const store = inject(ActiveSectorUserStore);
 
   return combineLatest([
     isCurrentUser

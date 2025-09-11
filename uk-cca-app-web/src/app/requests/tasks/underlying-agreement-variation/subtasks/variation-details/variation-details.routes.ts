@@ -1,41 +1,34 @@
 import { Routes } from '@angular/router';
 
-import { VariationDetailsWizardStep } from '@requests/common';
-
-import {
-  CanActivateVariationDetails,
-  CanActivateVariationDetailsCheckYourAnswers,
-  CanActivateVariationDetailsSummary,
-} from './variation-details.guard';
+import { variationDetailsRedirectGuard } from './variation-details-redirect.guard';
 
 export const VARIATION_DETAILS_ROUTES: Routes = [
   {
     path: '',
     children: [
       {
-        path: VariationDetailsWizardStep.SUMMARY,
+        path: '',
+        pathMatch: 'full',
+        canActivate: [variationDetailsRedirectGuard],
+        children: [],
+      },
+      {
+        path: 'summary',
         title: 'Summary',
         data: { backlink: '../../../', breadcrumb: false },
-        canActivate: [CanActivateVariationDetailsSummary],
         loadComponent: () => import('./summary/variation-details-summary.component'),
       },
       {
-        path: VariationDetailsWizardStep.CHECK_YOUR_ANSWERS,
+        path: 'check-your-answers',
         title: 'Check your answers',
         data: { backlink: '../../../', breadcrumb: false },
-        canActivate: [CanActivateVariationDetailsCheckYourAnswers],
         loadComponent: () => import('./check-your-answers/variation-details-check-your-answers.component'),
       },
       {
-        path: VariationDetailsWizardStep.DETAILS,
+        path: 'variation-details',
         title: 'Describe the changes',
         data: { backlink: '../../../', breadcrumb: false },
-        canActivate: [CanActivateVariationDetails],
-        loadComponent: () => import('@requests/common').then((m) => m.VariationDetailsComponent),
-      },
-      {
-        path: '**',
-        redirectTo: VariationDetailsWizardStep.SUMMARY,
+        loadComponent: () => import('./details/variation-details.component').then((m) => m.VariationDetailsComponent),
       },
     ],
   },

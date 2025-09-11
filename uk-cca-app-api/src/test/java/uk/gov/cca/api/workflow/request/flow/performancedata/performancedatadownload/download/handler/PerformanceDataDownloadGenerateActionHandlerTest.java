@@ -7,9 +7,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiod.domain.dto.TargetPeriodDTO;
-import uk.gov.cca.api.targetperiod.service.TargetPeriodService;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.domain.PerformanceDataTargetPeriodType;
@@ -34,7 +34,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -108,7 +107,7 @@ class PerformanceDataDownloadGenerateActionHandlerTest {
         when(workflowService.getVariable(processInstanceId, BpmnProcessConstants.BUSINESS_KEY))
                 .thenReturn(downloadRequestBusinessKey);
         when(performanceDataAccountQueryService
-                .getCandidateAccountsForPerformanceDataReportingBySector(eq(sectorAssociationId), eq(TargetPeriodType.TP6), any()))
+                .getCandidateAccountsForPerformanceDataReportingBySector(sectorAssociationId, TargetPeriodType.TP6))
                 .thenReturn(eligibleAccounts);
 
         // Invoke
@@ -127,7 +126,7 @@ class PerformanceDataDownloadGenerateActionHandlerTest {
         verify(workflowService, times(1))
                 .getVariable(processInstanceId, BpmnProcessConstants.BUSINESS_KEY);
         verify(performanceDataAccountQueryService, times(1))
-                .getCandidateAccountsForPerformanceDataReportingBySector(eq(sectorAssociationId), eq(TargetPeriodType.TP6), any());
+                .getCandidateAccountsForPerformanceDataReportingBySector(sectorAssociationId, TargetPeriodType.TP6);
         verify(startProcessRequestService, times(1))
                 .startProcess(any());
     }
@@ -161,7 +160,7 @@ class PerformanceDataDownloadGenerateActionHandlerTest {
         when(targetPeriodService.getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod()))
                 .thenReturn(targetPeriodDTO);
         when(performanceDataAccountQueryService
-                .getCandidateAccountsForPerformanceDataReportingBySector(eq(sectorAssociationId), eq(TargetPeriodType.TP6), any()))
+                .getCandidateAccountsForPerformanceDataReportingBySector(sectorAssociationId, TargetPeriodType.TP6))
                 .thenReturn(List.of());
 
         // Invoke
@@ -179,7 +178,7 @@ class PerformanceDataDownloadGenerateActionHandlerTest {
         verify(targetPeriodService, times(1))
                 .getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod());
         verify(performanceDataAccountQueryService, times(1))
-                .getCandidateAccountsForPerformanceDataReportingBySector(eq(sectorAssociationId), eq(TargetPeriodType.TP6), any());
+                .getCandidateAccountsForPerformanceDataReportingBySector(sectorAssociationId, TargetPeriodType.TP6);
         verifyNoInteractions(documentTemplateFileService, workflowService, startProcessRequestService);
     }
 

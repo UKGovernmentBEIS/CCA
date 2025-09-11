@@ -18,7 +18,7 @@ import { Configuration, FileToken, SectorAssociationSchemeService } from 'cca-ap
   selector: 'cca-sector-documents-download',
   template: `
     <h1 class="govuk-heading-l">Your download has started</h1>
-    <p class="govuk-body">You should see your downloads in the downloads folder.</p>
+    <p>You should see your downloads in the downloads folder.</p>
     <a class="govuk-link" [href]="downloadURL()" download #anchor>Click to restart download if it fails</a>
   `,
   standalone: true,
@@ -42,7 +42,7 @@ export class SectorDocumentsDownloadComponent {
     .generateGetSectorAssociationSchemeDocumentToken(this.sectorId, this.uuid)
     .pipe(tap(({ token }) => this.token.set(token)));
 
-  downloadURL = computed(() => (this.token() ? `${this.basePath}${this.token()}` : ''));
+  readonly downloadURL = computed(() => (this.token() ? `${this.basePath}${this.token()}` : ''));
 
   constructor() {
     this.getToken

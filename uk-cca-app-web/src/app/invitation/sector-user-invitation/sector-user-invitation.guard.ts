@@ -57,11 +57,9 @@ export const SectorUserNoTokenGuard: CanActivateFn = (): Observable<boolean | Ur
   const router = inject(Router);
   const storeUser = inject(SectorUserInvitationStore).state;
 
-  if (!storeUser.emailToken) {
-    return of(router.parseUrl('landing'));
-  } else {
-    return of(true);
-  }
+  if (!storeUser.emailToken) return of(router.parseUrl('landing'));
+
+  return of(true);
 };
 
 export const resetSectorInvitationStore: CanDeactivateFn<boolean> = () => {

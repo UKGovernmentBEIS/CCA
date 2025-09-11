@@ -17,6 +17,10 @@ export class ItemNamePipe implements PipeTransform {
         return 'Upload target unit assent';
       case 'UNDERLYING_AGREEMENT_WAIT_FOR_ACTIVATION':
         return `Application for underlying agreement awaiting operator's assent/activation`;
+      case 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW':
+        return 'Peer review application for underlying agreement';
+      case 'UNDERLYING_AGREEMENT_WAIT_FOR_PEER_REVIEW':
+        return 'Application for underlying agreement sent to peer reviewer';
 
       case 'ADMIN_TERMINATION_APPLICATION_SUBMIT':
         return 'Admin termination';
@@ -24,6 +28,10 @@ export class ItemNamePipe implements PipeTransform {
         return 'Withdraw admin termination';
       case 'ADMIN_TERMINATION_APPLICATION_FINAL_DECISION':
         return 'Admin termination final decision';
+      case 'ADMIN_TERMINATION_APPLICATION_PEER_REVIEW':
+        return 'Peer review admin termination request';
+      case 'ADMIN_TERMINATION_WAIT_FOR_PEER_REVIEW':
+        return 'Admin termination sent for peer review';
 
       case 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT':
         return 'Apply to vary the underlying agreement';
@@ -40,6 +48,8 @@ export class ItemNamePipe implements PipeTransform {
         return 'Download target period reporting (TPR) spreadsheets';
       case 'PERFORMANCE_DATA_UPLOAD_SUBMIT':
         return 'Target period reporting (TPR) spreadsheets upload';
+      case 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT':
+        return 'Performance account template (PAT) upload';
 
       default:
         return null;

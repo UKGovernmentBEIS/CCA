@@ -3,16 +3,16 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 
 import { Observable } from 'rxjs';
 
-import { SubsectorAssociationSchemeDTO, SubsectorAssociationSchemeService } from 'cca-api';
+import { SubsectorAssociationInfoViewService, SubsectorAssociationSchemesDTO } from 'cca-api';
 
 export function SubsectorAssociationSchemeResolver(
   route: ActivatedRouteSnapshot,
-): Observable<SubsectorAssociationSchemeDTO> {
-  const subsectorAssociationSchemeService = inject(SubsectorAssociationSchemeService);
+): Observable<SubsectorAssociationSchemesDTO> {
+  const subsectorAssociationInfoViewService = inject(SubsectorAssociationInfoViewService);
   const sectorId = +route.paramMap.get('sectorId');
   const subSectorId = +route.paramMap.get('subId');
 
-  return subsectorAssociationSchemeService.getSubsectorAssociationSchemeBySubsectorAssociationSchemeId(
+  return subsectorAssociationInfoViewService.getSubsectorAssociationSchemeBySubsectorAssociationId(
     sectorId,
     subSectorId,
   );

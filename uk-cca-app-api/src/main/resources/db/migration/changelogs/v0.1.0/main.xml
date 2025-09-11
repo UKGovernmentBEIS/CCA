@@ -22,25 +22,31 @@
   <include file="notification_template_cca.xml" relativeToChangelogFile="true"/>
 
   <include file="mi_reports.xml" relativeToChangelogFile="true" />
-  <include file="mi_reports_views.xml" relativeToChangelogFile="true"/>
   <include file="au_user_authority.xml" relativeToChangelogFile="true"/>
 
   <include file="request_cca.xml" relativeToChangelogFile="true"/>
-  
+
   <include file="underlying_agreement_ddl.xml" relativeToChangelogFile="true"/>
   <include file="facility_ddl.xml" relativeToChangelogFile="true"/>
 
   <include file="tpr_target_period_ddl.xml" relativeToChangelogFile="true"/>
   <include file="tpr_target_period.xml" relativeToChangelogFile="true"/>
   <include file="tpr_performance_data_ddl.xml" relativeToChangelogFile="true"/>
-  
+
   <include file="tpr_performance_account_template_data_ddl.xml" relativeToChangelogFile="true"/>
 
   <include file="subsistence_fees_ddl.xml" relativeToChangelogFile="true"/>
-  
+
   <include file="configuration_cca.xml" relativeToChangelogFile="true"/>
 
   <include file="tpr_buy_out_surplus_ddl.xml" relativeToChangelogFile="true"/>
   <include file="tpr_buy_out_surplus.xml" relativeToChangelogFile="true"/>
+
+  <include file="file_evidence_ddl.xml" relativeToChangelogFile="true"/>
+
+  <include file="tpr_facility_certification_ddl.xml" relativeToChangelogFile="true"/>
+  
+  <!-- Keep it as the last tag  -->
+  <include file="mi_reports_views.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

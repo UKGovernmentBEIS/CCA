@@ -1,0 +1,44 @@
+<netz-page-heading caption="Buy-out and surplus">New buy-out and surplus batch</netz-page-heading>
+
+<div class="govuk-!-width-two-thirds">
+  <p>
+    You are about to calculate the buy-out and surplus and send buy-out notifications to all eligible target units for
+    <strong>TP6</strong>.
+  </p>
+
+  <h2 class="govuk-heading-m">Target units on hold</h2>
+
+  <p>
+    Target units below will not be included in this batch. In case you want to change their status, you can do so from
+    the respective target unit account page on the "Buy-out and surplus" tab.
+  </p>
+
+  <govuk-warning-text assistiveText="">
+    This list represents a current snapshot. Any immediate changes to the "On Hold" status before you click the "Send
+    buy-out and surplus batch button" will not be automatically reflected in this list, but they will take effect during
+    the batch processing.
+  </govuk-warning-text>
+</div>
+
+@if (excludedAccounts()?.length) {
+  <div class="overflow-auto overflow-auto-table">
+    <govuk-table [columns]="excludedAccountsColumns" [data]="excludedAccounts()">
+      <ng-template let-column="column" let-row="row">
+        @switch (column.field) {
+          @default {
+            <span>{{ row[column.field] }}</span>
+          }
+          @case ('status') {
+            <div class="govuk-!-width-full">
+              <govuk-tag color="yellow">On hold</govuk-tag>
+            </div>
+          }
+        }
+      </ng-template>
+    </govuk-table>
+  </div>
+} @else {
+  <p>There are no target units on hold.</p>
+}
+
+<button govukButton netzPendingButton (click)="onCreateNewBatch()">Send buy-out and surplus batch</button>

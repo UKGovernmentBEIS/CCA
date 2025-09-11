@@ -85,11 +85,11 @@ describe('UserInputComponent', () => {
     standalone: true,
     template: `
       <form id="national-group" [formGroup]="nationalForm">
-        <cca-user-input phoneType="national"></cca-user-input>
+        <cca-user-input phoneType="national" />
       </form>
 
       <form id="full-group-name" [formGroup]="fullForm">
-        <cca-user-input formGroupName="user" phoneType="full"></cca-user-input>
+        <cca-user-input formGroupName="user" phoneType="full" />
       </form>
     `,
     imports: [UserInputComponent, ReactiveFormsModule],

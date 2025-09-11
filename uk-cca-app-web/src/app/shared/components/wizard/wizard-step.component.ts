@@ -11,9 +11,8 @@ import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
 
 @Component({
   selector: 'cca-wizard-step',
-  standalone: true,
   templateUrl: './wizard-step.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     AsyncPipe,
@@ -23,6 +22,7 @@ import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
     ButtonDirective,
     ErrorSummaryComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WizardStepComponent {
   @Input() showBackLink = false;
@@ -36,9 +36,9 @@ export class WizardStepComponent {
 
   @Output() readonly formSubmit = new EventEmitter<UntypedFormGroup>();
 
-  errorSummaryEl = viewChild(ErrorSummaryComponent);
+  protected readonly errorSummaryEl = viewChild(ErrorSummaryComponent);
 
-  isSummaryDisplayedSubject = new BehaviorSubject(false);
+  protected readonly isSummaryDisplayedSubject = new BehaviorSubject(false);
 
   onSubmit(): void {
     this.formGroup.statusChanges
@@ -56,7 +56,7 @@ export class WizardStepComponent {
           case 'INVALID':
             this.formGroup.markAllAsTouched();
             this.isSummaryDisplayedSubject.next(true);
-            this.errorSummaryEl()?.container?.nativeElement.focus();
+            this.errorSummaryEl()?.container()?.nativeElement.focus();
             break;
         }
       });

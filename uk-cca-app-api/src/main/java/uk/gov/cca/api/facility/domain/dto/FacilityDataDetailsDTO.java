@@ -15,6 +15,8 @@ import java.time.LocalDate;
 @Builder
 public class FacilityDataDetailsDTO {
 
+    private Long id;
+
     private String facilityId;
 
     private FacilityDataStatus status;

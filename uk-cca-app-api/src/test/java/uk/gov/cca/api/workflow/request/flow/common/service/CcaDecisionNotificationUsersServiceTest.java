@@ -6,14 +6,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
-import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
-import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaOfficialNoticeSendService;
 import uk.gov.netz.api.account.service.CaExternalContactService;
 import uk.gov.netz.api.user.core.service.auth.UserAuthService;
 import uk.gov.netz.api.userinfoapi.UserInfo;
-import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.flow.common.domain.DecisionNotification;
 
 import java.util.ArrayList;

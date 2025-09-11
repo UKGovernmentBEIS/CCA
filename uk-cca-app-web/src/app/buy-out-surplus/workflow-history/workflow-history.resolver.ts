@@ -1,0 +1,23 @@
+import { inject } from '@angular/core';
+import { ResolveFn } from '@angular/router';
+
+import { combineLatest } from 'rxjs';
+
+import { RequestActionInfoDTO, RequestActionsService, RequestDetailsDTO, RequestsService } from 'cca-api';
+
+export type WorkflowHistoryDetailsResponse = {
+  workflowDetails: RequestDetailsDTO;
+  requestActions: RequestActionInfoDTO[];
+};
+
+export const WorkflowHistoryDetailsResolver: ResolveFn<WorkflowHistoryDetailsResponse> = (route) => {
+  const requestsService = inject(RequestsService);
+  const requestActionsService = inject(RequestActionsService);
+
+  const runId = route.paramMap.get('id');
+
+  return combineLatest({
+    workflowDetails: requestsService.getRequestDetailsById(runId),
+    requestActions: requestActionsService.getRequestActionsByRequestId(runId),
+  });
+};

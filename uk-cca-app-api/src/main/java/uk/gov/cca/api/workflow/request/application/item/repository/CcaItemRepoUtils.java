@@ -20,11 +20,11 @@ public class CcaItemRepoUtils {
             QRequestTask requestTask, QRequestResource requestResource) {
 		
 	List<BooleanExpression> orExpressions = new ArrayList<>();
-	scopedUserRequestTaskTypes.forEach((sectorId, types) -> {
+	scopedUserRequestTaskTypes.forEach((sectorId, types) ->
 		orExpressions.add(requestResource.resourceType.eq(CcaResourceType.SECTOR_ASSOCIATION)
 				.and(requestResource.resourceId.eq(sectorId.toString()))
-				.and(requestTask.type.code.in(types)));
-	});
+				.and(requestTask.type.code.in(types)))
+	);
 	
 	return Expressions.booleanTemplate(constructMultipleOrWhereTemplate(orExpressions.size()), orExpressions);
 	}

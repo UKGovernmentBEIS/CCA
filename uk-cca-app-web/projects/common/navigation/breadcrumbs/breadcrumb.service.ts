@@ -6,14 +6,15 @@ export type Link = {
   queryParams?: Map<string, string | number>;
   fragment?: string;
 };
+
 export type BreadcrumbRouteData = Array<Link | (() => Link)>;
 
 @Injectable({
   providedIn: 'root',
 })
 export class BreadcrumbService {
-  links = signal<Link[]>([]);
-  inverse = signal<boolean>(false);
+  readonly links = signal<Link[]>([]);
+  readonly inverse = signal<boolean>(false);
 
   show(l: Link[]): void {
     this.links.set(l);

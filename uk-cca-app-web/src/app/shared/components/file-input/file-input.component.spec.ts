@@ -29,7 +29,7 @@ describe('FileInputComponent', () => {
     standalone: true,
     template: `
       <form [formGroup]="form">
-        <cca-file-input formControlName="file" [downloadUrl]="getDownloadUrl"></cca-file-input>
+        <cca-file-input formControlName="file" [downloadUrl]="getDownloadUrl" />
       </form>
     `,
     imports: [FileUploadListComponent, FileInputComponent, ReactiveFormsModule],
@@ -50,7 +50,7 @@ describe('FileInputComponent', () => {
     }
 
     get delete() {
-      return this.query<HTMLButtonElement>('.cca-multi-file-upload__delete');
+      return this.query<HTMLButtonElement>('button[name="delete"]');
     }
 
     get file() {
@@ -66,9 +66,7 @@ describe('FileInputComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TestComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.debugElement.query(By.directive(FileInputComponent)).componentInstance;
     hostComponent = fixture.componentInstance;
@@ -153,6 +151,7 @@ describe('FileInputComponent', () => {
         ),
       ),
     );
+
     page.file = new File(['test content'], 'New file');
     uploadSubject.next({ type: HttpEventType.UploadProgress, loaded: 10, total: 15 });
     fixture.detectChanges();

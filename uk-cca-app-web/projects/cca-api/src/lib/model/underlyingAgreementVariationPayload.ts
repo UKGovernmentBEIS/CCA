@@ -19,8 +19,8 @@ import { Facility } from './facility';
 export interface UnderlyingAgreementVariationPayload {
   underlyingAgreementVariationDetails: UnderlyingAgreementVariationDetails;
   underlyingAgreementTargetUnitDetails: UnderlyingAgreementTargetUnitDetails;
-  facilities: Facility[];
-  targetPeriod5Details: TargetPeriod5Details;
-  targetPeriod6Details: TargetPeriod6Details;
+  facilities?: Facility[];
+  targetPeriod5Details?: TargetPeriod5Details;
+  targetPeriod6Details?: TargetPeriod6Details;
   authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence;
 }

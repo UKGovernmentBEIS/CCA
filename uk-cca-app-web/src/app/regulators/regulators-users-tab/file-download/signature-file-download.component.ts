@@ -10,7 +10,7 @@ import { FileToken, RegulatorUsersService, UsersService } from 'cca-api';
   selector: 'cca-signature-file-download',
   template: `
     <h1 class="govuk-heading-l">Your download has started</h1>
-    <p class="govuk-body">You should see your downloads in the downloads folder.</p>
+    <p>You should see your downloads in the downloads folder.</p>
     <a class="govuk-link" [href]="url$ | async" download #anchor>Click to restart download if it fails</a>
   `,
   standalone: true,
@@ -27,7 +27,7 @@ export class SignatureFileDownloadComponent implements AfterViewChecked {
   private hasDownloadedOnce = false;
   private userSignaturePath = `${this.usersService.configuration.basePath}/v1.0/user-signatures/`;
 
-  url$ = this.route.paramMap.pipe(
+  readonly url$ = this.route.paramMap.pipe(
     map((params): Observable<FileToken> => {
       return params.has('userId')
         ? this.regulatorSignatureDownloadInfo(params)
@@ -43,7 +43,7 @@ export class SignatureFileDownloadComponent implements AfterViewChecked {
     }),
   );
 
-  ngAfterViewChecked(): void {
+  ngAfterViewChecked() {
     if (this.anchor.nativeElement.href.includes(this.userSignaturePath) && !this.hasDownloadedOnce) {
       this.anchor.nativeElement.click();
       this.hasDownloadedOnce = true;

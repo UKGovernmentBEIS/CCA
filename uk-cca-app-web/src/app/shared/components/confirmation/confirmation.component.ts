@@ -10,17 +10,16 @@ import { PanelComponent } from '@netz/govuk-components';
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <govuk-panel class="pre-wrap" [title]="title">
+        <govuk-panel class="pre-line" [title]="title">
           {{ titleReferenceText }}
           <div style="font-weight: bold;">{{ titleReferenceId }}</div>
         </govuk-panel>
 
         <ng-container
           *ngTemplateOutlet="whatHappensNextTemplate ? whatHappensNextTemplate : defaultWhatHappensNextTemplate"
-        >
-        </ng-container>
+        />
 
-        <ng-template #defaultWhatHappensNextTemplate></ng-template>
+        <ng-template #defaultWhatHappensNextTemplate />
         <a class="govuk-link" [routerLink]="returnToLink"> Return to dashboard </a>
       </div>
     </div>

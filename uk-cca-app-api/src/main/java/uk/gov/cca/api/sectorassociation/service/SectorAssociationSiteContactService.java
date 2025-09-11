@@ -1,9 +1,11 @@
 package uk.gov.cca.api.sectorassociation.service;
 
+import java.util.HashSet;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
@@ -38,12 +40,12 @@ public class SectorAssociationSiteContactService {
 
         Page<SectorAssociationSiteContactInfoDTO>
             contacts = sectorAssociationRepository.findSectorAssociationsSiteContactsByCA(
-            user.getCompetentAuthority(), PageRequest.of(page, pageSize));
+            user.getCompetentAuthority(), PageRequest.of(page, pageSize, Sort.by("acronym")));
 
         boolean isEditable = compAuthAuthorizationResourceService.hasUserScopeToCompAuth(user, Scope.EDIT_USER);
 
         return SectorAssociationSiteContactInfoResponse.builder()
-            .siteContacts(contacts.get().collect(Collectors.toList()))
+            .siteContacts(contacts.get().toList())
             .totalItems(contacts.getTotalElements())
             .editable(isEditable)
             .build();
@@ -82,21 +84,19 @@ public class SectorAssociationSiteContactService {
         List<Long> sectorAssociationsIdsUpdate =
             siteContactsUpdate.stream()
                 .map(SectorAssociationSiteContactDTO::getSectorAssociationId)
-                .collect(Collectors.toList());
+                .toList();
         List<SectorAssociation> sectorAssociations = sectorAssociationRepository.findAllByIdIn(sectorAssociationsIdsUpdate);
 
         siteContactsUpdate
             .forEach(contact -> sectorAssociations.stream()
                 .filter(sa -> sa.getId().equals(contact.getSectorAssociationId()))
                 .findFirst()
-                .ifPresent(ac -> {
-                    ac.setFacilitatorUserId(contact.getUserId());
-                }));
+                .ifPresent(ac -> ac.setFacilitatorUserId(contact.getUserId())));
     }
 
     /** Validates that sectors exists and belongs to CA */
     private void validateSectorAssociationsByCA(Set<Long> sectorAssociationIds, CompetentAuthorityEnum ca) {
-        List<Long> sectors = sectorAssociationRepository.findSectorAssociationsIdsByCompetentAuthority(ca);
+        Set<Long> sectors = new HashSet<>(sectorAssociationRepository.findSectorAssociationsIdsByCompetentAuthority(ca));
         if (!sectors.containsAll(sectorAssociationIds)) {
             throw new BusinessException(CcaErrorCode.SECTOR_ASSOCIATION_NOT_RELATED_TO_CA);
         }
@@ -112,7 +112,7 @@ public class SectorAssociationSiteContactService {
             return;
         }
 
-        List<String> users = regulatorAuthorityResourceService.findUsersByCompetentAuthority(ca);
+        Set<String> users = new HashSet<>(regulatorAuthorityResourceService.findUsersByCompetentAuthority(ca));
         if (!users.containsAll(filteredUserIds)) {
             throw new BusinessException(ErrorCode.AUTHORITY_USER_NOT_RELATED_TO_CA);
         }

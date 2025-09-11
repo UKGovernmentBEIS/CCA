@@ -12,6 +12,7 @@ describe('FacilityComponent', () => {
   let component: FacilityComponent;
   let fixture: ComponentFixture<FacilityComponent>;
   let store: RequestActionStore;
+
   const route: any = { snapshot: { params: { facilityId: 'ADS_2-F00028' }, pathFromRoot: [] } };
 
   beforeEach(async () => {

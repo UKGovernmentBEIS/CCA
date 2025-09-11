@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -55,11 +56,11 @@ public class CcaOfficialNoticeSendService {
                 .orElseThrow(() -> new BusinessException(CcaErrorCode.SECTOR_ASSOCIATION_NO_CONTACT_FOUND));
         ccRecipientsEmails.add(sectorContact.getEmail());
 
-        // Find to List
-        final List<String> toRecipientsEmails = defaultNoticeRecipients.stream()
+        // Find to List, remove duplicates in case responsible and administrative email is the same
+        final Set<String> toRecipientsEmails = defaultNoticeRecipients.stream()
                 .filter(recipient -> !recipient.getRecipientType().equals(NoticeRecipientType.SECTOR_CONTACT))
                 .map(DefaultNoticeRecipient::getEmail)
-                .toList();
+                .collect(Collectors.toSet());
 
         // Get Target Unit business id
         final String businessId = accountReferenceDetailsService.getTargetUnitAccountDetails(request.getAccountId()).getBusinessId();
@@ -84,7 +85,7 @@ public class CcaOfficialNoticeSendService {
                 ).build();
 
         // Send
-        this.notificationEmailService.notifyRecipients(emailData, toRecipientsEmails, ccRecipientsEmails, bccRecipientsEmails);
+        this.notificationEmailService.notifyRecipients(emailData, new ArrayList<>(toRecipientsEmails), ccRecipientsEmails, bccRecipientsEmails);
     }
 
     public void sendOfficialNotice(List<FileInfoDTO> attachments, Request request, Long sectorAssociationId) {

@@ -103,9 +103,9 @@ class PerformanceAccountTemplateDataGenerateCsvReportServiceTest {
 		FileDTO csvFile = fileDTOCaptor.getValue();
 		assertThat(csvFile.getFileName()).isEqualTo("req1_Summary.csv");
 		String csvContent = new String(csvFile.getFileContent(), StandardCharsets.UTF_8);
-		assertThat(csvContent).contains("ac1Bus,acc1FileName,Success");
-		assertThat(csvContent).contains("acc2Bus,acc2FileName,Error,Error for acc 2");
-		assertThat(csvContent).contains(",fileName3,Error,Error with file name 3");
+		assertThat(csvContent).contains("ac1Bus,acc1FileName,Success",
+				"acc2Bus,acc2FileName,Error,Error for acc 2",
+				",fileName3,Error,Error with file name 3");
 		
 		assertThat(fileStatusCaptor.getValue()).isEqualTo(FileStatus.SUBMITTED);
 		assertThat(assigneeCaptor.getValue()).isEqualTo("sectorUserAsignee");

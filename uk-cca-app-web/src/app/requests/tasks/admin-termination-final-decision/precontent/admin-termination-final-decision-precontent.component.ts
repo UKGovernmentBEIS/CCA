@@ -13,11 +13,9 @@ import { ADMIN_TERMINATION_FINAL_DECISION_SUBTASK } from '../admin-termination-f
   selector: 'cca-admin-termination-final-decision-precontent',
   template: `
     @if (isFinalDecisionReasonCompleted && isEditable) {
-      <div class="govuk-body">
-        <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
-          Notify operator of decision
-        </button>
-      </div>
+      <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
+        Notify operator of decision
+      </button>
     }
   `,
   standalone: true,

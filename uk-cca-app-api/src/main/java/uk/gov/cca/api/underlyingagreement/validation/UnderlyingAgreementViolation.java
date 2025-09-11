@@ -40,12 +40,16 @@ public class UnderlyingAgreementViolation extends BusinessViolation {
         INVALID_TARGETS("Invalid targets value"),
 
         INVALID_TARGET_PERIOD("Invalid target period data"),
+        INVALID_TARGET_PERIOD_DECLARED("Invalid target period declared"),
         
         INVALID_FACILITIES("Should include at least one facility"),
         INVALID_FACILITY_ID("Facility ID not in compliance with status"),
         INVALID_UNIQUE_FACILITY_ID("Facility ID should be unique"),
         INVALID_PREVIOUS_FACILITY_ID("Previous facility ID not exists"),
         INVALID_ADJACENT_FACILITY_ID("Adjacent facility ID not exists"),
+        INVALID_FACILITY_TARGETS("Facility target improvements with scheme version are not mutually valid"),
+        INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME("Facility participating scheme versions with current scheme version are not mutually valid"),
+        INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_ON_OWNERSHIP_CHANGE("Facility participating scheme versions with ownership change are not mutually valid"),
 
         INVALID_UNDERLYING_AGREEMENT_ACTIVATION_DETAILS_DATA("Invalid underlying agreement activation details data");
 

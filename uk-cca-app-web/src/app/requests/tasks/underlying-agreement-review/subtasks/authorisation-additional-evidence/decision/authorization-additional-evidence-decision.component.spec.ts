@@ -12,10 +12,12 @@ import { AuthorizationAdditionalEvidenceDecisionComponent } from './authorizatio
 
 describe('TP5 Decision', () => {
   let store: RequestTaskStore;
+  let tree: Element;
+
   const unaTaskService: Partial<jest.Mocked<TaskService>> = {
     saveSubtask: jest.fn().mockReturnValue(of({})),
   };
-  let tree: Element;
+
   beforeEach(async () => {
     const renderResult = await render(AuthorizationAdditionalEvidenceDecisionComponent, {
       providers: [
@@ -31,8 +33,10 @@ describe('TP5 Decision', () => {
         store.setState(mockUNAReviewRequestTaskState);
       },
     });
+
     tree = renderResult.container;
   });
+
   it('should match snapshot', () => {
     expect(tree).toMatchSnapshot();
   });

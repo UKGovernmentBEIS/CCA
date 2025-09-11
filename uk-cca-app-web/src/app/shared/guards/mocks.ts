@@ -19,8 +19,8 @@ export const mockAuthService: Record<keyof AuthService, Mock> = {
   loadUser: jest.fn(),
   loadUserState: jest.fn(),
   loadUserProfile: jest.fn(),
-  loadTerms: jest.fn(),
   loadIsLoggedIn: jest.fn(),
+  loadUserTerms: jest.fn(),
 };
 
 export const mockUsersService: Record<keyof UsersService, Mock> = {

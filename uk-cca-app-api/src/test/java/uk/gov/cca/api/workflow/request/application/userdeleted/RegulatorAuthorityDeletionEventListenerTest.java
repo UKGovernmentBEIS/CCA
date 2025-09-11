@@ -12,7 +12,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class RegulatorAuthorityDeletionEventListenerTest {
+class RegulatorAuthorityDeletionEventListenerTest {
 
     @InjectMocks
     private RegulatorAuthorityDeletionEventListener listener;

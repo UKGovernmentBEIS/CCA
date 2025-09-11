@@ -28,6 +28,7 @@ describe('EditAdministrativeContactComponent', () => {
     get firstNameValue() {
       return this.getInputValue('#firstName');
     }
+
     set firstNameValue(value: string) {
       this.setInputValue('#firstName', value);
     }
@@ -102,6 +103,7 @@ describe('EditAdministrativeContactComponent', () => {
 
   beforeEach(async () => {
     activatedRoute = new ActivatedRouteStub({ targetUnitId: '1' });
+
     await TestBed.configureTestingModule({
       imports: [EditAdministrativeContactComponent],
       providers: [
@@ -111,11 +113,10 @@ describe('EditAdministrativeContactComponent', () => {
         { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     store = TestBed.inject(ActiveTargetUnitStore);
     store.setState({ targetUnitAccountDetails: mockTargetUnitAccountDetails });
+
     fixture = TestBed.createComponent(EditAdministrativeContactComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

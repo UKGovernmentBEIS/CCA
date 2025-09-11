@@ -26,8 +26,8 @@ class SectorAssociationSubsistenceFeesServiceOrchestratorTest {
     @Test
     void getSectorSubsistenceFeesMoas() {
     	final long sectorAssociationId = 1L;
-        final long page = 0;
-        final long pageSize = 30;
+        final int page = 0;
+        final int pageSize = 30;
         PagingRequest pagingRequest = PagingRequest.builder().pageNumber(page).pageSize(pageSize).build();
         SubsistenceFeesMoaSearchCriteria criteria = SubsistenceFeesMoaSearchCriteria.builder()
         		.paging(pagingRequest)

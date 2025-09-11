@@ -1,0 +1,26 @@
+<netz-page-heading size="xl" caption="{{ targetUnitBusinessId }}"
+  >{{ targetPeriod }} surplus gained change history
+</netz-page-heading>
+
+<govuk-accordion data-testid="history">
+  @for (history of surplusHistory(); track history) {
+    <govuk-accordion-item
+      header="Amount changed by &ldquo;{{ history.submitter }}&rdquo;"
+      [caption]="history.submissionDate | govukDate: 'datetime'"
+    >
+      <dl govuk-summary-list>
+        <div govukSummaryListRow>
+          <dt govukSummaryListRowKey>{{ targetPeriod }} surplus gained (tCO2e)</dt>
+          <dd govukSummaryListRowValue>{{ history.surplusGained | number }}</dd>
+        </div>
+
+        @if (history?.comments) {
+          <div govukSummaryListRow>
+            <dt govukSummaryListRowKey>Comments</dt>
+            <dd class="pre-line" govukSummaryListRowValue>{{ history.comments }}</dd>
+          </div>
+        }
+      </dl>
+    </govuk-accordion-item>
+  }
+</govuk-accordion>

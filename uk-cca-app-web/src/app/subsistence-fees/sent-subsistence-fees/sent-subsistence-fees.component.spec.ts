@@ -1,26 +1,35 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
+import { of } from 'rxjs';
+
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { mockSentSubsistenceFeesDetails } from '@shared/components';
 import { screen } from '@testing-library/angular';
 
+import { SubsistenceFeesRunInfoViewService } from 'cca-api';
+
 import { SentSubsistenceFeesComponent } from './sent-subsistence-fees.component';
-import { mockSentSubsistenceFeesDetails } from './testing/mock-data';
 
 describe('SentSubsistenceFeesComponent', () => {
   let component: SentSubsistenceFeesComponent;
   let fixture: ComponentFixture<SentSubsistenceFeesComponent>;
+  let subsistenceFeesRunInfoViewService: Partial<jest.Mocked<SubsistenceFeesRunInfoViewService>>;
 
   beforeEach(async () => {
+    subsistenceFeesRunInfoViewService = {
+      getSubsistenceFeesRunDetailsById: jest.fn().mockReturnValue(of(mockSentSubsistenceFeesDetails)),
+    };
+
     await TestBed.configureTestingModule({
       imports: [SentSubsistenceFeesComponent],
       providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: new ActivatedRouteStub(null, null, {
-            subFeesDetails: mockSentSubsistenceFeesDetails,
-          }),
-        },
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ActivatedRoute, useValue: new ActivatedRouteStub({ runId: 1 }) },
+        { provide: SubsistenceFeesRunInfoViewService, useValue: subsistenceFeesRunInfoViewService },
       ],
     }).compileComponents();
 

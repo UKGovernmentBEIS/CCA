@@ -11,7 +11,7 @@ import { PageHeadingComponent } from '../page-heading';
   template: `
     <div class="govuk-grid-row">
       <netz-page-heading size="xl">{{ heading() }}</netz-page-heading>
-      <ng-content></ng-content>
+      <ng-content />
       <div class="govuk-button-group">
         <button type="button" netzPendingButton (click)="cancel()" govukWarnButton>Yes, cancel this task</button>
       </div>

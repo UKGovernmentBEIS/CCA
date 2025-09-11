@@ -7,6 +7,7 @@ import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementEntity;
 import uk.gov.cca.api.underlyingagreement.repository.UnderlyingAgreementRepository;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.netz.api.common.exception.BusinessException;
 
 import java.time.LocalDateTime;
@@ -28,9 +29,9 @@ public class UnderlyingAgreementService {
     private final UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
 
     @Transactional
-    public UnderlyingAgreementEntity submitUnderlyingAgreement(UnderlyingAgreementContainer container, Long accountId) {
+    public UnderlyingAgreementEntity submitUnderlyingAgreement(UnderlyingAgreementContainer container, Long accountId, UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
         // Validate
-        underlyingAgreementValidatorService.validate(container);
+        underlyingAgreementValidatorService.validate(container, underlyingAgreementValidationContext);
 
         activateFacilities(container);
 
@@ -42,9 +43,9 @@ public class UnderlyingAgreementService {
     }
 
     @Transactional
-    public void updateUnderlyingAgreement(UnderlyingAgreementContainer newContainer, Long accountId) {
+    public void updateUnderlyingAgreement(UnderlyingAgreementContainer newContainer, Long accountId, UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
         // Validate
-        underlyingAgreementValidatorService.validate(newContainer);
+        underlyingAgreementValidatorService.validate(newContainer, underlyingAgreementValidationContext);
 
         activateFacilities(newContainer);
 
@@ -53,7 +54,6 @@ public class UnderlyingAgreementService {
 
         // Update underlying agreement
         entity.setUnderlyingAgreementContainer(newContainer);
-        entity.setMeasurementType(newContainer.getSectorMeasurementType());
         entity.setActivationDate(LocalDateTime.now());
 
         doIncrementConsolidationNumber(entity);

@@ -45,6 +45,8 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 @ExtendWith(MockitoExtension.class)
 @EnableWebMvc
 class TargetUnitAccountUpdateControllerTest {
@@ -67,7 +69,7 @@ class TargetUnitAccountUpdateControllerTest {
     private AppUserAuthorizationService appUserAuthorizationService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
 
@@ -95,7 +97,7 @@ class TargetUnitAccountUpdateControllerTest {
         final AppUser user = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
         final long accountId = 1L;
         final UpdateTargetUnitAccountSicCodeDTO sicCodeDTO = UpdateTargetUnitAccountSicCodeDTO.builder()
-                .sicCode("111")
+                .sicCodes(List.of("111"))
                 .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
@@ -107,7 +109,7 @@ class TargetUnitAccountUpdateControllerTest {
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
         verify(targetUnitAccountUpdateService, times(1))
-                .updateTargetUnitAccountSicCode(accountId, sicCodeDTO);
+                .updateTargetUnitAccountSicCodes(accountId, sicCodeDTO);
     }
 
     @Test
@@ -115,7 +117,7 @@ class TargetUnitAccountUpdateControllerTest {
         final AppUser user = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
         final long accountId = 1L;
         final UpdateTargetUnitAccountSicCodeDTO sicCodeDTO = UpdateTargetUnitAccountSicCodeDTO.builder()
-                .sicCode("111")
+        		.sicCodes(List.of("111"))
                 .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);

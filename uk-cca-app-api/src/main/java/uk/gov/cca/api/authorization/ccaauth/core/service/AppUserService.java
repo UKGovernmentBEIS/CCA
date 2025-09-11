@@ -13,7 +13,7 @@ public class AppUserService {
 
     public Set<Long> getUserSectorAssociations(AppUser user) {
         return user.getAuthorities().stream()
-            .map(authority -> (AppCcaAuthority) authority)
+            .map(AppCcaAuthority.class::cast)
             .map(AppCcaAuthority::getSectorAssociationId)
             .filter(Objects::nonNull)
             .collect(Collectors.toSet());

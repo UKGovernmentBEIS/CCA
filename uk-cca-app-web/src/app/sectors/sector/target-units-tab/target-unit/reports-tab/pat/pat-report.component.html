@@ -1,0 +1,23 @@
+<h3 class="govuk-heading-s">Performance report</h3>
+<div [formGroup]="form" data-testid="pat-report-component">
+  <div
+    widthClass="govuk-!-width-one-quarter"
+    label="Select the period"
+    [options]="targetPeriodsOptions"
+    formControlName="targetPeriodType"
+    govuk-select
+  ></div>
+</div>
+
+@if (reportInfoData(); as reportInfo) {
+  <dl govuk-summary-list data-testid="pat-performance-report">
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Current reporting period</dt>
+      <dd govukSummaryListRowValue>{{ reportInfo?.targetPeriodName }}</dd>
+    </div>
+  </dl>
+
+  <a class="govuk-link" [routerLink]="[targetPeriodValue(), 'PAT', 'pat-submitted-report']">View details</a>
+} @else {
+  <p>There are no reports for the selected period.</p>
+}

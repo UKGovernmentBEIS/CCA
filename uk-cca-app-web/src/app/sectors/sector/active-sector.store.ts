@@ -14,9 +14,11 @@ export class ActiveSectorStore extends SignalStore<SectorAssociationResponseDTO>
   constructor() {
     super(initialState);
   }
+
   updateDetails(dto: SectorAssociationDetailsUpdateDTO): void {
     this.updateState({ sectorAssociationDetails: { ...this.state.sectorAssociationDetails, ...dto } });
   }
+
   updateContactDetails(dto: SectorAssociationContactDTO): void {
     this.updateState({ sectorAssociationContact: { ...this.state.sectorAssociationContact, ...dto } });
   }

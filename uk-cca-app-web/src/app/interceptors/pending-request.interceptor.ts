@@ -10,9 +10,6 @@ export function PendingRequestInterceptor(
   next: HttpHandlerFn,
 ): Observable<HttpEvent<unknown>> {
   const pendingRequest = inject(PendingRequestService);
-  if (request.method !== 'GET') {
-    return next(request).pipe(pendingRequest.trackRequest());
-  } else {
-    return next(request);
-  }
+  if (request.method !== 'GET') return next(request).pipe(pendingRequest.trackRequest());
+  return next(request);
 }

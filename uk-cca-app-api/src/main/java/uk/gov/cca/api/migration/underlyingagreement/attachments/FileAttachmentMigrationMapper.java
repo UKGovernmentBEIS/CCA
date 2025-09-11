@@ -13,7 +13,6 @@ import org.mapstruct.MappingTarget;
 import uk.gov.cca.api.migration.MigrationConstants;
 import uk.gov.cca.api.migration.underlyingagreement.placeholderattachments.PlaceholderAttachment;
 import uk.gov.netz.api.common.config.MapperConfig;
-import uk.gov.netz.api.common.domain.ResourceFile;
 import uk.gov.netz.api.files.attachments.domain.FileAttachment;
 import uk.gov.netz.api.files.common.FileType;
 import uk.gov.netz.api.files.common.domain.FileStatus;

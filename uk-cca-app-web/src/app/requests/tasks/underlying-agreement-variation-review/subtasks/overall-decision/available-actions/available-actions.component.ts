@@ -2,13 +2,19 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
-import { TaskService } from '@netz/common/forms';
-import { RequestTaskStore } from '@netz/common/store';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective, WarningTextComponent } from '@netz/govuk-components';
-import { OverallDecisionWizardStep, underlyingAgreementReviewQuery } from '@requests/common';
+import {
+  OVERALL_DECISION_SUBTASK,
+  OverallDecisionWizardStep,
+  TaskItemStatus,
+  TasksApiService,
+  underlyingAgreementReviewQuery,
+} from '@requests/common';
+import { produce } from 'immer';
 
 import { underlyingAgreementVariationReviewTaskQuery } from '../../../+state/una-variation-review.selectors';
-import { UnderlyingAgreementVariationReviewTaskService } from '../../../services/underlying-agreement-variation-review-task.service';
+import { createSaveDeterminationActionDTO } from '../../../transform';
 
 @Component({
   selector: 'cca-underlying-agreement-available-actions',
@@ -21,7 +27,7 @@ export class AvailableActionsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly taskService = inject(TaskService);
+  private readonly tasksApiService = inject(TasksApiService);
 
   protected readonly canReject = this.requestTaskStore.select(
     underlyingAgreementVariationReviewTaskQuery.selectCanReject,
@@ -35,18 +41,35 @@ export class AvailableActionsComponent {
     underlyingAgreementVariationReviewTaskQuery.selectRejectionWarning,
   )();
 
-  protected readonly determination = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)();
-
   submit(type: 'ACCEPTED' | 'REJECTED') {
-    (this.taskService as UnderlyingAgreementVariationReviewTaskService)
-      .saveReviewDetermination({ type })
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+
+    const reviewSectionsCompleted = produce(
+      this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewSectionsCompleted)(),
+      (draft) => {
+        draft[OVERALL_DECISION_SUBTASK] = TaskItemStatus.UNDECIDED;
+      },
+    );
+
+    const updatedDetermination = produce(
+      this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)(),
+      (draft) => {
+        draft.type = type;
+        draft.reason = null;
+      },
+    );
+
+    const dto = createSaveDeterminationActionDTO(requestTaskId, updatedDetermination, reviewSectionsCompleted);
+
+    this.tasksApiService
+      .saveRequestTaskAction(dto)
       .subscribe(() =>
         this.router.navigate(
           [
             '../',
             type === 'ACCEPTED' ? OverallDecisionWizardStep.ADDITIONAL_INFO : OverallDecisionWizardStep.EXPLANATION,
           ],
-          { relativeTo: this.activatedRoute, queryParamsHandling: 'preserve' },
+          { relativeTo: this.activatedRoute },
         ),
       );
   }

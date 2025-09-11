@@ -25,7 +25,7 @@ export const UNDERLYING_AGREEMENT_SUBMITTED_ROUTES: Routes = [
       {
         path: ':facilityId',
         title: 'Facility',
-        data: { backlink: '../../../', breadcrumb: false },
+        data: { backlink: '../../manage-facilities', breadcrumb: false },
         loadComponent: () => import('@requests/common').then((c) => c.FacilitySubmittedComponent),
       },
     ],

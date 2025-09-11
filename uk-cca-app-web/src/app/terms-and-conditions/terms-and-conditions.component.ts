@@ -20,9 +20,8 @@ import { TermsAndConditionsService } from 'cca-api';
 
 @Component({
   selector: 'cca-terms-and-conditions',
-  standalone: true,
   templateUrl: './terms-and-conditions.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     PageHeadingComponent,
     ReactiveFormsModule,
@@ -33,6 +32,7 @@ import { TermsAndConditionsService } from 'cca-api';
     AccordionComponent,
     AccordionItemComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TermsAndConditionsComponent {
   private readonly router = inject(Router);
@@ -41,13 +41,13 @@ export class TermsAndConditionsComponent {
   private readonly fb = inject(FormBuilder);
   private readonly latestTermsStore = inject(LatestTermsStore);
 
-  terms = this.latestTermsStore.stateAsSignal;
+  protected readonly terms = this.latestTermsStore.stateAsSignal;
 
-  form: FormGroup = this.fb.group({
+  protected readonly form: FormGroup = this.fb.group({
     terms: this.fb.control(null, GovukValidators.required('You should accept terms and conditions to proceed')),
   });
 
-  submitTerms(): void {
+  submitTerms() {
     if (this.form.valid) {
       this.termsAndConditionsService
         .editUserTerms({ version: this.terms().version })

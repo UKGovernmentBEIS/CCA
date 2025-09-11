@@ -16,7 +16,7 @@ export class AsyncValidationFieldDirective implements OnInit {
     private readonly destroy$: DestroyRef,
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.textInputComponent.control.statusChanges
       .pipe(
         takeUntilDestroyed(this.destroy$),

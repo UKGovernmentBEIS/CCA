@@ -14,7 +14,18 @@ import { toAdminTerminationReasonSummaryData } from '../../../admin-termination-
 
 @Component({
   selector: 'cca-reason-for-admin-termination-check-your-answers',
-  templateUrl: './reason-for-admin-termination-check-your-answers.component.html',
+  template: `
+    <div>
+      <netz-page-heading caption="Admin termination">Check your answers</netz-page-heading>
+      <cca-summary [data]="summaryData" />
+      <button netzPendingButton govukButton type="button" (click)="onSaveReasonForAdminTermination()">
+        Confirm and complete
+      </button>
+    </div>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [SummaryComponent, PageHeadingComponent, ButtonDirective, ReturnToTaskOrActionPageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +38,7 @@ export default class ReasonForAdminTerminationSummaryComponent {
 
   private readonly taskId = this.activatedRoute.snapshot.paramMap.get('taskId');
 
-  protected readonly downloadUrl = generateDownloadUrl(this.taskId);
+  private readonly downloadUrl = generateDownloadUrl(this.taskId);
 
   protected readonly summaryData = toAdminTerminationReasonSummaryData(
     this.requestTaskStore.select(AdminTerminationQuery.selectAdminTerminationReasonDetails)(),

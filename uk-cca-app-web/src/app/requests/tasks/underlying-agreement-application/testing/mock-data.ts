@@ -42,21 +42,21 @@ const facilities: Facility[] = [
       erpAuthorisationExists: true,
       authorisationNumber: 'authorisation',
       regulatorName: 'ENVIRONMENT_AGENCY',
-      permitFile: 'permitFile',
+      permitFile: '4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d',
     },
     facilityExtent: {
-      manufacturingProcessFile: 'manufacturingProcessFile',
-      processFlowFile: 'processFlowFile',
-      annotatedSitePlansFile: 'annotatedSitePlansFile',
-      eligibleProcessFile: 'eligibleProcessFile',
+      manufacturingProcessFile: '5b6c7d8e-9f0a-1b2c-3d4e-5f6a7b8c9d0e',
+      processFlowFile: '6c7d8e9f-0a1b-2c3d-4e5f-6a7b8c9d0e1f',
+      annotatedSitePlansFile: '7d8e9f0a-1b2c-3d4e-5f6a-7b8c9d0e1f2a',
+      eligibleProcessFile: '8e9f0a1b-2c3d-4e5f-6a7b-8c9d0e1f2a3b',
       areActivitiesClaimed: true,
-      activitiesDescriptionFile: 'activitiesDescriptionFile',
+      activitiesDescriptionFile: '9f0a1b2c-3d4e-5f6a-7b8c-9d0e1f2a3b4c',
     },
     apply70Rule: {
       energyConsumed: 50,
       energyConsumedProvision: 40,
       energyConsumedEligible: 70,
-      evidenceFile: 'evidenceFile',
+      evidenceFile: 'a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d',
     },
   },
 ];
@@ -64,7 +64,7 @@ const facilities: Facility[] = [
 export const mockTargetUnitDetails: TargetUnitAccountDetails = {
   operatorName: 'test',
   operatorType: 'LIMITED_COMPANY',
-  companyRegistrationNumber: 'test',
+  companyRegistrationNumber: 'test1234',
   address: {
     line1: 'accountrefdata operator address line 1',
     line2: 'accountrefdata operator address line 2',
@@ -135,7 +135,7 @@ export const mockUnderlyingAgreement: UnderlyingAgreementPayload = {
     },
     operatorType: 'LIMITED_COMPANY',
     isCompanyRegistrationNumber: true,
-    companyRegistrationNumber: '1111',
+    companyRegistrationNumber: '11112222',
   },
 
   facilities,
@@ -223,7 +223,7 @@ export const mockUnderlyingAgreementABSOLUTE: UnderlyingAgreementPayload = {
     },
     operatorType: 'LIMITED_COMPANY',
     isCompanyRegistrationNumber: true,
-    companyRegistrationNumber: '1111',
+    companyRegistrationNumber: '11112222',
   },
 
   facilities,
@@ -311,7 +311,7 @@ export const mockUnderlyingAgreementABSOLUTENoMeasurement: UnderlyingAgreementPa
     },
     operatorType: 'LIMITED_COMPANY',
     isCompanyRegistrationNumber: true,
-    companyRegistrationNumber: '1111',
+    companyRegistrationNumber: '11112222',
   },
   facilities,
   targetPeriod5Details: {
@@ -395,7 +395,7 @@ export const mockUnderlyingAgreementNOVEM: UnderlyingAgreementPayload = {
     },
     operatorType: 'LIMITED_COMPANY',
     isCompanyRegistrationNumber: true,
-    companyRegistrationNumber: '1111',
+    companyRegistrationNumber: '11112222',
   },
 
   facilities,
@@ -462,7 +462,9 @@ export const mockUnaRequestTaskPayload: UNAApplicationRequestTaskPayload = {
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
   underlyingAgreement: mockUnderlyingAgreement,
@@ -470,12 +472,17 @@ export const mockUnaRequestTaskPayload: UNAApplicationRequestTaskPayload = {
     underlyingAgreementTargetUnitDetails: 'IN_PROGRESS',
   },
   underlyingAgreementAttachments: {
-    manufacturingProcessFile: 'manufacturingProcessFile.xlsx',
-    processFlowFile: 'processFlowFile.xlsx',
-    annotatedSitePlansFile: 'annotatedSitePlansFile.xlsx',
-    eligibleProcessFile: 'eligibleProcessFile.xlsx',
-    activitiesDescriptionFile: 'activitiesDescriptionFile.xlsx',
-    evidenceFile: 'evidenceFile.xlsx',
+    '1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb': 'target_calculator.xlsx',
+    '1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb': 'conversion_evidence.pdf',
+    'f8dff40f-3fb7-4368-8723-244661fb686f': 'greenfield_evidence.pdf',
+    '2f611a22-bd5f-4fd4-b00f-c20bfb2706c9': 'authorisation_document.pdf',
+    '4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d': 'permitFile.pdf',
+    '5b6c7d8e-9f0a-1b2c-3d4e-5f6a7b8c9d0e': 'manufacturingProcessFile.xlsx',
+    '6c7d8e9f-0a1b-2c3d-4e5f-6a7b8c9d0e1f': 'processFlowFile.xlsx',
+    '7d8e9f0a-1b2c-3d4e-5f6a-7b8c9d0e1f2a': 'annotatedSitePlansFile.xlsx',
+    '8e9f0a1b-2c3d-4e5f-6a7b-8c9d0e1f2a3b': 'eligibleProcessFile.xlsx',
+    '9f0a1b2c-3d4e-5f6a-7b8c-9d0e1f2a3b4c': 'activitiesDescriptionFile.xlsx',
+    'a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d': 'evidenceFile.xlsx',
   },
 };
 
@@ -485,7 +492,9 @@ export const mockUnaRequestTaskPayloadNOVEM: UNAApplicationRequestTaskPayload = 
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
   underlyingAgreement: mockUnderlyingAgreementNOVEM,
@@ -493,12 +502,17 @@ export const mockUnaRequestTaskPayloadNOVEM: UNAApplicationRequestTaskPayload = 
     underlyingAgreementTargetUnitDetails: 'IN_PROGRESS',
   },
   underlyingAgreementAttachments: {
-    manufacturingProcessFile: 'manufacturingProcessFile.xlsx',
-    processFlowFile: 'processFlowFile.xlsx',
-    annotatedSitePlansFile: 'annotatedSitePlansFile.xlsx',
-    eligibleProcessFile: 'eligibleProcessFile.xlsx',
-    activitiesDescriptionFile: 'activitiesDescriptionFile.xlsx',
-    evidenceFile: 'evidenceFile.xlsx',
+    '1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb': 'target_calculator.xlsx',
+    '1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb': 'conversion_evidence.pdf',
+    'f8dff40f-3fb7-4368-8723-244661fb686f': 'greenfield_evidence.pdf',
+    '2f611a22-bd5f-4fd4-b00f-c20bfb2706c9': 'authorisation_document.pdf',
+    '4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d': 'permitFile.pdf',
+    '5b6c7d8e-9f0a-1b2c-3d4e-5f6a7b8c9d0e': 'manufacturingProcessFile.xlsx',
+    '6c7d8e9f-0a1b-2c3d-4e5f-6a7b8c9d0e1f': 'processFlowFile.xlsx',
+    '7d8e9f0a-1b2c-3d4e-5f6a-7b8c9d0e1f2a': 'annotatedSitePlansFile.xlsx',
+    '8e9f0a1b-2c3d-4e5f-6a7b-8c9d0e1f2a3b': 'eligibleProcessFile.xlsx',
+    '9f0a1b2c-3d4e-5f6a-7b8c-9d0e1f2a3b4c': 'activitiesDescriptionFile.xlsx',
+    'a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d': 'evidenceFile.xlsx',
   },
 };
 export const mockUnaRequestTaskPayloadABSOLUTE: UNAApplicationRequestTaskPayload = {
@@ -507,8 +521,9 @@ export const mockUnaRequestTaskPayloadABSOLUTE: UNAApplicationRequestTaskPayload
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
-      throughputUnit: 'tonne',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'tonne' },
+      },
     },
   },
   underlyingAgreement: mockUnderlyingAgreementABSOLUTE,
@@ -516,12 +531,17 @@ export const mockUnaRequestTaskPayloadABSOLUTE: UNAApplicationRequestTaskPayload
     underlyingAgreementTargetUnitDetails: 'IN_PROGRESS',
   },
   underlyingAgreementAttachments: {
-    manufacturingProcessFile: 'manufacturingProcessFile.xlsx',
-    processFlowFile: 'processFlowFile.xlsx',
-    annotatedSitePlansFile: 'annotatedSitePlansFile.xlsx',
-    eligibleProcessFile: 'eligibleProcessFile.xlsx',
-    activitiesDescriptionFile: 'activitiesDescriptionFile.xlsx',
-    evidenceFile: 'evidenceFile.xlsx',
+    '1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb': 'target_calculator.xlsx',
+    '1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb': 'conversion_evidence.pdf',
+    'f8dff40f-3fb7-4368-8723-244661fb686f': 'greenfield_evidence.pdf',
+    '2f611a22-bd5f-4fd4-b00f-c20bfb2706c9': 'authorisation_document.pdf',
+    '4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d': 'permitFile.pdf',
+    '5b6c7d8e-9f0a-1b2c-3d4e-5f6a7b8c9d0e': 'manufacturingProcessFile.xlsx',
+    '6c7d8e9f-0a1b-2c3d-4e5f-6a7b8c9d0e1f': 'processFlowFile.xlsx',
+    '7d8e9f0a-1b2c-3d4e-5f6a-7b8c9d0e1f2a': 'annotatedSitePlansFile.xlsx',
+    '8e9f0a1b-2c3d-4e5f-6a7b-8c9d0e1f2a3b': 'eligibleProcessFile.xlsx',
+    '9f0a1b2c-3d4e-5f6a-7b8c-9d0e1f2a3b4c': 'activitiesDescriptionFile.xlsx',
+    'a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d': 'evidenceFile.xlsx',
   },
 };
 export const mockUnaRequestTaskPayloadABSOLUTENoMeasurement: UNAApplicationRequestTaskPayload = {
@@ -530,7 +550,9 @@ export const mockUnaRequestTaskPayloadABSOLUTENoMeasurement: UNAApplicationReque
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
   underlyingAgreement: mockUnderlyingAgreementABSOLUTE,
@@ -538,12 +560,17 @@ export const mockUnaRequestTaskPayloadABSOLUTENoMeasurement: UNAApplicationReque
     underlyingAgreementTargetUnitDetails: 'IN_PROGRESS',
   },
   underlyingAgreementAttachments: {
-    manufacturingProcessFile: 'manufacturingProcessFile.xlsx',
-    processFlowFile: 'processFlowFile.xlsx',
-    annotatedSitePlansFile: 'annotatedSitePlansFile.xlsx',
-    eligibleProcessFile: 'eligibleProcessFile.xlsx',
-    activitiesDescriptionFile: 'activitiesDescriptionFile.xlsx',
-    evidenceFile: 'evidenceFile.xlsx',
+    '1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb': 'target_calculator.xlsx',
+    '1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb': 'conversion_evidence.pdf',
+    'f8dff40f-3fb7-4368-8723-244661fb686f': 'greenfield_evidence.pdf',
+    '2f611a22-bd5f-4fd4-b00f-c20bfb2706c9': 'authorisation_document.pdf',
+    '4a5b6c7d-8e9f-0a1b-2c3d-4e5f6a7b8c9d': 'permitFile.pdf',
+    '5b6c7d8e-9f0a-1b2c-3d4e-5f6a7b8c9d0e': 'manufacturingProcessFile.xlsx',
+    '6c7d8e9f-0a1b-2c3d-4e5f-6a7b8c9d0e1f': 'processFlowFile.xlsx',
+    '7d8e9f0a-1b2c-3d4e-5f6a-7b8c9d0e1f2a': 'annotatedSitePlansFile.xlsx',
+    '8e9f0a1b-2c3d-4e5f-6a7b-8c9d0e1f2a3b': 'eligibleProcessFile.xlsx',
+    '9f0a1b2c-3d4e-5f6a-7b8c-9d0e1f2a3b4c': 'activitiesDescriptionFile.xlsx',
+    'a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d': 'evidenceFile.xlsx',
   },
 };
 export const mockRequestTaskItemDTO: RequestTaskItemDTO = {

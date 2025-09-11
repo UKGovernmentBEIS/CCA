@@ -5,7 +5,7 @@
   heading="Provide termination reason details"
   data-testid="termination-details-reason-form"
 >
-  <div class="govuk-!-width-two-thirds govuk-body">
+  <div class="govuk-!-width-two-thirds">
     <div
       formControlName="reason"
       govuk-radio
@@ -14,7 +14,7 @@
       legendSize="medium"
     >
       @for (option of reasonForTerminationOptions; track option.value) {
-        <govuk-radio-option [label]="option.text" [hint]="option.hint" [value]="option.value"></govuk-radio-option>
+        <govuk-radio-option [label]="option.text" [hint]="option.hint" [value]="option.value" />
       }
     </div>
 
@@ -31,9 +31,9 @@
       label="Upload relevant files (optional)"
       hint="Upload relevant documents to support your explanation."
       formControlName="relevantFiles"
-    ></cca-multiple-file-input>
+    />
   </div>
 </cca-wizard-step>
 
 <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>
+<netz-return-to-task-or-action-page />

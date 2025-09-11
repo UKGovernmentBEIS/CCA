@@ -41,5 +41,18 @@
             where key = 'ui.features.subsistenceFeesHideMenu';
         </rollback>
     </changeSet>
+
+    <changeSet id="0_1_0_hide_una_notify_operator_btn" author="loukerip">
+        <sql>
+            update configuration
+            set value = 'true'
+            where key = 'ui.features.unaHideNotifyOperator';
+        </sql>
+        <rollback>
+            update configuration
+            set value = 'false'
+            where key = 'ui.features.unaHideNotifyOperator';
+        </rollback>
+    </changeSet>
         
 </databaseChangeLog>

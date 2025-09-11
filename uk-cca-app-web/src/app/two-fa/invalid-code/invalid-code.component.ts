@@ -8,12 +8,12 @@ import { PageHeadingComponent } from '@netz/common/components';
     <netz-page-heading>Invalid code</netz-page-heading>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <p class="govuk-body">Invalid code. Please try again.</p>
+        <p>Invalid code. Please try again.</p>
       </div>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [PageHeadingComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvalidCodeComponent {}

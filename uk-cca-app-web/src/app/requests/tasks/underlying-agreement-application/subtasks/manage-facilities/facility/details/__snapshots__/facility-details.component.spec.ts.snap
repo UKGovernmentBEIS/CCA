@@ -1,0 +1,444 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FacilityDetailsComponent should render the form with the correct initial values 1`] = `
+<cca-facility-details
+  activatedRoute={[Function Object]}
+  facilityId={[Function String]}
+  router={[Function _Router]}
+  store={[Function _RequestTaskStore]}
+  tasksApiService={[Function Object]}
+>
+  <cca-facility-details-form>
+    <cca-wizard-step
+      class="ng-untouched ng-pristine ng-invalid"
+      heading="Facility details"
+    >
+      <form
+        class="ng-untouched ng-pristine ng-invalid"
+        novalidate=""
+      >
+        <netz-page-heading>
+          <h1
+            class="govuk-heading-l"
+          >
+            Facility details
+          </h1>
+        </netz-page-heading>
+        <div
+          class="govuk-!-width-two-thirds"
+        >
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine"
+            formcontrolname="name"
+            govuk-text-input=""
+            label="Site name"
+          >
+            <label
+              class="govuk-label"
+              for="name"
+              id="l.name"
+            >
+               Site name 
+            </label>
+            <input
+              autocomplete="on"
+              class="govuk-input govuk-!-width-full"
+              disabled=""
+              id="name"
+              name="name"
+              type="text"
+            />
+          </div>
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+            formcontrolname="isCoveredByUkets"
+            govuk-radio=""
+            hint="If some or all of the activities carried out in this facility are regulated activities under the UK ETS scheme, you must enter the UK ETS permit identifier"
+            legend="Are the activities carried out by this facility included in the UKETS?"
+          >
+            <div
+              class="govuk-form-group"
+            >
+              <fieldset
+                aria-describedby="isCoveredByUkets-hint"
+                class="govuk-fieldset"
+                govukfieldset=""
+                id="isCoveredByUkets"
+              >
+                <legend
+                  class="govuk-fieldset__legend"
+                  govuklegend=""
+                  id="l.isCoveredByUkets"
+                >
+                   Are the activities carried out by this facility included in the UKETS? 
+                </legend>
+                <div
+                  class="govuk-hint"
+                  govukfieldsethint=""
+                  id="isCoveredByUkets-hint"
+                >
+                  If some or all of the activities carried out in this facility are regulated activities under the UK ETS scheme, you must enter the UK ETS permit identifier
+                </div>
+                <div
+                  class="govuk-radios"
+                >
+                  <div
+                    class="govuk-radios__item"
+                  >
+                    <input
+                      aria-controls="isCoveredByUkets-option0-conditional"
+                      class="govuk-radios__input"
+                      id="isCoveredByUkets-option0"
+                      name="isCoveredByUkets"
+                      type="radio"
+                      value="true"
+                    />
+                    <label
+                      class="govuk-label govuk-radios__label"
+                      for="isCoveredByUkets-option0"
+                    >
+                       Yes 
+                    </label>
+                  </div>
+                  <div
+                    class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                    id="isCoveredByUkets-option0-conditional"
+                  >
+                    <div
+                      class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine"
+                      formcontrolname="uketsId"
+                      govuk-text-input=""
+                      label="UK ETS installation/permit Identifier"
+                      widthclass="govuk-!-width-one-third"
+                    >
+                      <label
+                        class="govuk-label"
+                        for="uketsId"
+                        id="l.uketsId"
+                      >
+                         UK ETS installation/permit Identifier 
+                      </label>
+                      <input
+                        autocomplete="on"
+                        class="govuk-input govuk-!-width-one-third"
+                        disabled=""
+                        id="uketsId"
+                        name="uketsId"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="govuk-radios__item"
+                  >
+                    <input
+                      class="govuk-radios__input"
+                      id="isCoveredByUkets-option1"
+                      name="isCoveredByUkets"
+                      type="radio"
+                      value="false"
+                    />
+                    <label
+                      class="govuk-label govuk-radios__label"
+                      for="isCoveredByUkets-option1"
+                    >
+                       No 
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine"
+            formcontrolname="applicationReason"
+            govuk-radio=""
+            legend="Application reason"
+          >
+            <div
+              class="govuk-form-group"
+            >
+              <fieldset
+                class="govuk-fieldset"
+                govukfieldset=""
+                id="applicationReason"
+              >
+                <legend
+                  class="govuk-fieldset__legend"
+                  govuklegend=""
+                  id="l.applicationReason"
+                >
+                   Application reason 
+                </legend>
+                <div
+                  class="govuk-radios"
+                >
+                  <div
+                    class="govuk-radios__item"
+                  >
+                    <input
+                      class="govuk-radios__input"
+                      disabled=""
+                      id="applicationReason-option0"
+                      name="applicationReason"
+                      type="radio"
+                      value="NEW_AGREEMENT"
+                    />
+                    <label
+                      class="govuk-label govuk-radios__label"
+                      for="applicationReason-option0"
+                    >
+                       New entrant 
+                    </label>
+                  </div>
+                  <div
+                    class="govuk-radios__item"
+                  >
+                    <input
+                      class="govuk-radios__input"
+                      disabled=""
+                      id="applicationReason-option1"
+                      name="applicationReason"
+                      type="radio"
+                      value="CHANGE_OF_OWNERSHIP"
+                    />
+                    <label
+                      class="govuk-label govuk-radios__label"
+                      for="applicationReason-option1"
+                    >
+                       Change of ownership 
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            class="govuk-!-margin-bottom-9"
+          >
+            <p
+              class="govuk-!-margin-bottom-0"
+            >
+              Scheme participation
+            </p>
+            <p
+              class="govuk-hint govuk-!-margin-top-1"
+            >
+               This indicates whether the facility participates in CCA2 (2013-2024), CCA3 (2026-2030) or both 
+            </p>
+            <p>
+            </p>
+          </div>
+          <h2
+            class="govuk-heading-m"
+          >
+            Facility address
+          </h2>
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="sameAddress"
+            govuk-checkboxes=""
+          >
+            <fieldset
+              class="govuk-fieldset"
+              govukfieldset=""
+              id="sameAddress"
+            >
+              <legend
+                class="govuk-fieldset__legend govuk-fieldset__legend--l"
+                govuklegend=""
+                id="l.sameAddress"
+              >
+              </legend>
+              <div
+                class="govuk-checkboxes"
+              >
+                <div
+                  class="govuk-checkboxes__item"
+                >
+                  <input
+                    aria-describedby="sameAddress-0-item-hint"
+                    class="govuk-checkboxes__input"
+                    id="sameAddress-0"
+                    name="sameAddress"
+                    type="checkbox"
+                    value="true"
+                  />
+                  <label
+                    class="govuk-label govuk-checkboxes__label"
+                    for="sameAddress-0"
+                  >
+                     The facility address is the same as target unit address 
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            class="ng-untouched ng-pristine ng-invalid"
+            formgroupname="facilityAddress"
+          >
+            <cca-account-address-input>
+              <div
+                autocomplete="address-line1"
+                class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+                formcontrolname="line1"
+                govuk-text-input=""
+                label="Address line 1"
+                widthclass="govuk-!-width-two-thirds"
+              >
+                <label
+                  class="govuk-label"
+                  for="facilityAddress.line1"
+                  id="l.facilityAddress.line1"
+                >
+                   Address line 1 
+                </label>
+                <input
+                  autocomplete="address-line1"
+                  class="govuk-input govuk-!-width-two-thirds"
+                  id="facilityAddress.line1"
+                  name="facilityAddress.line1"
+                  type="text"
+                />
+              </div>
+              <div
+                autocomplete="address-line2"
+                class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+                formcontrolname="line2"
+                govuk-text-input=""
+                label="Address line 2 (optional)"
+                widthclass="govuk-!-width-two-thirds"
+              >
+                <label
+                  class="govuk-label"
+                  for="facilityAddress.line2"
+                  id="l.facilityAddress.line2"
+                >
+                   Address line 2 (optional) 
+                </label>
+                <input
+                  autocomplete="address-line2"
+                  class="govuk-input govuk-!-width-two-thirds"
+                  id="facilityAddress.line2"
+                  name="facilityAddress.line2"
+                  type="text"
+                />
+              </div>
+              <div
+                autocomplete="address-level2"
+                class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+                formcontrolname="city"
+                govuk-text-input=""
+                label="Town or city"
+                widthclass="govuk-!-width-one-third"
+              >
+                <label
+                  class="govuk-label"
+                  for="facilityAddress.city"
+                  id="l.facilityAddress.city"
+                >
+                   Town or city 
+                </label>
+                <input
+                  autocomplete="address-level2"
+                  class="govuk-input govuk-!-width-one-third"
+                  id="facilityAddress.city"
+                  name="facilityAddress.city"
+                  type="text"
+                />
+              </div>
+              <div
+                autocomplete="county"
+                class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+                formcontrolname="county"
+                govuk-text-input=""
+                label="County (optional)"
+                widthclass="govuk-!-width-one-third"
+              >
+                <label
+                  class="govuk-label"
+                  for="facilityAddress.county"
+                  id="l.facilityAddress.county"
+                >
+                   County (optional) 
+                </label>
+                <input
+                  autocomplete="county"
+                  class="govuk-input govuk-!-width-one-third"
+                  id="facilityAddress.county"
+                  name="facilityAddress.county"
+                  type="text"
+                />
+              </div>
+              <div
+                autocomplete="postal-code"
+                class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+                formcontrolname="postcode"
+                govuk-text-input=""
+                label="Postcode"
+                widthclass="govuk-!-width-one-third"
+              >
+                <label
+                  class="govuk-label"
+                  for="facilityAddress.postcode"
+                  id="l.facilityAddress.postcode"
+                >
+                   Postcode 
+                </label>
+                <input
+                  autocomplete="postal-code"
+                  class="govuk-input govuk-!-width-one-third"
+                  id="facilityAddress.postcode"
+                  name="facilityAddress.postcode"
+                  type="text"
+                />
+              </div>
+              <div
+                ccacountries=""
+                class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+                formcontrolname="country"
+                govuk-select=""
+                label="Country"
+                labelsize="small"
+              >
+                <label
+                  class="govuk-label"
+                  for="facilityAddress.country"
+                  id="l.facilityAddress.country"
+                >
+                   Country
+                </label>
+                <select
+                  class="govuk-select ng-untouched ng-pristine ng-invalid"
+                  govukformerror=""
+                  id="facilityAddress.country"
+                  name="facilityAddress.country"
+                >
+                </select>
+              </div>
+            </cca-account-address-input>
+          </div>
+        </div>
+        <button
+          class="govuk-button"
+          govukbutton=""
+          netzpendingbutton=""
+          type="submit"
+        >
+          Continue
+        </button>
+      </form>
+    </cca-wizard-step>
+    <hr
+      class="govuk-footer__section-break govuk-!-margin-bottom-3"
+    />
+    <a
+      class="govuk-link"
+      href="/"
+    >
+      Return to: Manage facilities
+    </a>
+  </cca-facility-details-form>
+</cca-facility-details>
+`;

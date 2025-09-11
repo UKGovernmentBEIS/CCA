@@ -1,10 +1,10 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { tap } from 'rxjs';
+import { combineLatest, startWith, Subject, switchMap, tap } from 'rxjs';
 
 import { PendingButtonDirective } from '@netz/common/directives';
 import {
@@ -17,13 +17,13 @@ import {
   TextInputComponent,
 } from '@netz/govuk-components';
 import { PaginationComponent, UtilityPanelComponent } from '@shared/components';
-import {
-  SubsistenceFeesRunMarkFacilitiesStatusPipe,
-  SubsistenceFeesRunPaymentStatusPipe,
-  SubsistenceFeesRunPaymentStatusTagColorPipe,
-} from '@shared/pipes';
+import { StatusColorPipe, StatusPipe } from '@shared/pipes';
 
-import { SectorAssociationSubsistenceFeesService, SubsistenceFeesMoaSearchResultInfoDTO } from 'cca-api';
+import {
+  SectorAssociationSubsistenceFeesService,
+  SubsistenceFeesMoaSearchCriteria,
+  SubsistenceFeesMoaSearchResultInfoDTO,
+} from 'cca-api';
 
 import {
   SECTOR_SUBSISTENCE_FEES_FORM,
@@ -31,7 +31,10 @@ import {
   SectorSubsistenceFeesFormProvider,
 } from './subsistence-fees-form.provider';
 
-type SibsistenceFeesState = {
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 10;
+
+type SubsistenceFeesState = {
   subsistenceFeesMoas: SubsistenceFeesMoaSearchResultInfoDTO[];
   currentPage: number;
   totalItems: number;
@@ -55,45 +58,51 @@ type SibsistenceFeesState = {
     TableComponent,
     PaginationComponent,
     TagComponent,
-    SubsistenceFeesRunPaymentStatusTagColorPipe,
-    SubsistenceFeesRunMarkFacilitiesStatusPipe,
-    SubsistenceFeesRunPaymentStatusPipe,
+    StatusPipe,
+    StatusColorPipe,
   ],
-  providers: [
-    SectorSubsistenceFeesFormProvider,
-    SubsistenceFeesRunPaymentStatusPipe,
-    SubsistenceFeesRunMarkFacilitiesStatusPipe,
-  ],
+  providers: [SectorSubsistenceFeesFormProvider, StatusPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SubsistenceFeesTabComponent implements OnInit {
+export class SubsistenceFeesTabComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly sectorAssociationSubsistenceFeesService = inject(SectorAssociationSubsistenceFeesService);
-  private readonly destroyref = inject(DestroyRef);
+  private readonly statusPipe = inject(StatusPipe);
 
-  private readonly paymentStatusPipe = inject(SubsistenceFeesRunPaymentStatusPipe);
-  private readonly markFacilitiesStatusPipe = inject(SubsistenceFeesRunMarkFacilitiesStatusPipe);
+  private readonly searchSubmit = new Subject<void>();
 
-  readonly sectorId = +this.activatedRoute.snapshot.paramMap.get('sectorId');
+  protected readonly sectorId = +this.activatedRoute.snapshot.paramMap.get('sectorId');
 
-  readonly searchForm = inject<SectorSubsistenceFeesFormModel>(SECTOR_SUBSISTENCE_FEES_FORM);
+  readonly state = signal<SubsistenceFeesState>({
+    subsistenceFeesMoas: [],
+    currentPage: +this.activatedRoute.snapshot.paramMap.get('page') || DEFAULT_PAGE,
+    pageSize: +this.activatedRoute.snapshot.paramMap.get('pageSize') || DEFAULT_PAGE_SIZE,
+    totalItems: 0,
+  });
 
-  readonly paymentStatusOptions: GovukSelectOption[] = [
+  protected readonly count = computed(() => this.state().totalItems);
+  protected readonly pageSize = computed(() => this.state().pageSize);
+  protected readonly currentPage = computed(() => this.state().currentPage);
+
+  protected readonly searchForm = inject<SectorSubsistenceFeesFormModel>(SECTOR_SUBSISTENCE_FEES_FORM);
+
+  protected readonly paymentStatusOptions: GovukSelectOption[] = [
     { value: null, text: 'All' },
-    { value: 'AWAITING_PAYMENT', text: this.paymentStatusPipe.transform('AWAITING_PAYMENT') },
-    { value: 'PAID', text: this.paymentStatusPipe.transform('PAID') },
-    { value: 'OVERPAID', text: this.paymentStatusPipe.transform('OVERPAID') },
-    { value: 'CANCELLED', text: this.paymentStatusPipe.transform('CANCELLED') },
+    { value: 'AWAITING_PAYMENT', text: this.statusPipe.transform('AWAITING_PAYMENT') },
+    { value: 'PAID', text: this.statusPipe.transform('PAID') },
+    { value: 'OVERPAID', text: this.statusPipe.transform('OVERPAID') },
+    { value: 'CANCELLED', text: this.statusPipe.transform('CANCELLED') },
   ];
 
-  readonly markingOfFacilitiesOptions: GovukSelectOption[] = [
+  protected readonly markingOfFacilitiesOptions: GovukSelectOption[] = [
     { value: null, text: 'All' },
-    { value: 'IN_PROGRESS', text: this.markFacilitiesStatusPipe.transform('IN_PROGRESS') },
-    { value: 'COMPLETED', text: this.markFacilitiesStatusPipe.transform('COMPLETED') },
-    { value: 'CANCELLED', text: this.markFacilitiesStatusPipe.transform('CANCELLED') },
+    { value: 'IN_PROGRESS', text: this.statusPipe.transform('IN_PROGRESS') },
+    { value: 'COMPLETED', text: this.statusPipe.transform('COMPLETED') },
+    { value: 'CANCELLED', text: this.statusPipe.transform('CANCELLED') },
   ];
 
-  readonly tableColumns: GovukTableColumn[] = [
+  protected readonly tableColumns: GovukTableColumn[] = [
     { field: 'transactionId', header: 'Transaction ID' },
     { field: 'paymentStatus', header: 'Payment status' },
     { field: 'markFacilitiesStatus', header: 'Marking of facilities' },
@@ -102,51 +111,59 @@ export class SubsistenceFeesTabComponent implements OnInit {
     { field: 'outstandingTotalAmount', header: 'Outstanding (GBP)' },
   ];
 
-  readonly state = signal<SibsistenceFeesState>({
-    subsistenceFeesMoas: [],
-    currentPage: +this.activatedRoute.snapshot.paramMap.get('page') || 1,
-    totalItems: 0,
-    pageSize: 30,
-  });
+  constructor() {
+    combineLatest([this.activatedRoute.queryParamMap, this.searchSubmit.pipe(startWith(null))])
+      .pipe(
+        takeUntilDestroyed(),
+        switchMap(([queryParamMap]) => {
+          const pageNumber = +queryParamMap.get('page') || DEFAULT_PAGE;
+          const pageSize = +queryParamMap.get('pageSize') || DEFAULT_PAGE_SIZE;
 
-  readonly count = computed(() => this.state().totalItems);
-  readonly currentPage = computed(() => this.state().currentPage);
+          this.state.update((state) => ({
+            ...state,
+            currentPage: pageNumber,
+            pageSize,
+          }));
 
-  ngOnInit(): void {
-    this.fetchSectorSubsistenceFeesMoas().subscribe();
+          const searchCriteria: SubsistenceFeesMoaSearchCriteria = {
+            moaType: 'SECTOR_MOA',
+            pageNumber: pageNumber - 1,
+            pageSize,
+            markFacilitiesStatus: this.searchForm.value.markFacilitiesStatus,
+            term: this.searchForm.value.term,
+            paymentStatus: this.searchForm.value.paymentStatus,
+          };
+
+          return this.fetchSectorSubsistenceFeesMoas(searchCriteria);
+        }),
+      )
+      .subscribe();
   }
 
   onApplyFilters() {
     if (this.searchForm.invalid) return;
-    this.fetchSectorSubsistenceFeesMoas().subscribe();
+    this.searchSubmit.next();
   }
 
   onClearFilters() {
     this.searchForm.reset();
-    this.fetchSectorSubsistenceFeesMoas().subscribe();
+    this.searchSubmit.next();
   }
 
-  handlePageChange(page: number) {
-    if (page === this.state().currentPage) return;
-
-    this.state.update((state) => ({
-      ...state,
-      currentPage: page,
-    }));
-
-    this.fetchSectorSubsistenceFeesMoas().subscribe();
+  onPageChange(page: number) {
+    if (page === this.currentPage()) return;
+    this.handleQueryParamsNavigation({ page });
   }
 
-  private fetchSectorSubsistenceFeesMoas() {
+  onPageSizeChange(pageSize: number) {
+    if (pageSize === this.pageSize()) return;
+    this.handleQueryParamsNavigation({ pageSize });
+  }
+
+  private fetchSectorSubsistenceFeesMoas(searchCriteria: SubsistenceFeesMoaSearchCriteria) {
     return this.sectorAssociationSubsistenceFeesService
-      .getSectorSubsistenceFeesMoas(this.sectorId, {
-        moaType: 'SECTOR_MOA',
-        pageNumber: this.state().currentPage - 1,
-        pageSize: this.state().pageSize,
-        ...this.searchForm.value,
-      })
+      .getSectorSubsistenceFeesMoas(this.sectorId, searchCriteria)
       .pipe(
-        takeUntilDestroyed(this.destroyref),
         tap((results) => {
           this.state.update((state) => ({
             ...state,
@@ -155,5 +172,14 @@ export class SubsistenceFeesTabComponent implements OnInit {
           }));
         }),
       );
+  }
+
+  private handleQueryParamsNavigation(pagination: Partial<{ page: number; pageSize: number }>) {
+    this.router.navigate([], {
+      queryParams: { ...pagination },
+      queryParamsHandling: 'merge',
+      relativeTo: this.activatedRoute,
+      fragment: 'subsistence-fees',
+    });
   }
 }

@@ -1,6 +1,5 @@
-import { NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { DaysRemainingPipe, ItemLinkPipe, ItemNamePipe } from '@netz/common/pipes';
 
@@ -12,15 +11,13 @@ import { ItemDTO } from 'cca-api';
  */
 @Component({
   selector: 'netz-related-tasks',
-  standalone: true,
   templateUrl: './related-tasks.component.html',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, NgFor, RouterLink, ItemNamePipe, ItemLinkPipe, DaysRemainingPipe],
+  imports: [RouterLink, ItemNamePipe, ItemLinkPipe, DaysRemainingPipe],
 })
 export class RelatedTasksComponent {
-  @Input() items: ItemDTO[];
-  @Input() heading = 'Related tasks';
-  @Input() noBorders = false;
-
-  constructor(public readonly router: Router) {}
+  readonly items = input<ItemDTO[]>();
+  readonly heading = input<string>('Related tasks');
+  readonly noBorders = input<boolean>(false);
 }

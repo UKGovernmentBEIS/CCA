@@ -7,7 +7,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { screen } from '@testing-library/angular';
 
 import { SubsistenceFeesStore } from '../subsistence-fees.store';
-import { subsistenceFeesStateMockData } from '../tests/mock-data';
+import { subsistenceFeesStateMockData } from '../testing/mock-data';
 import { WorkflowHistoryTabComponent } from './workflow-history-tab.component';
 
 describe('WorkflowHistoryTabComponent', () => {

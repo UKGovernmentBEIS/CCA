@@ -13,6 +13,7 @@ import uk.gov.netz.api.common.exception.ErrorCode;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -44,11 +45,11 @@ public class SectorUserAuthorityUpdateValidatorImpl implements SectorUserAuthori
     public void validateUniqueAdministrator(List<SectorUserAuthorityUpdateDTO> userAuthorities, Long associationSectorId) {
         if (!isActiveSectorUserAdminSelected(userAuthorities)) {
             List<String> currentActiveSectorAdminsUserIds = ccaAuthorityRepository.findActiveSectorUsersBySectorAndRole(associationSectorId, SECTOR_USER_ADMIN_CODE);
-            List<String> currentActiveSectorAdminsToBeUpdated = userAuthorities
+            Set<String> currentActiveSectorAdminsToBeUpdated = userAuthorities
                     .stream()
-                    .filter((userSectorAuthority) -> currentActiveSectorAdminsUserIds.contains(userSectorAuthority.getUserId())
+                    .filter(userSectorAuthority -> currentActiveSectorAdminsUserIds.contains(userSectorAuthority.getUserId())
                             && (!SECTOR_USER_ADMIN_CODE.equalsIgnoreCase(userSectorAuthority.getRoleCode())
-                            || AuthorityStatus.ACTIVE != userSectorAuthority.getAuthorityStatus())).map(SectorUserAuthorityUpdateDTO::getUserId).collect(Collectors.toList());
+                            || AuthorityStatus.ACTIVE != userSectorAuthority.getAuthorityStatus())).map(SectorUserAuthorityUpdateDTO::getUserId).collect(Collectors.toSet());
             if (currentActiveSectorAdminsToBeUpdated.containsAll(currentActiveSectorAdminsUserIds)) {
                 throw new BusinessException(CcaErrorCode.AUTHORITY_MIN_ONE_SECTOR_ADMIN_SHOULD_EXIST);
             }
@@ -57,9 +58,9 @@ public class SectorUserAuthorityUpdateValidatorImpl implements SectorUserAuthori
     }
 
     public void validateStatus(List<SectorUserAuthorityUpdateDTO> userAuthorities, Long associationSectorId) {
-        List<String> userIds = userAuthorities.stream().map(SectorUserAuthorityUpdateDTO::getUserId).collect(Collectors.toList());
+        List<String> userIds = userAuthorities.stream().map(SectorUserAuthorityUpdateDTO::getUserId).toList();
         Map<String, AuthorityStatus> userStatuses = ccaAuthorityRepository.findStatusByUsersAndSectorAssociationId(userIds, associationSectorId);
-        userAuthorities.forEach((userSectorAuthority) -> {
+        userAuthorities.forEach(userSectorAuthority -> {
             if (userStatuses.containsKey(userSectorAuthority.getUserId())
                     && (userStatuses.get(userSectorAuthority.getUserId())).equals(AuthorityStatus.ACCEPTED)
                     && !userSectorAuthority.getAuthorityStatus().equals(AuthorityStatus.ACTIVE)

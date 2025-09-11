@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class ChargingPeriodRepositoryIT extends AbstractContainerBaseTest {
+class ChargingPeriodRepositoryIT extends AbstractContainerBaseTest {
 
     @Autowired
     private ChargingPeriodRepository repository;
@@ -35,7 +35,7 @@ public class ChargingPeriodRepositoryIT extends AbstractContainerBaseTest {
     private EntityManager entityManager;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         Year y2025 = Year.of(2025);
         ChargingPeriod cp2025 = ChargingPeriod.builder()
                 .startDate(LocalDate.of(2025, 4, 1))
@@ -75,7 +75,7 @@ public class ChargingPeriodRepositoryIT extends AbstractContainerBaseTest {
 
         Optional<Year> results = repository.findChargingYear(currentDate);
 
-        assertThat(results.isEmpty()).isTrue();
+        assertThat(results).isEmpty();
     }
 
     @Test
@@ -84,7 +84,7 @@ public class ChargingPeriodRepositoryIT extends AbstractContainerBaseTest {
 
         Optional<Year> results = repository.findChargingYear(currentDate);
 
-        assertThat(results.isEmpty()).isTrue();
+        assertThat(results).isEmpty();
     }
 
     @Test
@@ -94,8 +94,7 @@ public class ChargingPeriodRepositoryIT extends AbstractContainerBaseTest {
 
         Optional<Year> results = repository.findChargingYear(currentDate);
 
-        assertThat(results.isPresent()).isTrue();
-        assertThat(results.get()).isEqualTo(y2026);
+        assertThat(results).contains(y2026);
     }
 
     @Test
@@ -105,8 +104,7 @@ public class ChargingPeriodRepositoryIT extends AbstractContainerBaseTest {
 
         Optional<Year> results = repository.findChargingYear(currentDate);
 
-        assertThat(results.isPresent()).isTrue();
-        assertThat(results.get()).isEqualTo(y2027);
+        assertThat(results).contains(y2027);
     }
 
     @Test
@@ -116,12 +114,11 @@ public class ChargingPeriodRepositoryIT extends AbstractContainerBaseTest {
 
         Optional<Year> results = repository.findChargingYear(currentDate);
 
-        assertThat(results.isPresent()).isTrue();
-        assertThat(results.get()).isEqualTo(y2028);
+        assertThat(results).contains(y2028);
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         repository.deleteAll();
         flushAndClear();
     }

@@ -47,9 +47,9 @@ export class SectorUserInvitationComponent implements OnInit {
 
   readonly form = inject<FormGroup<SectorUserInviteFormModel>>(SECTOR_USER_INVITATION_FORM);
 
-  isErrorSummaryDisplayed = signal(false);
+  protected readonly isErrorSummaryDisplayed = signal(false);
 
-  contactTypeOptions: { text: string; value: 'SECTOR_ASSOCIATION' | 'CONSULTANT' }[] = [
+  protected readonly contactTypeOptions: { text: string; value: 'SECTOR_ASSOCIATION' | 'CONSULTANT' }[] = [
     {
       text: 'Sector association',
       value: 'SECTOR_ASSOCIATION',
@@ -57,7 +57,7 @@ export class SectorUserInvitationComponent implements OnInit {
     { text: 'Consultant', value: 'CONSULTANT' },
   ];
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.breadcrumbsService.show([
       {
         text: 'Home',

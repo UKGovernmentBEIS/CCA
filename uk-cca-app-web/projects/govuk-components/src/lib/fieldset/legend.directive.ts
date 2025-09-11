@@ -1,19 +1,17 @@
-import { AfterContentInit, Directive, ElementRef, HostBinding, Input } from '@angular/core';
+import { AfterContentInit, Directive, ElementRef, HostBinding, input, inject } from '@angular/core';
 
 import { FieldsetDirective } from './fieldset.directive';
 import { LegendSizeType } from './legend-size.type';
 
 @Directive({ selector: 'legend[govukLegend],ng-template[govukLegend]', standalone: true })
 export class LegendDirective implements AfterContentInit {
-  @Input() size: LegendSizeType;
+  private readonly fieldset = inject(FieldsetDirective);
+  private readonly elementRef = inject(ElementRef);
 
-  constructor(
-    private readonly fieldset: FieldsetDirective,
-    private readonly elementRef: ElementRef,
-  ) {}
+  readonly size = input<LegendSizeType>();
 
   @HostBinding('class') get sizeClass() {
-    switch (this.size) {
+    switch (this.size()) {
       case 'heading':
       case 'large':
         return 'govuk-fieldset__legend govuk-fieldset__legend--l';
@@ -35,7 +33,7 @@ export class LegendDirective implements AfterContentInit {
   ngAfterContentInit(): void {
     const heading = this.nativeElement.querySelector('h1');
 
-    if (heading && this.size === 'heading') {
+    if (heading && this.size() === 'heading') {
       heading.classList.add('govuk-fieldset__heading');
     }
   }

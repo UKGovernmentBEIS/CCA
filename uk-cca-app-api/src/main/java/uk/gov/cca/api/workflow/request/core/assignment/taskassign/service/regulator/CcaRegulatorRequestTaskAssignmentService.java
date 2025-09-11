@@ -11,7 +11,6 @@ import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.RequestTaskAssignmentService;
 import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.RequestTaskReleaseService;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
-import uk.gov.netz.api.workflow.request.core.domain.constants.RequestStatuses;
 import uk.gov.netz.api.workflow.request.core.repository.RequestTaskRepository;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class CcaRegulatorRequestTaskAssignmentService {
     private final RequestTaskReleaseService requestTaskReleaseService;
 
     public void assignTasksToSiteContactOrRelease(String userId) {
-        List<RequestTask> requestTasks = requestTaskRepository.findByAssigneeAndRequestStatus(userId, RequestStatuses.IN_PROGRESS);
+        List<RequestTask> requestTasks = requestTaskRepository.findByAssignee(userId);
         if (!requestTasks.isEmpty()) {
             doAssignTasksToSiteContactOrRelease(requestTasks);
         }

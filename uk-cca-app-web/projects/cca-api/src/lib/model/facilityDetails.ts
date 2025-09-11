@@ -17,5 +17,6 @@ export interface FacilityDetails {
   uketsId?: string;
   applicationReason: 'NEW_AGREEMENT' | 'CHANGE_OF_OWNERSHIP';
   previousFacilityId?: string;
+  participatingSchemeVersions: ('CCA_2' | 'CCA_3')[];
   facilityAddress: AccountAddressDTO;
 }

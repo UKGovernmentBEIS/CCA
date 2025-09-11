@@ -9,16 +9,19 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.facility.domain.FacilityData;
+import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataCreationDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataUpdateDTO;
 import uk.gov.cca.api.facility.repository.FacilityDataRepository;
 import uk.gov.cca.api.facility.transform.FacilityAddressMapper;
+import uk.gov.cca.api.facility.transform.FacilityDetailsMapper;
 import uk.gov.netz.api.common.exception.BusinessException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
@@ -31,9 +34,10 @@ public class FacilityDataUpdateService {
     private final FacilityDataQueryService facilityDataQueryService;
 
     private static final FacilityAddressMapper FACILITY_ADDRESS_MAPPER = Mappers.getMapper(FacilityAddressMapper.class);
+    private static final FacilityDetailsMapper FACILITY_DETAILS_MAPPER = Mappers.getMapper(FacilityDetailsMapper.class);
 
     @Transactional
-    public void createFacilitiesData(@NotEmpty @Valid List<@NotNull FacilityDataCreationDTO> dtoList) {
+    public Set<FacilityBaseInfoDTO> createFacilitiesData(@NotEmpty @Valid List<@NotNull FacilityDataCreationDTO> dtoList) {
         List<FacilityData> facilitiesData = dtoList.stream()
                 .map(dto -> FacilityData.builder()
                         .facilityId(dto.getFacilityId())
@@ -42,10 +46,13 @@ public class FacilityDataUpdateService {
                         .address(FACILITY_ADDRESS_MAPPER.toFacilityAddress(dto.getAddress()))
                         .createdDate(dto.getCreatedDate())
                         .chargeStartDate(dto.getChargeStartDate())
+                        .participatingSchemeVersions(dto.getParticipatingSchemeVersions())
                         .build())
                 .toList();
 
-        repository.saveAll(facilitiesData);
+        return repository.saveAll(facilitiesData).stream()
+                .map(FACILITY_DETAILS_MAPPER::toFacilityBaseInfo)
+                .collect(Collectors.toSet());
     }
 
     @Transactional
@@ -55,7 +62,6 @@ public class FacilityDataUpdateService {
 
         List<FacilityData> persistedFacilitiesData = repository.findAllByFacilityIdIn(dtoMap.keySet());
 
-
         if (persistedFacilitiesData.size() != dtoMap.keySet().size()) {
             throw new BusinessException(RESOURCE_NOT_FOUND);
         }
@@ -64,6 +70,7 @@ public class FacilityDataUpdateService {
             FacilityDataUpdateDTO dto = dtoMap.get(facilityData.getFacilityId());
             facilityData.setSiteName(dto.getSiteName());
             LocalDate closedDate = dto.getClosedDate();
+            facilityData.setParticipatingSchemeVersions(dto.getParticipatingSchemeVersions());
             if (closedDate != null) {
                 if (facilityData.getSchemeExitDate() == null) {
                     facilityData.setSchemeExitDate(closedDate);
@@ -82,7 +89,7 @@ public class FacilityDataUpdateService {
 
         for (FacilityData facility : activeFacilitiesData) {
             facility.setClosedDate(terminationDateTime);
-            if(facility.getSchemeExitDate() == null) {
+            if (facility.getSchemeExitDate() == null) {
                 facility.setSchemeExitDate(terminationDateTime.toLocalDate());
             }
         }

@@ -6,19 +6,24 @@ import uk.gov.cca.api.migration.underlyingagreement.request.UnderlyingAgreementM
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.AdminTerminationWithdrawSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.TP6BuyOutCalculatedAccountProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.run.domain.BuyOutSurplusRunCompletedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerReviewDecisionSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaGeneratedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.subsistencefeesrun.domain.SubsistenceFeesRunCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.targetunitmoa.domain.TargetUnitMoaGeneratedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.domain.TargetUnitAccountCreationSubmittedRequestActionPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.activation.domain.UnderlyingAgreementActivatedRequestActionPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementAcceptedRequestActionPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementRejectedRequestActionPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.submit.domain.UnderlyingAgreementSubmittedRequestActionPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivatedRequestActionPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationAcceptedRequestActionPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationRejectedRequestActionPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.activation.domain.UnderlyingAgreementActivatedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementAcceptedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.review.domain.UnderlyingAgreementRejectedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivatedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationAcceptedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationRejectedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationSubmittedRequestActionPayload;
 import uk.gov.netz.api.swagger.SwaggerSchemasAbstractProvider;
 import uk.gov.netz.api.workflow.request.flow.payment.domain.PaymentCancelledRequestActionPayload;
 import uk.gov.netz.api.workflow.request.flow.payment.domain.PaymentProcessedRequestActionPayload;
@@ -60,6 +65,9 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
     	addResolvedShemas(AdminTerminationSubmittedRequestActionPayload.class.getSimpleName(), AdminTerminationSubmittedRequestActionPayload.class);
     	addResolvedShemas(AdminTerminationFinalDecisionSubmittedRequestActionPayload.class.getSimpleName(), AdminTerminationFinalDecisionSubmittedRequestActionPayload.class);
     	addResolvedShemas(AdminTerminationWithdrawSubmittedRequestActionPayload.class.getSimpleName(), AdminTerminationWithdrawSubmittedRequestActionPayload.class);
+    	
+    	//Peer review
+    	addResolvedShemas(CcaPeerReviewDecisionSubmittedRequestActionPayload.class.getSimpleName(), CcaPeerReviewDecisionSubmittedRequestActionPayload.class);
 
         // Underlying Agreement Variation
         addResolvedShemas(UnderlyingAgreementVariationSubmittedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationSubmittedRequestActionPayload.class);
@@ -70,10 +78,18 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
 		// Performance data upload
 		addResolvedShemas(PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload.class.getSimpleName(), PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload.class);
 		
+		// PΑΤ
+		addResolvedShemas(PerformanceAccountTemplateProcessingSubmittedRequestActionPayload.class.getSimpleName(), PerformanceAccountTemplateProcessingSubmittedRequestActionPayload.class);
+		
 		// Subsistence fees
 		addResolvedShemas(SubsistenceFeesRunCompletedRequestActionPayload.class.getSimpleName(), SubsistenceFeesRunCompletedRequestActionPayload.class);
 		addResolvedShemas(SectorMoaGeneratedRequestActionPayload.class.getSimpleName(), SectorMoaGeneratedRequestActionPayload.class);
 		addResolvedShemas(TargetUnitMoaGeneratedRequestActionPayload.class.getSimpleName(), TargetUnitMoaGeneratedRequestActionPayload.class);
+
+		// Buy Out Surplus
+		addResolvedShemas(BuyOutSurplusRunCompletedRequestActionPayload.class.getSimpleName(), BuyOutSurplusRunCompletedRequestActionPayload.class);
+		addResolvedShemas(TP6BuyOutCalculatedAccountProcessingSubmittedRequestActionPayload.class.getSimpleName(), TP6BuyOutCalculatedAccountProcessingSubmittedRequestActionPayload.class);
+		addResolvedShemas(TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload.class.getSimpleName(), TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload.class);
 	}
 
 }

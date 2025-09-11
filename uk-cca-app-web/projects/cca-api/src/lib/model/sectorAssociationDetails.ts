@@ -9,9 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { SchemeData } from './schemeData';
 
 export interface SectorAssociationDetails {
   subsectorAssociationName?: string;
-  measurementType?: 'ENERGY_KWH' | 'ENERGY_MWH' | 'ENERGY_GJ' | 'CARBON_KG' | 'CARBON_TONNE';
-  throughputUnit?: string;
+  schemeDataMap?: Record<string, SchemeData>;
 }

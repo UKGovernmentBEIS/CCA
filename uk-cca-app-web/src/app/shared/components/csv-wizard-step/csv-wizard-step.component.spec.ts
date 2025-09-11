@@ -40,9 +40,7 @@ describe('CsvWizardStepComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TestComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     element = fixture.nativeElement;
     hostComponent = fixture.componentInstance;

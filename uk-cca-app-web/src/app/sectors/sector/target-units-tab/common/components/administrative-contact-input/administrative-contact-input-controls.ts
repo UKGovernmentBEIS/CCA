@@ -24,9 +24,7 @@ export function createAdministrativeForm(
 ): FormGroup<AdministrativeContactDetailsFormModel> {
   const addressFormGroup = createAccountAddressForm(administrativeContactDetails?.address);
 
-  if (sameAddress) {
-    addressFormGroup.disable();
-  }
+  if (sameAddress) addressFormGroup.disable();
 
   return fb.group<AdministrativeContactDetailsFormModel>(
     {

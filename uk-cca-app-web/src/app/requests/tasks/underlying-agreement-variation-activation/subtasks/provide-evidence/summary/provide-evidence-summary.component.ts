@@ -11,7 +11,15 @@ import { underlyingAgreementVariationActivationQuery } from '../../../+state/una
 
 @Component({
   selector: 'cca-provide-evidence-summary',
-  templateUrl: './provide-evidence-summary.component.html',
+  template: `
+    <div>
+      <netz-page-heading>Provide evidence</netz-page-heading>
+      <cca-summary [data]="summaryData()" />
+    </div>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [SummaryComponent, PageHeadingComponent, ReturnToTaskOrActionPageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

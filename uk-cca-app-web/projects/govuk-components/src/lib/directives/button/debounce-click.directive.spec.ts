@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -14,7 +14,7 @@ describe('DebounceClickDirective', () => {
     template: ` <button #button govukDebounceClick (debounceClick)="onClick()">Simple button</button> `,
   })
   class TestComponent {
-    @ViewChild('button') button: ElementRef;
+    readonly button = viewChild<ElementRef>('button');
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     onClick(): void {}

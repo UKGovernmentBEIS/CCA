@@ -17,7 +17,21 @@ import { UnderlyingAgreementActivationTaskService } from '../services/underlying
 
 @Component({
   selector: 'cca-underlying-agreement-activation-notify-operator',
-  templateUrl: './underlying-agreement-activation-notify-operator.component.html',
+  template: `
+    <cca-wizard-step
+      (formSubmit)="onSubmit()"
+      [formGroup]="form"
+      caption="Notify operator"
+      heading="Select who should receive the active Underlying Agreement notice"
+      data-testid="underlying-agreement-activation-notify-operator-form"
+      submitText="Confirm and complete"
+    >
+      <cca-notify-operator-of-decision />
+    </cca-wizard-step>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [
     NotifyOperatorOfDecisionComponent,

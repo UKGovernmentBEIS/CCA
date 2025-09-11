@@ -24,5 +24,5 @@ export class AddOperatorConfirmationComponent {
 
   private readonly targetUnit = this.store.state.targetUnitAccountDetails;
 
-  targetUnitName = `${this.targetUnit.businessId} - ${this.targetUnit.name}`;
+  protected readonly targetUnitName = `${this.targetUnit.businessId} - ${this.targetUnit.name}`;
 }

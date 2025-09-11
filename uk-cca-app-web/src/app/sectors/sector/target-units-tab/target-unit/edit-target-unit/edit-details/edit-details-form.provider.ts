@@ -2,14 +2,13 @@ import { InjectionToken, Provider } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { SectorAssociationSchemeDTO, TargetUnitAccountPayload } from 'cca-api';
+import { textFieldValidators } from '@shared/validators';
+
+import { SectorAssociationSchemesDTO } from 'cca-api';
 
 import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
-import {
-  createTargetUnitAccountDetailsForm,
-  TargetUnitCreationFormModel,
-} from '../../../common/components/target-unit-details-input/target-unit-details-input-controls';
-
+import { TargetUnitCreationFormModel } from '../../../common/types';
+import { addSicCodeFormControl } from '../../../common/utils';
 export const EDIT_TARGET_UNIT_DETAILS_FORM = new InjectionToken<TargetUnitCreationFormModel>(
   'Edit Target Unit Details Form',
 );
@@ -18,10 +17,43 @@ export const EditDetailsFormProvider: Provider = {
   provide: EDIT_TARGET_UNIT_DETAILS_FORM,
   deps: [FormBuilder, ActiveTargetUnitStore, ActivatedRoute],
   useFactory: (fb: FormBuilder, store: ActiveTargetUnitStore, route: ActivatedRoute) => {
-    const subSectors = (route.snapshot.data?.subSectorScheme as SectorAssociationSchemeDTO)
-      ?.subsectorAssociationSchemes;
+    const subSectors =
+      (route.snapshot.data?.subSectorScheme as SectorAssociationSchemesDTO)?.subsectorAssociations || [];
+
     const accountDetails = store.state.targetUnitAccountDetails;
 
-    return createTargetUnitAccountDetailsForm(fb, accountDetails as TargetUnitAccountPayload, subSectors ?? [], true);
+    const sicCodes = accountDetails?.sicCodes ?? [];
+
+    const sicCodeFormControls =
+      sicCodes.length > 0 ? sicCodes.map((code) => addSicCodeFormControl(code)) : [addSicCodeFormControl()];
+
+    const group = fb.group<TargetUnitCreationFormModel>(
+      {
+        operatorType: fb.control({ value: accountDetails?.operatorType ?? null, disabled: true }),
+        name: fb.control(accountDetails?.name ?? null, textFieldValidators('operator name')),
+        isCompanyRegistrationNumber: fb.control({ value: !!accountDetails?.companyRegistrationNumber, disabled: true }),
+        companyRegistrationNumber: fb.control({
+          value: accountDetails?.companyRegistrationNumber ?? null,
+          disabled: true,
+        }),
+        registrationNumberMissingReason: fb.control({
+          value: accountDetails?.registrationNumberMissingReason ?? null,
+          disabled: true,
+        }),
+        sicCodes: fb.array(sicCodeFormControls),
+      },
+      { updateOn: 'change' },
+    );
+
+    if (subSectors.length > 0) {
+      group.addControl(
+        'subsectorAssociationId',
+        fb.control({ value: accountDetails?.subsectorAssociationId ?? null, disabled: true }),
+      );
+    } else {
+      group.removeControl('subsectorAssociationId');
+    }
+
+    return group;
   },
 };

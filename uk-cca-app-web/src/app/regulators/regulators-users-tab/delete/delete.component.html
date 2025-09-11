@@ -2,8 +2,8 @@
   <h2 class="govuk-heading-l">Confirm that the user account of {{ regulator | userFullName }} will be deleted</h2>
 
   <govuk-warning-text assistiveText="">You will not be able to undo this action.</govuk-warning-text>
-  <p class="govuk-body">All tasks currently assigned to this user will be automatically unassigned.</p>
-  <p class="govuk-body">You may cancel and manually re-assign tasks before attempting to delete this user.</p>
+  <p>All tasks currently assigned to this user will be automatically unassigned.</p>
+  <p>You may cancel and manually re-assign tasks before attempting to delete this user.</p>
 
   <div class="govuk-button-group">
     <button type="button" (click)="deleteRegulator()" netzPendingButton govukWarnButton>Confirm deletion</button>
@@ -12,7 +12,7 @@
 } @else {
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <govuk-panel title="The user account of {{ regulator | userFullName }} has been deleted"></govuk-panel>
+      <govuk-panel title="The user account of {{ regulator | userFullName }} has been deleted" />
 
       <a fragment="regulator-users" class="govuk-link" [routerLink]="['/user/regulators']">
         Return to the Regulator users page

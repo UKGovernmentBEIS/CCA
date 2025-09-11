@@ -1,5 +1,5 @@
 @if (isSummaryDisplayed()) {
-  <govuk-error-summary [form]="form"></govuk-error-summary>
+  <govuk-error-summary [form]="form" />
 }
 
 <netz-page-heading>{{ userId ? 'User details' : 'Add a new user' }}</netz-page-heading>
@@ -85,7 +85,7 @@
       hint="Upload a file"
       label="Signature"
       [showFilesizeHint]="false"
-    ></cca-file-input>
+    />
   </div>
 
   @if (isEditable) {
@@ -155,7 +155,7 @@
   </div>
 
   @if (isCurrentUser) {
-    <cca-two-fa-link [title]="'Change two factor authentication'" [link]="'/2fa/change'"> </cca-two-fa-link>
+    <cca-two-fa-link [title]="'Change two factor authentication'" [link]="'/2fa/change'" />
   } @else if (isEditable && userId) {
     <cca-two-fa-link
       [title]="'Reset two-factor authentication'"
@@ -163,8 +163,7 @@
       [userId]="userId"
       [userName]="userFullName"
       [role]="'REGULATOR'"
-    >
-    </cca-two-fa-link>
+    />
   }
 
   <button netzPendingButton govukButton type="submit">

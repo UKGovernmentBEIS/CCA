@@ -1,22 +1,42 @@
-import { Paging } from '@shared/components';
+import { GovukTableColumn } from '@netz/govuk-components';
 
-import { ItemDTO } from 'cca-api';
+import { CcaItemDTO } from 'cca-api';
 
 export type WorkflowItemsAssignmentType = 'assigned-to-me' | 'assigned-to-others' | 'unassigned';
 
-export interface DashboardState {
+export type Paging = {
+  page: number;
+  pageSize: number;
+};
+
+export type DashboardState = {
+  items: CcaItemDTO[];
+  isLoading: boolean;
   activeTab: WorkflowItemsAssignmentType;
-  items: ItemDTO[];
-  total: number;
-  paging: Paging;
-}
+  totalItems: number;
+  paging: {
+    page: number;
+    pageSize: number;
+  };
+};
+
+export const DEFAULT_PAGE = 1;
+export const DEFAULT_PAGE_SIZE = 50;
+
+export const DEFAULT_TABLE_COLUMNS: GovukTableColumn<CcaItemDTO>[] = [
+  { field: 'taskType', header: 'Task', isSortable: false },
+  { field: 'taskAssignee', header: 'Assigned to', isSortable: false },
+  { field: 'daysRemaining', header: 'Days remaining', isSortable: false },
+  { field: 'businessId', header: 'Target unit ID', isSortable: false },
+  { field: 'accountName', header: 'Target unit', isSortable: false },
+  { field: 'sectorAcronym', header: 'Sector ID', isSortable: false },
+  { field: 'sectorName', header: 'Sector', isSortable: false },
+];
 
 export const initialState: DashboardState = {
-  activeTab: 'assigned-to-me',
   items: [],
-  total: 0,
-  paging: {
-    page: 1,
-    pageSize: 10,
-  },
+  isLoading: false,
+  activeTab: 'assigned-to-me',
+  totalItems: 0,
+  paging: { page: DEFAULT_PAGE, pageSize: DEFAULT_PAGE_SIZE },
 };

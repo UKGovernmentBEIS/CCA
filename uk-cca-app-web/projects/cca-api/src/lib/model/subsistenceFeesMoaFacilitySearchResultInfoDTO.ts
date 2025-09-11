@@ -16,4 +16,5 @@ export interface SubsistenceFeesMoaFacilitySearchResultInfoDTO {
   facilityName?: string;
   markFacilitiesStatus?: 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
   paymentDate?: string;
+  hasHistory?: boolean;
 }

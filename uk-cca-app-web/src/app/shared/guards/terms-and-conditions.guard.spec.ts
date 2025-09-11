@@ -23,10 +23,13 @@ import { TermsAndConditionsGuard } from './terms-and-conditions.guard';
 describe('TermsAndConditionsGuard', () => {
   let authStore: AuthStore;
   let router: Router;
-  const route = new ActivatedRouteStub();
   let latestTermsStore: LatestTermsStore;
   let configStore: ConfigStore;
+
+  const route = new ActivatedRouteStub();
+
   mockAuthService.checkUser.mockReturnValue(of(undefined));
+
   function getGuard(_, snapshot) {
     return TestBed.runInInjectionContext(() => TermsAndConditionsGuard(null, snapshot));
   }
@@ -61,15 +64,20 @@ describe('TermsAndConditionsGuard', () => {
   it('should allow access when terms feature is disabled', async () => {
     const state: any = { url: '/terms' };
     configStore.setState({ features: { terms: false } });
+
     const result = await lastValueFrom(getGuard(null, state));
+
     expect(result).toEqual(true);
     expect(mockAuthService.checkUser).toHaveBeenCalledTimes(1);
   });
+
   it("should allow access when url is '/terms' and terms versions differ", async () => {
     authStore.setUserTerms({ termsVersion: 2 });
     configStore.setState({ features: { terms: true } });
+
     const state: any = { url: '/terms' };
     const result = await lastValueFrom(getGuard(null, state));
+
     expect(result).toEqual(true);
     expect(mockAuthService.checkUser).toHaveBeenCalledTimes(1);
   });
@@ -77,8 +85,10 @@ describe('TermsAndConditionsGuard', () => {
   it("should disallow access when url is '/terms' and terms versions are equal", async () => {
     authStore.setUserTerms({ termsVersion: 1 });
     configStore.setState({ features: { terms: true } });
+
     const state: any = { url: '/terms' };
     const result = await lastValueFrom(getGuard(null, state));
+
     expect(result).toEqual(router.parseUrl('landing'));
     expect(mockAuthService.checkUser).toHaveBeenCalledTimes(1);
   });
@@ -86,14 +96,18 @@ describe('TermsAndConditionsGuard', () => {
   it('should allow access when terms versions are equal', async () => {
     authStore.setUserTerms({ termsVersion: 1 });
     configStore.setState({ features: { terms: true } });
+
     const result = await lastValueFrom(getGuard(null, { url: '' } as any));
+
     expect(result).toEqual(true);
     expect(mockAuthService.checkUser).toHaveBeenCalledTimes(1);
   });
 
   it('should disallow access when terms versions differ', async () => {
     authStore.setUser({ termsVersion: 2 } as any);
+
     const result = await lastValueFrom(getGuard(null, { url: '' } as any));
+
     expect(result).toEqual(router.parseUrl('landing'));
     expect(mockAuthService.checkUser).toHaveBeenCalledTimes(1);
   });

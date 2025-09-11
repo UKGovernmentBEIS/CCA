@@ -57,14 +57,14 @@
               }
 
               @case ('paymentStatus') {
-                <govuk-tag [color]="row[column.field] | subsistenceFeesRunPaymentStatusTagColor" class="failure-tag">
-                  {{ row[column.field] | subsistenceFeesRunPaymentStatus }}
+                <govuk-tag [color]="row[column.field] | statusColor: 'grey'" class="tag-width">
+                  {{ row[column.field] | status }}
                 </govuk-tag>
               }
 
               @case ('markFacilitiesStatus') {
                 <div class="govuk-!-width-full">
-                  <span>{{ row[column.field] | subsistenceFeesRunMarkFacilitiesStatus }}</span>
+                  <span>{{ row[column.field] | status }}</span>
                 </div>
               }
 
@@ -84,13 +84,15 @@
         </govuk-table>
 
         <cca-pagination
-          [count]="state().totalItems"
-          (currentPageChange)="handlePageChange($event)"
-          [pageSize]="state().pageSize"
+          [count]="count()"
+          [currentPage]="currentPage()"
+          [pageSize]="pageSize()"
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
         />
       </div>
     </div>
   </div>
 } @else {
-  <p class="govuk-body govuk-!-margin-top-6">No sector MoAs were sent during this payment request.</p>
+  <p class="govuk-!-margin-top-6">No sector MoAs were sent during this payment request.</p>
 }

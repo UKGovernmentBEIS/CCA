@@ -4,8 +4,7 @@ import {
   Component,
   DestroyRef,
   ElementRef,
-  Inject,
-  Input,
+  inject,
   OnInit,
   Renderer2,
   viewChild,
@@ -20,36 +19,35 @@ import { TimeoutBannerService } from './timeout-banner.service';
 
 @Component({
   selector: 'cca-timeout-banner',
-  standalone: true,
   templateUrl: './timeout-banner.component.html',
-  styleUrl: './timeout-banner.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './timeout-banner.component.css',
+  standalone: true,
   imports: [PageHeadingComponent, AsyncPipe, SecondsToMinutesPipe, ButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimeoutBannerComponent implements OnInit {
-  @Input() timeOffsetSeconds: number;
+  private readonly renderer = inject(Renderer2);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly document = inject<Document>(DOCUMENT);
+
+  protected readonly timeoutBannerService = inject(TimeoutBannerService);
+
   readonly modal = viewChild<ElementRef<HTMLDialogElement>>('modal');
 
   private overlayClass = 'govuk-timeout-warning-overlay';
   private lastFocusedElement = null;
 
-  constructor(
-    @Inject(DOCUMENT) private readonly document: Document,
-    readonly timeoutBannerService: TimeoutBannerService,
-    private readonly renderer: Renderer2,
-    private readonly destroy$: DestroyRef,
-  ) {}
-
-  ngOnInit(): void {
-    this.timeoutBannerService.isVisible$.pipe(takeUntilDestroyed(this.destroy$)).subscribe((isVisible) => {
+  ngOnInit() {
+    this.timeoutBannerService.isVisible$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isVisible) => {
       isVisible ? this.showDialog() : this.hideDialog();
     });
   }
-  isDialogOpen(): boolean {
+
+  isDialogOpen() {
     return this.modal().nativeElement && this.modal().nativeElement.getAttribute('open') === '';
   }
 
-  showDialog(): void {
+  showDialog() {
     if (!this.isDialogOpen()) {
       this.renderer.addClass(this.document.body, this.overlayClass);
       this.saveLastFocusedElement();
@@ -59,7 +57,7 @@ export class TimeoutBannerComponent implements OnInit {
     }
   }
 
-  hideDialog(): void {
+  hideDialog() {
     if (this.isDialogOpen()) {
       this.renderer.removeClass(this.document.body, this.overlayClass);
       this.modal().nativeElement.removeAttribute('tabindex');
@@ -68,24 +66,24 @@ export class TimeoutBannerComponent implements OnInit {
     }
   }
 
-  saveLastFocusedElement(): void {
+  saveLastFocusedElement() {
     this.lastFocusedElement =
       this.document.activeElement && this.document.activeElement !== this.document.body
         ? this.document.activeElement
         : this.document.querySelector(':focus');
   }
 
-  setFocusOnLastFocusedElement(): void {
+  setFocusOnLastFocusedElement() {
     if (this.lastFocusedElement) {
       this.lastFocusedElement.focus();
     }
   }
 
-  continue(): void {
+  continue() {
     this.timeoutBannerService.extendSession();
   }
 
-  signOut(): void {
+  signOut() {
     this.timeoutBannerService.signOut();
   }
 }

@@ -1,0 +1,24 @@
+@if (documentTemplate(); as documentTemplate) {
+  <netz-page-heading>Edit {{ documentTemplate.name }}</netz-page-heading>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form()" id="template-form">
+    <div class="govuk-grid-row govuk-!-margin-bottom-5">
+      <div class="govuk-grid-column-full">
+        <cca-file-input
+          [downloadUrl]="getDownloadUrl"
+          formControlName="documentTemplate"
+          listTitle="Uploaded file"
+          hint="Uploading a file will replace any existing one"
+          label="Document template"
+          labelSize="medium"
+          [showFilesizeHint]="false"
+          [accepted]="fileType"
+        />
+      </div>
+
+      <button netzPendingButton govukButton type="submit" class="govuk-!-margin-left-3">Confirm and complete</button>
+    </div>
+  </form>
+
+  <cca-summary [data]="data()" />
+}

@@ -12,12 +12,11 @@ import { AuthService } from '@shared/services';
 
 import { ForgotPasswordService } from 'cca-api';
 
-import { ResetPasswordStore } from '../store/reset-password.store';
+import { ResetPasswordStore } from '../+store/reset-password.store';
 
 @Component({
   selector: 'cca-submit-otp',
   templateUrl: './submit-otp.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     ErrorSummaryComponent,
@@ -27,13 +26,14 @@ import { ResetPasswordStore } from '../store/reset-password.store';
     BackToTopComponent,
     TextInputComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubmitOtpComponent {
-  isSummaryDisplayed = signal<boolean>(false);
-  email = this.store.state.email;
-  isPasswordReset = false;
+  protected readonly isSummaryDisplayed = signal<boolean>(false);
+  protected readonly email = this.store.state.email;
+  protected isPasswordReset = false;
 
-  form = this.fb.group({
+  protected readonly form = this.fb.group({
     otp: [
       null,
       [

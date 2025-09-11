@@ -1,12 +1,19 @@
 <fieldset [id]="identifier" govukFieldset>
-  <legend govukLegend>{{ label }}</legend>
-  <div *ngIf="hint" govukFieldsetHint [innerHTML]="hint"></div>
+  <legend govukLegend>{{ label() }}</legend>
+
+  @if (hint()) {
+    <div govukFieldsetHint [innerHTML]="hint()"></div>
+  }
+
+  @if (text()) {
+    <p>{{ text() }}</p>
+  }
+
   <div [formGroup]="formGroup" class="govuk-date-input">
-    <govuk-error-message
-      *ngIf="shouldDisplayErrors"
-      [errors]="control.errors"
-      [identifier]="identifier"
-    ></govuk-error-message>
+    @if (shouldDisplayErrors) {
+      <govuk-error-message [errors]="control.errors" [identifier]="identifier"></govuk-error-message>
+    }
+
     <div class="govuk-date-input__item">
       <label [for]="identifier + '-day'" class="govuk-label govuk-date-input__label"> Day </label>
       <input
@@ -22,6 +29,7 @@
         type="text"
       />
     </div>
+
     <div class="govuk-date-input__item">
       <label [for]="identifier + '-month'" class="govuk-label govuk-date-input__label"> Month </label>
       <input
@@ -36,6 +44,7 @@
         type="text"
       />
     </div>
+
     <div class="govuk-date-input__item">
       <label [for]="identifier + '-year'" class="govuk-label govuk-date-input__label"> Year </label>
       <input

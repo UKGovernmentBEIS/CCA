@@ -11,7 +11,7 @@ import {
 
 import { AccessibilityComponent } from './accessibility/accessibility.component';
 import { ContactUsComponent } from './contact-us/contact-us.component';
-import { DashboardPageComponent } from './dashboard/containers/dashboard-page/dashboard-page.component';
+import { DashboardPageComponent } from './dashboard/dashboard-page/dashboard-page.component';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LandingPageGuard } from './landing-page/landing-page.guard';
@@ -97,7 +97,6 @@ export const APP_ROUTES: Routes = [
     path: 'invitation',
     loadChildren: () => import('./invitation/invitation.routes').then((r) => r.INVITATION_ROUTES),
   },
-
   {
     path: 'timed-out',
     data: { pageTitle: 'Session Timeout' },
@@ -135,7 +134,8 @@ export const APP_ROUTES: Routes = [
       {
         path: 'target-unit-accounts',
         data: { breadcrumb: 'Target Unit Accounts' },
-        loadChildren: () => import('./accounts/accounts.routes').then((r) => r.ACCOUNT_ROUTES),
+        loadChildren: () =>
+          import('./target-unit-accounts/target-unit-accounts.routes').then((r) => r.TARGET_UNIT_ACCOUNT_ROUTES),
       },
       {
         path: 'tasks',
@@ -148,10 +148,19 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: 'subsistence-fees',
-        data: { breadcrumb: 'Subsistence fees' },
         canMatch: [() => !isFeatureEnabled('subsistenceFeesHideMenu')()],
         canActivate: [AuthorizeGuard],
         loadChildren: () => import('./subsistence-fees/subsistence-fees.routes').then((r) => r.SUBSISTENCE_FEES_ROUTES),
+      },
+      {
+        path: 'buyout-surplus',
+        canActivate: [AuthorizeGuard],
+        loadChildren: () => import('./buy-out-surplus/buy-out-surplus.routes').then((r) => r.BUY_OUT_SURPLUS_ROUTES),
+      },
+      {
+        path: 'templates',
+        canActivate: [AuthorizeGuard],
+        loadChildren: () => import('./templates/templates.routes').then((r) => r.TEMPLATES_ROUTES),
       },
       {
         path: 'terms',
@@ -162,7 +171,6 @@ export const APP_ROUTES: Routes = [
       },
     ],
   },
-
   // The route below handles all unknown routes / Page Not Found functionality.
   // Please keep this route last else there will be unexpected behavior.
   {

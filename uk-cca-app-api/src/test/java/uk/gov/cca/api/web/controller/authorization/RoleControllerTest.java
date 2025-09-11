@@ -48,7 +48,6 @@ class RoleControllerTest {
     private static final String BASE_PATH = "/v1.0/authorities";
     private static final String OPERATOR_ROLE_CODES_PATH = "operator-role-codes";
     private static final String REGULATOR_ROLES_PATH = "regulator-roles";
-    private static final String VERIFIER_ROLE_CODES_PATH = "verifier-role-codes";
 
     private MockMvc mockMvc;
 
@@ -155,35 +154,6 @@ class RoleControllerTest {
             .andExpect(jsonPath("$[0].code").value(regulatorRolePermissionsDTO.getCode()))
             .andExpect(jsonPath("$[0].rolePermissions", Matchers.hasKey(MANAGE_USERS_AND_CONTACTS)))
             .andExpect(jsonPath("$[0].rolePermissions", Matchers.hasValue(NONE.name())));
-    }
-
-    @Test
-    void getVerifierRoleCodes() throws Exception {
-        List<RoleDTO> verifierRoles = List.of(buildRole("verifier_code1"), buildRole("verifier_code2"));
-
-        when(roleService.getVerifierRoleCodes()).thenReturn(verifierRoles);
-
-        mockMvc.perform(MockMvcRequestBuilders
-            .get(BASE_PATH + "/" + VERIFIER_ROLE_CODES_PATH)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].code").value(verifierRoles.get(0).getCode()))
-            .andExpect(jsonPath("$[1].code").value(verifierRoles.get(1).getCode()));
-    }
-
-    @Test
-    void getVerifierRoleCodes_forbidden() throws Exception {
-        AppUser appUser = AppUser.builder().userId("authId").roleType(RoleTypeConstants.VERIFIER).build();
-        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        doThrow(new BusinessException(ErrorCode.FORBIDDEN))
-            .when(appUserAuthorizationService)
-            .authorize(appUser, "getVerifierRoleCodes");
-
-        // Invoke
-        mockMvc.perform(MockMvcRequestBuilders
-            .get(BASE_PATH + "/" + VERIFIER_ROLE_CODES_PATH)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isForbidden());
     }
 
     private RegulatorRolePermissionsDTO buildRolePermissionsDTO(String code,

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.common.domain.MeasurementType;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementEntity;
@@ -14,6 +14,7 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.underlyingagreement.repository.UnderlyingAgreementRepository;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.netz.api.common.exception.BusinessException;
 
 import java.util.Optional;
@@ -43,7 +44,6 @@ class UnderlyingAgreementServiceTest {
     @Test
     void submitUnderlyingAgreement() {
         final long accountId = 1L;
-        final MeasurementType measurementType = MeasurementType.ENERGY_GJ;
         final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder()
                 .facilities(Set.of(Facility.builder().status(FacilityStatus.NEW).build()))
                 .authorisationAndAdditionalEvidence(AuthorisationAndAdditionalEvidence.builder()
@@ -51,8 +51,10 @@ class UnderlyingAgreementServiceTest {
                         .build())
                 .build();
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
-                .sectorMeasurementType(measurementType)
                 .underlyingAgreement(underlyingAgreement)
+                .build();
+        final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
+                .schemeVersion(SchemeVersion.CCA_3)
                 .build();
 
         // update facility status to 'LIVE' before save
@@ -65,26 +67,26 @@ class UnderlyingAgreementServiceTest {
         when(underlyingAgreementRepository.save(entity)).thenReturn(entity);
 
         // Invoke
-        underlyingAgreementService.submitUnderlyingAgreement(container, accountId);
+        underlyingAgreementService.submitUnderlyingAgreement(container, accountId, underlyingAgreementValidationContext);
 
         // Verify
-        verify(underlyingAgreementValidatorService, times(1)).validate(container);
+        verify(underlyingAgreementValidatorService, times(1)).validate(container, underlyingAgreementValidationContext);
         verify(underlyingAgreementRepository, times(1)).save(entity);
 
         assertTrue(container.getUnderlyingAgreement().getFacilities().stream()
                 .allMatch(f -> f.getStatus().equals(FacilityStatus.LIVE)));
         assertThat(entity.getUnderlyingAgreementContainer()).isEqualTo(container);
-        assertThat(entity.getMeasurementType()).isEqualTo(measurementType);
         assertThat(entity.getActivationDate()).isNotNull();
     }
 
     @Test
     void updateUnderlyingAgreement() {
         final long accountId = 1L;
-        final MeasurementType measurementType = MeasurementType.ENERGY_GJ;
         final UnderlyingAgreementContainer newContainer = UnderlyingAgreementContainer.builder()
-                .sectorMeasurementType(measurementType)
                 .underlyingAgreement(UnderlyingAgreement.builder().build())
+                .build();
+        final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
+                .schemeVersion(SchemeVersion.CCA_3)
                 .build();
 
         UnderlyingAgreementEntity persistentEntity = new UnderlyingAgreementEntity();
@@ -93,25 +95,25 @@ class UnderlyingAgreementServiceTest {
                 .thenReturn(Optional.of(persistentEntity));
 
         // Invoke
-        underlyingAgreementService.updateUnderlyingAgreement(newContainer, accountId);
+        underlyingAgreementService.updateUnderlyingAgreement(newContainer, accountId, underlyingAgreementValidationContext);
 
         // Verify
         assertThat(persistentEntity.getUnderlyingAgreementContainer()).isEqualTo(newContainer);
-        assertThat(persistentEntity.getMeasurementType()).isEqualTo(measurementType);
         assertThat(persistentEntity.getConsolidationNumber()).isPositive();
         assertThat(persistentEntity.getActivationDate()).isNotNull();
 
-        verify(underlyingAgreementValidatorService, times(1)).validate(newContainer);
+        verify(underlyingAgreementValidatorService, times(1)).validate(newContainer, underlyingAgreementValidationContext);
         verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
     }
 
     @Test
     void updateUnderlyingAgreement_not_found() {
         final long accountId = 1L;
-        final MeasurementType measurementType = MeasurementType.ENERGY_GJ;
         final UnderlyingAgreementContainer newContainer = UnderlyingAgreementContainer.builder()
-                .sectorMeasurementType(measurementType)
                 .underlyingAgreement(UnderlyingAgreement.builder().build())
+                .build();
+        final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
+                .schemeVersion(SchemeVersion.CCA_3)
                 .build();
 
         when(underlyingAgreementRepository.findByAccountId(accountId))
@@ -119,11 +121,11 @@ class UnderlyingAgreementServiceTest {
 
         // Invoke
         BusinessException businessException = assertThrows(BusinessException.class, () ->
-                underlyingAgreementService.updateUnderlyingAgreement(newContainer, accountId));
+                underlyingAgreementService.updateUnderlyingAgreement(newContainer, accountId, underlyingAgreementValidationContext));
 
         // Verify
         assertThat(businessException.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
-        verify(underlyingAgreementValidatorService, times(1)).validate(newContainer);
+        verify(underlyingAgreementValidatorService, times(1)).validate(newContainer, underlyingAgreementValidationContext);
         verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
     }
 

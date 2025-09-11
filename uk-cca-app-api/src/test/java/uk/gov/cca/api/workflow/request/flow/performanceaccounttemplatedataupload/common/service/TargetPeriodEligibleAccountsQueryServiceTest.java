@@ -44,7 +44,7 @@ class TargetPeriodEligibleAccountsQueryServiceTest {
 				.findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedDuringActivatedYearOrTerminatedBetween(
 						sectorAssociationId, 
 						targetPeriodYear.atMonth(Month.DECEMBER).atDay(31).atTime(LocalTime.MAX),
-						targetPeriodYear.atMonth(Month.JANUARY).atDay(1).atTime(LocalTime.MIN),
+						targetPeriodYear.plusYears(1).atMonth(Month.JANUARY).atDay(1).atTime(LocalTime.MIN),
 						MonthDay.of(5, 1).atYear(targetPeriodYear.getValue() + 1).atTime(LocalTime.MIN)
 						))
 				.thenReturn(accounts);	
@@ -55,7 +55,7 @@ class TargetPeriodEligibleAccountsQueryServiceTest {
 		
 		verify(targetUnitAccountQueryService, times(1)).findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedDuringActivatedYearOrTerminatedBetween(sectorAssociationId, 
 				targetPeriodYear.atMonth(Month.DECEMBER).atDay(31).atTime(LocalTime.MAX),
-				targetPeriodYear.atMonth(Month.JANUARY).atDay(1).atTime(LocalTime.MIN),
+				targetPeriodYear.plusYears(1).atMonth(Month.JANUARY).atDay(1).atTime(LocalTime.MIN),
 				MonthDay.of(5, 1).atYear(targetPeriodYear.getValue() + 1).atTime(LocalTime.MIN)
 				);
 		

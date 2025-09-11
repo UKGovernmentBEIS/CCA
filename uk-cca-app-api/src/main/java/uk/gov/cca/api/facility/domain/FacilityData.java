@@ -1,5 +1,6 @@
 package uk.gov.cca.api.facility.domain;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +15,7 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,9 +23,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -56,6 +61,11 @@ public class FacilityData {
     @Column(name = "account_id")
     @NotNull
     private Long accountId;
+
+    @Type(JsonType.class)
+    @Column(name = "participating_scheme_versions", columnDefinition = "jsonb")
+    @NotEmpty
+    private Set<SchemeVersion> participatingSchemeVersions;
 
     @Column(name = "created_date")
     @NotNull

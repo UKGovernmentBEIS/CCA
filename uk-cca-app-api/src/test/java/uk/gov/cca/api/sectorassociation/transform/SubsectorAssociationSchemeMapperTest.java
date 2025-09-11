@@ -6,7 +6,6 @@ import uk.gov.cca.api.sectorassociation.domain.SubsectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.SubsectorAssociationScheme;
 import uk.gov.cca.api.sectorassociation.domain.TargetCommitment;
 import uk.gov.cca.api.sectorassociation.domain.TargetSet;
-import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationSchemeDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.TargetCommitmentDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.TargetSetDTO;
@@ -42,10 +41,7 @@ class SubsectorAssociationSchemeMapperTest {
                 .targetSet(subsectorTargetSet)
                 .build();
 
-        SubsectorAssociationSchemeDTO dto = subsectorAssociationSchemeMapper.subsectorAssociationSchemeToDTO(subsectorAssociationScheme);
-
-        // Assertions for SubsectorAssociationDTO within SubsectorAssociationSchemeDTO
-        assertEquals(subsectorAssociationScheme.getSubsectorAssociation().getName(), dto.getSubsectorAssociation().getName());
+        SubsectorAssociationSchemeDTO dto = subsectorAssociationSchemeMapper.toSubsectorAssociationSchemeDTO(subsectorAssociationScheme);
 
         // Assertions for TargetSetDTO within SubsectorAssociationSchemeDTO
         assertEquals(subsectorAssociationScheme.getTargetSet().getEnergyOrCarbonUnit(), dto.getTargetSet().getEnergyOrCarbonUnit());
@@ -70,20 +66,12 @@ class SubsectorAssociationSchemeMapperTest {
                 .targetCommitments(Collections.singletonList(targetCommitmentDTO))
                 .build();
 
-        SubsectorAssociationDTO subsectorAssociationDTO = SubsectorAssociationDTO.builder()
-                .name("name")
-                .build();
-
         SubsectorAssociationSchemeDTO subsectorAssociationSchemeDTO = SubsectorAssociationSchemeDTO.builder()
-                .subsectorAssociation(subsectorAssociationDTO)
                 .targetSet(targetSetDTO)
                 .build();
 
         SubsectorAssociationScheme subsectorAssociationScheme =
                 subsectorAssociationSchemeMapper.toSubsectorAssociationScheme(subsectorAssociationSchemeDTO);
-
-        // Assertions for getSubsectorAssociation within SubsectorAssociationScheme
-        assertEquals(subsectorAssociationScheme.getSubsectorAssociation().getName(), subsectorAssociationSchemeDTO.getSubsectorAssociation().getName());
 
         // Assertions for TargetSetDTO within SubsectorAssociationSchemeDTO
         assertEquals(subsectorAssociationScheme.getTargetSet().getEnergyOrCarbonUnit(), subsectorAssociationSchemeDTO.getTargetSet().getEnergyOrCarbonUnit());

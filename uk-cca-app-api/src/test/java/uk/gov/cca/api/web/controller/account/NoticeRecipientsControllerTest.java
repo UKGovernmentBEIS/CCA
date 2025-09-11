@@ -66,7 +66,7 @@ class NoticeRecipientsControllerTest {
     private NoticeRecipientsServiceOrchestrator noticeRecipientsServiceOrchestrator;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
         AuthorizedRoleAspect authorizedRoleAspect = new AuthorizedRoleAspect(roleAuthorizationService, authorizationAspectUserResolver);

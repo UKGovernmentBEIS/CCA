@@ -3,9 +3,11 @@ import { SummaryQueryParamsPipe } from './queryParams.pipe';
 
 describe('Summary Change link Query Params pipe', () => {
   let pipe: SummaryQueryParamsPipe;
+
   beforeEach(() => {
     pipe = new SummaryQueryParamsPipe();
   });
+
   it('should always change query param by default', () => {
     summaryData.forEach((s) => {
       s.data.forEach((d) => {
@@ -13,6 +15,7 @@ describe('Summary Change link Query Params pipe', () => {
       });
     });
   });
+
   it('should not append change query param if explicitly set to', () => {
     summaryDataNoChangeParam.forEach((s) => {
       s.data.forEach((d) => {

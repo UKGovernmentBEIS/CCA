@@ -15,7 +15,20 @@ import { toFinalDecisionReasonSummaryData } from '../../../final-decision-reason
 
 @Component({
   selector: 'cca-final-decision-reason-check-your-answers',
-  templateUrl: './final-decision-reason-check-your-answers.component.html',
+  template: `
+    <div>
+      <netz-page-heading data-testid="heading" [caption]="finalDecisionType | finalDecisionType">
+        Check your answers
+      </netz-page-heading>
+      <cca-summary [data]="summaryData" />
+      <button netzPendingButton govukButton type="button" (click)="onSaveFinalDecisionReason()">
+        Confirm and complete
+      </button>
+    </div>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [
     SummaryComponent,

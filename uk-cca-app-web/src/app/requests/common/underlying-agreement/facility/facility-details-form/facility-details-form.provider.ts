@@ -1,0 +1,281 @@
+import { InjectionToken, Provider } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+
+import { catchError, debounceTime, filter, map, Observable, of, switchMap, tap } from 'rxjs';
+
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { GovukValidators } from '@netz/govuk-components';
+import {
+  facilityExistenceValidator,
+  hasBothCCASchemes,
+  isCCA2Scheme,
+  isCCA3Scheme,
+  isCreationDateAfterCutOffDate,
+  underlyingAgreementQuery,
+} from '@requests/common';
+import { AccountAddressFormModel, createAccountAddressForm } from '@shared/components';
+import { ConfigService } from '@shared/config';
+import { SchemeVersion, SchemeVersions } from '@shared/types';
+import { facilityIDValidators, textFieldValidators } from '@shared/validators';
+
+import { FacilityDetails, FacilityService } from 'cca-api';
+
+export type FacilityDetailsFormModel = {
+  name: FormControl<string>;
+  facilityId: FormControl<string>;
+  isCoveredByUkets: FormControl<FacilityDetails['isCoveredByUkets']>;
+  uketsId: FormControl<FacilityDetails['uketsId']>;
+  applicationReason: FormControl<FacilityDetails['applicationReason']>;
+  previousFacilityId: FormControl<FacilityDetails['previousFacilityId']>;
+  participatingSchemeVersions: FormControl<SchemeVersions>;
+  schemeParticipationChoice: FormControl<boolean | null>;
+  sameAddress: FormControl<boolean[]>;
+  facilityAddress: FormGroup<AccountAddressFormModel>;
+};
+
+export const FACILITY_DETAILS_FORM = new InjectionToken<FacilityDetailsFormModel>('Facility Details Form');
+
+export const FacilityDetailsFormProvider: Provider = {
+  provide: FACILITY_DETAILS_FORM,
+  deps: [FormBuilder, ActivatedRoute, RequestTaskStore, FacilityService, ConfigService],
+  useFactory: (
+    fb: FormBuilder,
+    activatedRoute: ActivatedRoute,
+    requestTaskStore: RequestTaskStore,
+    facilityService: FacilityService,
+    configService: ConfigService,
+  ) => {
+    const facilityId = activatedRoute.snapshot.params.facilityId;
+    const facility = requestTaskStore.select(underlyingAgreementQuery.selectFacility(facilityId))();
+
+    const targetUnitAddress = requestTaskStore.select(
+      underlyingAgreementQuery.selectAccountReferenceDataTargetUnitDetails,
+    )().address;
+
+    const isAfterCutOffDate = isCreationDateAfterCutOffDate(
+      requestTaskStore.select(requestTaskQuery.selectRequestInfo)()?.creationDate,
+      configService.getUnderlyingAgreementSchemeParticipationFlagCutOffDate(),
+    );
+
+    const previousFacilityId = facility?.facilityDetails?.previousFacilityId;
+    const schemeVersions = facility?.facilityDetails?.participatingSchemeVersions;
+
+    let schemeParticipationChoice: boolean | null = null;
+
+    if (previousFacilityId) {
+      if (hasBothCCASchemes(schemeVersions)) {
+        schemeParticipationChoice = true;
+      } else if (isCCA2Scheme(schemeVersions)) {
+        schemeParticipationChoice = false;
+      }
+    }
+
+    const addressFormGroup = createAccountAddressForm(facility?.facilityDetails?.facilityAddress ?? null);
+
+    const group = fb.group<FacilityDetailsFormModel>({
+      name: fb.control(
+        { value: facility?.facilityDetails?.name ?? null, disabled: facility && facility?.status !== 'NEW' },
+        textFieldValidators('site name'),
+      ),
+      facilityId: fb.control({ value: facility?.facilityId, disabled: true }),
+      isCoveredByUkets: fb.control(facility?.facilityDetails?.isCoveredByUkets ?? null, [
+        GovukValidators.required('Select yes if this facility is covered by UK ETS'),
+      ]),
+      uketsId: fb.control(facility?.facilityDetails?.uketsId ?? null, [
+        GovukValidators.required('UK ETS installation identifier cannot be blank'),
+        GovukValidators.maxLength(255, 'UK ETS installation identifier should not be more than 255 characters'),
+      ]),
+      applicationReason: fb.control(
+        {
+          value: facility?.facilityDetails?.applicationReason ?? null,
+          disabled: facility && facility?.status !== 'NEW',
+        },
+        [GovukValidators.required('Select the reason for the application')],
+      ),
+      previousFacilityId: fb.control({
+        value: facility?.facilityDetails?.previousFacilityId ?? null,
+        disabled: facility && facility?.status !== 'NEW',
+      }),
+      participatingSchemeVersions: fb.control(facility?.facilityDetails?.participatingSchemeVersions ?? []),
+      schemeParticipationChoice: fb.control<boolean | null>(schemeParticipationChoice),
+      sameAddress: fb.control([false]),
+      facilityAddress: addressFormGroup,
+    });
+
+    handleSchemeParticipationLogic(group, facility?.facilityDetails?.participatingSchemeVersions, isAfterCutOffDate);
+
+    group.controls.applicationReason.valueChanges.pipe(takeUntilDestroyed()).subscribe((reason) => {
+      handleApplicationReasonChange(reason, group, facilityService);
+    });
+
+    group.controls.previousFacilityId.statusChanges
+      .pipe(
+        takeUntilDestroyed(),
+        filter(
+          () =>
+            group.controls.applicationReason.value === 'CHANGE_OF_OWNERSHIP' &&
+            !group.controls.previousFacilityId.disabled,
+        ),
+        debounceTime(300),
+        switchMap(() => {
+          const facilityId = group.controls.previousFacilityId.value;
+          if (facilityId) return getFacilitySchemeParticipation(facilityService, facilityId);
+          return of(null);
+        }),
+        tap((schemeVersions) => handleSchemeParticipationLogic(group, schemeVersions, isAfterCutOffDate)),
+      )
+      .subscribe();
+
+    if (!isAfterCutOffDate) {
+      group.controls.schemeParticipationChoice.valueChanges.pipe(takeUntilDestroyed()).subscribe((choice) => {
+        updateSchemeParticipation(group, choice);
+      });
+    }
+
+    group.controls.sameAddress.valueChanges.pipe(takeUntilDestroyed()).subscribe((isSameAddress) => {
+      if (isSameAddress[0]) {
+        group.controls.facilityAddress.setValue({
+          ...targetUnitAddress,
+          line2: targetUnitAddress.line2 ?? null,
+          county: targetUnitAddress.county ?? null,
+        });
+
+        group.controls.facilityAddress.disable();
+      } else {
+        group.controls.facilityAddress.reset();
+        group.controls.facilityAddress.enable();
+      }
+    });
+
+    return group;
+  },
+};
+
+function getFacilitySchemeParticipation(
+  facilityService: FacilityService,
+  facilityId: string,
+): Observable<SchemeVersions | null> {
+  return facilityService.getActiveFacilityParticipatingSchemeVersions(facilityId).pipe(
+    map((schemeVersions) => (schemeVersions as SchemeVersions) || []),
+    catchError(() => of(null)),
+  );
+}
+
+function setupChangeOfOwnershipValidators(
+  group: FormGroup<FacilityDetailsFormModel>,
+  facilityService: FacilityService,
+) {
+  const previousFacilityCtrl = group.controls.previousFacilityId;
+
+  previousFacilityCtrl.enable();
+  previousFacilityCtrl.setValidators(
+    facilityIDValidators(
+      'Enter the facility ID of an existing facility.',
+      'The Previous facility ID must be in the same format as the facility number, like AAAA-F00001',
+    ),
+  );
+  previousFacilityCtrl.setAsyncValidators(facilityExistenceValidator(facilityService));
+  previousFacilityCtrl.updateValueAndValidity();
+}
+
+function handleApplicationReasonChange(
+  reason: 'NEW_AGREEMENT' | 'CHANGE_OF_OWNERSHIP' | null,
+  group: FormGroup<FacilityDetailsFormModel>,
+  facilityService: FacilityService,
+) {
+  const previousFacilityIdCtrl = group.controls.previousFacilityId;
+  const schemeParticipationChoiceCtrl = group.controls.schemeParticipationChoice;
+  const participatingSchemeVersionsCtrl = group.controls.participatingSchemeVersions;
+
+  if (reason === 'NEW_AGREEMENT') {
+    previousFacilityIdCtrl.disable();
+    previousFacilityIdCtrl.reset();
+
+    schemeParticipationChoiceCtrl.disable();
+    schemeParticipationChoiceCtrl.reset();
+
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_3]);
+  } else {
+    setupChangeOfOwnershipValidators(group, facilityService);
+
+    participatingSchemeVersionsCtrl.setValue([]);
+    schemeParticipationChoiceCtrl.reset();
+    schemeParticipationChoiceCtrl.disable();
+  }
+
+  previousFacilityIdCtrl.updateValueAndValidity();
+  schemeParticipationChoiceCtrl.updateValueAndValidity();
+  participatingSchemeVersionsCtrl.updateValueAndValidity();
+}
+
+function handleSchemeParticipationLogic(
+  group: FormGroup<FacilityDetailsFormModel>,
+  previousFacilitySchemes: SchemeVersions | null,
+  isAfterCutOffDate: boolean,
+) {
+  const schemeParticipationChoiceCtrl = group.controls.schemeParticipationChoice;
+  const participatingSchemeVersionsCtrl = group.controls.participatingSchemeVersions;
+
+  if (!previousFacilitySchemes || previousFacilitySchemes.length === 0) {
+    // No data available - reset everything
+    schemeParticipationChoiceCtrl.disable();
+    schemeParticipationChoiceCtrl.reset();
+    participatingSchemeVersionsCtrl.setValue([]);
+    return;
+  }
+
+  if (isAfterCutOffDate) {
+    schemeParticipationChoiceCtrl.disable();
+    schemeParticipationChoiceCtrl.reset();
+
+    if (hasBothCCASchemes(previousFacilitySchemes)) {
+      participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_2, SchemeVersion.CCA_3]);
+      return;
+    }
+
+    if (isCCA3Scheme(previousFacilitySchemes)) {
+      participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_3]);
+      return;
+    }
+
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_2]);
+    return;
+  }
+
+  if (hasBothCCASchemes(previousFacilitySchemes)) {
+    // Previous facility has both -> show user choice
+    schemeParticipationChoiceCtrl.enable();
+    schemeParticipationChoiceCtrl.setValidators([
+      GovukValidators.required('Select yes if this facility will participate in CCA3'),
+    ]);
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_2, SchemeVersion.CCA_3]);
+  } else if (isCCA3Scheme(previousFacilitySchemes)) {
+    // Previous facility has CCA3 -> automatically set to CCA3
+    schemeParticipationChoiceCtrl.disable();
+    schemeParticipationChoiceCtrl.reset();
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_3]);
+  } else {
+    // Previous facility has CCA2 -> show user choice
+    schemeParticipationChoiceCtrl.enable();
+    schemeParticipationChoiceCtrl.setValidators([
+      GovukValidators.required('Select yes if this facility will participate in CCA3'),
+    ]);
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_2]);
+  }
+
+  schemeParticipationChoiceCtrl.updateValueAndValidity();
+}
+
+function updateSchemeParticipation(group: FormGroup<FacilityDetailsFormModel>, userChoice: boolean | null) {
+  const participatingSchemeVersionsCtrl = group.controls.participatingSchemeVersions;
+
+  if (userChoice === true) {
+    // User chose Yes -> BOTH CCA2 and CCA3
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_2, SchemeVersion.CCA_3]);
+  } else if (userChoice === false) {
+    // User chose No -> CCA2 only
+    participatingSchemeVersionsCtrl.setValue([SchemeVersion.CCA_2]);
+  }
+}

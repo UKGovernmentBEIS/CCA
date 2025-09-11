@@ -1,0 +1,45 @@
+<form (ngSubmit)="onSearch()" [formGroup]="searchForm" id="search-form">
+  <div class="govuk-grid-row govuk-!-margin-bottom-5">
+    <div class="govuk-grid-column-two-thirds">
+      <div
+        formControlName="term"
+        govuk-text-input
+        label="Search for a template"
+        inputType="search"
+        aria-description="search results will appear below"
+      ></div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <button netzPendingButton govukButton type="submit" style="margin: 1.9rem 0">Search</button>
+    </div>
+  </div>
+</form>
+
+@if (templates().length) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <ng-container aria-live="polite" role="region" aria-atomic="true">
+        <cca-template-list
+          data-testid="template-list-component"
+          [templates]="templates()"
+          [templateType]="'document'"
+        />
+
+        <cca-pagination
+          [count]="count()"
+          [currentPage]="currentPage()"
+          [pageSize]="pageSize()"
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        />
+      </ng-container>
+    </div>
+  </div>
+} @else {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <p tabindex="-1" role="status">There are no results to show</p>
+    </div>
+  </div>
+}

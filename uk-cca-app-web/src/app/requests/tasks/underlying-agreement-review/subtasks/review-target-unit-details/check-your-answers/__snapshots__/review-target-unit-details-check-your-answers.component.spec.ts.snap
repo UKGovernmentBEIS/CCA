@@ -7,8 +7,9 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
   downloadUrl={[Function String]}
   requestTaskStore={[Function _RequestTaskStore]}
   router={[Function _Router]}
+  store={[Function _RequestTaskStore]}
   summaryData={[Function Array]}
-  taskService={[Function Object]}
+  tasksApiService={[Function TasksApiService]}
 >
   <div>
     <netz-page-heading
@@ -99,13 +100,40 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Company registration number
+            Company number
           </dt>
           <dd
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             123123123123 
+             AB123456 
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/?change=true"
+            >
+              Change
+            </a>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Reason for not having a registration number
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -433,7 +461,7 @@ exports[`Review Target Unit Details CheckYourAnswers should render the summary s
     class="govuk-footer__section-break govuk-!-margin-bottom-3"
   /><netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Review application for underlying agreement 

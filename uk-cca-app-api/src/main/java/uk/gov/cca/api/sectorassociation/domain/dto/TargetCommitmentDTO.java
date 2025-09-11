@@ -2,7 +2,6 @@ package uk.gov.cca.api.sectorassociation.domain.dto;
 
 import java.math.BigDecimal;
 
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

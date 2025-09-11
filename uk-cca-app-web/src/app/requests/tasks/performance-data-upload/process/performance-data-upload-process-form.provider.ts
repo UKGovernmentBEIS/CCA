@@ -6,7 +6,6 @@ import { GovukValidators } from '@netz/govuk-components';
 import { PerformanceDataTargetPeriodEnum } from '@requests/common';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
-import { transformAttachmentsToFilesWithUUIDs, transformFilesToUUIDsList } from '@shared/utils';
 
 import { performanceDataUploadQuery } from '../+state/performance-data-upload-selectors';
 
@@ -27,18 +26,13 @@ export const PerformanceDataUploadProcessFormProvider: Provider = {
     const attachments = requestTaskStore.select(performanceDataUploadQuery.selectPerformanceDataUploadAttachments)();
     const performanceDataUpload = requestTaskStore.select(performanceDataUploadQuery.selectPerformanceDataUpload)();
 
-    const uploadedFiles = transformAttachmentsToFilesWithUUIDs(
-      performanceDataUpload?.reportPackages ?? [],
-      attachments,
-    );
-
     return fb.group({
       targetPeriodType: fb.control(PerformanceDataTargetPeriodEnum.TP6, [
         GovukValidators.required('Please select an option'),
       ]),
       uploadedFiles: requestTaskFileService.buildFormControl(
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
-        transformFilesToUUIDsList(uploadedFiles),
+        performanceDataUpload?.reportPackages || [],
         attachments,
         'PERFORMANCE_DATA_UPLOAD_ATTACH_REPORT_PACKAGE',
         true,

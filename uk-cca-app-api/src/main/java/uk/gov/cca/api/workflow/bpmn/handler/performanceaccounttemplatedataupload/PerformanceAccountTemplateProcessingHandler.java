@@ -33,7 +33,7 @@ public class PerformanceAccountTemplateProcessingHandler implements JavaDelegate
 			throw new BpmnError("PerformanceAccountTemplateProcessingException", e);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			accountReport.getErrors().add("Internal error occurred");
+			accountReport.getErrors().add("Internal error occurred. Please contact the regulator for further advice.");
 			throw new BpmnError("PerformanceAccountTemplateProcessingHandler", e);
 		}
 	}

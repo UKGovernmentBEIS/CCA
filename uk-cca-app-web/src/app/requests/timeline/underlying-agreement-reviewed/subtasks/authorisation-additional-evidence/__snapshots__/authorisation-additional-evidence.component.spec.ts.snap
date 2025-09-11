@@ -14,10 +14,6 @@ exports[`AuthorisationAdditionalEvidenceComponent should match snapshot 1`] = `
       </h1>
     </netz-page-heading>
     <cca-summary>
-      <h2
-        class="govuk-heading-m"
-      >
-      </h2>
       <dl
         class="govuk-summary-list govuk-!-margin-bottom-9"
         govuk-summary-list=""

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/tpr_facility_certification_ddl.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+    <changeSet id="0_1_0_FACILITY_CERTIFICATION_SEQUENCE" author="P70383">
+        <createSequence sequenceName="tpr_facility_certification_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS tpr_facility_certification_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_FACILITY_CERTIFICATION_CREATE_TABLE" author="P70383">
+        <comment>Create facility certification table</comment>
+        <createTable tableName="tpr_facility_certification" remarks="Represents the facility certification">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="tpr_facility_certification_pk" nullable="false"/>
+            </column>
+            <column name="facility_id" type="bigint" remarks="The facility id">
+                <constraints nullable="false"/>
+            </column>
+            <column name="certification_period_id" type="bigint" remarks="The certification period id">
+                <constraints nullable="false"/>
+            </column>
+            <column name="certification_status" type="varchar(64)" remarks="The certification status">
+                <constraints nullable="false" />
+            </column>
+            <column name="start_date" type="date" remarks="The start date of facility certified">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint
+                tableName="tpr_facility_certification"
+                columnNames="facility_id, certification_period_id"
+                constraintName="tpr_facility_certification_uc"/>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS tpr_facility_certification CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import uk.gov.cca.api.targetperiod.domain.TargetPeriod;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiod.repository.TargetPeriodRepository;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.AccountPerformanceDataStatus;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataContainer;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataEntity;
@@ -17,7 +17,7 @@ import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDa
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.AccountPerformanceDataUpdateLockDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.repository.AccountPerformanceDataStatusRepository;
 import uk.gov.cca.api.targetperiodreporting.performancedata.repository.PerformanceDataRepository;
-import uk.gov.cca.api.targetperiodreporting.performancedata.service.validator.AccountPerformanceDataStatusValidatorService;
+import uk.gov.cca.api.targetperiodreporting.performancedata.validation.AccountPerformanceDataStatusValidationService;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 
@@ -29,9 +29,9 @@ import java.util.Optional;
 public class AccountPerformanceDataStatusService {
 
 	private final AccountPerformanceDataStatusRepository accountPerformanceDataStatusRepository;
-	private final TargetPeriodRepository targetPeriodRepository;
 	private final PerformanceDataRepository performanceDataRepository;
-	private final AccountPerformanceDataStatusValidatorService validatorService;
+	private final TargetPeriodService targetPeriodService;
+	private final AccountPerformanceDataStatusValidationService validatorService;
 
 	@Transactional
 	public void updateAccountPerformanceDataLock(Long accountId, AccountPerformanceDataUpdateLockDTO updateLockDTO) {
@@ -52,14 +52,13 @@ public class AccountPerformanceDataStatusService {
 		validatorService.validateAccountUnlocked(accountPerformanceData);
 		validatorService.validateReportVersion(accountPerformanceData, reportVersion);
 
-		TargetPeriod targetPeriod = targetPeriodRepository.findByBusinessId(targetPeriodType)
-				.orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
+		TargetPeriod targetPeriod = targetPeriodService.findByTargetPeriodType(targetPeriodType);
 
 		PerformanceDataEntity newPerformanceData = createPerformanceData(container, accountId, targetPeriod,
 				reportVersion, submissionType);
 
 		accountPerformanceData.ifPresentOrElse(
-				existingAccountPerformanceData -> updateExistingAccountPerformanceData(existingAccountPerformanceData,
+				existingAccountPerformanceData -> updateExistingAccountPerformanceDataStatus(existingAccountPerformanceData,
 						newPerformanceData),
 				() -> createAccountPerformanceData(accountId, targetPeriod, newPerformanceData));
 
@@ -87,7 +86,7 @@ public class AccountPerformanceDataStatusService {
 		accountPerformanceDataStatusRepository.save(newAccountPerformanceData);
 	}
 
-	private void updateExistingAccountPerformanceData(AccountPerformanceDataStatus accountPerformanceData,
+	private void updateExistingAccountPerformanceDataStatus(AccountPerformanceDataStatus accountPerformanceData,
 			PerformanceDataEntity newPerformanceData) {
 
 		accountPerformanceData.setLocked(true);

@@ -1,4 +1,3 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -24,10 +23,11 @@ describe('EditDetailsComponent', () => {
 
   class Page extends BasePage<EditDetailsComponent> {
     get sicCodeValue() {
-      return this.getInputValue('#sicCode');
+      return this.getInputValue('#sicCodes.0');
     }
+
     set sicCodeValue(value: string) {
-      this.setInputValue('#sicCode', value);
+      this.setInputValue('#sicCodes.0', value);
     }
 
     get submitButton() {
@@ -39,19 +39,19 @@ describe('EditDetailsComponent', () => {
     activatedRoute = new ActivatedRouteStub({ id: '1' }, null, {
       subSectorScheme: mockSectorScheme,
     });
+
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, EditDetailsComponent],
+      imports: [EditDetailsComponent],
       providers: [
         ActiveTargetUnitStore,
         { provide: UpdateTargetUnitAccountService, useValue: updateTargetUnitAccountService },
         { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     store = TestBed.inject(ActiveTargetUnitStore);
     store.setState({ targetUnitAccountDetails: mockTargetUnitAccountDetails });
+
     fixture = TestBed.createComponent(EditDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -63,7 +63,7 @@ describe('EditDetailsComponent', () => {
   });
 
   it('should display the pre-populated form', () => {
-    expect(page.sicCodeValue).toEqual(mockTargetUnitAccountDetails.sicCode);
+    expect([page.sicCodeValue]).toEqual(mockTargetUnitAccountDetails.sicCodes);
   });
 
   it('should edit details and submit form', () => {
@@ -73,6 +73,6 @@ describe('EditDetailsComponent', () => {
     page.submitButton.click();
     fixture.detectChanges();
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith(0, { sicCode: 'Changed' });
+    expect(spy).toHaveBeenCalledWith(0, { sicCodes: ['Changed'] });
   });
 });

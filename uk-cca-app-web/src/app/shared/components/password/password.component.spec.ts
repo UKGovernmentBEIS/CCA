@@ -9,17 +9,17 @@ import { of } from 'rxjs';
 import { ErrorSummaryComponent } from '@netz/govuk-components';
 import { render } from '@testing-library/angular';
 import { screen } from '@testing-library/dom';
+import { type UserEvent as UE } from '@testing-library/user-event';
 import UserEvent from '@testing-library/user-event';
 import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { PasswordComponent } from './password.component';
-import { PasswordService } from './password.service';
+import { PasswordValidators } from './password.service';
 import { PASSWORD_FORM, passwordFormFactory } from './password-form.factory';
-
 @Component({
   template: `
     @if (form.invalid && form.touched) {
-      <govuk-error-summary [form]="form"></govuk-error-summary>
+      <govuk-error-summary [form]="form" />
     }
     <form [formGroup]="form">
       <cca-password></cca-password>
@@ -36,7 +36,7 @@ export class TestComponent {
 
 describe('PasswordComponent', () => {
   beforeEach(async () => {
-    PasswordService.blacklisted = jest
+    PasswordValidators.blacklisted = jest
       .fn()
       .mockReturnValue(of({ blacklisted: 'Password has been blacklisted. Please select another password' }));
 

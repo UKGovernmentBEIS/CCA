@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.subsistencefees.config.SubsistenceFeesConfig;
+import uk.gov.cca.api.underlyingagreement.config.UnderlyingAgreementConfig;
 import uk.gov.netz.api.alert.dto.NotificationAlertDTO;
 import uk.gov.netz.api.alert.service.NotificationAlertService;
 import uk.gov.netz.api.configuration.domain.ui.UIConfigurationPropertiesDTO;
@@ -23,10 +24,10 @@ import uk.gov.netz.api.configuration.service.ui.UIConfigurationPropertiesResolve
 
 @ExtendWith(MockitoExtension.class)
 class UIPropertiesResolverTest {
-
-	@InjectMocks
+    
+    @InjectMocks
     private UIPropertiesResolver cut;
-
+    
     @Mock
     private NotificationAlertService notificationAlertService;
     
@@ -36,47 +37,53 @@ class UIPropertiesResolverTest {
     @Mock
     private SubsistenceFeesConfig subsistenceFeesConfig;
     
+    @Mock
+    UnderlyingAgreementConfig underlyingAgreementConfig;
+    
     @Test
     void resolve() {
-    	LocalDate subsistenceFeesTriggerDate = LocalDate.now();
-    	
-		UIConfigurationPropertiesDTO uiConfigurationPropertiesDTO = UIConfigurationPropertiesDTO.builder()
-				.features(new HashMap<String, Boolean>() {
-					{
-						put("ui.features.key1", Boolean.TRUE);
-						put("ui.features.key2", Boolean.FALSE);
-					}
-				})
-				.analytics(new HashMap<String, String>() {
-					{
-						put("ui.analytics.key1", "analytics1");
-						put("ui.analytics.key2", "analytics2");
-					}
-				})
-				.keycloakServerUrl("keycloakServerUrl")
-				.build();
-		
-		List<NotificationAlertDTO> notificationAlerts = List.of(
-				NotificationAlertDTO.builder().subject("sub1").body("body1").build(),
-				NotificationAlertDTO.builder().subject("sub2").body("body2").build()
-				);
-		
-		when(uiConfigurationPropertiesResolver.resolve()).thenReturn(uiConfigurationPropertiesDTO);
-		when(notificationAlertService.getNotificationAlerts()).thenReturn(notificationAlerts);
-		when(subsistenceFeesConfig.getTriggerDate()).thenReturn(subsistenceFeesTriggerDate);
-		
-		UIPropertiesDTO result = cut.resolve();
-		
-		assertThat(result).isEqualTo(UIPropertiesDTO.builder()
-				.features(uiConfigurationPropertiesDTO.getFeatures())
-				.analytics(uiConfigurationPropertiesDTO.getAnalytics())
-				.keycloakServerUrl(uiConfigurationPropertiesDTO.getKeycloakServerUrl())
-				.subsistenceFeesRunTriggerDate(subsistenceFeesTriggerDate)
-				.notificationAlerts(notificationAlerts)
-				.build());
-		
-		verify(uiConfigurationPropertiesResolver, times(1)).resolve();
-		verify(notificationAlertService, times(1)).getNotificationAlerts();
-		verify(subsistenceFeesConfig, times(1)).getTriggerDate();
+        LocalDate subsistenceFeesTriggerDate = LocalDate.now();
+        LocalDate schemeParticipationCutOffFlag = LocalDate.now();
+        
+        UIConfigurationPropertiesDTO uiConfigurationPropertiesDTO = UIConfigurationPropertiesDTO.builder()
+                .features(new HashMap<String, Boolean>() {
+                    {
+                        put("ui.features.key1", Boolean.TRUE);
+                        put("ui.features.key2", Boolean.FALSE);
+                    }
+                })
+                .analytics(new HashMap<String, String>() {
+                    {
+                        put("ui.analytics.key1", "analytics1");
+                        put("ui.analytics.key2", "analytics2");
+                    }
+                })
+                .keycloakServerUrl("keycloakServerUrl")
+                .build();
+        
+        List<NotificationAlertDTO> notificationAlerts = List.of(
+                NotificationAlertDTO.builder().subject("sub1").body("body1").build(),
+                NotificationAlertDTO.builder().subject("sub2").body("body2").build()
+        );
+        
+        when(uiConfigurationPropertiesResolver.resolve()).thenReturn(uiConfigurationPropertiesDTO);
+        when(notificationAlertService.getNotificationAlerts()).thenReturn(notificationAlerts);
+        when(subsistenceFeesConfig.getTriggerDate()).thenReturn(subsistenceFeesTriggerDate);
+        when(underlyingAgreementConfig.getSchemeParticipationFlagCutOffDate()).thenReturn(schemeParticipationCutOffFlag);
+        
+        UIPropertiesDTO result = cut.resolve();
+        
+        assertThat(result).isEqualTo(UIPropertiesDTO.builder()
+                .features(uiConfigurationPropertiesDTO.getFeatures())
+                .analytics(uiConfigurationPropertiesDTO.getAnalytics())
+                .keycloakServerUrl(uiConfigurationPropertiesDTO.getKeycloakServerUrl())
+                .subsistenceFeesRunTriggerDate(subsistenceFeesTriggerDate)
+                .underlyingAgreementSchemeParticipationFlagCutOffDate(schemeParticipationCutOffFlag)
+                .notificationAlerts(notificationAlerts)
+                .build());
+        
+        verify(uiConfigurationPropertiesResolver, times(1)).resolve();
+        verify(notificationAlertService, times(1)).getNotificationAlerts();
+        verify(subsistenceFeesConfig, times(1)).getTriggerDate();
     }
 }

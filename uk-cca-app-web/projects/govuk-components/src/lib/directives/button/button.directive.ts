@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostBinding, HostListener, inject } from '@angular/core';
 
 @Directive({
   selector:
@@ -6,7 +6,7 @@ import { Directive, ElementRef, HostBinding, HostListener } from '@angular/core'
   standalone: true,
 })
 export class ButtonDirective {
-  constructor(private readonly elementRef: ElementRef) {}
+  private readonly elementRef = inject(ElementRef);
 
   @HostBinding('attr.aria-disabled')
   @HostBinding('class.govuk-button--disabled')

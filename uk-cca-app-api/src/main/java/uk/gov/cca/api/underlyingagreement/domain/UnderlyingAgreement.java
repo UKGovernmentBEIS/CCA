@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,15 +35,12 @@ public class UnderlyingAgreement {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Builder.Default
     @Valid
-    @NotEmpty
     @JsonDeserialize(as = LinkedHashSet.class)
     private Set<@NotNull Facility> facilities = new HashSet<>();
 
-    @NotNull
     @Valid
     private TargetPeriod5Details targetPeriod5Details;
 
-    @NotNull
     @Valid
     private TargetPeriod6Details targetPeriod6Details;
 

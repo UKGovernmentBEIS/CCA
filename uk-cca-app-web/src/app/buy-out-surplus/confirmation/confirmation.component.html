@@ -1,0 +1,26 @@
+<div class="govuk-!-width-two-thirds">
+  <govuk-panel title="Batch in progress">
+    Your reference code is: <br />
+    {{ referenceCode }}
+  </govuk-panel>
+
+  <p>
+    You can navigate away from this page. The batch run progress can be monitored via the "Workflow history" section,
+    where you can check its status at any time and review any failed TUs if applicable.
+  </p>
+
+  <h2 class="govuk-heading-m">What happens next</h2>
+
+  <p>
+    Once the batch is completed you will be able to view and monitor outstanding amounts through the details of the
+    "Transactions tab" (dedicated tab in buy-out and surplus main screen).
+  </p>
+
+  <p>Select "{{ referenceCode }}" from your "Workflow history" tab to find the report.</p>
+
+  <div class="govuk-!-margin-top-9">
+    <a class="govuk-link" [routerLink]="['/', 'buyout-surplus']" [replaceUrl]="true">
+      Return to: Buy-out and surplus
+    </a>
+  </div>
+</div>

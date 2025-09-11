@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
@@ -24,9 +25,7 @@ describe('FileUploadComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, FileUploadComponent, TestComponent, ErrorMessageComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     hostComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(FileUploadComponent)).componentInstance;
@@ -58,5 +57,18 @@ describe('FileUploadComponent', () => {
     fixture.detectChanges();
 
     expect(hostComponent.control.touched).toBeTruthy();
+  });
+
+  it('should emit file change', () => {
+    const input = fixture.debugElement.query(By.css('input'));
+    const mockFiles = [new File(['test'], 'test.txt', { type: 'text/plain' })];
+    const mockEvent = { target: { files: mockFiles } };
+
+    expect(hostComponent.control.value).toBeNull();
+
+    input.triggerEventHandler('change', mockEvent);
+    fixture.detectChanges();
+
+    expect(hostComponent.control.value).toEqual(mockFiles);
   });
 });

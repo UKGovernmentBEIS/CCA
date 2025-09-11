@@ -1,25 +1,24 @@
 package uk.gov.cca.api.workflow.request.flow.admintermination.submit.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
+import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationReason;
+import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationReasonDetails;
+import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
+import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
-import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationReason;
-import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationReasonDetails;
-import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSaveRequestTaskActionPayload;
-import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSubmitRequestTaskPayload;
-import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
-import uk.gov.netz.api.workflow.request.core.domain.Request;
-import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class AdminTerminationSubmitServiceTest {
@@ -62,7 +61,7 @@ class AdminTerminationSubmitServiceTest {
         final Map<UUID, String> attachments = Map.of(UUID.randomUUID(), "attachment");
         final Map<String, String> sectionsCompleted = Map.of("subtask", "in_progress");
 
-        RequestTask requestTask = RequestTask.builder()
+        final RequestTask requestTask = RequestTask.builder()
                 .request(Request.builder()
                         .payload(AdminTerminationRequestPayload.builder()
                                 .payloadType(CcaRequestPayloadType.ADMIN_TERMINATION_REQUEST_PAYLOAD)
@@ -86,5 +85,38 @@ class AdminTerminationSubmitServiceTest {
         assertThat(actual.getDecisionNotification()).isEqualTo(decisionNotification);
         assertThat(actual.getSubmitSubmissionDate()).isNotNull();
         assertThat(requestTask.getRequest().getSubmissionDate()).isNotNull();
+    }
+
+    @Test
+    void requestPeerReview() {
+        final String selectedPeerReviewer = UUID.randomUUID().toString();
+        final String regulatorReviewer = UUID.randomUUID().toString();
+        final AdminTerminationReasonDetails adminTerminationReasonDetails = AdminTerminationReasonDetails.builder()
+                .reason(AdminTerminationReason.DATA_NOT_PROVIDED)
+                .explanation("explanation")
+                .build();
+        final Map<UUID, String> attachments = Map.of(UUID.randomUUID(), "attachment");
+        final Map<String, String> sectionsCompleted = Map.of("subtask", "in_progress");
+        final RequestTask requestTask = RequestTask.builder()
+                .request(Request.builder()
+                        .payload(AdminTerminationRequestPayload.builder()
+                                .payloadType(CcaRequestPayloadType.ADMIN_TERMINATION_REQUEST_PAYLOAD)
+                                .build())
+                        .build())
+                .payload(AdminTerminationSubmitRequestTaskPayload.builder()
+                        .adminTerminationReasonDetails(adminTerminationReasonDetails)
+                        .adminTerminationAttachments(attachments)
+                        .sectionsCompleted(sectionsCompleted)
+                        .build())
+                .build();
+
+        // invoke
+        adminTerminationSubmitService.requestPeerReview(requestTask, selectedPeerReviewer, regulatorReviewer);
+
+        // verify
+        AdminTerminationRequestPayload actual = (AdminTerminationRequestPayload) requestTask.getRequest().getPayload();
+        assertThat(actual.getAdminTerminationReasonDetails()).isEqualTo(adminTerminationReasonDetails);
+        assertThat(actual.getAdminTerminationSubmitAttachments()).isEqualTo(attachments);
+        assertThat(actual.getSectionsCompleted()).isEqualTo(sectionsCompleted);
     }
 }

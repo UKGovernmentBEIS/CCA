@@ -1,72 +1,62 @@
-import { DecimalPipe, PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
-import {
-  GovukTableColumn,
-  SortEvent,
-  SummaryListComponent,
-  SummaryListRowDirective,
-  SummaryListRowKeyDirective,
-  SummaryListRowValueDirective,
-  TableComponent,
-} from '@netz/govuk-components';
+import { GovukTableColumn, SortEvent, TableComponent } from '@netz/govuk-components';
+import { SummaryComponent } from '@shared/components';
+import { SchemeVersion } from '@shared/types';
 
-import { SectorAssociationSchemeService, SubsectorAssociationSchemeInfoDTO } from 'cca-api';
+import { SectorAssociationSchemeService, SubsectorAssociationInfoDTO } from 'cca-api';
+
+import { toSectorSchemeSummaryData } from './scheme-summary-data';
 
 @Component({
   selector: 'cca-sector-scheme-tab',
   templateUrl: './sector-scheme-tab.component.html',
   standalone: true,
-  imports: [
-    SummaryListComponent,
-    SummaryListRowDirective,
-    SummaryListRowKeyDirective,
-    SummaryListRowValueDirective,
-    TableComponent,
-    RouterLink,
-    DecimalPipe,
-    PercentPipe,
-  ],
+  imports: [SummaryComponent, TableComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorSchemeTabComponent {
   private readonly sectorAssociationSchemeService = inject(SectorAssociationSchemeService);
   private readonly route = inject(ActivatedRoute);
 
-  sectorScheme = toSignal(
+  private readonly sectorScheme = toSignal(
     this.sectorAssociationSchemeService.getSectorAssociationSchemeBySectorAssociationId(
       +this.route.snapshot.paramMap.get('sectorId'),
     ),
   );
 
-  sorting = signal<SortEvent | null>(null);
+  private readonly sorting = signal<SortEvent | null>(null);
 
-  sectorCommitmentColumns: GovukTableColumn[] = [
+  protected readonly sectorCommitmentColumns: GovukTableColumn[] = [
     { field: 'targetPeriod', header: 'Target period', widthClass: 'govuk-!-width-one-third' },
     { field: 'targetImprovement', header: 'Target improvement' },
   ];
 
-  subsectorsColumns: GovukTableColumn[] = [{ field: 'name', header: 'Name', isSortable: true }];
+  protected readonly subsectorsColumns: GovukTableColumn[] = [{ field: 'name', header: 'Name', isSortable: true }];
 
-  sectorCommitment = computed(() => this.sectorScheme().targetSet?.targetCommitments);
+  protected readonly sectorSchemeCCA2 = computed(
+    () => this.sectorScheme()?.sectorAssociationSchemeMap?.[SchemeVersion.CCA_2],
+  );
+  protected readonly sectorCommitmentCCA2 = computed(() => this.sectorSchemeCCA2()?.targetSet?.targetCommitments);
 
-  subSectors = computed(() => {
+  protected readonly sectorSchemeCCA3 = computed(
+    () => this.sectorScheme()?.sectorAssociationSchemeMap?.[SchemeVersion.CCA_3],
+  );
+  protected readonly sectorCommitmentCCA3 = computed(() => this.sectorSchemeCCA3()?.targetSet?.targetCommitments);
+
+  protected readonly subSectors = computed(() => {
     const sorting = this.sorting();
-    const subSectors: SubsectorAssociationSchemeInfoDTO[] = this.sectorScheme().subsectorAssociationSchemes;
+    const subSectors: SubsectorAssociationInfoDTO[] = this.sectorScheme()?.subsectorAssociations || [];
 
     if (!sorting) return subSectors;
 
     return subSectors.sort((a, b) => {
-      const diff = a.subsectorAssociation[sorting.column].localeCompare(
-        b.subsectorAssociation[sorting.column],
-        'en-GB',
-        {
-          numeric: true,
-          sensitivity: 'base',
-        },
-      );
+      const diff = a.name.localeCompare(b.name, 'en-GB', {
+        numeric: true,
+        sensitivity: 'base',
+      });
 
       return diff * (sorting.direction === 'ascending' ? 1 : -1);
     });
@@ -75,4 +65,9 @@ export class SectorSchemeTabComponent {
   sortBy(sorting: SortEvent) {
     this.sorting.set(sorting);
   }
+
+  schemeSummaryData = computed(() => {
+    const scheme = this.sectorScheme();
+    return scheme ? toSectorSchemeSummaryData(scheme, this.subSectors().length) : [];
+  });
 }

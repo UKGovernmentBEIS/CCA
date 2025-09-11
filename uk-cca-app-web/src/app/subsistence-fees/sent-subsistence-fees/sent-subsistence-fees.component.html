@@ -1,14 +1,12 @@
-@if (subFeesDetails) {
+@if (subFeesDetails(); as subFeesDetails) {
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <netz-page-heading size="xl" data-testid="page-heading" class="row-flex">
+      <netz-page-heading size="xl" data-testid="page-heading" class="govuk-tag-heading-align">
         {{ subFeesDetails.paymentRequestId }}
-        <span class="govuk-tag-heading-align">
-          <govuk-tag
-            [color]="subFeesDetails?.paymentStatus | subsistenceFeesRunPaymentStatusTagColor"
-            class="failure-tag"
-          >
-            {{ subFeesDetails?.paymentStatus | subsistenceFeesRunPaymentStatus }}
+
+        <span>
+          <govuk-tag [color]="subFeesDetails?.paymentStatus | statusColor: 'grey'" class="tag-width">
+            {{ subFeesDetails?.paymentStatus | status }}
           </govuk-tag>
         </span>
       </netz-page-heading>
@@ -16,9 +14,9 @@
   </div>
 
   <div class="govuk-grid-row">
-    <govuk-tabs>
+    <govuk-tabs [queryParamsHandling]="'replace'">
       <ng-template govukTabLazy id="details" label="Details">
-        <cca-summary [data]="data" />
+        <cca-summary [data]="data()" />
       </ng-template>
 
       <ng-template govukTabLazy id="sector-moas" [label]="'Sector MoAs (' + subFeesDetails?.sectorMoasCount + ')'">

@@ -11,9 +11,7 @@ describe('AccessibilityComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AccessibilityComponent, RouterTestingModule],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(AccessibilityComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

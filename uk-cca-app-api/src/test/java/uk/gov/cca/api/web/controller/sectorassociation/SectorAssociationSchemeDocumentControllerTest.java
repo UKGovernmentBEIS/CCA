@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class SectorAssociationSchemeDocumentControllerTest {
+class SectorAssociationSchemeDocumentControllerTest {
 
     private static final String BASE_PATH = "/v1.0/sector-documents";
 
@@ -38,7 +38,7 @@ public class SectorAssociationSchemeDocumentControllerTest {
     private SectorAssociationSchemeDocumentService sectorAssociationSchemeDocumentService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(sectorAssociationSchemeDocumentController)
                 .setControllerAdvice(new ExceptionControllerAdvice())
                 .build();

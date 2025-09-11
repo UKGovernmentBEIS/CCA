@@ -1,24 +1,26 @@
-import { AfterContentInit, ContentChild, Directive, ElementRef, HostBinding, Input } from '@angular/core';
+import { AfterContentInit, Directive, ElementRef, HostBinding, input, contentChild } from '@angular/core';
 
 import { FieldsetHintDirective } from './fieldset-hint.directive';
 
 @Directive({ selector: 'fieldset[govukFieldset]', standalone: true })
 export class FieldsetDirective implements AfterContentInit {
-  @Input() id = 'fieldset';
-  @ContentChild(FieldsetHintDirective, { read: ElementRef, static: false }) hint: ElementRef<HTMLDivElement>;
+  readonly id = input('fieldset');
+  readonly hint = contentChild(FieldsetHintDirective, { read: ElementRef });
+
   @HostBinding('class.govuk-fieldset') readonly fieldsetClass = true;
 
   @HostBinding('attr.id') get identifier() {
-    return this.id;
+    return this.id();
   }
 
   @HostBinding('attr.aria-describedby') get ariaDescribedby() {
-    return this.hint ? `${this.id}-hint` : null;
+    return this.hint() ? `${this.id()}-hint` : null;
   }
 
   ngAfterContentInit(): void {
-    if (this.hint) {
-      this.hint.nativeElement.id = `${this.identifier}-hint`;
+    const hint = this.hint();
+    if (hint) {
+      hint.nativeElement.id = `${this.identifier}-hint`;
     }
   }
 }

@@ -61,9 +61,9 @@ export class EditSectorUserDetailsComponent {
   private readonly currentUserId = inject(AuthStore).select(selectUserId);
   private readonly isCurrentUser = this.currentUserId() === this.sectorUserId;
 
-  readonly sectorUserDetails = this.store.state.details;
+  protected readonly sectorUserDetails = this.store.state.details;
 
-  contactTypeOptions: { text: string; value: ContactType }[] = [
+  protected readonly contactTypeOptions: { text: string; value: ContactType }[] = [
     {
       text: 'Sector association',
       value: 'SECTOR_ASSOCIATION',

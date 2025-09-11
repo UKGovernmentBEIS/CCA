@@ -1,5 +1,5 @@
 import { SummaryFactory } from '@shared/components';
-import { transformAttachmentsAndFileUUIDsToDownloadableFiles } from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 
 import { UnderlyingAgreementFacilityReviewDecision, UnderlyingAgreementReviewDecision } from 'cca-api';
 
@@ -24,7 +24,7 @@ export function addDecisionSummaryData(
     })
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsAndFileUUIDsToDownloadableFiles(decision?.details?.files, attachments, downloadUrl),
+      fileUtils.toDownloadableFiles(fileUtils.extractAttachments(decision?.details?.files, attachments), downloadUrl),
       { change: isEditable },
     );
 }
@@ -37,6 +37,7 @@ export function addFacilityDecisionSummaryData(
   downloadUrl: string,
 ): SummaryFactory {
   const f = factory.addSection('Decision Summary', '../decision');
+
   f.addRow(
     'Decision status',
     decision?.type ? decision.type.slice(0, 1).concat(decision?.type.slice(1).toLowerCase()) : null,
@@ -44,18 +45,20 @@ export function addFacilityDecisionSummaryData(
       change: isEditable,
     },
   );
+
   if (decision?.changeStartDate) {
     f.addRow('Start date of paying the subsistence charge fee', decision?.startDate, {
       change: isEditable,
     });
   }
+
   return f
     .addRow('Notes', decision?.details?.notes ?? null, {
       change: isEditable,
     })
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsAndFileUUIDsToDownloadableFiles(decision?.details?.files, attachments, downloadUrl),
+      fileUtils.toDownloadableFiles(fileUtils.extractAttachments(decision?.details?.files, attachments), downloadUrl),
       { change: isEditable },
     );
 }

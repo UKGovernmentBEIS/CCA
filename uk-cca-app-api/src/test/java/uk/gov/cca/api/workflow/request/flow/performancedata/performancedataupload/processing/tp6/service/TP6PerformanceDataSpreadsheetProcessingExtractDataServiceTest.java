@@ -72,7 +72,6 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
 
     @Test
     void extractData() throws Exception {
-        final long accountId = 1L;
         final PerformanceDataSpreadsheetProcessingRequestMetadata metadata =
                 PerformanceDataSpreadsheetProcessingRequestMetadata.builder()
                         .submissionType(PerformanceDataSubmissionType.PRIMARY)
@@ -81,7 +80,7 @@ class TP6PerformanceDataSpreadsheetProcessingExtractDataServiceTest {
         final FileDTO file = FileDTO.builder().fileContent(createMockXlsxTemplate()).build();
 
         // Invoke
-        TP6PerformanceData result = tp6PerformanceDataSpreadsheetProcessingExtractDataService.extractData(accountId, metadata, file);
+        TP6PerformanceData result = tp6PerformanceDataSpreadsheetProcessingExtractDataService.extractData(metadata, file);
 
         // Verify
         assertThat(result).isInstanceOf(TP6PerformanceData.class);

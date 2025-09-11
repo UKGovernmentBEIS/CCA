@@ -19,7 +19,21 @@ import { AdminTerminationFinalDecisionTaskService } from '../services/admin-term
 
 @Component({
   selector: 'cca-final-decision-notify-operator',
-  templateUrl: './final-decision-notify-operator.component.html',
+  template: `
+    <cca-wizard-step
+      (formSubmit)="onSubmit()"
+      [formGroup]="form"
+      caption="Notify operator of decision"
+      [heading]="heading"
+      data-testid="admin-termination-final-decision-notify-operator-form"
+      submitText="Confirm and complete"
+    >
+      <cca-notify-operator-of-decision />
+    </cca-wizard-step>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [
     NotifyOperatorOfDecisionComponent,

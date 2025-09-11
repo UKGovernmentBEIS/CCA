@@ -70,15 +70,15 @@ class ItemAssignedToMeSectorUserServiceTest {
         when(itemRequestResourcesService.getItemRequestResources(expectedItemPage)).thenReturn(expectedItemRequestResources);
         doReturn(expectedItemPage).when(itemRepository).findItems(
         		appUser.getUserId(), ItemAssignmentType.ME, scopedRequestTaskTypes, PagingRequest.builder()
-	        		.pageNumber(0L)
-	        		.pageSize(10L)
+	        		.pageNumber(0)
+	        		.pageSize(10)
 	        		.build());
         doReturn(expectedItemDTOResponse).when(itemResponseService)
         		.toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
 
         // Invoke
         ItemDTOResponse actualItemDTOResponse = itemService
-                .getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+                .getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
 
         // Assert
         assertEquals(expectedItemDTOResponse, actualItemDTOResponse);
@@ -87,8 +87,8 @@ class ItemAssignedToMeSectorUserServiceTest {
                 .getUserScopedRequestTaskTypes(appUser);
         verify(itemRepository, times(1)).findItems(
         		appUser.getUserId(), ItemAssignmentType.ME, scopedRequestTaskTypes, PagingRequest.builder()
-	        		.pageNumber(0L)
-	        		.pageSize(10L)
+	        		.pageNumber(0)
+	        		.pageSize(10)
 	        		.build());
         verify(itemResponseService, times(1)).toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
     }
@@ -113,14 +113,14 @@ class ItemAssignedToMeSectorUserServiceTest {
         when(itemRequestResourcesService.getItemRequestResources(expectedItemPage)).thenReturn(expectedItemRequestResources);
         doReturn(expectedItemPage).when(itemRepository).findItems(
         		appUser.getUserId(), ItemAssignmentType.ME, scopedRequestTaskTypes, PagingRequest.builder()
-	        		.pageNumber(0L)
-	        		.pageSize(10L)
+	        		.pageNumber(0)
+	        		.pageSize(10)
 	        		.build());
         doReturn(expectedItemDTOResponse).when(itemResponseService)
         	.toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
 
         // Invoke
-        ItemDTOResponse actualItemDTOResponse = itemService.getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+        ItemDTOResponse actualItemDTOResponse = itemService.getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
 
         // Assert
         assertEquals(ItemDTOResponse.emptyItemDTOResponse(), actualItemDTOResponse);
@@ -128,7 +128,7 @@ class ItemAssignedToMeSectorUserServiceTest {
         verify(sectorUserAuthorityResourceAdapter, times(1))
                 .getUserScopedRequestTaskTypes(appUser);
         verify(itemRepository, times(1))
-                .findItems(appUser.getUserId(), ItemAssignmentType.ME, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+                .findItems(appUser.getUserId(), ItemAssignmentType.ME, scopedRequestTaskTypes, PagingRequest.builder().pageNumber(0).pageSize(10).build());
         verify(itemResponseService, times(1)).toItemDTOResponse(expectedItemPage, expectedItemRequestResources, appUser);
     }
 

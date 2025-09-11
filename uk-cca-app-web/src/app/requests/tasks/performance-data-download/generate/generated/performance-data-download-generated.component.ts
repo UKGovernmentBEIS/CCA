@@ -19,6 +19,7 @@ import { SectorAssociationInfoSummaryComponent } from '../sector-association-inf
 
 @Component({
   selector: 'cca-performance-data-download-generated',
+  templateUrl: './performance-data-download-generated.component.html',
   standalone: true,
   imports: [
     NotificationBannerComponent,
@@ -30,7 +31,6 @@ import { SectorAssociationInfoSummaryComponent } from '../sector-association-inf
     ReactiveFormsModule,
     SectorAssociationInfoSummaryComponent,
   ],
-  templateUrl: './performance-data-download-generated.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDataDownloadGeneratedComponent {
@@ -39,13 +39,15 @@ export class PerformanceDataDownloadGeneratedComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly tasksService = inject(TasksService);
   private readonly businessErrorService = inject(BusinessErrorService);
-  readonly sectorId = input<string>();
-  readonly sectorName = input<string>();
-  readonly targetPeriod = input<string>();
-  readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
-  readonly zipFile = this.requestTaskStore.select(performanceDataDownloadQuery.selectZipFile);
-  readonly errorsFile = this.requestTaskStore.select(performanceDataDownloadQuery.selectErrorsFile);
-  readonly errorMessage = this.requestTaskStore.select(performanceDataDownloadQuery.selectErrorMessage);
+
+  protected readonly sectorId = input<string>();
+  protected readonly sectorName = input<string>();
+  protected readonly targetPeriod = input<string>();
+
+  protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
+  protected readonly zipFile = this.requestTaskStore.select(performanceDataDownloadQuery.selectZipFile);
+  protected readonly errorsFile = this.requestTaskStore.select(performanceDataDownloadQuery.selectErrorsFile);
+  protected readonly errorMessage = this.requestTaskStore.select(performanceDataDownloadQuery.selectErrorMessage);
 
   onComplete() {
     return this.tasksService

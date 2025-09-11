@@ -3,7 +3,6 @@ package uk.gov.cca.api.account.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.account.domain.CcaAccountContactType;
@@ -17,8 +16,10 @@ import uk.gov.cca.api.authorization.ccaauth.rules.services.resource.SectorAssoci
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.service.SectorUserAuthorityService;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
+import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria;
 import uk.gov.netz.api.account.service.AccountCaSiteContactProvider;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.exception.BusinessException;
 
 import java.util.List;
@@ -27,14 +28,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType.OPERATOR;
-
 @Service
 @RequiredArgsConstructor
 @Primary
 public class TargetUnitAccountSiteContactService implements AccountCaSiteContactProvider {
 
     private final TargetUnitAccountRepository targetUnitAccountRepository;
+    private final CcaAccountSearchService accountSearchService;
     private final SectorAssociationAuthorizationResourceService sectorAssociationAuthorizationResourceService;
     private final TargetUnitAccountQueryService targetUnitAccountQueryService;
     private final SectorUserAuthorityService sectorUserAuthorityService;
@@ -48,11 +48,17 @@ public class TargetUnitAccountSiteContactService implements AccountCaSiteContact
         return Optional.ofNullable(sectorAssociationQueryService.getSectorAssociationFacilitatorUserId(sectorAssociationId));
     }
 
+    public Optional<String> findTargetUnitAccountSiteContactByAccountId(Long accountId) {
+        Optional<TargetUnitAccount> accountOpt = targetUnitAccountRepository.findById(accountId);
+        return accountOpt
+                .map(TargetUnitAccount::getContacts)
+                .map(contacts -> contacts.get(CcaAccountContactType.TU_SITE_CONTACT));
+    }
 
-    public TargetUnitAccountInfoResponseDTO getTargetUnitAccountsWithSiteContact(AppUser user, Long sectorAssociationId, final Integer page, final Integer pageSize) {
-    	
-        Page<TargetUnitAccountInfoDTO> accountWithSiteContactPage =
-        		getTargetUnitAccountDtosWithSiteContact(user, sectorAssociationId, CcaAccountContactType.TU_SITE_CONTACT, page, pageSize);
+	public TargetUnitAccountInfoResponseDTO getTargetUnitAccountsWithSiteContact(AppUser user, Long sectorAssociationId,
+			AccountSearchCriteria accountSearchCriteria) {
+		Page<TargetUnitAccountInfoDTO> accountWithSiteContactPage = getTargetUnitAccountDtosWithSiteContact(user,
+				sectorAssociationId, CcaAccountContactType.TU_SITE_CONTACT, accountSearchCriteria);
 
         boolean isEditable = sectorAssociationAuthorizationResourceService
                 .hasUserScopeToSectorAssociation(user, CcaScope.EDIT_SECTOR_ASSOCIATION, sectorAssociationId);
@@ -65,23 +71,17 @@ public class TargetUnitAccountSiteContactService implements AccountCaSiteContact
             .build();
     }
 
-    private Page<TargetUnitAccountInfoDTO> getTargetUnitAccountDtosWithSiteContact(AppUser user,Long sectorAssociationId, String siteContactType, final Integer page, final Integer pageSize) {
-        if(user.getRoleType().equals(OPERATOR.name())){
-            return targetUnitAccountRepository.
-                    findTargetUnitAccountWithSiteContactAndAccountsIds(
-                            PageRequest.of(page, pageSize),
-                            sectorAssociationId,
-                            user.getAccounts(),
-                            siteContactType);
-        } else {
-            return targetUnitAccountRepository.findTargetUnitAccountsWithSiteContact(
-                    PageRequest.of(page, pageSize),
-                    sectorAssociationId,
-                    siteContactType
-            );
-        }
-
-
+	private Page<TargetUnitAccountInfoDTO> getTargetUnitAccountDtosWithSiteContact(AppUser user,
+			Long sectorAssociationId, String siteContactType, AccountSearchCriteria accountSearchCriteria) {
+		return RoleTypeConstants.OPERATOR.equals(user.getRoleType())
+				? accountSearchService.searchAccountsWithSiteContactAndAccountsIds(sectorAssociationId,
+						user.getAccounts(), 
+						siteContactType, 
+						accountSearchCriteria)
+				:
+				accountSearchService.searchAccountsWithSiteContact(sectorAssociationId, 
+						siteContactType,
+						accountSearchCriteria);
     }
 
     @Transactional
@@ -124,8 +124,8 @@ public class TargetUnitAccountSiteContactService implements AccountCaSiteContact
             .forEach(contact -> accounts.stream()
                                         .filter(ac -> ac.getId().equals(contact.getAccountId()))
                                         .findFirst()
-                                        .ifPresent(ac -> {
-                                        	ac.getContacts().put(CcaAccountContactType.TU_SITE_CONTACT, contact.getUserId()); }
+                                        .ifPresent(ac ->
+                                        	ac.getContacts().put(CcaAccountContactType.TU_SITE_CONTACT, contact.getUserId())
                                         )
                                      );
     }
@@ -147,11 +147,5 @@ public class TargetUnitAccountSiteContactService implements AccountCaSiteContact
             throw new BusinessException(CcaErrorCode.AUTHORITY_USER_NOT_RELATED_TO_SECTOR_ASSOCIATION);
         }
     }
-
-    public Optional<String> findTargetUnitAccountSiteContactByAccountId(Long accountId) {
-        Optional<TargetUnitAccount> accountOpt = targetUnitAccountRepository.findById(accountId);
-        return accountOpt
-                .map(TargetUnitAccount::getContacts)
-                .map(contacts -> contacts.get(CcaAccountContactType.TU_SITE_CONTACT));
-    }
+    
 }

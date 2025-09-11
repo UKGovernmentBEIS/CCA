@@ -6,7 +6,6 @@ import { of, throwError } from 'rxjs';
 
 import { BusinessTestingModule, expectBusinessErrorToBe } from '@error/testing/business-error';
 import { ActivatedRouteStub, changeInputValue } from '@netz/common/testing';
-import { GovukComponentsModule } from '@netz/govuk-components';
 
 import { CaExternalContactDTO, CaExternalContactsService } from 'cca-api';
 
@@ -19,18 +18,21 @@ describe('DetailsComponent - add', () => {
   let fixture: ComponentFixture<ExternalContactsDetailsComponent>;
   let router: Router;
   let route: ActivatedRouteStub;
+
   const caExternalContactsService: Partial<jest.Mocked<CaExternalContactsService>> = {
     createCaExternalContact: jest.fn(),
     editCaExternalContact: jest.fn().mockReturnValue(of(null)),
   };
+
   const submitButton = () => fixture.nativeElement.querySelector('button[type="submit"]');
   const errorSummary = () => fixture.nativeElement.querySelector('govuk-error-summary');
 
   beforeEach(async () => {
     route = new ActivatedRouteStub();
+
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ExternalContactsDetailsComponent, GovukComponentsModule, BusinessTestingModule],
+      imports: [ExternalContactsDetailsComponent, BusinessTestingModule],
       providers: [
         ActiveExternalContactStore,
         provideRouter([]),
@@ -38,13 +40,11 @@ describe('DetailsComponent - add', () => {
         { provide: ActivatedRoute, useValue: route },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
+    router = TestBed.inject(Router);
     fixture = TestBed.createComponent(ExternalContactsDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    router = TestBed.inject(Router);
   });
 
   afterEach(() => jest.clearAllMocks());
@@ -168,6 +168,7 @@ describe('DetailsComponent - add', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['../..'], { relativeTo: route, fragment: 'external-contacts' });
   });
 });
+
 describe('DetailsComponent - edit', () => {
   let store: ActiveExternalContactStore;
   let route: ActivatedRouteStub;
@@ -179,17 +180,20 @@ describe('DetailsComponent - edit', () => {
     createCaExternalContact: jest.fn(),
     editCaExternalContact: jest.fn().mockReturnValue(of(null)),
   };
+
   const mockExternalContact: CaExternalContactDTO = {
     id: 3,
     description: 'Description',
     email: 'external@contact.com',
     name: 'External Contact',
   };
+
   beforeEach(async () => {
     route = new ActivatedRouteStub();
+
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ExternalContactsDetailsComponent, GovukComponentsModule, BusinessTestingModule],
+      imports: [ExternalContactsDetailsComponent, BusinessTestingModule],
       providers: [
         ActiveExternalContactStore,
         provideRouter([]),

@@ -8,12 +8,8 @@ import { getAllUnderlyingAgreementSections } from '../underlying-agreement-submi
 
 @Component({
   selector: 'cca-unde',
+  template: `<netz-task-list [sections]="sections()" />`,
   standalone: true,
-  template: `
-    <div class="govuk-body">
-      <netz-task-list [sections]="sections()"></netz-task-list>
-    </div>
-  `,
   imports: [TaskListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -22,7 +18,7 @@ export default class UnderlyingAgreementSubmittedTaskListComponent {
 
   protected readonly sections = computed(() =>
     getAllUnderlyingAgreementSections(
-      this.requestActionStore.select(underlyingAgreementMigratedQuery.selectUnderlyingAgreementFacilities)(),
+      this.requestActionStore.select(underlyingAgreementMigratedQuery.selectPayload)()?.underlyingAgreement,
     ),
   );
 }

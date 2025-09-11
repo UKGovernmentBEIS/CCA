@@ -3,18 +3,20 @@ import { inject } from '@angular/core';
 import { getItemActionHeader } from '@netz/common/pipes';
 import { RequestActionPageContentFactoryMap } from '@netz/common/request-action';
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
+import { PeerReviewSubmittedComponent } from '@requests/common';
 
-import {
-  UnderlyingAgreementSubmittedRequestActionPayload,
-  UnderlyingAgreementVariationSubmittedRequestActionPayload,
-} from 'cca-api';
+import { UnderlyingAgreementSubmittedRequestActionPayload } from 'cca-api';
 
 import { AdminTerminationFinalDecisionSubmittedTimelineComponent } from './admin-termination-final-decision-submitted/admin-termination-final-decision-submitted-timeline.component';
 import { AdminTerminationSubmittedTimelineComponent } from './admin-termination-submitted/admin-termination-submitted-timeline.component';
 import { AdminTerminationWithdrawSubmittedTimelineComponent } from './admin-termination-withdraw-submitted/admin-termination-withdraw-submitted-timeline.component';
+import { BuyOutFeeCalculatedComponent } from './buy-out-fee-calculated/buy-out-fee-calculated.component';
+import { BuyOutSurplusBatchRunCompletedComponent } from './buy-out-surplus-batch-run-completed/buy-out-surplus-batch-run-completed.component';
+import { PATUploadSubmittedComponent } from './performance-account-template-upload-submitted/pat-upload-submitted.component';
 import { PerformanceDataUploadSubmittedComponent } from './performance-data-upload-submitted/performance-data-upload-submitted.component';
 import { SectorMoaGeneratedComponent } from './sector-moa-generated/sector-moa-generated.component';
 import { SubsistenceFeesRunCompletedComponent } from './subsistence-fees-run-completed/subsistence-fees-run-completed.component';
+import { SurplusCalculatedComponent } from './surplus-calculated/surplus-calculated.component';
 import { TargetUnitAccountSubmittedTimelineComponent } from './target-unit-account-creation/target-unit-account-submitted-timeline.component';
 import { TuMoaGeneratedComponent } from './tu-moa-generated/tu-moa-generated.component';
 import { UnderlyingAgreementActivatedComponent } from './underlying-agreement-activated/underlying-agreement-activated.component';
@@ -46,7 +48,7 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     return {
       header: getItemActionHeader(action),
       sections: getAllUnderlyingAgreementSections(
-        (payload as UnderlyingAgreementSubmittedRequestActionPayload)?.underlyingAgreement?.facilities,
+        (payload as UnderlyingAgreementSubmittedRequestActionPayload)?.underlyingAgreement,
         'underlying-agreement-submitted/',
       ),
     };
@@ -92,6 +94,26 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     };
   },
 
+  UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEWER_ACCEPTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: PeerReviewSubmittedComponent,
+    };
+  },
+
+  UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEWER_REJECTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: PeerReviewSubmittedComponent,
+    };
+  },
+
   ADMIN_TERMINATION_APPLICATION_SUBMITTED: () => {
     const store = inject(RequestActionStore);
     const action = store.select(requestActionQuery.selectAction)();
@@ -122,16 +144,33 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     };
   },
 
-  UNDERLYING_AGREEMENT_VARIATION_APPLICATION_SUBMITTED: () => {
+  ADMIN_TERMINATION_APPLICATION_PEER_REVIEWER_ACCEPTED: () => {
     const store = inject(RequestActionStore);
     const action = store.select(requestActionQuery.selectAction)();
-    const payload = store.select(requestActionQuery.selectActionPayload)();
 
     return {
       header: getItemActionHeader(action),
-      sections: getAllUnderlyingAgreementVariationSections(
-        payload as UnderlyingAgreementVariationSubmittedRequestActionPayload,
-      ),
+      component: PeerReviewSubmittedComponent,
+    };
+  },
+
+  ADMIN_TERMINATION_APPLICATION_PEER_REVIEWER_REJECTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: PeerReviewSubmittedComponent,
+    };
+  },
+
+  UNDERLYING_AGREEMENT_VARIATION_APPLICATION_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      sections: getAllUnderlyingAgreementVariationSections(),
     };
   },
 
@@ -175,6 +214,16 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     };
   },
 
+  PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: PATUploadSubmittedComponent,
+    };
+  },
+
   SUBSISTENCE_FEES_RUN_COMPLETED: () => {
     const store = inject(RequestActionStore);
     const action = store.select(requestActionQuery.selectAction)();
@@ -212,6 +261,46 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     return {
       header: getItemActionHeader(action),
       component: TuMoaGeneratedComponent,
+    };
+  },
+
+  BUY_OUT_SURPLUS_RUN_COMPLETED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: BuyOutSurplusBatchRunCompletedComponent,
+    };
+  },
+
+  BUY_OUT_SURPLUS_RUN_COMPLETED_WITH_FAILURES: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: BuyOutSurplusBatchRunCompletedComponent,
+    };
+  },
+
+  TP6_BUY_OUT_ACCOUNT_PROCESSING_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: BuyOutFeeCalculatedComponent,
+    };
+  },
+
+  TP6_SURPLUS_ACCOUNT_PROCESSING_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: SurplusCalculatedComponent,
     };
   },
 };

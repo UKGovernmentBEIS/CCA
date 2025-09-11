@@ -14,7 +14,6 @@ import uk.gov.cca.api.facility.domain.FacilityData;
 import uk.gov.cca.api.facility.domain.FacilityDataStatus;
 import uk.gov.cca.api.facility.domain.dto.FacilitySearchCriteria;
 import uk.gov.cca.api.facility.domain.dto.FacilitySearchResultInfoDTO;
-import uk.gov.cca.api.facility.domain.dto.FacilitySearchResults;
 import uk.gov.cca.api.facility.repository.FacilityDataRepository;
 import uk.gov.cca.api.facility.transform.FacilitySearchResultsMapper;
 import uk.gov.netz.api.common.domain.PagingRequest;
@@ -28,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-public class FacilitySearchServiceTest {
+class FacilitySearchServiceTest {
 
     @InjectMocks
     private FacilitySearchService facilitySearchService;
@@ -45,11 +44,11 @@ public class FacilitySearchServiceTest {
         final String facilityId = "SA-F00001";
         final String siteName = "site1";
         final String term = "SA-";
-        final long pageNum = 0;
-        final long pageSize = 30;
+        final int pageNum = 0;
+        final int pageSize = 30;
 
         final FacilitySearchResultInfoDTO facilitySearchResultInfoDTO =
-                new FacilitySearchResultInfoDTO(facilityId, siteName, null, FacilityDataStatus.LIVE);
+                new FacilitySearchResultInfoDTO(1L, facilityId, siteName, null, FacilityDataStatus.LIVE);
 
         final FacilitySearchCriteria facilitySearchCriteria = FacilitySearchCriteria.builder()
                 .term(term)
@@ -61,10 +60,7 @@ public class FacilitySearchServiceTest {
                 .siteName(siteName)
                 .build();
 
-        final FacilitySearchResults facilitySearchResults = FacilitySearchResults.builder()
-                .facilities(List.of(facilitySearchResultInfoDTO))
-                .total(1L)
-                .build();
+        final Page<FacilitySearchResultInfoDTO> expectedResults = new PageImpl<>(List.of(facilitySearchResultInfoDTO));
 
         final Page<FacilityData> page = new PageImpl<>(List.of(facilityData));
 
@@ -76,12 +72,12 @@ public class FacilitySearchServiceTest {
         when(facilitySearchResultsMapper.toFacilitySearchResultInfo(facilityData)).thenReturn(facilitySearchResultInfoDTO);
 
         // invoke
-        final FacilitySearchResults results = facilitySearchService.searchFacilities(accountId, facilitySearchCriteria);
+        final Page<FacilitySearchResultInfoDTO> results = facilitySearchService.searchFacilities(accountId, facilitySearchCriteria);
 
         // verify
         verify(facilityDataRepository, times(1)).searchFacilityDataByAccountIdAndTerm(pageable, accountId, searchTerm);
         verify(facilitySearchResultsMapper, times(1)).toFacilitySearchResultInfo(facilityData);
-        assertThat(results).isEqualTo(facilitySearchResults);
+        assertThat(results).isEqualTo(expectedResults);
     }
 
     private String getSearchTerm(FacilitySearchCriteria facilitySearchCriteria) {
@@ -90,8 +86,8 @@ public class FacilitySearchServiceTest {
 
     private Pageable getPageable(FacilitySearchCriteria facilitySearchCriteria) {
         return PageRequest.of(
-                facilitySearchCriteria.getPaging().getPageNumber().intValue(),
-                facilitySearchCriteria.getPaging().getPageSize().intValue(),
+                facilitySearchCriteria.getPaging().getPageNumber(),
+                facilitySearchCriteria.getPaging().getPageSize(),
                 Sort.by("facilityId"));
     }
 }

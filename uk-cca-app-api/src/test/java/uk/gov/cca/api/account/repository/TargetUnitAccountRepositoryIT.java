@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,9 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -32,7 +28,6 @@ import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
-import uk.gov.cca.api.account.domain.dto.TargetUnitAccountInfoDTO;
 import uk.gov.netz.api.common.AbstractContainerBaseTest;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 
@@ -49,7 +44,7 @@ class TargetUnitAccountRepositoryIT extends AbstractContainerBaseTest {
     private EntityManager entityManager;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AccountAddress address1 = AccountAddress.builder()
             .line1("123 Test Street")
             .city("Test City")
@@ -128,22 +123,9 @@ class TargetUnitAccountRepositoryIT extends AbstractContainerBaseTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         repository.deleteAll();
         flushAndClear();
-    }
-
-    @Test
-    void testFindTargetUnitAccountContactsByCaAndContactTypeAndStatusNotIn() {
-        Long sectorAssociationId = 1L;
-        
-        String contactType = CcaAccountContactType.TU_SITE_CONTACT;
-        PageRequest pageable = PageRequest.of(0, 10);
-
-        Page<TargetUnitAccountInfoDTO> result = repository.findTargetUnitAccountsWithSiteContact(pageable, sectorAssociationId, contactType);
-
-        assertThat(result).isNotNull();
-        assertThat(result.getContent()).isNotEmpty();
     }
 
     @Test
@@ -166,25 +148,6 @@ class TargetUnitAccountRepositoryIT extends AbstractContainerBaseTest {
     }
 
     @Test
-    void findTargetUnitAccountWithSiteContactAndAccountsIds() {
-        Long sectorAssociationId = 1L;
-        Pageable pageable = PageRequest.of(0, 10);
-        Set<Long> accountsIds = Set.of(1L, 2L, 3L);
-
-        String contactType = CcaAccountContactType.TU_SITE_CONTACT;
-
-        Page<TargetUnitAccountInfoDTO> result = repository
-                .findTargetUnitAccountWithSiteContactAndAccountsIds(pageable, sectorAssociationId,
-                        accountsIds, contactType);
-
-
-        assertThat(result.getContent())
-                .hasSize(2)
-                .extracting(TargetUnitAccountInfoDTO::getAccountId)
-                .containsExactlyInAnyOrder(1L, 2L);
-    }
-    
-    @Test
     void findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedTerminatedBetween() {
     	//TP6 2016
     	LocalDateTime acceptedDate = LocalDate.of(2016, 12, 31).atTime(LocalTime.MAX);
@@ -193,13 +156,13 @@ class TargetUnitAccountRepositoryIT extends AbstractContainerBaseTest {
     	
     	Long sectorAssociationId = 1L;
         
-        TargetUnitAccount account1 = createAccount(-1L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2015, 11, 3).atStartOfDay(), null);
-        TargetUnitAccount account2 = createAccount(-2L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2016, 11, 3).atStartOfDay(), null);
-        createAccount(-3L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2018, 11, 3).atStartOfDay(), null);
-        createAccount(-4L, sectorAssociationId, TargetUnitAccountStatus.NEW, LocalDate.of(2016, 11, 3).atStartOfDay(), null);
-        createAccount(-5L, -1l, TargetUnitAccountStatus.LIVE, LocalDate.of(2016, 11, 3).atStartOfDay(), null);
-        TargetUnitAccount account6 = createAccount(-6L, sectorAssociationId, TargetUnitAccountStatus.TERMINATED, LocalDate.of(2016, 11, 3).atStartOfDay(), LocalDate.of(2016, 12, 3).atStartOfDay());
-        createAccount(-7L, sectorAssociationId, TargetUnitAccountStatus.TERMINATED, LocalDate.of(2016, 11, 3).atStartOfDay(), LocalDate.of(2017, 5, 3).atStartOfDay());
+        TargetUnitAccount account1 = createAccount(-1L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2015, 11, 3).atStartOfDay(), null, null);
+        TargetUnitAccount account2 = createAccount(-2L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2016, 11, 3).atStartOfDay(), null, null);
+        createAccount(-3L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2018, 11, 3).atStartOfDay(), null, null);
+        createAccount(-4L, sectorAssociationId, TargetUnitAccountStatus.NEW, LocalDate.of(2016, 11, 3).atStartOfDay(), null, null);
+        createAccount(-5L, -1l, TargetUnitAccountStatus.LIVE, LocalDate.of(2016, 11, 3).atStartOfDay(), null, null);
+        TargetUnitAccount account6 = createAccount(-6L, sectorAssociationId, TargetUnitAccountStatus.TERMINATED, LocalDate.of(2016, 11, 3).atStartOfDay(), LocalDate.of(2016, 12, 3).atStartOfDay(), null);
+        createAccount(-7L, sectorAssociationId, TargetUnitAccountStatus.TERMINATED, LocalDate.of(2016, 11, 3).atStartOfDay(), LocalDate.of(2017, 5, 3).atStartOfDay(), null);
     	
     	flushAndClear();
     	
@@ -210,12 +173,31 @@ class TargetUnitAccountRepositoryIT extends AbstractContainerBaseTest {
 				account2.getId(), account6.getId());
     	
     }
+    
+    @Test
+    void findTargetUnitAccountsWithCrnAndStatusIn() {
+    	Long sectorAssociationId = 1L;
+    	
+        TargetUnitAccount account1 = createAccount(100L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2015, 11, 3).atStartOfDay(), null, "crn");
+        createAccount(200L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2016, 11, 3).atStartOfDay(), null, null);
+        createAccount(300L, sectorAssociationId, TargetUnitAccountStatus.TERMINATED, LocalDate.of(2015, 11, 3).atStartOfDay(), null, "crn");
+    	
+    	flushAndClear();
+    	
+    	List<TargetUnitAccount> result = repository.findTargetUnitAccountsWithCrnAndStatusIn(
+    			List.of(TargetUnitAccountStatus.NEW, TargetUnitAccountStatus.LIVE));
+    	
+		assertThat(result).containsExactly(account1);
+    	
+    }
 
-    private TargetUnitAccount createAccount(Long id, Long sectorId, TargetUnitAccountStatus status, LocalDateTime acceptedDate, LocalDateTime terminationDate) {
+    private TargetUnitAccount createAccount(Long id, Long sectorId, TargetUnitAccountStatus status, 
+    		LocalDateTime acceptedDate, LocalDateTime terminationDate, String crn) {
     	TargetUnitAccount account = TargetUnitAccount.builder()
     		.id(id)
 			.businessId("businessId" + id)
 			.name("name" + id)
+			.companyRegistrationNumber(crn)
 	        .sectorAssociationId(sectorId)
 	        .status(status)
 	        .acceptedDate(acceptedDate)

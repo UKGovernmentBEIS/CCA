@@ -5,9 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import { TextareaComponent } from '@netz/govuk-components';
-import { PROVIDE_EVIDENCE_SUBTASK, ProvideEvidenceWizardStep } from '@requests/common';
+import { PROVIDE_EVIDENCE_SUBTASK } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
-import { transformFilesToUUIDsList } from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 import { generateDownloadUrl } from '@shared/utils';
 
 import {
@@ -42,8 +42,8 @@ export default class ProvideEvidenceDetailsComponent {
 
   onSubmit() {
     this.taskService
-      .saveSubtask(PROVIDE_EVIDENCE_SUBTASK, ProvideEvidenceWizardStep.DETAILS, this.activatedRoute, {
-        evidenceFiles: transformFilesToUUIDsList(this.form.value.evidenceFiles),
+      .saveSubtask(PROVIDE_EVIDENCE_SUBTASK, 'details', this.activatedRoute, {
+        evidenceFiles: fileUtils.toUUIDs(this.form.value.evidenceFiles),
         comments: this.form.value.comments,
       })
       .subscribe();

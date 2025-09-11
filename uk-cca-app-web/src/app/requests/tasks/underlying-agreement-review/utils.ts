@@ -1,20 +1,21 @@
 import {
   OVERALL_DECISION_SUBTASK,
-  staticGroupDecisions,
+  staticReviewGroupDecisions,
   TaskItemStatus,
   transform,
   UNAReviewRequestTaskPayload,
 } from '@requests/common';
+import { produce } from 'immer';
 
-import { UnderlyingAgreementFacilityReviewDecision, UnderlyingAgreementPayload } from 'cca-api';
+import { Determination, UnderlyingAgreementFacilityReviewDecision, UnderlyingAgreementPayload } from 'cca-api';
 
 type DecisionType = UnderlyingAgreementFacilityReviewDecision['type'];
 
 const allStatisSectionsAccepted = (payload: UNAReviewRequestTaskPayload) =>
-  staticGroupDecisions.every((d) => payload.reviewGroupDecisions[d]?.type === 'ACCEPTED');
+  staticReviewGroupDecisions.every((d) => payload.reviewGroupDecisions[d]?.type === 'ACCEPTED');
 
 const anyStaticSectionRejected = (payload: UNAReviewRequestTaskPayload) =>
-  staticGroupDecisions.some((d) => payload.reviewGroupDecisions[d].type === 'REJECTED');
+  staticReviewGroupDecisions.some((d) => payload.reviewGroupDecisions[d].type === 'REJECTED');
 
 const acceptedFacilityDecisionExists = (payload: UNAReviewRequestTaskPayload) =>
   Object.keys(payload.facilitiesReviewGroupDecisions).some(
@@ -33,7 +34,7 @@ export const reviewSectionsCompleted = (payload: UNAReviewRequestTaskPayload) =>
 
   if (hasUndecidedSection) return false;
 
-  const groupDecisionsCompleted = staticGroupDecisions.every((s) => payload.reviewGroupDecisions[s]);
+  const groupDecisionsCompleted = staticReviewGroupDecisions.every((s) => payload.reviewGroupDecisions[s]);
   if (!groupDecisionsCompleted) return false;
 
   return payload.underlyingAgreement.facilities.every((f) => payload.facilitiesReviewGroupDecisions[f.facilityId]);
@@ -74,3 +75,41 @@ export const createProposedUnderlyingAgreementPayload = (
 
   return proposed;
 };
+
+export function resetDetermination(determination: Determination): Determination {
+  return produce(determination, (draft) => {
+    if (draft?.type) draft.type = null;
+  });
+}
+
+export function resetDeterminationStatus(reviewSectionsCompleted: Record<string, string>): Record<string, string> {
+  return produce(reviewSectionsCompleted, (draft) => {
+    draft[OVERALL_DECISION_SUBTASK] = TaskItemStatus.UNDECIDED;
+  });
+}
+
+/**
+ * When the user edits a payload, we need to reset the determination and the sections completed
+ */
+export function applySaveActionSideEffects(
+  determination: Determination,
+  reviewSectionsCompleted: Record<string, string>,
+  sectionsCompleted: Record<string, string>,
+  subtask: string,
+): {
+  determination: Determination;
+  reviewSectionsCompleted: Record<string, string>;
+  sectionsCompleted: Record<string, string>;
+} {
+  return {
+    determination: resetDetermination(determination),
+    reviewSectionsCompleted: produce(reviewSectionsCompleted, (draft) => {
+      draft[subtask] = TaskItemStatus.UNDECIDED;
+      draft[OVERALL_DECISION_SUBTASK] = TaskItemStatus.UNDECIDED;
+    }),
+    // we used to reset the sections completed, but this is not needed anymore and we want to keep the function's api the same
+    sectionsCompleted: produce(sectionsCompleted, (draft) => {
+      draft[subtask] = TaskItemStatus.IN_PROGRESS;
+    }),
+  };
+}

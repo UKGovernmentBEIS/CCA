@@ -3,6 +3,7 @@ package uk.gov.cca.api.underlyingagreement.validation;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.cca.api.common.domain.MeasurementType;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.DataValidator;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
@@ -32,7 +33,9 @@ import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementV
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_CALCULATOR_ATTACHMENT_TYPE;
 
 @Service
-public class UnderlyingAgreementTargetPeriod6ContextValidatorService extends UnderlyingAgreementSectionConstraintValidatorService<TargetPeriod6Details> implements UnderlyingAgreementSectionContextValidator {
+public class UnderlyingAgreementTargetPeriod6ContextValidatorService 
+		extends UnderlyingAgreementSectionConstraintValidatorService<TargetPeriod6Details> 
+		implements UnderlyingAgreementSectionContextValidator, UnderlyingAgreementSectionSchemeContextValidator {
 
     private final FileAttachmentService fileAttachmentService;
 
@@ -42,12 +45,12 @@ public class UnderlyingAgreementTargetPeriod6ContextValidatorService extends Und
     }
 
     @Override
-    public BusinessValidationResult validate(final UnderlyingAgreementContainer container) {
+    public BusinessValidationResult validate(final UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
         TargetPeriod6Details section = container.getUnderlyingAgreement().getTargetPeriod6Details();
 
-        List<UnderlyingAgreementViolation> violations = super.validateEmptySection(section);
-        if(violations.isEmpty()){
-            violations = this.validateSection(section, container);
+        List<UnderlyingAgreementViolation> violations = new ArrayList<>();
+        if(!ObjectUtils.isEmpty(section)) {
+            violations = this.validateSection(section, container, underlyingAgreementValidationContext);
             
             // Validate calculated target for ABSOLUTE and TP6
             validateTargetTP6(section, violations);
@@ -57,15 +60,17 @@ public class UnderlyingAgreementTargetPeriod6ContextValidatorService extends Und
     }
 
     @Override
-    protected List<UnderlyingAgreementViolation> validateSection(final TargetPeriod6Details section, final UnderlyingAgreementContainer container) {
+    protected List<UnderlyingAgreementViolation> validateSection(final TargetPeriod6Details section, final UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
         // Validate data
         super.validate(section).ifPresent(violations::add);
 
         // Business validations
-        validateTargetComposition(section.getTargetComposition(), container.getSectorMeasurementType(), 
-        		container.getSectorThroughputUnit(), violations);
+        MeasurementType sectorMeasurementType = container.getSchemeDataMap().get(getSectionSchemeVersion()).getSectorMeasurementType();
+        String sectorThroughputUnit = container.getSchemeDataMap().get(getSectionSchemeVersion()).getSectorThroughputUnit();
+        
+        validateTargetComposition(section.getTargetComposition(), sectorMeasurementType, sectorThroughputUnit, violations);
         validateBaselineData(section, violations);
         validateTargets(section, violations);
         validateFiles(section, violations);
@@ -79,7 +84,7 @@ public class UnderlyingAgreementTargetPeriod6ContextValidatorService extends Und
     }
 
     private void validateTargetComposition(final TargetComposition targetComposition, 
-    		MeasurementType sectorMeasurementType, String throughputUnit, List<UnderlyingAgreementViolation> violations) {
+    		MeasurementType sectorMeasurementType, String sectorThroughputUnit, List<UnderlyingAgreementViolation> violations) {
     	
         // Validate measurement type with sector/subsector scheme
         if(!targetComposition.getMeasurementType().getCategory().equals(sectorMeasurementType.getCategory())) {
@@ -87,18 +92,31 @@ public class UnderlyingAgreementTargetPeriod6ContextValidatorService extends Und
         }
         
         // Validate is target unit throughput measured with sector/subsector scheme
-        if(ObjectUtils.isEmpty(throughputUnit) && !ObjectUtils.isEmpty(targetComposition.getIsTargetUnitThroughputMeasured())) {
+        if(ObjectUtils.isEmpty(sectorThroughputUnit) && !ObjectUtils.isEmpty(targetComposition.getIsTargetUnitThroughputMeasured())) {
             violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_TARGET_UNIT_THROUGHPUT_MEASURED, targetComposition.getIsTargetUnitThroughputMeasured()));
         }
         
         // Validate is throughput unit with both sector/subsector scheme and target composition data
-        if((Boolean.TRUE.equals(targetComposition.getIsTargetUnitThroughputMeasured()) 
-        		|| (ObjectUtils.isEmpty(throughputUnit) 
-        				&& !AgreementCompositionType.NOVEM.equals(targetComposition.getAgreementCompositionType()))) 
-        		&& ObjectUtils.isEmpty(targetComposition.getThroughputUnit())) {
+        if(throughputUnitNotExist(targetComposition, sectorThroughputUnit) 
+        		|| throughputUnitNotEqualToSectorThroughputUnit(targetComposition, sectorThroughputUnit)) {
             violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_THROUGHPUT_UNIT, targetComposition.getThroughputUnit()));
         }
     }
+
+	private boolean throughputUnitNotExist(final TargetComposition targetComposition, String sectorThroughputUnit) {
+		return (Boolean.TRUE.equals(targetComposition.getIsTargetUnitThroughputMeasured()) 
+        		|| (ObjectUtils.isEmpty(sectorThroughputUnit) 
+        				&& !AgreementCompositionType.NOVEM.equals(targetComposition.getAgreementCompositionType()))) 
+        		&& ObjectUtils.isEmpty(targetComposition.getThroughputUnit());
+	}
+	
+	private boolean throughputUnitNotEqualToSectorThroughputUnit(final TargetComposition targetComposition,
+			String sectorThroughputUnit) {
+		return Boolean.FALSE.equals(targetComposition.getIsTargetUnitThroughputMeasured()) 
+				&& !ObjectUtils.isEmpty(sectorThroughputUnit) 
+				&& (ObjectUtils.isEmpty(targetComposition.getThroughputUnit()) 
+						|| !targetComposition.getThroughputUnit().equals(sectorThroughputUnit));
+	}
 
     private void validateBaselineData(final TargetPeriod6Details section, List<UnderlyingAgreementViolation> violations) {
         BaselineData baselineData = section.getBaselineData();
@@ -183,5 +201,10 @@ public class UnderlyingAgreementTargetPeriod6ContextValidatorService extends Und
 					.compareTo(section.getTargets().getTarget()) != 0) {
 		    violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_TARGETS, section.getTargets().getTarget()));
 		}
+	}
+
+	@Override
+	public SchemeVersion getSectionSchemeVersion() {
+		return SchemeVersion.CCA_2;
 	}
 }

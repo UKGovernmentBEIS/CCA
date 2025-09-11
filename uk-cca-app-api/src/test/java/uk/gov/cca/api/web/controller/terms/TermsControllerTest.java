@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.web.controller.terms.TermsController;
 import uk.gov.netz.api.terms.Terms;
 import uk.gov.netz.api.terms.TermsDTO;
 import uk.gov.netz.api.terms.TermsMapper;

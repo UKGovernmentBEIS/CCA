@@ -10,7 +10,7 @@
     data-testid="target-unit-list"
   >
     <ng-template let-column="column" let-index="index" let-row="row">
-      <div [formGroupName]="index" class="cell-container">
+      <div [formGroupName]="index">
         @switch (column.field) {
           @case ('accountName') {
             <a [routerLink]="['target-units', row.accountId]" class="govuk-link">{{ row[column.field] }}</a>
@@ -29,7 +29,7 @@
           }
 
           @case ('status') {
-            <govuk-tag [color]="row[column.field] | statusColorPipe">
+            <govuk-tag [color]="row[column.field] | statusColor">
               {{ row[column.field] | lowercase }}
             </govuk-tag>
           }
@@ -43,10 +43,12 @@
   </govuk-table>
 
   <cca-pagination
-    [count]="count()"
-    (currentPageChange)="handlePageChange($event)"
-    [pageSize]="pageSize"
-  ></cca-pagination>
+    [count]="state().totalItems"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  />
 
   @if (editable() && targetUnits()?.length > 0) {
     <div class="govuk-button-group">

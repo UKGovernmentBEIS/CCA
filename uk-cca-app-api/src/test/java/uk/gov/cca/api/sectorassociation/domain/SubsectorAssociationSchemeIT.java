@@ -11,6 +11,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.netz.api.common.AbstractContainerBaseTest;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.files.common.domain.FileStatus;
@@ -23,14 +24,14 @@ import java.math.BigDecimal;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class SubsectorAssociationSchemeIT extends AbstractContainerBaseTest {
+class SubsectorAssociationSchemeIT extends AbstractContainerBaseTest {
 
     @Autowired
     private EntityManager entityManager;
 
     private TargetSet targetSet;
     private SubsectorAssociation subsectorAssociation;
-    private SectorAssociationScheme sectorAssociationScheme;
+
     @BeforeEach
     void setUp() {
         SectorAssociationSchemeDocument umbrellaAgreement = SectorAssociationSchemeDocument.builder()
@@ -90,16 +91,9 @@ public class SubsectorAssociationSchemeIT extends AbstractContainerBaseTest {
 
         entityManager.persist(sectorAssociation);
 
-        sectorAssociationScheme = SectorAssociationScheme.builder()
-                .umbrellaAgreement(umbrellaAgreement)
-                .sectorAssociation(sectorAssociation)
-                .targetSet(targetSet)
-                .build();
-
-        entityManager.persist(sectorAssociationScheme);
-
         subsectorAssociation = SubsectorAssociation.builder()
                 .name("name")
+                .sectorAssociation(sectorAssociation)
                 .build();
 
         entityManager.persist(subsectorAssociation);
@@ -110,7 +104,7 @@ public class SubsectorAssociationSchemeIT extends AbstractContainerBaseTest {
         SubsectorAssociationScheme subsectorAssociationScheme = SubsectorAssociationScheme.builder()
                 .subsectorAssociation(subsectorAssociation)
                 .targetSet(targetSet)
-                .sectorAssociationScheme(sectorAssociationScheme)
+                .schemeVersion(SchemeVersion.CCA_2)
                 .build();
 
         entityManager.persist(subsectorAssociationScheme);

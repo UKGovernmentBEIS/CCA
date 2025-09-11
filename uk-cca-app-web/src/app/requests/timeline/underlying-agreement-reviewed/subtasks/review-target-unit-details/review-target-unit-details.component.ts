@@ -12,14 +12,20 @@ import { underlyingAgreementReviewedRequestActionQuery } from '../../+state/unde
 
 @Component({
   selector: 'cca-timeline-review-review-target-unit-details',
+  template: `
+    <div>
+      <netz-page-heading>Target unit details</netz-page-heading>
+      <cca-summary [data]="summaryData()" />
+    </div>
+  `,
   standalone: true,
   imports: [PageHeadingComponent, SummaryComponent],
-  templateUrl: './review-target-unit-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReviewTargetUnitDetailsComponent {
   private readonly requestActionStore = inject(RequestActionStore);
-  readonly summaryData = computed(() =>
+
+  protected readonly summaryData = computed(() =>
     toReviewTargetUnitDetailsSummaryDataWithDecision(
       this.requestActionStore.select(
         underlyingAgreementRequestActionQuery.selectUnderlyingAgreementTargetUnitDetails,

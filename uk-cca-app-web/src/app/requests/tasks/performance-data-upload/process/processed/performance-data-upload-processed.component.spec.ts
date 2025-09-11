@@ -22,6 +22,7 @@ describe('PerformanceDataUploadProcessedComponent', () => {
   const tasksService: Partial<jest.Mocked<TasksService>> = {
     processRequestTaskAction: jest.fn().mockReturnValue(of(mockRequestTaskStatePerformanceDataUploadState)),
   };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PerformanceDataUploadProcessedComponent],
@@ -34,6 +35,7 @@ describe('PerformanceDataUploadProcessedComponent', () => {
         { provide: TasksService, useValue: tasksService },
       ],
     }).compileComponents();
+
     store = TestBed.inject(RequestTaskStore);
     store.setState({
       ...mockRequestTaskStatePerformanceDataUploadState,

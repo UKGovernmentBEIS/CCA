@@ -2,20 +2,21 @@
   <button
     class="govuk-header__menu-button govuk-js-header-toggle"
     [class.govuk-header__menu-button--open]="isNavigationOpen"
-    [attr.aria-controls]="identifier"
-    [attr.aria-label]="menuButtonAriaLabel"
+    [attr.aria-controls]="identifier()"
+    [attr.aria-label]="menuButtonAriaLabel()"
     [attr.aria-expanded]="isNavigationOpen"
     type="button"
     (click)="isNavigationOpen = !isNavigationOpen"
   >
     Menu
   </button>
+
   <ul
-    [id]="identifier"
+    [id]="identifier()"
     class="govuk-header__navigation-list"
     [class.govuk-header__navigation--open]="isNavigationOpen"
-    [attr.aria-label]="ariaLabel"
+    [attr.aria-label]="ariaLabel()"
   >
-    <ng-content></ng-content>
+    <ng-content />
   </ul>
 </nav>

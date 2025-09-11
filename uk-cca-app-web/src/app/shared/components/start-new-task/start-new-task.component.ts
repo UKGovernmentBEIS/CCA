@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -9,7 +9,7 @@ import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { ItemLinkPipe } from '@netz/common/pipes';
 import { ButtonDirective } from '@netz/govuk-components';
-import { AccountStatusPipe } from '@shared/pipes';
+import { StatusPipe } from '@shared/pipes';
 
 import {
   RequestCreateValidationResult,
@@ -21,15 +21,16 @@ import {
 
 import {
   processActionsDetailsTypesMap,
+  taskWorkflowContentDisplayMap,
   userRoleWorkflowAccessMap,
   WorkflowDisplayContent,
 } from './start-new-task.types';
 
 @Component({
   selector: 'cca-start-new-task',
+  templateUrl: './start-new-task.component.html',
   standalone: true,
   imports: [PageHeadingComponent, PendingButtonDirective, ButtonDirective, RouterLink],
-  templateUrl: './start-new-task.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StartNewTaskComponent {
@@ -39,57 +40,39 @@ export class StartNewTaskComponent {
   private readonly requestItemsService = inject(RequestItemsService);
   private readonly authStore = inject(AuthStore);
 
-  id: string =
+  private readonly id =
     this.activatedRoute.snapshot.paramMap.get('targetUnitId') ?? this.activatedRoute.snapshot.paramMap.get('sectorId');
 
-  resourceType: string = this.activatedRoute.snapshot.paramMap.get('targetUnitId') ? 'ACCOUNT' : 'SECTOR_ASSOCIATION';
+  private readonly resourceType = this.activatedRoute.snapshot.paramMap.get('targetUnitId')
+    ? 'ACCOUNT'
+    : 'SECTOR_ASSOCIATION';
 
-  returnTo: string =
+  protected readonly returnTo =
     this.activatedRoute.snapshot.data.targetUnit?.targetUnitAccountDetails?.name ??
     `${this.activatedRoute.snapshot.data.details.sectorAssociationDetails.acronym} - ${this.activatedRoute.snapshot.data.details.sectorAssociationDetails.commonName}`;
 
-  availableWorkflows: Signal<WorkflowDisplayContent[]> = toSignal(
+  protected readonly availableWorkflows = toSignal(
     this.requestsService
       .getAvailableWorkflows(this.resourceType, this.id)
       .pipe(map((response) => this.mapToWorkflowDisplayContent(response, this.authStore.select(selectUserRoleType)()))),
   );
 
-  private readonly taskWorkflowContentDisplayMap: Record<string, WorkflowDisplayContent> = {
-    ADMIN_TERMINATION: {
-      title: 'Admin termination',
-      button: 'Start admin termination',
-      hint: 'Terminate the underlying agreement. The target unit account will be closed once the admin termination is complete.',
-      type: 'ADMIN_TERMINATION',
-      errors: [],
-    },
-    UNDERLYING_AGREEMENT_VARIATION: {
-      title: 'Make a permanent change to your underlying agreement',
-      button: 'Start a variation',
-      type: 'UNDERLYING_AGREEMENT_VARIATION',
-      errors: [],
-    },
-    PERFORMANCE_DATA_DOWNLOAD: {
-      title: 'Download target period reporting (TPR) spreadsheets',
-      hint: 'Generate a zip file that contains the TPR spreadsheets. You will be able to edit the data in the spreadsheets.',
-      button: 'Start TPR spreadsheets download',
-      type: 'PERFORMANCE_DATA_DOWNLOAD',
-      errors: [],
-    },
-    PERFORMANCE_DATA_UPLOAD: {
-      title: 'Upload target period reporting (TPR) spreadsheets',
-      button: 'Start TPR spreadsheets upload',
-      type: 'PERFORMANCE_DATA_UPLOAD',
-      errors: [],
-    },
-  };
-
   mapToWorkflowDisplayContent(
     validationResults: Record<string, RequestCreateValidationResult>,
     userRole: UserStateDTO['roleType'],
   ): WorkflowDisplayContent[] {
+    const workflowOrder = [
+      'UNDERLYING_AGREEMENT_VARIATION',
+      'PERFORMANCE_DATA_DOWNLOAD',
+      'PERFORMANCE_DATA_UPLOAD',
+      'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
+      'ADMIN_TERMINATION',
+    ];
+
     return Object.entries(validationResults)
       .filter(([type]) => this.isWorkflowAvailableForRole(type, userRole))
-      .map(([type, result]) => this.createWorkflowDisplayContent(type, result));
+      .map(([type, result]) => this.createWorkflowDisplayContent(type, result))
+      .sort((a, b) => workflowOrder.indexOf(a.type) - workflowOrder.indexOf(b.type));
   }
 
   isWorkflowAvailableForRole(type: string, userRole: UserStateDTO['roleType']): boolean {
@@ -97,7 +80,7 @@ export class StartNewTaskComponent {
   }
 
   createWorkflowDisplayContent(type: string, result: RequestCreateValidationResult): WorkflowDisplayContent {
-    const workflowContent = this.taskWorkflowContentDisplayMap[type] || { title: '', button: '', type: '', errors: [] };
+    const workflowContent = taskWorkflowContentDisplayMap[type] || { title: '', button: '', type: '', errors: [] };
     return {
       ...workflowContent,
       type,
@@ -110,7 +93,7 @@ export class StartNewTaskComponent {
     const typeString = processActionsDetailsTypesMap[requestType];
 
     if (status && !result?.applicableAccountStatuses?.includes(status)) {
-      const accountStatusString = new AccountStatusPipe().transform(status)?.toUpperCase();
+      const accountStatusString = new StatusPipe().transform(status)?.toUpperCase();
       return [`You cannot start the ${typeString} while the account status is ${accountStatusString}.`];
     } else {
       return result.requests.map((r) => this.createErrorMessage(requestType, r));

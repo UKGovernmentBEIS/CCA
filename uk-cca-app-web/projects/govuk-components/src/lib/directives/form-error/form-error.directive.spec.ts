@@ -1,4 +1,3 @@
-import { NgForOf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,7 +9,7 @@ import { FormErrorDirective } from './form-error.directive';
 describe('FormErrorDirective', () => {
   @Component({
     standalone: true,
-    imports: [ReactiveFormsModule, FormErrorDirective, NgForOf],
+    imports: [ReactiveFormsModule, FormErrorDirective],
     template: `
       <div>
         <div class="govuk-form-group">
@@ -18,7 +17,9 @@ describe('FormErrorDirective', () => {
         </div>
         <input type="text" [formControl]="simpleControl" govukFormError id="simple" />
         <select [formControl]="selectControl" govukFormError id="select">
-          <option *ngFor="let option of options" [ngValue]="option.value">{{ option.text }}</option>
+          @for (option of options; track option) {
+            <option [ngValue]="option.value">{{ option.text }}</option>
+          }
         </select>
         <textarea [formControl]="textareaControl" govukFormError id="textarea"></textarea>
         <form [formGroup]="formGroup">

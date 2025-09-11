@@ -1,31 +1,33 @@
-<ng-container *ngIf="cookiesNotAccepted()">
+@if (cookiesNotAccepted()) {
   <div id="global-cookie-message-to-accept" class="gem-c-cookie-banner" role="region" aria-label="cookie banner">
     <div class="govuk-width-container">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
           <div>
             <h2 class="govuk-heading-m">Tell us whether you accept cookies</h2>
-            <p class="govuk-body">
+            <p>
               We use cookies to collect information about how you use GOV.UK. We use this information to make the
               website work as well as possible and improve government services.
             </p>
           </div>
+
           <div>
             <div class="govuk-grid-column-one-half-from-desktop">
               <button
                 type="button"
                 class="govuk-button govuk-cookie-button"
                 (click)="acceptCookies()"
-                [disabled]="!areBrowserCookiesEnabled"
+                [disabled]="!areBrowserCookiesEnabled()"
               >
                 Accept all cookies
               </button>
             </div>
+
             <div class="govuk-grid-column-one-half-from-desktop">
               <button
                 type="button"
                 class="govuk-button govuk-cookie-button"
-                [disabled]="!areBrowserCookiesEnabled"
+                [disabled]="!areBrowserCookiesEnabled()"
                 (click)="goToSetPreferences()"
               >
                 Set cookie preferences
@@ -36,8 +38,9 @@
       </div>
     </div>
   </div>
-</ng-container>
-<ng-container *ngIf="show">
+}
+
+@if (show) {
   <div id="global-cookie-message-approval" class="gem-c-cookie-banner govuk-clearfix" aria-label="cookie banner">
     <div class="govuk-width-container">
       <div class="govuk-grid-row">
@@ -48,6 +51,7 @@
             at any time.
           </p>
         </div>
+
         <div class="govuk-grid-column-one-third">
           <p>
             <button type="button" class="gem-c-cookie-banner__hide-button" (click)="hideCookieMessage()">Hide</button>
@@ -56,4 +60,4 @@
       </div>
     </div>
   </div>
-</ng-container>
+}

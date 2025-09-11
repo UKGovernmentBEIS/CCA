@@ -4,8 +4,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
-  toReviewTargetUnitDetailsOriginalSummaryData,
-  toReviewTargetUnitDetailsSummaryData,
+  toVariationTargetUnitDetailsOriginalSummaryData,
+  toVariationTargetUnitDetailsSummaryData,
   underlyingAgreementQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
@@ -26,13 +26,12 @@ import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
 export default class ReviewTargetUnitDetailsSummaryComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
-  protected readonly summaryDataOriginal = toReviewTargetUnitDetailsOriginalSummaryData(
+  protected readonly summaryDataOriginal = toVariationTargetUnitDetailsOriginalSummaryData(
     this.requestTaskStore.select(underlyingAgreementQuery.selectAccountReferenceData)(),
     this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
   );
 
-  protected readonly summaryDataCurrent = toReviewTargetUnitDetailsSummaryData(
-    this.requestTaskStore.select(underlyingAgreementQuery.selectAccountReferenceData)(),
+  protected readonly summaryDataCurrent = toVariationTargetUnitDetailsSummaryData(
     this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
     this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
   );

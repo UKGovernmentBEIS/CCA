@@ -26,7 +26,7 @@ import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaTargetUnitSea
 public class SubsistenceFeesMoaTargetUnitQueryService implements SubsistenceFeesMoaTargetUnitAuthorityInfoProvider {
 	
 	private final SubsistenceFeesMoaTargetUnitRepository subsistenceFeesMoaTargetUnitRepository;
-	private final SubsistenceFeesMapper SUBSISTENCE_FEES_MAPPER = Mappers.getMapper(SubsistenceFeesMapper.class);
+	private static final SubsistenceFeesMapper SUBSISTENCE_FEES_MAPPER = Mappers.getMapper(SubsistenceFeesMapper.class);
 	
 	public SubsistenceFeesMoaTargetUnitSearchResults getSubsistenceFeesMoaTargetUnits(Long moaId, SubsistenceFeesSearchCriteria criteria) {
 		

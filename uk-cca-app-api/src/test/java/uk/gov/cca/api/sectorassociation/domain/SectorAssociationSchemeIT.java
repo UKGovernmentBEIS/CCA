@@ -11,6 +11,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.netz.api.common.AbstractContainerBaseTest;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.files.common.domain.FileStatus;
@@ -98,6 +99,7 @@ class SectorAssociationSchemeIT extends AbstractContainerBaseTest {
                 .umbrellaAgreement(umbrellaAgreement)
                 .sectorAssociation(sectorAssociation)
                 .targetSet(targetSet)
+                .schemeVersion(SchemeVersion.CCA_2)
                 .build();
 
         entityManager.persist(sectorAssociationScheme);

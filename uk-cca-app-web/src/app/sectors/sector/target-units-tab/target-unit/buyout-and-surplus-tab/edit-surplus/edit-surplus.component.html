@@ -1,0 +1,36 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Change"
+  heading="{{ targetPeriod }} surplus gained"
+  submitText="Confirm"
+>
+  <div class="govuk-grid-row govuk-!-margin-top-9">
+    <div class="govuk-grid-column-full">
+      <dl govuk-summary-list>
+        <div govukSummaryListRow>
+          <dt govukSummaryListRowKey>Current amount (tCO2e)</dt>
+          <dd govukSummaryListRowValue>{{ currentSurplus }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <div
+        formControlName="surplus"
+        govuk-text-input
+        inputType="number"
+        label="New amount (tCO2e)"
+        widthClass="govuk-!-width-one-third"
+      ></div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-top-3">
+    <div class="govuk-grid-column-two-thirds">
+      <div formControlName="comments" govuk-textarea label="Comments"></div>
+    </div>
+  </div>
+</cca-wizard-step>

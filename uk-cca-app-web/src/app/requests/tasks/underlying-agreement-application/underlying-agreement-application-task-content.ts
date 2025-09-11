@@ -5,13 +5,10 @@ import { RequestTaskPageContentFactory } from '@netz/common/request-task';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
-  BaselineAndTargetPeriodsSubtasks,
   filterEditableTaskLinks,
-  MANAGE_FACILITIES_SUBTASK,
+  nonFacilitySections,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
-  staticSections,
   TaskItemStatus,
-  transformFacilities,
   UNAApplicationRequestTaskPayload,
 } from '@requests/common';
 
@@ -28,8 +25,8 @@ export const underlyingAgreementApplicationTaskContent: RequestTaskPageContentFa
       title: 'Send Application',
       tasks: [
         {
-          status: allSectionsCompleted(payload) ? TaskItemStatus.NOT_STARTED : TaskItemStatus.CANNOT_START_YET,
-          link: allSectionsCompleted(payload) ? `${routePrefix}/send-application` : '',
+          status: canSubmit(payload) ? TaskItemStatus.NOT_STARTED : TaskItemStatus.CANNOT_START_YET,
+          link: canSubmit(payload) ? `${routePrefix}/send-application` : '',
           linkText: 'Submit to regulator',
         },
       ],
@@ -58,36 +55,9 @@ export function getAllUnderlyingAgreementApplicationSections(payload: UNAApplica
       title: 'Facilities',
       tasks: [
         {
-          status: payload?.sectionsCompleted?.[MANAGE_FACILITIES_SUBTASK] ?? TaskItemStatus.NOT_STARTED,
+          status: manageFacilitiesStatus(payload?.sectionsCompleted),
           link: `${routePrefix}/manage-facilities`,
-          linkText: 'Manage facilities list',
-        },
-        ...transformFacilities(
-          payload?.underlyingAgreement?.facilities,
-          [],
-          payload?.sectionsCompleted,
-          routePrefix,
-          'summary',
-          TaskItemStatus.NOT_STARTED,
-        ),
-      ],
-    },
-    {
-      title: 'Baseline and Targets',
-      tasks: [
-        {
-          status:
-            payload?.sectionsCompleted?.[BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_5_DETAILS] ??
-            TaskItemStatus.NOT_STARTED,
-          link: `${routePrefix}/target-period-5`,
-          linkText: 'TP5 (2021-2022)',
-        },
-        {
-          status:
-            payload?.sectionsCompleted?.[BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS] ??
-            TaskItemStatus.NOT_STARTED,
-          link: `${routePrefix}/target-period-6`,
-          linkText: 'TP6 (2024)',
+          linkText: 'Manage facilities',
         },
       ],
     },
@@ -105,11 +75,18 @@ export function getAllUnderlyingAgreementApplicationSections(payload: UNAApplica
 }
 
 function allSectionsCompleted(payload: UNAApplicationRequestTaskPayload): boolean {
-  return (
-    staticSections.every((section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.COMPLETED) &&
-    payload.underlyingAgreement.facilities.length &&
-    payload?.underlyingAgreement?.facilities?.every(
-      (facility) => payload?.sectionsCompleted?.[facility.facilityId] === TaskItemStatus.COMPLETED,
-    )
-  );
+  return Object.values(payload?.sectionsCompleted).every((section) => section === TaskItemStatus.COMPLETED);
+}
+
+function manageFacilitiesStatus(sectionsCompleted: Record<string, string>): TaskItemStatus {
+  const facilitySections = Object.keys(sectionsCompleted).filter((section) => !nonFacilitySections.includes(section));
+  if (facilitySections.length === 0) return TaskItemStatus.NOT_STARTED;
+
+  return facilitySections.every((section) => sectionsCompleted?.[section] === TaskItemStatus.COMPLETED)
+    ? TaskItemStatus.COMPLETED
+    : TaskItemStatus.IN_PROGRESS;
+}
+
+function canSubmit(payload: UNAApplicationRequestTaskPayload) {
+  return allSectionsCompleted(payload) && payload?.underlyingAgreement?.facilities?.length > 0;
 }

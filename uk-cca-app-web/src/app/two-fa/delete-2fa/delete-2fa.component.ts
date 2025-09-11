@@ -11,8 +11,8 @@ import { UsersSecuritySetupService } from 'cca-api';
 @Component({
   selector: 'cca-delete-2fa',
   template: '',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Delete2faComponent implements OnInit {
   constructor(
@@ -22,7 +22,7 @@ export class Delete2faComponent implements OnInit {
     private readonly authService: AuthService,
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.route.queryParamMap
       .pipe(
         map((params) => params.get('token')),

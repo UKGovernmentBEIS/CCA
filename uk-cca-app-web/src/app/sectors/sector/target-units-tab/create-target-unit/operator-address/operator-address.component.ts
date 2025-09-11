@@ -2,9 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { SelectComponent } from '@netz/govuk-components';
 import { AccountAddressFormModel, AccountAddressInputComponent, WizardStepComponent } from '@shared/components';
-import { CountriesDirective } from '@shared/directives';
 
 import { CreateTargetUnitStore } from '../create-target-unit.store';
 import {
@@ -16,13 +14,7 @@ import {
   selector: 'cca-operator-address',
   templateUrl: './operator-address.component.html',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    SelectComponent,
-    AccountAddressInputComponent,
-    CountriesDirective,
-    WizardStepComponent,
-  ],
+  imports: [ReactiveFormsModule, AccountAddressInputComponent, WizardStepComponent],
   providers: [TargetUnitOperatorAddressFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

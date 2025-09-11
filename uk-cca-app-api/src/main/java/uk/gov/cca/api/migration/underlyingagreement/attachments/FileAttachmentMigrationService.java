@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
 import org.mapstruct.factory.Mappers;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
@@ -35,9 +36,11 @@ import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 @ConditionalOnAvailableEndpoint(endpoint = MigrationEndpoint.class)
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class FileAttachmentMigrationService {
 
     private static final FileAttachmentMigrationMapper fileAttachmentMapper = Mappers.getMapper(FileAttachmentMigrationMapper.class);
+    private static final String FORWARD_SLASH = "/";
     
     private final FtpProperties ftpProperties;
     private final FtpFileService ftpService;
@@ -90,8 +93,7 @@ public class FileAttachmentMigrationService {
                 attachment.setStatus(FileStatus.SUBMITTED);
                 fileAttachmentRepository.save(attachment);
             } catch (IOException e) {
-//                log.error("File {} failed with {}",
-//                        attachment.getFileName(), ExceptionUtils.getRootCause(e).getMessage());
+                log.error("Failed to save file: {}", attachment.getFileName());
             }
         }
         
@@ -101,7 +103,7 @@ public class FileAttachmentMigrationService {
         final String ftpServertDirectory = ftpProperties.getServerUnaAttachmentsDirectory();
         List<String> filePaths = attachmentsToMigrate.stream()
                 .map(fileAttachment -> new String(fileAttachment.getFileContent(), StandardCharsets.UTF_8))
-                .map(fileStoredName -> ftpServertDirectory + "/" + fileStoredName)
+                .map(fileStoredName -> ftpServertDirectory + FORWARD_SLASH + fileStoredName)
                 .toList();
         List<FtpFileDTOResult> ftpFileDTOResults = ftpService.fetchFiles(filePaths);
 
@@ -109,7 +111,7 @@ public class FileAttachmentMigrationService {
             FileAttachment fileAttachment = attachmentsToMigrate.stream()
                     .filter(att -> (new String(att.getFileContent(), StandardCharsets.UTF_8)).equals(ftpFileDTOResult.getFileDTO().getFileName()))
                     .findFirst()
-                    .get();
+                    .orElseThrow();
 
             if (ftpFileDTOResult.getErrorReport() != null) {
                 migrationErrors.add(FileMigrationError.builder()

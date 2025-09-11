@@ -1,7 +1,6 @@
 package uk.gov.cca.api.facility.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -10,12 +9,8 @@ import org.springframework.stereotype.Service;
 import uk.gov.cca.api.facility.domain.FacilityData;
 import uk.gov.cca.api.facility.domain.dto.FacilitySearchCriteria;
 import uk.gov.cca.api.facility.domain.dto.FacilitySearchResultInfoDTO;
-import uk.gov.cca.api.facility.domain.dto.FacilitySearchResults;
 import uk.gov.cca.api.facility.repository.FacilityDataRepository;
 import uk.gov.cca.api.facility.transform.FacilitySearchResultsMapper;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +19,7 @@ public class FacilitySearchService {
     private final FacilityDataRepository facilityDataRepository;
     private final FacilitySearchResultsMapper facilitySearchResultsMapper;
 
-    public FacilitySearchResults searchFacilities(Long accountId, FacilitySearchCriteria facilitySearchCriteria) {
+    public Page<FacilitySearchResultInfoDTO> searchFacilities(Long accountId, FacilitySearchCriteria facilitySearchCriteria) {
 
         final String term = getSearchTerm(facilitySearchCriteria);
         final Pageable pageable = getPageable(facilitySearchCriteria);
@@ -32,18 +27,7 @@ public class FacilitySearchService {
         Page<FacilityData> results =
                 facilityDataRepository.searchFacilityDataByAccountIdAndTerm(pageable, accountId, term);
 
-        if (ObjectUtils.isEmpty(results)) {
-            return FacilitySearchResults.emptyFacilitySearchResults();
-        }
-
-        List<FacilitySearchResultInfoDTO> facilities = results.stream()
-                .map(facilitySearchResultsMapper::toFacilitySearchResultInfo)
-                .collect(Collectors.toList());
-
-        return FacilitySearchResults.builder()
-                .facilities(facilities)
-                .total(results.getTotalElements())
-                .build();
+        return results.map(facilitySearchResultsMapper::toFacilitySearchResultInfo);
     }
 
     private String getSearchTerm(FacilitySearchCriteria facilitySearchCriteria) {
@@ -52,8 +36,8 @@ public class FacilitySearchService {
 
     private Pageable getPageable(FacilitySearchCriteria facilitySearchCriteria) {
         return PageRequest.of(
-                facilitySearchCriteria.getPaging().getPageNumber().intValue(),
-                facilitySearchCriteria.getPaging().getPageSize().intValue(),
+                facilitySearchCriteria.getPaging().getPageNumber(),
+                facilitySearchCriteria.getPaging().getPageSize(),
                 Sort.by("facilityId"));
     }
 

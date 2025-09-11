@@ -17,7 +17,7 @@ All links within the notification banner body should be decorated with the `govu
 ```html
 <govuk-notification-banner [type]="type" [heading]="heading">
   <h3 class="govuk-notification-banner__heading">Training outcome recorded and trainee withdrawn</h3>
-  <p class="govuk-body">
+  <p>
     Contact <a govukLink="notification" href="#">example@department.gov.uk</a> if you think there's a problem.
   </p>
 </govuk-notification-banner>

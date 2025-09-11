@@ -4,16 +4,19 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.admintermination.submit.peerreview.domain.AdminTerminationPeerReviewRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.AdminTerminationWithdrawRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataDownloadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadSubmitRequestTaskPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.activation.domain.UnderlyingAgreementActivationRequestTaskPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.review.domain.UnderlyingAgreementReviewRequestTaskPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.submit.domain.UnderlyingAgreementSubmitRequestTaskPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivationRequestTaskPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSubmitRequestTaskPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.activation.domain.UnderlyingAgreementActivationRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.review.domain.UnderlyingAgreementReviewRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.review.peerreview.domain.UnderlyingAgreementPeerReviewRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.submit.domain.UnderlyingAgreementSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivationRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.peerreview.domain.UnderlyingAgreementVariationPeerReviewRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
 import uk.gov.netz.api.swagger.SwaggerSchemasAbstractProvider;
 import uk.gov.netz.api.workflow.request.flow.payment.domain.PaymentConfirmRequestTaskPayload;
 import uk.gov.netz.api.workflow.request.flow.payment.domain.PaymentMakeRequestTaskPayload;
@@ -41,23 +44,26 @@ public class RequestTaskPayloadSchemasProvider extends SwaggerSchemasAbstractPro
 		addResolvedShemas(UnderlyingAgreementSubmitRequestTaskPayload.class.getSimpleName(), UnderlyingAgreementSubmitRequestTaskPayload.class);
 		addResolvedShemas(UnderlyingAgreementReviewRequestTaskPayload.class.getSimpleName(), UnderlyingAgreementReviewRequestTaskPayload.class);
 		addResolvedShemas(UnderlyingAgreementActivationRequestTaskPayload.class.getSimpleName(), UnderlyingAgreementActivationRequestTaskPayload.class);
+		addResolvedShemas(UnderlyingAgreementPeerReviewRequestTaskPayload.class.getSimpleName(), UnderlyingAgreementPeerReviewRequestTaskPayload.class);
 
 		// Underlying Agreement Variation
 		addResolvedShemas(UnderlyingAgreementVariationSubmitRequestTaskPayload.class.getSimpleName(), UnderlyingAgreementVariationSubmitRequestTaskPayload.class);
 		addResolvedShemas(UnderlyingAgreementVariationReviewRequestTaskPayload.class.getSimpleName(), UnderlyingAgreementVariationReviewRequestTaskPayload.class);
         addResolvedShemas(UnderlyingAgreementVariationActivationRequestTaskPayload.class.getSimpleName(), UnderlyingAgreementVariationActivationRequestTaskPayload.class);
+		addResolvedShemas(UnderlyingAgreementVariationPeerReviewRequestTaskPayload.class.getSimpleName(), UnderlyingAgreementVariationPeerReviewRequestTaskPayload.class);
 
-        // Admin Termination
+		// Admin Termination
         addResolvedShemas(AdminTerminationSubmitRequestTaskPayload.class.getSimpleName(), AdminTerminationSubmitRequestTaskPayload.class);
 		addResolvedShemas(AdminTerminationFinalDecisionRequestTaskPayload.class.getSimpleName(), AdminTerminationFinalDecisionRequestTaskPayload.class);
 		addResolvedShemas(AdminTerminationWithdrawRequestTaskPayload.class.getSimpleName(), AdminTerminationWithdrawRequestTaskPayload.class);
+		addResolvedShemas(AdminTerminationPeerReviewRequestTaskPayload.class.getSimpleName(), AdminTerminationPeerReviewRequestTaskPayload.class);
 
 		// Performance data download
 		addResolvedShemas(PerformanceDataDownloadSubmitRequestTaskPayload.class.getSimpleName(), PerformanceDataDownloadSubmitRequestTaskPayload.class);
 
 		// Performance data upload
 		addResolvedShemas(PerformanceDataUploadSubmitRequestTaskPayload.class.getSimpleName(), PerformanceDataUploadSubmitRequestTaskPayload.class);
-		
+
 		// PAT
 		addResolvedShemas(PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class.getSimpleName(),
 				PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class);

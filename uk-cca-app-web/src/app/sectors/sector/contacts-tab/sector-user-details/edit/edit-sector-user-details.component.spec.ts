@@ -12,6 +12,7 @@ describe('EditSectorUserDetailsComponent', () => {
   let component: EditSectorUserDetailsComponent;
   let fixture: ComponentFixture<EditSectorUserDetailsComponent>;
   let store: ActiveSectorUserStore;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [EditSectorUserDetailsComponent],
@@ -26,8 +27,10 @@ describe('EditSectorUserDetailsComponent', () => {
         },
       ],
     }).compileComponents();
+
     store = TestBed.inject(ActiveSectorUserStore);
     store.setState({ details: mockSectorUserDetails, editable: true });
+
     fixture = TestBed.createComponent(EditSectorUserDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

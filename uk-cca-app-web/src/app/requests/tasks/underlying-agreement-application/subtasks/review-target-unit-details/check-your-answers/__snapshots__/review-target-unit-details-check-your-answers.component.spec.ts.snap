@@ -2,11 +2,11 @@
 
 exports[`CheckYourAnswersComponent should render the summary sections and rows 1`] = `
 <cca-check-your-answers
-  activatedRoute={[Function ActivatedRouteStub]}
   requestTaskStore={[Function _RequestTaskStore]}
-  router={[Function _Router]}
+  route={[Function ActivatedRouteStub]}
+  router={[Function Object]}
   summaryData={[Function Array]}
-  taskService={[Function Object]}
+  tasksApiService={[Function Object]}
 >
   <div>
     <netz-page-heading
@@ -55,7 +55,7 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
             <a
               class="govuk-link"
-              href="/?change=true"
+              href=""
             >
               Change
             </a>
@@ -77,22 +77,16 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
              Limited company 
           </dd>
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Company registration number
-          </dt>
           <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
           >
-             test 
+            <a
+              class="govuk-link"
+              href=""
+            >
+              Change
+            </a>
           </dd>
         </div>
         <div
@@ -103,13 +97,51 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Subsector
+            Company number
           </dt>
           <dd
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             SUBSECTOR_2 
+             11112222 
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href=""
+            >
+              Change
+            </a>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Reason for not having a registration number
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href=""
+            >
+              Change
+            </a>
           </dd>
         </div>
       </dl>
@@ -150,7 +182,7 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
             <a
               class="govuk-link"
-              href="/?change=true"
+              href=""
             >
               Change
             </a>
@@ -188,7 +220,7 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
             <a
               class="govuk-link"
-              href="/?change=true"
+              href=""
             >
               Change
             </a>
@@ -216,7 +248,7 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
             <a
               class="govuk-link"
-              href="/?change=true"
+              href=""
             >
               Change
             </a>
@@ -244,7 +276,7 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
             <a
               class="govuk-link"
-              href="/?change=true"
+              href=""
             >
               Change
             </a>
@@ -282,7 +314,7 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
           >
             <a
               class="govuk-link"
-              href="/?change=true"
+              href=""
             >
               Change
             </a>
@@ -298,10 +330,12 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
     >
       Confirm and complete
     </button>
-  </div><netz-return-to-task-or-action-page>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
     <a
-      govuklink=""
-      href="/undefined"
+      class="govuk-link"
+      href=""
     >
        Return to: Apply for underlying agreement 
     </a>

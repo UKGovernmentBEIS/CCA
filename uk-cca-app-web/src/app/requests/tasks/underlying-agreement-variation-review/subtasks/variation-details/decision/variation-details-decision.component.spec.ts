@@ -12,10 +12,12 @@ import { VariationDetailsDecisionComponent } from './variation-details-decision.
 
 describe('AUthorizationAdditionalEvidenceDecisionComponent', () => {
   let store: RequestTaskStore;
+  let tree: Element;
+
   const unaTaskService: Partial<jest.Mocked<TaskService>> = {
     saveSubtask: jest.fn().mockReturnValue(of({})),
   };
-  let tree: Element;
+
   beforeEach(async () => {
     const renderResult = await render(VariationDetailsDecisionComponent, {
       providers: [
@@ -31,8 +33,10 @@ describe('AUthorizationAdditionalEvidenceDecisionComponent', () => {
         store.setState(mockVariationReviewRequestTaskState);
       },
     });
+
     tree = renderResult.container;
   });
+
   it('should match snapshot', () => {
     expect(tree).toMatchSnapshot();
   });

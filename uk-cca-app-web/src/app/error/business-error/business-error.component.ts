@@ -11,20 +11,20 @@ import { BusinessErrorService } from './business-error.service';
   template: `
     @if (businessErrorService.error$ | async; as error) {
       <cca-error-page [heading]="error.heading">
-        <p class="govuk-body">
+        <p>
           <a class="govuk-link" [routerLink]="error.link" [fragment]="error.fragment">{{ error.linkText }}</a>
         </p>
       </cca-error-page>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [ErrorPageComponent, RouterLink, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BusinessErrorComponent implements OnDestroy {
   constructor(readonly businessErrorService: BusinessErrorService) {}
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.businessErrorService.clear();
   }
 }

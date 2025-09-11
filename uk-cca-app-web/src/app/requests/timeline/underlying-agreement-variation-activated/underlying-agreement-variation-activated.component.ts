@@ -10,35 +10,41 @@ import { toUnderlyingAgreementVariationActivatedSummaryData } from './underlying
 
 @Component({
   selector: 'cca-underlying-agreement-variation-activated',
+  template: ` <cca-summary [data]="summaryData()" />`,
   standalone: true,
   imports: [SummaryComponent],
-  template: ` <cca-summary [data]="summaryData()" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementVariationActivatedComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
-  readonly activatedPayload: Signal<UnderlyingAgreementVariationActivatedRequestActionPayload> = computed(() => {
-    return {
-      officialNotice: this.requestActionStore.select(underlyingAgreementVariationActivatedQuery.selectOfficialNotice)(),
-      usersInfo: this.requestActionStore.select(underlyingAgreementVariationActivatedQuery.selectUsersInfo)(),
-      defaultContacts: this.requestActionStore.select(
-        underlyingAgreementVariationActivatedQuery.selectDefaultContacts,
-      )(),
-      decisionNotification: this.requestActionStore.select(
-        underlyingAgreementVariationActivatedQuery.selectDecisionNotification,
-      )(),
-      underlyingAgreementDocument: this.requestActionStore.select(
-        underlyingAgreementVariationActivatedQuery.selectUnderlyingAgreementDocument,
-      )(),
-      underlyingAgreementActivationDetails: this.requestActionStore.select(
-        underlyingAgreementVariationActivatedQuery.selectUnderlyingAgreementActivationDetails,
-      )(),
-      underlyingAgreementActivationAttachments: this.requestActionStore.select(
-        underlyingAgreementVariationActivatedQuery.selectUnderlyingAgreementActivationAttachments,
-      )(),
-    } as UnderlyingAgreementVariationActivatedRequestActionPayload;
-  });
+  protected readonly activatedPayload: Signal<UnderlyingAgreementVariationActivatedRequestActionPayload> = computed(
+    () => {
+      return {
+        officialNotice: this.requestActionStore.select(
+          underlyingAgreementVariationActivatedQuery.selectOfficialNotice,
+        )(),
+        usersInfo: this.requestActionStore.select(underlyingAgreementVariationActivatedQuery.selectUsersInfo)(),
+        defaultContacts: this.requestActionStore.select(
+          underlyingAgreementVariationActivatedQuery.selectDefaultContacts,
+        )(),
+        decisionNotification: this.requestActionStore.select(
+          underlyingAgreementVariationActivatedQuery.selectDecisionNotification,
+        )(),
+        underlyingAgreementDocument: this.requestActionStore.select(
+          underlyingAgreementVariationActivatedQuery.selectUnderlyingAgreementDocument,
+        )(),
+        underlyingAgreementActivationDetails: this.requestActionStore.select(
+          underlyingAgreementVariationActivatedQuery.selectUnderlyingAgreementActivationDetails,
+        )(),
+        underlyingAgreementActivationAttachments: this.requestActionStore.select(
+          underlyingAgreementVariationActivatedQuery.selectUnderlyingAgreementActivationAttachments,
+        )(),
+      } as UnderlyingAgreementVariationActivatedRequestActionPayload;
+    },
+  );
 
-  readonly summaryData = computed(() => toUnderlyingAgreementVariationActivatedSummaryData(this.activatedPayload()));
+  protected readonly summaryData = computed(() =>
+    toUnderlyingAgreementVariationActivatedSummaryData(this.activatedPayload()),
+  );
 }

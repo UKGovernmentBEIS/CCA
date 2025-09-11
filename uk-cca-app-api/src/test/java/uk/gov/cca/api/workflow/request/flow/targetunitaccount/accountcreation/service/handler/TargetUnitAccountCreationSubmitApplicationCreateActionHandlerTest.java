@@ -33,6 +33,7 @@ import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstan
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestParams;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,7 +75,7 @@ class TargetUnitAccountCreationSubmitApplicationCreateActionHandlerTest {
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .operatorType(TargetUnitAccountOperatorType.PARTNERSHIP)
                 .companyRegistrationNumber("companyRegistrationNumber")
-                .sicCode("sicCode")
+                .sicCodes(List.of("sicCode"))
                 .address(AccountAddressDTO.builder().build())
                 .administrativeContactDetails(getAdministrativeContactDetailsDTO())
                 .responsiblePerson(getResponsiblePersonDTO())
@@ -104,7 +105,7 @@ class TargetUnitAccountCreationSubmitApplicationCreateActionHandlerTest {
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .operatorType(TargetUnitAccountOperatorType.PARTNERSHIP)
                 .companyRegistrationNumber("companyRegistrationNumber")
-                .sicCode("sicCode")
+                .sicCodes(List.of("sicCode"))
                 .sectorAssociationId(sectorAssociationId)
                 .address(AccountAddressDTO.builder().build())
                 .administrativeContactDetails(getAdministrativeContactDetailsDTO())
@@ -119,7 +120,7 @@ class TargetUnitAccountCreationSubmitApplicationCreateActionHandlerTest {
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .operatorType(TargetUnitAccountOperatorType.PARTNERSHIP)
                 .companyRegistrationNumber("companyRegistrationNumber")
-                .sicCode("sicCode")
+                .sicCodes(List.of("sicCode"))
                 .sectorAssociationId(sectorAssociationId)
                 .address(AccountAddressDTO.builder().build())
                 .administrativeContactDetails(getPersistedAdministrativeContactDetailsDTO())

@@ -35,7 +35,7 @@ import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
 import uk.gov.netz.api.user.core.domain.enumeration.UserInvitationStatus;
 
 @ExtendWith(MockitoExtension.class)
-public class SectorUserRegistrationControllerTest {
+class SectorUserRegistrationControllerTest {
 
     private static final String USER_CONTROLLER_PATH = "/v1.0/sector-users/registration";
     private static final String ACCEPT_INVITATION_PATH = "/accept-invitation";
@@ -61,7 +61,7 @@ public class SectorUserRegistrationControllerTest {
     private ObjectMapper mapper;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))

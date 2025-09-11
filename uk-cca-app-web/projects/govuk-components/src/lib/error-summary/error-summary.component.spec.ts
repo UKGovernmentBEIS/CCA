@@ -1,5 +1,4 @@
-import { NgIf } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -12,31 +11,36 @@ import { ErrorSummaryComponent } from './error-summary.component';
 describe('ErrorSummaryComponent', () => {
   @Component({
     standalone: true,
-    imports: [NgIf, ErrorSummaryComponent, ReactiveFormsModule, TextInputComponent, FormsModule],
+    imports: [ErrorSummaryComponent, ReactiveFormsModule, TextInputComponent, FormsModule],
     template: `
-      <form *ngIf="!isTemplate" [formGroup]="form">
-        <govuk-error-summary [form]="form"></govuk-error-summary>
-        <div govuk-text-input inputType="text" formControlName="topLevel"></div>
-        <div formGroupName="secondLevelTop">
-          <div govuk-text-input inputType="text" formControlName="secondLevelFirst"></div>
-          <div govuk-text-input inputType="text" formControlName="secondLevelSecond"></div>
-        </div>
-        <div formArrayName="secondLevelArrayTop">
-          <div [formGroupName]="0">
-            <div govuk-text-input inputType="text" formControlName="nestedArrayControl"></div>
+      @if (!isTemplate) {
+        <form [formGroup]="form">
+          <govuk-error-summary [form]="form"></govuk-error-summary>
+          <div govuk-text-input inputType="text" formControlName="topLevel"></div>
+          <div formGroupName="secondLevelTop">
+            <div govuk-text-input inputType="text" formControlName="secondLevelFirst"></div>
+            <div govuk-text-input inputType="text" formControlName="secondLevelSecond"></div>
           </div>
-          <div govuk-text-input inputType="text" [formControlName]="1"></div>
-        </div>
-      </form>
 
-      <form #templateForm="ngForm" *ngIf="isTemplate">
-        <govuk-error-summary [form]="templateForm"></govuk-error-summary>
-        <select [(ngModel)]="selectValue" name="someField" required></select>
-      </form>
+          <div formArrayName="secondLevelArrayTop">
+            <div [formGroupName]="0">
+              <div govuk-text-input inputType="text" formControlName="nestedArrayControl"></div>
+            </div>
+            <div govuk-text-input inputType="text" [formControlName]="1"></div>
+          </div>
+        </form>
+      }
+
+      @if (isTemplate) {
+        <form #templateForm="ngForm">
+          <govuk-error-summary [form]="templateForm"></govuk-error-summary>
+          <select [(ngModel)]="selectValue" name="someField" required></select>
+        </form>
+      }
     `,
   })
   class TestComponent {
-    @ViewChild('templateForm') public testForm: NgForm;
+    public readonly testForm = viewChild<NgForm>('templateForm');
 
     form: FormGroup;
     isTemplate = false;
@@ -103,7 +107,7 @@ describe('ErrorSummaryComponent', () => {
     hostComponent.isTemplate = true;
     fixture.detectChanges();
     await fixture.whenStable();
-    hostComponent.testForm.control.markAllAsTouched();
+    hostComponent.testForm().control.markAllAsTouched();
     fixture.detectChanges();
 
     const hostElement: HTMLElement = fixture.nativeElement;

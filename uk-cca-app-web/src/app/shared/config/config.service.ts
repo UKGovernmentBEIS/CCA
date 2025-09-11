@@ -4,7 +4,12 @@ import { map, Observable, tap } from 'rxjs';
 
 import { UIConfigurationService } from 'cca-api';
 
-import { selectGtmContainerId, selectIsFeatureEnabled, selectSubsistenceFeesRunTriggerDate } from './config.selectors';
+import {
+  selectGtmContainerId,
+  selectIsFeatureEnabled,
+  selectSubsistenceFeesRunTriggerDate,
+  selectUnderlyingAgreementSchemeParticipationFlagCutOffDate,
+} from './config.selectors';
 import { ConfigState, FeatureName } from './config.state';
 import { ConfigStore } from './config.store';
 
@@ -30,5 +35,9 @@ export class ConfigService {
 
   getSubsistenceFeesRunTriggerDate() {
     return this.configStore.select(selectSubsistenceFeesRunTriggerDate)();
+  }
+
+  getUnderlyingAgreementSchemeParticipationFlagCutOffDate() {
+    return this.configStore.select(selectUnderlyingAgreementSchemeParticipationFlagCutOffDate)();
   }
 }

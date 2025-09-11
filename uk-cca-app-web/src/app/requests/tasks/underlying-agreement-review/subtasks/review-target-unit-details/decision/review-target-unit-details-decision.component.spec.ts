@@ -12,10 +12,12 @@ import ReviewTargetUnitDetailsDecisionComponent from './review-target-unit-detai
 
 describe('Review Target Unit Details Decision', () => {
   let store: RequestTaskStore;
+  let tree: Element;
+
   const unaTaskService: Partial<jest.Mocked<TaskService>> = {
     saveSubtask: jest.fn().mockReturnValue(of({})),
   };
-  let tree: Element;
+
   beforeEach(async () => {
     const renderResult = await render(ReviewTargetUnitDetailsDecisionComponent, {
       providers: [
@@ -31,8 +33,10 @@ describe('Review Target Unit Details Decision', () => {
         store.setState(mockUNAReviewRequestTaskState);
       },
     });
+
     tree = renderResult.container;
   });
+
   it('should match snapshot', () => {
     expect(tree).toMatchSnapshot();
   });

@@ -16,5 +16,6 @@ export interface UIPropertiesDTO {
   analytics?: Record<string, string>;
   keycloakServerUrl?: string;
   subsistenceFeesRunTriggerDate?: string;
+  underlyingAgreementSchemeParticipationFlagCutOffDate?: string;
   notificationAlerts?: NotificationAlertDTO[];
 }

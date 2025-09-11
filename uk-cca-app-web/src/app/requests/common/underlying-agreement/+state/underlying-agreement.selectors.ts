@@ -12,7 +12,7 @@ import {
 } from 'cca-api';
 
 import { TaskItemStatus } from '../../task-item-status';
-import { ManageFacilities, UNARequestTaskPayload } from '../underlying-agreement.types';
+import { FacilityItemViewModel, UNARequestTaskPayload } from '../types';
 
 const selectPayload: StateSelector<RequestTaskState, UNARequestTaskPayload> = createDescendingSelector(
   requestTaskQuery.selectRequestTaskPayload,
@@ -28,6 +28,12 @@ const selectAccountReferenceDataSectorAssociationDetails: StateSelector<RequestT
   createDescendingSelector(
     selectAccountReferenceData,
     (accountReferenceData) => accountReferenceData.sectorAssociationDetails,
+  );
+
+const selectSectorAssociationDetailsSchemeData = (scheme: string) =>
+  createDescendingSelector(
+    selectAccountReferenceDataSectorAssociationDetails,
+    (details) => details?.schemeDataMap[scheme],
   );
 
 const selectAccountReferenceDataTargetUnitDetails: StateSelector<RequestTaskState, TargetUnitAccountDetails> =
@@ -71,23 +77,21 @@ const selectUnderlyingAgreementTargetUnitDetails: StateSelector<
   (payload) => payload.underlyingAgreement.underlyingAgreementTargetUnitDetails,
 );
 
-const selectManageFacilities: StateSelector<RequestTaskState, ManageFacilities> = createDescendingSelector(
-  selectUnderlyingAgreement,
-  (underlyingAgreement) => ({
-    facilityItems:
-      underlyingAgreement?.facilities?.map((f) => ({
-        name: f.facilityDetails.name,
-        facilityId: f.facilityId,
-        status: f.status,
-      })) ?? [],
-  }),
+const selectFacilityItems: StateSelector<RequestTaskState, FacilityItemViewModel[]> = createDescendingSelector(
+  selectPayload,
+  (payload: UNARequestTaskPayload) =>
+    payload.underlyingAgreement?.facilities?.map((f) => ({
+      name: f.facilityDetails.name,
+      facilityId: f.facilityId,
+      status: f.status,
+      workflowStatus: (payload.sectionsCompleted?.[f.facilityId] as TaskItemStatus) ?? TaskItemStatus.IN_PROGRESS,
+    })) ?? [],
 );
 
-const selectFacility = (facilityId: string): StateSelector<RequestTaskState, Facility> => {
-  return createDescendingSelector(selectUnderlyingAgreement, (underlyingAgreement) =>
+const selectFacility = (facilityId: string): StateSelector<RequestTaskState, Facility> =>
+  createDescendingSelector(selectUnderlyingAgreement, (underlyingAgreement) =>
     underlyingAgreement?.facilities ? underlyingAgreement.facilities.find((f) => f.facilityId === facilityId) : null,
   );
-};
 
 const selectAuthorisationAndAdditionalEvidence: StateSelector<RequestTaskState, AuthorisationAndAdditionalEvidence> =
   createDescendingSelector(
@@ -120,6 +124,24 @@ const selectTargetComposition = (isTP5: boolean) =>
     isTP5 ? una.targetPeriod5Details.details.targetComposition : una.targetPeriod6Details.targetComposition,
   );
 
+const selectFacilityTargetComposition = (facilityIndex: number) =>
+  createDescendingSelector(
+    selectUnderlyingAgreement,
+    (una) => una.facilities[facilityIndex]?.cca3BaselineAndTargets?.targetComposition,
+  );
+
+const selectFacilityBaselineData = (facilityIndex: number) =>
+  createDescendingSelector(
+    selectUnderlyingAgreement,
+    (una) => una.facilities[facilityIndex]?.cca3BaselineAndTargets?.baselineData,
+  );
+
+const selectFacilityTargets = (facilityIndex: number) =>
+  createDescendingSelector(
+    selectUnderlyingAgreement,
+    (una) => una.facilities[facilityIndex]?.cca3BaselineAndTargets?.facilityTargets,
+  );
+
 export const underlyingAgreementQuery = {
   selectPayload,
   selectSectionsCompleted,
@@ -127,11 +149,12 @@ export const underlyingAgreementQuery = {
   selectAccountReferenceData,
   selectAccountReferenceDataTargetUnitDetails,
   selectAccountReferenceDataSectorAssociationDetails,
+  selectSectorAssociationDetailsSchemeData,
   selectStatusForSubtask,
   selectAttachments,
   selectUnderlyingAgreement,
   selectUnderlyingAgreementTargetUnitDetails,
-  selectManageFacilities,
+  selectFacilityItems,
   selectFacility,
   selectAuthorisationAndAdditionalEvidence,
   selectTargetPeriodDetails,
@@ -139,4 +162,7 @@ export const underlyingAgreementQuery = {
   selectBaselineData,
   selectTargets,
   selectTargetComposition,
+  selectFacilityTargetComposition,
+  selectFacilityBaselineData,
+  selectFacilityTargets,
 };

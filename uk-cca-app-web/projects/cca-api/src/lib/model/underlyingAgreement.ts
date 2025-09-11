@@ -15,8 +15,8 @@ import { AuthorisationAndAdditionalEvidence } from './authorisationAndAdditional
 import { Facility } from './facility';
 
 export interface UnderlyingAgreement {
-  facilities: Facility[];
-  targetPeriod5Details: TargetPeriod5Details;
-  targetPeriod6Details: TargetPeriod6Details;
+  facilities?: Facility[];
+  targetPeriod5Details?: TargetPeriod5Details;
+  targetPeriod6Details?: TargetPeriod6Details;
   authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence;
 }

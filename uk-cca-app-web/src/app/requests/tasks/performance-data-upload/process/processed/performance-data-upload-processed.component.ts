@@ -18,6 +18,7 @@ import { toSubmissionResultsSummaryData } from './submission-results-summary-dat
 
 @Component({
   selector: 'cca-performance-data-upload-processed',
+  templateUrl: './performance-data-upload-processed.component.html',
   standalone: true,
   imports: [
     NotificationBannerComponent,
@@ -26,7 +27,6 @@ import { toSubmissionResultsSummaryData } from './submission-results-summary-dat
     ErrorMessageTypePipe,
     SummaryComponent,
   ],
-  templateUrl: './performance-data-upload-processed.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDataUploadProcessedComponent {
@@ -35,15 +35,22 @@ export class PerformanceDataUploadProcessedComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly tasksService = inject(TasksService);
   private readonly businessErrorService = inject(BusinessErrorService);
-  readonly errorMessage = this.requestTaskStore.select(performanceDataUploadQuery.selectErrorMessage);
-  readonly successfulReportsCount = this.requestTaskStore.select(
+
+  protected readonly errorMessage = this.requestTaskStore.select(performanceDataUploadQuery.selectErrorMessage);
+
+  protected readonly successfulReportsCount = this.requestTaskStore.select(
     performanceDataUploadQuery.selectSuccessfulReportsCount,
   );
-  readonly failedReportsCount = this.requestTaskStore.select(performanceDataUploadQuery.selectFailedReportsCount);
-  readonly csvFile = this.requestTaskStore.select(performanceDataUploadQuery.selectCsvFile);
-  readonly summaryData = computed(() => {
-    return toSubmissionResultsSummaryData(this.successfulReportsCount(), this.failedReportsCount(), this.csvFile());
-  });
+
+  protected readonly failedReportsCount = this.requestTaskStore.select(
+    performanceDataUploadQuery.selectFailedReportsCount,
+  );
+
+  protected readonly csvFile = this.requestTaskStore.select(performanceDataUploadQuery.selectCsvFile);
+
+  protected readonly summaryData = computed(() =>
+    toSubmissionResultsSummaryData(this.successfulReportsCount(), this.failedReportsCount(), this.csvFile()),
+  );
 
   onComplete() {
     return this.tasksService

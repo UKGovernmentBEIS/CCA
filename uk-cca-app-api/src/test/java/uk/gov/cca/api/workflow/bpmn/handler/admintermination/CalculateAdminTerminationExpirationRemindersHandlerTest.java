@@ -9,8 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.service.CalculateAdminTerminationWithdrawExpirationRemindersService;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaRequestExpirationKey;
+import uk.gov.netz.api.common.utils.DateUtils;
 import uk.gov.netz.api.workflow.request.flow.common.service.RequestExpirationVarsBuilder;
-import uk.gov.netz.api.workflow.utils.DateUtils;
 
 import java.time.LocalDate;
 import java.util.Date;

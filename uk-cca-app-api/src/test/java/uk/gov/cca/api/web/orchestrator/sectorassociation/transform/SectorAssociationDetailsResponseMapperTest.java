@@ -11,17 +11,17 @@ import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SectorAssociationDetailsResponseMapperTest {
+class SectorAssociationDetailsResponseMapperTest {
 
     private SectorAssociationDetailsResponseMapper mapper;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mapper = Mappers.getMapper(SectorAssociationDetailsResponseMapper.class);
     }
 
     @Test
-    public void testMapping() {
+    void testMapping() {
         SectorAssociationDetailsDTO dto = SectorAssociationDetailsDTO.builder()
             .competentAuthority(CompetentAuthorityEnum.ENGLAND)
             .commonName("Common Name")

@@ -65,7 +65,6 @@ class SectorUserAuthServiceTest {
     void updateSectorUser() {
         String userId = "user";
         String username = "username";
-        UserRepresentation userRepresentation = createUserRepresentation(userId, "email1", username);
         UserRepresentation userRepresentationUpdated = createUserRepresentation(userId, "email2", username);
 
         SectorUserAuthorityDetailsDTO sectorUserAuthorityDetailsDTO =

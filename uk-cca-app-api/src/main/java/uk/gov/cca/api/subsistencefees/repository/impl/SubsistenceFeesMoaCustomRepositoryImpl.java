@@ -55,7 +55,7 @@ public class SubsistenceFeesMoaCustomRepositoryImpl implements SubsistenceFeesMo
                 .where(moa.subsistenceFeesRun.id.eq(runId).and(moa.moaType.eq(criteria.getMoaType())))
                 .groupBy(moa.id, moa.transactionId)
                 .orderBy(isSectorMoa(criteria) ? sector.acronym.asc() : account.businessId.asc())
-                .offset(criteria.getPaging().getPageNumber() * criteria.getPaging().getPageSize())
+                .offset((long)criteria.getPaging().getPageNumber() * criteria.getPaging().getPageSize())
                 .limit(criteria.getPaging().getPageSize());
 
         constructSectorOrAccountJoinQuery(criteria, moa, sector, account, jpaQuery);
@@ -99,7 +99,7 @@ public class SubsistenceFeesMoaCustomRepositoryImpl implements SubsistenceFeesMo
                 .where(moa.resourceId.eq(sectorAssociationId).and(moa.moaType.eq(MoaType.SECTOR_MOA)))
                 .groupBy(moa.id, moa.transactionId, sector.acronym, sector.name)
                 .orderBy(moa.submissionDate.desc())
-                .offset(criteria.getPaging().getPageNumber() * criteria.getPaging().getPageSize())
+                .offset((long)criteria.getPaging().getPageNumber() * criteria.getPaging().getPageSize())
                 .limit(criteria.getPaging().getPageSize());
 
         // Apply filters

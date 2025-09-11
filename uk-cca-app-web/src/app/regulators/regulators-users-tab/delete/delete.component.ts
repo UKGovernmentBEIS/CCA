@@ -19,7 +19,7 @@ import { DetailsStore } from '../details/details.store';
 @Component({
   selector: 'cca-delete',
   templateUrl: './delete.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     WarningTextComponent,
     PanelComponent,
@@ -28,7 +28,7 @@ import { DetailsStore } from '../details/details.store';
     RouterLink,
     PendingButtonDirective,
   ],
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteComponent {
   private readonly store = inject(DetailsStore);
@@ -38,8 +38,8 @@ export class DeleteComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly businessErrorService = inject(BusinessErrorService);
 
-  regulator = this.store.state.user;
-  isConfirmationDisplayed = signal(false);
+  protected readonly regulator = this.store.state.user;
+  protected readonly isConfirmationDisplayed = signal(false);
 
   deleteRegulator(): void {
     this.route.paramMap

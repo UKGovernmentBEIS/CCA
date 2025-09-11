@@ -13,10 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SubsectorAssociationSchemeDTO {
 
-    @NotNull(message = "{subsectorAssociationScheme.subsectorAssociation.notNull}")
-    @Valid
-    private SubsectorAssociationDTO subsectorAssociation;
-
     @NotNull(message = "{subsectorAssociationScheme.targetSet.notNull}")
     @Valid
     private TargetSetDTO targetSet;

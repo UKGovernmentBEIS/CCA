@@ -1,10 +1,13 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { TaskService } from '@netz/common/forms';
+import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub, MockType } from '@netz/common/testing';
+import { TasksApiService } from '@requests/common';
 import { screen } from '@testing-library/angular';
 import UserEvent from '@testing-library/user-event';
 
@@ -17,14 +20,17 @@ describe('VariationSubmitActionComponent', () => {
 
   const activatedRoute = new ActivatedRouteStub();
 
-  const tasksService: MockType<TaskService> = {
-    submit: jest.fn().mockReturnValue(of({})),
+  const mockTasksApiService: MockType<TasksApiService> = {
+    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [
-        { provide: TaskService, useValue: tasksService },
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        RequestTaskStore,
+        { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     }).compileComponents();
@@ -46,11 +52,16 @@ describe('VariationSubmitActionComponent', () => {
 
   it('should submit and navigate to confirmation page', async () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
-    const tasksServiceSpy = jest.spyOn(tasksService, 'submit');
+    const apiServiceSpy = jest.spyOn(mockTasksApiService, 'saveRequestTaskAction');
     const user = UserEvent.setup();
     await user.click(screen.getByText('Confirm and send'));
 
-    expect(tasksServiceSpy).toHaveBeenCalledTimes(1);
+    expect(apiServiceSpy).toHaveBeenCalledTimes(1);
+    expect(apiServiceSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requestTaskActionType: 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT_APPLICATION',
+      }),
+    );
     expect(navigateSpy).toHaveBeenCalledWith(['confirmation'], expect.anything());
   });
 });

@@ -9,7 +9,6 @@ import uk.gov.netz.api.authorization.core.repository.RoleRepository;
 import uk.gov.netz.api.authorization.core.transform.RoleMapper;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 
@@ -22,6 +21,6 @@ public class CcaRoleService {
     private final RoleRepository roleRepository;
 
     public List<RoleDTO> getSectorUserRoles() {
-        return roleRepository.findByType(SECTOR_USER).stream().map(roleMapper::toRoleDTO).collect(Collectors.toList());
+        return roleRepository.findByType(SECTOR_USER).stream().map(roleMapper::toRoleDTO).toList();
     }
 }

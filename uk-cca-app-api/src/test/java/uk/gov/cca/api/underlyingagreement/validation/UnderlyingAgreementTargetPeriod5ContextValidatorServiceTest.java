@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
@@ -21,11 +22,14 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("unchecked")
 @ExtendWith(MockitoExtension.class)
 class UnderlyingAgreementTargetPeriod5ContextValidatorServiceTest {
 
@@ -37,6 +41,7 @@ class UnderlyingAgreementTargetPeriod5ContextValidatorServiceTest {
 
     @Test
     void validate() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
                 .underlyingAgreement(UnderlyingAgreement.builder()
                         .targetPeriod5Details(TargetPeriod5Details.builder()
@@ -46,7 +51,7 @@ class UnderlyingAgreementTargetPeriod5ContextValidatorServiceTest {
                 .build();
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(schemeVersion));
 
         // Verify
         assertThat(result.isValid()).isTrue();
@@ -55,6 +60,7 @@ class UnderlyingAgreementTargetPeriod5ContextValidatorServiceTest {
 
     @Test
     void validate_no_details() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
                 .underlyingAgreement(UnderlyingAgreement.builder()
                         .targetPeriod5Details(TargetPeriod5Details.builder()
@@ -64,7 +70,7 @@ class UnderlyingAgreementTargetPeriod5ContextValidatorServiceTest {
                 .build();
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(schemeVersion));
 
         // Verify
         assertThat(result.isValid()).isFalse();
@@ -75,6 +81,7 @@ class UnderlyingAgreementTargetPeriod5ContextValidatorServiceTest {
 
     @Test
     void validate_details_should_not_exists() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
                 .underlyingAgreement(UnderlyingAgreement.builder()
                         .targetPeriod5Details(TargetPeriod5Details.builder()
@@ -89,7 +96,7 @@ class UnderlyingAgreementTargetPeriod5ContextValidatorServiceTest {
                 .build();
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(schemeVersion));
 
         // Verify
         assertThat(result.isValid()).isFalse();
@@ -100,6 +107,7 @@ class UnderlyingAgreementTargetPeriod5ContextValidatorServiceTest {
 
     @Test
     void validate_calculated_target_absolute_correct() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
                 .underlyingAgreement(UnderlyingAgreement.builder()
                         .targetPeriod5Details(TargetPeriod5Details.builder()
@@ -119,20 +127,28 @@ class UnderlyingAgreementTargetPeriod5ContextValidatorServiceTest {
                         .build())
                 .build();
 
-        when(underlyingAgreementTargetPeriod6ContextValidatorService.validateSection(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails(), container))
+        when(underlyingAgreementTargetPeriod6ContextValidatorService
+                .validateSection(
+                        eq(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails()),
+                        eq(container),
+                        argThat(ctx -> ctx.getSchemeVersion().equals(schemeVersion))))
                 .thenReturn(List.of());
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(schemeVersion));
 
         // Verify
         assertThat(result.isValid()).isTrue();
         verify(underlyingAgreementTargetPeriod6ContextValidatorService, times(1))
-                .validateSection(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails(), container);
+                .validateSection(
+                        eq(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails()),
+                        eq(container),
+                        argThat(ctx -> ctx.getSchemeVersion().equals(schemeVersion)));
     }
     
     @Test
     void validate_calculated_target_relative_correct() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
                 .underlyingAgreement(UnderlyingAgreement.builder()
                         .targetPeriod5Details(TargetPeriod5Details.builder()
@@ -154,21 +170,29 @@ class UnderlyingAgreementTargetPeriod5ContextValidatorServiceTest {
                                 .build())
                         .build())
                 .build();
-
-        when(underlyingAgreementTargetPeriod6ContextValidatorService.validateSection(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails(), container))
+        
+        when(underlyingAgreementTargetPeriod6ContextValidatorService
+                .validateSection(
+                        eq(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails()),
+                        eq(container),
+                        argThat(ctx -> ctx.getSchemeVersion().equals(schemeVersion))))
                 .thenReturn(List.of());
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(schemeVersion));
 
         // Verify
         assertThat(result.isValid()).isTrue();
         verify(underlyingAgreementTargetPeriod6ContextValidatorService, times(1))
-                .validateSection(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails(), container);
+                .validateSection(
+                        eq(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails()),
+                        eq(container),
+                        argThat(ctx -> ctx.getSchemeVersion().equals(schemeVersion)));
     }
     
     @Test
     void validate_calculated_target_relative_incorrect() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
                 .underlyingAgreement(UnderlyingAgreement.builder()
                         .targetPeriod5Details(TargetPeriod5Details.builder()
@@ -190,23 +214,31 @@ class UnderlyingAgreementTargetPeriod5ContextValidatorServiceTest {
                                 .build())
                         .build())
                 .build();
-
-        when(underlyingAgreementTargetPeriod6ContextValidatorService.validateSection(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails(), container))
+        
+        when(underlyingAgreementTargetPeriod6ContextValidatorService
+                .validateSection(
+                        eq(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails()),
+                        eq(container),
+                        argThat(ctx -> ctx.getSchemeVersion().equals(schemeVersion))))
                 .thenReturn(List.of());
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(schemeVersion));
 
         // Verify
         assertThat(result.isValid()).isFalse();
         assertThat((List<UnderlyingAgreementViolation>) result.getViolations()).extracting(UnderlyingAgreementViolation::getMessage)
         		.containsOnly(UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGETS.getMessage());
         verify(underlyingAgreementTargetPeriod6ContextValidatorService, times(1))
-                .validateSection(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails(), container);
+                .validateSection(
+                        eq(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails()),
+                        eq(container),
+                        argThat(ctx -> ctx.getSchemeVersion().equals(schemeVersion)));
     }
 
     @Test
     void validate_with_details() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
                 .underlyingAgreement(UnderlyingAgreement.builder()
                         .targetPeriod5Details(TargetPeriod5Details.builder()
@@ -219,30 +251,38 @@ class UnderlyingAgreementTargetPeriod5ContextValidatorServiceTest {
                                 .build())
                         .build())
                 .build();
-
-        when(underlyingAgreementTargetPeriod6ContextValidatorService.validateSection(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails(), container))
+        
+        when(underlyingAgreementTargetPeriod6ContextValidatorService
+                .validateSection(
+                        eq(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails()),
+                        eq(container),
+                        argThat(ctx -> ctx.getSchemeVersion().equals(schemeVersion))))
                 .thenReturn(List.of());
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(schemeVersion));
 
         // Verify
         assertThat(result.isValid()).isTrue();
         verify(underlyingAgreementTargetPeriod6ContextValidatorService, times(1))
-                .validateSection(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails(), container);
+                .validateSection(
+                        eq(container.getUnderlyingAgreement().getTargetPeriod5Details().getDetails()),
+                        eq(container),
+                        argThat(ctx -> ctx.getSchemeVersion().equals(schemeVersion)));
     }
     
     @Test
-    void validate_no_data_not_valid() {
+    void validate_no_data_valid() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
                 .underlyingAgreement(UnderlyingAgreement.builder().build())
                 .build();
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(schemeVersion));
 
         // Verify
-        assertThat(result.isValid()).isFalse();
+        assertThat(result.isValid()).isTrue();
         verifyNoInteractions(underlyingAgreementTargetPeriod6ContextValidatorService);
     }
 }

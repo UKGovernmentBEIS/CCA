@@ -1,5 +1,5 @@
-import { NgClass, NgForOf, NgIf } from '@angular/common';
-import { Component, Input, Optional, Self } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, input, inject, computed, model } from '@angular/core';
 import { ControlContainer, ControlValueAccessor, NgControl, ReactiveFormsModule } from '@angular/forms';
 
 import { ErrorMessageComponent } from '../error-message';
@@ -17,25 +17,22 @@ import { GovukTextWidthClass } from './select.type';
   selector: 'div[govuk-select]',
   standalone: true,
   templateUrl: './select.component.html',
-  imports: [ReactiveFormsModule, NgClass, NgForOf, NgIf, ErrorMessageComponent],
+  imports: [ReactiveFormsModule, NgClass, ErrorMessageComponent],
 })
 export class SelectComponent extends FormInput implements ControlValueAccessor {
-  @Input() options: GovukSelectOption[];
-  @Input() widthClass: GovukTextWidthClass;
-  @Input() isLabelHidden = true;
-  currentLabel = 'Select';
+  readonly options = model<GovukSelectOption[]>();
+  readonly widthClass = input<GovukTextWidthClass>();
+  readonly label = input<string>();
 
-  constructor(
-    @Self() @Optional() ngControl: NgControl,
-    formService: FormService,
-    @Optional() container: ControlContainer,
-  ) {
+  readonly isLabelHidden = computed(() => (this.label() ? false : true));
+  readonly currentLabel = computed(() => this.label() ?? 'Select');
+
+  constructor() {
+    const ngControl = inject(NgControl, { self: true, optional: true });
+    const formService = inject(FormService);
+    const container = inject(ControlContainer, { optional: true });
+
     super(ngControl, formService, container);
-  }
-
-  @Input() set label(label: string) {
-    this.currentLabel = label;
-    this.isLabelHidden = false;
   }
 
   writeValue(): void {}

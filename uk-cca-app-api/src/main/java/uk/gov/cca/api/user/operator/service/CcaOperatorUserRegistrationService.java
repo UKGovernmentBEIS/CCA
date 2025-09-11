@@ -31,9 +31,8 @@ public class CcaOperatorUserRegistrationService {
         String userId =
                 ccaOperatorUserAuthService.registerOperatorUser(operatorUserInvitationDTO);
 
-        String authorityUuid =
-                operatorUserAuthorityService.createPendingAuthorityForOperator(accountId, roleCode, operatorUserInvitationDTO.getContactType(), userId, currentUser);
-
-        return authorityUuid;
+        return operatorUserAuthorityService
+                .createPendingAuthorityForOperator(accountId, roleCode,
+                        operatorUserInvitationDTO.getContactType(), userId, currentUser);
     }
 }

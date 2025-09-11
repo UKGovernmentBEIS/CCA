@@ -19,6 +19,7 @@ describe('DeleteComponent', () => {
   let page: Page;
   let externalContactsService: Partial<jest.Mocked<CaExternalContactsService>>;
   let store: ActiveExternalContactStore;
+
   const contact: CaExternalContactDTO = {
     id: 1,
     name: 'Bob Squarepants',
@@ -47,6 +48,7 @@ describe('DeleteComponent', () => {
 
   beforeEach(async () => {
     externalContactsService = { deleteCaExternalContactById: jest.fn().mockReturnValue(asyncData(null)) };
+
     await TestBed.configureTestingModule({
       imports: [DeleteComponent, RouterStubComponent, BusinessTestingModule],
       providers: [
@@ -55,11 +57,10 @@ describe('DeleteComponent', () => {
         { provide: CaExternalContactsService, useValue: externalContactsService },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     store = TestBed.inject(ActiveExternalContactStore);
     store.setState(contact);
+
     fixture = TestBed.createComponent(DeleteComponent);
     component = fixture.componentInstance;
     page = new Page(fixture);

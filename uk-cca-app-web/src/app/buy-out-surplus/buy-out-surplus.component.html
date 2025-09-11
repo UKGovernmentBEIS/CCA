@@ -1,0 +1,38 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <netz-page-heading size="xl">Buy-out and surplus</netz-page-heading>
+  </div>
+
+  <div class="govuk-grid-column-one-quarter" style="text-align: end">
+    <button
+      class="govuk-!-margin-top-1"
+      govukButton
+      type="button"
+      [disabled]="isActivePolling()"
+      (click)="onNewBatchRequest()"
+    >
+      New buy-out and surplus batch
+    </button>
+  </div>
+</div>
+
+@if (isActivePolling()) {
+  <div class="govuk-!-margin-bottom-9">
+    <govuk-warning-text assistiveText="">
+      Buy-out and surplus batch is
+      <a [routerLink]="[]" fragment="workflow-history" class="govuk-link">in progress</a>, you cannot initiate a new one
+      until it has finished
+    </govuk-warning-text>
+  </div>
+}
+
+<govuk-tabs [queryParamsHandling]="'replace'">
+  <ng-template govukTabLazy id="transactions" label="Transactions">
+    <cca-transaction-report-filters />
+    <cca-transaction-table />
+  </ng-template>
+
+  <ng-template govukTabLazy id="workflow-history" label="Workflow history" [badgeNumber]="badgeNumber()">
+    <cca-workflow-history-tab />
+  </ng-template>
+</govuk-tabs>

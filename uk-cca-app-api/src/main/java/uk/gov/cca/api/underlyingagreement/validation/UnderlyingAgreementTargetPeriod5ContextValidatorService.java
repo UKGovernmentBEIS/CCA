@@ -7,6 +7,7 @@ import uk.gov.cca.api.common.validation.DataValidator;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.common.domain.AgreementCompositionType;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod5Details;
 
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGETS;
@@ -16,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UnderlyingAgreementTargetPeriod5ContextValidatorService extends UnderlyingAgreementSectionConstraintValidatorService<TargetPeriod5Details> implements UnderlyingAgreementSectionContextValidator {
+public class UnderlyingAgreementTargetPeriod5ContextValidatorService 
+		extends UnderlyingAgreementSectionConstraintValidatorService<TargetPeriod5Details> 
+		implements UnderlyingAgreementSectionContextValidator, UnderlyingAgreementSectionSchemeContextValidator {
 
     private final UnderlyingAgreementTargetPeriod6ContextValidatorService underlyingAgreementTargetPeriod6ContextValidatorService;
 
@@ -26,12 +29,12 @@ public class UnderlyingAgreementTargetPeriod5ContextValidatorService extends Und
     }
 
     @Override
-    public BusinessValidationResult validate(UnderlyingAgreementContainer container) {
+    public BusinessValidationResult validate(UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
         TargetPeriod5Details section = container.getUnderlyingAgreement().getTargetPeriod5Details();
 
-        List<UnderlyingAgreementViolation> violations = super.validateEmptySection(section);
-        if(violations.isEmpty()){
-            violations = this.validateSection(section, container);
+        List<UnderlyingAgreementViolation> violations = new ArrayList<>();
+        if(!ObjectUtils.isEmpty(section)) {
+            violations = this.validateSection(section, container, underlyingAgreementValidationContext);
             
             // Validate calculated target for ABSOLUTE and TP5
             validateTargetTP5(section, violations);
@@ -41,7 +44,7 @@ public class UnderlyingAgreementTargetPeriod5ContextValidatorService extends Und
     }
 
     @Override
-    protected List<UnderlyingAgreementViolation> validateSection(TargetPeriod5Details section, UnderlyingAgreementContainer container) {
+    protected List<UnderlyingAgreementViolation> validateSection(TargetPeriod5Details section, UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
         // Invoke validation manually to reduce duplications from TargetPeriod6 validations
@@ -51,7 +54,7 @@ public class UnderlyingAgreementTargetPeriod5ContextValidatorService extends Und
         }
 
         if(Boolean.TRUE.equals(section.getExist()) && !ObjectUtils.isEmpty(section.getDetails())) {
-            violations.addAll(underlyingAgreementTargetPeriod6ContextValidatorService.validateSection(section.getDetails(), container));
+            violations.addAll(underlyingAgreementTargetPeriod6ContextValidatorService.validateSection(section.getDetails(), container, underlyingAgreementValidationContext));
         }
 
         return violations;
@@ -70,5 +73,10 @@ public class UnderlyingAgreementTargetPeriod5ContextValidatorService extends Und
 				.compareTo(section.getDetails().getTargets().getTarget()) != 0) {
 		    violations.add(new UnderlyingAgreementViolation(this.getSectionName(), INVALID_TARGETS, section.getDetails().getTargets().getTarget()));
 		}
+	}
+
+	@Override
+	public SchemeVersion getSectionSchemeVersion() {
+		return SchemeVersion.CCA_2;
 	}
 }

@@ -18,8 +18,8 @@ import uk.gov.netz.api.authorization.core.domain.dto.UserAuthorityDTO;
 import uk.gov.netz.api.user.operator.service.OperatorUserInfoService;
 import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +62,8 @@ public class OperatorUserAuthorityInfoService {
                                         .filter(info -> info.getUserId().equals(authority.getUserId()))
                                         .findFirst()
                                         .orElse(new UserInfoDTO())))
-                        .collect(Collectors.toList());
+                        .sorted(Comparator.comparing(OperatorAuthorityInfoDTO::getAuthorityCreationDate))
+                        .toList();
 
         return OperatorAuthoritiesInfoDTO.builder().authorities(operatorAuthorityInfoDTOS).editable(operatorAuthoritiesDTO.isEditable()).build();
     }

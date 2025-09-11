@@ -56,7 +56,7 @@ class RequestActionFileDocumentControllerTest {
     private AppUserAuthorizationService appUserAuthorizationService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
 

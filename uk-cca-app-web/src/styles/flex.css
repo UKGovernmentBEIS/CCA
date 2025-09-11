@@ -1,0 +1,31 @@
+.row-flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.gap-1 {
+  gap: var(--govuk-spacing-1);
+}
+
+.gap-2 {
+  gap: var(--govuk-spacing-2);
+}
+
+.gap-3 {
+  gap: var(--govuk-spacing-3);
+}
+
+.align-self-end {
+  align-self: end;
+}
+
+.align-self-center {
+  align-self: center;
+}
+
+.align-items-end {
+  align-items: flex-end;
+}

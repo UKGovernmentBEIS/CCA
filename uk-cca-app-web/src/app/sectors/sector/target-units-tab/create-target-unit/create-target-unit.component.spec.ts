@@ -17,6 +17,7 @@ describe('CreateTargetUnitComponent', () => {
   let fixture: ComponentFixture<CreateTargetUnitComponent>;
   let createTargetUnitStore: CreateTargetUnitStore;
   let sectorStore: ActiveSectorStore;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CreateTargetUnitComponent],
@@ -58,7 +59,7 @@ describe('CreateTargetUnitComponent', () => {
     expect(screen.getByText('Operator type')).toBeInTheDocument();
     expect(screen.getByText('Operator name')).toBeInTheDocument();
     expect(screen.getByText('Does your company have a registration number?')).toBeInTheDocument();
-    expect(screen.getByText('Standard Industrial Classification (SIC) code (optional)')).toBeInTheDocument();
+    expect(screen.getByText('Standard Industrial Classification (SIC) codes (optional)')).toBeInTheDocument();
     expect(screen.getByText('Subsector')).toBeInTheDocument();
   });
 

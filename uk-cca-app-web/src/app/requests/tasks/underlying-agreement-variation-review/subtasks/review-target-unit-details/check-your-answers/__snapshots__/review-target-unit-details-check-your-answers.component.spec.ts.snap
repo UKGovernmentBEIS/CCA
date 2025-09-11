@@ -7,11 +7,11 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
   attachments={[Function Object]}
   downloadUrl={[Function String]}
   originalTargetUnitDetails={[Function Object]}
-  requestTaskStore={[Function _RequestTaskStore]}
   router={[Function _Router]}
+  store={[Function _RequestTaskStore]}
   summaryDataCurrent={[Function Array]}
   summaryDataOriginal={[Function Array]}
-  taskService={[Function Object]}
+  tasksApiService={[Function Object]}
 >
   <div>
     <netz-page-heading
@@ -106,13 +106,40 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Company registration number
+                Company number
               </dt>
               <dd
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 1111 
+                 11111111 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Reason for not having a registration number
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -478,13 +505,40 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Company registration number
+                Company number
               </dt>
               <dd
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 test 
+                 testtest 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Reason for not having a registration number
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -879,7 +933,7 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dt
               class="govuk-summary-list__key"
             >
-              Company registration number
+              Company number
             </dt>
             <dd
               class="govuk-summary-list__value"
@@ -887,42 +941,12 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
               <del
                 class="diffmod"
               >
-                test 
-              </del>
-            </dd>
-            <dd
-              class="govuk-summary-list__actions"
-            >
-              <a
-                class="govuk-link"
-                href="/?change=true"
-              />
-            </dd>
-          </div>
-          <div
-            class="govuk-summary-list__row"
-          >
-            <dt
-              class="govuk-summary-list__key"
-            >
-              <del
-                class="diffmod"
-              >
-                Subsector
-              </del>
-            </dt>
-            <dd
-              class="govuk-summary-list__value"
-            >
-              <del
-                class="diffmod"
-              >
-                 SUBSECTOR_2
+                testtest
               </del>
               <ins
                 class="diffmod"
               >
-                1111
+                11111111
               </ins>
             </dd>
             <dd
@@ -933,6 +957,65 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 href="/?change=true"
               >
                 Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Reason for not having a registration number
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              <del
+                class="diffdel"
+              >
+                Subsector
+              </del>
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <del
+                class="diffdel"
+              >
+                 SUBSECTOR_2 
+              </del>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+              >
+                <del
+                  class="diffdel"
+                >
+                  Change
+                </del>
               </a>
             </dd>
           </div>
@@ -1443,7 +1526,7 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
     class="govuk-footer__section-break govuk-!-margin-bottom-3"
   /><netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Review underlying agreement variation 

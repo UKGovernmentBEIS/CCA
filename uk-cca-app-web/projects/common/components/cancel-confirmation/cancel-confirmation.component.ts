@@ -12,8 +12,8 @@ import { PanelComponent } from '@netz/govuk-components';
         <govuk-panel title="Task cancelled"></govuk-panel>
       </div>
     </div>
-    <ng-content></ng-content>
-    <a govukLink routerLink="/dashboard"> Return to dashboard </a>
+    <ng-content />
+    <a class="gov uk-link" routerLink="/dashboard"> Return to dashboard </a>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, PanelComponent],

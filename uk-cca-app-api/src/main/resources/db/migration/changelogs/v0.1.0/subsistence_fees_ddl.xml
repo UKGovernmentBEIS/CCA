@@ -314,7 +314,7 @@
             </addColumn>
         </rollback>
     </changeSet>
-    
+
     <changeSet id="0_1_0_rename_column_subsistence_fees_tu_id_in_sfr_moa_facility" author="apostolouk@unisystems.gr">
         <renameColumn tableName="sfr_moa_facility" newColumnName="moa_target_unit_id" oldColumnName="subsistence_fees_tu_id"/>
         <rollback>
@@ -387,6 +387,125 @@
         <modifyDataType tableName="sfr_moa" columnName="submission_date" newDataType="timestamp"/>
         <rollback>
             <modifyDataType tableName="sfr_moa" columnName="submission_date" newDataType="date"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_moa_received_amount_history_sequence" author="P70311">
+        <createSequence sequenceName="sfr_moa_received_amount_history_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS sfr_moa_received_amount_history_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_moa_received_amount_history_table" author="P70311">
+        <createTable tableName="sfr_moa_received_amount_history">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="sfr_moa_received_amount_history_pk" nullable="false"/>
+            </column>
+            <column name="moa_id" type="bigint" remarks="Foreign key to sfr_moa table">
+                <constraints nullable="false" foreignKeyName="sfr_sfr_moa_received_amount_history_sfr_moa_fk" referencedTableName="sfr_moa" referencedColumnNames="id" />
+            </column>
+            <column name="submitter_id" type="varchar(255)" remarks="The submitter uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="submitter" type="varchar(255)" remarks="The full name of the submitter">
+                <constraints nullable="false" />
+            </column>
+            <column name="transaction_amount" type="numeric" remarks="Actual amount involved in the transaction">
+                <constraints nullable="false" />
+            </column>
+            <column name="previous_received_amount" type="numeric" remarks="The received amount before the last transaction" >
+                <constraints nullable="false" />
+            </column>
+            <column name="file_attachment_uuid" type="varchar(255)" remarks="The evidence file attachment uuid"/>
+            <column name="comments" type="varchar(10000)" remarks="The relevant comments"/>
+            <column name="submission_date" type="timestamp" remarks="The date of the transaction confirmation">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sfr_moa_received_amount_history CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_alter_sfr_moa_received_amount_history_table" author="P70311">
+        <dropColumn columnName="transaction_amount" tableName="sfr_moa_received_amount_history"/>
+        <dropColumn columnName="previous_received_amount" tableName="sfr_moa_received_amount_history"/>
+        <dropColumn columnName="file_attachment_uuid" tableName="sfr_moa_received_amount_history"/>
+        <dropColumn columnName="comments" tableName="sfr_moa_received_amount_history"/>
+        <addColumn tableName="sfr_moa_received_amount_history">
+            <column name="payload" type="jsonb" remarks="The historical data of the received amount">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <rollback>
+            <addColumn tableName="sfr_moa_received_amount_history">
+                <column name="transaction_amount" type="numeric" remarks="Actual amount involved in the transaction">
+                    <constraints nullable="false"/>
+                </column>
+            </addColumn>
+            <addColumn tableName="sfr_moa_received_amount_history">
+                <column name="previous_received_amount" type="numeric" remarks="The received amount before the last transaction">
+                    <constraints nullable="false"/>
+                </column>
+            </addColumn>
+            <addColumn tableName="sfr_moa_received_amount_history">
+                <column name="file_attachment_uuid" type="varchar(255)" remarks="The evidence file attachment uuid"/>
+            </addColumn>
+            <addColumn tableName="sfr_moa_received_amount_history">
+                <column name="comments" type="varchar(10000)" remarks="The relevant comments"/>
+            </addColumn>
+            <dropColumn columnName="payload" tableName="sfr_moa_received_amount_history"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_sfr_moa_received_amount_history_update_submitter_id_to_optional" author="P70383">
+        <dropNotNullConstraint tableName="sfr_moa_received_amount_history" columnName="submitter_id"/>
+        <rollback>
+            <addNotNullConstraint tableName="sfr_moa_received_amount_history" columnName="submitter_id"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_moa_facility_marking_status_history_sequence" author="P70311">
+        <createSequence sequenceName="sfr_moa_facility_marking_status_history_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS sfr_moa_facility_marking_status_history_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_sfr_moa_facility_marking_status_history_table" author="P70311">
+        <createTable tableName="sfr_moa_facility_marking_status_history">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="sfr_moa_facility_marking_status_history_pk" nullable="false"/>
+            </column>
+            <column name="moa_facility_id" type="bigint" remarks="Foreign key to sfr_moa table">
+                <constraints nullable="false" foreignKeyName="sfr_sfr_moa_facility_marking_status_history_sfr_moa_facility_fk" referencedTableName="sfr_moa_facility" referencedColumnNames="id" />
+            </column>
+            <column name="payment_status" type="varchar(20)" remarks="The current payment status for this facility">
+                <constraints nullable="false" />
+            </column>
+            <column name="submitter_id" type="varchar(255)" remarks="The submitter uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="submitter" type="varchar(255)" remarks="The full name of the submitter">
+                <constraints nullable="false" />
+            </column>
+            <column name="submission_date" type="timestamp" remarks="The date of the transaction confirmation">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS sfr_moa_facility_marking_status_history CASCADE;
+            </sql>
         </rollback>
     </changeSet>
 

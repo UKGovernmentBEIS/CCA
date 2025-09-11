@@ -14,6 +14,7 @@ describe(`HttpErrorInterceptor`, () => {
   function intercept(req: HttpRequest<unknown>, next: HttpHandlerFn) {
     return TestBed.runInInjectionContext(() => HttpErrorInterceptor(req, next));
   }
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [{ provide: GlobalErrorHandlingService, useValue: globalErrorHandlingService }],

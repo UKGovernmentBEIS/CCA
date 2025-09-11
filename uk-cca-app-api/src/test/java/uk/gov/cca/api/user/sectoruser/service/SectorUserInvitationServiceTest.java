@@ -12,13 +12,12 @@ import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.user.core.service.auth.UserAuthService;
-import uk.gov.netz.api.userinfoapi.AuthenticationStatus;
 import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
@@ -60,7 +59,7 @@ class SectorUserInvitationServiceTest {
         String authorityUuid = "authorityUuid";
         AppUser currentUser = createAppUser(currentUserId, SECTOR_USER);
         final SectorUserInvitationDTO sectorUserInvitationDTO = createSectorUserInvitationDTO(email, userRoleCode);
-        final UserInfoDTO userInfoDTO = createUserInfoDTO(userId, AuthenticationStatus.PENDING);
+        final UserInfoDTO userInfoDTO = createUserInfoDTO(userId);
 
         when(authUserService.getUserByEmail(sectorUserInvitationDTO.getEmail())).thenReturn(Optional.of(userInfoDTO));
         when(existingSectorUserInvitationService.addExistingUserToSectorAssociation(sectorUserInvitationDTO, sectorAssociationId, userId, currentUser))
@@ -104,7 +103,7 @@ class SectorUserInvitationServiceTest {
     }
 
     @Test
-    void inviteUserToSectorAssociationWhenRegulatorRegisteredExists() throws Exception {
+    void inviteUserToSectorAssociationWhenRegulatorRegisteredExists() {
         String userId = "254cad93-d1f5-4951-bb0e-e9b0a1586844";
         String userRoleCode = "regulator_administrator";
         String email = "email";
@@ -114,7 +113,7 @@ class SectorUserInvitationServiceTest {
         String authorityUuid = "authorityUuid";
         AppUser currentUser = createAppUser(currentUserId, REGULATOR);
         final SectorUserInvitationDTO sectorUserInvitationDTO = createSectorUserInvitationDTO(email, userRoleCode);
-        final UserInfoDTO userInfoDTO = createUserInfoDTO(userId, AuthenticationStatus.REGISTERED);
+        final UserInfoDTO userInfoDTO = createUserInfoDTO(userId);
 
         when(authUserService.getUserByEmail(sectorUserInvitationDTO.getEmail())).thenReturn(Optional.of(userInfoDTO));
         when(existingSectorUserInvitationService.addExistingUserToSectorAssociation(sectorUserInvitationDTO, sectorAssociationId, userId, currentUser))
@@ -148,7 +147,7 @@ class SectorUserInvitationServiceTest {
                 .build();
     }
 
-    private UserInfoDTO createUserInfoDTO(String userId, AuthenticationStatus authenticationStatus) {
+    private UserInfoDTO createUserInfoDTO(String userId) {
         UserInfoDTO user = new UserInfoDTO();
         user.setUserId(userId);
         return user;

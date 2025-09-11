@@ -53,6 +53,7 @@ describe('CanAddUsersGuard', () => {
     regulatorAuthoritiesService.getCurrentRegulatorUserPermissionsByCa = jest
       .fn()
       .mockReturnValue(of(readonlyRegulatorPermissions));
+
     const res = await firstValueFrom((await getGuard()) as Observable<unknown>);
     expect(res instanceof UrlTree).toBeTruthy();
   });
@@ -61,6 +62,7 @@ describe('CanAddUsersGuard', () => {
     regulatorAuthoritiesService.getCurrentRegulatorUserPermissionsByCa = jest
       .fn()
       .mockReturnValue(of(executeRegulatorPermissions));
+
     const res = await firstValueFrom((await getGuard()) as Observable<unknown>);
     expect(res).toStrictEqual(true);
   });

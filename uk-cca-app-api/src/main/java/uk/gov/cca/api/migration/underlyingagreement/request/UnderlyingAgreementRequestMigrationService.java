@@ -16,8 +16,8 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.core.domain.constants.CcaRequestStatuses;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
-import uk.gov.cca.api.workflow.request.flow.common.transform.TargetUnitDetailsMapper;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.transform.UnderlyingAgreementTargetUnitDetailsMapper;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementPayload;
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
@@ -38,7 +38,7 @@ public class UnderlyingAgreementRequestMigrationService {
     private final RequestCreateService requestCreateService;
     private final FileDocumentService fileDocumentService;
     private final AccountReferenceDetailsService accountReferenceDetailsService;
-    private final TargetUnitDetailsMapper targetUnitDetailsMapper;
+    private final UnderlyingAgreementTargetUnitDetailsMapper targetUnitDetailsMapper;
     private final UnderlyingAgreementRepository underlyingAgreementRepository;
 
 

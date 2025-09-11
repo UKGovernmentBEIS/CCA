@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.authorization.ccaauth.core.domain.CcaAuthority;
 import uk.gov.cca.api.authorization.ccaauth.core.domain.CcaAuthorityDetails;
 import uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType;
-import uk.gov.cca.api.authorization.ccaauth.core.repository.CcaAuthorityDetailsRepository;
 import uk.gov.cca.api.authorization.ccaauth.core.repository.CcaAuthorityRepository;
 import uk.gov.cca.api.authorization.ccaauth.core.service.CcaAuthorityAssignmentService;
 import uk.gov.cca.api.authorization.ccaauth.core.service.CcaAuthorityService;
@@ -47,13 +46,7 @@ class SectorUserAuthorityServiceTest {
     private CcaAuthorityService authorityService;
 
     @Mock
-    private CcaAuthorityDetailsRepository authorityDetailsRepository;
-
-    @Mock
     private CcaAuthorityAssignmentService authorityAssignmentService;
-
-    @Mock
-    private SectorUserAuthorityUpdateValidator sectorAuthorityUpdateValidator;
 
 
     @Test
@@ -154,7 +147,6 @@ class SectorUserAuthorityServiceTest {
 
         List<String> res = sectorUserAuthorityService.findActiveSectorUsersBySectorAssociationId(sectorAssociationId);
 
-        assertThat(res).hasSize(2);
         assertThat(res).containsExactlyInAnyOrder("user1", "user2");
 
         verify(authorityRepository, times(1)).findActiveSectorUsersBySectorAssociationId(sectorAssociationId);

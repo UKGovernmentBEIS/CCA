@@ -14,6 +14,11 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParam
 import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
+import { AccountBuyOutSurplusInfoDTO } from '../model/accountBuyOutSurplusInfoDTO';
+import { SurplusHistoryDTO } from '../model/surplusHistoryDTO';
+import { SurplusUpdateDTO } from '../model/surplusUpdateDTO';
+import { TargetUnitAccountBusinessInfoDTO } from '../model/targetUnitAccountBusinessInfoDTO';
+
 import { BASE_PATH } from '../variables';
 import { Configuration } from '../configuration';
 
@@ -80,39 +85,39 @@ export class BuyOutAndSurplusInfoService {
   }
 
   /**
-   * Retrieves the buy-out excluded (on hold) flag for a specific account
+   * Creates the buy-out excluded (on hold) flag for a specific account
    * @param accountId The account id
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public isAccountExcludedFromBuyOutSurplus(accountId: number): Observable<boolean>;
-  public isAccountExcludedFromBuyOutSurplus(
+  public excludeAccountFromBuyOutSurplus(accountId: number): Observable<any>;
+  public excludeAccountFromBuyOutSurplus(
     accountId: number,
     observe: 'response',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<HttpResponse<boolean>>;
-  public isAccountExcludedFromBuyOutSurplus(
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<any>>;
+  public excludeAccountFromBuyOutSurplus(
     accountId: number,
     observe: 'events',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<HttpEvent<boolean>>;
-  public isAccountExcludedFromBuyOutSurplus(
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<any>>;
+  public excludeAccountFromBuyOutSurplus(
     accountId: number,
     observe: 'body',
     reportProgress?: boolean,
-    options?: { httpHeaderAccept?: '*/*' | 'application/json' },
-  ): Observable<boolean>;
-  public isAccountExcludedFromBuyOutSurplus(
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any>;
+  public excludeAccountFromBuyOutSurplus(
     accountId: number,
     observe: any = 'body',
     reportProgress = false,
-    options?: { httpHeaderAccept?: '*/*' | 'application/json' },
+    options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
       throw new Error(
-        'Required parameter accountId was null or undefined when calling isAccountExcludedFromBuyOutSurplus.',
+        'Required parameter accountId was null or undefined when calling excludeAccountFromBuyOutSurplus.',
       );
     }
 
@@ -127,7 +132,7 @@ export class BuyOutAndSurplusInfoService {
     let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
     if (httpHeaderAcceptSelected === undefined) {
       // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['*/*', 'application/json'];
+      const httpHeaderAccepts: string[] = ['application/json'];
       httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
     }
     if (httpHeaderAcceptSelected !== undefined) {
@@ -139,8 +144,410 @@ export class BuyOutAndSurplusInfoService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<boolean>(
-      `${this.configuration.basePath}/v1.0/target-unit-accounts/${encodeURIComponent(String(accountId))}/buy-out-surplus/excluded`,
+    return this.httpClient.post<any>(
+      `${this.configuration.basePath}/v1.0/target-unit-accounts/${encodeURIComponent(String(accountId))}/buy-out-surplus/exclude`,
+      null,
+      {
+        responseType: responseType_ as any,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
+  }
+
+  /**
+   * Retrieves the surplus history for a specific account and target period
+   * @param accountId The account id
+   * @param targetPeriod The target period business id
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getAllSurplusHistoryByTargetPeriodAndAccountId(
+    accountId: number,
+    targetPeriod: 'TP5' | 'TP6',
+  ): Observable<SurplusHistoryDTO[]>;
+  public getAllSurplusHistoryByTargetPeriodAndAccountId(
+    accountId: number,
+    targetPeriod: 'TP5' | 'TP6',
+    observe: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<SurplusHistoryDTO[]>>;
+  public getAllSurplusHistoryByTargetPeriodAndAccountId(
+    accountId: number,
+    targetPeriod: 'TP5' | 'TP6',
+    observe: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<SurplusHistoryDTO[]>>;
+  public getAllSurplusHistoryByTargetPeriodAndAccountId(
+    accountId: number,
+    targetPeriod: 'TP5' | 'TP6',
+    observe: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<SurplusHistoryDTO[]>;
+  public getAllSurplusHistoryByTargetPeriodAndAccountId(
+    accountId: number,
+    targetPeriod: 'TP5' | 'TP6',
+    observe: any = 'body',
+    reportProgress = false,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any> {
+    if (accountId === null || accountId === undefined) {
+      throw new Error(
+        'Required parameter accountId was null or undefined when calling getAllSurplusHistoryByTargetPeriodAndAccountId.',
+      );
+    }
+    if (targetPeriod === null || targetPeriod === undefined) {
+      throw new Error(
+        'Required parameter targetPeriod was null or undefined when calling getAllSurplusHistoryByTargetPeriodAndAccountId.',
+      );
+    }
+
+    let queryParameters = new HttpParams({ encoder: this.encoder });
+    if (targetPeriod !== undefined && targetPeriod !== null) {
+      queryParameters = this.addToHttpParams(queryParameters, targetPeriod as any, 'targetPeriod');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (bearerAuth) required
+    const credential = this.configuration.lookupCredential('bearerAuth');
+    if (credential) {
+      headers = headers.set('Authorization', 'Bearer ' + credential);
+    }
+
+    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    let responseType_: 'text' | 'json' = 'json';
+    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+      responseType_ = 'text';
+    }
+
+    return this.httpClient.get<SurplusHistoryDTO[]>(
+      `${this.configuration.basePath}/v1.0/target-unit-accounts/${encodeURIComponent(String(accountId))}/buy-out-surplus/history`,
+      {
+        params: queryParameters,
+        responseType: responseType_ as any,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
+  }
+
+  /**
+   * Retrieves the buy-out and surplus details for a specific account
+   * @param accountId The account id
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getBuyOutSurplusInfoByAccountId(accountId: number): Observable<AccountBuyOutSurplusInfoDTO>;
+  public getBuyOutSurplusInfoByAccountId(
+    accountId: number,
+    observe: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<AccountBuyOutSurplusInfoDTO>>;
+  public getBuyOutSurplusInfoByAccountId(
+    accountId: number,
+    observe: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<AccountBuyOutSurplusInfoDTO>>;
+  public getBuyOutSurplusInfoByAccountId(
+    accountId: number,
+    observe: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<AccountBuyOutSurplusInfoDTO>;
+  public getBuyOutSurplusInfoByAccountId(
+    accountId: number,
+    observe: any = 'body',
+    reportProgress = false,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any> {
+    if (accountId === null || accountId === undefined) {
+      throw new Error(
+        'Required parameter accountId was null or undefined when calling getBuyOutSurplusInfoByAccountId.',
+      );
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (bearerAuth) required
+    const credential = this.configuration.lookupCredential('bearerAuth');
+    if (credential) {
+      headers = headers.set('Authorization', 'Bearer ' + credential);
+    }
+
+    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    let responseType_: 'text' | 'json' = 'json';
+    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+      responseType_ = 'text';
+    }
+
+    return this.httpClient.get<AccountBuyOutSurplusInfoDTO>(
+      `${this.configuration.basePath}/v1.0/target-unit-accounts/${encodeURIComponent(String(accountId))}/buy-out-surplus/`,
+      {
+        responseType: responseType_ as any,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
+  }
+
+  /**
+   * Retrieves all the on hold accounts for a specific target period
+   * @param targetPeriodType The target period business id
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getExcludedAccountsForBuyOutSurplusRun(
+    targetPeriodType: 'TP5' | 'TP6',
+  ): Observable<TargetUnitAccountBusinessInfoDTO[]>;
+  public getExcludedAccountsForBuyOutSurplusRun(
+    targetPeriodType: 'TP5' | 'TP6',
+    observe: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<TargetUnitAccountBusinessInfoDTO[]>>;
+  public getExcludedAccountsForBuyOutSurplusRun(
+    targetPeriodType: 'TP5' | 'TP6',
+    observe: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<TargetUnitAccountBusinessInfoDTO[]>>;
+  public getExcludedAccountsForBuyOutSurplusRun(
+    targetPeriodType: 'TP5' | 'TP6',
+    observe: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<TargetUnitAccountBusinessInfoDTO[]>;
+  public getExcludedAccountsForBuyOutSurplusRun(
+    targetPeriodType: 'TP5' | 'TP6',
+    observe: any = 'body',
+    reportProgress = false,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any> {
+    if (targetPeriodType === null || targetPeriodType === undefined) {
+      throw new Error(
+        'Required parameter targetPeriodType was null or undefined when calling getExcludedAccountsForBuyOutSurplusRun.',
+      );
+    }
+
+    let queryParameters = new HttpParams({ encoder: this.encoder });
+    if (targetPeriodType !== undefined && targetPeriodType !== null) {
+      queryParameters = this.addToHttpParams(queryParameters, targetPeriodType as any, 'targetPeriodType');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (bearerAuth) required
+    const credential = this.configuration.lookupCredential('bearerAuth');
+    if (credential) {
+      headers = headers.set('Authorization', 'Bearer ' + credential);
+    }
+
+    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    let responseType_: 'text' | 'json' = 'json';
+    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+      responseType_ = 'text';
+    }
+
+    return this.httpClient.get<TargetUnitAccountBusinessInfoDTO[]>(
+      `${this.configuration.basePath}/v1.0/buy-out-surplus/run/excluded-accounts`,
+      {
+        params: queryParameters,
+        responseType: responseType_ as any,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
+  }
+
+  /**
+   * Removes the buy-out excluded (on hold) flag for a specific account
+   * @param accountId The account id
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public removeAccountExclusionFromBuyOutSurplus(accountId: number): Observable<any>;
+  public removeAccountExclusionFromBuyOutSurplus(
+    accountId: number,
+    observe: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<any>>;
+  public removeAccountExclusionFromBuyOutSurplus(
+    accountId: number,
+    observe: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<any>>;
+  public removeAccountExclusionFromBuyOutSurplus(
+    accountId: number,
+    observe: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any>;
+  public removeAccountExclusionFromBuyOutSurplus(
+    accountId: number,
+    observe: any = 'body',
+    reportProgress = false,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any> {
+    if (accountId === null || accountId === undefined) {
+      throw new Error(
+        'Required parameter accountId was null or undefined when calling removeAccountExclusionFromBuyOutSurplus.',
+      );
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (bearerAuth) required
+    const credential = this.configuration.lookupCredential('bearerAuth');
+    if (credential) {
+      headers = headers.set('Authorization', 'Bearer ' + credential);
+    }
+
+    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    let responseType_: 'text' | 'json' = 'json';
+    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+      responseType_ = 'text';
+    }
+
+    return this.httpClient.delete<any>(
+      `${this.configuration.basePath}/v1.0/target-unit-accounts/${encodeURIComponent(String(accountId))}/buy-out-surplus/include`,
+      {
+        responseType: responseType_ as any,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
+  }
+
+  /**
+   * Updates the surplus and surplus history for a specific account and target period
+   * @param accountId The account id
+   * @param surplusUpdateDTO
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public updateSurplusGained(accountId: number, surplusUpdateDTO: SurplusUpdateDTO): Observable<any>;
+  public updateSurplusGained(
+    accountId: number,
+    surplusUpdateDTO: SurplusUpdateDTO,
+    observe: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<any>>;
+  public updateSurplusGained(
+    accountId: number,
+    surplusUpdateDTO: SurplusUpdateDTO,
+    observe: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<any>>;
+  public updateSurplusGained(
+    accountId: number,
+    surplusUpdateDTO: SurplusUpdateDTO,
+    observe: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any>;
+  public updateSurplusGained(
+    accountId: number,
+    surplusUpdateDTO: SurplusUpdateDTO,
+    observe: any = 'body',
+    reportProgress = false,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any> {
+    if (accountId === null || accountId === undefined) {
+      throw new Error('Required parameter accountId was null or undefined when calling updateSurplusGained.');
+    }
+    if (surplusUpdateDTO === null || surplusUpdateDTO === undefined) {
+      throw new Error('Required parameter surplusUpdateDTO was null or undefined when calling updateSurplusGained.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (bearerAuth) required
+    const credential = this.configuration.lookupCredential('bearerAuth');
+    if (credential) {
+      headers = headers.set('Authorization', 'Bearer ' + credential);
+    }
+
+    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    // to determine the Content-Type header
+    const consumes: string[] = ['application/json'];
+    const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+    if (httpContentTypeSelected !== undefined) {
+      headers = headers.set('Content-Type', httpContentTypeSelected);
+    }
+
+    let responseType_: 'text' | 'json' = 'json';
+    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+      responseType_ = 'text';
+    }
+
+    return this.httpClient.post<any>(
+      `${this.configuration.basePath}/v1.0/target-unit-accounts/${encodeURIComponent(String(accountId))}/buy-out-surplus/`,
+      surplusUpdateDTO,
       {
         responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,

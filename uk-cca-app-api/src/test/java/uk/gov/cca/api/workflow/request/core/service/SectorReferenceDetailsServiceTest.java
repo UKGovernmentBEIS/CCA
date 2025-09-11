@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.dto.AddressDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
@@ -45,7 +47,7 @@ class SectorReferenceDetailsServiceTest {
     private static final SectorReferenceDataMapper sectorReferenceDataMapper = Mappers.getMapper(SectorReferenceDataMapper.class);
 
     @BeforeEach
-    public void init() {
+    void init() {
         ReflectionTestUtils.setField(service, "sectorReferenceDataMapper", sectorReferenceDataMapper);
     }
 
@@ -101,21 +103,6 @@ class SectorReferenceDetailsServiceTest {
     }
 
     @Test
-    void getSectorAssociationSchemeBySectorAssociationId() {
-        final long sectorId = 2L;
-
-        when(sectorAssociationSchemeService.getSectorAssociationSchemeBySectorAssociationId(sectorId))
-                .thenReturn(SectorAssociationSchemeDTO.builder().build());
-
-        // Invoke
-        service.getSectorAssociationSchemeBySectorAssociationId(sectorId);
-
-        // Verify
-        verify(sectorAssociationSchemeService, times(1))
-                .getSectorAssociationSchemeBySectorAssociationId(sectorId);
-    }
-
-    @Test
     void getSectorAssociationInfo() {
         final long sectorAssociationId = 1L;
         final SectorAssociationInfoNameDTO sectorAssociationInfoNameDTO = SectorAssociationInfoNameDTO.builder()
@@ -139,6 +126,31 @@ class SectorReferenceDetailsServiceTest {
         assertThat(actual).isEqualTo(sectorAssociationInfo);
         verify(sectorAssociationQueryService, times(1))
                 .getSectorAssociationInfoNameDTO(sectorAssociationId);
+    }
+    
+    @Test
+    void getSectorAssociationAcronymAndNameBySectorAssociationId() {
+        final long sectorId = 2L;
+        
+        when(sectorAssociationQueryService.getSectorAssociationAcronymAndName(sectorId))
+                .thenReturn("ADS-identifier");
+
+        service.getSectorAssociationAcronymAndNameBySectorAssociationId(sectorId);
+
+        verify(sectorAssociationQueryService, times(1)).getSectorAssociationAcronymAndName(sectorId);
+    }
+    
+    @Test
+    void getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion() {
+        final long sectorId = 2L;
+        
+        when(sectorAssociationSchemeService.getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(sectorId, SchemeVersion.CCA_2))
+                .thenReturn(SectorAssociationSchemeDTO.builder().build());
+
+        service.getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(sectorId, SchemeVersion.CCA_2);
+
+        verify(sectorAssociationSchemeService, times(1))
+        		.getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(sectorId, SchemeVersion.CCA_2);
     }
 
 }

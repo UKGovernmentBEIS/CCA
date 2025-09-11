@@ -1,0 +1,28 @@
+package uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.review;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+public class UnderlyingAgreementReviewDecisionDetails {
+
+    @Size(max = 10000)
+    private String notes;
+
+    @Builder.Default
+    @JsonInclude(Include.NON_EMPTY)
+    private Set<UUID> files = new HashSet<>();
+}

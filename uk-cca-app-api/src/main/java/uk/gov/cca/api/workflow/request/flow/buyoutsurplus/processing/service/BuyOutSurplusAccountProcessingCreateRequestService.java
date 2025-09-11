@@ -10,6 +10,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusAccountState;
+import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestMetadata;
@@ -33,19 +34,23 @@ public class BuyOutSurplusAccountProcessingCreateRequestService {
     private final StartProcessRequestService startProcessRequestService;
 
     @Transactional
-    public void createRequest(BuyOutSurplusAccountState accountState, String parentRequestId, String parentRequestBusinessKey) {
+    public void createRequest(Long accountId, String parentRequestId, String parentRequestBusinessKey) {
         final Request parentRequest = requestService.findRequestById(parentRequestId);
         final BuyOutSurplusRunRequestMetadata parentRequestMetadata = (BuyOutSurplusRunRequestMetadata) parentRequest.getMetadata();
+        final BuyOutSurplusRunRequestPayload parentPayload = (BuyOutSurplusRunRequestPayload) parentRequest.getPayload();
+        final BuyOutSurplusAccountState accountState = parentPayload.getBuyOutSurplusAccountStates().get(accountId);
 
         // Get account details
         TargetUnitAccountDetailsDTO accountDetails = accountReferenceDetailsService
-                .getTargetUnitAccountDetails(accountState.getAccountId());
+                .getTargetUnitAccountDetails(accountId);
 
         final RequestParams requestParams = RequestParams.builder()
                 .type(CcaRequestType.BUY_OUT_SURPLUS_ACCOUNT_PROCESSING)
-                .requestResources(requestCreateAccountAndSectorResourcesService.createRequestResources(accountState.getAccountId()))
+                .requestResources(requestCreateAccountAndSectorResourcesService.createRequestResources(accountId))
                 .requestPayload(BuyOutSurplusAccountProcessingRequestPayload.builder()
                         .payloadType(CcaRequestPayloadType.BUY_OUT_SURPLUS_ACCOUNT_PROCESSING_PAYLOAD)
+                        .submitterId(parentPayload.getSubmitterId())
+                        .targetPeriodDetails(parentPayload.getTargetPeriodDetails())
                         .accountDetails(accountDetails)
                         .build())
                 .requestMetadata(BuyOutSurplusAccountProcessingRequestMetadata.builder()
@@ -55,7 +60,7 @@ public class BuyOutSurplusAccountProcessingCreateRequestService {
                         .targetPeriodType(parentRequestMetadata.getTargetPeriodType())
                         .build())
                 .processVars(Map.of(
-                        BpmnProcessConstants.ACCOUNT_ID, accountState.getAccountId(),
+                        BpmnProcessConstants.ACCOUNT_ID, accountId,
                         CcaBpmnProcessConstants.BUY_OUT_SURPLUS_RUN_REQUEST_BUSINESS_KEY, parentRequestBusinessKey,
                         CcaBpmnProcessConstants.BUY_OUT_SURPLUS_ACCOUNT_STATE, accountState
                 ))

@@ -1,53 +1,51 @@
-<govuk-error-summary [form]="form"></govuk-error-summary>
+<govuk-error-summary [form]="form" />
 
 <netz-page-heading>Change user details</netz-page-heading>
 
-<div class="govuk-body">
-  <form (ngSubmit)="onSubmit()" [formGroup]="form" data-testid="operator-details-form">
-    <div class="govuk-!-width-one-half govuk-!-margin-bottom-9">
-      <h2 class="govuk-heading-m">Name</h2>
+<form (ngSubmit)="onSubmit()" [formGroup]="form" data-testid="operator-details-form">
+  <div class="govuk-!-width-one-half govuk-!-margin-bottom-9">
+    <h2 class="govuk-heading-m">Name</h2>
 
-      <div formControlName="firstName" govuk-text-input label="First name" labelSize="small"></div>
+    <div formControlName="firstName" govuk-text-input label="First name" labelSize="small"></div>
 
-      <div formControlName="lastName" govuk-text-input label="Last name" labelSize="small"></div>
+    <div formControlName="lastName" govuk-text-input label="Last name" labelSize="small"></div>
 
-      <div formControlName="jobTitle" govuk-text-input label="Job title (optional)" labelSize="small"></div>
+    <div formControlName="jobTitle" govuk-text-input label="Job title (optional)" labelSize="small"></div>
 
-      <div
-        formControlName="email"
-        govuk-text-input
-        label="Email address"
-        labelSize="small"
-        hint="All system alerts, notices and official communications will always be sent by email"
-      ></div>
+    <div
+      formControlName="email"
+      govuk-text-input
+      label="Email address"
+      labelSize="small"
+      hint="All system alerts, notices and official communications will always be sent by email"
+    ></div>
+  </div>
+
+  <div class="govuk-!-width-one-half">
+    <h2 class="govuk-heading-m">Organisation details</h2>
+
+    <div formControlName="contactType" govuk-radio legend="Contact type" [isInline]="true">
+      @for (option of contactTypeOptions; track option.value) {
+        <govuk-radio-option [label]="option.text" [value]="option.value" isDisabled="true" />
+      }
     </div>
 
-    <div class="govuk-!-width-one-half">
-      <h2 class="govuk-heading-m">Organisation details</h2>
+    <div
+      formControlName="organisationName"
+      govuk-text-input
+      label="Organisation name (optional)"
+      labelSize="small"
+    ></div>
 
-      <div formControlName="contactType" govuk-radio legend="Contact type" [isInline]="true">
-        @for (option of contactTypeOptions; track option.value) {
-          <govuk-radio-option [label]="option.text" [value]="option.value" isDisabled="true"></govuk-radio-option>
-        }
-      </div>
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Phone number (optional)</h3>
+    <p class="govuk-!-margin-top-0">For international numbers include the country code</p>
+  </div>
 
-      <div
-        formControlName="organisationName"
-        govuk-text-input
-        label="Organisation name (optional)"
-        labelSize="small"
-      ></div>
+  <div cca-phone-input formControlName="phoneNumber" label="Phone number 1"></div>
+  <div cca-phone-input formControlName="mobileNumber" label="Phone number 2"></div>
 
-      <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Phone number (optional)</h3>
-      <p class="govuk-!-margin-top-0">For international numbers include the country code</p>
-    </div>
-
-    <div cca-phone-input formControlName="phoneNumber" label="Phone number 1"></div>
-    <div cca-phone-input formControlName="mobileNumber" label="Phone number 2"></div>
-
-    <button netzPendingButton govukButton type="submit">Confirm and continue</button>
-  </form>
-</div>
+  <button netzPendingButton govukButton type="submit">Confirm and continue</button>
+</form>
 
 <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
 <a class="govuk-link" [routerLink]="'../'"> Return to: User details </a>

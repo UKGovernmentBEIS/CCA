@@ -20,7 +20,9 @@ const basePayload: UnderlyingAgreementReviewRequestTaskPayload = {
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
 };

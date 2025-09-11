@@ -22,7 +22,7 @@ import uk.gov.cca.api.migration.MigrationBaseService;
 import uk.gov.cca.api.migration.MigrationEndpoint;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
-import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationSchemeDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationSchemesDTO;
 import uk.gov.netz.api.common.utils.ExceptionUtils;
 
 @Log4j2
@@ -143,8 +143,7 @@ public class SectorAssociationMigrationService extends MigrationBaseService {
         boolean hasSubSectors = sectorVO.getSubsectorsCounter() != 0;
 
         SectorAssociationSchemeDTO sectorSchemeDTO = sectorDTOBuilder.constructSectorAssociationScheme(sectorVO, hasSubSectors);
-        List<SubsectorAssociationSchemeDTO> subSectorSchemeDTOs = new ArrayList<>();
-
+        List<SubsectorAssociationSchemesDTO> subSectorSchemeDTOs = new ArrayList<>();
         
         if (hasSubSectors) {
             List<SubSectorAssociationVO> subSectorVOs = getSubSectorsBySectorId(sectorVO.getOriginalSectorId());
@@ -154,7 +153,7 @@ public class SectorAssociationMigrationService extends MigrationBaseService {
         Set<ConstraintViolation<SectorAssociationDTO>> sectorViolations  = validator.validate(sectorDTO);
         Set<ConstraintViolation<SectorAssociationSchemeDTO>> sectorSchemeViolations  = validator.validate(sectorSchemeDTO);
         
-        Set<ConstraintViolation<SubsectorAssociationSchemeDTO>> subSectorViolations  = new HashSet<>();
+        Set<ConstraintViolation<SubsectorAssociationSchemesDTO>> subSectorViolations  = new HashSet<>();
         if (hasSubSectors) {
             subSectorSchemeDTOs.forEach(dto -> subSectorViolations.addAll(validator.validate(dto)));
         }

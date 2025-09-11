@@ -9,13 +9,32 @@ import {
 
 @Component({
   selector: 'cca-sector-association-info-summary',
+  template: `
+    <div>
+      <dl govuk-summary-list>
+        <div govukSummaryListRow>
+          <dt govukSummaryListRowKey>Sector ID</dt>
+          <dd govukSummaryListRowValue>{{ sectorId() }}</dd>
+        </div>
+
+        <div govukSummaryListRow>
+          <dt govukSummaryListRowKey>Sector name</dt>
+          <dd govukSummaryListRowValue>{{ sectorName() }}</dd>
+        </div>
+
+        <div govukSummaryListRow>
+          <dt govukSummaryListRowKey>Target period</dt>
+          <dd govukSummaryListRowValue>{{ targetPeriod() }}</dd>
+        </div>
+      </dl>
+    </div>
+  `,
   standalone: true,
   imports: [SummaryListComponent, SummaryListRowDirective, SummaryListRowKeyDirective, SummaryListRowValueDirective],
-  templateUrl: './sector-association-info-summary.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorAssociationInfoSummaryComponent {
-  readonly sectorId = input<string>();
-  readonly sectorName = input<string>();
-  readonly targetPeriod = input<string>();
+  protected readonly sectorId = input<string>();
+  protected readonly sectorName = input<string>();
+  protected readonly targetPeriod = input<string>();
 }

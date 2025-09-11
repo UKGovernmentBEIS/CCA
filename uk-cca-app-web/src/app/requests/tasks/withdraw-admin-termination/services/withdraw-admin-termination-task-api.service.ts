@@ -38,23 +38,6 @@ export class WithdrawAdminTerminationTaskApiService extends TaskApiService {
     return undefined;
   }
 
-  private createSaveAction(
-    payload: AdminTerminationWithdrawRequestTaskPayload,
-  ): RequestTaskActionProcessDTO & { requestTaskActionPayload: AdminTerminationWithdrawSaveRequestTaskActionPayload } {
-    const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
-    const { adminTerminationWithdrawReasonDetails, sectionsCompleted } = payload;
-
-    return {
-      requestTaskId,
-      requestTaskActionType: 'ADMIN_TERMINATION_WITHDRAW_SAVE_APPLICATION',
-      requestTaskActionPayload: {
-        payloadType: 'ADMIN_TERMINATION_WITHDRAW_SAVE_PAYLOAD',
-        adminTerminationWithdrawReasonDetails,
-        sectionsCompleted,
-      },
-    };
-  }
-
   notifyOperator(decisionNotification: CcaDecisionNotification): Observable<void> {
     return this.service
       .processRequestTaskAction({
@@ -86,5 +69,22 @@ export class WithdrawAdminTerminationTaskApiService extends TaskApiService {
           this.businessErrorService.showErrorForceNavigation(requestTaskReassignedError()),
         ),
       );
+  }
+
+  private createSaveAction(
+    payload: AdminTerminationWithdrawRequestTaskPayload,
+  ): RequestTaskActionProcessDTO & { requestTaskActionPayload: AdminTerminationWithdrawSaveRequestTaskActionPayload } {
+    const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
+    const { adminTerminationWithdrawReasonDetails, sectionsCompleted } = payload;
+
+    return {
+      requestTaskId,
+      requestTaskActionType: 'ADMIN_TERMINATION_WITHDRAW_SAVE_APPLICATION',
+      requestTaskActionPayload: {
+        payloadType: 'ADMIN_TERMINATION_WITHDRAW_SAVE_PAYLOAD',
+        adminTerminationWithdrawReasonDetails,
+        sectionsCompleted,
+      },
+    };
   }
 }

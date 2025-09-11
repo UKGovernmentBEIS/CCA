@@ -40,13 +40,14 @@ export class OperatorUserInvitationComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly store = inject(OperatorUserInvitationStore);
 
-  contactTypeOptions = [
+  protected readonly form = inject<FormGroup<OperatorUserInviteFormModel>>(OPERATOR_USER_INVITATION_FORM);
+
+  protected readonly contactTypeOptions = [
     { text: 'Operator', value: 'OPERATOR' },
     { text: 'Consultant', value: 'CONSULTANT' },
   ];
-  readonly form = inject<FormGroup<OperatorUserInviteFormModel>>(OPERATOR_USER_INVITATION_FORM);
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.breadcrumbsService.show([
       {
         text: 'Home',
@@ -54,6 +55,7 @@ export class OperatorUserInvitationComponent implements OnInit {
       },
     ]);
   }
+
   onSubmit() {
     if (this.form.invalid) return;
 

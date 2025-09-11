@@ -40,7 +40,7 @@ class AuthorityControllerTest {
 	private AppSecurityComponent appSecurityComponent;
 
 	@BeforeEach
-    public void setUp() {
+    void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(authorityController)
 				.setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))
             	.setControllerAdvice(new ExceptionControllerAdvice())

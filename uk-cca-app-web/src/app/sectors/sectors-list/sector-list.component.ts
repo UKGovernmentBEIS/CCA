@@ -9,9 +9,6 @@ import { SectorAssociationInfoDTO, SectorAssociationInfoViewService } from 'cca-
 
 @Component({
   selector: 'cca-sector-list',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeadingComponent, TableComponent, RouterLink],
   template: ` <netz-page-heading size="xl">Manage Sectors</netz-page-heading>
     <govuk-table [columns]="tableColumns" [data]="sectors()" (sort)="sortBy($event)" data-testid="sector-list">
       <ng-template let-column="column" let-index="index" let-row="row">
@@ -22,27 +19,30 @@ import { SectorAssociationInfoDTO, SectorAssociationInfoViewService } from 'cca-
         }
       </ng-template>
     </govuk-table>`,
+  standalone: true,
+  imports: [PageHeadingComponent, TableComponent, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorListComponent {
   private readonly sectorAssociationInfoViewService = inject(SectorAssociationInfoViewService);
 
   private _sectors = toSignal(this.sectorAssociationInfoViewService.getSectorAssociations());
 
-  tableColumns: GovukTableColumn[] = [
+  protected readonly tableColumns: GovukTableColumn[] = [
     { field: 'sector', header: 'Sector', isSortable: true },
     { field: 'mainContact', header: 'Main Contact', isSortable: true },
   ];
 
-  sorting = signal<SortEvent | null>(null);
+  protected readonly sorting = signal<SortEvent | null>(null);
 
-  sectors = computed(() => {
+  protected readonly sectors = computed(() => {
     const sorting = this.sorting();
     const sortingColumn = sorting?.column ?? this.tableColumns[0].field;
     const sectors: SectorAssociationInfoDTO[] = this._sectors();
 
     if (!sorting) return sectors;
 
-    return sectors.sort((a, b) => {
+    return sectors.slice().sort((a, b) => {
       const diff = a[sortingColumn].localeCompare(b[sortingColumn], 'en-GB', { numeric: true, sensitivity: 'base' });
       return diff * (sorting?.direction === 'descending' ? -1 : 1);
     });

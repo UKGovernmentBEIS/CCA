@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { BasePage } from '../../testing';
 import { TaskHeaderInfoComponent } from './task-header-info.component';
+import { ComponentRef } from '@angular/core';
 
 describe('TaskHeaderInfoComponent', () => {
   let component: TaskHeaderInfoComponent;
+  let componentRef: ComponentRef<TaskHeaderInfoComponent>;
   let fixture: ComponentFixture<TaskHeaderInfoComponent>;
   let page: Page;
 
@@ -16,41 +17,37 @@ describe('TaskHeaderInfoComponent', () => {
   }
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-    }).compileComponents();
-  });
-
-  beforeEach(() => {
+    await TestBed.configureTestingModule({}).compileComponents();
     fixture = TestBed.createComponent(TaskHeaderInfoComponent);
     component = fixture.componentInstance;
+    componentRef = fixture.componentRef;
     page = new Page(fixture);
+    fixture.detectChanges();
   });
 
   it('should create', () => {
-    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
 
   it('should display the content', () => {
-    component.assignee = 'Adam Smith';
-    component.daysRemaining = 13;
+    componentRef.setInput('assignee', 'Adam Smith');
+    componentRef.setInput('daysRemaining', 13);
     fixture.detectChanges();
 
     expect(page.info.map((el) => el.textContent.trim())).toEqual(['Assigned to: Adam Smith', 'Days Remaining: 13']);
   });
 
   it('should display the content with no deadline', () => {
-    component.assignee = 'Adam Smith';
-    component.daysRemaining = null;
+    componentRef.setInput('assignee', 'Adam Smith');
+    componentRef.setInput('daysRemaining', null);
     fixture.detectChanges();
 
     expect(page.info.map((el) => el.textContent.trim())).toEqual(['Assigned to: Adam Smith']);
   });
 
   it('should display the content with no assignee', () => {
-    component.assignee = null;
-    component.daysRemaining = 13;
+    componentRef.setInput('assignee', null);
+    componentRef.setInput('daysRemaining', 13);
     fixture.detectChanges();
 
     expect(page.info.map((el) => el.textContent.trim())).toEqual(['Assigned to:', 'Days Remaining: 13']);

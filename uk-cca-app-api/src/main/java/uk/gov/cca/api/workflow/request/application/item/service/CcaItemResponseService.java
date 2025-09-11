@@ -77,7 +77,7 @@ public class CcaItemResponseService implements ItemResponseService {
             .map(resource -> resource.get(ResourceType.ACCOUNT))
             .filter(Objects::nonNull)
             .map(Long::parseLong)
-            .collect(Collectors.toList());
+            .toList();
 
         if (CollectionUtils.isEmpty(accountIds))
             return Collections.emptyMap();
@@ -93,7 +93,7 @@ public class CcaItemResponseService implements ItemResponseService {
 	            .map(resource -> resource.get(CcaResourceType.SECTOR_ASSOCIATION))
 	            .filter(Objects::nonNull)
 	            .map(Long::parseLong)
-	            .collect(Collectors.toList());
+	            .toList();
 
 	        if (CollectionUtils.isEmpty(sectorIds))
 	            return Collections.emptyMap();

@@ -1,0 +1,50 @@
+:root {
+  /* GOV.UK Spacing Scale - Static */
+  --govuk-spacing-0: 0;
+  --govuk-spacing-1: 5px;
+  --govuk-spacing-2: 10px;
+  --govuk-spacing-3: 15px;
+  --govuk-spacing-4: 20px;
+  --govuk-spacing-5: 25px;
+  --govuk-spacing-6: 30px;
+  --govuk-spacing-7: 40px;
+  --govuk-spacing-8: 50px;
+  --govuk-spacing-9: 60px;
+
+  /* GOV.UK Spacing Scale - Responsive (for media queries) */
+  --govuk-spacing-responsive-4-small: 15px;
+  --govuk-spacing-responsive-4-large: 20px;
+  --govuk-spacing-responsive-5-small: 15px;
+  --govuk-spacing-responsive-5-large: 25px;
+  --govuk-spacing-responsive-6-small: 20px;
+  --govuk-spacing-responsive-6-large: 30px;
+  --govuk-spacing-responsive-7-small: 25px;
+  --govuk-spacing-responsive-7-large: 40px;
+  --govuk-spacing-responsive-8-small: 30px;
+  --govuk-spacing-responsive-8-large: 50px;
+  --govuk-spacing-responsive-9-small: 40px;
+  --govuk-spacing-responsive-9-large: 60px;
+}
+
+/* Media query for responsive spacing */
+@media (min-width: 641px) {
+  :root {
+    --govuk-spacing-4: var(--govuk-spacing-responsive-4-large);
+    --govuk-spacing-5: var(--govuk-spacing-responsive-5-large);
+    --govuk-spacing-6: var(--govuk-spacing-responsive-6-large);
+    --govuk-spacing-7: var(--govuk-spacing-responsive-7-large);
+    --govuk-spacing-8: var(--govuk-spacing-responsive-8-large);
+    --govuk-spacing-9: var(--govuk-spacing-responsive-9-large);
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --govuk-spacing-4: var(--govuk-spacing-responsive-4-small);
+    --govuk-spacing-5: var(--govuk-spacing-responsive-5-small);
+    --govuk-spacing-6: var(--govuk-spacing-responsive-6-small);
+    --govuk-spacing-7: var(--govuk-spacing-responsive-7-small);
+    --govuk-spacing-8: var(--govuk-spacing-responsive-8-small);
+    --govuk-spacing-9: var(--govuk-spacing-responsive-9-small);
+  }
+}

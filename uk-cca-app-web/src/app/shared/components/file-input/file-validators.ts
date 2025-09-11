@@ -19,6 +19,7 @@ export class FileValidators {
             : null;
         return errorMessage ? { ...acc, [`maxFileSize-${idx}`]: errorMessage } : acc;
       }, {});
+
       return Object.keys(messages).length > 0 ? messages : null;
     };
   }
@@ -32,6 +33,7 @@ export class FileValidators {
         const message = event?.file?.size === 0 ? `${event.file.name} should not be empty` : null;
         return message ? { ...acc, [`notEmpty-${idx}`]: message } : acc;
       }, {});
+
       return Object.keys(messages).length > 0 ? messages : null;
     };
   }
@@ -47,6 +49,7 @@ export class FileValidators {
         const errorMessage = fileType && !types.includes(fileType) ? `${event.file.name} ` + message : null;
         return errorMessage ? { ...acc, [`validContentTypes-${idx}`]: errorMessage } : acc;
       }, {});
+
       return Object.keys(messages).length > 0 ? messages : null;
     };
   }
@@ -67,6 +70,7 @@ export class FileValidators {
             : null;
           return errorMessage ? { ...acc, [`dimensions-${idx}`]: errorMessage } : acc;
         }, {});
+
       return Object.keys(messages).length > 0 ? messages : null;
     };
   }

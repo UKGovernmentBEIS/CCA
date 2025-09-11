@@ -20,8 +20,9 @@ export interface TargetUnitAccountPayload {
   isCompanyRegistrationNumber: boolean;
   companyRegistrationNumber?: string;
   registrationNumberMissingReason?: string;
-  sicCode?: string;
+  sicCodes?: string[];
   subsectorAssociationId?: number;
+  subsectorAssociationName?: string;
   address: AccountAddressDTO;
   responsiblePerson: TargetUnitAccountContactDTO;
   administrativeContactDetails: TargetUnitAccountContactDTO;

@@ -13,6 +13,7 @@ import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import uk.gov.netz.api.token.FileToken;
 import uk.gov.netz.api.token.UserFileTokenService;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -39,12 +40,14 @@ public class SectorAssociationSchemeDocumentService {
     }
 
     private void validateDocumentFileToken(Long sectorId, UUID documentUuid) {
-        SectorAssociationScheme sectorAssociationScheme =
-                sectorAssociationSchemeRepository.findSectorAssociationSchemeBySectorAssociationId(sectorId)
-                        .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
+        List<SectorAssociationScheme> sectorAssociationSchemes =
+                sectorAssociationSchemeRepository.findSectorAssociationSchemesBySectorAssociationId(sectorId);
 
+        List<String> schemeUuids = sectorAssociationSchemes.stream()
+        		.map(scheme -> scheme.getUmbrellaAgreement().getUuid())
+        		.toList();
         String uuid = documentUuid.toString();
-        if (!uuid.equals(sectorAssociationScheme.getUmbrellaAgreement().getUuid())) {
+        if (!schemeUuids.contains(uuid)) {
             throw new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, documentUuid);
         }
 

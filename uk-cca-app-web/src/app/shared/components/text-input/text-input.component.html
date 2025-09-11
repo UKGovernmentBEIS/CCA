@@ -5,19 +5,24 @@
   [class]="currentLabelSize"
 >
   <ng-container *ngIf="!templateLabel; else labelTemplate">{{ currentLabel }}</ng-container>
+
   <ng-template #labelTemplate>
-    <ng-content select="[govukLabel]"></ng-content>
+    <ng-content select="[govukLabel]" />
   </ng-template>
 </label>
+
 <div *ngIf="hint" [id]="identifier + '-hint'" class="govuk-hint">
   {{ hint }}
 </div>
-<govuk-error-message *ngIf="shouldDisplayErrors" [errors]="control.errors" [identifier]="identifier">
-</govuk-error-message>
+
+<govuk-error-message *ngIf="shouldDisplayErrors" [errors]="control.errors" [identifier]="identifier" />
+
 <ng-container *ngIf="prefix || suffix; else plainInput">
   <div class="govuk-input__wrapper">
     <div *ngIf="prefix" aria-hidden="true" class="govuk-input__prefix">{{ prefix }}</div>
-    <ng-container *ngTemplateOutlet="plainInput"></ng-container>
+
+    <ng-container *ngTemplateOutlet="plainInput" />
+
     <div *ngIf="suffix" aria-hidden="true" class="govuk-input__suffix">{{ suffix }}</div>
   </div>
 </ng-container>
@@ -42,7 +47,7 @@
       class="govuk-input"
     />
   } @else {
-    <p class="govuk-body">
+    <p>
       {{ valueTransform ? valueTransform(control.value) : control.value }}
     </p>
   }

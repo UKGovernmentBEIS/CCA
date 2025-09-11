@@ -3,24 +3,24 @@ import {
   AfterContentInit,
   ChangeDetectionStrategy,
   Component,
-  ContentChildren,
-  Inject,
-  Input,
   OnInit,
-  QueryList,
+  input,
+  contentChildren,
+  inject,
 } from '@angular/core';
 
 import { combineLatest, map, Observable, startWith, switchMap, take } from 'rxjs';
 
 import { ACCORDION, Accordion, accordionFactory } from './accordion';
 import { AccordionItemComponent } from './accordion-item/accordion-item.component';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'govuk-accordion',
   standalone: true,
   imports: [AsyncPipe],
   template: `
-    <div class="govuk-accordion" [id]="id" data-module="govuk-accordion">
+    <div class="govuk-accordion" [id]="id()" data-module="govuk-accordion">
       <div class="govuk-accordion__controls">
         <button
           type="button"
@@ -44,24 +44,27 @@ import { AccordionItemComponent } from './accordion-item/accordion-item.componen
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccordionComponent implements OnInit, AfterContentInit {
-  @Input() id: string;
-  @Input() openIndexes: number[];
-  @Input() cacheDisabled: boolean;
-  @ContentChildren(AccordionItemComponent) accordionItems: QueryList<AccordionItemComponent>;
+  private accordion = inject<Accordion>(ACCORDION);
+
+  readonly id = input<string>();
+  readonly openIndexes = input<number[]>();
+  readonly cacheDisabled = input<boolean>();
+
+  readonly accordionItems = contentChildren(AccordionItemComponent);
+
+  readonly accordionItems$ = toObservable(this.accordionItems);
 
   areExpanded$: Observable<boolean>;
 
-  constructor(@Inject(ACCORDION) private accordion: Accordion) {}
-
   ngOnInit(): void {
-    this.accordion.id = this.id;
-    this.accordion.openIndexes = this.openIndexes;
-    this.accordion.cacheDisabled = this.cacheDisabled;
+    this.accordion.id = this.id();
+    this.accordion.openIndexes = this.openIndexes();
+    this.accordion.cacheDisabled = this.cacheDisabled();
   }
 
   ngAfterContentInit(): void {
-    this.areExpanded$ = this.accordionItems.changes.pipe(
-      startWith(this.accordionItems),
+    this.areExpanded$ = this.accordionItems$.pipe(
+      startWith(this.accordionItems()),
       switchMap((items: AccordionItemComponent[]) => combineLatest(items.map((item) => item.isExpanded$))),
       map((areExpanded) => areExpanded.every((isExpanded) => isExpanded)),
     );
@@ -70,5 +73,5 @@ export class AccordionComponent implements OnInit, AfterContentInit {
   toggleAllSections: () => void = () =>
     this.areExpanded$
       .pipe(take(1))
-      .subscribe((areExpanded) => this.accordionItems.forEach((item) => item.isExpanded.next(!areExpanded)));
+      .subscribe((areExpanded) => this.accordionItems().forEach((item) => item.isExpanded.next(!areExpanded)));
 }

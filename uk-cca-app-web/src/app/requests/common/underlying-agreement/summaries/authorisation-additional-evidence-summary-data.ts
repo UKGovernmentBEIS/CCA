@@ -1,9 +1,9 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { transformAttachmentsAndFileUUIDsToDownloadableFiles } from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 
 import { AuthorisationAndAdditionalEvidence, UnderlyingAgreementReviewDecision } from 'cca-api';
 
-import { AuthorisationAdditionalEvidenceWizardStep } from '../underlying-agreement.types';
+import { AuthorisationAdditionalEvidenceWizardStep } from '../types';
 import { addDecisionSummaryData } from './decision-summary-data';
 
 function toSummaryData(
@@ -17,18 +17,22 @@ function toSummaryData(
     .addSection('', prefix + AuthorisationAdditionalEvidenceWizardStep.PROVIDE_EVIDENCE)
     .addFileListRow(
       'Authorisation',
-      transformAttachmentsAndFileUUIDsToDownloadableFiles(
-        authorisationAndAdditionalEvidence.authorisationAttachmentIds,
-        underlyingAgreementAttachments,
+      fileUtils.toDownloadableFiles(
+        fileUtils.extractAttachments(
+          authorisationAndAdditionalEvidence.authorisationAttachmentIds,
+          underlyingAgreementAttachments,
+        ),
         downloadUrl,
       ),
       { change: isEditable },
     )
     .addFileListRow(
       'Additional evidence',
-      transformAttachmentsAndFileUUIDsToDownloadableFiles(
-        authorisationAndAdditionalEvidence.additionalEvidenceAttachmentIds,
-        underlyingAgreementAttachments,
+      fileUtils.toDownloadableFiles(
+        fileUtils.extractAttachments(
+          authorisationAndAdditionalEvidence.additionalEvidenceAttachmentIds,
+          underlyingAgreementAttachments,
+        ),
         downloadUrl,
       ),
       { change: isEditable },
@@ -50,6 +54,7 @@ export function toAuthorisationAdditionalEvidenceSummaryData(
     prefix,
   ).create();
 }
+
 export function toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
   authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence,
   underlyingAgreementAttachments: Record<string, string>,

@@ -1,3 +1,3 @@
+export * from './error-message-type.pipe';
 export * from './performance-data.types';
-export * from './pipes/error-message-type.pipe';
-export * from './pipes/target-period-outcome.pipe';
+export * from './error-message-type.pipe';

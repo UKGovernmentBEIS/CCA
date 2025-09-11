@@ -2,7 +2,7 @@
   Are you sure you want to reset two-factor authentication for {{ userName$ | async }} ?
 </netz-page-heading>
 
-<p class="govuk-body">This will send a two-factor authentication reset email to {{ userName$ | async }}</p>
+<p>This will send a two-factor authentication reset email to {{ userName$ | async }}</p>
 
 <div class="govuk-button-group">
   <button type="button" netzPendingButton (click)="reset()" govukWarnButton>Yes, reset authentication</button>

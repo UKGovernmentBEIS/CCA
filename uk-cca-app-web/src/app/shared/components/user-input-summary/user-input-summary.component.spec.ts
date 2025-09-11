@@ -23,7 +23,7 @@ describe('SummaryTemplateComponent', () => {
   };
 
   @Component({
-    template: '<cca-user-input-summary-template [userInfo]="userInfo"></cca-user-input-summary-template>',
+    template: '<cca-user-input-summary-template [userInfo]="userInfo"/>',
     standalone: true,
     imports: [UserInputSummaryTemplateComponent],
   })
@@ -35,6 +35,7 @@ describe('SummaryTemplateComponent', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, TestComponent],
     }).compileComponents();
+
     fixture = TestBed.createComponent(TestComponent);
     hostComponent = fixture.componentInstance;
     hostComponent.userInfo = mockUserOperatorDTO;

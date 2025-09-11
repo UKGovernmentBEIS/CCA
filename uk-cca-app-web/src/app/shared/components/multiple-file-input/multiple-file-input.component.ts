@@ -34,23 +34,23 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
   private readonly root = inject(FormGroupDirective, { optional: true });
   private readonly rootNgForm = inject(NgForm, { optional: true });
 
-  headerSize = input<'m' | 's'>(null);
-  listTitle = input<string>();
-  label = input<string>('Upload a file');
-  hint = input<string>();
-  accepted = input<string>('*/*');
-  uploadStatusText = input<string>('Uploading files, please wait');
-  dropzoneHintText = input<string>('Drag and drop files here or');
-  dropzoneButtonText = input<string>('Choose files');
-  baseDownloadUrl = input<string>();
+  protected readonly headerSize = input<'m' | 's'>('m');
+  protected readonly listTitle = input<string>();
+  protected readonly label = input<string>('Upload a file');
+  protected readonly hint = input<string>();
+  protected readonly accepted = input<string>('*/*');
+  protected readonly uploadStatusText = input<string>('Uploading files, please wait');
+  protected readonly dropzoneHintText = input<string>('Drag and drop files here or');
+  protected readonly dropzoneButtonText = input<string>('Choose files');
+  protected readonly baseDownloadUrl = input<string>();
 
-  fileInput = viewChild<ElementRef<HTMLInputElement>>('input');
+  protected readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('input');
 
-  uploadStatusText$ = new Subject<string>();
-  uploadedFiles$: Observable<FileUploadEvent[]>;
-  isFocused = false;
-  isDraggedOver = false;
-  isDisabled: boolean;
+  protected readonly uploadStatusText$ = new Subject<string>();
+  protected uploadedFiles$: Observable<FileUploadEvent[]>;
+  protected isFocused = false;
+  protected isDraggedOver = false;
+  protected isDisabled: boolean;
 
   private onChange: (value: FileUpload[]) => any;
   private onBlur: () => any;
@@ -67,6 +67,7 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
   get control(): UntypedFormControl {
     return this.ngControl.control as UntypedFormControl;
   }
+
   get shouldDisplayErrors(): boolean {
     return this.control?.invalid && (!this.form || this.form.submitted);
   }
@@ -74,6 +75,7 @@ export class MultipleFileInputComponent implements ControlValueAccessor, OnInit 
   private get form(): FormGroupDirective | NgForm | null {
     return this.root ?? this.rootNgForm;
   }
+
   ngOnInit(): void {
     this.uploadedFiles$ = combineLatest([
       this.value$,

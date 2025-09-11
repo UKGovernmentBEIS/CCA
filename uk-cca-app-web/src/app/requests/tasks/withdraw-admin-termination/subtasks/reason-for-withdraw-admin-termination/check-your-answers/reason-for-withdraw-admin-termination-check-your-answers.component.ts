@@ -14,7 +14,18 @@ import { toWithdrawAdminTerminationReasonSummaryData } from '../../../withdraw-a
 
 @Component({
   selector: 'cca-reason-for-withdraw-admin-termination-check-your-answers',
-  templateUrl: './reason-for-withdraw-admin-termination-check-your-answers.component.html',
+  template: `
+    <div>
+      <netz-page-heading caption="Withdraw admin termination">Check your answers</netz-page-heading>
+      <cca-summary [data]="summaryData" />
+      <button netzPendingButton govukButton type="button" (click)="onSaveReasonForAdminTerminationWithdraw()">
+        Confirm and complete
+      </button>
+    </div>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [SummaryComponent, PageHeadingComponent, ButtonDirective, ReturnToTaskOrActionPageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

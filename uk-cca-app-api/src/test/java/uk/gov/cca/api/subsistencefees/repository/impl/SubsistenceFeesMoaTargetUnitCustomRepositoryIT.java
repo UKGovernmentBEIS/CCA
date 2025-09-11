@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,7 @@ import uk.gov.cca.api.account.domain.FinancialIndependenceStatus;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.FacilityAddress;
 import uk.gov.cca.api.facility.domain.FacilityData;
 import uk.gov.cca.api.subsistencefees.domain.FacilityPaymentStatus;
@@ -56,7 +58,7 @@ class SubsistenceFeesMoaTargetUnitCustomRepositoryIT extends AbstractContainerBa
     private final LocalDateTime submissionDate = LocalDateTime.now();
 
     @BeforeEach
-    public void setUp() {   	
+    void setUp() {
     	// set up facility addresses
         FacilityAddress address1 = FacilityAddress.builder()
                 .line1("123 Test Street")
@@ -166,6 +168,7 @@ class SubsistenceFeesMoaTargetUnitCustomRepositoryIT extends AbstractContainerBa
         FacilityData facilityData1 = FacilityData.builder()
                 .facilityId("term")
                 .accountId(account1.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("site1")
                 .schemeExitDate(null)
                 .chargeStartDate(LocalDate.of(2025, 1, 1))
@@ -177,6 +180,7 @@ class SubsistenceFeesMoaTargetUnitCustomRepositoryIT extends AbstractContainerBa
         FacilityData facilityData2 = FacilityData.builder()
                 .facilityId("ADS_1-F00015")
                 .accountId(account1.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil2")
                 .address(address2)
                 .schemeExitDate(null)
@@ -188,6 +192,7 @@ class SubsistenceFeesMoaTargetUnitCustomRepositoryIT extends AbstractContainerBa
         FacilityData facilityData3 = FacilityData.builder()
                 .facilityId("ADS_1-F00016")
                 .accountId(account2.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("terminal3")
                 .address(address3)
                 .chargeStartDate(LocalDate.of(2024, 1, 1))
@@ -200,6 +205,7 @@ class SubsistenceFeesMoaTargetUnitCustomRepositoryIT extends AbstractContainerBa
         FacilityData facilityData4 = FacilityData.builder()
                 .facilityId("ADS_1-F00017")
                 .accountId(account2.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("terminal3")
                 .address(address4)
                 .chargeStartDate(LocalDate.of(2024, 1, 1))
@@ -212,6 +218,7 @@ class SubsistenceFeesMoaTargetUnitCustomRepositoryIT extends AbstractContainerBa
         FacilityData facilityData5 = FacilityData.builder()
                 .facilityId("ADS_1-F00018")
                 .accountId(account3.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil5")
                 .address(address5)
                 .schemeExitDate(null)
@@ -305,7 +312,7 @@ class SubsistenceFeesMoaTargetUnitCustomRepositoryIT extends AbstractContainerBa
 
     @Test
     void findBySearchCriteria_noCriteria() {
-    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0L).pageSize(50L).build();
+    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0).pageSize(50).build();
     	SubsistenceFeesSearchCriteria criteria = SubsistenceFeesSearchCriteria.builder()
     			.paging(pagingRequest)
     			.build();
@@ -328,7 +335,7 @@ class SubsistenceFeesMoaTargetUnitCustomRepositoryIT extends AbstractContainerBa
     
     @Test
     void findBySearchCriteria_term_in_facility_code() {
-    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0L).pageSize(50L).build();
+    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0).pageSize(50).build();
     	SubsistenceFeesSearchCriteria criteria = SubsistenceFeesSearchCriteria.builder()
     			.paging(pagingRequest)
     			.term("ter")
@@ -348,8 +355,8 @@ class SubsistenceFeesMoaTargetUnitCustomRepositoryIT extends AbstractContainerBa
     
     @Test
     void findBySearchCriteria_facilityStatus() {
-    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0L).pageSize(50L).build();
-    	// Find cancelled only
+    	PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0).pageSize(50).build();
+    	// Find canceled only
     	SubsistenceFeesSearchCriteria criteria1 = SubsistenceFeesSearchCriteria.builder()
     			.paging(pagingRequest)
     			.markFacilitiesStatus(FacilityPaymentStatus.CANCELLED)
@@ -402,7 +409,7 @@ class SubsistenceFeesMoaTargetUnitCustomRepositoryIT extends AbstractContainerBa
     }
     
     @AfterEach
-    public void flushAndClear() {
+    void flushAndClear() {
     	entityManager.flush();
         entityManager.clear();
     }

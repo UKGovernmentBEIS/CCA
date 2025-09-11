@@ -97,6 +97,34 @@ export const TASKS_ROUTES: Routes = [
           ),
       },
       {
+        path: 'admin-termination-peer-review',
+        loadChildren: () =>
+          import('./admin-termination-peer-review/admin-termination-peer-review.routes').then(
+            (r) => r.ADMIN_TERMINATION_PEER_REVIEW_ROUTES,
+          ),
+      },
+      {
+        path: 'admin-termination-await-peer-review',
+        loadChildren: () =>
+          import('./admin-termination-wait-for-peer-review/admin-termination-wait-for-peer-review.routes').then(
+            (r) => r.ADMIN_TERMINATION_WAIT_FOR_PEER_REVIEW_ROUTES,
+          ),
+      },
+      {
+        path: 'underlying-agreement-peer-review',
+        loadChildren: () =>
+          import('./underlying-agreement-peer-review/underlying-agreement-peer-review.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_PEER_REVIEW_ROUTES,
+          ),
+      },
+      {
+        path: 'underlying-agreement-await-peer-review',
+        loadChildren: () =>
+          import('./underlying-agreement-wait-for-peer-review/underlying-agreement-wait-for-peer-review.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_WAIT_FOR_PEER_REVIEW_ROUTES,
+          ),
+      },
+      {
         path: 'underlying-agreement-variation',
         loadChildren: () =>
           import('./underlying-agreement-variation/underlying-agreement-variation.routes').then(
@@ -121,6 +149,11 @@ export const TASKS_ROUTES: Routes = [
           import('./performance-data-upload/performance-data-upload.routes').then(
             (r) => r.PERFORMANCE_DATA_UPLOAD_ROUTES,
           ),
+      },
+      {
+        path: 'performance-account-template-upload',
+        loadChildren: () =>
+          import('./performance-account-template-upload/pat-upload.routes').then((r) => r.PAT_UPLOAD_ROUTES),
       },
       {
         path: 'file-download/:uuid',

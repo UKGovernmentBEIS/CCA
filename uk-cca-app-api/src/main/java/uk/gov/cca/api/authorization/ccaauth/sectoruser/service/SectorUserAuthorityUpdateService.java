@@ -114,7 +114,7 @@ public class SectorUserAuthorityUpdateService {
         Set<String> newRoleCodes = sectorUsers.stream().map(SectorUserAuthorityUpdateDTO::getRoleCode).collect(Collectors.toSet());
         Set<String> sectorUserRoleCodes = this.roleRepository.findByType(SECTOR_USER).stream().map(Role::getCode).collect(Collectors.toSet());
         if (!sectorUserRoleCodes.containsAll(newRoleCodes)) {
-            List<String> invalidCodes = new ArrayList(newRoleCodes);
+            List<String> invalidCodes = new ArrayList<>(newRoleCodes);
             invalidCodes.removeAll(sectorUserRoleCodes);
             throw new BusinessException(CcaErrorCode.ROLE_INVALID_SECTOR_USER_ROLE_CODE, new Object[]{invalidCodes});
         }

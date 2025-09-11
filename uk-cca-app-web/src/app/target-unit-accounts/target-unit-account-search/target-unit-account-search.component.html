@@ -1,0 +1,45 @@
+<div class="govuk-grid-row" data-testid="target-unit-account-search">
+  <div class="govuk-grid-column-three-quarters">
+    <netz-page-heading size="xl" data-testid="page-heading" class="govuk-!-margin-bottom-0"
+      >Target unit accounts</netz-page-heading
+    >
+
+    <form (ngSubmit)="onSearch()" [formGroup]="searchForm" id="search-form">
+      <div class="govuk-grid-row govuk-!-margin-bottom-5">
+        <div class="govuk-grid-column-two-thirds">
+          <div
+            formControlName="term"
+            govuk-text-input
+            label="Enter target unit name, target unit ID, facility ID or postcode"
+            inputType="search"
+            aria-description="search results will appear below"
+          ></div>
+        </div>
+
+        <div class="govuk-grid-column-one-third">
+          <button netzPendingButton govukButton type="submit" style="margin: 1.9rem 0">Search</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="govuk-grid-column-full">
+    @if (accounts().length) {
+      <ng-container aria-live="polite" role="region" aria-atomic="true">
+        <cca-target-unit-accounts-list data-testid="target-unit-accounts-component" [accounts]="accounts()" />
+
+        <cca-pagination
+          [count]="count()"
+          [currentPage]="currentPage()"
+          [pageSize]="pageSize()"
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        />
+      </ng-container>
+    } @else {
+      <div class="govuk-grid-row">
+        <p tabindex="-1" role="status">There are no results to show</p>
+      </div>
+    }
+  </div>
+</div>

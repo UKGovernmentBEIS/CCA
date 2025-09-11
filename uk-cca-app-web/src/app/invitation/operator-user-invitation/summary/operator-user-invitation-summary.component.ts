@@ -51,7 +51,7 @@ export class OperatorUserInvitationSummaryComponent {
 
   protected readonly storeUser = this.store.state;
 
-  summaryData = toSummaryData(this.storeUser);
+  protected readonly summaryData = toSummaryData(this.storeUser);
 
   onSaveUserInvitationDetails() {
     const operatorUser: CcaOperatorUserRegistrationWithCredentialsDTO = {

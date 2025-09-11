@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataContainer;
 import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
 import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusService;
@@ -114,7 +114,7 @@ public class PerformanceDataSpreadsheetProcessingService {
                 .findFirst().orElseThrow();
 
         // Extract Excel data
-        PerformanceData performanceData = extractDataService.extractData(accountId, metadata, accountReportFile);
+        PerformanceData performanceData = extractDataService.extractData(metadata, accountReportFile);
 
         // Update payload with performance data
         requestPayload.setPerformanceData(performanceData);
@@ -138,7 +138,7 @@ public class PerformanceDataSpreadsheetProcessingService {
             UnderlyingAgreementDTO underlyingAgreement = underlyingAgreementQueryService
                     .getUnderlyingAgreementByAccountId(accountId);
 			PerformanceDataContainer lastUploadedReport = accountPerformanceDataStatusQueryService
-					.getLastUploadedReport(accountId,metadata.getPerformanceDataTargetPeriodType().getReferenceTargetPeriod()).orElse(null);
+					.getLastUploadedPerformanceData(accountId,metadata.getPerformanceDataTargetPeriodType().getReferenceTargetPeriod()).orElse(null);
             PerformanceDataReferenceDetails referenceDetails = PERFORMANCE_DATA_SPREADSHEET_PROCESSING_MAPPER
                     .toPerformanceDataReferenceDetails(accountDetails, underlyingAgreement, performanceDataCalculatedMetrics, metadata, accountReportFile, lastUploadedReport);
 

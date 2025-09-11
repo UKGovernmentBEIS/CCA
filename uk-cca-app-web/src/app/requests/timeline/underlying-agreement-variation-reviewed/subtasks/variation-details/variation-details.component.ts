@@ -9,15 +9,20 @@ import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+s
 
 @Component({
   selector: 'cca-timeline-variation-details',
+  template: `
+    <div>
+      <netz-page-heading>Variation details</netz-page-heading>
+      <cca-summary [data]="summaryData()" />
+    </div>
+  `,
   standalone: true,
   imports: [PageHeadingComponent, SummaryComponent],
-  templateUrl: './variation-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VariationDetailsComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
-  readonly summaryData = computed(() =>
+  protected readonly summaryData = computed(() =>
     toVariationDetailsSummaryDataWithDecision(
       this.requestActionStore.select(underlyingAgreementVariationReviewedRequestActionQuery.selectVariationDetails)(),
       false,

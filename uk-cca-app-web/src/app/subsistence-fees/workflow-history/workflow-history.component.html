@@ -1,22 +1,16 @@
 @if (details) {
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <netz-page-heading size="xl" data-testid="page-heading" class="row-flex">
+    <div class="govuk-grid-column-full">
+      <netz-page-heading size="xl" data-testid="page-heading" class="govuk-tag-heading-align">
         {{ details?.workflowDetails.id }}
-        <span class="govuk-tag-heading-align">
-          <govuk-tag
-            [color]="details?.workflowDetails.requestStatus | paymentRequestStatusTagColor"
-            class="failure-tag"
-          >
-            {{ details?.workflowDetails.requestStatus | paymentRequestProcessStatus }}
+
+        <span>
+          <govuk-tag [color]="details?.workflowDetails.requestStatus | statusColor" class="tag-width">
+            {{ details?.workflowDetails.requestStatus | status }}
           </govuk-tag>
         </span>
       </netz-page-heading>
     </div>
-
-    <!-- <div class="govuk-grid-column-one-third">
-      <button govukSecondaryButton type="button" class="float-right">View run details</button>
-    </div> -->
   </div>
 
   <div class="govuk-grid-row">
@@ -30,10 +24,9 @@
                 [link]="action | timelineItemLink: true"
                 [state]="navigationState"
                 data-testid="timeline-item"
-              >
-              </netz-timeline-item>
+              />
             } @empty {
-              <p class="govuk-body" data-testid="no-timeline-events">No timeline events</p>
+              <p data-testid="no-timeline-events">No timeline events</p>
             }
           </netz-timeline>
         </div>

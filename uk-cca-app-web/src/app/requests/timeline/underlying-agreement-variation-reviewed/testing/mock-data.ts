@@ -110,7 +110,7 @@ const underlyingAgreement: UnderlyingAgreementVariationPayload = {
     },
     operatorType: 'LIMITED_COMPANY',
     isCompanyRegistrationNumber: true,
-    companyRegistrationNumber: 'test',
+    companyRegistrationNumber: 'test1234',
   },
   facilities: facilities,
   targetPeriod5Details: {
@@ -204,13 +204,13 @@ const determination: Determination = {
 };
 
 const reviewSectionsCompleted = {
-  'ADS_2-F00028': 'APPROVED',
-  'ADS_2-F00029': 'APPROVED',
-  underlyingAgreementVariationDetails: 'APPROVED',
-  targetPeriod5Details: 'APPROVED',
-  targetPeriod6Details: 'APPROVED',
-  authorisationAndAdditionalEvidence: 'APPROVED',
-  underlyingAgreementTargetUnitDetails: 'APPROVED',
+  'ADS_2-F00028': 'ACCEPTED',
+  'ADS_2-F00029': 'ACCEPTED',
+  underlyingAgreementVariationDetails: 'ACCEPTED',
+  targetPeriod5Details: 'ACCEPTED',
+  targetPeriod6Details: 'ACCEPTED',
+  authorisationAndAdditionalEvidence: 'ACCEPTED',
+  underlyingAgreementTargetUnitDetails: 'ACCEPTED',
 };
 
 const reviewGroupDecisions: Record<string, UnderlyingAgreementReviewDecision> = {
@@ -269,7 +269,9 @@ const underlyingAgreementVariationPayload: UnderlyingAgreementVariationDecisionR
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
   businessId: '64',

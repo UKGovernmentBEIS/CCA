@@ -1,4 +1,4 @@
-<cca-service-banner></cca-service-banner>
+<cca-service-banner />
 
 @if (vm(); as vm) {
   @if (vm.isLoggedIn === false) {
@@ -7,68 +7,66 @@
         <div class="govuk-grid-column-two-thirds">
           <netz-page-heading>Manage your Climate Change Agreement (CCA)</netz-page-heading>
 
-          <div class="govuk-body">
-            <p>
-              Climate Change Agreements (CCA) are voluntary agreements between UK industry and the Environment Agency to
-              reduce energy use and carbon dioxide (CO2) emissions. CCA holders can claim a discount on the Climate
-              Change Levy (CCL).
-            </p>
+          <p>
+            Climate Change Agreements (CCA) are voluntary agreements between UK industry and the Environment Agency to
+            reduce energy use and carbon dioxide (CO2) emissions. CCA holders can claim a discount on the Climate Change
+            Levy (CCL).
+          </p>
 
-            <br />
+          <br />
 
-            <h2 class="govuk-heading-m">Who is eligible to apply for a CCA</h2>
-            <p>
-              CCAs are available for a wide range of industry sectors from major energy-intensive processes such as
-              chemicals and paper to supermarkets and agricultural businesses such as intensive pig and poultry farming.
-              A full list of eligible processes is available in Appendix A of the
-              <a
-                class="govuk-link"
-                rel="noreferrer noopener"
-                target="_blank"
-                href="https://assets.publishing.service.gov.uk/media/6216220cd3bf7f4f0399d084/Climate-Change-Agreements-Operations-Manual.pdf"
-              >
-                CCA operations manual.
-              </a>
-            </p>
-
-            <p>If you need an account to be created for you, contact your sector association.</p>
-
-            <br />
-
-            <h2 class="govuk-heading-s">I already have a sign in</h2>
-            <p>You’ll need your password and two-factor authentication app to sign in to the service</p>
-
-            <a class="govuk-button govuk-button--start" routerLink="." (click)="authService.login()" draggable="false">
-              Sign in
-              <img class="govuk-button__start-icon" src="/assets/images/start-button-arrow.svg" alt="" />
+          <h2 class="govuk-heading-m">Who is eligible to apply for a CCA</h2>
+          <p>
+            CCAs are available for a wide range of industry sectors from major energy-intensive processes such as
+            chemicals and paper to supermarkets and agricultural businesses such as intensive pig and poultry farming. A
+            full list of eligible processes is available in Appendix A of the
+            <a
+              class="govuk-link"
+              rel="noreferrer noopener"
+              target="_blank"
+              href="https://assets.publishing.service.gov.uk/media/6216220cd3bf7f4f0399d084/Climate-Change-Agreements-Operations-Manual.pdf"
+            >
+              CCA operations manual.
             </a>
-          </div>
+          </p>
+
+          <p>If you need an account to be created for you, contact your sector association.</p>
+
+          <br />
+
+          <h2 class="govuk-heading-s">I already have a sign in</h2>
+          <p>You’ll need your password and two-factor authentication app to sign in to the service</p>
+
+          <a class="govuk-button govuk-button--start" routerLink="." (click)="authService.login()" draggable="false">
+            Sign in
+            <img class="govuk-button__start-icon" src="/assets/images/start-button-arrow.svg" alt="" />
+          </a>
         </div>
       </div>
-
-      <div class="govuk-!-margin-bottom-9"></div>
-      <cca-back-to-top></cca-back-to-top>
     </div>
+
+    <div class="govuk-!-margin-bottom-9"></div>
+    <cca-back-to-top></cca-back-to-top>
   } @else {
     @switch (vm.status) {
       @case ('NO_AUTHORITY') {
-        <ng-container [ngTemplateOutlet]="userHasNoAuthority"></ng-container>
+        <ng-container [ngTemplateOutlet]="userHasNoAuthority" />
       }
 
       @case ('ENABLED') {
-        <ng-container [ngTemplateOutlet]="userHasNoAuthority"></ng-container>
+        <ng-container [ngTemplateOutlet]="userHasNoAuthority" />
       }
 
       @case ('DISABLED') {
-        <ng-container [ngTemplateOutlet]="userDisabled"></ng-container>
+        <ng-container [ngTemplateOutlet]="userDisabled" />
       }
 
       @case ('ACCEPTED') {
-        <ng-container [ngTemplateOutlet]="userActivation"></ng-container>
+        <ng-container [ngTemplateOutlet]="userActivation" />
       }
 
       @case ('TEMP_DISABLED') {
-        <ng-container [ngTemplateOutlet]="userTempDisabled"></ng-container>
+        <ng-container [ngTemplateOutlet]="userTempDisabled" />
       }
     }
   }
@@ -81,7 +79,7 @@
 
   <ng-template #userActivation>
     <netz-page-heading>Your user account needs activation.</netz-page-heading>
-    <p class="govuk-body">Contact your admin to gain access to your account.</p>
+    <p>Contact your admin to gain access to your account.</p>
   </ng-template>
 
   <ng-template #userTempDisabled>

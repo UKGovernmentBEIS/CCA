@@ -13,7 +13,9 @@ import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.aop.framework.AopProxy;
 import org.springframework.aop.framework.DefaultAopProxyFactory;
 import org.springframework.format.support.FormattingConversionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -21,8 +23,11 @@ import org.springframework.validation.Validator;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import uk.gov.cca.api.facility.domain.dto.UpdateFacilitySchemeExitDateDTO;
 import uk.gov.cca.api.facility.service.FacilityDataUpdateService;
+import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationStatus;
+import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationStatusUpdateDTO;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.cca.api.web.orchestrator.facility.service.FacilityInfoServiceOrchestrator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.common.constants.RoleTypeConstants;
@@ -34,6 +39,7 @@ import uk.gov.netz.api.security.AuthorizedAspect;
 
 import java.time.LocalDate;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 @EnableWebMvc
-public class FacilityUpdateControllerTest {
+class FacilityUpdateControllerTest {
 
     private static final String BASE_PATH = "/v1.0/facilities/ADS_1-F00023";
 
@@ -63,9 +69,12 @@ public class FacilityUpdateControllerTest {
     @Mock
     private AppUserAuthorizationService appUserAuthorizationService;
 
+    @Mock
+    private FacilityInfoServiceOrchestrator facilityInfoServiceOrchestrator;
+
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
 
@@ -129,6 +138,22 @@ public class FacilityUpdateControllerTest {
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
         verifyNoInteractions(facilityDataUpdateService);
+    }
+
+    @Test
+    void updateFacilityCertificationStatus() {
+
+        final String facilityId = "ADS_1-F00023";
+        final FacilityCertificationStatusUpdateDTO facilityCertificationStatusUpdateDTO = FacilityCertificationStatusUpdateDTO.builder()
+                .certificationStatus(FacilityCertificationStatus.CERTIFIED)
+                .certificationPeriodId(2L)
+                .build();
+
+        ResponseEntity<Void> result = controller.updateFacilityCertificationStatus(facilityId, facilityCertificationStatusUpdateDTO);
+
+        assertEquals(new ResponseEntity<Void>(HttpStatus.NO_CONTENT), result);
+        verify(facilityInfoServiceOrchestrator, times(1))
+                .updateFacilityCertificationStatus(facilityId, facilityCertificationStatusUpdateDTO);
     }
 
 }

@@ -10,7 +10,6 @@ import {
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   staticVariationSections,
   TaskItemStatus,
-  transformFacilities,
   UNAVariationRequestTaskPayload,
   VARIATION_DETAILS_SUBTASK,
 } from '@requests/common';
@@ -27,24 +26,6 @@ export const underlyingAgreementVariationTaskContent: RequestTaskPageContentFact
 };
 
 export function getAllUnderlyingAgreementVariationSections(payload: UNAVariationRequestTaskPayload): TaskSection[] {
-  const facilities = transformFacilities(
-    payload?.underlyingAgreement?.facilities,
-    ['NEW', 'LIVE'],
-    payload?.sectionsCompleted,
-    routePrefix,
-    'summary',
-    TaskItemStatus.NOT_STARTED,
-  );
-
-  const excludedFacilities = transformFacilities(
-    payload?.underlyingAgreement?.facilities,
-    ['EXCLUDED'],
-    payload?.sectionsCompleted,
-    routePrefix,
-    'summary',
-    TaskItemStatus.NOT_STARTED,
-  );
-
   return [
     {
       title: 'Variation details',
@@ -70,16 +51,11 @@ export function getAllUnderlyingAgreementVariationSections(payload: UNAVariation
       title: 'Facilities',
       tasks: [
         {
-          status: payload?.sectionsCompleted?.[MANAGE_FACILITIES_SUBTASK] ?? TaskItemStatus.NOT_STARTED,
+          status: manageFacilitiesStatus(payload?.sectionsCompleted),
           link: `${routePrefix}/manage-facilities`,
-          linkText: 'Manage facilities list',
+          linkText: 'Manage facilities',
         },
-        ...facilities,
       ],
-    },
-    {
-      title: 'Excluded facilities',
-      tasks: excludedFacilities,
     },
     {
       title: 'Baseline and Targets',
@@ -114,8 +90,8 @@ export function getAllUnderlyingAgreementVariationSections(payload: UNAVariation
       title: 'Send Application',
       tasks: [
         {
-          status: allSectionsCompleted(payload) ? TaskItemStatus.NOT_STARTED : TaskItemStatus.CANNOT_START_YET,
-          link: allSectionsCompleted(payload) ? `${routePrefix}/send-application` : '',
+          status: canSubmit(payload) ? TaskItemStatus.NOT_STARTED : TaskItemStatus.CANNOT_START_YET,
+          link: canSubmit(payload) ? `${routePrefix}/send-application` : '',
           linkText: 'Submit to regulator',
         },
       ],
@@ -124,11 +100,22 @@ export function getAllUnderlyingAgreementVariationSections(payload: UNAVariation
 }
 
 function allSectionsCompleted(payload: UNAVariationRequestTaskPayload): boolean {
-  return (
-    staticVariationSections.every((section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.COMPLETED) &&
-    payload.underlyingAgreement.facilities.length &&
-    payload?.underlyingAgreement?.facilities?.every(
-      (facility) => payload?.sectionsCompleted?.[facility.facilityId] === TaskItemStatus.COMPLETED,
-    )
+  return staticVariationSections.every((section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.COMPLETED);
+}
+
+function manageFacilitiesStatus(sectionsCompleted: Record<string, string>): TaskItemStatus {
+  // TODO: Remove MANAGE_FACILITIES_SUBTASK section when the CCA3 specification is finalized and it's removed from the database sections.
+  const facilitySections = Object.keys(sectionsCompleted).filter(
+    (section) => ![MANAGE_FACILITIES_SUBTASK, ...staticVariationSections].includes(section),
   );
+
+  if (facilitySections.length === 0) throw new Error('No facility found.');
+
+  return facilitySections.every((section) => sectionsCompleted?.[section] === TaskItemStatus.COMPLETED)
+    ? TaskItemStatus.COMPLETED
+    : TaskItemStatus.IN_PROGRESS;
+}
+
+function canSubmit(payload: UNAVariationRequestTaskPayload) {
+  return allSectionsCompleted(payload) && payload?.underlyingAgreement?.facilities?.length > 0;
 }

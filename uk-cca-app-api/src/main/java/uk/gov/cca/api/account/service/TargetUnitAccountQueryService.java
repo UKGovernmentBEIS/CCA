@@ -3,7 +3,6 @@ package uk.gov.cca.api.account.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
-import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
@@ -48,8 +47,13 @@ public class TargetUnitAccountQueryService implements TargetUnitAuthorityInfoPro
     public Long getAccountSectorAssociationId(Long accountId) {
         return getAccountById(accountId).getSectorAssociationId();
     }
-
+    
     public String getAccountName(Long accountId) {
+        final TargetUnitAccount targetUnitAccount = getAccountById(accountId);
+        return targetUnitAccount.getName();
+    }
+
+    public String getAccountBusinessIdAndName(Long accountId) {
         final TargetUnitAccount targetUnitAccount = getAccountById(accountId);
         return targetUnitAccount.getBusinessId() + " - " + targetUnitAccount.getName();
     }
@@ -59,12 +63,12 @@ public class TargetUnitAccountQueryService implements TargetUnitAuthorityInfoPro
         return repository.findAllIdsBySectorAssociationId(sectorAssociationId);
     }
 
-    public List<TargetUnitAccountBusinessInfoDTO> getAllActiveTargetUnitAccountsBusinessInfoBySectorAssociationId(Long sectorAssociationId) {
-        return repository.findAllTargetUnitAccountsBusinessInfoBySectorAssociationIdAndStatus(sectorAssociationId, TargetUnitAccountStatus.LIVE);
-    }
-
     public TargetUnitAccountHeaderInfoDTO getTargetUnitAccountHeaderInfo(Long accountId) {
         return targetUnitAccountMapper.toTargetUnitAccountHeaderInfoDTO(getAccountById(accountId));
+    }
+    
+    public TargetUnitAccountBusinessInfoDTO getTargetUnitAccountBusinessInfoDTO(Long accountId) {
+        return targetUnitAccountMapper.toTargetUnitAccountBusinessInfoDTO(getAccountById(accountId));
     }
 
     public TargetUnitAccount getAccountById(Long accountId) {

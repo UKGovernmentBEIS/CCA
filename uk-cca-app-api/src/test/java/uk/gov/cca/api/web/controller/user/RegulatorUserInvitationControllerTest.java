@@ -172,8 +172,7 @@ class RegulatorUserInvitationControllerTest {
     }
 
 	private RegulatorInvitedUserDTO createInvitedUser() {
-		RegulatorInvitedUserDTO invitedUser = 
-				RegulatorInvitedUserDTO.builder()
+		return RegulatorInvitedUserDTO.builder()
 					.userDetails(RegulatorInvitedUserDetailsDTO.builder()
 									.firstName("fn")
 									.lastName("ln")
@@ -183,7 +182,6 @@ class RegulatorUserInvitationControllerTest {
 									.build())
 					.permissions(Map.of(MANAGE_USERS_AND_CONTACTS, NONE))
 					.build();
-		return invitedUser;
 	}
 
 }

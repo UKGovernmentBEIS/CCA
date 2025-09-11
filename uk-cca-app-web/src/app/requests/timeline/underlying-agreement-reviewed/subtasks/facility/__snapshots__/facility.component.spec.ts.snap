@@ -5,15 +5,23 @@ exports[`FacilityComponent should match snapshot 1`] = `
   activatedRoute={[Function Object]}
   facility={[Function Function]}
   facilityId={[Function String]}
+  participatingSchemeVersions={[Function Function]}
   requestActionStore={[Function _RequestActionStore]}
+  schemeVersion={[Function Function]}
+  sectorSchemeData={[Function Function]}
   summaryData={[Function Function]}
 >
   <div>
     <netz-page-heading>
+      <span
+        class="govuk-caption-l"
+      >
+        aaa
+      </span>
       <h1
         class="govuk-heading-l"
       >
-        aaa (ADS_2-F00029)
+        Summary
       </h1>
     </netz-page-heading>
     <cca-summary>
@@ -26,6 +34,23 @@ exports[`FacilityComponent should match snapshot 1`] = `
         class="govuk-summary-list govuk-!-margin-bottom-9"
         govuk-summary-list=""
       >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Facility ID
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+             ADS_2-F00029 
+          </dd>
+        </div>
         <div
           class="govuk-summary-list__row"
           govuksummarylistrow=""
@@ -51,24 +76,7 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Facility code
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-             ADS_2-F00029 
-          </dd>
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Is this facility covered by UK ETS?
+            Are the activities carried out in this facility included in the UK ETS?
           </dt>
           <dd
             class="govuk-summary-list__value"
@@ -107,7 +115,7 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             New agreement 
+             New entrant 
           </dd>
         </div>
         <div
@@ -134,10 +142,26 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
+            Scheme participation
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
             Facility address
           </dt>
           <dd
-            class="pre-wrap govuk-summary-list__value"
+            class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
              test 
@@ -223,7 +247,7 @@ exports[`FacilityComponent should match snapshot 1`] = `
             Contact address
           </dt>
           <dd
-            class="pre-wrap govuk-summary-list__value"
+            class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
              test 
@@ -531,7 +555,7 @@ exports[`FacilityComponent should match snapshot 1`] = `
       <h2
         class="govuk-heading-m"
       >
-        Apply the 70% rule
+        70% rule
       </h2>
       <dl
         class="govuk-summary-list govuk-!-margin-bottom-9"

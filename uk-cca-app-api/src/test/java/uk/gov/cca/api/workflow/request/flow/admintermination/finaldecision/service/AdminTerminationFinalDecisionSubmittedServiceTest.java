@@ -5,12 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.admintermination.common.service.AdminTerminationOfficialNoticeService;
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionReasonDetails;
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionType;
@@ -48,7 +46,7 @@ class AdminTerminationFinalDecisionSubmittedServiceTest {
     private CcaOfficialNoticeSendService ccaOfficialNoticeSendService;
 
     @Mock
-    private AdminTerminationOfficialNoticeService adminTerminationOfficialNoticeService;
+    private AdminTerminationFinalDecisionOfficialNoticeService adminTerminationFinalDecisionOfficialNoticeService;
 
     @Test
     void submit() {
@@ -97,7 +95,7 @@ class AdminTerminationFinalDecisionSubmittedServiceTest {
         when(requestService.findRequestById(requestId)).thenReturn(request);
         when(ccaRequestActionUserInfoResolver.getUsersInfo(ccaDecisionNotification, request)).thenReturn(usersInfo);
         when(ccaOfficialNoticeSendService.getOfficialNoticeToDefaultRecipients(request)).thenReturn(defaultContacts);
-        when(adminTerminationOfficialNoticeService.generateFinalDecisionOfficialNotice(request))
+        when(adminTerminationFinalDecisionOfficialNoticeService.generateOfficialNotice(request))
                 .thenReturn(file);
 
         // Invoke
@@ -110,11 +108,11 @@ class AdminTerminationFinalDecisionSubmittedServiceTest {
                 .getUsersInfo(ccaDecisionNotification, request);
         verify(ccaOfficialNoticeSendService, times(1))
                 .getOfficialNoticeToDefaultRecipients(request);
-        verify(adminTerminationOfficialNoticeService, times(1))
-                .generateFinalDecisionOfficialNotice(request);
+        verify(adminTerminationFinalDecisionOfficialNoticeService, times(1))
+                .generateOfficialNotice(request);
         verify(requestService, times(1))
                 .addActionToRequest(request, actionPayload, CcaRequestActionType.ADMIN_TERMINATION_FINAL_DECISION_APPLICATION_SUBMITTED, regulator);
-        verify(adminTerminationOfficialNoticeService, times(1))
+        verify(adminTerminationFinalDecisionOfficialNoticeService, times(1))
                 .sendOfficialNotice(request, file, ccaDecisionNotification);
     }
 }

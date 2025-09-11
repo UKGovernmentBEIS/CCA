@@ -14,18 +14,18 @@ import { ActiveExternalContactStore } from '../active-external-contact.store';
 @Component({
   selector: 'cca-delete',
   templateUrl: './delete.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [ButtonDirective, PanelComponent, RouterLink, WarningTextComponent, PendingButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteComponent {
   private readonly externalContactsService = inject(CaExternalContactsService);
   private readonly businessErrorService = inject(BusinessErrorService);
   private readonly store = inject(ActiveExternalContactStore);
 
-  contact = this.store.state;
+  protected readonly contact = this.store.state;
 
-  isConfirmationDisplayed = signal(false);
+  protected readonly isConfirmationDisplayed = signal(false);
 
   deleteExternalContact(): void {
     this.externalContactsService

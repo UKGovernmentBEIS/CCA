@@ -20,7 +20,7 @@ import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminTerminationUploadAttachmentServiceTest {
+class AdminTerminationUploadAttachmentServiceTest {
 
     @InjectMocks
     private AdminTerminationUploadAttachmentService adminTerminationUploadAttachmentService;

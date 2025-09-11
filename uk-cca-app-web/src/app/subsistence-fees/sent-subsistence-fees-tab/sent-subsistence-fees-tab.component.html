@@ -19,14 +19,14 @@
               }
 
               @case ('paymentStatus') {
-                <govuk-tag [color]="row[column.field] | subsistenceFeesRunPaymentStatusTagColor" class="failure-tag">
-                  {{ row[column.field] | subsistenceFeesRunPaymentStatus }}
+                <govuk-tag [color]="row[column.field] | statusColor: 'grey'" class="tag-width">
+                  {{ row[column.field] | status }}
                 </govuk-tag>
               }
 
               @case ('markFacilitiesStatus') {
                 <div class="govuk-!-width-full">
-                  <span>{{ row[column.field] | subsistenceFeesRunMarkFacilitiesStatus }}</span>
+                  <span>{{ row[column.field] | status }}</span>
                 </div>
               }
 
@@ -43,9 +43,11 @@
 
         <cca-pagination
           [count]="state().totalSubsistenceFeesRunItems"
-          (currentPageChange)="handlePageChange($event)"
+          [currentPage]="state().currentPage"
           [pageSize]="state().pageSize"
-        ></cca-pagination>
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        />
       </div>
     </div>
   </div>

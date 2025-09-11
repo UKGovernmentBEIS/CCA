@@ -1,14 +1,13 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  ContentChild,
-  EventEmitter,
-  Inject,
-  Input,
+  input,
   OnDestroy,
   OnInit,
-  Output,
+  output,
+  contentChild,
+  inject,
 } from '@angular/core';
 
 import { BehaviorSubject, Observable, Subject, takeUntil, tap } from 'rxjs';
@@ -19,15 +18,19 @@ import { AccordionItemSummaryDirective } from '../directives/accordion-item-summ
 @Component({
   selector: 'govuk-accordion-item',
   standalone: true,
-  imports: [AsyncPipe, NgIf],
+  imports: [AsyncPipe],
   templateUrl: './accordion-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccordionItemComponent implements OnInit, OnDestroy {
-  @Input() header: string;
-  @Output() readonly expand = new EventEmitter<boolean>();
+  accordion = inject<Accordion>(ACCORDION);
 
-  @ContentChild(AccordionItemSummaryDirective) accordionItemSummaryDirective: AccordionItemSummaryDirective;
+  readonly header = input<string>();
+
+  readonly expand = output<boolean>();
+  readonly caption = input<string>();
+
+  readonly accordionItemSummaryDirective = contentChild(AccordionItemSummaryDirective);
 
   itemIndex: number;
   isFocused = false;
@@ -35,8 +38,6 @@ export class AccordionItemComponent implements OnInit, OnDestroy {
   isExpanded$: Observable<boolean> = this.isExpanded.asObservable().pipe(tap(() => this.storeState()));
 
   readonly destroy$ = new Subject<void>();
-
-  constructor(@Inject(ACCORDION) public accordion: Accordion) {}
 
   get contentId(): string {
     return `${this.accordion.id}-content-${this.itemIndex}`;

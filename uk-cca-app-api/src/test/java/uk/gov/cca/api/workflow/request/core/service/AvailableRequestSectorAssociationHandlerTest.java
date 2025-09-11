@@ -36,7 +36,7 @@ class AvailableRequestSectorAssociationHandlerTest {
 
     
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         ArrayList<RequestCreateBySectorAssociationValidator> requestCreateBySectorValidators = new ArrayList<>();
         requestCreateBySectorValidators.add(requestCreateValidatorA);
         requestCreateBySectorValidators.add(requestCreateValidatorB);

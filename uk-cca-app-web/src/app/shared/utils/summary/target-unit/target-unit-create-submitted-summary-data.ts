@@ -1,43 +1,35 @@
-import { inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
+import { boolToString } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { transformOperatorType } from '@shared/pipes';
 
-import { AccountAddressDTO, SectorAssociationSchemeDTO, TargetUnitAccountPayload } from 'cca-api';
+import { AccountAddressDTO, TargetUnitAccountPayload } from 'cca-api';
 
 import { transformPhoneNumber } from '../../phone';
 
 export function toTargetUnitCreateSubmittedSummaryData(payload: TargetUnitAccountPayload): SummaryData {
-  const subSectors = (inject(ActivatedRoute).snapshot.data?.subSectorScheme as SectorAssociationSchemeDTO)
-    ?.subsectorAssociationSchemes;
-
-  const selectedSubsector = subSectors?.find((ss) => ss.id === payload?.subsectorAssociationId)?.subsectorAssociation
-    ?.name;
-
-  return new SummaryFactory()
+  const factory = new SummaryFactory()
     .addSection('Target unit details', '../', { testid: 'target-unit-details-list' })
     .addRow('Operator name', payload?.name)
     .addRow('Operator type', transformOperatorType(payload?.operatorType))
-    .addRow(
-      payload?.isCompanyRegistrationNumber
-        ? 'Company Registration Number'
-        : 'Reason why you do not have a registration number',
-      payload?.isCompanyRegistrationNumber
-        ? payload?.companyRegistrationNumber
-        : payload?.registrationNumberMissingReason,
-    )
-    .addRow('Nature of business (SIC) code', payload?.sicCode)
-    .addRow('Subsector', selectedSubsector)
+    .addRow('Does your company have a registration number?', boolToString(payload.isCompanyRegistrationNumber))
+    .addRow('Company number', payload?.companyRegistrationNumber ?? 'Not provided');
+
+  if (payload?.registrationNumberMissingReason) {
+    factory.addRow('Reason for not having a registration number', payload?.registrationNumberMissingReason);
+  }
+
+  factory
+    .addRow('Standard Industrial Classification (SIC) codes', payload?.sicCodes)
+    .addRow('Subsector', payload?.subsectorAssociationName)
 
     .addSection('Operator address', '../operator-address', { testid: 'operator-address-list' })
-    .addRow('Address', getAddressAsArray(payload?.address), { prewrap: true })
+    .addTextAreaRow('Address', getAddressAsArray(payload?.address))
 
     .addSection('Responsible person', '../responsible-person', { testid: 'responsible-person-list' })
     .addRow('First name', payload?.responsiblePerson?.firstName)
     .addRow('Last name', payload?.responsiblePerson?.lastName)
     .addRow('Job title', payload?.responsiblePerson?.jobTitle)
-    .addRow('Address', getAddressAsArray(payload?.responsiblePerson?.address), { prewrap: true })
+    .addTextAreaRow('Address', getAddressAsArray(payload?.responsiblePerson?.address))
     .addRow('Phone number', transformPhoneNumber(payload?.responsiblePerson?.phoneNumber))
     .addRow('Email address', payload?.responsiblePerson?.email)
 
@@ -49,10 +41,9 @@ export function toTargetUnitCreateSubmittedSummaryData(payload: TargetUnitAccoun
     .addRow('Job title', payload?.administrativeContactDetails?.jobTitle)
     .addRow('Email address', payload?.administrativeContactDetails?.email)
     .addRow('Phone number', transformPhoneNumber(payload?.administrativeContactDetails?.phoneNumber))
-    .addRow('Address', getAddressAsArray(payload?.administrativeContactDetails?.address), {
-      prewrap: true,
-    })
-    .create();
+    .addTextAreaRow('Address', getAddressAsArray(payload?.administrativeContactDetails?.address));
+
+  return factory.create();
 }
 
 function getAddressAsArray(address: AccountAddressDTO): string[] {

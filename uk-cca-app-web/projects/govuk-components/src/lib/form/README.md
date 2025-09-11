@@ -25,20 +25,3 @@ export class FormIdentifierService extends FormService {
     return path.join('-');
   }
 }
-
-// app.module.ts
-import { NgModule } from '@angular/core';
-
-import { GovukComponentsModule, FormService } from 'govuk-components';
-
-import { FormIdentifierService } from './form-identifier.service';
-
-const keycloakService = new KeycloakService();
-
-@NgModule({
-  imports: [GovukComponentsModule],
-  providers: [{ provide: FormService, useClass: FormIdentifierService }],
-})
-export class AppModule {
-}
-```

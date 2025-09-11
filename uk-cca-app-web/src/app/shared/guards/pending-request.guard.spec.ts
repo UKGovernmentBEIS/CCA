@@ -28,6 +28,7 @@ describe('PendingRequestGuard', () => {
     TestBed.configureTestingModule({
       imports: [TestComponent, EmptyTestComponent],
     });
+
     fixture = TestBed.createComponent(TestComponent);
     testComponent = fixture.componentInstance;
     router = TestBed.inject(Router);

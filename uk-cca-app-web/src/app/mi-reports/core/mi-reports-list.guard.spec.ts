@@ -4,12 +4,13 @@ import { lastValueFrom, Observable, of } from 'rxjs';
 
 import { MiReportsService } from 'cca-api';
 
-import { MiReportsStore } from '../store/mi-reports.store';
+import { MiReportsStore } from '../mi-reports.store';
 import { miReportsListGuard } from './mi-reports-list.guard';
 
 describe('MiReportsListGuard', () => {
   let store: MiReportsStore;
   let miReportsService: Partial<jest.Mocked<MiReportsService>>;
+
   const miReports = [{ id: 1, miReportType: 'CUSTOM' }];
 
   beforeEach(() => {
@@ -20,6 +21,7 @@ describe('MiReportsListGuard', () => {
     TestBed.configureTestingModule({
       providers: [MiReportsStore, { provide: MiReportsService, useValue: miReportsService }],
     });
+
     store = TestBed.inject(MiReportsStore);
   });
 

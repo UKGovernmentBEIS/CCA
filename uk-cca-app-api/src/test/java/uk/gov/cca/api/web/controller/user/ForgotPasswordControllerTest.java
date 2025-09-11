@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith({MockitoExtension.class})
-public class ForgotPasswordControllerTest {
+class ForgotPasswordControllerTest {
 	
 	private static final String BASE_PATH = "/v1.0/users/forgot-password";
     private static final String SEND_VERIFICATION_EMAIL = "/reset-password-email";
@@ -52,7 +52,7 @@ public class ForgotPasswordControllerTest {
     private ObjectMapper mapper;
     
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(forgotPasswordController)
             .setValidator(validator)
             .setControllerAdvice(new ExceptionControllerAdvice())

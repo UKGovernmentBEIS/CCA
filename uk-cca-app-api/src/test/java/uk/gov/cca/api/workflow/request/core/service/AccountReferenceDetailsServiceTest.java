@@ -12,6 +12,8 @@ import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.account.service.TargetUnitAccountService;
 import uk.gov.cca.api.common.domain.MeasurementType;
+import uk.gov.cca.api.common.domain.SchemeData;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationInfoService;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
@@ -23,6 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.Map;
 
 @ExtendWith(MockitoExtension.class)
 class AccountReferenceDetailsServiceTest {
@@ -45,7 +49,7 @@ class AccountReferenceDetailsServiceTest {
     private static final AccountReferenceDataMapper accountReferenceDataMapper = Mappers.getMapper(AccountReferenceDataMapper.class);
 
     @BeforeEach
-    public void init() {
+    void init() {
         ReflectionTestUtils.setField(service, "accountReferenceDataMapper", accountReferenceDataMapper);
     }
 
@@ -99,54 +103,6 @@ class AccountReferenceDetailsServiceTest {
     }
 
     @Test
-    void getSectorAssociationNameByAccountId() {
-        final long accountId = 1L;
-        final long sectorId = 2L;
-
-        final TargetUnitAccountDetailsDTO targetUnitAccountDetailsDTO = TargetUnitAccountDetailsDTO.builder()
-                .sectorAssociationId(sectorId)
-                .build();
-
-        when(targetUnitAccountService.getTargetUnitAccountDetailsById(accountId))
-                .thenReturn(targetUnitAccountDetailsDTO);
-        when(sectorAssociationQueryService.getSectorAssociationName(sectorId))
-                .thenReturn("Name");
-
-        // Invoke
-        service.getSectorAssociationNameByAccountId(accountId);
-
-        // Verify
-        verify(targetUnitAccountService, times(1))
-                .getTargetUnitAccountDetailsById(accountId);
-        verify(sectorAssociationQueryService, times(1))
-                .getSectorAssociationName(sectorId);
-    }
-
-    @Test
-    void getSectorAssociationAcronymAndNameByAccountId() {
-        final long accountId = 1L;
-        final long sectorId = 2L;
-
-        final TargetUnitAccountDetailsDTO targetUnitAccountDetailsDTO = TargetUnitAccountDetailsDTO.builder()
-                .sectorAssociationId(sectorId)
-                .build();
-
-        when(targetUnitAccountService.getTargetUnitAccountDetailsById(accountId))
-                .thenReturn(targetUnitAccountDetailsDTO);
-        when(sectorAssociationQueryService.getSectorAssociationAcronymAndName(sectorId))
-                .thenReturn("identifier");
-
-        // Invoke
-        service.getSectorAssociationAcronymAndNameByAccountId(accountId);
-
-        // Verify
-        verify(targetUnitAccountService, times(1))
-                .getTargetUnitAccountDetailsById(accountId);
-        verify(sectorAssociationQueryService, times(1))
-                .getSectorAssociationAcronymAndName(sectorId);
-    }
-
-    @Test
     void getAccountReferenceData() {
         final Long subsectorAssociationId = 1L;
         final Long sectorAssociationId = 1L;
@@ -169,8 +125,13 @@ class AccountReferenceDetailsServiceTest {
         final SectorAssociationDetails sectorAssociationDetails = SectorAssociationDetails
                 .builder()
                 .subsectorAssociationName(subsectorAssociationName)
-                .measurementType(measurementType)
-                .throughputUnit(throughputUnit)
+                .schemeDataMap(Map.of(SchemeVersion.CCA_2, SchemeData.builder()
+                		.sectorMeasurementType(measurementType)
+                		.sectorThroughputUnit(throughputUnit)
+                		.build(), SchemeVersion.CCA_3, SchemeData.builder()
+                		.sectorMeasurementType(measurementType)
+                		.sectorThroughputUnit(null)
+                		.build()))
                 .build();
 
         when(service.getTargetUnitAccountDetails(1L)).thenReturn(targetUnitAccountDetailsDTO);
@@ -184,8 +145,10 @@ class AccountReferenceDetailsServiceTest {
         verify(sectorReferenceDetailsService, times(1)).getSectorAssociationMeasurementDetails(sectorAssociationId, subsectorAssociationId);
 
         assertThat(result.getSectorAssociationDetails().getSubsectorAssociationName()).isEqualTo(subsectorAssociationName);
-        assertThat(result.getSectorAssociationDetails().getMeasurementType()).isEqualTo(measurementType);
-        assertThat(result.getSectorAssociationDetails().getThroughputUnit()).isEqualTo(throughputUnit);
+        assertThat(result.getSectorAssociationDetails().getSchemeDataMap().get(SchemeVersion.CCA_2).getSectorMeasurementType()).isEqualTo(measurementType);
+        assertThat(result.getSectorAssociationDetails().getSchemeDataMap().get(SchemeVersion.CCA_2).getSectorThroughputUnit()).isEqualTo(throughputUnit);
+        assertThat(result.getSectorAssociationDetails().getSchemeDataMap().get(SchemeVersion.CCA_3).getSectorMeasurementType()).isEqualTo(measurementType);
+        assertThat(result.getSectorAssociationDetails().getSchemeDataMap().get(SchemeVersion.CCA_3).getSectorThroughputUnit()).isNull();
         assertThat(result.getTargetUnitAccountDetails().getOperatorType()).isEqualTo(targetUnitAccountDetailsDTO.getOperatorType());
         assertThat(result.getTargetUnitAccountDetails().getCompanyRegistrationNumber()).isEqualTo(targetUnitAccountDetailsDTO.getCompanyRegistrationNumber());
     }

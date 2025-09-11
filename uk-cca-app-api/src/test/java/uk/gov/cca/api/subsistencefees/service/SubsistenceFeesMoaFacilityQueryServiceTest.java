@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import uk.gov.cca.api.subsistencefees.domain.FacilityPaymentStatus;
 import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaFacilitySearchResultInfoDTO;
@@ -36,8 +37,8 @@ class SubsistenceFeesMoaFacilityQueryServiceTest {
 
     @Test
     void getSubsistenceFeesMoaFacilities() {
-    	final long page = 0;
-        final long pageSize = 30;
+    	final int page = 0;
+        final int pageSize = 30;
         final LocalDate date = LocalDate.now();
         PagingRequest pagingRequest = PagingRequest.builder().pageNumber(page).pageSize(pageSize).build();
         SubsistenceFeesSearchCriteria criteria = SubsistenceFeesSearchCriteria.builder()
@@ -45,7 +46,7 @@ class SubsistenceFeesMoaFacilityQueryServiceTest {
         		.build();
         final Pageable pageable = getPageable(criteria);
         final SubsistenceFeesMoaFacilitySearchResultInfoDTO resultInfoDto =
-                new SubsistenceFeesMoaFacilitySearchResultInfoDTO(1L, "ADS-0001", "name", FacilityPaymentStatus.IN_PROGRESS, date);
+                new SubsistenceFeesMoaFacilitySearchResultInfoDTO(1L, "ADS-0001", "name", FacilityPaymentStatus.IN_PROGRESS, date, false);
         final SubsistenceFeesMoaFacilitySearchResults expectedResults = SubsistenceFeesMoaFacilitySearchResults.builder()
                 .subsistenceFeesMoaFacilities(List.of(resultInfoDto))
                 .total(1L)
@@ -65,7 +66,8 @@ class SubsistenceFeesMoaFacilityQueryServiceTest {
     
     private Pageable getPageable(SubsistenceFeesSearchCriteria criteria) {
         return PageRequest.of(
-                criteria.getPaging().getPageNumber().intValue(),
-                criteria.getPaging().getPageSize().intValue());
+                criteria.getPaging().getPageNumber(),
+                criteria.getPaging().getPageSize(),
+                Sort.by("fd.facilityId"));
     }
 }

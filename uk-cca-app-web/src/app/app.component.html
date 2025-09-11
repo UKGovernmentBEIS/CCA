@@ -1,9 +1,10 @@
 @if (showCookiesBanner() === true) {
-  <cca-cookies-container></cca-cookies-container>
+  <cca-cookies-container />
 }
 
 <govuk-header title="Manage your Climate Change Agreement">
   <govuk-skip-link />
+
   <govuk-header-actions-list>
     @if (isLoggedIn()) {
       <a class="govuk-header__link" routerLink="." (click)="authService.logout()"> Sign out </a>
@@ -34,11 +35,28 @@
             <a routerLinkActive class="govuk-header__link" [routerLink]="['/subsistence-fees']"> Subsistence fees </a>
           </li>
         }
+
+        <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
+          <a
+            routerLinkActive
+            class="govuk-header__link"
+            [routerLink]="['/buyout-surplus']"
+            [queryParams]="{ buyOutSurplusPaymentStatus: 'AWAITING_PAYMENT' }"
+          >
+            Buy-out and surplus
+          </a>
+        </li>
+
         <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
           <a routerLinkActive class="govuk-header__link" [routerLink]="['/user/regulators']"> Regulator users </a>
         </li>
+
         <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
           <a routerLinkActive class="govuk-header__link" [routerLink]="['/mi-reports']"> MI Reports </a>
+        </li>
+
+        <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
+          <a routerLinkActive class="govuk-header__link" [routerLink]="['/templates']"> Templates </a>
         </li>
       }
     </govuk-header-nav-list>
@@ -50,24 +68,28 @@
   <cca-workflow-task-header />
   <netz-breadcrumbs />
   <netz-back-link />
+
   <main class="govuk-main-wrapper" id="main-content" role="main" tabindex="0">
-    <router-outlet></router-outlet>
+    <router-outlet />
   </main>
 </section>
 
 <govuk-footer>
   <govuk-footer-meta-info>
     <li class="govuk-footer__inline-list-item">
-      <a routerLink="/privacy-notice"> Privacy Notice </a>
+      <a class="govuk-footer__link" routerLink="/privacy-notice"> Privacy Notice </a>
     </li>
+
     <li class="govuk-footer__inline-list-item">
-      <a routerLink="/contact-us"> Contact us </a>
+      <a class="govuk-footer__link" routerLink="/contact-us"> Contact us </a>
     </li>
+
     <li class="govuk-footer__inline-list-item">
-      <a routerLink="/accessibility"> Accessibility Statement </a>
+      <a class="govuk-footer__link" routerLink="/accessibility"> Accessibility Statement </a>
     </li>
+
     <li class="govuk-footer__inline-list-item">
-      <a routerLink="/legislation"> CCA legislation </a>
+      <a class="govuk-footer__link" routerLink="/legislation"> CCA legislation </a>
     </li>
   </govuk-footer-meta-info>
 </govuk-footer>

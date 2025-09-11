@@ -3,21 +3,23 @@ import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterLink } from '@angu
 
 import { filter } from 'rxjs';
 import { BreadcrumbService, Link } from './breadcrumb.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'netz-breadcrumbs',
   standalone: true,
   template: `
     @if (showBreadcrumb()) {
-      <div
+      <nav
         class="govuk-breadcrumbs govuk-breadcrumbs--collapse-on-mobile"
+        aria-label="Breadcrumb"
         [class.govuk-breadcrumbs--inverse]="inverse()"
       >
         <ol class="govuk-breadcrumbs__list">
           @for (breadcrumb of links(); track breadcrumb.link) {
             <li class="govuk-breadcrumbs__list-item">
               <a
-                class="govuk-link"
+                class="govuk-breadcrumbs__link"
                 [routerLink]="breadcrumb.link"
                 [queryParams]="breadcrumb.queryParams"
                 [fragment]="breadcrumb.fragment"
@@ -26,7 +28,7 @@ import { BreadcrumbService, Link } from './breadcrumb.service';
             </li>
           }
         </ol>
-      </div>
+      </nav>
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,19 +38,26 @@ export class BreadcrumbsComponent {
   private readonly router = inject(Router);
   private readonly breadcrumbsService = inject(BreadcrumbService);
 
-  links = this.breadcrumbsService.links;
-  inverse = this.breadcrumbsService.inverse;
-  showBreadcrumb = signal(true);
+  readonly links = this.breadcrumbsService.links;
+  readonly inverse = this.breadcrumbsService.inverse;
+  readonly showBreadcrumb = signal(true);
 
   constructor() {
-    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
-      const breadcrumbData = this.extract();
-      this.breadcrumbsService.links.set(breadcrumbData);
-    });
+    this.router.events
+      .pipe(
+        takeUntilDestroyed(),
+        filter((event) => event instanceof NavigationEnd),
+      )
+      .subscribe(() => {
+        let breadcrumbData = this.extract();
+        const snapshot = this.router.routerState.snapshot;
+        const path = snapshot.url.toString().split('#')[0].split('?')[0];
+        breadcrumbData = removeSameRouteBreadcrumb(breadcrumbData, path);
+        this.breadcrumbsService.links.set(breadcrumbData);
+      });
   }
 
   /**
-   *
    * @returns any breadcrumb data found in the current route tree, starting from the root route
    */
   private extract(): Link[] {
@@ -56,30 +65,23 @@ export class BreadcrumbsComponent {
     let snapshot = this.router.routerState.snapshot.root;
 
     while (snapshot) {
-      // feat: disable breadcrumb for the current route
-      if (snapshot.data.breadcrumb === false && isLeaf(snapshot)) {
-        return [];
-      }
+      // disable breadcrumb for the current route
+      if (snapshot.data.breadcrumb === false && isLeaf(snapshot)) return [];
 
       if (!snapshot.data.breadcrumb) {
         snapshot = snapshot.firstChild;
         continue;
       }
 
-      // if the current route is a leaf and has no url, we need to remove the last breadcrumb
-      if (isLeaf(snapshot) && !snapshot.url.length) {
-        return routeData.slice(0, -1);
-      }
+      const breadcrumb = createLink(snapshot);
 
-      // we need if a breadcrumb with the same text already exists
-      // because the Angular router transfers the data route property from the parent route to the child route
-      const text =
-        typeof snapshot.data.breadcrumb === 'function'
-          ? snapshot.data.breadcrumb(snapshot.data)
-          : snapshot.data.breadcrumb;
-
-      if (!hasText(routeData, text)) {
-        routeData.push(createLink(text, snapshot.pathFromRoot));
+      // Angular router transfers the data route property from the parent route to the child route.
+      // That's why we need to determine if a breadcrumb with the same text already exists
+      if (!hasText(routeData, breadcrumb.text)) {
+        routeData.push(breadcrumb);
+      } else {
+        const idx = routeData.findIndex((r) => r.text === breadcrumb.text);
+        routeData[idx].fragment = breadcrumb.fragment;
       }
 
       snapshot = snapshot.firstChild;
@@ -89,11 +91,49 @@ export class BreadcrumbsComponent {
   }
 }
 
-function createLink(text: string, pathFromRoot: ActivatedRouteSnapshot[]): Link {
-  return {
-    text,
-    link: pathFromRoot.map((u) => u.url.toString()).join('/'),
-  };
+/**
+ * Removes the same breadcrumb from the breadcrumb data array
+ * @param breadcrumbData
+ * @param path
+ * @returns
+ */
+function removeSameRouteBreadcrumb(breadcrumbData: Link[], path: string): Link[] {
+  const bd = structuredClone(breadcrumbData);
+  const index = bd.findIndex((b) => b.link === path);
+  if (index >= 0) bd.splice(index);
+  return bd;
+}
+
+/**
+ * Creates a breadcrumb link from the current route snapshot
+ * @param snapshot
+ * @returns
+ */
+function createLink(snapshot: ActivatedRouteSnapshot): Link {
+  let breadcrumbRouteData = snapshot.data.breadcrumb;
+  let text = '';
+  let fragment: string;
+  let link = snapshot.pathFromRoot
+    .map((u) => u.url.join('/'))
+    .filter((u) => !!u)
+    .join('/');
+
+  link = `/${link}`;
+
+  // if the breadcrumb data is a function, we need to call it to get the breadcrumb data
+  // before reconciliating the text, link and fragment
+  if (typeof breadcrumbRouteData === 'function') breadcrumbRouteData = breadcrumbRouteData(snapshot.data);
+
+  if (typeof breadcrumbRouteData === 'string') {
+    text = breadcrumbRouteData;
+  } else if (breadcrumbRouteData && typeof breadcrumbRouteData === 'object' && 'text' in breadcrumbRouteData) {
+    text = breadcrumbRouteData.text;
+    fragment = breadcrumbRouteData.fragment;
+
+    if (breadcrumbRouteData.link) link = breadcrumbRouteData.link;
+  }
+
+  return { text, link, fragment };
 }
 
 /**
@@ -103,9 +143,14 @@ function createLink(text: string, pathFromRoot: ActivatedRouteSnapshot[]): Link 
  */
 function hasText(links: Link[], t: unknown): boolean {
   if (typeof t !== 'string') return false;
-  return links.map((l) => l.text).includes(t);
+  return links.some((l) => l.text === t);
 }
 
+/**
+ * Checks if the current route is a leaf node
+ * @param snapshot
+ * @returns
+ */
 function isLeaf(snapshot: ActivatedRouteSnapshot): boolean {
   return !snapshot.firstChild;
 }

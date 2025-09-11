@@ -1,0 +1,49 @@
+@if (facility(); as facility) {
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    [caption]="facility?.facilityDetails?.name"
+    heading="Targets"
+    data-testid="targets-form"
+  >
+    <div class="govuk-!-width-two-thirds">
+      <p class="govuk-!-margin-bottom-9">Add improvement target for the target period</p>
+
+      <section>
+        <div
+          widthClass="govuk-!-width-one-quarter"
+          formControlName="tp7"
+          suffix="%"
+          label="TP7 (2026) improvement (%)"
+          inputType="number"
+          cca-text-input
+        ></div>
+      </section>
+
+      <section>
+        <div
+          widthClass="govuk-!-width-one-quarter"
+          formControlName="tp8"
+          suffix="%"
+          label="TP8 (2027 to 2028) improvement (%)"
+          inputType="number"
+          cca-text-input
+        ></div>
+      </section>
+
+      <section>
+        <div
+          widthClass="govuk-!-width-one-quarter"
+          formControlName="tp9"
+          suffix="%"
+          label="TP9 (2029 to 2030) improvement (%)"
+          inputType="number"
+          cca-text-input
+        ></div>
+      </section>
+    </div>
+  </cca-wizard-step>
+}
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" routerLink="../..">Return to: Manage facilities</a>

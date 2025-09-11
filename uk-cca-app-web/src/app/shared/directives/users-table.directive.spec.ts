@@ -96,7 +96,7 @@ describe('UsersTableDirective', () => {
         >
           <ng-template let-column="column" let-index="index" let-row="row">
             <ng-container formArrayName="usersArray">
-              <div [formGroupName]="index" class="cell-container">
+              <div [formGroupName]="index">
                 @switch (column.field) {
                   @case ('name') {
                     <input type="text" formControlName="firstName" />

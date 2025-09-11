@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
@@ -201,7 +201,7 @@ class PerformanceAccountTemplateDataUploadProcessingActionHandlerTest {
 	}
 	
 	@Test
-	void process_not_empty_account_reports() throws IOException, ReportPackageMissingException {
+	void process_not_empty_account_reports() throws ReportPackageMissingException {
 		Long requestTaskId = 1L;
 		String requestTaskActionType = "reqActionType";
 		AppUser appUser = AppUser.builder().userId("userId").build();

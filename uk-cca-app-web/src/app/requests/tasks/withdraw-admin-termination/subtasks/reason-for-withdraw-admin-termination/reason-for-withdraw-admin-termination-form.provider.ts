@@ -4,7 +4,6 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
-import { transformAttachmentsToFilesWithUUIDs, transformFilesToUUIDsList } from '@shared/utils';
 import { textFieldValidators } from '@shared/validators';
 
 import { AdminTerminationWithdrawReasonDetails } from 'cca-api';
@@ -31,11 +30,6 @@ export const ReasonForWithdrawAdminTerminationFormProvider: Provider = {
       AdminTerminationWithdrawQuery.selectWithdrawAdminTerminationAttachments,
     )();
 
-    const files = transformAttachmentsToFilesWithUUIDs(
-      withdrawAdminTerminationReasonDetails.relevantFiles,
-      withdrawAdminTerminationAttachments,
-    );
-
     return fb.group({
       explanation: fb.control(
         withdrawAdminTerminationReasonDetails.explanation,
@@ -43,7 +37,7 @@ export const ReasonForWithdrawAdminTerminationFormProvider: Provider = {
       ),
       relevantFiles: requestTaskFileService.buildFormControl(
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
-        transformFilesToUUIDsList(files),
+        withdrawAdminTerminationReasonDetails.relevantFiles,
         withdrawAdminTerminationAttachments,
         'ADMIN_TERMINATION_UPLOAD_ATTACHMENT',
         false,

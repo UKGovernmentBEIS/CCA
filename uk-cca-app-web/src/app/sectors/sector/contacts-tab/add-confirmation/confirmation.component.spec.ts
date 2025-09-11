@@ -10,6 +10,7 @@ import { AddSectorConfirmationComponent } from './confirmation.component';
 describe('AddSectorConfirmationComponent', () => {
   const role: RoleCode = 'sector_user_administrator';
   const email = 'sector_user@cca.uk';
+
   beforeEach(async () => {
     await render(AddSectorConfirmationComponent, {
       configureTestBed: (testbed) => {
@@ -18,16 +19,19 @@ describe('AddSectorConfirmationComponent', () => {
       },
     });
   });
+
   it('should render confirmation banner with the appropriate email', () => {
     const text = `An account confirmation email has been sent to ${email}`;
     expect(screen.getByTestId('confirmation-screen')).toBeInTheDocument();
     expect(screen.getByText(text)).toBeInTheDocument();
   });
+
   it('should render confirmation banner with the role', () => {
     const roleText = roleOptions.find((r) => r.value === role)?.text;
     const roleContents = `The new ${roleText.toLowerCase()} will be able to sign in to the service once they confirm their account.`;
     expect(screen.getByText(roleContents)).toBeInTheDocument();
   });
+
   it('should render `return to: Contacts` link', () => {
     expect(screen.getByText('Return to: Contacts')).toBeInTheDocument();
   });

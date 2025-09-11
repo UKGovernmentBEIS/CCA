@@ -18,6 +18,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.cca.api.web.orchestrator.template.dto.NotificationTemplateViewDTO;
+import uk.gov.cca.api.web.orchestrator.template.service.NotificationTemplateQueryServiceOrchestrator;
+import uk.gov.netz.api.documenttemplate.domain.dto.DocumentTemplateInfoDTO;
 import uk.gov.netz.api.security.AppSecurityComponent;
 import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
 import uk.gov.netz.api.security.AuthorizedAspect;
@@ -42,6 +45,7 @@ import uk.gov.netz.api.notification.template.service.NotificationTemplateUpdateS
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -63,6 +67,9 @@ class NotificationTemplateControllerTest {
 
     @Mock
     private NotificationTemplateQueryService notificationTemplateQueryService;
+    
+    @Mock
+    private NotificationTemplateQueryServiceOrchestrator notificationTemplateQueryServiceOrchestrator;
 
     @Mock
     private NotificationTemplateUpdateService notificationTemplateUpdateService;
@@ -79,7 +86,7 @@ class NotificationTemplateControllerTest {
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedRoleAspect
             authorizedRoleAspect = new AuthorizedRoleAspect(roleAuthorizationService, authorizationAspectUserResolver);
@@ -117,13 +124,13 @@ class NotificationTemplateControllerTest {
         NotificationTemplateSearchCriteria searchCriteria = NotificationTemplateSearchCriteria.builder()
             .competentAuthority(ca)
             .term("term")
-            .roleType(RoleTypeConstants.OPERATOR)
-            .paging(PagingRequest.builder().pageNumber(0L).pageSize(30L).build())
+            .roleTypes(List.of(RoleTypeConstants.OPERATOR))
+            .paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
             .build();
 
         List<NotificationTemplateInfoDTO> notificationTemplates = List.of(
-                new NotificationTemplateInfoDTO(1L, "template1", "Workflow Name", LocalDateTime.now()),
-                new NotificationTemplateInfoDTO(2L, "template2", "Workflow Name", LocalDateTime.now())
+                new NotificationTemplateInfoDTO(1L, "template1", RoleTypeConstants.OPERATOR, "Workflow Name", LocalDateTime.now()),
+                new NotificationTemplateInfoDTO(2L, "template2", RoleTypeConstants.OPERATOR, "Workflow Name", LocalDateTime.now())
         );
         NotificationTemplateSearchResults results = NotificationTemplateSearchResults.builder()
             .templates(notificationTemplates)
@@ -136,7 +143,7 @@ class NotificationTemplateControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/v1.0/notification-templates")
                 .param("term", searchCriteria.getTerm())
-                .param("role", searchCriteria.getRoleType())
+                .param("roleTypes", new String[]{OPERATOR})
                 .param("page", String.valueOf(searchCriteria.getPaging().getPageNumber()))
                 .param("size", String.valueOf(searchCriteria.getPaging().getPageSize()))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -159,8 +166,8 @@ class NotificationTemplateControllerTest {
         NotificationTemplateSearchCriteria searchCriteria = NotificationTemplateSearchCriteria.builder()
             .competentAuthority(CompetentAuthorityEnum.WALES)
             .term("term")
-            .roleType(RoleTypeConstants.OPERATOR)
-            .paging(PagingRequest.builder().pageNumber(0L).pageSize(30L).build())
+            .roleTypes(List.of(RoleTypeConstants.OPERATOR))
+            .paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
             .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
@@ -171,7 +178,7 @@ class NotificationTemplateControllerTest {
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/v1.0/notification-templates")
                 .param("term", searchCriteria.getTerm())
-                .param("role", searchCriteria.getRoleType())
+                .param("roleTypes", String.valueOf(searchCriteria.getRoleTypes()))
                 .param("page", String.valueOf(searchCriteria.getPaging().getPageNumber()))
                 .param("size", String.valueOf(searchCriteria.getPaging().getPageSize()))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -189,8 +196,16 @@ class NotificationTemplateControllerTest {
             .id(notificationTemplateId)
             .name(notificationTemplateName)
             .build();
+        
+        DocumentTemplateInfoDTO documentTemplateInfoDTO =
+                new DocumentTemplateInfoDTO(1L, "name", OPERATOR, "Multiple workflows", LocalDateTime.now());
+        
+        NotificationTemplateViewDTO notificationTemplateViewDTO = NotificationTemplateViewDTO.builder()
+                .notificationTemplate(notificationTemplateDTO)
+                .documentTemplates(Set.of(documentTemplateInfoDTO))
+                .build();
 
-        when(notificationTemplateQueryService.getManagedNotificationTemplateById(notificationTemplateId)).thenReturn(notificationTemplateDTO);
+        when(notificationTemplateQueryServiceOrchestrator.getManagedNotificationTemplateById(notificationTemplateId)).thenReturn(notificationTemplateViewDTO);
 
         mockMvc.perform(MockMvcRequestBuilders
             .get("/v1.0/notification-templates/" + notificationTemplateId)
@@ -199,7 +214,7 @@ class NotificationTemplateControllerTest {
             .andExpect(jsonPath("$.id").value(notificationTemplateId))
             .andExpect(jsonPath("$.name").value(notificationTemplateName));
 
-        verify(notificationTemplateQueryService, times(1)).getManagedNotificationTemplateById(notificationTemplateId);
+        verify(notificationTemplateQueryServiceOrchestrator, times(1)).getManagedNotificationTemplateById(notificationTemplateId);
     }
 
     @Test
@@ -220,7 +235,7 @@ class NotificationTemplateControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
 
-        verifyNoInteractions(notificationTemplateQueryService);
+        verifyNoInteractions(notificationTemplateQueryServiceOrchestrator);
     }
 
     @Test

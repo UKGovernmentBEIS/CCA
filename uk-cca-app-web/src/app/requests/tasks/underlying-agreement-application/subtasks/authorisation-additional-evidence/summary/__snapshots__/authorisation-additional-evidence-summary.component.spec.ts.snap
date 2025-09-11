@@ -24,10 +24,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
       </h1>
     </netz-page-heading>
     <cca-summary>
-      <h2
-        class="govuk-heading-m"
-      >
-      </h2>
       <dl
         class="govuk-summary-list govuk-!-margin-bottom-9"
         govuk-summary-list=""
@@ -46,14 +42,9 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-            <cca-summary-download-files>
-              <a
-                class="govuk-link"
-                href="/tasks/null/file-download/2f611a22-bd5f-4fd4-b00f-c20bfb2706c9"
-                target="_blank"
-              >
-              </a>
-            </cca-summary-download-files>
+            <span>
+              No files provided
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -99,9 +90,11 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
         </div>
       </dl>
     </cca-summary>
-  </div><netz-return-to-task-or-action-page>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Apply for underlying agreement 

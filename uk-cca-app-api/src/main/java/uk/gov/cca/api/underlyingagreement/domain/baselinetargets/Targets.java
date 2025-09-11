@@ -1,7 +1,6 @@
 package uk.gov.cca.api.underlyingagreement.domain.baselinetargets;
 
 import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;

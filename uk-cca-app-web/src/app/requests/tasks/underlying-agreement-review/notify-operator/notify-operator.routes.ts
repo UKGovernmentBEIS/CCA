@@ -1,6 +1,8 @@
-import { Routes } from '@angular/router';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, Routes, UrlTree } from '@angular/router';
 
-import { canActivateNotifyOperator } from '@requests/common';
+import { RequestTaskStore } from '@netz/common/store';
+import { underlyingAgreementReviewQuery } from '@requests/common';
 
 export const UNDERLYING_AGREEMENT_REVIEW_NOTIFY_OPERATOR_ROUTES: Routes = [
   {
@@ -17,3 +19,10 @@ export const UNDERLYING_AGREEMENT_REVIEW_NOTIFY_OPERATOR_ROUTES: Routes = [
       import('../confirmation/confirmation.component').then((c) => c.NotifyOperatorConfirmationComponent),
   },
 ];
+
+function canActivateNotifyOperator(route: ActivatedRouteSnapshot): boolean | UrlTree {
+  const requestTaskStore = inject(RequestTaskStore);
+  const determinationSubmitted = requestTaskStore.select(underlyingAgreementReviewQuery.selectDeterminationSubmitted)();
+  if (!determinationSubmitted) return createUrlTreeFromSnapshot(route, ['../../']);
+  return true;
+}

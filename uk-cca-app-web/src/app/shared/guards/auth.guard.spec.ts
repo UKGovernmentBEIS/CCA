@@ -17,6 +17,7 @@ describe('AuthGuard', () => {
   let authStore: AuthStore;
   let latestTermsStore: LatestTermsStore;
   let configStore: ConfigStore;
+
   const authService: MockType<AuthService> = {
     checkUser: jest.fn(() => of(null)),
   };
@@ -37,6 +38,7 @@ describe('AuthGuard', () => {
     configStore = TestBed.inject(ConfigStore);
     configStore.setState({ features: { terms: true } });
   });
+
   function getGuard() {
     return TestBed.runInInjectionContext(() => AuthGuard());
   }
@@ -60,6 +62,7 @@ describe('AuthGuard', () => {
     res = await lastValueFrom(getGuard());
     expect(res).toBeTruthy();
   });
+
   it('should redirect to landing page if user is not logged in or is disabled and terms feature is enabled', async () => {
     authStore.setIsLoggedIn(false);
     configStore.setState({ features: { terms: true } });
@@ -75,10 +78,12 @@ describe('AuthGuard', () => {
     authStore.setUserState({ status: 'TEMP_DISABLED' });
     expect(await lastValueFrom(getGuard())).toEqual(router.parseUrl('landing'));
   });
+
   it('should allow access if user is logged in and not disabled and terms feature is disabled', async () => {
     authStore.setIsLoggedIn(true);
     authStore.setUserState({ status: 'ACCEPTED' });
     configStore.setState({ features: { terms: false } });
+
     await expect(lastValueFrom(getGuard())).resolves.toEqual(true);
   });
 });

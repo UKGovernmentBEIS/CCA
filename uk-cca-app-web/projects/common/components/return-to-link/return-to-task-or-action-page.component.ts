@@ -13,7 +13,7 @@ import {
   selector: 'netz-return-to-task-or-action-page',
   standalone: true,
   imports: [RouterLinkWithHref],
-  template: `<a govukLink [routerLink]="returnToUrl()"> Return to: {{ returnToText() }} </a> `,
+  template: `<a class="govuk-link" [routerLink]="returnToUrl()"> Return to: {{ returnToText() }} </a> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReturnToTaskOrActionPageComponent {

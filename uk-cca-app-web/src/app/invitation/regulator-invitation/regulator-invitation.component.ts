@@ -16,9 +16,21 @@ import { InvitedRegulatorUserStore } from './invited-regulator-user.store';
 
 @Component({
   selector: 'cca-regulator-invitation',
-  templateUrl: './regulator-invitation.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [passwordFormFactory],
+  template: `
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        @if (form.invalid && form.touched) {
+          <govuk-error-summary [form]="form" />
+        }
+
+        <netz-page-heading>Activate your account</netz-page-heading>
+        <form (ngSubmit)="submitPassword()" [formGroup]="form">
+          <cca-password />
+          <button netzPendingButton govukButton type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  `,
   standalone: true,
   imports: [
     PageHeadingComponent,
@@ -28,22 +40,26 @@ import { InvitedRegulatorUserStore } from './invited-regulator-user.store';
     ButtonDirective,
     PendingButtonDirective,
   ],
+  providers: [passwordFormFactory],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegulatorInvitationComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly regulatorUsersRegistrationService = inject(RegulatorUsersRegistrationService);
   private readonly store = inject(InvitedRegulatorUserStore);
+
   readonly form = inject(PASSWORD_FORM);
 
-  ngOnInit(): void {
+  ngOnInit() {
     const email = this.store.state.email;
     this.form.patchValue({ email });
   }
 
-  submitPassword(): void {
+  submitPassword() {
     this.form.markAsTouched();
     if (this.form.invalid) return;
+
     this.route.queryParamMap
       .pipe(
         map((paramMap) => paramMap.get('token')),

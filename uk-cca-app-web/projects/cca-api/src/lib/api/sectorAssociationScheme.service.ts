@@ -15,7 +15,7 @@ import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
 import { FileToken } from '../model/fileToken';
-import { SectorAssociationSchemeDTO } from '../model/sectorAssociationSchemeDTO';
+import { SectorAssociationSchemesDTO } from '../model/sectorAssociationSchemesDTO';
 
 import { BASE_PATH } from '../variables';
 import { Configuration } from '../configuration';
@@ -171,30 +171,30 @@ export class SectorAssociationSchemeService {
   }
 
   /**
-   * Retrieves the sector association scheme that corresponds to the provided sector id
+   * Retrieves the sector association schemes that correspond to the provided sector id
    * @param sectorId The sector association id
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getSectorAssociationSchemeBySectorAssociationId(sectorId: number): Observable<SectorAssociationSchemeDTO>;
+  public getSectorAssociationSchemeBySectorAssociationId(sectorId: number): Observable<SectorAssociationSchemesDTO>;
   public getSectorAssociationSchemeBySectorAssociationId(
     sectorId: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<SectorAssociationSchemeDTO>>;
+  ): Observable<HttpResponse<SectorAssociationSchemesDTO>>;
   public getSectorAssociationSchemeBySectorAssociationId(
     sectorId: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<SectorAssociationSchemeDTO>>;
+  ): Observable<HttpEvent<SectorAssociationSchemesDTO>>;
   public getSectorAssociationSchemeBySectorAssociationId(
     sectorId: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<SectorAssociationSchemeDTO>;
+  ): Observable<SectorAssociationSchemesDTO>;
   public getSectorAssociationSchemeBySectorAssociationId(
     sectorId: number,
     observe: any = 'body',
@@ -230,7 +230,7 @@ export class SectorAssociationSchemeService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<SectorAssociationSchemeDTO>(
+    return this.httpClient.get<SectorAssociationSchemesDTO>(
       `${this.configuration.basePath}/v1.0/sector-association/${encodeURIComponent(String(sectorId))}/scheme`,
       {
         responseType: responseType_ as any,

@@ -21,6 +21,7 @@ describe('DeleteComponent', () => {
   let page: Page;
   let authStore: AuthStore;
   let detailsStore: DetailsStore;
+
   class Page extends BasePage<DeleteComponent> {
     get header() {
       return this.query<HTMLHeadingElement>('h2');
@@ -57,9 +58,11 @@ describe('DeleteComponent', () => {
 
   beforeEach(async () => {
     const activatedRoute = new ActivatedRouteStub({ userId: '1reg' }, null, { user });
+
     authService = {
       logout: jest.fn(),
     };
+
     regulatorAuthoritiesService = {
       deleteRegulatorUserByCompetentAuthority: jest.fn().mockReturnValue(of(null)),
       deleteCurrentRegulatorUserByCompetentAuthority: jest.fn().mockReturnValue(of(null)),
@@ -79,9 +82,7 @@ describe('DeleteComponent', () => {
     authStore = TestBed.inject(AuthStore);
     detailsStore = TestBed.inject(DetailsStore);
     detailsStore.update({ user });
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DeleteComponent);
     component = fixture.componentInstance;
     page = new Page(fixture);

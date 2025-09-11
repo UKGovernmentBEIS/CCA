@@ -54,7 +54,7 @@ public class CcaAuthorityCustomRepositoryImpl implements CcaAuthorityCustomRepos
     public Map<String, AuthorityStatus> findStatusByUsersAndSectorAssociationId(List<String> userIds, Long sectorAssociationId) {
         return entityManager.createNamedQuery("CcaAuthority.findStatusByUsersAndSectorAssociationId", Tuple.class)
                 .setParameter("userIds", userIds).setParameter("sectorAssociationId", sectorAssociationId).getResultStream()
-                .collect(Collectors.toMap((t) -> (String)t.get("userId"), (t) -> (AuthorityStatus)t.get("status")));
+                .collect(Collectors.toMap(t -> (String)t.get("userId"), t -> (AuthorityStatus)t.get("status")));
     }
     
     @Override

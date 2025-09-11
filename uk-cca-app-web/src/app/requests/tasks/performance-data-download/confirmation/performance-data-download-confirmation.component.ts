@@ -15,5 +15,6 @@ import { performanceDataDownloadQuery } from '../+state/performance-data-downloa
 })
 export class PerformanceDataDownloadConfirmationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
-  readonly zipFile = this.requestTaskStore.select(performanceDataDownloadQuery.selectZipFile);
+
+  protected readonly zipFile = this.requestTaskStore.select(performanceDataDownloadQuery.selectZipFile);
 }

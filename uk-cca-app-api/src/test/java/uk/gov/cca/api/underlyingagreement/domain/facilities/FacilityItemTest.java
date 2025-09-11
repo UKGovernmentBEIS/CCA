@@ -11,8 +11,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
@@ -58,9 +62,8 @@ class FacilityItemTest {
 
     private UUID evidenceFile;
 
-
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
 
@@ -74,6 +77,139 @@ class FacilityItemTest {
         eligibleProcessFile = UUID.randomUUID();
         activitiesDescriptionFile = UUID.randomUUID();
         evidenceFile = UUID.randomUUID();
+    }
+
+    @Test
+    void validate_CCA3_no_baselineAndTargets_not_valid() {
+        FacilityItem item = FacilityItem.builder()
+                .facilityId("ADS_1-F00001")
+                .facilityDetails(FacilityDetails.builder()
+                        .name("Facility name")
+                        .isCoveredByUkets(Boolean.TRUE)
+                        .uketsId("uketsId")
+                        .applicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP)
+                        .previousFacilityId("AAA_1-F11111")
+                        .participatingSchemeVersions(Set.of(SchemeVersion.CCA_3))
+                        .facilityAddress(AccountAddressDTO.builder()
+                                .line1("Line 1")
+                                .line2("Line 2")
+                                .city("City")
+                                .county("County")
+                                .postcode("code")
+                                .country("Country")
+                                .build())
+                        .build())
+                .facilityContact(TargetUnitAccountContactDTO.builder()
+                        .email("responsiblePerson@test.com")
+                        .firstName("firstName")
+                        .lastName("lastName")
+                        .jobTitle("jobTitle")
+                        .address(AccountAddressDTO.builder()
+                                .line1("line1")
+                                .line2("line2")
+                                .city("city")
+                                .country("country")
+                                .postcode("postcode")
+                                .build())
+                        .build())
+                .eligibilityDetailsAndAuthorisation(EligibilityDetailsAndAuthorisation.builder()
+                        .isConnectedToExistingFacility(Boolean.TRUE)
+                        .adjacentFacilityId("AAA_1-F11111")
+                        .agreementType(AgreementType.ENVIRONMENTAL_PERMITTING_REGULATIONS)
+                        .erpAuthorisationExists(Boolean.TRUE)
+                        .authorisationNumber("authorisationNumber")
+                        .regulatorName(RegulatorNameType.ENVIRONMENT_AGENCY)
+                        .permitFile(UUID.randomUUID())
+                        .build())
+                .facilityExtent(FacilityExtent.builder()
+                        .manufacturingProcessFile(UUID.randomUUID())
+                        .processFlowFile(UUID.randomUUID())
+                        .annotatedSitePlansFile(UUID.randomUUID())
+                        .eligibleProcessFile(UUID.randomUUID())
+                        .areActivitiesClaimed(Boolean.TRUE)
+                        .activitiesDescriptionFile(UUID.randomUUID())
+                        .build())
+                .apply70Rule(Apply70Rule.builder()
+                        .energyConsumed(BigDecimal.valueOf(65))
+                        .energyConsumedProvision(BigDecimal.valueOf(12))
+                        .energyConsumedEligible(BigDecimal.valueOf(72.8))
+                        .startDate(LocalDate.now())
+                        .evidenceFile(UUID.randomUUID())
+                        .build())
+                .build();
+
+        final Set<ConstraintViolation<FacilityItem>> violations = validator.validate(item);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage)
+                .containsExactly("{underlyingagreement.facilities.cca3BaselineAndTargets}");
+    }
+
+    @Test
+    void validate_CCA2_with_baselineAndTargets_not_valid() {
+        FacilityItem item = FacilityItem.builder()
+                .facilityId("ADS_1-F00001")
+                .facilityDetails(FacilityDetails.builder()
+                        .name("Facility name")
+                        .isCoveredByUkets(Boolean.TRUE)
+                        .uketsId("uketsId")
+                        .applicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP)
+                        .previousFacilityId("AAA_1-F11111")
+                        .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
+                        .facilityAddress(AccountAddressDTO.builder()
+                                .line1("Line 1")
+                                .line2("Line 2")
+                                .city("City")
+                                .county("County")
+                                .postcode("code")
+                                .country("Country")
+                                .build())
+                        .build())
+                .facilityContact(TargetUnitAccountContactDTO.builder()
+                        .email("responsiblePerson@test.com")
+                        .firstName("firstName")
+                        .lastName("lastName")
+                        .jobTitle("jobTitle")
+                        .address(AccountAddressDTO.builder()
+                                .line1("line1")
+                                .line2("line2")
+                                .city("city")
+                                .country("country")
+                                .postcode("postcode")
+                                .build())
+                        .build())
+                .eligibilityDetailsAndAuthorisation(EligibilityDetailsAndAuthorisation.builder()
+                        .isConnectedToExistingFacility(Boolean.TRUE)
+                        .adjacentFacilityId("AAA_1-F11111")
+                        .agreementType(AgreementType.ENVIRONMENTAL_PERMITTING_REGULATIONS)
+                        .erpAuthorisationExists(Boolean.TRUE)
+                        .authorisationNumber("authorisationNumber")
+                        .regulatorName(RegulatorNameType.ENVIRONMENT_AGENCY)
+                        .permitFile(UUID.randomUUID())
+                        .build())
+                .facilityExtent(FacilityExtent.builder()
+                        .manufacturingProcessFile(UUID.randomUUID())
+                        .processFlowFile(UUID.randomUUID())
+                        .annotatedSitePlansFile(UUID.randomUUID())
+                        .eligibleProcessFile(UUID.randomUUID())
+                        .areActivitiesClaimed(Boolean.TRUE)
+                        .activitiesDescriptionFile(UUID.randomUUID())
+                        .build())
+                .apply70Rule(Apply70Rule.builder()
+                        .energyConsumed(BigDecimal.valueOf(65))
+                        .energyConsumedProvision(BigDecimal.valueOf(12))
+                        .energyConsumedEligible(BigDecimal.valueOf(72.8))
+                        .startDate(LocalDate.now())
+                        .evidenceFile(UUID.randomUUID())
+                        .build())
+                .cca3BaselineAndTargets(Cca3FacilityBaselineAndTargets.builder().build())
+                .build();
+
+        final Set<ConstraintViolation<FacilityItem>> violations = validator.validate(item);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting(ConstraintViolation::getMessage)
+                .contains("{underlyingagreement.facilities.cca3BaselineAndTargets}");
     }
 
     @Test

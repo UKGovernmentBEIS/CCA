@@ -30,12 +30,12 @@ class PerformanceAccountTemplateDataUploadSubmitInitializerTest {
 	void initializePayload() {
 		Request request = Request.builder().build();
 		RequestTaskPayload result = cut.initializePayload(request);
-		
-		assertThat(result).isInstanceOf(PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class);
-		
-		assertThat(result).isEqualTo(PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.builder()
-				.payloadType(CcaRequestTaskPayloadType.PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT_PAYLOAD)
-				.processingStatus(PerformanceAccountTemplateDataUploadProcessingStatus.NOT_STARTED_YET)
-				.build());
+
+		assertThat(result)
+				.isInstanceOf(PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class)
+				.isEqualTo(PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.builder()
+						.payloadType(CcaRequestTaskPayloadType.PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT_PAYLOAD)
+						.processingStatus(PerformanceAccountTemplateDataUploadProcessingStatus.NOT_STARTED_YET)
+						.build());
 	}
 }

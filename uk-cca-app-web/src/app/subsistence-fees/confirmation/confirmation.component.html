@@ -1,4 +1,4 @@
-<div class="govuk-body govuk-!-width-two-thirds">
+<div class="govuk-!-width-two-thirds">
   <govuk-panel title="Payment requests process in progress">
     Your reference code is: <br />
     {{ referenceCode }}
@@ -16,6 +16,6 @@
   <p>Select "{{ referenceCode }}" from your list of sent subsistence fees to find the report.</p>
 
   <div class="govuk-!-margin-top-9">
-    <a class="govuk-link" [routerLink]="['/', 'subsistence-fees']"> Return to: Subsistence fees </a>
+    <a class="govuk-link" [routerLink]="['/', 'subsistence-fees']" [replaceUrl]="true"> Return to: Subsistence fees </a>
   </div>
 </div>

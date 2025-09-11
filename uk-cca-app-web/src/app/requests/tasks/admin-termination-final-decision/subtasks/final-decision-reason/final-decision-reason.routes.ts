@@ -12,14 +12,14 @@ export const FINAL_DECISION_REASON_ROUTES: Routes = [
     path: '',
     children: [
       {
-        path: AdminTerminationFinalDecisionTerminateAgreementWizardStep.SUMMARY,
+        path: 'summary',
         title: 'Summary',
         data: { backlink: '../../..', breadcrumb: false },
         canActivate: [CanActivateFinalDecisionReasonSummary],
         loadComponent: () => import('./summary/final-decision-reason-summary.component'),
       },
       {
-        path: AdminTerminationFinalDecisionTerminateAgreementWizardStep.CHECK_YOUR_ANSWERS,
+        path: 'check-your-answers',
         title: 'Check your answers',
         data: { backlink: '../../..', breadcrumb: false },
         canActivate: [CanActivateFinalDecisionReasonCheckYourAnswers],

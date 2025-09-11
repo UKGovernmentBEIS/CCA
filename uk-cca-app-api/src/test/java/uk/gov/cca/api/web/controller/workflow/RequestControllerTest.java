@@ -94,7 +94,7 @@ class RequestControllerTest {
     private CountyService countyService;
     
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
 
@@ -209,7 +209,7 @@ class RequestControllerTest {
         RequestSearchCriteria criteria = RequestSearchCriteria.builder()
         		.resourceId(String.valueOf(accountId))
         		.resourceType(ResourceType.ACCOUNT)
-        		.paging(PagingRequest.builder().pageNumber(0L).pageSize(30L).build())
+        		.paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
         		.historyCategory("cat1").build();
 
         RequestDetailsDTO workflowResult1 = new RequestDetailsDTO(requestId, requestType, "IN_PROGRESS", LocalDateTime.now(), null);
@@ -239,7 +239,7 @@ class RequestControllerTest {
         RequestSearchCriteria  criteria = RequestSearchCriteria.builder()
         		.resourceId(String.valueOf(accountId))
         		.resourceType(ResourceType.ACCOUNT)
-        		.paging(PagingRequest.builder().pageNumber(0L).pageSize(30L).build())
+        		.paging(PagingRequest.builder().pageNumber(0).pageSize(30).build())
         		.historyCategory("cat1").build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);

@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionDetailsTabComponent should show summary values 1`] = `
+<cca-transaction-details-tab
+  activatedRoute={[Function Object]}
+  summaryData={[Function Array]}
+>
+  <cca-summary>
+  </cca-summary>
+</cca-transaction-details-tab>
+`;

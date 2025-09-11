@@ -1,19 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal,
-  WritableSignal,
-} from '@angular/core';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { distinctUntilChanged, map, Observable, switchMap, tap } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
@@ -24,9 +15,8 @@ import { PaginationComponent } from '@shared/components';
 
 import {
   RegulatorAuthoritiesService,
-  RegulatorUserAuthorityInfoDTO,
-  SectorAssociationSiteContactDTO,
   SectorAssociationSiteContactInfoDTO,
+  SectorAssociationSiteContactInfoResponse,
   SectorAssociationsSiteContactsService,
 } from 'cca-api';
 
@@ -34,16 +24,17 @@ import { savePartiallyNotFoundSiteContactError } from '../errors/business-error'
 import { createForm } from './site-contact.utils';
 
 type State = {
-  currentPage: number;
   siteContacts: SectorAssociationSiteContactInfoDTO[];
-  editable: boolean;
+  isEditable: boolean;
   totalItems: number;
 };
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 20;
 
 @Component({
   selector: 'cca-site-contacts',
   templateUrl: './site-contacts.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     TableComponent,
@@ -54,44 +45,57 @@ type State = {
     ButtonDirective,
     PendingButtonDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SiteContactsComponent implements OnInit {
+export class SiteContactsComponent {
   private readonly fb = inject(FormBuilder);
-  private readonly route = inject(ActivatedRoute);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly sectorAssociationsSiteContactsService = inject(SectorAssociationsSiteContactsService);
   private readonly regulatorAuthoritiesService = inject(RegulatorAuthoritiesService);
   private readonly businessErrorService = inject(BusinessErrorService);
-  private readonly destroy = inject(DestroyRef);
 
-  readonly pageSize = 50;
+  private readonly queryParams = toSignal(this.activatedRoute.queryParamMap);
 
-  readonly regulators = toSignal(this.getRegulators());
-  readonly regulatorNames = computed(() => {
-    const namesMap = new Map();
-    if (!this.regulators()) return namesMap;
-    this.regulators().forEach((r) => namesMap.set(r.userId, transformUsername(r)));
-    return namesMap;
-  });
-
-  columns: GovukTableColumn<SectorAssociationSiteContactInfoDTO>[] = [
+  protected readonly columns: GovukTableColumn<SectorAssociationSiteContactInfoDTO>[] = [
     { field: 'sectorName', header: 'Sector Name', isHeader: true },
     { field: 'sectorAssociationId', header: 'Assigned to' },
   ];
 
-  private readonly state: WritableSignal<State> = signal({
-    currentPage: +this.route.snapshot.queryParamMap.get('page') || 1,
+  readonly state = signal<State>({
     siteContacts: [],
-    editable: false,
+    isEditable: false,
     totalItems: 0,
   });
 
-  siteContacts = computed(() => this.state().siteContacts);
-  count = computed(() => this.state().totalItems);
-  currentPage = computed(() => this.state().currentPage);
-  currentPage$ = toObservable(this.currentPage);
-  editable = computed(() => this.state().editable);
-  form = computed(() => createForm(this.fb, this.siteContacts()));
-  assigneeOptions = computed(() =>
+  protected readonly regulators = toSignal(
+    this.regulatorAuthoritiesService.getCaRegulators().pipe(map((r) => r.caUsers)),
+  );
+
+  readonly currentPage = computed(() => {
+    const params = this.queryParams();
+    return +params?.get('page') || DEFAULT_PAGE;
+  });
+
+  readonly pageSize = computed(() => {
+    const params = this.queryParams();
+    return +params?.get('pageSize') || DEFAULT_PAGE_SIZE;
+  });
+
+  protected readonly regulatorNames = computed(() => {
+    const namesMap = new Map();
+    if (!this.regulators()) return namesMap;
+
+    for (const regulator of this.regulators()) {
+      namesMap.set(regulator.userId, transformUsername(regulator));
+    }
+
+    return namesMap;
+  });
+
+  protected readonly form = computed(() => createForm(this.fb, this.state().siteContacts));
+
+  readonly assigneeOptions = computed(() =>
     this.regulators()?.length
       ? [{ text: 'Unassigned', value: null }].concat(
           this.regulators()
@@ -101,52 +105,47 @@ export class SiteContactsComponent implements OnInit {
       : [],
   );
 
-  ngOnInit(): void {
-    // we need this logic because pagination component emits twice when bootstrapped
-    this.currentPage$
+  constructor() {
+    this.activatedRoute.queryParamMap
       .pipe(
-        takeUntilDestroyed(this.destroy),
-        distinctUntilChanged(),
-        switchMap((page) =>
-          this.sectorAssociationsSiteContactsService.getSectorAssociationSiteContacts(page - 1, this.pageSize).pipe(
-            tap((v) => {
-              const sortedContacts = v.siteContacts.sort((a, b) => {
-                return a.sectorName.localeCompare(b.sectorName);
-              });
-
-              this.state.update((state) => ({
-                ...state,
-                siteContacts: sortedContacts,
-                editable: v.editable,
-                totalItems: v.totalItems,
-              }));
-            }),
-          ),
-        ),
+        takeUntilDestroyed(),
+        map((queryParamMap) => ({
+          page: +queryParamMap.get('page') || DEFAULT_PAGE,
+          pageSize: +queryParamMap.get('pageSize') || DEFAULT_PAGE_SIZE,
+        })),
+        switchMap(({ page, pageSize }) => this.fetchSiteContacts(page, pageSize)),
       )
-      .subscribe();
-  }
-  private getRegulators(): Observable<RegulatorUserAuthorityInfoDTO[]> {
-    return this.regulatorAuthoritiesService.getCaRegulators().pipe(map((r) => r.caUsers));
-  }
-  handlePageChange(page: number) {
-    this.state.update((state) => ({ ...state, currentPage: page }));
-  }
-
-  refreshSectorAssociationSiteContacts() {
-    this.sectorAssociationsSiteContactsService
-      .getSectorAssociationSiteContacts(this.currentPage() - 1, this.pageSize)
-      .subscribe((v) => {
-        const sortedContacts = v.siteContacts.sort((a, b) => {
-          return a.sectorName.localeCompare(b.sectorName);
-        });
-
-        this.state.update((state) => ({ ...state, siteContacts: sortedContacts, totalItems: v.totalItems }));
+      .subscribe((resp) => {
+        this.update(resp);
       });
   }
 
-  onSave(): void {
-    const siteContacts = this.form().controls.siteContacts.value as SectorAssociationSiteContactDTO[];
+  onPageChange(page: number) {
+    if (page === this.currentPage()) return;
+    this.handleQueryParamsNavigation({ page });
+  }
+
+  onPageSizeChange(pageSize: number) {
+    if (pageSize === this.pageSize()) return;
+    this.handleQueryParamsNavigation({ pageSize });
+  }
+
+  refreshSectorAssociationSiteContacts() {
+    this.fetchSiteContacts(this.currentPage(), this.pageSize())
+      .pipe(
+        tap((resp) => {
+          this.update(resp);
+        }),
+      )
+      .subscribe((resp) => {
+        this.form().patchValue({ siteContacts: resp.siteContacts });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+  }
+
+  onSave() {
+    const siteContacts = this.form().controls.siteContacts.value;
+
     this.sectorAssociationsSiteContactsService
       .updateSectorAssociationSiteContacts(siteContacts)
       .pipe(
@@ -155,5 +154,28 @@ export class SiteContactsComponent implements OnInit {
         ),
       )
       .subscribe();
+  }
+
+  private fetchSiteContacts(page: number, pageSize: number) {
+    return this.sectorAssociationsSiteContactsService.getSectorAssociationSiteContacts(page - 1, pageSize);
+  }
+
+  private update = (response: SectorAssociationSiteContactInfoResponse) => {
+    const sortedContacts = response.siteContacts.sort((a, b) => a.sectorName.localeCompare(b.sectorName));
+
+    this.state.update(() => ({
+      siteContacts: sortedContacts,
+      isEditable: response.editable,
+      totalItems: response.totalItems,
+    }));
+  };
+
+  private handleQueryParamsNavigation(pagination: Partial<{ page: number; pageSize: number }>) {
+    this.router.navigate([], {
+      queryParams: { ...pagination },
+      queryParamsHandling: 'merge',
+      relativeTo: this.activatedRoute,
+      fragment: 'site-contacts',
+    });
   }
 }

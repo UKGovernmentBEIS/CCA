@@ -26,6 +26,7 @@ describe('UnderlyingAgreementVariationReviewedRejectedDecisionDetailsComponent',
         store.setState(mockRejectedRequestActionState);
       },
     });
+
     tree = renderResult.container;
   });
 

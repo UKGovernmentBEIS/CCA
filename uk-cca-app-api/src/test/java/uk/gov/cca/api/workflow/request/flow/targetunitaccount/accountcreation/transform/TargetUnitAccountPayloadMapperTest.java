@@ -52,7 +52,6 @@ class TargetUnitAccountPayloadMapperTest {
         String accountName = "account";
         String businessId = "businessId";
         long sectorAssociationId = 1L;
-        String userId = "userId";
         CompetentAuthorityEnum competentAuthority = CompetentAuthorityEnum.WALES;
         CcaEmissionTradingScheme ets = CcaEmissionTradingScheme.DUMMY_EMISSION_TRADING_SCHEME;
         TargetUnitAccountPayload accountPayload = createAccountPayload(accountName, competentAuthority, ets);

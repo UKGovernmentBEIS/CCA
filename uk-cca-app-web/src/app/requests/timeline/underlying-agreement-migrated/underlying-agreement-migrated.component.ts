@@ -8,7 +8,7 @@ import { toUnderlyingAgreementMigratedSummaryData } from './underlying-agreement
 
 @Component({
   selector: 'cca-underlying-agreement-migrated',
-  template: ` <cca-summary [data]="summaryData()" />`,
+  template: `<cca-summary [data]="summaryData()" />`,
   standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

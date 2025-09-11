@@ -14,9 +14,10 @@ import { ActiveExternalContactStore } from '../active-external-contact.store';
 import { ExternalContactDetailsGuard } from './details.guard';
 
 describe('DetailsGuard', () => {
-  const response = { contact: { id: '1', name: 'Dexter', email: 'dexter@lab.com', description: 'A scientist' } };
   let store: ActiveExternalContactStore;
   let caExternalContactsService: Partial<jest.Mocked<CaExternalContactsService>>;
+
+  const response = { contact: { id: '1', name: 'Dexter', email: 'dexter@lab.com', description: 'A scientist' } };
 
   beforeEach(() => {
     caExternalContactsService = {
@@ -30,6 +31,7 @@ describe('DetailsGuard', () => {
         { provide: CaExternalContactsService, useValue: caExternalContactsService },
       ],
     });
+
     store = TestBed.inject(ActiveExternalContactStore);
   });
 

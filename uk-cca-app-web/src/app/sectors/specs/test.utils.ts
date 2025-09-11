@@ -67,7 +67,7 @@ export async function navigateToTargetUnits(id: number, { harness, httpTestingCo
   req.flush(mockSectorAuthorities);
   await harness.fixture.whenStable();
 
-  req = httpTestingController.expectOne(`/api/v1.0/target-unit-accounts/sector-association/${id}?page=0&size=50`);
+  req = httpTestingController.expectOne(`/api/v1.0/sector-association/${id}/target-unit-accounts/?page=0&size=50`);
   req.flush(mockTargetUnits);
   await harness.fixture.whenStable();
 

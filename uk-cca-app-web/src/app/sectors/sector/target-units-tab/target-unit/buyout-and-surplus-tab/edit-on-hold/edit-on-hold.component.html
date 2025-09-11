@@ -1,0 +1,19 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div
+        legend="Do you want to put this target unit on hold for the next buy-out and surplus batch?"
+        legendSize="heading"
+        radioSize="large"
+        formControlName="changeOnHold"
+        govuk-radio
+        hint="Use your judgement to make minor changes within the details if needed"
+      >
+        <govuk-radio-option [value]="true" [label]="'Yes'" />
+        <govuk-radio-option [value]="false" [label]="'No'" />
+      </div>
+
+      <button govukButton type="submit">Confirm</button>
+    </form>
+  </div>
+</div>

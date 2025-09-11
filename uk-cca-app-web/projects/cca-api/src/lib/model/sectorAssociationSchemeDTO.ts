@@ -10,7 +10,6 @@
  * Do not edit the class manually.
  */
 import { TargetSetDTO } from './targetSetDTO';
-import { SubsectorAssociationSchemeInfoDTO } from './subsectorAssociationSchemeInfoDTO';
 import { SectorAssociationSchemeDocumentDTO } from './sectorAssociationSchemeDocumentDTO';
 
 export interface SectorAssociationSchemeDTO {
@@ -19,5 +18,4 @@ export interface SectorAssociationSchemeDTO {
   targetSet?: TargetSetDTO;
   umaDate?: string;
   sectorDefinition?: string;
-  subsectorAssociationSchemes?: SubsectorAssociationSchemeInfoDTO[];
 }

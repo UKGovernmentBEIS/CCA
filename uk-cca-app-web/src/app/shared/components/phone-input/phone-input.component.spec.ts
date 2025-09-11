@@ -90,9 +90,7 @@ describe('PhoneInputComponent', () => {
       imports: [TestComponent],
       providers: [{ provide: CountryService, useClass: CountryServiceStub }],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.debugElement.query(By.directive(PhoneInputComponent)).componentInstance;
     hostComponent = fixture.componentInstance;

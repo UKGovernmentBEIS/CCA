@@ -13,9 +13,9 @@ import { OperatorUsersService, RegulatorUsersService, SectorUsersService } from 
 @Component({
   selector: 'cca-reset-two-fa',
   templateUrl: './reset-two-fa.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [PageHeadingComponent, PendingButtonDirective, ButtonDirective, RouterLink, AsyncPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetTwoFaComponent implements OnInit {
   private readonly regulatorUsersService = inject(RegulatorUsersService);
@@ -25,13 +25,15 @@ export class ResetTwoFaComponent implements OnInit {
   private readonly router = inject(Router);
   protected readonly location = inject(Location);
 
-  userId$ = this.activatedRoute.paramMap.pipe(map(() => window.history.state['userId']));
-  accountId$ = this.activatedRoute.paramMap.pipe(map(() => window.history.state['accountId']));
-  sectorAssociationId$ = this.activatedRoute.paramMap.pipe(map(() => window.history.state['sectorAssociationId']));
-  userName$ = this.activatedRoute.paramMap.pipe(map(() => window.history.state['userName']));
-  role$ = this.activatedRoute.paramMap.pipe(map(() => window.history.state['role']));
+  protected readonly userId$ = this.activatedRoute.paramMap.pipe(map(() => window.history.state['userId']));
+  protected readonly accountId$ = this.activatedRoute.paramMap.pipe(map(() => window.history.state['accountId']));
+  protected readonly sectorAssociationId$ = this.activatedRoute.paramMap.pipe(
+    map(() => window.history.state['sectorAssociationId']),
+  );
+  protected readonly userName$ = this.activatedRoute.paramMap.pipe(map(() => window.history.state['userName']));
+  protected readonly role$ = this.activatedRoute.paramMap.pipe(map(() => window.history.state['role']));
 
-  ngOnInit(): void {
+  ngOnInit() {
     combineLatest([this.userId$, this.role$, this.userName$])
       .pipe(take(1))
       .subscribe(([userId, role, userName]) => {

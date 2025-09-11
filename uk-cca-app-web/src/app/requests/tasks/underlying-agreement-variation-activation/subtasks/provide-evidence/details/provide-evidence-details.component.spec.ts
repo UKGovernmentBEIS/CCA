@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 import { TaskService } from '@netz/common/forms';
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
-import { PROVIDE_EVIDENCE_SUBTASK, ProvideEvidenceWizardStep } from '@requests/common';
+import { PROVIDE_EVIDENCE_SUBTASK } from '@requests/common';
 
 import { mockRequestTaskItemDTO } from '../../../testing/mock-data';
 import ProvideEvidenceDetailsComponent from './provide-evidence-details.component';
@@ -78,7 +78,7 @@ describe('ProvideEvidenceDetailsComponent', () => {
     page.submitButton.click();
     fixture.detectChanges();
 
-    expect(taskServiceSpy).toHaveBeenCalledWith(PROVIDE_EVIDENCE_SUBTASK, ProvideEvidenceWizardStep.DETAILS, route, {
+    expect(taskServiceSpy).toHaveBeenCalledWith(PROVIDE_EVIDENCE_SUBTASK, 'details', route, {
       evidenceFiles: ['evidenceFile'],
       comments: 'My comments change',
     });

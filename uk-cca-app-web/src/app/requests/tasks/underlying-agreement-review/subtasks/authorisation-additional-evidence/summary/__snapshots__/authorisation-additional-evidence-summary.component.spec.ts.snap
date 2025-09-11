@@ -24,10 +24,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
       </h1>
     </netz-page-heading>
     <cca-summary>
-      <h2
-        class="govuk-heading-m"
-      >
-      </h2>
       <dl
         class="govuk-summary-list govuk-!-margin-bottom-9"
         govuk-summary-list=""
@@ -196,9 +192,11 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
         </div>
       </dl>
     </cca-summary>
-  </div><netz-return-to-task-or-action-page>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Review application for underlying agreement 

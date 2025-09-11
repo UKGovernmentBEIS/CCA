@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminTerminationWithdrawnDocumentTemplateWorkflowParamsProviderTest {
+class AdminTerminationWithdrawnDocumentTemplateWorkflowParamsProviderTest {
 
     @InjectMocks
     private AdminTerminationWithdrawnDocumentTemplateWorkflowParamsProvider paramsProvider;

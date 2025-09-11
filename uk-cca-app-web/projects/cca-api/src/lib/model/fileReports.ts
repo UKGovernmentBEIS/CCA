@@ -9,9 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AccountFileUploadReport } from './accountFileUploadReport';
+import { AccountUploadReport } from './accountUploadReport';
+import { NotAccountRelatedUploadErrorReport } from './notAccountRelatedUploadErrorReport';
 
 export interface FileReports {
-  accountFileReports?: Record<string, AccountFileUploadReport>;
-  notAccountRelatedFileErrors?: string[];
+  accountFileReports?: Record<string, AccountUploadReport>;
+  notAccountRelatedFileErrors?: NotAccountRelatedUploadErrorReport[];
+  readonly numberOfFilesSucceeded?: number;
+  readonly numberOfFilesFailed?: number;
 }

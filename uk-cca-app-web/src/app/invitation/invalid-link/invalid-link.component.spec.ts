@@ -18,9 +18,7 @@ describe('InvalidLinkComponent', () => {
       imports: [InvalidLinkComponent, RouterTestingModule],
       providers: [{ provide: ActivatedRoute, useValue: activatedRoute }],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(InvalidLinkComponent);
     component = fixture.componentInstance;
     element = fixture.nativeElement;

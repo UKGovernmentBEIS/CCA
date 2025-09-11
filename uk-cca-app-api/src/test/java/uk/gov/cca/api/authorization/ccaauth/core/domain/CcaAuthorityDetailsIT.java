@@ -10,10 +10,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import uk.gov.cca.api.sectorassociation.domain.Location;
 import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
 import uk.gov.netz.api.common.AbstractContainerBaseTest;
-import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class CcaAuthorityDetailsIT extends AbstractContainerBaseTest {
+class CcaAuthorityDetailsIT extends AbstractContainerBaseTest {
 
     @Autowired
     private EntityManager em;

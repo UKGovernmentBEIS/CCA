@@ -11,8 +11,8 @@
  */
 
 /**
- * The updated data for sic code
+ * The updated data for sic codes
  */
 export interface UpdateTargetUnitAccountSicCodeDTO {
-  sicCode?: string;
+  sicCodes?: string[];
 }

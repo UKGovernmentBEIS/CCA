@@ -12,6 +12,7 @@ export type PendingRequest = {
 export function PendingRequestGuard(component: PendingRequest | any) {
   const router = inject(Router);
   const pendingRequest = inject(PendingRequestService);
+
   return (
     router.getCurrentNavigation()?.extras?.state?.forceNavigation ||
     combineLatest([
@@ -31,6 +32,7 @@ export function PendingRequestGuard(component: PendingRequest | any) {
     )
   );
 }
+
 function isPendingRequest(component: PendingRequest | any): component is PendingRequest {
   return component.pendingRequest;
 }

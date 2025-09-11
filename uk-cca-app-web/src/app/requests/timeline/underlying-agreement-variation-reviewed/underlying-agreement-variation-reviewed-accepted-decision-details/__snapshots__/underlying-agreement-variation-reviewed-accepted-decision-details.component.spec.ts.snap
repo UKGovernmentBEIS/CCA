@@ -10,6 +10,7 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
     >
       Decision details
     </h2>
+    
     <dl
       class="govuk-summary-list govuk-!-margin-bottom-9"
       govuk-summary-list=""
@@ -29,6 +30,7 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
           govuksummarylistrowvalue=""
         >
           
+          
           <a
             class="govuk-link"
             href="/"
@@ -41,6 +43,7 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
           
           
         </dd>
+        
         
       </div>
       <div
@@ -59,12 +62,14 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
         >
           
           
+          
            Accept 
           
           
           
           
         </dd>
+        
         
       </div>
       <div
@@ -83,12 +88,14 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
         >
           
           
+          
            My info 
           
           
           
           
         </dd>
+        
         
       </div>
       <div
@@ -112,18 +119,22 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
           
           
           
+          
         </dd>
+        
         
       </div>
       
       
       
     </dl>
+    
     <h2
       class="govuk-heading-m"
     >
       Recipients
     </h2>
+    
     <dl
       class="govuk-summary-list govuk-!-margin-bottom-9"
       govuk-summary-list=""
@@ -144,6 +155,7 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
         >
           
           
+          
            test test, Responsible person, test@test.com 
           
           <br />
@@ -160,6 +172,7 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
           
           
         </dd>
+        
         
       </div>
       <div
@@ -178,12 +191,14 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
         >
           
           
+          
            Regulator 2 
           
           
           
           
         </dd>
+        
         
       </div>
       <div
@@ -224,13 +239,16 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
           
           
           
+          
         </dd>
+        
         
       </div>
       
       
       
     </dl>
+    
     
   </cca-summary>
 </div>

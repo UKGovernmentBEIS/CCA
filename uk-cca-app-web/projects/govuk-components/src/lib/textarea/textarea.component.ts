@@ -1,5 +1,4 @@
-import { NgIf } from '@angular/common';
-import { AfterViewInit, Component, Input, Optional, Self } from '@angular/core';
+import { AfterViewInit, Component, input, inject, computed } from '@angular/core';
 import { ControlContainer, ControlValueAccessor, NgControl, ReactiveFormsModule } from '@angular/forms';
 
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs';
@@ -16,49 +15,40 @@ import { LabelSizeType } from './label-size.type';
 */
 @Component({
   selector: 'div[govuk-textarea]',
-  standalone: true,
-  imports: [NgIf, ReactiveFormsModule, ErrorMessageComponent],
   templateUrl: './textarea.component.html',
+  standalone: true,
+  imports: [ReactiveFormsModule, ErrorMessageComponent],
 })
 export class TextareaComponent extends FormInput implements ControlValueAccessor, AfterViewInit {
   private static readonly WARNING_PERCENTAGE = 0.99;
 
-  @Input() hint: string;
-  @Input() rows = '5';
-  @Input() maxLength: number;
-  currentLabel = 'Insert text details';
-  currentLabelSize = 'govuk-label';
-  isLabelHidden = true;
+  readonly label = input<string>();
+  readonly labelSize = input<LabelSizeType>();
+  readonly hint = input<string>();
+  readonly rows = input('5');
+  readonly maxLength = input<number>();
+
   onBlur: (_: any) => any;
 
-  constructor(
-    @Self() @Optional() ngControl: NgControl,
-    formService: FormService,
-    @Optional() container: ControlContainer,
-  ) {
-    super(ngControl, formService, container);
-  }
-
-  @Input() set label(label: string) {
-    this.currentLabel = label;
-    this.isLabelHidden = false;
-  }
-
-  @Input() set labelSize(size: LabelSizeType) {
-    switch (size) {
+  readonly currentLabelSize = computed(() => {
+    switch (this.labelSize()) {
       case 'small':
-        this.currentLabelSize = 'govuk-label govuk-label--s';
-        break;
+        return 'govuk-label govuk-label--s';
       case 'medium':
-        this.currentLabelSize = 'govuk-label govuk-label--m';
-        break;
+        return 'govuk-label govuk-label--m';
       case 'large':
-        this.currentLabelSize = 'govuk-label govuk-label--l';
-        break;
+        return 'govuk-label govuk-label--l';
       default:
-        this.currentLabelSize = 'govuk-label';
-        break;
+        return 'govuk-label';
     }
+  });
+
+  constructor() {
+    const ngControl = inject(NgControl, { self: true, optional: true });
+    const formService = inject(FormService);
+    const container = inject(ControlContainer, { optional: true });
+
+    super(ngControl, formService, container);
   }
 
   writeValue(): void {}
@@ -80,11 +70,11 @@ export class TextareaComponent extends FormInput implements ControlValueAccessor
   }
 
   exceedsMaxLength(length: number): boolean {
-    return length > this.maxLength;
+    return length > this.maxLength();
   }
 
   approachesMaxLength(length: number): boolean {
-    return !this.exceedsMaxLength(length) && length >= this.maxLength * TextareaComponent.WARNING_PERCENTAGE;
+    return !this.exceedsMaxLength(length) && length >= this.maxLength() * TextareaComponent.WARNING_PERCENTAGE;
   }
 
   ngAfterViewInit(): void {

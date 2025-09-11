@@ -10,9 +10,16 @@ import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+s
 
 @Component({
   selector: 'cca-timeline-variation-review-facility',
+  template: `
+    @if (facility(); as facility) {
+      <div>
+        <netz-page-heading>{{ facility.facilityDetails.name }} ({{ facility.facilityId }})</netz-page-heading>
+        <cca-summary [data]="summaryData()" />
+      </div>
+    }
+  `,
   standalone: true,
   imports: [PageHeadingComponent, SummaryComponent],
-  templateUrl: './facility.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityComponent {
@@ -20,11 +27,12 @@ export class FacilityComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
 
   private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
-  readonly facility = this.requestActionStore.select(
+
+  protected readonly facility = this.requestActionStore.select(
     underlyingAgreementRequestActionQuery.selectFacility(this.facilityId),
   );
 
-  readonly summaryData = computed(() =>
+  protected readonly summaryData = computed(() =>
     toFacilitySummaryDataWithDecision(
       this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectFacility(this.facilityId))(),
       this.requestActionStore.select(

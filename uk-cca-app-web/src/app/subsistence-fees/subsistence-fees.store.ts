@@ -1,6 +1,6 @@
 import { computed, effect, inject, Injectable } from '@angular/core';
 
-import { EMPTY, map, Observable, Subject, switchMap, take, takeUntil, timer } from 'rxjs';
+import { EMPTY, map, Observable, pipe, Subject, switchMap, take, takeUntil, tap, timer } from 'rxjs';
 
 import { SignalStore } from '@netz/common/store';
 import { ConfigService } from '@shared/config';
@@ -9,10 +9,12 @@ import { produce } from 'immer';
 
 import {
   RequestDetailsDTO,
+  RequestDetailsSearchResults,
   RequestSearchCriteria,
   RequestsService,
   SubsistenceFeesRunInfoViewService,
   SubsistenceFeesRunSearchResultInfoDTO,
+  SubsistenceFeesRunSearchResults,
 } from 'cca-api';
 
 /**
@@ -31,6 +33,7 @@ import {
 
 export type SubsistenceFeesState = {
   currentPage: number;
+  pageSize: number;
   workflowsHistory: RequestDetailsDTO[];
   subsistenceFeesRuns: SubsistenceFeesRunSearchResultInfoDTO[];
   totalWorkflowHistoryItems: number;
@@ -38,11 +41,11 @@ export type SubsistenceFeesState = {
   badgeNumber: number;
   isValidChargeDate: boolean;
   runInProgress: boolean;
-  pageSize: number;
 };
 
 const INITIAL_STATE: SubsistenceFeesState = {
   currentPage: 1,
+  pageSize: 10,
   workflowsHistory: [],
   subsistenceFeesRuns: [],
   totalWorkflowHistoryItems: 0,
@@ -50,7 +53,6 @@ const INITIAL_STATE: SubsistenceFeesState = {
   runInProgress: false,
   badgeNumber: 0,
   isValidChargeDate: undefined,
-  pageSize: 30,
 };
 
 @Injectable()
@@ -82,47 +84,6 @@ export class SubsistenceFeesStore extends SignalStore<SubsistenceFeesState> {
     this.setState({ ...this.state, ...state });
   }
 
-  fetchAndSetSubsistenceFeesRun() {
-    this.fetchSubsistenceFeesRun()
-      .pipe(take(1), takeUntil(this.destroyRef))
-      .subscribe({
-        next: (res) => {
-          this.updateState({
-            subsistenceFeesRuns: res.subsistenceFeesRuns,
-            totalSubsistenceFeesRunItems: res.total,
-          });
-        },
-        error: (err) => {
-          console.error('Error loading subsistence fees run', err);
-        },
-      });
-  }
-
-  /**
-   * Fetches and updates the data in workflow history table.
-   * It also notifies the parent to initiate the polling mechanism, if not already active,
-   * if an entry is in progress.
-   */
-  fetchAndSetWorkflows() {
-    this.fetchWorkflows()
-      .pipe(take(1), takeUntil(this.destroyRef))
-      .subscribe({
-        next: (details) => {
-          const isInProgress = details.requestDetails.some((item) => item.requestStatus === 'IN_PROGRESS');
-
-          this.updateState({
-            workflowsHistory: details.requestDetails,
-            totalWorkflowHistoryItems: details.total,
-            runInProgress: isInProgress ? true : false,
-            badgeNumber: isInProgress ? 1 : 0,
-          });
-        },
-        error: (err) => {
-          console.error('Error loading workflows', err);
-        },
-      });
-  }
-
   /**
    * Handles the polling mechanism.
    * If it finds an in progress request, the polling is initiated, until no in progress task is found.
@@ -139,35 +100,15 @@ export class SubsistenceFeesStore extends SignalStore<SubsistenceFeesState> {
         if (requestInProgress) return this.initProgressUpdatePolling();
 
         this.updateState({ badgeNumber: 0, runInProgress: false });
-        this.fetchAndSetWorkflows();
-        this.fetchAndSetSubsistenceFeesRun();
 
-        return EMPTY;
+        return this.fetchWorkflows();
       }),
+      switchMap(() => this.fetchSubsistenceFeesRun()),
+      this.updateSubsistenceFees(),
+      map(() => EMPTY),
     );
   }
 
-  /**
-   * It fetches the data for the `Workflow history` tab.
-   * @returns The available data.
-   */
-  private fetchWorkflows() {
-    const requestSearchCriteria: RequestSearchCriteria = {
-      resourceType: 'CA',
-      resourceId: 'ENGLAND',
-      requestTypes: ['SUBSISTENCE_FEES_RUN'],
-      historyCategory: HistoryCategory.CA,
-      pageNumber: this.state.currentPage - 1,
-      pageSize: this.state.pageSize,
-    };
-
-    return this.fetchRequestDetails(requestSearchCriteria);
-  }
-
-  /**
-   * It checks for any in progress requests.
-   * @returns All in progress requests.
-   */
   checkForPendingSubsistenceRun(): Observable<boolean> {
     const requestSearchCriteria: RequestSearchCriteria = {
       resourceType: 'CA',
@@ -176,7 +117,7 @@ export class SubsistenceFeesStore extends SignalStore<SubsistenceFeesState> {
       requestStatuses: ['IN_PROGRESS'],
       historyCategory: HistoryCategory.CA,
       pageNumber: 0,
-      pageSize: 30,
+      pageSize: this.state.pageSize || 10,
     };
 
     return this.fetchRequestDetails(requestSearchCriteria).pipe(
@@ -185,15 +126,54 @@ export class SubsistenceFeesStore extends SignalStore<SubsistenceFeesState> {
     );
   }
 
-  private fetchRequestDetails(requestSearchCriteria: RequestSearchCriteria) {
-    return this.requestsService.getRequestDetailsByResource(requestSearchCriteria);
-  }
-
-  private fetchSubsistenceFeesRun() {
+  fetchSubsistenceFeesRun() {
     return this.subsistenceFeesRunInfoViewService.getSubsistenceFeesRuns(
       this.state.currentPage - 1,
       this.state.pageSize,
     );
+  }
+
+  fetchWorkflows() {
+    const requestSearchCriteria: RequestSearchCriteria = {
+      resourceType: 'CA',
+      resourceId: 'ENGLAND',
+      requestTypes: ['SUBSISTENCE_FEES_RUN'],
+      historyCategory: HistoryCategory.CA,
+      pageNumber: this.state.currentPage - 1,
+      pageSize: this.state.pageSize || 10,
+    };
+
+    return this.fetchRequestDetails(requestSearchCriteria);
+  }
+
+  updateSubsistenceFees() {
+    return pipe(
+      tap((results: SubsistenceFeesRunSearchResults) =>
+        this.updateState({
+          subsistenceFeesRuns: results.subsistenceFeesRuns,
+          totalSubsistenceFeesRunItems: results.total,
+        }),
+      ),
+    );
+  }
+
+  updateWorkflows() {
+    return pipe(
+      tap((results: RequestDetailsSearchResults) => {
+        const isInProgress = results.requestDetails.some((item) => item.requestStatus === 'IN_PROGRESS');
+
+        this.updateState({
+          workflowsHistory: results.requestDetails,
+          totalWorkflowHistoryItems: results.total,
+          runInProgress: isInProgress,
+          badgeNumber: isInProgress ? 1 : 0,
+        });
+      }),
+    );
+  }
+
+  private fetchRequestDetails(requestSearchCriteria: RequestSearchCriteria) {
+    return this.requestsService.getRequestDetailsByResource(requestSearchCriteria);
   }
 
   override reset() {

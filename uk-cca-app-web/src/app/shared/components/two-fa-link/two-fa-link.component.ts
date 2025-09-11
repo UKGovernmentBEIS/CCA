@@ -21,18 +21,18 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
       >
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TwoFaLinkComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);
 
-  title = input<string>();
-  link = input<string>();
-  userId = input<string>();
-  accountId = input<number>();
-  userName = input<string>();
-  role = input<string>();
-  sectorAssociationId = input<string>();
+  protected readonly title = input<string>();
+  protected readonly link = input<string>();
+  protected readonly userId = input<string>();
+  protected readonly accountId = input<number>();
+  protected readonly userName = input<string>();
+  protected readonly role = input<string>();
+  protected readonly sectorAssociationId = input<string>();
 }

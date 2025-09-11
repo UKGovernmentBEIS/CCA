@@ -28,7 +28,6 @@ import { savePartiallyNotFoundRegulatorError } from '../errors/business-error';
   selector: 'cca-regulators-users',
   templateUrl: './regulators-users.component.html',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     TableComponent,
@@ -40,6 +39,7 @@ import { savePartiallyNotFoundRegulatorError } from '../errors/business-error';
     ButtonDirective,
     PendingButtonDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegulatorsUsersComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
@@ -47,33 +47,38 @@ export class RegulatorsUsersComponent implements OnInit {
   private readonly regulatorAuthoritiesService = inject(RegulatorAuthoritiesService);
   private readonly businessErrorService = inject(BusinessErrorService);
 
-  private regulatorsData: WritableSignal<RegulatorUsersAuthoritiesInfoDTO | null> = signal(null);
-  readonly regulators = computed(() => this.regulatorsData()?.caUsers || []);
-  readonly isEditable = computed(() => this.regulatorsData()?.editable);
-  regulators$ = toObservable(this.regulators);
+  private readonly regulatorsData: WritableSignal<RegulatorUsersAuthoritiesInfoDTO | null> = signal(null);
+  protected readonly regulators = computed(() => this.regulatorsData()?.caUsers || []);
+  protected readonly isEditable = computed(() => this.regulatorsData()?.editable);
 
-  isErrorSummaryDisplayed = signal(false);
-  userId = this.authStore.select(selectUserId);
-  regulatorsForm = this.fb.group({ regulatorsArray: this.fb.array([]) });
+  protected readonly regulators$ = toObservable(this.regulators);
 
-  get regulatorsArray(): UntypedFormArray {
-    return this.regulatorsForm.get('regulatorsArray') as UntypedFormArray;
-  }
-  authorityStatuses: GovukSelectOption<string>[] = [
+  protected readonly isErrorSummaryDisplayed = signal(false);
+  protected readonly userId = this.authStore.select(selectUserId);
+  protected readonly regulatorsForm = this.fb.group({ regulatorsArray: this.fb.array([]) });
+
+  protected readonly authorityStatuses: GovukSelectOption<string>[] = [
     { text: 'Active', value: 'ACTIVE' },
     { text: 'Disabled', value: 'DISABLED' },
   ];
-  authorityStatusesAccepted: GovukSelectOption<string>[] = [
+
+  protected readonly authorityStatusesAccepted: GovukSelectOption<string>[] = [
     { text: 'Accepted', value: 'ACCEPTED' },
     { text: 'Active', value: 'ACTIVE' },
   ];
-  editableCols: GovukTableColumn[] = [
+
+  protected readonly editableCols: GovukTableColumn[] = [
     { field: 'name', header: 'Name', isSortable: true },
     { field: 'jobTitle', header: 'Job title' },
     { field: 'authorityStatus', header: 'Account status' },
     { field: 'deleteBtn', header: 'Actions' },
   ];
-  nonEditableCols: GovukTableColumn[] = this.editableCols.slice(0, 2);
+
+  protected readonly nonEditableCols: GovukTableColumn[] = this.editableCols.slice(0, 2);
+
+  get regulatorsArray(): UntypedFormArray {
+    return this.regulatorsForm.get('regulatorsArray') as UntypedFormArray;
+  }
 
   ngOnInit() {
     this.refresh();

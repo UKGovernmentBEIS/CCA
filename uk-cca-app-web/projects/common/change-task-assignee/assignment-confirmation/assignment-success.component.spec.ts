@@ -37,9 +37,9 @@ describe('AssignmentConfirmationComponent', () => {
     expect(
       (fixture.nativeElement as HTMLElement).querySelector<HTMLDivElement>('.govuk-panel__body').innerHTML.trim(),
     ).toEqual('');
-    expect(
-      (fixture.nativeElement as HTMLElement).querySelector<HTMLParagraphElement>('.govuk-body').innerHTML.trim(),
-    ).toEqual('The task will appear in the unassigned tab of your dashboard');
+    expect((fixture.nativeElement as HTMLElement).querySelector<HTMLParagraphElement>('p').innerHTML.trim()).toEqual(
+      'The task will appear in the unassigned tab of your dashboard',
+    );
   });
 
   it('should render the assignee if provided', () => {
@@ -52,9 +52,9 @@ describe('AssignmentConfirmationComponent', () => {
     expect(
       (fixture.nativeElement as HTMLElement).querySelector<HTMLDivElement>('.govuk-panel__body').innerHTML.trim(),
     ).toEqual('Test User');
-    expect(
-      (fixture.nativeElement as HTMLElement).querySelector<HTMLParagraphElement>('.govuk-body').innerHTML.trim(),
-    ).toEqual('The task will appear in the dashboard of the person it has been assigned to');
+    expect((fixture.nativeElement as HTMLElement).querySelector<HTMLParagraphElement>('p').innerHTML.trim()).toEqual(
+      'The task will appear in the dashboard of the person it has been assigned to',
+    );
   });
 
   it('should render link to return to dashboard', () => {

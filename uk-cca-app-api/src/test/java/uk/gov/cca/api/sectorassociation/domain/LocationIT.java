@@ -18,7 +18,7 @@ import uk.gov.netz.api.common.AbstractContainerBaseTest;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class LocationIT extends AbstractContainerBaseTest {
+class LocationIT extends AbstractContainerBaseTest {
 
     @Autowired
     private EntityManager em;

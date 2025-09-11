@@ -1,0 +1,50 @@
+@if (state().totalWorkflowHistoryItems === 0) {
+  <p>There are no workflow history events yet.</p>
+  <p>More information will be available when you create a new buy-out and surplus batch.</p>
+} @else {
+  <div class="overflow-auto overflow-auto-table">
+    <govuk-table [columns]="workflowHistoryColumns" [data]="state().workflowsHistory">
+      <ng-template let-column="column" let-row="row">
+        @switch (column.field) {
+          @case ('id') {
+            <a [routerLink]="['/', 'buyout-surplus', 'workflow-history', row[column.field]]" class="govuk-link">
+              {{ row[column.field] }}
+            </a>
+          }
+
+          @case ('creationDate') {
+            <span>{{ row[column.field] | date: 'dd MMM yyyy' }}</span>
+          }
+
+          @case ('requestStatus') {
+            <div class="govuk-!-width-full">
+              <govuk-tag [color]="row[column.field] | statusColor" class="tag-width">
+                {{ row[column.field] | status }}
+              </govuk-tag>
+            </div>
+          }
+
+          @case ('totalAccounts') {
+            <div class="govuk-!-text-align-right">
+              <span>{{ row.requestMetadata[column.field] | number }}</span>
+            </div>
+          }
+
+          @case ('failedAccounts') {
+            <div class="govuk-!-text-align-right">
+              <span>{{ row.requestMetadata[column.field] | number }}</span>
+            </div>
+          }
+        }
+      </ng-template>
+    </govuk-table>
+
+    <cca-pagination
+      [count]="count()"
+      [currentPage]="currentPage()"
+      [pageSize]="pageSize()"
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    />
+  </div>
+}

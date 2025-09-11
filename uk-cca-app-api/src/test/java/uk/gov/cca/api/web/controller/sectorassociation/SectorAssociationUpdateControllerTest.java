@@ -22,7 +22,7 @@ import uk.gov.cca.api.sectorassociation.service.SectorAssociationUpdateService;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 
 @ExtendWith(MockitoExtension.class)
-public class SectorAssociationUpdateControllerTest {
+class SectorAssociationUpdateControllerTest {
 
     private static final String CONTROLLER_PATH = "/v1.0/sector-association/";
 
@@ -37,7 +37,7 @@ public class SectorAssociationUpdateControllerTest {
     private SectorAssociationUpdateService sectorAssociationUpdateService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
             .setControllerAdvice(new ExceptionControllerAdvice())
             .build();

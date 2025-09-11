@@ -20,9 +20,7 @@ describe('ConfirmationSharedComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ConfirmationSharedComponent);
     component = fixture.componentInstance;
     component.title = 'The notification has been recalled';

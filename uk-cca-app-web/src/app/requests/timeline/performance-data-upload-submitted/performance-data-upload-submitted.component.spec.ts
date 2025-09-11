@@ -20,6 +20,7 @@ describe('PerformanceDataUploadSubmittedComponent', () => {
 
     store = TestBed.inject(RequestActionStore);
     store.setState(mockRequestActionStatePerformanceDataUpload);
+
     fixture = TestBed.createComponent(PerformanceDataUploadSubmittedComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

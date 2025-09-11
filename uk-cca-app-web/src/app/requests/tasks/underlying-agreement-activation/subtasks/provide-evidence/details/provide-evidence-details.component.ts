@@ -5,10 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { TaskService } from '@netz/common/forms';
 import { TextareaComponent } from '@netz/govuk-components';
-import { PROVIDE_EVIDENCE_SUBTASK, ProvideEvidenceWizardStep } from '@requests/common';
+import { PROVIDE_EVIDENCE_SUBTASK } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
-import { transformFilesToAttachments, transformFilesToUUIDsList } from '@shared/utils';
-import { generateDownloadUrl } from '@shared/utils';
+import { fileUtils, generateDownloadUrl } from '@shared/utils';
 
 import {
   PROVIDE_EVIDENCE_DETAILS_FORM,
@@ -18,6 +17,7 @@ import {
 
 @Component({
   selector: 'cca-provide-evidence-details',
+  templateUrl: './provide-evidence-details.component.html',
   standalone: true,
   imports: [
     WizardStepComponent,
@@ -26,7 +26,6 @@ import {
     MultipleFileInputComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  templateUrl: './provide-evidence-details.component.html',
   providers: [ProvideEvidenceDetailsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -36,17 +35,18 @@ export default class ProvideEvidenceDetailsComponent {
 
   protected readonly form =
     inject<FormGroup<UnderlyingAgreementActivationDetailsFormModel>>(PROVIDE_EVIDENCE_DETAILS_FORM);
+
   private readonly taskId = this.activatedRoute.snapshot.paramMap.get('taskId');
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 
   onSubmit() {
     this.taskService
-      .saveSubtask(PROVIDE_EVIDENCE_SUBTASK, ProvideEvidenceWizardStep.DETAILS, this.activatedRoute, {
+      .saveSubtask(PROVIDE_EVIDENCE_SUBTASK, 'details', this.activatedRoute, {
         details: {
-          evidenceFiles: transformFilesToUUIDsList(this.form.value.evidenceFiles),
+          evidenceFiles: fileUtils.toUUIDs(this.form.value.evidenceFiles),
           comments: this.form.value.comments,
         },
-        attachments: transformFilesToAttachments(this.form.value.evidenceFiles),
+        attachments: fileUtils.toAttachments(this.form.value.evidenceFiles),
       })
       .subscribe();
   }

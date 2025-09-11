@@ -1,0 +1,3 @@
+import { PerformanceAccountTemplateProcessingSubmittedRequestActionPayload } from 'cca-api';
+
+export type PATUploadedActionPayload = PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;

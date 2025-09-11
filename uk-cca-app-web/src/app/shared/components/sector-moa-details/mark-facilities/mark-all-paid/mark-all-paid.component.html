@@ -1,0 +1,20 @@
+<netz-page-heading size="l" data-testid="page-heading" class="govuk-!-margin-bottom-6">
+  Are you sure you want to mark all target units of {{ state().sectorMoaDetails.businessId }} -
+  {{ state().sectorMoaDetails.name }} sector and all their facilities as Paid?
+</netz-page-heading>
+
+<dl govuk-summary-list>
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Sector</dt>
+    <dd govukSummaryListRowValue>{{ state().sectorMoaDetails.businessId }} - {{ state().sectorMoaDetails.name }}</dd>
+  </div>
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Selected target units</dt>
+    <dd govukSummaryListRowValue>All ({{ state().sectorMoaDetails.totalFacilities }} facilities)</dd>
+  </div>
+</dl>
+
+<govuk-warning-text assistiveText=""> Any cancelled facilities will not be updated. </govuk-warning-text>
+
+<button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and submit</button>

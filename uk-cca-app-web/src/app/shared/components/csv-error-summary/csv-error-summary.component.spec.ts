@@ -35,6 +35,7 @@ describe('CsvErrorSummaryComponent', () => {
         ],
       },
     ] as NestedMessageValidationError[]);
+
     page = new Page(fixture);
     fixture.detectChanges();
   });

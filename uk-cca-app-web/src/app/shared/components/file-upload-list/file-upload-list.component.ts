@@ -14,10 +14,10 @@ import { FileUploadEvent } from '../file-input/file-upload-event';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileUploadListComponent {
-  headerSize = input<'m' | 's'>('m');
-  listTitle = input<string>();
-  files = input<FileUploadEvent[]>([]);
-  isDisabled = input<boolean>(false);
+  protected readonly headerSize = input<'m' | 's'>('m');
+  protected readonly listTitle = input<string>();
+  protected readonly files = input<FileUploadEvent[]>([]);
+  protected readonly isDisabled = input<boolean>(false);
 
-  fileDelete = output<number>();
+  protected readonly fileDelete = output<number>();
 }

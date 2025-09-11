@@ -6,7 +6,7 @@ import {
   UNAApplicationRequestTaskPayload,
   UNAReviewRequestTaskPayload,
   UNAVariationRequestTaskPayload,
-} from '../underlying-agreement.types';
+} from '../types';
 
 export const facilities: Facility[] = [
   {
@@ -14,6 +14,7 @@ export const facilities: Facility[] = [
     status: 'NEW',
     facilityDetails: {
       name: 'Facility 1',
+      participatingSchemeVersions: ['CCA_2'],
       facilityAddress: {
         city: 'Facility City',
         line1: 'Facility Line1',
@@ -69,6 +70,7 @@ export const facilities: Facility[] = [
     status: 'LIVE',
     facilityDetails: {
       name: 'Facility 2',
+      participatingSchemeVersions: ['CCA_2'],
       facilityAddress: {
         city: 'Facility City',
         line1: 'Facility Line1',
@@ -124,7 +126,7 @@ export const facilities: Facility[] = [
 export const mockTargetUnitDetails: TargetUnitAccountDetails = {
   operatorName: 'test',
   operatorType: 'LIMITED_COMPANY',
-  companyRegistrationNumber: 'test',
+  companyRegistrationNumber: 'test1234',
   address: {
     line1: 'accountrefdata operator address line 1',
     line2: 'accountrefdata operator address line 2',
@@ -174,6 +176,8 @@ export const mockTargetUnitDetails: TargetUnitAccountDetails = {
 export const mockUnderlyingAgreement: UnderlyingAgreementPayload = {
   underlyingAgreementTargetUnitDetails: {
     isCompanyRegistrationNumber: true,
+    companyRegistrationNumber: null,
+    registrationNumberMissingReason: null,
     operatorType: 'PARTNERSHIP',
     operatorName: 'operator name',
     operatorAddress: {
@@ -257,6 +261,7 @@ export const mockUnderlyingAgreement: UnderlyingAgreementPayload = {
     additionalEvidenceAttachmentIds: [],
   },
 };
+
 export const mockUnderlyingAgreementABSOLUTE: UnderlyingAgreementPayload = {
   underlyingAgreementTargetUnitDetails: {
     isCompanyRegistrationNumber: true,
@@ -344,6 +349,7 @@ export const mockUnderlyingAgreementABSOLUTE: UnderlyingAgreementPayload = {
     additionalEvidenceAttachmentIds: [],
   },
 };
+
 export const mockUnderlyingAgreementABSOLUTENoMeasurement: UnderlyingAgreementPayload = {
   underlyingAgreementTargetUnitDetails: {
     isCompanyRegistrationNumber: true,
@@ -518,7 +524,9 @@ export const mockUnaRequestTaskPayload: UNAApplicationRequestTaskPayload = {
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
   underlyingAgreement: mockUnderlyingAgreement,
@@ -552,7 +560,7 @@ export const mockUnaReviewRequestTaskPayload: UNAReviewRequestTaskPayload = {
     targetUnitAccountDetails: {
       operatorName: 'Flying Company 3',
       operatorType: 'LIMITED_COMPANY',
-      companyRegistrationNumber: '123123123123',
+      companyRegistrationNumber: 'AB123456',
       address: {
         line1: 'Address',
         line2: 'Apartment 1',
@@ -589,7 +597,9 @@ export const mockUnaReviewRequestTaskPayload: UNAReviewRequestTaskPayload = {
     },
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_1',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
   underlyingAgreement: {
@@ -616,7 +626,7 @@ export const mockUnaReviewRequestTaskPayload: UNAReviewRequestTaskPayload = {
       },
       operatorType: 'LIMITED_COMPANY',
       isCompanyRegistrationNumber: true,
-      companyRegistrationNumber: '123123123123',
+      companyRegistrationNumber: 'AB123456',
       subsectorAssociationName: 'SUBSECTOR_1',
     },
     facilities: [
@@ -625,6 +635,7 @@ export const mockUnaReviewRequestTaskPayload: UNAReviewRequestTaskPayload = {
         status: 'NEW',
         facilityDetails: {
           name: 'Facility 1',
+          participatingSchemeVersions: ['CCA_2'],
           facilityAddress: {
             city: 'Facility City',
             line1: 'Facility Line1',
@@ -680,6 +691,7 @@ export const mockUnaReviewRequestTaskPayload: UNAReviewRequestTaskPayload = {
         facilityId: 'ADS_53-F00007',
         facilityDetails: {
           name: 'Facility 1',
+          participatingSchemeVersions: ['CCA_2'],
           isCoveredByUkets: false,
           applicationReason: 'NEW_AGREEMENT',
           facilityAddress: {
@@ -777,10 +789,10 @@ export const mockUnaReviewRequestTaskPayload: UNAReviewRequestTaskPayload = {
   reviewSectionsCompleted: {
     'ADS_53-F00006': 'REJECTED',
     'ADS_53-F00007': 'REJECTED',
-    targetPeriod5Details: 'APPROVED',
-    targetPeriod6Details: 'APPROVED',
-    authorisationAndAdditionalEvidence: 'APPROVED',
-    underlyingAgreementTargetUnitDetails: 'APPROVED',
+    targetPeriod5Details: 'ACCEPTED',
+    targetPeriod6Details: 'ACCEPTED',
+    authorisationAndAdditionalEvidence: 'ACCEPTED',
+    underlyingAgreementTargetUnitDetails: 'ACCEPTED',
     overallDecision: 'REJECTED',
   },
   reviewGroupDecisions: {
@@ -837,7 +849,9 @@ export const mockUnaRequestTaskPayloadNOVEM: UNAApplicationRequestTaskPayload = 
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
   underlyingAgreement: mockUnderlyingAgreementNOVEM,
@@ -859,8 +873,9 @@ export const mockUnaRequestTaskPayloadABSOLUTE: UNAApplicationRequestTaskPayload
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
-      throughputUnit: 'tonne',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'tonne' },
+      },
     },
   },
   underlyingAgreement: mockUnderlyingAgreementABSOLUTE,
@@ -882,7 +897,9 @@ export const mockUnaRequestTaskPayloadABSOLUTENoMeasurement: UNAApplicationReque
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
   underlyingAgreement: mockUnderlyingAgreementABSOLUTE,
@@ -898,6 +915,7 @@ export const mockUnaRequestTaskPayloadABSOLUTENoMeasurement: UNAApplicationReque
     evidenceFile: 'evidenceFile.xlsx',
   },
 };
+
 export const mockRequestTaskItemDTO: RequestTaskItemDTO = {
   requestTask: {
     id: 20,
@@ -923,8 +941,10 @@ export const mockRequestTaskItemDTO: RequestTaskItemDTO = {
     requestMetadata: {
       type: 'UNDERLYING_AGREEMENT',
     },
+    creationDate: '2025-07-25T15:47:22.695292Z',
   },
 };
+
 export const mockVariationRequestTaskItemDTO: RequestTaskItemDTO = {
   requestTask: {
     id: 20,
@@ -952,6 +972,7 @@ export const mockVariationRequestTaskItemDTO: RequestTaskItemDTO = {
     },
   },
 };
+
 export const mockRequestTaskItemUNAReviewDTO: RequestTaskItemDTO = {
   requestTask: {
     id: 9,
@@ -985,6 +1006,7 @@ export const mockRequestTaskItemUNAReviewDTO: RequestTaskItemDTO = {
     paymentAmount: '0',
   },
 };
+
 export const mockRequestTaskItemDTONOVEM: RequestTaskItemDTO = {
   requestTask: {
     id: 20,
@@ -1040,6 +1062,7 @@ export const mockRequestTaskItemDTOABSOLUTE: RequestTaskItemDTO = {
     },
   },
 };
+
 export const mockRequestTaskItemDTOABSOLUTENoMeasurement: RequestTaskItemDTO = {
   requestTask: {
     id: 20,
@@ -1075,6 +1098,7 @@ export const mockRequestTaskState: RequestTaskState = {
   taskReassignedTo: 'abc',
   isEditable: true,
 };
+
 export const mockUNAReviewRequestTaskState: RequestTaskState = {
   requestTaskItem: mockRequestTaskItemUNAReviewDTO,
   relatedTasks: [],

@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
 @ExtendWith(MockitoExtension.class)
-public class FacilityIdentifierServiceTest {
+class FacilityIdentifierServiceTest {
 
     @InjectMocks
     private FacilityIdentifierService facilityIdentifierService;

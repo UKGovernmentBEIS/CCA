@@ -20,7 +20,6 @@ import { ActiveExternalContactStore } from '../active-external-contact.store';
 @Component({
   selector: 'cca-external-contact-details',
   templateUrl: './details.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     ErrorSummaryComponent,
@@ -31,6 +30,7 @@ import { ActiveExternalContactStore } from '../active-external-contact.store';
     ButtonDirective,
     PendingButtonDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExternalContactsDetailsComponent {
   private readonly fb = inject(UntypedFormBuilder);
@@ -40,9 +40,9 @@ export class ExternalContactsDetailsComponent {
   private readonly businessErrorService = inject(BusinessErrorService);
   private readonly store = inject(ActiveExternalContactStore);
 
-  isAdd = !!this.store.state;
+  protected readonly isAdd = !!this.store.state;
 
-  form = this.fb.group(
+  readonly form = this.fb.group(
     {
       name: this.fb.control(this.store.state?.name, [
         GovukValidators.required(`Enter the external contact's displayed name`),
@@ -64,6 +64,7 @@ export class ExternalContactsDetailsComponent {
   addExternalContact(): void {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
+
     this.route.paramMap
       .pipe(
         first(),
@@ -89,13 +90,16 @@ export class ExternalContactsDetailsComponent {
         case ErrorCodes.EXTCONTACT1001:
           this.form.get('name').setErrors({ uniqueName: 'Enter a unique displayed name' });
           break;
+
         case ErrorCodes.EXTCONTACT1002:
           this.form.get('email').setErrors({ uniqueEmail: 'Email address already exists' });
           break;
+
         case ErrorCodes.EXTCONTACT1003:
           this.form.get('name').setErrors({ uniqueName: 'Enter a unique displayed name' });
           this.form.get('email').setErrors({ uniqueEmail: 'Email address already exists' });
           break;
+
         default:
           throw res;
       }

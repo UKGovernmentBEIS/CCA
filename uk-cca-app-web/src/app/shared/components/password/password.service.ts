@@ -36,8 +36,7 @@ const blacklisted = (control: AbstractControl): Observable<MessageValidationErro
 
 const strong = (control: AbstractControl): MessageValidationErrors | null => {
   const strength = zxcvbn(control.value ?? '').score;
-
   return strength > 2 ? null : { weakPassword: 'Enter a strong password' };
 };
 
-export const PasswordService = { blacklisted, strong };
+export const PasswordValidators = { blacklisted, strong };

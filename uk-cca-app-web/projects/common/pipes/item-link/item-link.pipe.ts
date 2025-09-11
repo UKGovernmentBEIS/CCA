@@ -15,6 +15,11 @@ export class ItemLinkPipe implements PipeTransform {
       case 'UNDERLYING_AGREEMENT_VARIATION':
       case 'PERFORMANCE_DATA_DOWNLOAD':
       case 'PERFORMANCE_DATA_UPLOAD':
+      case 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD':
+      case 'ADMIN_TERMINATION_APPLICATION_PEER_REVIEW':
+      case 'ADMIN_TERMINATION_WAIT_FOR_PEER_REVIEW':
+      case 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW':
+      case 'UNDERLYING_AGREEMENT_WAIT_FOR_PEER_REVIEW':
         return [routerLooks + 'tasks', value.taskId];
 
       default:

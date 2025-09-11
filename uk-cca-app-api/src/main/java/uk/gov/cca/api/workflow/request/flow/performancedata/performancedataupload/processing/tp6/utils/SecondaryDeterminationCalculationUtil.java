@@ -2,7 +2,6 @@ package uk.gov.cca.api.workflow.request.flow.performancedata.performancedatauplo
 
 import lombok.experimental.UtilityClass;
 
-import uk.gov.cca.api.workflow.request.flow.performancedata.common.domain.PerformanceDataTargetPeriodType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataCalculationParameters;
 
 import java.math.BigDecimal;
@@ -22,8 +21,7 @@ public class SecondaryDeterminationCalculationUtil {
     public Optional<BigDecimal> getSecondaryBuyOutCostCalculatedValue(PerformanceDataCalculationParameters parameters) {
         BigDecimal secondaryBuyOutCo2 = SecondaryDeterminationCalculationUtil.getSecondaryBuyOutCo2CalculatedValue(parameters)
                 .orElse(null);
-        BigDecimal multiplier = parameters.getType().equals(PerformanceDataTargetPeriodType.TP6)
-                ? BigDecimal.valueOf(25) : BigDecimal.ZERO;
+        BigDecimal multiplier = parameters.getType().getReferenceTargetPeriod().getCostPerCarbon();
 
         return SecondaryDeterminationCalculationFunctionUtil.SECONDARY_BUY_OUT_COST
                 .apply(secondaryBuyOutCo2, multiplier);

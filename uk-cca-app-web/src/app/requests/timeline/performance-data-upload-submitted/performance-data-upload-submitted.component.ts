@@ -8,16 +8,20 @@ import { toPerformanceUploadSubmittedSummaryData } from './performance-data-uplo
 
 @Component({
   selector: 'cca-performance-data-download-submitted',
+  template: `<cca-summary [data]="summaryData()" />`,
   standalone: true,
   imports: [SummaryComponent],
-  templateUrl: './performance-data-upload-submitted.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDataUploadSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);
-  readonly payload = this.requestActionStore.select(performanceDataUploadSubmittedActionQuery.selectPayload);
-  readonly creationDate = this.requestActionStore.select(performanceDataUploadSubmittedActionQuery.selectCreationDate);
-  readonly summaryData = computed(() => {
+
+  private readonly payload = this.requestActionStore.select(performanceDataUploadSubmittedActionQuery.selectPayload);
+  private readonly creationDate = this.requestActionStore.select(
+    performanceDataUploadSubmittedActionQuery.selectCreationDate,
+  );
+
+  protected readonly summaryData = computed(() => {
     return toPerformanceUploadSubmittedSummaryData(this.payload(), this.creationDate());
   });
 }

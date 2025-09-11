@@ -8,7 +8,7 @@ import {
   UnderlyingAgreementVariationPayload,
 } from 'cca-api';
 
-import { UNAVariationRequestTaskPayload } from '../underlying-agreement.types';
+import { UNAVariationRequestTaskPayload } from '../types';
 
 const selectPayload: StateSelector<RequestTaskState, UNAVariationRequestTaskPayload> = createDescendingSelector(
   requestTaskQuery.selectRequestTaskPayload,
@@ -34,6 +34,13 @@ const selectOriginalFacility = (facilityId: string): StateSelector<RequestTaskSt
       : null,
   );
 };
+
+const selectReviewGroupDecisions = createDescendingSelector(selectPayload, (payload) => payload.reviewGroupDecisions);
+
+const selectFacilityReviewGroupDecisions = createDescendingSelector(
+  selectPayload,
+  (payload) => payload.facilitiesReviewGroupDecisions,
+);
 
 const selectOriginalUnderlyingAgreementAttachments: StateSelector<
   RequestTaskState,
@@ -71,4 +78,6 @@ export const underlyingAgreementVariationQuery = {
   selectOriginalAuthorisationAndAdditionalEvidence,
   selectOriginalBaselineExists,
   selectOriginalTargetPeriodDetails,
+  selectReviewGroupDecisions,
+  selectFacilityReviewGroupDecisions,
 };

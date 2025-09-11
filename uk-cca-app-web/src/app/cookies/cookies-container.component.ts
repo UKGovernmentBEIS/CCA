@@ -8,16 +8,15 @@ import { CookiesService } from './cookies.service';
 
 @Component({
   selector: 'cca-cookies-container',
-  standalone: true,
   template: `
     <govuk-cookies-pop-up
       cookiesExpirationTime="1"
       [areBrowserCookiesEnabled]="cookiesEnabled"
       [cookiesAccepted]="cookiesAccepted$ | async"
       (cookiesAcceptedEmitter)="acceptCookies($event)"
-    >
-    </govuk-cookies-pop-up>
+    />
   `,
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CookiesPopUpComponent, AsyncPipe],
 })

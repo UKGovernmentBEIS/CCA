@@ -37,9 +37,7 @@ export function createResponsibleForm(
 ): FormGroup<ResponsiblePersonFormModel> {
   const addressFormGroup = formConfig.address.value;
 
-  if (formConfig.address.disabled) {
-    addressFormGroup.disable();
-  }
+  if (formConfig.address.disabled) addressFormGroup.disable();
 
   return fb.group<ResponsiblePersonFormModel>(
     {

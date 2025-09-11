@@ -1,5 +1,5 @@
-import { DOCUMENT, Location, ViewportScroller } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { Location, ViewportScroller } from '@angular/common';
+import { Injectable, inject } from '@angular/core';
 import { Router, Scroll } from '@angular/router';
 
 import { filter } from 'rxjs';
@@ -10,12 +10,11 @@ export interface ScrollState {
 
 @Injectable({ providedIn: 'root' })
 export class ScrollService {
-  constructor(
-    private readonly router: Router,
-    private readonly viewportScroller: ViewportScroller,
-    private readonly location: Location,
-    @Inject(DOCUMENT) private readonly document: Document,
-  ) {
+  private readonly router = inject(Router);
+  private readonly viewportScroller = inject(ViewportScroller);
+  private readonly location = inject(Location);
+
+  constructor() {
     this.initialize();
   }
 

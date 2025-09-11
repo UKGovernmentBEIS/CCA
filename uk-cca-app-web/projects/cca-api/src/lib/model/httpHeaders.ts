@@ -20,7 +20,6 @@ export interface HttpHeaders {
 
   allow?: object[];
   acceptLanguage?: HttpHeadersAcceptLanguage[];
-  basicAuth?: string;
   accept?: MediaType[];
   acceptLanguageAsLocales?: HttpHeadersAcceptLanguageAsLocales[];
   acceptPatch?: MediaType[];
@@ -56,5 +55,6 @@ export interface HttpHeaders {
   origin?: string;
   contentLanguage?: HttpHeadersAcceptLanguageAsLocales;
   bearerAuth?: string;
+  basicAuth?: string;
   cacheControl?: string;
 }

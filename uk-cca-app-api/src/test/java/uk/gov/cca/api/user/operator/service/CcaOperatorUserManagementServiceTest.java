@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class CcaOperatorUserManagementServiceTest {
+class CcaOperatorUserManagementServiceTest {
 
     @Mock
     private CcaOperatorUserViewMapper ccaOperatorUserViewMapper;
@@ -40,16 +40,15 @@ public class CcaOperatorUserManagementServiceTest {
     @Mock
     private CcaOperatorUserAuthService ccaOperatorUserAuthService;
 
-    private CcaOperatorUserDetailsDTO ccaOperatorUserDetailsDTO;
-
-    private final String userId = "someUserId";
-    private final Long accountId = 123L;
 
     @Test
     void testGetOperatorUserByAccountIdAndUserId_Success() {
+
+        final String userId = "someUserId";
+        final Long accountId = 123L;
         CcaAuthorityDetails ccaAuthorityDetails = new CcaAuthorityDetails();
         UserRepresentation userRepresentation = new UserRepresentation();
-        ccaOperatorUserDetailsDTO = new CcaOperatorUserDetailsDTO();
+        CcaOperatorUserDetailsDTO ccaOperatorUserDetailsDTO = new CcaOperatorUserDetailsDTO();
         when(ccaOperatorAuthorityService.getOperatorUserAuthorityDetails(userId, accountId)).thenReturn(ccaAuthorityDetails);
         when(authService.getUserRepresentationById(userId)).thenReturn(userRepresentation);
         when(ccaOperatorUserViewMapper.toCcaOperatorUserDetailsDTO(userRepresentation, ccaAuthorityDetails)).thenReturn(ccaOperatorUserDetailsDTO);
@@ -62,7 +61,7 @@ public class CcaOperatorUserManagementServiceTest {
     }
 
     @Test
-    public void testUpdateCurrentOperatorUser() {
+    void testUpdateCurrentOperatorUser() {
         AppUser appUser = new AppUser();
         appUser.setUserId("user123");
         Long accountId = 1L;
@@ -76,7 +75,7 @@ public class CcaOperatorUserManagementServiceTest {
     }
 
     @Test
-    public void testUpdateOperatorUserByAccountAndId() {
+    void testUpdateOperatorUserByAccountAndId() {
         Long accountId = 1L;
         String userId = "user123";
         CcaOperatorUserDetailsDTO ccaOperatorUserDetailsDTO = new CcaOperatorUserDetailsDTO();

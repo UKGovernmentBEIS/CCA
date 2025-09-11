@@ -86,6 +86,7 @@ export class DateInputValidators {
     const isBetweenTheAllowedValues = (value, min, max) => {
       return /^\d+$/.test(value) && value >= min && value <= max;
     };
+
     const isNotCorrectLeapYearDate = () => {
       return Number(day) === 29 && Number(month) === 2 && !DateInputValidators.isLeapYear(Number(year));
     };
@@ -95,12 +96,15 @@ export class DateInputValidators {
       (DateInputValidators.isShortMonth(Number(month)) && Number(day) > 30) ||
       Number(day) > 31;
 
+    const isValidYear = Number(year).toString().length === 4;
+
     return (
       !isBetweenTheAllowedValues(day, 1, 31) ||
       !isBetweenTheAllowedValues(month, 1, 12) ||
       !isBetweenTheAllowedValues(year, 1900, 2100) ||
       isNotCorrectLeapYearDate() ||
-      isIncorrectDay
+      isIncorrectDay ||
+      !isValidYear
     );
   }
 }

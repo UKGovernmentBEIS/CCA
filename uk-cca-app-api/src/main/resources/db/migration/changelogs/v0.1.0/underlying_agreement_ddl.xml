@@ -64,5 +64,54 @@
             <dropColumn tableName="underlying_agreement" columnName="activation_date"/>
 		</rollback>
 	</changeSet>
+	
+	<changeSet id="0_1_0_COPY_SECTOR_THROUGHPUT_UNIT_TO_THROUGHPUT_UNIT" author="apostolouk@unisystems.gr">
+        <sql>
+            update underlying_agreement
+			set data = jsonb_set(data, '{underlyingAgreement, targetPeriod6Details, targetComposition, throughputUnit}', data -> 'sectorThroughputUnit')
+			where data -> 'underlyingAgreement' -> 'targetPeriod6Details' -> 'targetComposition' ->> 'isTargetUnitThroughputMeasured' = 'false'
+			and data ->> 'sectorThroughputUnit' is not null;
+			
+			update underlying_agreement
+			set data = jsonb_set(data, '{underlyingAgreement, targetPeriod5Details, details, targetComposition, throughputUnit}', data -> 'sectorThroughputUnit')
+			where data -> 'underlyingAgreement' -> 'targetPeriod5Details' -> 'details' -> 'targetComposition' ->> 'isTargetUnitThroughputMeasured' = 'false'
+			and data ->> 'sectorThroughputUnit' is not null;
+        </sql>
+    </changeSet>
+    
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_DROP_MEASUREMENT_TYPE_COLUMN" author="apostolouk@unisystems.gr">
+        <dropColumn tableName="underlying_agreement" columnName="measurement_type"/>
+        <rollback>
+	        <addColumn tableName="underlying_agreement">
+	            <column name="measurement_type" type="varchar(255)" remarks="The underlying agreement's measurement type">
+	            	<constraints nullable="false" />
+	            </column>
+	        </addColumn>
+		</rollback>
+	</changeSet>
+	
+	<changeSet id="0_1_0_MOVE_SECTOR_THROUGHPUT_UNIT_AND_MEASUREMENT_TYPE_TO_SCHEME_DATA" author="apostolouk@unisystems.gr">
+        <sql>
+            update underlying_agreement
+			set 
+			data = (data || jsonb_build_object('schemeDataMap', jsonb_build_object('CCA_2', jsonb_build_object('sectorMeasurementType', data -> 'sectorMeasurementType')))) - 'sectorMeasurementType';
+			
+			update underlying_agreement
+			set 
+			data = jsonb_set(data, '{schemeDataMap, CCA_2, sectorThroughputUnit}', data -> 'sectorThroughputUnit') - 'sectorThroughputUnit' 
+			where data ->> 'sectorThroughputUnit' is not null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_ADD_FACILITY_PARTICIPATING_SCHEME_VERSION" author="P70383">
+        <comment>Add CCA schema versions in data</comment>
+        <sql>
+            UPDATE underlying_agreement
+            SET data = jsonb_set(data, '{underlyingAgreement,facilities}', (
+                SELECT jsonb_agg( jsonb_set(element, '{facilityDetails}', element -> 'facilityDetails' || '{"participatingSchemeVersions": ["CCA_2"]}') )
+                FROM jsonb_array_elements(data -> 'underlyingAgreement'->'facilities') element
+            ))
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>

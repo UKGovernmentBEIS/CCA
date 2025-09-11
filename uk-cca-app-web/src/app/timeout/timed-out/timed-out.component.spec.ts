@@ -9,6 +9,7 @@ import { TimedOutComponent } from './timed-out.component';
 describe('TimedOutComponent', () => {
   let component: TimedOutComponent;
   let fixture: ComponentFixture<TimedOutComponent>;
+
   const authService = mockClass(AuthService);
   const activatedRoute = new ActivatedRouteStub(null, { idle: 30 });
 
@@ -20,9 +21,7 @@ describe('TimedOutComponent', () => {
         { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TimedOutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -42,7 +41,7 @@ describe('TimedOutComponent', () => {
   });
 
   it('should show idle time properly', () => {
-    const message = fixture.nativeElement.querySelector('.govuk-body').innerHTML;
+    const message = fixture.nativeElement.querySelector('p').innerHTML;
     expect(message).toContain('We have reset your session because you did not do anything for less than a minute .');
   });
 });

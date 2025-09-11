@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.FacilityAddress;
 import uk.gov.cca.api.facility.domain.FacilityData;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataCreationDTO;
@@ -48,12 +49,14 @@ class FacilityDataUpdateServiceTest {
                 .facilityId("FAC001")
                 .accountId(1001L)
                 .createdDate(LocalDateTime.of(2023, 9, 10, 12, 0))
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3))
                 .build();
 
         FacilityDataCreationDTO dto2 = FacilityDataCreationDTO.builder()
                 .facilityId("FAC002")
                 .accountId(1002L)
                 .createdDate(LocalDateTime.of(2023, 9, 11, 12, 0))
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3))
                 .build();
 
         List<FacilityDataCreationDTO> dtoList = List.of(dto1, dto2);
@@ -86,6 +89,7 @@ class FacilityDataUpdateServiceTest {
                 .siteName("site1New")
                 .facilityAddress(AccountAddressDTO.builder().line1("line1Updated").build())
                 .closedDate(null)
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3))
                 .build();
 
         FacilityDataUpdateDTO dto2 = FacilityDataUpdateDTO.builder()
@@ -93,6 +97,7 @@ class FacilityDataUpdateServiceTest {
                 .siteName("site2")
                 .facilityAddress(AccountAddressDTO.builder().build())
                 .closedDate(LocalDate.of(2024, 9, 2))
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3))
                 .build();
 
         List<FacilityDataUpdateDTO> dtoList = List.of(dto1, dto2);
@@ -102,6 +107,7 @@ class FacilityDataUpdateServiceTest {
                 .facilityId("FAC001")
                 .address(FacilityAddress.builder().line1("line1Original").build())
                 .siteName("site1")
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .build();
 
         FacilityData facilityData2 = FacilityData.builder()
@@ -109,6 +115,7 @@ class FacilityDataUpdateServiceTest {
                 .facilityId("FAC002")
                 .address(FacilityAddress.builder().build())
                 .siteName("site2")
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .build();
 
         List<FacilityData> facilitiesData = List.of(facilityData1, facilityData2);
@@ -130,6 +137,8 @@ class FacilityDataUpdateServiceTest {
         assertEquals(dto1.getFacilityAddress().getLine1(), updatedFacilities.get(0).getAddress().getLine1());
         assertEquals(dto2.getClosedDate().atStartOfDay(), updatedFacilities.get(1).getClosedDate());
         assertEquals(dto2.getClosedDate(), updatedFacilities.get(1).getSchemeExitDate());
+        assertEquals(dto1.getParticipatingSchemeVersions(), updatedFacilities.get(0).getParticipatingSchemeVersions());
+        assertEquals(dto2.getParticipatingSchemeVersions(), updatedFacilities.get(1).getParticipatingSchemeVersions());
     }
 
     @Test

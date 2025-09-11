@@ -7,7 +7,7 @@ export const SUBMIT_ROUTES: Routes = [
       {
         path: '',
         title: 'Submit to regulator',
-        data: { backlink: '../../../', breadcrumb: false },
+        data: { backlink: '../../', breadcrumb: false },
         loadComponent: () =>
           import('./action/action.component').then((c) => c.UnderlyingAgreementSubmitActionComponent),
       },

@@ -15,6 +15,7 @@ describe('LandingPageGuard', () => {
   let authStore: AuthStore;
   let latestTermsStore: LatestTermsStore;
   let configStore: ConfigStore;
+
   const authService: MockType<AuthService> = {
     checkUser: jest.fn(() => of(undefined)),
   };
@@ -83,6 +84,7 @@ describe('LandingPageGuard', () => {
 
     await expect(lastValueFrom(getGuard())).resolves.toEqual(true);
   });
+
   it(`should redirect to dashboard when user is REGULATOR and has NO_AUTHORITY`, async () => {
     authStore.setUserState({
       roleType: 'REGULATOR',
@@ -96,6 +98,7 @@ describe('LandingPageGuard', () => {
     });
     await expect(lastValueFrom(getGuard())).resolves.toEqual(true);
   });
+
   it(`should allow when user has login 'DISABLED' or 'TEMP_DISABLED'`, async () => {
     authStore.setUserState({
       roleType: 'REGULATOR',
@@ -111,6 +114,7 @@ describe('LandingPageGuard', () => {
 
     await expect(lastValueFrom(getGuard())).resolves.toEqual(true);
   });
+
   it('should not redirect to terms if terms feature is disabled', async () => {
     configStore.setState({ features: { terms: false } });
     await expect(lastValueFrom(getGuard())).resolves.toEqual(router.parseUrl('dashboard'));

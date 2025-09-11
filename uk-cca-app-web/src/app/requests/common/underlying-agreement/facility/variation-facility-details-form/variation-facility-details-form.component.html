@@ -1,0 +1,61 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  [caption]="facility() ? facility()?.facilityDetails?.name : 'Add facility'"
+  heading="Facility details"
+>
+  <div class="govuk-!-width-two-thirds">
+    <div formControlName="name" govuk-text-input label="Site name"></div>
+
+    @if (facility()?.facilityId) {
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Facility ID</h3>
+      <p class="govuk-!-margin-top-1">{{ facility()?.facilityId }}</p>
+    }
+
+    <div
+      formControlName="isCoveredByUkets"
+      govuk-radio
+      legend="Are the activities carried out by this facility included in the UKETS?"
+      hint="If some or all of the activities carried out in this facility are regulated activities under the UK ETS scheme, you must enter the UK ETS permit identifier"
+    >
+      <govuk-radio-option [value]="true" [label]="'Yes'">
+        <ng-container govukConditionalContent>
+          <div
+            widthClass="govuk-!-width-one-third"
+            formControlName="uketsId"
+            govuk-text-input
+            label="UK ETS installation/permit Identifier"
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+      <govuk-radio-option [value]="false" [label]="'No'" />
+    </div>
+
+    <div formControlName="applicationReason" govuk-radio legend="Application reason">
+      <govuk-radio-option [value]="'NEW_AGREEMENT'" [label]="'NEW_AGREEMENT' | applicationReasonType" />
+      <govuk-radio-option [value]="'CHANGE_OF_OWNERSHIP'" [label]="'CHANGE_OF_OWNERSHIP' | applicationReasonType">
+        <ng-container govukConditionalContent>
+          <div
+            widthClass="govuk-!-width-one-third"
+            formControlName="previousFacilityId"
+            govuk-text-input
+            label="Previous facility ID"
+            hint="You must enter a previous facility ID if the facility is transferring from a different underlying agreement"
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+    </div>
+
+    <h2 class="govuk-heading-m">Facility address</h2>
+    <div formControlName="sameAddress" govuk-checkboxes>
+      <govuk-checkbox [value]="true" label="The facility address is the same as target unit address" />
+    </div>
+
+    <div formGroupName="facilityAddress">
+      <cca-account-address-input />
+    </div>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" [routerLink]="[returnPath]">Return to: Manage facilities</a>

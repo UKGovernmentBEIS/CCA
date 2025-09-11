@@ -61,12 +61,10 @@ public class SurplusBuyOutDetermination {
     private BigDecimal totalPriBuyOutCarbon;
 
     // Secondary buy-out required
-    @NotNull
     @Digits(integer = Integer.MAX_VALUE, fraction = 20)
     private BigDecimal secondaryBuyOutCo2;
 
     // Secondary buy-out cost
-    @NotNull
     @Digits(integer = Integer.MAX_VALUE, fraction = 20)
     private BigDecimal secondaryBuyOutCost;
 

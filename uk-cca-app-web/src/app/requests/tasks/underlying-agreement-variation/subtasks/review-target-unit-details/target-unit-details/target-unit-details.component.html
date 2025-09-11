@@ -1,0 +1,40 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Change"
+  heading="Target unit details"
+  data-testid="change-target-unit-details-form"
+>
+  <div class="govuk-!-width-two-thirds">
+    <div
+      formControlName="operatorName"
+      cca-text-input
+      label="Operator name"
+      hint="For limited companies, limited partnerships or limited liability partnerships this should
+      be the name which currently appears on Companies House"
+    ></div>
+
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Operator type</h3>
+    <p class="govuk-!-margin-top-0">{{ targetUnitDetails?.operatorType | operatorType }}</p>
+
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Company number</h3>
+    <p class="govuk-!-margin-top-0">
+      {{ targetUnitDetails?.companyRegistrationNumber ?? 'Not provided' }}
+    </p>
+
+    @if (targetUnitDetails?.registrationNumberMissingReason) {
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Reason for not having a registration number</h3>
+      <p class="govuk-!-margin-top-0">
+        {{ targetUnitDetails?.registrationNumberMissingReason }}
+      </p>
+    }
+
+    @if (targetUnitDetails?.subsectorAssociationName) {
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Subsector</h3>
+      <p class="govuk-!-margin-top-0">{{ targetUnitDetails?.subsectorAssociationName }}</p>
+    }
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

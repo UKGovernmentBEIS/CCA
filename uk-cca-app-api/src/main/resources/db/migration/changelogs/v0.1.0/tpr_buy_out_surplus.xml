@@ -7,8 +7,9 @@
      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
 
     <changeSet id="0_1_0_POPULATE_TPR_BUY_OUT_TRANSACTION_IDENTIFIER_TABLE" author="P70383">
+    	<validCheckSum>1:any</validCheckSum>
         <sql>
-            INSERT INTO tpr_buy_out_transaction_identifier (id, target_period_type, transaction_id) VALUES (1, 'TP6', 0);
+            INSERT INTO tpr_buy_out_surplus_transaction_identifier (id, target_period_type, transaction_id) VALUES (1, 'TP6', 0);
         </sql>
     </changeSet>
 </databaseChangeLog>

@@ -31,7 +31,7 @@ class SubsistenceFeesTransactionIdentifierRepositoryIT extends AbstractContainer
     private EntityManager entityManager;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         SubsistenceFeesTransactionIdentifier transactionIdentifier1 = SubsistenceFeesTransactionIdentifier.builder()
                 .id(1)
                 .transactionId(1199L)
@@ -68,7 +68,7 @@ class SubsistenceFeesTransactionIdentifierRepositoryIT extends AbstractContainer
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         repository.deleteAll();
         flushAndClear();
     }

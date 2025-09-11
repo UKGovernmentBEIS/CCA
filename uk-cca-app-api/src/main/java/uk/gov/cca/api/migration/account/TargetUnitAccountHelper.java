@@ -13,7 +13,7 @@ public class TargetUnitAccountHelper {
 
     public String constructQuery(String query, String ids) {
         return ObjectUtils.isEmpty(ids) ? query
-                : String.format(query + " and tu_id IN (%s)", 
+                : query + String.format(" and tu_id IN (%s)", 
                         Arrays.stream(ids.split(","))
                         .filter(Objects::nonNull)
                         .map(id -> "'" + id.trim() + "'")

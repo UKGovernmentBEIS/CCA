@@ -1,19 +1,22 @@
 <div class="govuk-grid-row" data-testid="email-sent">
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-l">Password reset email sent</h2>
-    <p class="govuk-body">
+    <p>
       We have sent an email to <strong>{{ email }}</strong> with details on how to reset your password.
     </p>
+
     <details class="govuk-details" data-module="govuk-details">
       <summary class="govuk-details__summary">
         <span class="govuk-details__summary-text"> I didn't get an email </span>
       </summary>
+
       <div class="govuk-details__text">
-        <p class="govuk-body">
+        <p>
           If you have not received the email after a few minutes, check your spam or junk folder. The subject of the
           email is ‘Password reset request – Energy Savings Opportunity Scheme’.
         </p>
-        <p class="govuk-body">
+
+        <p>
           You can
           <a class="govuk-link" [routerLink]="['/forgot-password']" (click)="retry.emit()">
             request another password reset email

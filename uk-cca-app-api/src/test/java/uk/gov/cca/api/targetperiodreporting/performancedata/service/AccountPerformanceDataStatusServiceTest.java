@@ -19,9 +19,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.common.exception.CcaErrorCode;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriod;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiod.repository.TargetPeriodRepository;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
+import uk.gov.cca.api.targetperiodreporting.performancedata.validation.AccountPerformanceDataStatusValidationService;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.AccountPerformanceDataStatus;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataContainer;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataEntity;
@@ -29,26 +30,25 @@ import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDa
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.AccountPerformanceDataUpdateLockDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.repository.AccountPerformanceDataStatusRepository;
 import uk.gov.cca.api.targetperiodreporting.performancedata.repository.PerformanceDataRepository;
-import uk.gov.cca.api.targetperiodreporting.performancedata.service.validator.AccountPerformanceDataStatusValidatorService;
 import uk.gov.netz.api.common.exception.BusinessException;
 
 @ExtendWith(MockitoExtension.class)
 class AccountPerformanceDataStatusServiceTest {
 
 	@InjectMocks
-	AccountPerformanceDataStatusService accountPerformanceDataStatusService;
+	private AccountPerformanceDataStatusService accountPerformanceDataStatusService;
 
 	@Mock
-	AccountPerformanceDataStatusRepository accountPerformanceDataStatusRepository;
+	private AccountPerformanceDataStatusRepository accountPerformanceDataStatusRepository;
 
 	@Mock
-	PerformanceDataRepository performanceDataRepository;
+	private PerformanceDataRepository performanceDataRepository;
 
 	@Mock
-	TargetPeriodRepository targetPeriodRepository;
+	private TargetPeriodService targetPeriodService;
 
 	@Mock
-	AccountPerformanceDataStatusValidatorService validatorService;
+	private AccountPerformanceDataStatusValidationService validatorService;
 
 	@Test
 	void updateAccountPerformanceDataStatusLock() {
@@ -86,7 +86,7 @@ class AccountPerformanceDataStatusServiceTest {
 		when(accountPerformanceDataStatusRepository.findByAccountIdAndTargetPeriodBusinessIdForUpdate(accountId,
 				targetPeriodType)).thenReturn(Optional.empty());
 
-		when(targetPeriodRepository.findByBusinessId(targetPeriodType)).thenReturn(Optional.of(tp6TargetPeriod));
+		when(targetPeriodService.findByTargetPeriodType(targetPeriodType)).thenReturn(tp6TargetPeriod);
 
 		when(performanceDataRepository.save(any(PerformanceDataEntity.class))).thenReturn(performanceDataEntity);
 
@@ -97,6 +97,7 @@ class AccountPerformanceDataStatusServiceTest {
 		verify(accountPerformanceDataStatusRepository, times(1))
 				.findByAccountIdAndTargetPeriodBusinessIdForUpdate(accountId, targetPeriodType);
 		verify(performanceDataRepository, times(1)).save(any(PerformanceDataEntity.class));
+		verify(targetPeriodService, times(1)).findByTargetPeriodType(targetPeriodType);
 		verify(accountPerformanceDataStatusRepository, times(1)).save(any(AccountPerformanceDataStatus.class));
 
 	}
@@ -119,7 +120,7 @@ class AccountPerformanceDataStatusServiceTest {
 		when(accountPerformanceDataStatusRepository.findByAccountIdAndTargetPeriodBusinessIdForUpdate(accountId,
 				targetPeriodType)).thenReturn(Optional.of(existingAccountPerformanceDataStatus));
 
-		when(targetPeriodRepository.findByBusinessId(targetPeriodType)).thenReturn(Optional.of(tp6TargetPeriod));
+		when(targetPeriodService.findByTargetPeriodType(targetPeriodType)).thenReturn(tp6TargetPeriod);
 
 		when(performanceDataRepository.save(any(PerformanceDataEntity.class))).thenReturn(performanceDataEntity);
 
@@ -130,7 +131,7 @@ class AccountPerformanceDataStatusServiceTest {
 		assertTrue(existingAccountPerformanceDataStatus.isLocked());
 		verify(accountPerformanceDataStatusRepository, times(1))
 				.findByAccountIdAndTargetPeriodBusinessIdForUpdate(accountId, targetPeriodType);
-		verify(targetPeriodRepository, times(1)).findByBusinessId(targetPeriodType);
+		verify(targetPeriodService, times(1)).findByTargetPeriodType(targetPeriodType);
 		verify(performanceDataRepository, times(1)).save(any(PerformanceDataEntity.class));
 		verify(accountPerformanceDataStatusRepository, never()).save(any(AccountPerformanceDataStatus.class));
 

@@ -8,13 +8,11 @@
 >
   <h3 class="govuk-heading-m">Users automatically notified</h3>
 
-  <div class="govuk-body">
-    @for (user of defaultUsers(); track user.email) {
-      <p class="govuk-!-margin-bottom-1 govuk-!-margin-top-0">
-        {{ user.firstName }} {{ user.lastName }}, {{ user.type | noticeRecipientsType }}, {{ user.email }}
-      </p>
-    }
-  </div>
+  @for (user of defaultUsers(); track user.email) {
+    <p class="govuk-!-margin-bottom-1 govuk-!-margin-top-0">
+      {{ user.firstName }} {{ user.lastName }}, {{ user.type | noticeRecipientsType }}, {{ user.email }}
+    </p>
+  }
 
   @if (additionalUsers(); as additionalUsers) {
     <div
@@ -28,7 +26,7 @@
         <govuk-checkbox
           [value]="user"
           [label]="user.firstName + ' ' + user.lastName + ', ' + (user.type | noticeRecipientsType) + ', ' + user.email"
-        ></govuk-checkbox>
+        />
       }
     </div>
   }
@@ -42,7 +40,7 @@
       govuk-checkboxes
     >
       @for (contact of caExternalContacts; track contact.id) {
-        <govuk-checkbox [value]="contact.id" [label]="contact.email"></govuk-checkbox>
+        <govuk-checkbox [value]="contact.id" [label]="contact.email" />
       }
     </div>
   }
@@ -56,4 +54,4 @@
 </cca-wizard-step>
 
 <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>
+<netz-return-to-task-or-action-page />

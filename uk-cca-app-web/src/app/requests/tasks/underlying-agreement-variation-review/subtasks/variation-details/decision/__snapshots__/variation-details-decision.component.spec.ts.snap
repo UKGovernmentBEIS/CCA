@@ -14,11 +14,7 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
       </h1>
     </netz-page-heading>
     <cca-summary>
-      <h2
-        class="govuk-heading-m"
-      >
-        
-      </h2>
+      
       <dl
         class="govuk-summary-list govuk-!-margin-bottom-9"
         govuk-summary-list=""
@@ -34,9 +30,10 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             Target Unit/Facility changes
           </dt>
           <dd
-            class="pre-wrap govuk-summary-list__value"
+            class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
             
             
              Amend the 70% rule evaluation for one or more facilities 
@@ -51,11 +48,12 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
           >
             <a
               class="govuk-link"
-              href="/details?change=true"
+              href="/variation-details?change=true"
             >
               Change
             </a>
           </dd>
+          
           
         </div>
         <div
@@ -69,9 +67,10 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             Amend the target currency to
           </dt>
           <dd
-            class="pre-wrap govuk-summary-list__value"
+            class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
             
             
              change the throughput unit 
@@ -86,11 +85,12 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
           >
             <a
               class="govuk-link"
-              href="/details?change=true"
+              href="/variation-details?change=true"
             >
               Change
             </a>
           </dd>
+          
           
         </div>
         <div
@@ -104,9 +104,10 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             Explain what you are changing and the reason for the changes
           </dt>
           <dd
-            class="pre-wrap govuk-summary-list__value"
+            class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
             
             
              Variation reason 
@@ -121,17 +122,19 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
           >
             <a
               class="govuk-link"
-              href="/details?change=true"
+              href="/variation-details?change=true"
             >
               Change
             </a>
           </dd>
+          
           
         </div>
         
         
         
       </dl>
+      
       
     </cca-summary>
     <cca-wizard-step
@@ -202,14 +205,12 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
                       class="govuk-label govuk-radios__label"
                       for="type-option0"
                     >
-                      Accepted
-                      
+                       Accepted 
                       
                       
                     </label>
                     
                   </div>
-                  
                   
                   
                   
@@ -228,14 +229,12 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
                       class="govuk-label govuk-radios__label"
                       for="type-option1"
                     >
-                      Rejected
-                      
+                       Rejected 
                       
                       
                     </label>
                     
                   </div>
-                  
                   
                   
                   
@@ -277,69 +276,65 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
               class="cca-multi-file-upload cca-multi-file-upload--enhanced"
             >
               <div
-                class="cca-multi-file-upload__upload"
+                class="govuk-form-group"
               >
-                <div
-                  class="govuk-form-group"
+                <label
+                  class="govuk-label govuk-label--m"
+                  for="files"
+                  id="l.files"
                 >
+                  Upload evidence (optional)
+                </label>
+                <span
+                  class="govuk-hint"
+                  id="files-hint-file-size"
+                >
+                   Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
+                </span>
+                
+                
+                
+                <div
+                  class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
+                >
+                  <input
+                    accept="*/*"
+                    aria-labelledby="l.files ld.files"
+                    class="govuk-file-upload cca-multi-file-upload__input"
+                    id="files"
+                    multiple=""
+                    name="files"
+                    type="file"
+                  />
+                  <p
+                    class="govuk-body"
+                  >
+                    Drag and drop files here or
+                  </p>
                   <label
-                    class="govuk-label govuk-label--null"
+                    class="govuk-button govuk-button--secondary"
                     for="files"
-                    id="l.files"
+                    id="ld.files"
                   >
-                    Upload evidence (optional)
+                     Choose files 
                   </label>
-                  <span
-                    class="govuk-hint"
-                    id="files-hint-file-size"
-                  >
-                     Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
-                  </span>
-                  
-                  
-                  
                   <div
-                    class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
+                    aria-live="polite"
+                    class="govuk-visually-hidden"
+                    role="status"
                   >
-                    <input
-                      accept="*/*"
-                      aria-labelledby="l.files ld.files"
-                      class="govuk-file-upload cca-multi-file-upload__input"
-                      id="files"
-                      multiple=""
-                      name="files"
-                      type="file"
-                    />
-                    <p
-                      class="govuk-body"
-                    >
-                      Drag and drop files here or
-                    </p>
-                    <label
-                      class="govuk-button govuk-button--secondary"
-                      for="files"
-                      id="ld.files"
-                    >
-                       Choose files 
-                    </label>
-                    <div
-                      aria-live="polite"
-                      class="govuk-visually-hidden"
-                      role="status"
-                    >
-                      
-                    </div>
+                    
                   </div>
                 </div>
               </div>
               <cca-file-upload-list>
                 <div
-                  class="cca-multi-file__uploaded-files govuk-body cca-hidden"
+                  class="cca-multi-file__uploaded-files cca-hidden"
                 >
                   
                   
                   <dl
-                    class="govuk-summary-list cca-multi-file-upload__list"
+                    class="govuk-summary-list"
                   >
                     
                   </dl>
@@ -372,7 +367,7 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
   />
   <netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Review underlying agreement variation 

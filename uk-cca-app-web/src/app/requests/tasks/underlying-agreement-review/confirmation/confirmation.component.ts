@@ -9,7 +9,7 @@ import { underlyingAgreementReviewQuery } from '@requests/common';
   selector: 'cca-confirmation',
   standalone: true,
   template: `
-    <govuk-panel>Application {{ this.determinationType === 'ACCEPTED' ? 'accepted' : 'rejected' }}</govuk-panel>
+    <govuk-panel>Application {{ determinationType === 'ACCEPTED' ? 'accepted' : 'rejected' }}</govuk-panel>
     <a class="govuk-link" [routerLink]="['/dashboard']"> Return to: Dashboard </a>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,5 +17,6 @@ import { underlyingAgreementReviewQuery } from '@requests/common';
 })
 export class NotifyOperatorConfirmationComponent {
   private readonly store = inject(RequestTaskStore);
+
   protected readonly determinationType = this.store.select(underlyingAgreementReviewQuery.selectDetermination)().type;
 }

@@ -1,37 +1,81 @@
-import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
-import { TaskService } from '@netz/common/forms';
-import { RequestTaskStore } from '@netz/common/store';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
-import { MANAGE_FACILITIES_SUBTASK, ManageFacilitiesWizardStep, underlyingAgreementQuery } from '@requests/common';
+import { MANAGE_FACILITIES_SUBTASK, TasksApiService, underlyingAgreementQuery } from '@requests/common';
+import { produce } from 'immer';
 
-import { Facility } from 'cca-api';
+import {
+  UnderlyingAgreementVariationApplySavePayload,
+  UnderlyingAgreementVariationSubmitRequestTaskPayload,
+} from 'cca-api';
+
+import { createRequestTaskActionProcessDTO, toUnderlyingAgreementVariationSavePayload } from '../../../transform';
+import { extractReviewProps } from '../../../utils';
 
 @Component({
   selector: 'cca-facility-item-undo',
+  templateUrl: './facility-item-undo.component.html',
   standalone: true,
   imports: [PageHeadingComponent, RouterLink, ButtonDirective, PendingButtonDirective],
-  templateUrl: './facility-item-undo.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityItemUndoComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
-  private readonly taskService = inject(TaskService);
-  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly tasksApiService = inject(TasksApiService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
-  private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
-  protected readonly facility: Signal<Facility> = this.requestTaskStore.select(
-    underlyingAgreementQuery.selectFacility(this.facilityId),
-  );
+  private readonly facilityId = this.route.snapshot.params.facilityId;
+  protected readonly facility = this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId));
 
   onSubmit() {
-    this.taskService
-      .saveSubtask(MANAGE_FACILITIES_SUBTASK, ManageFacilitiesWizardStep.UNDO_FACILITY, this.activatedRoute, {
-        facilityId: this.facility().facilityId,
-      })
-      .subscribe();
+    // Step 1: Get payload from store
+    const payload = this.requestTaskStore.select(
+      requestTaskQuery.selectRequestTaskPayload,
+    )() as UnderlyingAgreementVariationSubmitRequestTaskPayload;
+
+    // Step 2: Transform to save action payload
+    const savePayload = toUnderlyingAgreementVariationSavePayload(payload);
+
+    // Step 3: Apply business logic transformations
+    const updatedPayload = undoFacility(savePayload, this.facilityId);
+
+    // Update sections completed
+    const currentSectionsCompleted = this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)();
+    const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
+      draft[MANAGE_FACILITIES_SUBTASK] = 'IN_PROGRESS';
+    });
+
+    // Create and send DTO
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+    const reviewProps = extractReviewProps(this.requestTaskStore);
+    // we cannot reset the review section here because in this step we do not know if the change of the section
+    // started from the facility wizard, or was simply an exclusion. Thus, we prefer to keep the review section as undecided for safety.
+    const dto = createRequestTaskActionProcessDTO(requestTaskId, updatedPayload, sectionsCompleted, reviewProps);
+
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
+      this.router.navigate(['../../'], { relativeTo: this.route });
+    });
   }
+}
+
+function undoFacility(
+  payload: UnderlyingAgreementVariationApplySavePayload,
+  facilityId: string,
+): UnderlyingAgreementVariationApplySavePayload {
+  return produce(payload, (draft) => {
+    draft.facilities = draft.facilities.map((f) =>
+      f.facilityId === facilityId
+        ? {
+            ...f,
+            status: 'LIVE',
+            excludedDate: null,
+          }
+        : f,
+    );
+  });
 }

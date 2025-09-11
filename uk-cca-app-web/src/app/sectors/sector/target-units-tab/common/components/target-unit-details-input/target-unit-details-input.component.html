@@ -1,7 +1,7 @@
 <div class="govuk-!-width-two-thirds">
   <div formControlName="operatorType" govuk-radio legend="Operator type" legendSize="medium" hint="Select one option">
     @for (option of operatorTypeOptions; track option.value) {
-      <govuk-radio-option [label]="option.text" [value]="option.value"></govuk-radio-option>
+      <govuk-radio-option [label]="option.text" [value]="option.value" />
     }
   </div>
 
@@ -26,7 +26,7 @@
           widthClass="govuk-input--width-10"
           formControlName="companyRegistrationNumber"
           govuk-text-input
-          label="Company registration number"
+          label="Company number"
         ></div>
       </ng-container>
     </govuk-radio-option>
@@ -42,26 +42,43 @@
     </govuk-radio-option>
   </div>
 
-  <div class="govuk-!-margin-bottom-6">
-    <div
-      formControlName="sicCode"
-      widthClass="govuk-input--width-10"
-      class="govuk-!-margin-bottom-1"
-      govuk-text-input
-      label="Standard Industrial Classification (SIC) code (optional)"
-      labelSize="medium"
-      hint="In case of multiple SIC codes, you should provide the most relevant to the activity that's eligible for inclusion in the agreement."
-    ></div>
-
-    <a
-      class="govuk-link"
-      rel="noreferrer noopener"
-      href="https://www.gov.uk/government/publications/standard-industrial-classification-of-economic-activities-sic"
-      target="_blank"
-    >
-      View all SIC codes
+  <p class="govuk-body">Standard Industrial Classification (SIC) codes (optional)</p>
+  <p class="govuk-hint">
+    You can add, edit or remove SIC codes. <br />You can find a
+    <a class="govuk-link" rel="noreferrer noopener" href="https://resources.companieshouse.gov.uk/sic/" target="_blank">
+      condensed list of all SIC codes
     </a>
-  </div>
+    on the Companies House website.
+  </p>
+
+  <ng-container formArrayName="sicCodes">
+    @for (sicCode of sicCodeFormArray.controls; let i = $index; track sicCode) {
+      <div class="row-flex govuk-!-margin-right-3">
+        <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+          <div [formControlName]="i" govuk-text-input class="govuk-!-width-full"></div>
+        </div>
+        <div class="govuk-grid-column-one-third">
+          @if (sicCodeFormArray.length > 1) {
+            <a
+              govukLink
+              (click)="removeCode(i)"
+              (keydown)="removeCode(i)"
+              role="button"
+              tabindex="0"
+              class="govuk-!-width-two-thirds"
+              >Remove</a
+            >
+          }
+        </div>
+      </div>
+    }
+  </ng-container>
+
+  @if (sicCodeFormArray.length < 4) {
+    <div class="govuk-button-group">
+      <button (click)="addCode()" govukSecondaryButton type="button">Add a code</button>
+    </div>
+  }
 
   @if (subSectorOptions.length > 0) {
     <div [options]="subSectorOptions" formControlName="subsectorAssociationId" govuk-select label="Subsector"></div>

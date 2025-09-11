@@ -14,31 +14,32 @@ import java.util.Optional;
 import java.util.Set;
 
 @Repository
+@Transactional(readOnly = true)
 public interface FacilityDataRepository extends JpaRepository<FacilityData, Long> {
 
-    @Transactional(readOnly = true)
     @EntityGraph(value = "facility-address-graph", type = EntityGraph.EntityGraphType.LOAD)
     Optional<FacilityData> findByFacilityId(String facilityId);
 
-    @Transactional(readOnly = true)
     boolean existsByFacilityId(String facilityId);
 
-	@Transactional(readOnly = true)
     boolean existsByFacilityIdAndClosedDateIsNull(String facilityId);
 
-    @Transactional(readOnly = true)
+    Optional<FacilityData> findByFacilityIdAndClosedDateIsNull(String facilityId);
+
     List<FacilityData> findAllByFacilityIdIn(Set<String> facilityIds);
 
-    @Transactional(readOnly = true)
     List<FacilityData> findFacilityDataByAccountIdAndClosedDateIsNull(Long accountId);
 
-    @Transactional(readOnly = true)
+    @Query(value = "select fd.id from FacilityData fd where fd.accountId = :accountId and fd.closedDate is NULL")
+    List<Long> findFacilityIdsByAccountIdAndClosedDateIsNull(Long accountId);
+
     @Query(value = "select fd "
             + "from FacilityData fd "
             + "where fd.accountId = (:accountId) "
             + "and (LOWER(fd.facilityId) like CONCAT('%',:term,'%') "
-            + "or LOWER(fd.siteName) like CONCAT('%',:term,'%')) "
-            + "order by fd.facilityId asc")
+            + "or LOWER(fd.siteName) like CONCAT('%',:term,'%')) ")
     Page<FacilityData> searchFacilityDataByAccountIdAndTerm(Pageable pageable, Long accountId, String term);
-
+    
+    @Query(value = "select fd.id from FacilityData fd where fd.facilityId = :facilityId")
+    Optional<Long> findIdByFacilityId(String facilityId);
 }

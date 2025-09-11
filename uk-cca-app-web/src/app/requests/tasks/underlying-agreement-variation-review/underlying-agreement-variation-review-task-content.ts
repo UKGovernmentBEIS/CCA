@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 
-import { TaskSection } from '@netz/common/model';
+import { TaskItem, TaskSection } from '@netz/common/model';
 import { RequestTaskPageContentFactory } from '@netz/common/request-task';
 import { RequestTaskStore } from '@netz/common/store';
 import {
@@ -8,11 +8,13 @@ import {
   BaselineAndTargetPeriodsSubtasks,
   overallDecisionStatus,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
+  sortFacilitiesById,
   TaskItemStatus,
-  transformFacilities,
   UNAVariationReviewRequestTaskPayload,
   VARIATION_DETAILS_SUBTASK,
 } from '@requests/common';
+
+import { Facility } from 'cca-api';
 
 import { UnderlyingAgreementVariationReviewPrecontentComponent } from './precontent/underlying-agreement-variation-review-precontent.component';
 import { reviewSectionsCompleted } from './utils';
@@ -32,24 +34,6 @@ export const underlyingAgreementVariationReviewTaskContent: RequestTaskPageConte
 export function getAllUnderlyingAgreementVariationSections(
   payload: UNAVariationReviewRequestTaskPayload,
 ): TaskSection[] {
-  const facilities = transformFacilities(
-    payload?.underlyingAgreement?.facilities,
-    ['NEW', 'LIVE'],
-    payload?.reviewSectionsCompleted,
-    routePrefix,
-    'summary',
-    TaskItemStatus.UNDECIDED,
-  );
-
-  const excludedFacilities = transformFacilities(
-    payload?.underlyingAgreement?.facilities,
-    ['EXCLUDED'],
-    payload?.reviewSectionsCompleted,
-    routePrefix,
-    'summary',
-    TaskItemStatus.UNDECIDED,
-  );
-
   return [
     {
       title: 'Variation details',
@@ -73,11 +57,11 @@ export function getAllUnderlyingAgreementVariationSections(
     },
     {
       title: 'Facilities',
-      tasks: facilities,
+      tasks: activeFacilitiesToTaskItems(payload?.underlyingAgreement?.facilities, payload?.reviewSectionsCompleted),
     },
     {
       title: 'Excluded facilities',
-      tasks: excludedFacilities,
+      tasks: excludedFacilitiesToTaskItems(payload?.underlyingAgreement?.facilities, payload?.reviewSectionsCompleted),
     },
     {
       title: 'Baseline and Targets',
@@ -120,4 +104,30 @@ export function getAllUnderlyingAgreementVariationSections(
       ],
     },
   ].filter((item) => item.tasks.length > 0);
+}
+
+function activeFacilitiesToTaskItems(
+  facilities: Facility[],
+  reviewSectionsCompleted: Record<string, string>,
+): TaskItem[] {
+  return sortFacilitiesById(facilities)
+    .filter((facility) => facility.status === 'NEW' || facility.status === 'LIVE')
+    .map((facility) => ({
+      status: reviewSectionsCompleted?.[facility.facilityId] ?? TaskItemStatus.UNDECIDED,
+      link: `${routePrefix}/facility/${facility.facilityId}`,
+      linkText: `${facility.facilityDetails.name} (${facility.facilityId})`,
+    }));
+}
+
+function excludedFacilitiesToTaskItems(
+  facilities: Facility[],
+  reviewSectionsCompleted: Record<string, string>,
+): TaskItem[] {
+  return sortFacilitiesById(facilities)
+    .filter((facility) => facility.status === 'EXCLUDED')
+    .map((facility) => ({
+      status: reviewSectionsCompleted?.[facility.facilityId] ?? TaskItemStatus.UNDECIDED,
+      link: `${routePrefix}/facility/${facility.facilityId}`,
+      linkText: `${facility.facilityDetails.name} (${facility.facilityId})`,
+    }));
 }

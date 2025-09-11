@@ -43,9 +43,9 @@ export const OperatorUserInvitationGuard: CanActivateFn = (route) => {
         });
 
         return of(false);
-      } else {
-        return throwError(() => res);
       }
+
+      return throwError(() => res);
     }),
   );
 };
@@ -53,11 +53,9 @@ export const OperatorUserNoTokenGuard: CanActivateFn = (): Observable<boolean | 
   const router = inject(Router);
   const storeUser = inject(OperatorUserInvitationStore).state;
 
-  if (!storeUser.emailToken) {
-    return of(router.parseUrl('landing'));
-  } else {
-    return of(true);
-  }
+  if (!storeUser.emailToken) return of(router.parseUrl('landing'));
+
+  return of(true);
 };
 
 export const resetOperatorInvitationStore: CanDeactivateFn<boolean> = () => {

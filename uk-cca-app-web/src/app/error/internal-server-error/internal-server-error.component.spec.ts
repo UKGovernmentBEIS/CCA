@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GovukComponentsModule } from '@netz/govuk-components';
-
 import { InternalServerErrorComponent } from './internal-server-error.component';
 
 describe('InternalServerErrorComponent', () => {
@@ -10,11 +8,9 @@ describe('InternalServerErrorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InternalServerErrorComponent, GovukComponentsModule],
+      imports: [InternalServerErrorComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(InternalServerErrorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

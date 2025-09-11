@@ -38,11 +38,11 @@ export class DeleteSectorUserComponent {
   private readonly businessErrorService = inject(BusinessErrorService);
 
   private readonly sectorUserId = this.route.snapshot.paramMap.get('sectorUserId');
-  readonly sectorId = +this.route.snapshot.paramMap.get('sectorId');
+  protected readonly sectorId = +this.route.snapshot.paramMap.get('sectorId');
 
-  sectorUser = (this.route.snapshot.data as SectorRouteData)?.sectorUserDetails;
+  protected readonly sectorUser = (this.route.snapshot.data as SectorRouteData)?.sectorUserDetails;
 
-  isConfirmationDisplayed = signal(false);
+  protected readonly isConfirmationDisplayed = signal(false);
 
   onDeleteSectorUser(): void {
     let sectorAssociationAuthoritiesObs: Observable<void>;

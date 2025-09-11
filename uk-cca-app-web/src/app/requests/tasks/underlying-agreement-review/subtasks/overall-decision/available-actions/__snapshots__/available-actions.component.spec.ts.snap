@@ -20,9 +20,7 @@ exports[`ExplanationComponent should match snapshot for AvailableActionsComponen
     >
       Available actions
     </h2>
-    <p
-      class="govuk-body"
-    >
+    <p>
       Based on the current status of the determination
     </p>
     <div>
@@ -42,7 +40,7 @@ exports[`ExplanationComponent should match snapshot for AvailableActionsComponen
   />
   <netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Review application for underlying agreement 

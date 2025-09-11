@@ -10,7 +10,7 @@ import { screen } from '@testing-library/dom';
 
 import { ActiveTargetUnitStore } from '../../active-target-unit.store';
 import { PerformanceReportStore } from '../performance-report-store';
-import { mockAccountPerformanceState } from './testing/mock-data';
+import { mockAccountPerformanceState } from './performance-data/testing/mock-data';
 import { TuReportsTabComponent } from './tu-reports-tab.component';
 
 describe('TuReportsTabComponent', () => {
@@ -35,10 +35,12 @@ describe('TuReportsTabComponent', () => {
         provideHttpClientTesting(),
       ],
     }).compileComponents();
+
     activeTargetUnitStore = TestBed.inject(ActiveTargetUnitStore);
     performanceReportStore = TestBed.inject(PerformanceReportStore);
     activeTargetUnitStore.setState({});
     performanceReportStore.setState(mockAccountPerformanceState);
+
     fixture = TestBed.createComponent(TuReportsTabComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -68,6 +70,6 @@ describe('TuReportsTabComponent', () => {
   });
 
   it('should display the performance report component when section is performance', () => {
-    expect(screen.getByTestId('performance report component')).toBeTruthy();
+    expect(screen.getByTestId('performance-report-component')).toBeTruthy();
   });
 });

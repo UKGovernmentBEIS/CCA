@@ -14,6 +14,7 @@ describe('AuthorizeGuard', () => {
   let guard: boolean | UrlTree;
   let authStore: AuthStore;
   let router: Router;
+
   const route = new ActivatedRouteStub();
 
   beforeEach(() => {
@@ -54,6 +55,7 @@ describe('AuthorizeGuard', () => {
       status: 'NO_AUTHORITY',
       roleType: 'REGULATOR',
     });
+
     guard = TestBed.runInInjectionContext(() => AuthorizeGuard());
     expect(guard).toEqual(true);
   });

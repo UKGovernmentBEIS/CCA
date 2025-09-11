@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { GovukValidators } from '@netz/govuk-components';
 
-import { FacilityDataDetailsDTO } from 'cca-api';
+import { FacilityInfoDTO } from 'cca-api';
 
 export type EditFacilityDetailsFormModel = FormGroup<{
   hasFacilityExited: FormControl<boolean>;
@@ -21,7 +21,7 @@ export const editFacilityDetailsFormProvider = (): Provider => {
     provide: EDIT_FACILITY_DETAILS_FORM_PROVIDER,
     deps: [FormBuilder, ActivatedRoute],
     useFactory: (fb: FormBuilder, activatedRoute: ActivatedRoute) => {
-      const facilityDetails = activatedRoute.snapshot.data.facilityDetails as FacilityDataDetailsDTO;
+      const facilityDetails = activatedRoute.snapshot.data.facilityDetails as FacilityInfoDTO;
 
       const group = fb.group({
         hasFacilityExited: fb.control(!!facilityDetails?.schemeExitDate),

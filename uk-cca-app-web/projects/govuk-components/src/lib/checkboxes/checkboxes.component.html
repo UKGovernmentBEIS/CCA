@@ -1,20 +1,24 @@
 <fieldset [id]="identifier" govukFieldset>
-  <legend [size]="legendSize" govukLegend>
-    <ng-container *ngIf="legend; else customLegend">{{ legend }}</ng-container>
-    <ng-template #customLegend>
+  <legend [size]="legendSize()" govukLegend>
+    @if (legend()) {
+      {{ legend() }}
+    } @else {
       <ng-content select="[govukLegend]"></ng-content>
-    </ng-template>
+    }
   </legend>
-  <div *ngIf="hint" govukFieldsetHint [innerHTML]="hint"></div>
-  <govuk-error-message
-    *ngIf="shouldDisplayErrors"
-    [errors]="control.errors"
-    [identifier]="identifier"
-  ></govuk-error-message>
-  <div [class.govuk-checkboxes--small]="size === 'small'" class="govuk-checkboxes">
-    <ng-container *ngFor="let option of options">
-      <ng-container [ngTemplateOutlet]="option.optionTemplate"></ng-container>
-      <ng-container [ngTemplateOutlet]="option.conditionalTemplate"></ng-container>
-    </ng-container>
+
+  @if (hint()) {
+    <div govukFieldsetHint [innerHTML]="hint()"></div>
+  }
+
+  @if (shouldDisplayErrors) {
+    <govuk-error-message [errors]="control.errors" [identifier]="identifier"></govuk-error-message>
+  }
+
+  <div [class.govuk-checkboxes--small]="size() === 'small'" class="govuk-checkboxes">
+    @for (option of options(); track option) {
+      <ng-container [ngTemplateOutlet]="option.optionTemplate()"></ng-container>
+      <ng-container [ngTemplateOutlet]="option.conditionalTemplate()"></ng-container>
+    }
   </div>
 </fieldset>

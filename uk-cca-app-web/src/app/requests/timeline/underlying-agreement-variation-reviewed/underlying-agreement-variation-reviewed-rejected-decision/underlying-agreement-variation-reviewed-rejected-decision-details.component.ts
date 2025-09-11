@@ -10,15 +10,15 @@ import { toRejectedDecisionDetailsSummaryData } from '../underlying-agreement-va
 
 @Component({
   selector: 'cca-underlying-agreement-variation-reviewed-rejected-decision',
+  template: ` <cca-summary [data]="summaryData()" />`,
   standalone: true,
   imports: [SummaryComponent],
-  template: ` <cca-summary [data]="summaryData()" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementVariationReviewedRejectedDecisionDetailsComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
-  readonly summaryData = computed(() =>
+  protected readonly summaryData = computed(() =>
     toRejectedDecisionDetailsSummaryData(
       this.requestActionStore.select(
         underlyingAgreementRequestActionQuery.selectPayload,

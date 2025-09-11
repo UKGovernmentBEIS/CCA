@@ -11,9 +11,21 @@ import { SectorUserInvitationStore } from '../sector-user-invitation.store';
 
 @Component({
   selector: 'cca-sector-user-invitation-create-password',
-  templateUrl: './sector-user-invitation-create-password.component.html',
+  template: `
+    @if (isErrorSummaryDisplayed()) {
+      <govuk-error-summary [form]="form" />
+    }
+
+    <div class="govuk-!-width-three-quarters">
+      <netz-page-heading [caption]="'Create user account'">Create a password</netz-page-heading>
+
+      <form (ngSubmit)="onSubmitPassword()" [formGroup]="form" data-testid="invited-sector-user-password-form">
+        <cca-password />
+        <button netzPendingButton govukButton type="submit">Continue</button>
+      </form>
+    </div>
+  `,
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageHeadingComponent,
     PasswordComponent,
@@ -23,15 +35,16 @@ import { SectorUserInvitationStore } from '../sector-user-invitation.store';
     PendingButtonDirective,
   ],
   providers: [passwordFormFactory],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorUserInvitationCreatePasswordComponent {
   private readonly store = inject(SectorUserInvitationStore);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
 
-  readonly form = inject<FormGroup>(PASSWORD_FORM);
+  protected readonly form = inject<FormGroup>(PASSWORD_FORM);
 
-  isErrorSummaryDisplayed = signal(false);
+  protected readonly isErrorSummaryDisplayed = signal(false);
 
   onSubmitPassword() {
     if (this.form.invalid) {

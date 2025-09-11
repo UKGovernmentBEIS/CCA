@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
@@ -86,7 +85,7 @@ public class SectorAssociationQueryServiceOrchestrator {
 
         // sort the list by sector name in ascending order
         return sectorAssociationInfoDTOList.stream()
-                .sorted(Comparator.comparing(SectorAssociationInfoDTO::getSector)).collect(Collectors.toList());
+                .sorted(Comparator.comparing(SectorAssociationInfoDTO::getSector)).toList();
     }
 
     private List<SectorAssociationInfoDTO> getOperatorUserSectorAssociations(AppUser appUser) {

@@ -2,10 +2,9 @@ package uk.gov.cca.api.workflow.request.flow.admintermination.submit.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
@@ -37,5 +36,21 @@ public class AdminTerminationSubmitService {
         requestPayload.setAdminTerminationSubmitAttachments(taskPayload.getAdminTerminationAttachments());
         requestPayload.setSectionsCompleted(taskPayload.getSectionsCompleted());
         requestPayload.setDecisionNotification(decisionNotification);
+    }
+
+    @Transactional
+    public void requestPeerReview(final RequestTask requestTask, final String selectedPeerReviewer,
+                                  final String regulatorReviewer) {
+
+        final AdminTerminationSubmitRequestTaskPayload taskPayload =
+                (AdminTerminationSubmitRequestTaskPayload) requestTask.getPayload();
+        final Request request = requestTask.getRequest();
+        final AdminTerminationRequestPayload requestPayload = (AdminTerminationRequestPayload) request.getPayload();
+
+        requestPayload.setAdminTerminationReasonDetails(taskPayload.getAdminTerminationReasonDetails());
+        requestPayload.setAdminTerminationSubmitAttachments(taskPayload.getAdminTerminationAttachments());
+        requestPayload.setSectionsCompleted(taskPayload.getSectionsCompleted());
+        requestPayload.setRegulatorReviewer(regulatorReviewer);
+        requestPayload.setRegulatorPeerReviewer(selectedPeerReviewer);
     }
 }

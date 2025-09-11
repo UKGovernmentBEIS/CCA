@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 
 @Data
@@ -19,7 +18,6 @@ public class UnderlyingAgreementDTO {
     private UnderlyingAgreementContainer underlyingAgreementContainer;
     private Long accountId;
     private int consolidationNumber;
-    private MeasurementType measurementType;
     private String fileDocumentUuid;
     private LocalDateTime activationDate;
 }

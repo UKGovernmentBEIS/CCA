@@ -1,7 +1,6 @@
 package uk.gov.cca.api.workflow.bpmn.handler.admintermination;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,11 +21,6 @@ class AdminTerminationUpdateAccountHandlerTest {
     private DelegateExecution execution;
     @Mock
     AdminTerminationFinalisedService adminTerminationFinalisedService;
-
-
-    @BeforeEach
-    void setUp() {
-    }
 
     @Test
     void execute() throws Exception {

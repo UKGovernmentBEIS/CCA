@@ -39,19 +39,20 @@ import { ADD_SECTOR_FORM, AddSectorFormModel, AddSectorFormProvider } from './ad
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddSectorUserComponent {
-  form = inject<AddSectorFormModel>(ADD_SECTOR_FORM);
-  route = inject(ActivatedRoute);
-  sectorUserInvitationService = inject(SectorUsersInvitationService);
-  router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly sectorUserInvitationService = inject(SectorUsersInvitationService);
+  private readonly router = inject(Router);
 
-  status = toSignal(this.form.statusChanges.pipe(startWith(this.form.status)));
-  role = this.route.snapshot.queryParamMap.get('role') as RoleCode;
-  sectorId = this.route.snapshot.paramMap.get('sectorId');
-  isAdmin = isAdmin(this.role);
+  protected readonly form = inject<AddSectorFormModel>(ADD_SECTOR_FORM);
 
-  title = this.isAdmin ? 'Add an administrator user' : 'Add a basic user';
+  protected readonly status = toSignal(this.form.statusChanges.pipe(startWith(this.form.status)));
+  protected readonly role = this.route.snapshot.queryParamMap.get('role') as RoleCode;
+  protected readonly sectorId = this.route.snapshot.paramMap.get('sectorId');
+  protected readonly isAdmin = isAdmin(this.role);
 
-  contactTypeOptions: { text: string; value: ContactType }[] = [
+  protected readonly title = this.isAdmin ? 'Add an administrator user' : 'Add a basic user';
+
+  protected readonly contactTypeOptions: { text: string; value: ContactType }[] = [
     {
       text: 'Sector association',
       value: 'SECTOR_ASSOCIATION',
@@ -62,7 +63,9 @@ export class AddSectorUserComponent {
   onSubmit() {
     this.form.markAsTouched();
     if (this.form.status === 'INVALID') return;
+
     const email = this.form.value.email;
+
     this.sectorUserInvitationService
       .inviteUserToSectorAssociation(+this.sectorId, this.form.getRawValue())
       .pipe(

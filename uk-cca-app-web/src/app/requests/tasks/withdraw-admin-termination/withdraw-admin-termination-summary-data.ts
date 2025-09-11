@@ -1,5 +1,5 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { transformAttachmentsAndFileUUIDsToDownloadableFiles } from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 
 import { AdminTerminationWithdrawReasonDetails } from 'cca-api';
 
@@ -13,7 +13,7 @@ export function toWithdrawAdminTerminationReasonSummaryData(
 ): SummaryData {
   return new SummaryFactory()
     .addSection('', `../${ReasonForWithdrawAdminTerminationWizardStep.REASON_DETAILS}`)
-    .addRow(
+    .addTextAreaRow(
       'Explain why you are withdrawing the admin termination',
       adminTerminationWithdrawReasonDetails.explanation,
       {
@@ -22,9 +22,11 @@ export function toWithdrawAdminTerminationReasonSummaryData(
     )
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsAndFileUUIDsToDownloadableFiles(
-        adminTerminationWithdrawReasonDetails.relevantFiles,
-        adminTerminationWithdrawAttachments,
+      fileUtils.toDownloadableFiles(
+        fileUtils.extractAttachments(
+          adminTerminationWithdrawReasonDetails.relevantFiles,
+          adminTerminationWithdrawAttachments,
+        ),
         downloadUrl,
       ),
       { change: isEditable },

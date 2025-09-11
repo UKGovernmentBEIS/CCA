@@ -1,4 +1,4 @@
-import { AsyncPipe, NgForOf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -19,16 +19,20 @@ describe('AccordionComponent', () => {
         <govuk-accordion-item header="One">
           <p>Something about one</p>
         </govuk-accordion-item>
+
         <govuk-accordion-item header="Two">
           <a href="#">View</a>
         </govuk-accordion-item>
-        <govuk-accordion-item *ngFor="let item of items$ | async" [header]="item.header">
-          <div govukAccordionItemSummary>{{ item.summary }}</div>
-          {{ item.content }}
-        </govuk-accordion-item>
+
+        @for (item of items$ | async; track item) {
+          <govuk-accordion-item [header]="item.header">
+            <div govukAccordionItemSummary>{{ item.summary }}</div>
+            {{ item.content }}
+          </govuk-accordion-item>
+        }
       </govuk-accordion>
     `,
-    imports: [AccordionItemComponent, AccordionComponent, NgForOf, AsyncPipe],
+    imports: [AccordionItemComponent, AccordionComponent, AsyncPipe],
   })
   class TestComponent {
     id = 'test-accordion';

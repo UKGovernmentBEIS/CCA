@@ -1,7 +1,7 @@
 import {
+  DECISION_TO_SUBTASK_MAP,
   OVERALL_DECISION_SUBTASK,
   staticVariationGroupDecisions,
-  StaticVariationGroupDecisionsEnum,
   TaskItemStatus,
   transform,
   UNAVariationReviewRequestTaskPayload,
@@ -10,6 +10,7 @@ import {
 import { produce } from 'immer';
 
 import {
+  Determination,
   Facility,
   UnderlyingAgreementContainer,
   UnderlyingAgreementVariationFacilityReviewDecision,
@@ -126,15 +127,16 @@ export const createProposedUnderlyingAgreementVariationPayload = (
     authorisationAndAdditionalEvidence: underlyingAgreement.authorisationAndAdditionalEvidence,
   };
 
-  if (reviewGroupDecisions['TARGET_UNIT_DETAILS'].type === 'REJECTED')
+  if (reviewGroupDecisions['TARGET_UNIT_DETAILS'].type === TaskItemStatus.REJECTED) {
     proposed.underlyingAgreementTargetUnitDetails = transform(accountReferenceData);
+  }
 
   Object.entries(reviewGroupDecisions)
-    .filter((rg) => rg[0] !== 'TARGET_UNIT_DETAILS' && rg[0] !== 'VARIATION_DETAILS')
-    .forEach((rg) => {
-      if (rg[1].type === 'REJECTED')
-        proposed[StaticVariationGroupDecisionsEnum[rg[0]]] =
-          originalUnderlyingAgreementContainer.underlyingAgreement[StaticVariationGroupDecisionsEnum[rg[0]]];
+    .filter(([reviewGroup]) => reviewGroup !== 'TARGET_UNIT_DETAILS' && reviewGroup !== 'VARIATION_DETAILS')
+    .forEach(([reviewGroup, decision]) => {
+      if (decision.type === TaskItemStatus.REJECTED)
+        proposed[DECISION_TO_SUBTASK_MAP[reviewGroup]] =
+          originalUnderlyingAgreementContainer.underlyingAgreement[DECISION_TO_SUBTASK_MAP[reviewGroup]];
     });
 
   proposed.facilities = Object.keys(facilitiesReviewGroupDecisions)
@@ -147,3 +149,37 @@ export const createProposedUnderlyingAgreementVariationPayload = (
 
   return proposed;
 };
+
+export function resetDetermination(determination: Determination): Determination {
+  return produce(determination, (draft) => {
+    if (draft?.type) {
+      draft.type = null;
+    }
+  });
+}
+
+/**
+ * When the user edits a payload, we need to reset the determination and the sections completed
+ */
+export function applySaveActionSideEffects(
+  determination: Determination,
+  reviewSectionsCompleted: Record<string, string>,
+  sectionsCompleted: Record<string, string>,
+  subtask: string,
+): {
+  determination: Determination;
+  reviewSectionsCompleted: Record<string, string>;
+  sectionsCompleted: Record<string, string>;
+} {
+  return {
+    determination: resetDetermination(determination),
+    reviewSectionsCompleted: produce(reviewSectionsCompleted, (draft) => {
+      draft[subtask] = TaskItemStatus.UNDECIDED;
+      draft[OVERALL_DECISION_SUBTASK] = TaskItemStatus.UNDECIDED;
+    }),
+    // we used to reset the sections completed, but this is not needed anymore and we want to keep the function's api the same
+    sectionsCompleted: produce(sectionsCompleted, (draft) => {
+      draft[subtask] = TaskItemStatus.IN_PROGRESS;
+    }),
+  };
+}

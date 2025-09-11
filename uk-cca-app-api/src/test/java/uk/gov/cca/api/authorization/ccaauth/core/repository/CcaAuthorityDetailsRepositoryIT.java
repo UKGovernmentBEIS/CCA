@@ -24,7 +24,7 @@ import java.util.Optional;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class CcaAuthorityDetailsRepositoryIT extends AbstractContainerBaseTest {
+class CcaAuthorityDetailsRepositoryIT extends AbstractContainerBaseTest {
 
     @Autowired
     private CcaAuthorityDetailsRepository ccaAuthorityDetailsRepository;

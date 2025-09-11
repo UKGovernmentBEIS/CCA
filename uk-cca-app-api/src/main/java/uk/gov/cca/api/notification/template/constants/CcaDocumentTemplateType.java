@@ -40,4 +40,16 @@ public class CcaDocumentTemplateType {
 
     // SC_L001_Target_Unit_MoA
     public static final String TARGET_UNIT_MOA = "TARGET_UNIT_MOA";
+
+    // L001_Initial Buy-Out MoA.docx
+    public static final String PRIMARY_BUY_OUT = "PRIMARY_BUY_OUT";
+
+    // L002_Secondary Buy-Out MoA.docx
+    public static final String SECONDARY_BUY_OUT = "SECONDARY_BUY_OUT";
+
+    // L003_Secondary Buy-Out Overpayment Letter v01.docx
+    public static final String SECONDARY_OVERPAYMENT_BUY_OUT = "SECONDARY_OVERPAYMENT_BUY_OUT";
+
+    // Buyout Refund Claim Form.docx
+    public static final String REFUND_CLAIM_FORM_BUY_OUT = "REFUND_CLAIM_FORM_BUY_OUT";
 }

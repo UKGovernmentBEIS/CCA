@@ -65,13 +65,29 @@ exports[`ReviewTargetUnitDetailsComponent should match snapshot 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Company registration number
+            Company number
           </dt>
           <dd
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             test 
+             test1234 
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Reason for not having a registration number
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
           </dd>
         </div>
       </dl>

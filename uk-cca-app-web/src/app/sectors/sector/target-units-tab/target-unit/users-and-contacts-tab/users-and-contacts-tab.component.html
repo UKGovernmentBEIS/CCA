@@ -19,7 +19,7 @@
 <form [formGroup]="usersForm" data-testid="target-unit-users-form" (ngSubmit)="onSave()">
   <govuk-table [columns]="targetUnitUsersColumns" (sort)="sortBy($event)" [data]="users()" formArrayName="users">
     <ng-template let-column="column" let-index="index" let-row="row">
-      <div [formGroupName]="index" class="cell-container">
+      <div [formGroupName]="index">
         @switch (column.field) {
           @case ('name') {
             @if (isEditable() || row.userId === currentUserId()) {

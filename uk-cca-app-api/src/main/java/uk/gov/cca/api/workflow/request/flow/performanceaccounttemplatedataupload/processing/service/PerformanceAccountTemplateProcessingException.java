@@ -3,24 +3,24 @@ package uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedatauploa
 import java.util.List;
 
 public class PerformanceAccountTemplateProcessingException extends Exception {
-
-	private static final long serialVersionUID = 1L;
-	
-	private List<String> errors;
-	
-	public PerformanceAccountTemplateProcessingException(String message, List<String> errors) {
+    
+    private static final long serialVersionUID = 1L;
+    
+    private final List<String> errors;
+    
+    public PerformanceAccountTemplateProcessingException(String message, List<String> errors) {
         super(message);
         this.errors = errors;
     }
-	
-	public PerformanceAccountTemplateProcessingException(List<String> errors) {
+    
+    public PerformanceAccountTemplateProcessingException(List<String> errors) {
         this.errors = errors;
     }
-	
+    
     public List<String> getErrors() {
         return errors;
     }
-
+    
     public void addError(String error) {
         this.errors.add(error);
     }
@@ -29,5 +29,5 @@ public class PerformanceAccountTemplateProcessingException extends Exception {
     public String getMessage() {
         return super.getMessage() + " Errors: " + errors.toString();
     }
-
+    
 }

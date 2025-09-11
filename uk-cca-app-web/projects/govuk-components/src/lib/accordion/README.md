@@ -24,7 +24,7 @@ Accordion item component:
 <govuk-accordion id="accordion">
   <govuk-accordion-item header="Something">
     <div govukAccordionItemSummary>More info</div>
-    <p class="govuk-body">Content</p>
+    <p>Content</p>
   </govuk-accordion-item>
 </govuk-accordion>
 
@@ -32,7 +32,7 @@ Accordion item component:
   <govuk-accordion-item *ngFor="let item of items$ | async"
                         [header]="item.header">
     <div govukAccordionItemSummary>{{ item.summary }}</div>
-    <p class="govuk-body">{{ item.content }}</p>
+    <p>{{ item.content }}</p>
   </govuk-accordion-item>
 </govuk-accordion>
 ```

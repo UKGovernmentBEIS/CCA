@@ -1,116 +1,137 @@
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 
-import { ActivatedRouteStub } from '@netz/common/testing';
-import { render } from '@testing-library/angular';
-import { screen } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
+import { AuthStore } from '@netz/common/auth';
 
-import {
-  SectorAssociationAuthoritiesService,
-  TargetUnitAccountInfoViewService,
-  TargetUnitAccountsSiteContactsService,
-} from 'cca-api';
+import { SectorAssociationAuthoritiesService, SectorAssociationTargetUnitAccountsInfoService } from 'cca-api';
 
 import { mockSectorAuthorities, mockTargetUnits, mockTargetUnitsNotEditable } from '../../specs/fixtures/mock';
 import { SectorTargetUnitsTabComponent } from './target-units-tab.component';
 
-describe('Target Units Tab Editable', () => {
-  let targetUnitSiteContactsService: Partial<jest.Mocked<TargetUnitAccountsSiteContactsService>>;
-  let sectorAssociationAuthoritiesService: Partial<jest.Mocked<SectorAssociationAuthoritiesService>>;
-  let targetUnitService: Partial<jest.Mocked<TargetUnitAccountInfoViewService>>;
+describe('SectorTargetUnitsTabComponent', () => {
+  let component: SectorTargetUnitsTabComponent;
+  let fixture: ComponentFixture<SectorTargetUnitsTabComponent>;
+  let targetUnitService: jest.Mocked<SectorAssociationTargetUnitAccountsInfoService>;
+  let routerNavigateSpy: jest.SpyInstance;
 
-  beforeEach(async () => {
-    targetUnitSiteContactsService = {
-      updateTargetUnitAccountSiteContacts: jest.fn().mockReturnValue(of(null)),
+  const createQueryParamMock = (page = '1', pageSize = '50') => ({
+    get: jest.fn().mockImplementation((param) => {
+      if (param === 'page') return page;
+      if (param === 'pageSize') return pageSize;
+      return null;
+    }),
+  });
+
+  const setupComponent = async (targetUnitsData = mockTargetUnits) => {
+    const authStoreMock = {
+      select: jest.fn().mockReturnValue(signal('test-user-id')),
     };
 
-    sectorAssociationAuthoritiesService = {
+    const authoritiesServiceMock = {
       getSectorUserAuthoritiesBySectorAssociationId: jest.fn().mockReturnValue(of(mockSectorAuthorities)),
     };
 
-    targetUnitService = {
-      getTargetUnitAccountsWithSiteContacts: jest.fn().mockReturnValue(of(mockTargetUnits)),
-    };
-
-    const { fixture } = await render(SectorTargetUnitsTabComponent, {
-      configureTestBed: (testbed) => {
-        testbed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
-        testbed.overrideProvider(TargetUnitAccountsSiteContactsService, { useValue: targetUnitSiteContactsService });
-        testbed.overrideProvider(TargetUnitAccountInfoViewService, { useValue: targetUnitService });
-        testbed.overrideProvider(ActivatedRoute, { useValue: new ActivatedRouteStub({ id: 1 }) });
-        testbed.overrideProvider(SectorAssociationAuthoritiesService, {
-          useValue: sectorAssociationAuthoritiesService,
-        });
-      },
-    });
-
-    fixture.componentInstance.canCreateTargetUnit = signal(true);
-    fixture.detectChanges();
-  });
-
-  it('should render the target unit list', () => {
-    expect(screen.getByTestId('target-unit-list')).toBeVisible();
-  });
-
-  it('should show add button if editable is true', () => {
-    expect(screen.getByText('Add new target unit')).toBeVisible();
-  });
-
-  it('should refetch data on discard changes', async () => {
-    const spy = jest.spyOn(targetUnitService, 'getTargetUnitAccountsWithSiteContacts');
-    const user = UserEvent.setup();
-
-    await user.click(screen.getByText('Discard changes'));
-    expect(spy).toHaveBeenCalledTimes(2);
-  });
-});
-
-describe('Target Units Tab Not Editable', () => {
-  let targetUnitSiteContactsService: Partial<jest.Mocked<TargetUnitAccountsSiteContactsService>>;
-  let sectorAssociationAuthoritiesService: Partial<jest.Mocked<SectorAssociationAuthoritiesService>>;
-  let targetUnitService: Partial<jest.Mocked<TargetUnitAccountInfoViewService>>;
-
-  beforeEach(async () => {
-    targetUnitSiteContactsService = {
+    const targetUnitServiceMock = {
+      getTargetUnitAccountsWithSiteContacts: jest.fn().mockReturnValue(of(targetUnitsData)),
       updateTargetUnitAccountSiteContacts: jest.fn().mockReturnValue(of(null)),
     };
 
-    sectorAssociationAuthoritiesService = {
-      getSectorUserAuthoritiesBySectorAssociationId: jest.fn().mockReturnValue(of(mockSectorAuthorities)),
-    };
+    const queryParamMock = createQueryParamMock();
+    const queryParamSubject = new BehaviorSubject(queryParamMock);
 
-    targetUnitService = {
-      getTargetUnitAccountsWithSiteContacts: jest.fn().mockReturnValue(of(mockTargetUnitsNotEditable)),
-    };
-
-    const { fixture } = await render(SectorTargetUnitsTabComponent, {
-      configureTestBed: (testbed) => {
-        testbed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
-        testbed.overrideProvider(TargetUnitAccountsSiteContactsService, { useValue: targetUnitSiteContactsService });
-        testbed.overrideProvider(TargetUnitAccountInfoViewService, { useValue: targetUnitService });
-        testbed.overrideProvider(ActivatedRoute, { useValue: new ActivatedRouteStub({ id: 1 }) });
-        testbed.overrideProvider(SectorAssociationAuthoritiesService, {
-          useValue: sectorAssociationAuthoritiesService,
-        });
+    const activatedRouteMock = {
+      snapshot: {
+        paramMap: { get: jest.fn().mockReturnValue('1') },
+        queryParamMap: queryParamMock,
+        fragment: null,
       },
-    });
+      queryParamMap: queryParamSubject.asObservable(),
+    };
 
-    fixture.detectChanges();
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, SectorTargetUnitsTabComponent],
+      providers: [
+        { provide: SectorAssociationTargetUnitAccountsInfoService, useValue: targetUnitServiceMock },
+        { provide: SectorAssociationAuthoritiesService, useValue: authoritiesServiceMock },
+        { provide: ActivatedRoute, useValue: activatedRouteMock },
+        { provide: AuthStore, useValue: authStoreMock },
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(SectorTargetUnitsTabComponent);
+    component = fixture.componentInstance;
+
+    routerNavigateSpy = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    targetUnitService = TestBed.inject(
+      SectorAssociationTargetUnitAccountsInfoService,
+    ) as jest.Mocked<SectorAssociationTargetUnitAccountsInfoService>;
+  };
+
+  afterEach(() => {
+    routerNavigateSpy?.mockClear();
   });
 
-  it('should show assignTo as text', () => {
-    mockTargetUnitsNotEditable.accountsWithSiteContact.forEach((_, idx) => {
-      expect(document.getElementById(`targetUnits.${idx}.assignedTo`)).toBeFalsy();
+  describe('when editable', () => {
+    beforeEach(() => setupComponent(mockTargetUnits));
+
+    it('should load data and update state when effect triggers', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      expect(targetUnitService.getTargetUnitAccountsWithSiteContacts).toHaveBeenCalledWith(1, 0, 50);
+
+      // The component's constructor subscribes to queryParams and updates state automatically
+      expect(component.state().editable).toBe(true);
+      expect(component.state().totalItems).toBe(3);
+      expect(component.state().targetUnits.length).toBe(3);
+    }));
+
+    it('should have reactive currentPage and pageSize computed properties', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      expect(component.currentPage()).toBe(1);
+      expect(component.pageSize()).toBe(50);
+    }));
+
+    it('should handle navigation and pagination correctly', () => {
+      component.onAddNewTargetUnit();
+      component.onPageChange(2);
+
+      expect(routerNavigateSpy).toHaveBeenCalledWith(
+        ['target-units', 'create'],
+        expect.objectContaining({
+          relativeTo: expect.anything(),
+        }),
+      );
+      expect(routerNavigateSpy).toHaveBeenCalledWith(
+        [],
+        expect.objectContaining({
+          queryParams: expect.objectContaining({ page: 2 }),
+        }),
+      );
+    });
+
+    it('should not navigate when page values remain the same', () => {
+      component.onPageChange(1);
+      component.onPageSizeChange(50);
+
+      expect(routerNavigateSpy).not.toHaveBeenCalled();
     });
   });
 
-  it('should not show save and discard buttons', () => {
-    expect(screen.queryByText('Save')).not.toBeInTheDocument();
-    expect(screen.queryByText('Discard changes')).not.toBeInTheDocument();
+  describe('when not editable', () => {
+    beforeEach(() => setupComponent(mockTargetUnitsNotEditable));
+
+    it('should handle non-editable state correctly', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      expect(component.state().editable).toBe(false);
+    }));
   });
 });

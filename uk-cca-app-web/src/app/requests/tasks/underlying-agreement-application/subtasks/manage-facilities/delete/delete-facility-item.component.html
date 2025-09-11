@@ -1,0 +1,12 @@
+<netz-page-heading>Are you sure you want to delete the {{ facilityName }}?</netz-page-heading>
+
+<govuk-warning-text assistiveText="">You will not be able to undo this action.</govuk-warning-text>
+
+<p>Your facility and all its data will be deleted permanently.</p>
+
+<div class="govuk-button-group">
+  <button type="button" netzPendingButton (click)="onDelete()" govukWarnButton>Yes, delete the facility</button>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" [routerLink]="['../../']"> Return to: Manage facilities </a>

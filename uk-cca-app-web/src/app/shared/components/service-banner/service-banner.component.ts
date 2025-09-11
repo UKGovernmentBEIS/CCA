@@ -7,12 +7,14 @@ import { UIConfigurationService } from 'cca-api';
 
 @Component({
   selector: 'cca-service-banner',
-  standalone: true,
   templateUrl: './service-banner.component.html',
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServiceBannerComponent {
-  configurationService = inject(UIConfigurationService);
+  private readonly configurationService = inject(UIConfigurationService);
 
-  notifications = toSignal(this.configurationService.getUIFlags().pipe(map((res) => res.notificationAlerts)));
+  protected readonly notifications = toSignal(
+    this.configurationService.getUIFlags().pipe(map((res) => res.notificationAlerts)),
+  );
 }

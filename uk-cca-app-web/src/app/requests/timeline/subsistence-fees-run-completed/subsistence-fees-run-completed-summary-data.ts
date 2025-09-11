@@ -1,13 +1,13 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { PaymentRequestProcessStatusPipe } from '@shared/pipes';
-import { transformFileInfoToDownloadableFile } from '@shared/utils';
+import { StatusPipe } from '@shared/pipes';
+import { fileUtils } from '@shared/utils';
 
 import { SubsistenceFeesRunCompletedRequestActionPayload } from 'cca-api';
 
 export function toSubsistenceFeesRunCompletedSummaryData(
   payload: SubsistenceFeesRunCompletedRequestActionPayload,
 ): SummaryData {
-  const statusPipe = new PaymentRequestProcessStatusPipe();
+  const statusPipe = new StatusPipe();
 
   const summary = new SummaryFactory()
     .addSection('Details')
@@ -21,7 +21,7 @@ export function toSubsistenceFeesRunCompletedSummaryData(
   }
 
   if (payload?.report) {
-    summary.addFileListRow('Detailed report', transformFileInfoToDownloadableFile(payload?.report, './file-download'));
+    summary.addFileListRow('Detailed report', fileUtils.toDownloadableDocument([payload?.report], './file-download'));
   } else {
     summary.addRow('Detailed report', 'Nothing to report');
   }

@@ -1,4 +1,12 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  computed,
+  input,
+  viewChild,
+} from '@angular/core';
 
 @Component({
   selector: 'govuk-notification-banner',
@@ -6,22 +14,17 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, O
   templateUrl: './notification-banner.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationBannerComponent implements AfterViewInit, OnInit {
-  @Input() type: 'success' | 'neutral' = 'neutral';
-  @Input() heading?: string;
+export class NotificationBannerComponent implements AfterViewInit {
+  readonly type = input<'success' | 'neutral'>('neutral');
+  readonly heading = input('', {
+    transform: (value: string | undefined) => value ?? (this.type() === 'success' ? 'Success' : 'Important'),
+  });
 
-  tabIndex: number | null;
+  readonly tabIndex = computed(() => (this.type() === 'success' ? -1 : null));
 
-  @ViewChild('banner') private readonly bannerElement: ElementRef<HTMLDivElement>;
+  private readonly bannerElement = viewChild<ElementRef<HTMLDivElement>>('banner');
 
-  ngOnInit(): void {
-    this.heading = this.heading ?? (this.type === 'success' ? 'Success' : 'Important');
-    this.tabIndex = this.type === 'success' ? -1 : null;
-  }
-
-  ngAfterViewInit(): void {
-    if (this.tabIndex) {
-      this.bannerElement.nativeElement.focus();
-    }
+  ngAfterViewInit() {
+    if (this.tabIndex()) this.bannerElement().nativeElement.focus();
   }
 }

@@ -1,8 +1,7 @@
 import { Component, NgZone } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Router, RouterOutlet } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router, RouterOutlet } from '@angular/router';
 
 import { SkipLinkComponent } from './skip-link.component';
 
@@ -18,15 +17,15 @@ describe('SkipLinkComponent', () => {
     standalone: true,
     imports: [SkipLinkComponent, RouterOutlet],
     template: `
-      <govuk-skip-link></govuk-skip-link>
-      <router-outlet></router-outlet>
+      <govuk-skip-link />
+      <router-outlet />
     `,
   })
   class HostComponent {}
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([{ path: 'test', component: RoutedComponent }])],
+      providers: [provideRouter([{ path: 'test', component: RoutedComponent }])],
     }).compileComponents();
   });
 
@@ -43,11 +42,13 @@ describe('SkipLinkComponent', () => {
 
   it('should correctly set routerLink', async () => {
     const originalNavigateByUrl = router.navigateByUrl;
+
     jest
       .spyOn(router, 'navigateByUrl')
       .mockImplementation((...options) =>
         TestBed.inject(NgZone).run(() => originalNavigateByUrl.apply(router, options)),
       );
+
     await router.navigateByUrl('/test');
     fixture.detectChanges();
 

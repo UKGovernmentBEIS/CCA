@@ -13,9 +13,8 @@ import { CcaOperatorUserRegistrationWithCredentialsDTO } from 'cca-api';
 
 @Component({
   selector: 'cca-user-input-summary-template',
-  standalone: true,
   templateUrl: './user-input-summary.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     RouterLink,
     PhoneNumberPipe,
@@ -24,6 +23,7 @@ import { CcaOperatorUserRegistrationWithCredentialsDTO } from 'cca-api';
     SummaryListRowValueDirective,
     SummaryListRowActionsDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserInputSummaryTemplateComponent implements OnInit {
   @Input() userInfo: Partial<Omit<CcaOperatorUserRegistrationWithCredentialsDTO, 'emailToken'>>;
@@ -34,7 +34,7 @@ export class UserInputSummaryTemplateComponent implements OnInit {
 
   constructor(readonly route: ActivatedRoute) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.modifiedUserInfo = this.userInfo;
   }
 }

@@ -14,10 +14,6 @@ exports[`VariationDetailsComponent should match snapshot 1`] = `
       </h1>
     </netz-page-heading>
     <cca-summary>
-      <h2
-        class="govuk-heading-m"
-      >
-      </h2>
       <dl
         class="govuk-summary-list govuk-!-margin-bottom-9"
         govuk-summary-list=""
@@ -33,7 +29,7 @@ exports[`VariationDetailsComponent should match snapshot 1`] = `
             Target Unit/Facility changes
           </dt>
           <dd
-            class="pre-wrap govuk-summary-list__value"
+            class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
              Amend the 70% rule evaluation for one or more facilities 
@@ -50,7 +46,7 @@ exports[`VariationDetailsComponent should match snapshot 1`] = `
             Amend the target currency to
           </dt>
           <dd
-            class="pre-wrap govuk-summary-list__value"
+            class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
              change the throughput unit 
@@ -67,7 +63,7 @@ exports[`VariationDetailsComponent should match snapshot 1`] = `
             Explain what you are changing and the reason for the changes
           </dt>
           <dd
-            class="pre-wrap govuk-summary-list__value"
+            class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
              Variation reason 

@@ -12,14 +12,14 @@ export const REASON_FOR_ADMIN_TERMINATION_ROUTES: Routes = [
     path: '',
     children: [
       {
-        path: ReasonForAdminTerminationWizardStep.SUMMARY,
+        path: 'summary',
         title: 'Summary',
         data: { backlink: '../../../', breadcrumb: false },
         canActivate: [CanActivateReasonForAdminTerminationSummary],
         loadComponent: () => import('./summary/reason-for-admin-termination-summary.component'),
       },
       {
-        path: ReasonForAdminTerminationWizardStep.CHECK_YOUR_ANSWERS,
+        path: 'check-your-answers',
         title: 'Check your answers',
         data: { backlink: '../../../', breadcrumb: false },
         canActivate: [CanActivateReasonForAdminTerminationCheckYourAnswers],

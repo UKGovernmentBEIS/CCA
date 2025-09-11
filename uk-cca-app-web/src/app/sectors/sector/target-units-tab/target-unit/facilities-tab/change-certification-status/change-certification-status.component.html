@@ -1,0 +1,72 @@
+@if (hasFormErrors() && (form?.pristine || form?.dirty)) {
+  <govuk-error-summary [form]="form" />
+}
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <netz-page-heading caption="Change">Certification status</netz-page-heading>
+  <div class="govuk-grid-row govuk-!-margin-bottom-6">
+    <div class="govuk-grid-column-two-thirds">
+      <p>
+        The facility’s certification status determines whether an operator can claim the Climate Change Levy (CCL)
+        relief for a specific certification period.
+      </p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>
+          Certified facility status means that the operator will be able to claim CCL relief for the certification, and
+          the start date you enter will be shown on the Reduced Rate Certificate for this facility
+        </li>
+        <li>
+          Decertified facility status means that the facility will not appear on the Reduced Rate Certificate, and the
+          operator will not be able to claim CCL relief for the certification period
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-6">
+    <div class="govuk-grid-column-two-thirds">
+      <span class="govuk-label govuk-label--s">
+        {{ certificationPeriodDuration }}
+      </span>
+      <span>
+        {{
+          certificationDetails.certificationPeriodStartDate | duration: certificationDetails.certificationPeriodEndDate
+        }}
+      </span>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-6">
+    <div class="govuk-grid-column-two-thirds">
+      <span class="govuk-label govuk-label--s">Select certification status</span>
+      <span class="govuk-hint">{{ hint }}</span>
+      <div formControlName="certificationStatus" legendSize="medium" govuk-radio>
+        <govuk-radio-option value="CERTIFIED" label="Certified">
+          <ng-container govukConditionalContent>
+            <span class="govuk-label">Select start date</span>
+            <span class="govuk-hint"
+              >The start date must be today or a past date within the certification period.
+            </span>
+
+            <div formControlName="startDate" govuk-date-input></div>
+          </ng-container>
+        </govuk-radio-option>
+        <govuk-radio-option value="DECERTIFIED" label="Decertified" />
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-6">
+    <div class="govuk-grid-column-two-thirds">
+      <button netzPendingButton govukButton type="submit">Save and continue</button>
+    </div>
+  </div>
+</form>
+
+<div class="govuk-grid-row">
+  <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+  <a class="govuk-link" [routerLink]="['../../details']" [replaceUrl]="true" [relativeTo]="activatedRoute">
+    Return to: {{ facilityId }}</a
+  >
+</div>

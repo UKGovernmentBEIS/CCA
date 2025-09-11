@@ -14,17 +14,7 @@ import uk.gov.netz.api.documenttemplate.domain.templateparams.AccountTemplatePar
 @AllArgsConstructor
 @SuperBuilder
 public class TargetUnitAccountTemplateParams extends AccountTemplateParams {
-    private String sectorIdentifier;
     private String targetUnitIdentifier;
     private String targetUnitAddress;
     private String companyRegistrationNumber;
-
-    // Sector Information
-    private String sectorName;
-    private String sectorContactFullName;
-    private String sectorContactEmail;
-    private String sectorContactLocation;
-    private String umaDate;
-    private String sectorThroughputUnit;
-	private String definition;
 }

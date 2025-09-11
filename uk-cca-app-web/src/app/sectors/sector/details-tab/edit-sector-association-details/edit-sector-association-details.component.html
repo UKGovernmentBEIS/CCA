@@ -1,4 +1,4 @@
-<govuk-error-summary [form]="form"></govuk-error-summary>
+<govuk-error-summary [form]="form" />
 
 <netz-page-heading size="l">Change sector details</netz-page-heading>
 <div class="govuk-!-width-one-half">
@@ -6,22 +6,20 @@
     <div formControlName="commonName" govuk-text-input label="Sector name" labelSize="small"></div>
 
     <p class="govuk-label govuk-label--s">Sector acronym</p>
-    <p class="govuk-body">{{ sectorAssociationDetails.acronym }}</p>
+    <p>{{ sectorAssociationDetails.acronym }}</p>
 
     <div formControlName="legalName" govuk-text-input label="Sector / Trade association name" labelSize="small"></div>
 
     <p class="govuk-label govuk-label--s">Sector facilitator</p>
-    <p class="govuk-body">
-      {{ sectorAssociationDetails?.facilitator?.firstName }} {{ sectorAssociationDetails?.facilitator?.lastName }}
-    </p>
+    <p>{{ sectorAssociationDetails?.facilitator?.firstName }} {{ sectorAssociationDetails?.facilitator?.lastName }}</p>
 
     <p class="govuk-label govuk-label--s">Energy intensive or EPR</p>
-    <p class="govuk-body">{{ sectorAssociationDetails.energyIntensiveOrEPR | sectorEnergyEprFactor }}</p>
+    <p>{{ sectorAssociationDetails.energyIntensiveOrEPR | sectorEnergyEprFactor }}</p>
 
     <h2 class="govuk-heading-m">Address for service of notices</h2>
 
     <div formGroupName="noticeServiceAddress">
-      <cca-county-address-input></cca-county-address-input>
+      <cca-county-address-input />
     </div>
 
     <button netzPendingButton govukButton type="submit">Submit</button>

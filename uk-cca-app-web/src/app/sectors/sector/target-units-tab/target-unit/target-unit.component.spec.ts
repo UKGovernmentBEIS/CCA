@@ -37,9 +37,16 @@ describe('TargetUnitComponent', () => {
   });
 
   it('should display the tabs', () => {
-    const tabTitles = ['Details', 'Facilities', 'Workflow history', 'Reports', 'Users and contacts'];
+    const tabTitles = [
+      'Details',
+      'Facilities',
+      'Workflow history',
+      'Reports',
+      'Users and contacts',
+      'Buy-out and surplus',
+    ];
 
-    expect(screen.getAllByRole('tab')).toHaveLength(5);
+    expect(screen.getAllByRole('tab')).toHaveLength(6);
     expect(screen.getAllByRole('tab')[0]).toHaveTextContent(tabTitles[0]);
     expect(screen.getAllByRole('tab')[1]).toHaveTextContent(tabTitles[1]);
     expect(screen.getAllByRole('tab')[2]).toHaveTextContent(tabTitles[2]);
@@ -66,8 +73,8 @@ describe('TargetUnitComponent', () => {
         [
           'Operator name',
           'Operator type',
-          'Company registration number',
-          'Standard industrial classification (SIC) code',
+          'Company number',
+          'Standard industrial classification (SIC) codes',
           'Subsector',
         ],
         ['Target unit name 01', 'Limited company', '2636942', '01110', ''],

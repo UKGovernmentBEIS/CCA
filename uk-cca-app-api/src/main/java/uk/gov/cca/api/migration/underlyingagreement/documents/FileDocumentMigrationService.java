@@ -32,6 +32,7 @@ import uk.gov.netz.api.files.documents.repository.FileDocumentRepository;
 public class FileDocumentMigrationService {
     
     private static final FileDocumentMigrationMapper fileDocumentMapper = Mappers.getMapper(FileDocumentMigrationMapper.class);
+    private static final String FORWARD_SLASH = "/";
    
     private final FtpFileService ftpService;
     private final FtpProperties ftpProperties;
@@ -77,7 +78,7 @@ public class FileDocumentMigrationService {
         final String ftpServertDirectory = ftpProperties.getServerUnderlyingAgreementsDirectory();
         List<String> filePaths = documentsToMigrate.stream()
                 .map(FileDocument::getFileName)
-                .map(fileName -> ftpServertDirectory + "/" + fileName)
+                .map(fileName -> ftpServertDirectory + FORWARD_SLASH + fileName)
                 .toList();
         List<FtpFileDTOResult> ftpFileDTOResults = ftpService.fetchFiles(filePaths);
 
@@ -85,7 +86,7 @@ public class FileDocumentMigrationService {
             FileDocument fileDocument = documentsToMigrate.stream()
                     .filter(att -> att.getFileName().equals(ftpFileDTOResult.getFileDTO().getFileName()))
                     .findFirst()
-                    .get();
+                    .orElseThrow();
 
             if (ftpFileDTOResult.getErrorReport() != null) {
                 migrationErrors.add(FileMigrationError.builder()

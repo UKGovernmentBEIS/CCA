@@ -22,9 +22,11 @@ import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.user.operator.service.OperatorUserInfoService;
 import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,34 +55,37 @@ class OperatorUserAuthorityInfoServiceTest {
 
         AppUser appUser = AppUser.builder().userId(userId).roleType(RoleTypeConstants.REGULATOR).build();
 
-        final OperatorAuthorityDTO operatorAuthorityDTO_1 = OperatorAuthorityDTO.builder()
+        final OperatorAuthorityDTO operatorAuthorityDTO1 = OperatorAuthorityDTO.builder()
         		.userId("user_1")
         		.roleName(roleName)
         		.roleCode(roleCode)
         		.authorityStatus(AuthorityStatus.PENDING)
         		.authorityCreationDate(null)
         		.contactType(ContactType.OPERATOR)
+		        .authorityCreationDate(LocalDateTime.now())
         		.build();
 
-        final OperatorAuthorityDTO operatorAuthorityDTO_2 = OperatorAuthorityDTO.builder()
+        final OperatorAuthorityDTO operatorAuthorityDTO2 = OperatorAuthorityDTO.builder()
         		.userId("user_2")
         		.roleName(roleName)
         		.roleCode(roleCode)
         		.authorityStatus(AuthorityStatus.ACTIVE)
         		.authorityCreationDate(null)
         		.contactType(ContactType.OPERATOR)
+		        .authorityCreationDate(LocalDateTime.now())
         		.build();
 
         final OperatorAuthoritiesDTO operatorAuthoritiesDTO = OperatorAuthoritiesDTO.builder()
-                .authorities(List.of(operatorAuthorityDTO_1, operatorAuthorityDTO_2))
+                .authorities(List.of(operatorAuthorityDTO2, operatorAuthorityDTO1))
                 .editable(true)
                 .build();
 
-        List<String> userIds = operatorAuthoritiesDTO.getAuthorities().stream().map(UserAuthorityDTO::getUserId).toList();
+        final List<String> userIds = operatorAuthoritiesDTO.getAuthorities().stream().map(UserAuthorityDTO::getUserId).toList();
 
         final List<UserInfoDTO> userInfoDTOS = List.of(
-                UserInfoDTO.builder().userId("user_1").firstName("John").lastName("Rambo").build(),
-                UserInfoDTO.builder().userId("user_2").firstName("Chuck").lastName("Norris").build());
+		        UserInfoDTO.builder().userId("user_1").firstName("Chuck").lastName("Norris").build(),
+                UserInfoDTO.builder().userId("user_2").firstName("John").lastName("Rambo").build()
+                );
 
         when(operatorAuthorityQueryService.getOperatorAuthorities(appUser, accountId)).thenReturn(operatorAuthoritiesDTO);
         when(operatorUserInfoService.getOperatorUsersInfo(userIds)).thenReturn(userInfoDTOS);
@@ -89,10 +94,10 @@ class OperatorUserAuthorityInfoServiceTest {
         final OperatorAuthoritiesInfoDTO operatorAuthoritiesInfo = service.getOperatorAuthoritiesInfo(appUser, accountId);
 
         //assert
-        assertThat(operatorAuthoritiesInfo.getAuthorities().size()).isEqualTo(2);
+        assertThat(operatorAuthoritiesInfo.getAuthorities()).hasSize(2);
         assertThat(operatorAuthoritiesInfo.isEditable()).isTrue();
-        assertThat(operatorAuthoritiesInfo.getAuthorities().get(0).getFirstName()).isEqualTo("John");
-
+		assertEquals(operatorAuthoritiesInfo.getAuthorities().getFirst().getAuthorityCreationDate(),
+				operatorAuthorityDTO1.getAuthorityCreationDate());
     }
 
     @Test
@@ -104,7 +109,7 @@ class OperatorUserAuthorityInfoServiceTest {
 
         AppUser appUser = AppUser.builder().userId(userId).roleType(RoleTypeConstants.REGULATOR).build();
 
-        final OperatorAuthorityDTO operatorAuthorityDTO_1 = OperatorAuthorityDTO.builder()
+        final OperatorAuthorityDTO operatorAuthorityDTO1 = OperatorAuthorityDTO.builder()
                 .userId("user_1")
                 .roleName(roleName)
                 .roleCode(roleCode)
@@ -114,7 +119,7 @@ class OperatorUserAuthorityInfoServiceTest {
                 .build();
 
         final OperatorAuthoritiesDTO operatorAuthoritiesDTO = OperatorAuthoritiesDTO.builder()
-                .authorities(List.of(operatorAuthorityDTO_1))
+                .authorities(List.of(operatorAuthorityDTO1))
                 .editable(true)
                 .build();
 

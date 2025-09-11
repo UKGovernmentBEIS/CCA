@@ -39,7 +39,7 @@ import uk.gov.netz.api.token.FileToken;
 
 
 @ExtendWith(MockitoExtension.class)
-public class UnderlyingAgreementControllerTest {
+class UnderlyingAgreementControllerTest {
     private static final String CONTROLLER_PATH = "/v1.0/underlying-agreements";
     
     private MockMvc mockMvc;
@@ -57,7 +57,7 @@ public class UnderlyingAgreementControllerTest {
     private AppUserAuthorizationService appUserAuthorizationService;
     
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
 

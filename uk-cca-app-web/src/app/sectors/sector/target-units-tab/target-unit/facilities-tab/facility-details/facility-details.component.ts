@@ -12,9 +12,10 @@ import {
   SummaryListRowValueDirective,
   TagComponent,
 } from '@netz/govuk-components';
-import { FacilityStatusPipe } from '@shared/pipes';
+import { StatusPipe } from '@shared/pipes';
+import { DurationPipe } from '@shared/pipes';
 
-import { FacilityDataDetailsDTO } from 'cca-api';
+import { FacilityInfoDTO } from 'cca-api';
 
 @Component({
   selector: 'cca-facility-details',
@@ -23,23 +24,23 @@ import { FacilityDataDetailsDTO } from 'cca-api';
   imports: [
     PageHeadingComponent,
     TagComponent,
-    FacilityStatusPipe,
-    DatePipe,
+    StatusPipe,
     RouterLink,
     SummaryListComponent,
     SummaryListRowDirective,
     SummaryListRowKeyDirective,
     SummaryListRowValueDirective,
     SummaryListRowActionsDirective,
+    DurationPipe,
+    DatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class FacilityDetailsComponent {
+export class FacilityDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly authStore = inject(AuthStore);
 
-  readonly roleType = this.authStore.select(selectUserRoleType);
-
-  readonly queryParams: Params = { change: true };
-  readonly facilityDetails = this.activatedRoute.snapshot.data.facilityDetails as FacilityDataDetailsDTO;
+  protected readonly roleType = this.authStore.select(selectUserRoleType);
+  protected readonly queryParams: Params = { change: true };
+  protected readonly facilityInfoDTO = this.activatedRoute.snapshot.data.facilityDetails as FacilityInfoDTO;
 }

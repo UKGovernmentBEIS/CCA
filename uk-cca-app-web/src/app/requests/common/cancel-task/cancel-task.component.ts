@@ -13,6 +13,7 @@ import { UnderlyingAgreementVariationCancelTaskComponent } from './underlying-ag
 
 @Component({
   selector: 'cca-cancel-task',
+  templateUrl: './cancel-task.component.html',
   standalone: true,
   imports: [
     UnderlyingAgreementCancelTaskComponent,
@@ -20,7 +21,6 @@ import { UnderlyingAgreementVariationCancelTaskComponent } from './underlying-ag
     AdminTerminationCancelTaskComponent,
     UnderlyingAgreementVariationCancelTaskComponent,
   ],
-  templateUrl: './cancel-task.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CancelTaskComponent {
@@ -28,7 +28,8 @@ export class CancelTaskComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly taskService = inject(TasksService);
-  requestTaskType = this.store.select(requestTaskQuery.selectRequestTaskType)();
+
+  protected readonly requestTaskType = this.store.select(requestTaskQuery.selectRequestTaskType)();
 
   cancel() {
     return this.taskService

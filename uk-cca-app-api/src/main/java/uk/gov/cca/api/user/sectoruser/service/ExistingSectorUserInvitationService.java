@@ -29,10 +29,9 @@ public class ExistingSectorUserInvitationService {
 
         checkInvitedUserStatusAndRole(userId, sectorUserInvitationDTO);
 
-        String authorityUuid =
-                sectorUserAuthorityService.createPendingAuthorityForSectorUser(sectorAssociationId, sectorUserInvitationDTO.getRoleCode(), sectorUserInvitationDTO.getContactType(), userId, currentUser);
-
-        return authorityUuid;
+	    return sectorUserAuthorityService
+                .createPendingAuthorityForSectorUser(sectorAssociationId, sectorUserInvitationDTO.getRoleCode(),
+                        sectorUserInvitationDTO.getContactType(), userId, currentUser);
     }
 
     private void checkInvitedUserStatusAndRole(String userId, SectorUserInvitationDTO sectorUserInvitationDTO) {

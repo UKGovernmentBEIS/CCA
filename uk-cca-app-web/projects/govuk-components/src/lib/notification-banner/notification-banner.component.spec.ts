@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import type { ComponentFixture } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { NotificationBannerComponent } from './notification-banner.component';
@@ -15,22 +16,24 @@ describe('NotificationBannerComponent', () => {
     template: `
       <govuk-notification-banner [type]="type" [heading]="heading">
         <h3 class="govuk-notification-banner__heading">Training outcome recorded and trainee withdrawn</h3>
-        <p class="govuk-body">Test content</p>
+        <p>Test content</p>
       </govuk-notification-banner>
     `,
   })
   class TestComponent {
-    type: NotificationBannerComponent['type'] = 'neutral';
-    heading = 'Alert';
+    type: 'success' | 'neutral' = 'neutral';
+    heading?: string;
   }
 
   const getBanner = () => element.querySelector<HTMLDivElement>('.govuk-notification-banner');
   const getHeading = () => element.querySelector<HTMLHeadingElement>('.govuk-notification-banner__title');
 
-  const createComponent = (type: NotificationBannerComponent['type'], heading?: string) => {
+  const createComponent = (type: 'success' | 'neutral', heading?: string) => {
     fixture = TestBed.createComponent(TestComponent);
-    fixture.componentInstance['type'] = type;
-    fixture.componentInstance['heading'] = heading;
+    fixture.componentInstance.type = type;
+    if (heading !== undefined) {
+      fixture.componentInstance.heading = heading;
+    }
     component = fixture.debugElement.query(By.directive(NotificationBannerComponent)).componentInstance;
     element = fixture.nativeElement;
     fixture.detectChanges();
@@ -59,7 +62,7 @@ describe('NotificationBannerComponent', () => {
 
     it('should project content', () => {
       expect(element.querySelector<HTMLHeadingElement>('.govuk-notification-banner__heading')).toBeTruthy();
-      expect(element.querySelector<HTMLAnchorElement>('p.govuk-body')).toBeTruthy();
+      expect(element.querySelector<HTMLParagraphElement>('p')).toBeTruthy();
     });
 
     it('should not focus the element in neutral notifications', () => {

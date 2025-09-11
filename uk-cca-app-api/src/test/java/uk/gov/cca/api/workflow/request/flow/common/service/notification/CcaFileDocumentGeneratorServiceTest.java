@@ -10,13 +10,14 @@ import uk.gov.cca.api.notification.template.constants.CcaDocumentTemplateType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.service.CcaDecisionNotificationUsersService;
 import uk.gov.netz.api.documenttemplate.domain.templateparams.TemplateParams;
-import uk.gov.netz.api.documenttemplate.service.DocumentFileGeneratorService;
+import uk.gov.netz.api.documenttemplate.service.FileDocumentGenerateServiceDelegator;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.flow.common.domain.DecisionNotification;
 import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateOfficialNoticeParamsProvider;
 import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateParamsSourceData;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,10 +37,47 @@ class CcaFileDocumentGeneratorServiceTest {
     private DocumentTemplateOfficialNoticeParamsProvider documentTemplateOfficialNoticeParamsProvider;
 
     @Mock
-    private DocumentFileGeneratorService documentFileGeneratorService;
+    private FileDocumentGenerateServiceDelegator fileDocumentGenerateServiceDelegator;
 
     @Mock
     private CcaDecisionNotificationUsersService ccaDecisionNotificationUsersService;
+    
+    @Mock
+    private CcaDocumentTemplateCommonParamsProvider commonParamsProvider;
+
+    @Test
+    void generate_with_signatory() {
+        final Request request = Request.builder().id("request-id").build();
+        final String signatory = "signatory";
+        final String type = CcaDocumentTemplateGenerationContextActionType.BUY_OUT_SURPLUS_NOTICE;
+        final String documentTemplateType = CcaDocumentTemplateType.SECONDARY_BUY_OUT;
+        final String fileNameToGenerate = "test.pdf";
+
+        final DocumentTemplateParamsSourceData params = DocumentTemplateParamsSourceData.builder()
+                .contextActionType(type)
+                .request(request)
+                .signatory(signatory)
+                .build();
+        final TemplateParams templateParams = TemplateParams.builder()
+                .params(new HashMap<>(Map.of("param", "param")))
+                .build();
+
+        when(documentTemplateOfficialNoticeParamsProvider.constructTemplateParams(params))
+                .thenReturn(templateParams);
+        when(commonParamsProvider.getSectorTemplateParams(request, null))
+        		.thenReturn(Map.of());
+        when(fileDocumentGenerateServiceDelegator.generateAndSaveFileDocument(documentTemplateType, templateParams, fileNameToGenerate))
+                .thenReturn(FileInfoDTO.builder().build());
+
+        // Invoke
+        ccaOfficialNoticeGeneratorService.generate(request, signatory, type, documentTemplateType, fileNameToGenerate);
+
+        // Verify
+        verify(documentTemplateOfficialNoticeParamsProvider, times(1))
+                .constructTemplateParams(params);
+        verify(fileDocumentGenerateServiceDelegator, times(1))
+                .generateAndSaveFileDocument(documentTemplateType, templateParams, fileNameToGenerate);
+    }
 
     @Test
     void generate() {
@@ -61,14 +99,14 @@ class CcaFileDocumentGeneratorServiceTest {
                 .ccRecipientsEmails(recipients)
                 .build();
         final TemplateParams templateParams = TemplateParams.builder()
-                .params(Map.of("param", "param"))
+                .params(new HashMap<>(Map.of("param", "param")))
                 .build();
 
         when(documentTemplateOfficialNoticeParamsProvider.constructTemplateParams(params))
                 .thenReturn(templateParams);
         when(ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification))
                 .thenReturn(recipients);
-        when(documentFileGeneratorService.generateAndSaveFileDocument(documentTemplateType, templateParams, fileNameToGenerate))
+        when(fileDocumentGenerateServiceDelegator.generateAndSaveFileDocument(documentTemplateType, templateParams, fileNameToGenerate))
                 .thenReturn(FileInfoDTO.builder().build());
 
         // Invoke
@@ -79,7 +117,7 @@ class CcaFileDocumentGeneratorServiceTest {
                 .constructTemplateParams(params);
         verify(ccaDecisionNotificationUsersService, times(1))
                 .findCCUserEmails(decisionNotification);
-        verify(documentFileGeneratorService, times(1))
+        verify(fileDocumentGenerateServiceDelegator, times(1))
                 .generateAndSaveFileDocument(documentTemplateType, templateParams, fileNameToGenerate);
     }
     
@@ -103,14 +141,16 @@ class CcaFileDocumentGeneratorServiceTest {
                 .ccRecipientsEmails(recipients)
                 .build();
         final TemplateParams templateParams = TemplateParams.builder()
-                .params(Map.of("param", "param"))
+                .params(new HashMap<>(Map.of("param", "param")))
                 .build();
 
         when(documentTemplateOfficialNoticeParamsProvider.constructTemplateParams(params))
                 .thenReturn(templateParams);
+        when(commonParamsProvider.getSectorTemplateParams(request, null))
+				.thenReturn(Map.of());
         when(ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification))
                 .thenReturn(recipients);
-        when(documentFileGeneratorService.generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate))
+        when(fileDocumentGenerateServiceDelegator.generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate))
                 .thenReturn(CompletableFuture.completedFuture(FileInfoDTO.builder().build()));
 
         // Invoke
@@ -121,7 +161,7 @@ class CcaFileDocumentGeneratorServiceTest {
                 .constructTemplateParams(params);
         verify(ccaDecisionNotificationUsersService, times(1))
                 .findCCUserEmails(decisionNotification);
-        verify(documentFileGeneratorService, times(1))
+        verify(fileDocumentGenerateServiceDelegator, times(1))
                 .generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate);
     }
 }

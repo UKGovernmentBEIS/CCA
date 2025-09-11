@@ -1,7 +1,15 @@
-import { Component, input, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Component, inject, input, OnInit } from '@angular/core';
+import {
+  ControlContainer,
+  FormArray,
+  FormGroup,
+  ReactiveFormsModule,
+  UntypedFormArray,
+  UntypedFormGroup,
+} from '@angular/forms';
 
 import {
+  ButtonDirective,
   ConditionalContentDirective,
   GovukSelectOption,
   RadioComponent,
@@ -12,7 +20,9 @@ import {
 import { operatorTypeOptions } from '@shared/pipes';
 import { existingControlContainer } from '@shared/providers';
 
-import { SubsectorAssociationSchemeInfoDTO } from 'cca-api';
+import { SubsectorAssociationInfoDTO } from 'cca-api';
+
+import { addSicCodeFormControl } from '../../utils';
 
 @Component({
   selector: 'cca-target-unit-details-input',
@@ -25,20 +35,37 @@ import { SubsectorAssociationSchemeInfoDTO } from 'cca-api';
     RadioOptionComponent,
     ConditionalContentDirective,
     SelectComponent,
+    ButtonDirective,
   ],
   viewProviders: [existingControlContainer],
 })
 export class TargetUnitDetailsInputComponent implements OnInit {
-  subSectors = input<SubsectorAssociationSchemeInfoDTO[]>([]);
+  private readonly controlContainer = inject(ControlContainer);
 
-  subSectorOptions: GovukSelectOption[];
+  protected readonly subSectors = input<SubsectorAssociationInfoDTO[]>([]);
+  protected subSectorOptions: GovukSelectOption[];
+  protected form: FormGroup;
+  protected sicCodeFormArray: FormArray;
 
   readonly operatorTypeOptions = operatorTypeOptions;
 
-  ngOnInit(): void {
-    this.subSectorOptions = this.subSectors().map((scheme) => ({
-      text: scheme.subsectorAssociation.name,
-      value: scheme.id,
+  ngOnInit() {
+    this.form = this.controlContainer.control as UntypedFormGroup;
+    this.sicCodeFormArray = this.form.get('sicCodes') as UntypedFormArray;
+
+    this.subSectorOptions = this.subSectors().map((subsector) => ({
+      text: subsector.name,
+      value: subsector.id,
     }));
+  }
+
+  addCode() {
+    this.sicCodeFormArray.push(addSicCodeFormControl());
+    this.sicCodeFormArray.at(this.sicCodeFormArray.length - 1);
+    this.sicCodeFormArray.markAsDirty();
+  }
+
+  removeCode(index: number) {
+    this.sicCodeFormArray.removeAt(index);
   }
 }

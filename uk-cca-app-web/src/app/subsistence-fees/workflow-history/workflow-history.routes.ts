@@ -6,6 +6,12 @@ export const SUBSISTENCE_FEES_WORKFLOW_HISTORY_ROUTES: Routes = [
   {
     path: ':id',
     resolve: { details: WorkflowHistoryDetailsResolver },
+    data: {
+      breadcrumb: ({ details }) => ({
+        text: `${details.workflowDetails.id}`,
+        link: `/subsistence-fees/workflow-history/${details.workflowDetails.id}`,
+      }),
+    },
     children: [
       {
         path: '',

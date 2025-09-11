@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot, UrlTree } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { PROVIDE_EVIDENCE_SUBTASK, ProvideEvidenceWizardStep, TaskItemStatus } from '@requests/common';
+import { PROVIDE_EVIDENCE_SUBTASK, TaskItemStatus } from '@requests/common';
 
 import { underlyingAgreementVariationActivationQuery } from '../../+state/una-variation-activation.selectors';
 import { isWizardCompleted } from './provide-evidence.wizard';
@@ -25,9 +25,9 @@ export const CanActivateProvideEvidence: CanActivateFn = (route: ActivatedRouteS
     )()[PROVIDE_EVIDENCE_SUBTASK];
 
     if (sectionCompleted === TaskItemStatus.COMPLETED) {
-      return createUrlTreeFromSnapshot(route, ['../', ProvideEvidenceWizardStep.SUMMARY]);
+      return createUrlTreeFromSnapshot(route, ['../', 'summary']);
     } else if (sectionCompleted === TaskItemStatus.IN_PROGRESS) {
-      return createUrlTreeFromSnapshot(route, ['../', ProvideEvidenceWizardStep.CHECK_ANSWERS]);
+      return createUrlTreeFromSnapshot(route, ['../', 'check-your-answers']);
     }
   }
 
@@ -44,7 +44,7 @@ export const CanActivateProvideEvidenceCheckYourAnswers: CanActivateFn = (
   )();
 
   if (!isWizardCompleted(details)) {
-    return createUrlTreeFromSnapshot(route, ['../', ProvideEvidenceWizardStep.DETAILS]);
+    return createUrlTreeFromSnapshot(route, ['../', 'details']);
   }
 
   const sectionCompleted = requestTaskStore.select(
@@ -52,7 +52,7 @@ export const CanActivateProvideEvidenceCheckYourAnswers: CanActivateFn = (
   )()[PROVIDE_EVIDENCE_SUBTASK];
 
   if (sectionCompleted === TaskItemStatus.COMPLETED) {
-    return createUrlTreeFromSnapshot(route, ['../', ProvideEvidenceWizardStep.SUMMARY]);
+    return createUrlTreeFromSnapshot(route, ['../', 'summary']);
   }
 
   return true;
@@ -66,7 +66,7 @@ export const CanActivateProvideEvidenceSummary: CanActivateFn = (route) => {
   )();
 
   if (!isWizardCompleted(details)) {
-    return createUrlTreeFromSnapshot(route, ['../', ProvideEvidenceWizardStep.DETAILS]);
+    return createUrlTreeFromSnapshot(route, ['../', 'details']);
   }
 
   const sectionCompleted = requestTaskStore.select(
@@ -74,7 +74,7 @@ export const CanActivateProvideEvidenceSummary: CanActivateFn = (route) => {
   )()[PROVIDE_EVIDENCE_SUBTASK];
 
   if (sectionCompleted === TaskItemStatus.IN_PROGRESS) {
-    return createUrlTreeFromSnapshot(route, ['../', ProvideEvidenceWizardStep.CHECK_ANSWERS]);
+    return createUrlTreeFromSnapshot(route, ['../', 'check-your-answers']);
   }
 
   return true;

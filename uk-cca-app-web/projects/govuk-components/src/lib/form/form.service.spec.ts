@@ -1,4 +1,3 @@
-import { NgForOf } from '@angular/common';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -11,12 +10,14 @@ describe('FormService', () => {
 
   @Component({
     standalone: true,
-    imports: [ReactiveFormsModule, TextInputComponent, NgForOf, FormsModule],
+    imports: [ReactiveFormsModule, TextInputComponent, FormsModule],
     template: `
       <div [formGroup]="formGroup">
         <div govuk-text-input formControlName="test"></div>
         <div formArrayName="list">
-          <div govuk-text-input *ngFor="let control of list.controls; let i = index" [formControlName]="i"></div>
+          @for (control of list.controls; track control; let i = $index) {
+            <div govuk-text-input [formControlName]="i"></div>
+          }
         </div>
       </div>
 

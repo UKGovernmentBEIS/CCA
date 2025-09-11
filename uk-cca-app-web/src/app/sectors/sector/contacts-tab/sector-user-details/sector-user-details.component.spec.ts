@@ -13,6 +13,7 @@ describe('SectorUserDetailsComponent', () => {
   let fixture: ComponentFixture<SectorUserDetailsComponent>;
   let store: ActiveSectorUserStore;
   let authStore: AuthStore;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SectorUserDetailsComponent],
@@ -27,14 +28,17 @@ describe('SectorUserDetailsComponent', () => {
         },
       ],
     }).compileComponents();
+
     store = TestBed.inject(ActiveSectorUserStore);
     store.setState({ details: mockSectorUserDetails, editable: true });
+
     authStore = TestBed.inject(AuthStore);
     authStore.setUserState({
       status: 'ENABLED',
       roleType: 'REGULATOR',
       userId: '5reg',
     });
+
     fixture = TestBed.createComponent(SectorUserDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

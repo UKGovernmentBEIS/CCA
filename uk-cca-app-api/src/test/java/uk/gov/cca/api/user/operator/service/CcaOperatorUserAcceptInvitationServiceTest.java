@@ -78,7 +78,7 @@ class CcaOperatorUserAcceptInvitationServiceTest {
 
         when(operatorUserTokenVerificationService.verifyInvitationTokenForPendingAuthority(invitationToken)).thenReturn(authorityInfo);
         when(operatorUserAuthService.getUserById(authorityInfo.getUserId())).thenReturn(operatorUser);
-        when(targetUnitAccountQueryService.getAccountName(authorityInfo.getAccountId())).thenReturn(accountInstallationName);
+        when(targetUnitAccountQueryService.getAccountBusinessIdAndName(authorityInfo.getAccountId())).thenReturn(accountInstallationName);
         when(operatorUserAcceptInvitationMapper.toOperatorUserWithAuthorityDTO(operatorUser, authorityInfo, accountInstallationName))
                 .thenReturn(operatorUserAcceptInvitation);
         when(ccaOperatorUserAcceptInvitationMapper.toOperatorInvitedUserInfoDTO(operatorUserAcceptInvitation, authorityRoleCode, userInvitationStatus, ContactType.OPERATOR))
@@ -93,7 +93,7 @@ class CcaOperatorUserAcceptInvitationServiceTest {
         verify(operatorUserTokenVerificationService, times(1))
                 .verifyInvitationTokenForPendingAuthority(invitationToken);
         verify(operatorUserAuthService, times(1)).getUserById(userId);
-        verify(targetUnitAccountQueryService, times(1)).getAccountName(accountId);
+        verify(targetUnitAccountQueryService, times(1)).getAccountBusinessIdAndName(accountId);
         verify(operatorUserAcceptInvitationMapper, times(1)).
                 toOperatorUserWithAuthorityDTO(operatorUser, authorityInfo, accountInstallationName);
         verify(operatorRoleCodeAcceptInvitationServiceDelegator, times(1))

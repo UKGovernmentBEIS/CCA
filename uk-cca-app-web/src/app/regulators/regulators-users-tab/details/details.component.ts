@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -31,7 +31,6 @@ import { tableColumns, tableRows } from './permissions-table-data';
 @Component({
   selector: 'cca-details',
   templateUrl: './details.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     ErrorSummaryComponent,
@@ -49,6 +48,7 @@ import { tableColumns, tableRows } from './permissions-table-data';
     RadioOptionComponent,
     PendingButtonDirective,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailsComponent {
   private readonly store = inject(DetailsStore);
@@ -59,46 +59,26 @@ export class DetailsComponent {
   private readonly regulatorUsersService = inject(RegulatorUsersService);
   private readonly businessErrorService = inject(BusinessErrorService);
 
-  userId = this.route.snapshot.paramMap.get('userId');
-  currentUserId = this.authStore.select(selectUserState)().userId;
-  isCurrentUser = this.userId === this.currentUserId;
+  protected readonly userId = this.route.snapshot.paramMap.get('userId');
+  protected readonly currentUserId = this.authStore.select(selectUserState)().userId;
+  protected readonly isCurrentUser = this.userId === this.currentUserId;
 
-  basePermissionSelected: string;
-  userFullName: string;
+  protected readonly isAdd = this.store.state.isAdd;
+  protected readonly isEditable = this.store.state.isEditable;
+  protected readonly userRolePermissions = this.store.state.regulatorRoles;
+  protected readonly permissionGroups = this.store.state.permissionGroupLevels;
+  protected readonly userPermissions = this.store.state.userPermissions;
+  protected readonly user = this.store.state.user;
 
-  isAdd = this.store.state.isAdd;
-  isEditable = this.store.state.isEditable;
-  userRolePermissions = this.store.state.regulatorRoles;
-  permissionGroups = this.store.state.permissionGroupLevels;
-  userPermissions = this.store.state.userPermissions;
-  user = this.store.state.user;
+  protected readonly isSummaryDisplayed = signal(false);
 
-  isSummaryDisplayed = signal(false);
+  protected readonly form = createForm(this.fb, this.isAdd, this.user, this.userPermissions);
 
-  form = createForm(this.fb, this.isAdd);
+  protected basePermissionSelected = '';
+  protected readonly userFullName = `${this.user?.firstName}' '${this.user?.lastName}`;
 
-  tableColumns = tableColumns;
-  tableRows = tableRows;
-
-  constructor() {
-    effect(() => {
-      if (this.user) {
-        this.form.patchValue({
-          user: this.user,
-          signature: this.user.signature?.uuid
-            ? ({
-                uuid: this.user.signature.uuid,
-                file: { name: this.user.signature.name } as File,
-              } as UuidFilePair)
-            : null,
-          permissions: this.userPermissions,
-        });
-
-        this.form.get('user').get('email').disable();
-        this.userFullName = this.user.firstName + ' ' + this.user.lastName;
-      }
-    });
-  }
+  protected readonly tableColumns = tableColumns;
+  protected readonly tableRows = tableRows;
 
   setBasePermissions(roleCode: string): void {
     this.basePermissionSelected = roleCode;
@@ -143,6 +123,7 @@ export class DetailsComponent {
 
         op$ = this.regulatorUsersService.inviteRegulatorUserToCA(payload, signatureBlob);
       }
+
       op$
         .pipe(
           catchBadRequest([ErrorCodes.USER1001, ErrorCodes.AUTHORITY1005, ErrorCodes.AUTHORITY1014], () => {

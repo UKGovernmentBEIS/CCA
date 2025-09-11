@@ -20,11 +20,27 @@ import { existingControlContainer } from '../../providers/control-container.fact
 
 @Component({
   selector: 'cca-boolean-radio-group',
-  templateUrl: './boolean-radio-group.component.html',
-  providers: [existingControlContainer],
-  viewProviders: [existingControlContainer],
+  template: `
+    <div
+      [formControlName]="controlName"
+      [hint]="hint"
+      [isInline]="true"
+      [legend]="legend"
+      legendSize="medium"
+      govuk-radio
+    >
+      <govuk-radio-option [value]="true" [label]="yesLabel" />
+      <govuk-radio-option [value]="false" [label]="noLabel" />
+    </div>
+
+    <div [class.govuk-radios__conditional--hidden]="(value$ | async) !== true" [id]="conditionalId">
+      <ng-content select="[govukConditionalContent]" />
+    </div>
+  `,
   standalone: true,
   imports: [RadioComponent, FormsModule, ReactiveFormsModule, RadioOptionComponent, AsyncPipe],
+  providers: [existingControlContainer],
+  viewProviders: [existingControlContainer],
 })
 export class BooleanRadioGroupComponent implements AfterContentInit, AfterViewInit, OnInit {
   @Input() controlName: string;

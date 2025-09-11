@@ -1,6 +1,9 @@
 <div class="govuk-panel govuk-panel--confirmation">
-  <h1 *ngIf="title" class="govuk-panel__title">{{ title }}</h1>
+  @if (title()) {
+    <h1 class="govuk-panel__title">{{ title() }}</h1>
+  }
+
   <div class="govuk-panel__body">
-    <ng-content></ng-content>
+    <ng-content />
   </div>
 </div>

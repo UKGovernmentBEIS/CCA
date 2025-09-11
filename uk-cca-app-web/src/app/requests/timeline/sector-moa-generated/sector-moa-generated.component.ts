@@ -21,5 +21,5 @@ export class SectorMoaGeneratedComponent {
     requestActionQuery.selectActionPayload,
   )() as SectorMoaGeneratedRequestActionPayload;
 
-  readonly data = toSectorMoaGeneratedSummaryData(this.actionPayload);
+  protected readonly data = toSectorMoaGeneratedSummaryData(this.actionPayload);
 }

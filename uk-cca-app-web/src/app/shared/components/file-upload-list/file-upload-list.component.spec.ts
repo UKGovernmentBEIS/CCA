@@ -24,7 +24,7 @@ describe('FileUploadListComponent', () => {
         [files]="files"
         (fileDelete)="onDelete($event)"
         [isDisabled]="isDisabled"
-      ></cca-file-upload-list>
+      />
     `,
     imports: [FileUploadListComponent],
     providers: [{ provide: ActivatedRoute, useValue: activatedRoute }],
@@ -54,7 +54,7 @@ describe('FileUploadListComponent', () => {
     }
 
     get deleteButtons() {
-      return this.queryAll<HTMLButtonElement>('.cca-multi-file-upload__delete');
+      return this.queryAll<HTMLButtonElement>('button[name="delete"]');
     }
   }
 
@@ -62,9 +62,7 @@ describe('FileUploadListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TestComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     hostComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(FileUploadListComponent)).componentInstance;
@@ -95,6 +93,7 @@ describe('FileUploadListComponent', () => {
       { file: new File([], 'Test file 2'), uuid: null, errors: null, progress: 0.3 },
       { file: new File([], 'Test file 3'), uuid: null, errors: { upload: 'Could not upload' }, progress: null },
     ];
+
     fixture.detectChanges();
 
     expect(page.hidden).toBeFalsy();
@@ -114,6 +113,7 @@ describe('FileUploadListComponent', () => {
       { file: { name: 'Uploaded file' } as File, uuid: '1234', progress: null },
       { file: new File([], 'Test file 3'), uuid: null, errors: { upload: 'Could not upload' }, progress: null },
     ];
+
     fixture.detectChanges();
 
     page.deleteButtons[0].click();

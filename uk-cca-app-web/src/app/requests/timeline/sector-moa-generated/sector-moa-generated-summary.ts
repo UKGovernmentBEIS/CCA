@@ -1,6 +1,6 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { NoticeRecipientsTypePipe } from '@shared/pipes';
-import { transformFileInfoToDownloadableFile } from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 
 import { SectorMoaGeneratedRequestActionPayload } from 'cca-api';
 
@@ -18,7 +18,7 @@ export function toSectorMoaGeneratedSummaryData(payload: SectorMoaGeneratedReque
     .addRow('Transaction ID', payload?.transactionId)
     .addFileListRow(
       'Payment requests notice',
-      transformFileInfoToDownloadableFile(payload?.moaDocument, './file-download'),
+      fileUtils.toDownloadableDocument([payload?.moaDocument], './file-download'),
     )
 
     .addSection('Recipients')

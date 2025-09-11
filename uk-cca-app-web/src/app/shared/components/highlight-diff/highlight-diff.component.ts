@@ -17,9 +17,8 @@ import diff from 'html-diff-ts';
 @Component({
   selector: 'cca-highlight-diff',
   templateUrl: './highlight-diff.component.html',
-  styleUrl: './highlight-diff.component.scss',
+  styleUrl: './highlight-diff.component.css',
   standalone: true,
-
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -31,7 +30,7 @@ export class HighlightDiffComponent implements AfterViewInit {
   private readonly previous = viewChild<ElementRef<HTMLDivElement>>('previous');
   private readonly current = viewChild<ElementRef<HTMLDivElement>>('current');
 
-  htmlDiff: SafeHtml;
+  protected htmlDiff: SafeHtml;
 
   ngAfterViewInit(): void {
     const previous = this.stripHtmlComments(this.previous().nativeElement.innerHTML);

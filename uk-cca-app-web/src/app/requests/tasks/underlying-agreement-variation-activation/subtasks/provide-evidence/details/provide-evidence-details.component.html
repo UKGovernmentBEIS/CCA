@@ -5,18 +5,18 @@
   heading="Provide evidence"
   data-testid="provide-evidence-details-form"
 >
-  <div class="govuk-!-width-two-thirds govuk-body">
+  <div class="govuk-!-width-two-thirds">
     <cca-multiple-file-input
       [baseDownloadUrl]="downloadUrl"
       [listTitle]="'Uploaded files'"
       label="Evidence files"
       hint="Upload evidence of assent received from the responsible person for the target unit"
       formControlName="evidenceFiles"
-    ></cca-multiple-file-input>
+    />
 
     <div formControlName="comments" govuk-textarea label="Comments (optional)" labelSize="small"></div>
   </div>
 </cca-wizard-step>
 
 <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-<netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>
+<netz-return-to-task-or-action-page />

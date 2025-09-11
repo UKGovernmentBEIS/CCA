@@ -1,30 +1,23 @@
-import {
-  AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
-  AuthorisationAdditionalEvidenceReviewWizardStep,
-  canActivateReviewCheckYourAnswers,
-  canActivateReviewDecision,
-  canActivateReviewSummary,
-  canActivateReviewWizardStep,
-} from '@requests/common';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot } from '@angular/router';
 
-export const canActivateAuthorisationAndAdditionalEvidence = canActivateReviewWizardStep(
-  'AUTHORISATION_AND_ADDITIONAL_EVIDENCE',
-  AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
-  AuthorisationAdditionalEvidenceReviewWizardStep,
-);
+import { RequestTaskStore } from '@netz/common/store';
+import { AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK, underlyingAgreementReviewQuery } from '@requests/common';
 
-export const canActivateAuthorisationAdditionalEvidenceCheckYourAnswers = canActivateReviewCheckYourAnswers(
-  'AUTHORISATION_AND_ADDITIONAL_EVIDENCE',
-  AuthorisationAdditionalEvidenceReviewWizardStep,
-);
-export const canActivateAuthorisationAdditionalEvidenceSummary = canActivateReviewSummary(
-  'AUTHORISATION_AND_ADDITIONAL_EVIDENCE',
-  AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
-  AuthorisationAdditionalEvidenceReviewWizardStep,
-);
+export const authorisationAdditionalEvidenceRedirectGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+  const store = inject(RequestTaskStore);
 
-export const canActivateAuthorisationAdditionalEvidenceDecision = canActivateReviewDecision(
-  'AUTHORISATION_AND_ADDITIONAL_EVIDENCE',
-  AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
-  AuthorisationAdditionalEvidenceReviewWizardStep,
-);
+  const reviewSectionCompleted = store.select(
+    underlyingAgreementReviewQuery.selectReviewSectionIsCompleted(AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK),
+  )();
+
+  const decision = store.select(
+    underlyingAgreementReviewQuery.selectSubtaskDecision('AUTHORISATION_AND_ADDITIONAL_EVIDENCE'),
+  )();
+
+  if (!reviewSectionCompleted && !decision) return createUrlTreeFromSnapshot(route, ['decision']);
+  if (!reviewSectionCompleted && decision) return createUrlTreeFromSnapshot(route, ['check-your-answers']);
+  if (reviewSectionCompleted && decision) return createUrlTreeFromSnapshot(route, ['summary']);
+
+  return false;
+};

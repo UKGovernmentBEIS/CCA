@@ -22,6 +22,7 @@ describe('EditOperatorDetailsComponent', () => {
         testbed.overrideProvider(ActivatedRoute, {
           useValue: new ActivatedRouteStub({ targetUnitId: 1, userId: 'e7de58d5-0256-42a7-9501-014d25d5d310' }),
         });
+
         store = testbed.inject(ActiveOperatorStore);
         store.setState({
           details: mockTargetUnitOperatorDetails,

@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
@@ -18,9 +17,7 @@ import { SummaryData, SummarySection } from './type';
   selector: 'cca-summary',
   templateUrl: './summary.component.html',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    NgClass,
     SummaryListComponent,
     SummaryListRowDirective,
     SummaryListRowKeyDirective,
@@ -30,17 +27,23 @@ import { SummaryData, SummarySection } from './type';
     SummaryQueryParamsPipe,
     SummaryDownloadFilesComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SummaryComponent {
-  data = input.required<SummaryData>();
-  displayData = computed(() => filterEmptySections(this.data()));
+  protected readonly data = input.required<SummaryData>();
+  protected readonly displayData = computed(() => filterEmptySections(this.data()));
 }
 
 const filterEmptySections = (sectionList: SummaryData): SummaryData =>
-  sectionList.filter((s) => s.data.filter(hasValues).length);
+  sectionList.filter((s) => s.data.filter(hasValues).length || s.header);
 
 const hasValues = (v: SummarySection) => {
   // password values are always shown
   if (v.key === 'Password') return true;
-  return Array.isArray(v.value) && v.value.length && v.value.some(Boolean);
+  // file list rows are always shown to display 'No files provided'
+  if (v.isFileList) return true;
+  if (Array.isArray(v.value)) {
+    return v.value.length && v.value.some(Boolean);
+  }
+  return Boolean(v.value);
 };

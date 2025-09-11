@@ -1,0 +1,46 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h2 class="govuk-heading-m">Put on hold from buy-out and surplus batch</h2>
+    <dl govuk-summary-list>
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>On hold</dt>
+        <dd govukSummaryListRowValue>{{ buyOutSurplusInfo()?.excluded ? 'Yes' : 'No' }}</dd>
+
+        @if (userIsRegulator) {
+          <dd govukSummaryListRowActions>
+            <a class="govuk-link" [routerLink]="['buyout-surplus', 'edit-on-hold']">Change</a>
+          </dd>
+        }
+      </div>
+    </dl>
+  </div>
+</div>
+
+@for (bsi of buyOutSurplusInfo()?.surplusGainedDTOList; track bsi) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h2 class="govuk-heading-m">Surplus</h2>
+      <dl govuk-summary-list>
+        <div govukSummaryListRow>
+          <dt govukSummaryListRowKey>{{ bsi.targetPeriod }} surplus gained (tCO2e)</dt>
+          <dd govukSummaryListRowValue>{{ bsi.surplusGained | number }}</dd>
+          <dd govukSummaryListRowActions>
+            @if (bsi.hasHistory) {
+              <a class="govuk-link" [routerLink]="['buyout-surplus', bsi.targetPeriod, 'surplus-history']">
+                View history
+              </a>
+            }
+
+            @if (bsi.hasHistory && userIsRegulator) {
+              <span class="opacity-m"> | </span>
+            }
+
+            @if (userIsRegulator) {
+              <a class="govuk-link" [routerLink]="['buyout-surplus', bsi.targetPeriod, 'edit-surplus']"> Change </a>
+            }
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+}

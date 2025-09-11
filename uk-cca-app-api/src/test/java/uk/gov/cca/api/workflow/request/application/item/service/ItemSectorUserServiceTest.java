@@ -49,7 +49,7 @@ class ItemSectorUserServiceTest {
     private ItemSectorUserService itemSectorUserService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
     }
 

@@ -8,13 +8,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.notification.template.domain.TargetUnitAccountTemplateParams;
 import uk.gov.cca.api.sectorassociation.domain.dto.AddressDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
-import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationDetails;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.service.SectorReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransformationMapper;
@@ -29,6 +29,7 @@ import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.user.core.service.auth.UserAuthService;
 import uk.gov.netz.api.user.regulator.domain.RegulatorUserDTO;
 import uk.gov.netz.api.user.regulator.service.RegulatorUserAuthService;
+import uk.gov.netz.api.workflow.request.core.domain.Request;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -67,19 +68,11 @@ class CcaDocumentTemplateCommonParamsProviderTest {
     @Test
     void getAccountTemplateParams() {
         final long accountId = 1L;
-        final long sectorId = 2L;
-        final long subsectorId = 3L;
-
-        final String sectorIdentifier = "Sector Id";
-        final String sectorName = "Sector Name";
-        final LocalDate date = LocalDate.of(2024, 2, 3);
         final TargetUnitAccountDetailsDTO accountDetails = TargetUnitAccountDetailsDTO.builder()
                 .name("name")
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .companyRegistrationNumber("registrationNumber")
                 .businessId("Business Id")
-                .sectorAssociationId(sectorId)
-                .subsectorAssociationId(subsectorId)
                 .address(AccountAddressDTO.builder()
                         .line1("Acc Line 1")
                         .line2("Acc Line 2")
@@ -103,18 +96,6 @@ class CcaDocumentTemplateCommonParamsProviderTest {
                         .build())
                 .build();
 
-        final SectorAssociationContactDTO sectorContact = SectorAssociationContactDTO.builder()
-                .lastName("lastname")
-                .firstName("firstname")
-                .email("email@email.com")
-                .address(AddressDTO.builder()
-                        .line1("Line 1")
-                        .line2("Line 2")
-                        .city("City")
-                        .county("County")
-                        .postcode("code").build())
-                .build();
-
         final TargetUnitAccountTemplateParams expected = TargetUnitAccountTemplateParams.builder()
                 .name("name")
                 .companyRegistrationNumber("registrationNumber")
@@ -124,45 +105,15 @@ class CcaDocumentTemplateCommonParamsProviderTest {
                 .primaryContactEmail("responsible@example.com")
                 .location("Res Line 1\nRes Line 2\nRes City\nRes code\nRes County\nGreece")
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
-                .sectorName(sectorName)
-                .sectorIdentifier(sectorIdentifier)
-                .sectorContactFullName("%s %s".formatted(sectorContact.getFirstName(), sectorContact.getLastName()))
-                .sectorContactEmail(sectorContact.getEmail())
-                .sectorContactLocation("Line 1\nLine 2\nCity\ncode\nCounty")
-                .sectorThroughputUnit("unit")
-                .umaDate("03/02/2024")
-                .definition("definition")
-                .build();
-
-        final SectorAssociationSchemeDTO scheme = SectorAssociationSchemeDTO.builder()
-                .umaDate(date)
-                .sectorDefinition("definition")
-                .build();
-
-        final SectorAssociationDetails sectorMeasurementInfo = SectorAssociationDetails.builder()
-                .throughputUnit("unit")
                 .build();
 
         when(accountReferenceDetailsService.getTargetUnitAccountDetails(accountId))
                 .thenReturn(accountDetails);
-        when(accountReferenceDetailsService.getSectorAssociationAcronymAndNameByAccountId(accountId))
-                .thenReturn(sectorIdentifier);
-        when(accountReferenceDetailsService.getSectorAssociationNameByAccountId(accountId))
-                .thenReturn(sectorName);
-        when(accountReferenceDetailsService.getSectorAssociationContactByAccountId(accountId))
-                .thenReturn(sectorContact);
-        when(sectorReferenceDetailsService.getSectorAssociationSchemeBySectorAssociationId(sectorId))
-                .thenReturn(scheme);
-        when(sectorReferenceDetailsService.getSectorAssociationMeasurementDetails(sectorId, subsectorId))
-                .thenReturn(sectorMeasurementInfo);
-        when(documentTemplateTransformationMapper.constructAddressDTO(sectorContact.getAddress()))
-                .thenReturn("Line 1\nLine 2\nCity\ncode\nCounty");
         when(documentTemplateTransformationMapper.constructAccountAddressDTO(accountDetails.getAddress()))
                 .thenReturn("Acc Line 1\nAcc Line 2\nAcc City\nAcc code\nAcc County\nGreece");
         when(documentTemplateTransformationMapper.constructAccountAddressDTO(accountDetails.getResponsiblePerson().getAddress()))
                 .thenReturn("Res Line 1\nRes Line 2\nRes City\nRes code\nRes County\nGreece");
-        when(documentTemplateTransformationMapper.formatUmaDate(date))
-                .thenReturn("03/02/2024");
+
 
         // Invoke
         TargetUnitAccountTemplateParams actual = ccaDocumentTemplateCommonParamsProvider
@@ -172,35 +123,23 @@ class CcaDocumentTemplateCommonParamsProviderTest {
         assertThat(actual).isEqualTo(expected);
         verify(accountReferenceDetailsService, times(1))
                 .getTargetUnitAccountDetails(accountId);
-        verify(accountReferenceDetailsService, times(1))
-                .getSectorAssociationAcronymAndNameByAccountId(accountId);
-        verify(accountReferenceDetailsService, times(1))
-                .getSectorAssociationContactByAccountId(accountId);
-        verify(accountReferenceDetailsService, times(1))
-                .getSectorAssociationNameByAccountId(accountId);
-        verify(sectorReferenceDetailsService, times(1))
-                .getSectorAssociationSchemeBySectorAssociationId(sectorId);
-        verify(sectorReferenceDetailsService, times(1))
-                .getSectorAssociationMeasurementDetails(sectorId, subsectorId);
-        verify(documentTemplateTransformationMapper, times(1))
-                .constructAddressDTO(sectorContact.getAddress());
         verify(documentTemplateTransformationMapper, times(1))
                 .constructAccountAddressDTO(accountDetails.getAddress());
         verify(documentTemplateTransformationMapper, times(1))
                 .constructAccountAddressDTO(accountDetails.getResponsiblePerson().getAddress());
-        verify(documentTemplateTransformationMapper, times(1))
-                .formatUmaDate(date);
     }
 
     @Test
-    void getSectorTemplateParams() {
+    void getSectorAndCaAndSignatoryTemplateParams() {
         final long sectorAssociationId = 1L;
         final String sectorAcronym = "acronym";
         final String sectorName = "Sector Name";
         final String sectorLegalName = "Sector legal name";
+        final LocalDate date = LocalDate.of(2024, 2, 3);
         final SectorAssociationContactDTO sectorAssociationContact = SectorAssociationContactDTO.builder()
                 .firstName("firstName")
                 .lastName("lastName")
+                .email("email")
                 .address(AddressDTO.builder()
                         .city("city")
                         .county("county")
@@ -218,6 +157,12 @@ class CcaDocumentTemplateCommonParamsProviderTest {
                         .build())
                 .sectorAssociationContact(sectorAssociationContact)
                 .build();
+        
+        final SectorAssociationSchemeDTO scheme = SectorAssociationSchemeDTO.builder()
+                .umaDate(date)
+                .sectorDefinition("definition")
+                .build();
+        
 
         final String signatory = UUID.randomUUID().toString();
         final RegulatorUserDTO signatoryUser = RegulatorUserDTO.builder()
@@ -249,33 +194,59 @@ class CcaDocumentTemplateCommonParamsProviderTest {
                         .build())
                 .signatoryParams(signatoryParams)
                 .params(Map.of(
-                        "sectorId", sectorAcronym,
-                        "sectorAssociationName", sectorLegalName,
+                        "sectorAcronym", sectorAcronym,
+                        "sectorAcronymAndName", sectorAcronym + "-" + sectorName,
+                        "sectorName", sectorName,
+                        "sectorLegalName", sectorLegalName,
                         "sectorContactFullName", "%s %s".formatted(sectorAssociationContact.getFirstName(), sectorAssociationContact.getLastName()),
-                        "sectorContactAddress", "line 1\ncity\ncounty\ncode"))
+                        "sectorContactAddress", "line 1\ncity\ncounty\ncode",
+                        "sectorContactEmail", "email",
+                        "umaDate", "03/02/2024",
+                        "sectorDefinition", "definition"))
                 .build();
 
-        when(sectorReferenceDetailsService.getSectorAssociationDetails(sectorAssociationId)).thenReturn(sectorAssociationDTO);
+        when(sectorReferenceDetailsService.getSectorAssociationDetails(sectorAssociationId))
+        		.thenReturn(sectorAssociationDTO);
+        when(sectorReferenceDetailsService.getSectorAssociationAcronymAndNameBySectorAssociationId(sectorAssociationId))
+				.thenReturn(sectorAcronym + "-" + sectorName);
+        when(sectorReferenceDetailsService.getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(sectorAssociationId, SchemeVersion.CCA_2))
+        		.thenReturn(scheme);
         when(competentAuthorityService.getCompetentAuthorityDTO(CompetentAuthorityEnum.ENGLAND)).thenReturn(competentAuthorityDTO);
         when(regulatorUserAuthService.getUserById(signatory)).thenReturn(signatoryUser);
         when(userAuthService.getUserSignature(signatureInfo.getUuid())).thenReturn(Optional.of(fileDTO));
         when(documentTemplateTransformationMapper.constructAddressDTO(sectorAssociationContact.getAddress()))
                 .thenReturn("line 1\ncity\ncounty\ncode");
+        when(documentTemplateTransformationMapper.formatUmaDate(date))
+        		.thenReturn("03/02/2024");
 
         // invoke
-        TemplateParams actual = ccaDocumentTemplateCommonParamsProvider.getSectorTemplateParams(signatory, sectorAssociationId, TemplateParams.builder().build());
+        TemplateParams actual = ccaDocumentTemplateCommonParamsProvider.getSectorAndCaAndSignatoryTemplateParams(signatory, sectorAssociationId, TemplateParams.builder().build());
 
         // verify
         assertThat(actual.getParams()).isEqualTo(expected.getParams());
-        verify(sectorReferenceDetailsService, times(1)).getSectorAssociationDetails(sectorAssociationId);
+        verify(sectorReferenceDetailsService, times(2)).getSectorAssociationDetails(sectorAssociationId);
+        verify(sectorReferenceDetailsService, times(1))
+        		.getSectorAssociationAcronymAndNameBySectorAssociationId(sectorAssociationId);
+        verify(sectorReferenceDetailsService, times(1))
+        		.getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(sectorAssociationId, SchemeVersion.CCA_2);
         verify(competentAuthorityService, times(1)).getCompetentAuthorityDTO(CompetentAuthorityEnum.ENGLAND);
         verify(regulatorUserAuthService, times(1)).getUserById(signatory);
         verify(userAuthService, times(1)).getUserSignature(signatureInfo.getUuid());
         verify(documentTemplateTransformationMapper, times(1))
                 .constructAddressDTO(sectorAssociationContact.getAddress());
-
+        verify(documentTemplateTransformationMapper, times(1))
+        		.formatUmaDate(date);
     }
 
+    @Test
+    void getSectorTemplateParams_request_not_related_to_sector() {
+    	final Request request = Request.builder().build();
+    	
+    	Map<String, String> result = ccaDocumentTemplateCommonParamsProvider.getSectorTemplateParams(request, null);
+    	
+        assertThat(result).isEmpty();
+    }
+    
     @Test
     void getPermitReferenceId() {
         assertThat(ccaDocumentTemplateCommonParamsProvider.getPermitReferenceId(1L))

@@ -2,9 +2,13 @@ import { SummaryData, SummaryFactory } from '@shared/components';
 
 import { UnderlyingAgreementReviewDecision, UnderlyingAgreementVariationDetails } from 'cca-api';
 
-import { baselineChangesTypes, facilityChangesTypes, otherChangesTypes, targetCurrencyChangesTypes } from '../modules';
 import { VariationChangesEnum } from '../pipes/variation-changes-type.pipe';
-import { VariationDetailsWizardStep } from '../underlying-agreement.types';
+import {
+  baselineChangesTypes,
+  facilityChangesTypes,
+  otherChangesTypes,
+  targetCurrencyChangesTypes,
+} from '../variation-details';
 import { addDecisionSummaryData } from './decision-summary-data';
 
 function toSummaryData(
@@ -12,7 +16,7 @@ function toSummaryData(
   isEditable: boolean,
   prefix = '../',
 ): SummaryFactory {
-  const factory = new SummaryFactory().addSection('', prefix + VariationDetailsWizardStep.DETAILS);
+  const factory = new SummaryFactory().addSection('', prefix + 'variation-details');
 
   let facilityChanges = [];
   let baselineChanges = [];
@@ -27,57 +31,52 @@ function toSummaryData(
   }
 
   if (facilityChanges.length > 0) {
-    factory.addRow(
+    factory.addTextAreaRow(
       'Target Unit/Facility changes',
       facilityChanges.map((c) => VariationChangesEnum[c]),
       {
         change: isEditable,
         appendChangeParam: true,
-        prewrap: true,
       },
     );
   }
 
   if (baselineChanges.length > 0) {
-    factory.addRow(
+    factory.addTextAreaRow(
       'Amend the baseline and target due to',
       baselineChanges.map((c) => VariationChangesEnum[c]),
       {
         change: isEditable,
         appendChangeParam: true,
-        prewrap: true,
       },
     );
   }
 
   if (targetCurrencyChanges.length > 0) {
-    factory.addRow(
+    factory.addTextAreaRow(
       'Amend the target currency to',
       targetCurrencyChanges.map((c) => VariationChangesEnum[c]),
       {
         change: isEditable,
         appendChangeParam: true,
-        prewrap: true,
       },
     );
   }
 
   if (otherChanges.length > 0) {
-    factory.addRow(
+    factory.addTextAreaRow(
       'Other',
       otherChanges.map((c) => VariationChangesEnum[c]),
       {
         change: isEditable,
         appendChangeParam: true,
-        prewrap: true,
       },
     );
   }
 
-  factory.addRow('Explain what you are changing and the reason for the changes', variationDetails?.reason, {
+  factory.addTextAreaRow('Explain what you are changing and the reason for the changes', variationDetails?.reason, {
     change: isEditable,
     appendChangeParam: true,
-    prewrap: true,
   });
 
   return factory;

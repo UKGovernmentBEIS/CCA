@@ -31,15 +31,15 @@ export class FileInputComponent implements OnInit, ControlValueAccessor {
     return this.shouldDisplayErrors;
   }
 
-  listTitle = input<string>();
-  label = input<string>('Upload a file');
-  text = input<string>();
-  showFilesizeHint = input<boolean>(true);
-  hint = input<string>();
-  accepted = input<string>('*/*');
-  downloadUrl = input<(uuid: string) => string | string[]>();
-  currentLabelSize = 'govuk-label';
-  fileInput = viewChild<ElementRef<HTMLInputElement>>('input');
+  protected readonly listTitle = input<string>();
+  protected readonly label = input<string>('Upload a file');
+  protected readonly text = input<string>();
+  protected readonly showFilesizeHint = input<boolean>(true);
+  protected readonly hint = input<string>();
+  protected readonly accepted = input<string>('*/*');
+  protected readonly downloadUrl = input<(uuid: string) => string | string[]>();
+  protected currentLabelSize = 'govuk-label';
+  protected readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('input');
 
   uploadedFiles$: Observable<FileUploadEvent[]>;
   isDisabled: boolean;
@@ -57,12 +57,15 @@ export class FileInputComponent implements OnInit, ControlValueAccessor {
       case 'small':
         this.currentLabelSize = 'govuk-label govuk-label--s';
         break;
+
       case 'medium':
         this.currentLabelSize = 'govuk-label govuk-label--m';
         break;
+
       case 'large':
         this.currentLabelSize = 'govuk-label govuk-label--l';
         break;
+
       default:
         this.currentLabelSize = 'govuk-label';
         break;
@@ -98,9 +101,7 @@ export class FileInputComponent implements OnInit, ControlValueAccessor {
         withLatestFrom(this.value$),
         filter(([fileEvent, value]) => fileEvent.file === value?.file),
         tap(([uploadEvent, value]) => {
-          if (uploadEvent.uuid) {
-            this.onChange({ ...value, uuid: uploadEvent.uuid, dimensions: value.dimensions });
-          }
+          if (uploadEvent.uuid) this.onChange({ ...value, uuid: uploadEvent.uuid, dimensions: value.dimensions });
         }),
         map(([fileEvent]) => fileEvent),
       ),

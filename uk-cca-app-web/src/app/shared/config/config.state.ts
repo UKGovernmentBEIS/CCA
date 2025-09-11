@@ -9,6 +9,7 @@ export interface ConfigState {
   };
   keycloakServerUrl?: string;
   subsistenceFeesRunTriggerDate?: string;
+  underlyingAgreementSchemeParticipationFlagCutOffDate?: string;
 }
 
 export const initialState: ConfigState = {
@@ -20,4 +21,5 @@ export const initialState: ConfigState = {
     gtmContainerId: '',
   },
   subsistenceFeesRunTriggerDate: '',
+  underlyingAgreementSchemeParticipationFlagCutOffDate: '',
 };

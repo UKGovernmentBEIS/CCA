@@ -34,9 +34,8 @@ public class SectorUserRegistrationService {
                         sectorUserInvitationDTO.getFirstName(),
                         sectorUserInvitationDTO.getLastName());
 
-        String authorityUuid =
-                sectorUserAuthorityService.createPendingAuthorityForSectorUser(sectorAssociationId, roleCode, sectorUserInvitationDTO.getContactType(), userId, currentUser);
-
-        return authorityUuid;
+	    return sectorUserAuthorityService
+                .createPendingAuthorityForSectorUser(sectorAssociationId, roleCode,
+                        sectorUserInvitationDTO.getContactType(), userId, currentUser);
     }
 }

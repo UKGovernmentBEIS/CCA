@@ -4,22 +4,50 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
-import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import {
+  TaskItemStatus,
+  TasksApiService,
+  toVariationReviewTargetUnitDetailsOriginalSummaryDataWithDecision,
+  toVariationReviewTargetUnitDetailsSummaryDataWithDecision,
+  UNAVariationReviewRequestTaskPayload,
+} from '@requests/common';
+import {
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
-  toReviewTargetUnitDetailsSummaryDataWithDecision,
   transform,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
+import { produce } from 'immer';
+
+import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../transform';
+import { resetDetermination } from '../../../utils';
 
 @Component({
   selector: 'cca-check-your-answers',
   standalone: true,
+  template: `
+    <div>
+      <netz-page-heading caption="Target unit details">Check your answers</netz-page-heading>
+
+      <ng-template #contentTpl let-showOriginal="showOriginal">
+        <cca-summary [data]="showOriginal ? summaryDataOriginal : summaryDataCurrent" />
+      </ng-template>
+
+      <cca-highlight-diff>
+        <ng-container slot="previous" *ngTemplateOutlet="contentTpl; context: { showOriginal: true }" />
+        <ng-container slot="current" *ngTemplateOutlet="contentTpl; context: { showOriginal: false }" />
+      </cca-highlight-diff>
+
+      <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
+    </div>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   imports: [
     PageHeadingComponent,
     SummaryComponent,
@@ -29,46 +57,76 @@ import { generateDownloadUrl } from '@shared/utils';
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
-  templateUrl: './review-target-unit-details-check-your-answers.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class ReviewTargetUnitDetailsCheckYourAnswersComponent {
+export class ReviewTargetUnitDetailsCheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly taskService = inject(TaskService);
-  private readonly requestTaskStore = inject(RequestTaskStore);
+  private readonly tasksApiService = inject(TasksApiService);
+  private readonly store = inject(RequestTaskStore);
 
   private readonly downloadUrl = generateDownloadUrl(
-    this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
+    this.store.select(requestTaskQuery.selectRequestTaskId)().toString(),
   );
 
-  private readonly attachments = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
+  private readonly attachments = this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
 
-  private readonly accountReferenceData = this.requestTaskStore.select(
-    underlyingAgreementQuery.selectAccountReferenceData,
-  );
+  private readonly accountReferenceData = this.store.select(underlyingAgreementQuery.selectAccountReferenceData);
 
   private readonly originalTargetUnitDetails = transform(this.accountReferenceData());
 
-  protected readonly summaryDataOriginal = toReviewTargetUnitDetailsSummaryDataWithDecision(
+  protected readonly summaryDataOriginal = toVariationReviewTargetUnitDetailsOriginalSummaryDataWithDecision(
     this.originalTargetUnitDetails,
-    this.requestTaskStore.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
+    this.store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
     this.attachments,
     this.downloadUrl,
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    this.store.select(requestTaskQuery.selectIsEditable)(),
   );
 
-  protected readonly summaryDataCurrent = toReviewTargetUnitDetailsSummaryDataWithDecision(
-    this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
-    this.requestTaskStore.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
+  protected readonly summaryDataCurrent = toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
+    this.store.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
+    this.store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
     this.attachments,
     this.downloadUrl,
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    this.store.select(requestTaskQuery.selectIsEditable)(),
   );
 
   onSubmit() {
-    this.taskService
-      .submitSubtask(REVIEW_TARGET_UNIT_DETAILS_SUBTASK)
-      .subscribe(() => this.router.navigate(['../../..'], { relativeTo: this.activatedRoute, replaceUrl: true }));
+    const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
+
+    const payload = this.store.select(
+      requestTaskQuery.selectRequestTaskPayload,
+    )() as UNAVariationReviewRequestTaskPayload;
+
+    const actionPayload = toUnderlyingAgreementVariationReviewSavePayload(payload);
+
+    const sectionsCompleted = produce(
+      this.store.select(underlyingAgreementQuery.selectSectionsCompleted)(),
+      (draft) => {
+        draft[REVIEW_TARGET_UNIT_DETAILS_SUBTASK] = TaskItemStatus.COMPLETED;
+      },
+    );
+
+    const decision = this.store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))();
+
+    const reviewSectionsCompleted = produce(
+      this.store.select(underlyingAgreementReviewQuery.selectReviewSectionsCompleted)(),
+      (draft) => {
+        draft[REVIEW_TARGET_UNIT_DETAILS_SUBTASK] =
+          decision.type === 'ACCEPTED' ? TaskItemStatus.ACCEPTED : TaskItemStatus.REJECTED;
+      },
+    );
+
+    const determination = resetDetermination(this.store.select(underlyingAgreementReviewQuery.selectDetermination)());
+
+    const dto = createSaveActionDTO(requestTaskId, actionPayload, {
+      sectionsCompleted,
+      reviewSectionsCompleted,
+      determination: determination,
+    });
+
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
+      this.router.navigate(['../../..'], { relativeTo: this.activatedRoute, replaceUrl: true });
+    });
   }
 }

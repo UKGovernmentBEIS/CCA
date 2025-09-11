@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
-import { PageHeadingComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
-import { TaskService } from '@netz/common/forms';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
+import { TasksApiService } from '@requests/common';
+
+import { RequestTaskActionProcessDTO } from 'cca-api';
 
 @Component({
   selector: 'cca-una-submit-action',
-  standalone: true,
-  imports: [ButtonDirective, PageHeadingComponent, PendingButtonDirective, ReturnToTaskOrActionPageComponent],
   template: `
     <netz-page-heading size="xl"> Submit to regulator </netz-page-heading>
 
-    <p class="govuk-body">Your application will be sent directly to your Regulator (Environment Agency).</p>
-    <p class="govuk-body">
+    <p>Your application will be sent directly to your Regulator (Environment Agency).</p>
+    <p>
       By selecting 'Confirm and send' you confirm that the information in your application is correct to the best of
       your knowledge.
     </p>
@@ -25,18 +25,31 @@ import { ButtonDirective } from '@netz/govuk-components';
     </div>
 
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-    <netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>
+    <netz-return-to-task-or-action-page />
   `,
+  standalone: true,
+  imports: [ButtonDirective, PageHeadingComponent, PendingButtonDirective, ReturnToTaskOrActionPageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementSubmitActionComponent {
   private readonly router = inject(Router);
-  private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly tasksService = inject(TaskService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly store = inject(RequestTaskStore);
+  private readonly tasksApiService = inject(TasksApiService);
 
   submit() {
-    this.tasksService
-      .submit()
-      .subscribe(() => this.router.navigate(['confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true }));
+    const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
+
+    const dto: RequestTaskActionProcessDTO = {
+      requestTaskId,
+      requestTaskActionType: 'UNDERLYING_AGREEMENT_SUBMIT_APPLICATION',
+      requestTaskActionPayload: {
+        payloadType: 'EMPTY_PAYLOAD',
+      },
+    };
+
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
+      this.router.navigate(['confirmation'], { relativeTo: this.route });
+    });
   }
 }

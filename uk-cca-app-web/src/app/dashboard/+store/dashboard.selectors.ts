@@ -1,9 +1,8 @@
 import { createDescendingSelector, createSelector, StateSelector } from '@netz/common/store';
-import { Paging } from '@shared/components';
 
 import { ItemDTO } from 'cca-api';
 
-import { DashboardState, WorkflowItemsAssignmentType } from './dashboard.state';
+import { DashboardState, Paging, WorkflowItemsAssignmentType } from './dashboard.state';
 
 export const selectActiveTab: StateSelector<DashboardState, WorkflowItemsAssignmentType> = createSelector(
   (state) => state.activeTab,
@@ -11,7 +10,7 @@ export const selectActiveTab: StateSelector<DashboardState, WorkflowItemsAssignm
 
 export const selectItems: StateSelector<DashboardState, ItemDTO[]> = createSelector((state) => state.items);
 
-export const selectTotal: StateSelector<DashboardState, number> = createSelector((state) => state.total);
+export const selectTotal: StateSelector<DashboardState, number> = createSelector((state) => state.totalItems);
 
 export const selectPaging: StateSelector<DashboardState, Paging> = createSelector((state) => state.paging);
 

@@ -10,7 +10,7 @@
 
               @if (errorItem?.columns && errorItem?.rows) {
                 <govuk-details summary="View details">
-                  <p class="govuk-body">
+                  <p>
                     <span
                       >Check the data in column '{{ errorItem?.columns }}' on rows
                       {{ getRowIndexes(errorItem?.rows).join(', ') }}

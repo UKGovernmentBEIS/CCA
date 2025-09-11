@@ -1,24 +1,27 @@
 import { DatePipe, KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { combineLatest, map } from 'rxjs';
+import { pipe, switchMap, tap } from 'rxjs';
 
 import { CheckboxComponent, CheckboxesComponent } from '@netz/govuk-components';
 import { PaginationComponent } from '@shared/components';
-import { RequestStatusTagColorPipe, WorkflowStatusPipe } from '@shared/pipes';
+import { PerformanceOutcomePipe, StatusColorPipe, StatusPipe, TprVersionPipe } from '@shared/pipes';
 import { HistoryCategory } from '@shared/types';
 
-import { RequestSearchCriteria, RequestsService } from 'cca-api';
+import { RequestDetailsSearchResults, type RequestSearchCriteria, RequestsService } from 'cca-api';
 
+import { WorkflowHistoryTabState, workflowStatusesMap, workflowTypesMap } from './workflow-history-tab.types';
 import {
-  originalOrder,
-  WorkflowHistoryTabState,
-  workflowStatusesMap,
-  workflowTypesMap,
-} from './workflow-history-tab.types';
+  WORKFLOW_HISTORY_TAB_FORM_PROVIDER,
+  type WorkflowHistoryTabFormModel,
+  WorkflowHistoryTabFormProvider,
+} from './workflow-history-tab-form.provider';
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 10;
 
 @Component({
   selector: 'cca-workflow-history-tab',
@@ -26,96 +29,127 @@ import {
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    RouterLink,
     CheckboxComponent,
     CheckboxesComponent,
+    PaginationComponent,
     KeyValuePipe,
     DatePipe,
-    PaginationComponent,
-    RequestStatusTagColorPipe,
-    WorkflowStatusPipe,
-    RouterLink,
+    StatusColorPipe,
+    StatusPipe,
+    TprVersionPipe,
+    PerformanceOutcomePipe,
   ],
+  providers: [WorkflowHistoryTabFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkflowHistoryTabComponent implements OnInit {
+export class WorkflowHistoryTabComponent {
   private readonly requestsService = inject(RequestsService);
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
 
-  private readonly targetUnitAccountId = this.activatedRoute.snapshot.paramMap.get('targetUnitId');
+  readonly filtersForm = inject<WorkflowHistoryTabFormModel>(WORKFLOW_HISTORY_TAB_FORM_PROVIDER);
+
+  private readonly targetUnitId = this.activatedRoute.snapshot.paramMap.get('targetUnitId');
+
+  protected readonly workflowTypesMap = workflowTypesMap;
+  protected readonly workflowStatusesMap = workflowStatusesMap;
 
   readonly state = signal<WorkflowHistoryTabState>({
-    currentPage: +this.activatedRoute.snapshot.queryParamMap.get('page') || 1,
     workflowsHistory: null,
     totalItems: 0,
     requestTypes: [],
     requestStatuses: [],
+    currentPage: +this.activatedRoute.snapshot.queryParamMap.get('page') || DEFAULT_PAGE,
+    pageSize: +this.activatedRoute.snapshot.queryParamMap.get('pageSize') || DEFAULT_PAGE_SIZE,
   });
 
-  readonly pageSize = 30;
-  readonly originalOrder = originalOrder;
+  constructor() {
+    this.activatedRoute.queryParamMap
+      .pipe(
+        takeUntilDestroyed(),
+        switchMap((queryParamMap) => {
+          const page = +queryParamMap.get('page') || DEFAULT_PAGE;
+          const pageSize = +queryParamMap.get('pageSize') || DEFAULT_PAGE_SIZE;
+          const requestTypes = queryParamMap.getAll('requestTypes');
+          const requestStatuses = queryParamMap.getAll('requestStatuses');
 
-  readonly searchForm = this.fb.group({
-    requestTypes: this.fb.control<string[]>([]),
-    requestStatuses: this.fb.control<string[]>([]),
-  });
+          this.state.update((state) => ({
+            ...state,
+            currentPage: page,
+            pageSize,
+            requestTypes,
+            requestStatuses,
+          }));
 
-  readonly formData = toSignal(this.searchForm.valueChanges, { initialValue: this.searchForm.value });
-  readonly currentPage = computed(() => this.state().currentPage);
-  readonly workflowsHistory = computed(() => this.state().workflowsHistory?.requestDetails);
-  readonly currentPage$ = toObservable(this.currentPage);
-  readonly formData$ = toObservable(this.formData);
+          const requestSearchCriteria: RequestSearchCriteria = {
+            resourceType: 'ACCOUNT',
+            resourceId: this.targetUnitId,
+            requestTypes,
+            requestStatuses,
+            historyCategory: HistoryCategory.UNA,
+            pageNumber: page - 1,
+            pageSize,
+          };
 
-  readonly count = computed(() => this.state().totalItems);
+          return this.fetchWorkflows(requestSearchCriteria);
+        }),
+        this.updateWorkflows(),
+      )
+      .subscribe();
 
-  readonly workflowTypesMap = workflowTypesMap;
-  readonly workflowStatusesMap = workflowStatusesMap;
-
-  ngOnInit(): void {
-    combineLatest([this.formData$, this.currentPage$]).subscribe(([formValues, page]) => {
-      this.state.update((state) => ({
-        ...state,
-        requestTypes: formValues.requestTypes,
-        requestStatuses: formValues.requestStatuses,
-        currentPage: page,
-      }));
-
-      this.fetchAndSetWorkflows(this.targetUnitAccountId);
-    });
+    this.filtersForm.valueChanges
+      .pipe(
+        takeUntilDestroyed(),
+        tap((formValues) => {
+          this.handleQueryParamsNavigation({
+            requestTypes: formValues.requestTypes,
+            requestStatuses: formValues.requestStatuses,
+          });
+        }),
+      )
+      .subscribe();
   }
 
-  private fetchAndSetWorkflows(targetUnitAccountId: string) {
-    this.fetchWorkflows(targetUnitAccountId).subscribe({
-      next: (data) => {
+  onPageChange(page: number) {
+    if (page === this.state().currentPage) return;
+    this.handleQueryParamsNavigation({ page });
+  }
+
+  onPageSizeChange(pageSize: number) {
+    if (pageSize === this.state().pageSize) return;
+    this.handleQueryParamsNavigation({ pageSize });
+  }
+
+  private fetchWorkflows(requestSearchCriteria: RequestSearchCriteria) {
+    return this.requestsService.getRequestDetailsByResource(requestSearchCriteria);
+  }
+
+  private updateWorkflows() {
+    return pipe(
+      tap((results: RequestDetailsSearchResults) =>
         this.state.update((state) => ({
           ...state,
-          workflowsHistory: data.requestDetailsSearchResults,
-          totalItems: data.requestDetailsSearchResults.total || 0,
-        }));
-      },
-      error: (err) => {
-        console.error('Error loading workflows', err);
-      },
+          workflowsHistory: results,
+          totalItems: results.total || 0,
+        })),
+      ),
+    );
+  }
+
+  private handleQueryParamsNavigation(
+    pagination: Partial<{
+      page: number;
+      pageSize: number;
+      requestTypes: string[];
+      requestStatuses: string[];
+    }>,
+  ) {
+    this.router.navigate([], {
+      queryParams: { ...pagination },
+      queryParamsHandling: 'merge',
+      relativeTo: this.activatedRoute,
+      fragment: this.activatedRoute.snapshot.fragment,
     });
-  }
-
-  private fetchWorkflows(targetUnitAccountId: string) {
-    const requestSearchCriteria: RequestSearchCriteria = {
-      resourceType: 'ACCOUNT', // Available options at NETZ's `ResourceType` and CCA's `CcaResourceType`
-      resourceId: targetUnitAccountId,
-      requestTypes: this.state().requestTypes,
-      requestStatuses: this.state().requestStatuses,
-      historyCategory: HistoryCategory.UNA,
-      pageNumber: this.state().currentPage - 1,
-      pageSize: this.pageSize,
-    };
-
-    return this.requestsService
-      .getRequestDetailsByResource(requestSearchCriteria)
-      .pipe(map((requestDetailsSearchResults) => ({ requestDetailsSearchResults })));
-  }
-
-  handlePageChange(page: number) {
-    this.state.update((state) => ({ ...state, currentPage: page }));
   }
 }

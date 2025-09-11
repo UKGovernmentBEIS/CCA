@@ -1,76 +1,74 @@
-<div class="govuk-grid-row govuk-body govuk-!-padding-3" data-testid="facilities-search">
-  <div class="govuk-grid-column-full">
-    <div class="govuk-grid-row">
-      <h3 class="govuk-heading-m">Facilities</h3>
+<h3 class="govuk-heading-m">Facilities</h3>
 
-      <form (ngSubmit)="onSearch()" [formGroup]="form" id="search-form">
-        <div class="row-flex govuk-!-margin-bottom-5">
-          <div class="govuk-grid-column-two-thirds">
-            <div
-              formControlName="term"
-              govuk-text-input
-              label="Find a facility"
-              hint="Enter at least three characters of the site name or facility ID"
-              inputType="search"
-              aria-description="search results will appear below"
-            ></div>
-          </div>
-
-          <div class="govuk-grid-column-one-third align-self-end">
-            <button netzPendingButton govukButton type="submit" data-testid="search-btn">Search</button>
-          </div>
-        </div>
-
-        <div class="govuk-grid-column-full">
-          @if (state().totalItems) {
-            <ng-container aria-live="polite" role="region" aria-atomic="true">
-              <div class="govuk-grid-row">
-                <govuk-table [columns]="tableColumns" [data]="facilities()" data-testid="facilities-list-table">
-                  <ng-template let-column="column" let-index="index" let-row="row">
-                    @switch (column.field) {
-                      @case ('id') {
-                        <a [routerLink]="[row.id, 'details']" class="govuk-link">{{ row[column.field] }}</a>
-                      }
-
-                      @case ('siteName') {
-                        {{ row[column.field] }}
-                      }
-
-                      @case ('status') {
-                        <govuk-tag [color]="row[column.field] === 'LIVE' ? 'green' : 'red'">
-                          {{ row[column.field] | facilityStatus }}
-                        </govuk-tag>
-                      }
-
-                      @case ('schemeExitDate') {
-                        {{ row[column.field] | date: 'dd/MM/yyyy' }}
-                      }
-
-                      @case ('certifiedStatus') {
-                        {{ row[column.field] | titlecase }}
-                      }
-
-                      @default {
-                        {{ row[column.field] }}
-                      }
-                    }
-                  </ng-template>
-                </govuk-table>
-              </div>
-
-              <cca-pagination
-                [pageSize]="pageSize"
-                [count]="count()"
-                (currentPageChange)="handlePageChange($event)"
-              ></cca-pagination>
-            </ng-container>
-          } @else {
-            <div class="govuk-grid-row">
-              <p class="govuk-body" tabindex="-1" role="status">There are no results to show.</p>
-            </div>
-          }
-        </div>
-      </form>
+<div class="govuk-grid-row" data-testid="facilities-search">
+  <form (ngSubmit)="onSearch()" [formGroup]="form" id="search-form">
+    <div class="govuk-grid-column-two-thirds">
+      <div
+        formControlName="term"
+        govuk-text-input
+        label="Find a facility"
+        hint="Enter at least three characters of the site name or facility ID"
+        inputType="search"
+        aria-description="search results will appear below"
+      ></div>
     </div>
-  </div>
+
+    <div class="govuk-grid-column-one-third" style="text-align: start">
+      <button style="margin-top: 65px" netzPendingButton govukButton type="submit" data-testid="search-btn">
+        Search
+      </button>
+    </div>
+  </form>
+
+  @if (state().totalItems) {
+    <div class="govuk-grid-column-full">
+      <govuk-table [columns]="tableColumns()" [data]="facilities()" data-testid="facilities-list-table">
+        <ng-template let-column="column" let-index="index" let-row="row">
+          @switch (column.field) {
+            @case ('id') {
+              <a [routerLink]="[row.id, 'details']" class="govuk-link">{{ row[column.field] }}</a>
+            }
+
+            @case ('siteName') {
+              {{ row[column.field] }}
+            }
+
+            @case ('status') {
+              <govuk-tag [color]="row[column.field] === 'LIVE' ? 'green' : 'red'">
+                {{ row[column.field] | status }}
+              </govuk-tag>
+            }
+
+            @case ('schemeExitDate') {
+              {{ row[column.field] | date: 'dd/MM/yyyy' }}
+            }
+
+            @case ('certifiedStatus') {
+              {{ row[column.field] | titlecase }}
+            }
+
+            @case ('certificationStatus') {
+              {{ row[column.field] | status }}
+            }
+
+            @default {
+              {{ row[column.field] }}
+            }
+          }
+        </ng-template>
+      </govuk-table>
+
+      <cca-pagination
+        [count]="state().totalItems"
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      />
+    </div>
+  } @else {
+    <div class="govuk-grid-column-full">
+      <p tabindex="-1" role="status">There are no results to show.</p>
+    </div>
+  }
 </div>

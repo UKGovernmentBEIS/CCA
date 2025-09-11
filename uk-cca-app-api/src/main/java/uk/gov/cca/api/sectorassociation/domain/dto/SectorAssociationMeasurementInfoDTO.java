@@ -1,9 +1,13 @@
 package uk.gov.cca.api.sectorassociation.domain.dto;
 
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uk.gov.cca.api.common.domain.SchemeData;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 
 @Data
 @AllArgsConstructor
@@ -12,6 +16,5 @@ import lombok.NoArgsConstructor;
 public class SectorAssociationMeasurementInfoDTO {
 
     private String subsectorAssociationName;
-    private String measurementUnit;
-    private String throughputUnit;
+    private Map<SchemeVersion, SchemeData> schemeDataMap;
 }

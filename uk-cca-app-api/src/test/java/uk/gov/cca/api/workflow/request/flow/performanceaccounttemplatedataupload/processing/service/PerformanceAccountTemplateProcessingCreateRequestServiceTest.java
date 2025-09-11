@@ -14,7 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.service.PerformanceAccountTemplateDataQueryService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
@@ -44,6 +45,9 @@ class PerformanceAccountTemplateProcessingCreateRequestServiceTest {
 	private RequestService requestService;
 	
 	@Mock
+	private PerformanceAccountTemplateDataQueryService performanceAccountTemplateDataQueryService;
+	
+	@Mock
 	private StartProcessRequestService startProcessRequestService;
 	
 	@Test
@@ -64,6 +68,7 @@ class PerformanceAccountTemplateProcessingCreateRequestServiceTest {
 				.builder()
 				.targetPeriodType(TargetPeriodType.TP6)
 				.sectorAssociationInfo(sectorInfo)
+				.sectorUserAssignee("SecUAssingee")
 				.targetPeriodYear(Year.of(2025))
 				.build();
 		
@@ -72,6 +77,8 @@ class PerformanceAccountTemplateProcessingCreateRequestServiceTest {
 				.build();
 		
 		when(requestService.findRequestById(parentRequestId)).thenReturn(parentRequest);
+		when(performanceAccountTemplateDataQueryService.calculateNextReportVersion(accountReport.getAccountId(),
+				parentRequestPayload.getTargetPeriodYear())).thenReturn(1);
 		when(requestCreateAccountAndSectorResourcesService.createRequestResources(accountReport.getAccountId()))
 			.thenReturn(Map.of(
 						ResourceType.ACCOUNT, accountReport.getAccountId().toString(),
@@ -81,6 +88,8 @@ class PerformanceAccountTemplateProcessingCreateRequestServiceTest {
 		cut.createRequest(accountReport, parentRequestId, parentRequestBusinessKey);
 		
 		verify(requestService, times(1)).findRequestById(parentRequestId);
+		verify(performanceAccountTemplateDataQueryService, times(1)).calculateNextReportVersion(accountReport.getAccountId(),
+				parentRequestPayload.getTargetPeriodYear());
 		verify(requestCreateAccountAndSectorResourcesService, times(1)).createRequestResources(accountReport.getAccountId());
 		verify(startProcessRequestService, times(1)).startProcess(RequestParams.builder()
 				.type(CcaRequestType.PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING)
@@ -91,6 +100,8 @@ class PerformanceAccountTemplateProcessingCreateRequestServiceTest {
 				.requestMetadata(PerformanceAccountTemplateProcessingRequestMetadata.builder()
 						.type(CcaRequestMetadataType.PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING)
 						.sectorAssociationInfo(parentRequestPayload.getSectorAssociationInfo())
+						.sectorUserAssignee(parentRequestPayload.getSectorUserAssignee())
+						.accountId(accountReport.getAccountId())
 						.accountBusinessId(accountReport.getAccountBusinessId())
 						.targetPeriodType(parentRequestPayload.getTargetPeriodType())
 						.targetPeriodYear(parentRequestPayload.getTargetPeriodYear())

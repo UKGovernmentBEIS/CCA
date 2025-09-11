@@ -51,6 +51,6 @@ public class BuyOutSurplusRunRequestIdGenerator extends RequestSequenceRequestId
 
     @Override
     public String getPrefix() {
-        return "BS";
+        return "BOS";
     }
 }

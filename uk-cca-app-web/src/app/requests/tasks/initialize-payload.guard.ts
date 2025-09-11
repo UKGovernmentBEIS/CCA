@@ -12,12 +12,14 @@ import { initializeWithdrawAdminTerminationPayload } from './withdraw-admin-term
 
 export const initializePayloadGuard = () => {
   const store = inject(RequestTaskStore);
+
   return store.rxSelect(requestTaskQuery.selectRequestTask).pipe(
     skipWhile((t) => !t),
     take(1),
     tap((task) => {
       const type = task.type;
       const payload = task.payload;
+
       switch (type) {
         case 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT':
           store.setPayload(initializeUnderlyingAgreementSubmitPayload(payload));

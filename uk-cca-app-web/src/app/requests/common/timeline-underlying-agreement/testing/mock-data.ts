@@ -30,7 +30,7 @@ const mockUnderlyingAgreement: UnderlyingAgreementPayload = {
     },
     operatorType: 'LIMITED_COMPANY',
     isCompanyRegistrationNumber: true,
-    companyRegistrationNumber: '1111',
+    companyRegistrationNumber: '11112222',
   },
   facilities: [
     {
@@ -38,6 +38,7 @@ const mockUnderlyingAgreement: UnderlyingAgreementPayload = {
       status: 'NEW',
       facilityDetails: {
         name: 'Facility 1',
+        participatingSchemeVersions: ['CCA_2'],
         facilityAddress: {
           city: 'Facility City',
           line1: 'Facility Line1',
@@ -138,7 +139,7 @@ const mockPayload: UnderlyingAgreementSubmittedRequestActionPayload = {
     targetUnitAccountDetails: {
       operatorName: 'test',
       operatorType: 'LIMITED_COMPANY',
-      companyRegistrationNumber: 'test',
+      companyRegistrationNumber: 'test1234',
       address: {
         line1: 'accountrefdata operator address line 1',
         line2: 'accountrefdata operator address line 2',
@@ -186,7 +187,9 @@ const mockPayload: UnderlyingAgreementSubmittedRequestActionPayload = {
     },
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
   underlyingAgreement: mockUnderlyingAgreement,

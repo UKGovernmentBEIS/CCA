@@ -79,7 +79,7 @@ class SectorUserAuthorityControllerTest {
 
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         final AopProxy aopProxy = getAopProxy(authorizationAspectUserResolver);
 

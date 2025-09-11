@@ -6,7 +6,7 @@ import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
 
 import { miReportTypeDescriptionMap } from './core/mi-report';
 import { MiReportsComponent } from './mi-reports.component';
-import { MiReportsStore } from './store/mi-reports.store';
+import { MiReportsStore } from './mi-reports.store';
 
 describe('MiReportsComponent', () => {
   let component: MiReportsComponent;
@@ -31,9 +31,7 @@ describe('MiReportsComponent', () => {
       imports: [MiReportsComponent, PageHeadingComponent],
       providers: [{ provide: ActivatedRoute, useValue: routeStub }],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     miReportsStore = TestBed.inject(MiReportsStore);
     miReportsStore.setState(miReports);
     fixture = TestBed.createComponent(MiReportsComponent);
@@ -49,6 +47,7 @@ describe('MiReportsComponent', () => {
   it('should create table with expected content', () => {
     const cells = page.cells;
     expect(cells.length).toEqual(1);
+
     const reportDescriptions = cells.map((c) => c.textContent);
     const expectedDescriptions = miReports
       .map((r) => miReportTypeDescriptionMap[r.miReportType])

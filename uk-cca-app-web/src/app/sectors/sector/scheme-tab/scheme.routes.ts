@@ -7,7 +7,7 @@ export const SCHEME_ROUTES: Routes = [
     path: 'subsector/:subId',
     data: {
       pageTitle: 'Sub-sector details',
-      breadcrumb: ({ subSector }) => `${subSector.subsectorAssociation.name}`,
+      breadcrumb: ({ subSector }) => `${subSector.name}`,
     },
     resolve: { subSector: SubsectorAssociationSchemeResolver },
     loadComponent: () =>

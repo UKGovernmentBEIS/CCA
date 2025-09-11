@@ -11,6 +11,7 @@ import { initializePayloadGuard } from './initialize-payload.guard';
 
 describe('Initialize Payload Guard', () => {
   let store: RequestTaskStore;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [

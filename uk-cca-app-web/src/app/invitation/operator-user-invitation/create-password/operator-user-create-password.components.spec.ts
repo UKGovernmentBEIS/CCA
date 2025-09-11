@@ -16,6 +16,7 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
   let fixture: ComponentFixture<OperatorUserCreatePasswordComponent>;
   let operatorUserInvitationStore: OperatorUserInvitationStore;
   let router: Router;
+
   const route = new ActivatedRouteStub();
 
   const operatorUserStoreState: InvitedOperatorUserExtended = {

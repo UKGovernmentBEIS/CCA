@@ -1,50 +1,40 @@
 import { Routes } from '@angular/router';
 
-import { VariationDetailsReviewWizardStep } from '@requests/common';
-
-import {
-  canActivateVariationDetails,
-  canActivateVariationDetailsCheckYourAnswers,
-  canActivateVariationDetailsDecision,
-  canActivateVariationDetailsSummary,
-} from './variation-details.guard';
+import { variationDetailsRedirectGuard } from './variation-details-redirect.guard';
 
 export const VARIATION_DETAILS_ROUTES: Routes = [
   {
     path: '',
     children: [
       {
-        path: VariationDetailsReviewWizardStep.DECISION,
-        title: 'Variation details',
+        path: '',
+        canActivate: [variationDetailsRedirectGuard],
+        children: [],
+      },
+      {
+        path: 'decision',
+        title: 'Variation details decision',
         data: { backlink: '../../../', breadcrumb: false },
-        canActivate: [canActivateVariationDetailsDecision],
         loadComponent: () =>
           import('./decision/variation-details-decision.component').then((c) => c.VariationDetailsDecisionComponent),
       },
       {
-        path: VariationDetailsReviewWizardStep.SUMMARY,
+        path: 'summary',
         title: 'Summary',
         data: { backlink: '../../../', breadcrumb: false },
-        canActivate: [canActivateVariationDetailsSummary],
         loadComponent: () => import('./summary/variation-details-summary.component'),
       },
       {
-        path: VariationDetailsReviewWizardStep.CHECK_YOUR_ANSWERS,
+        path: 'check-your-answers',
         title: 'Check your answers',
         data: { backlink: '../../../', breadcrumb: false },
-        canActivate: [canActivateVariationDetailsCheckYourAnswers],
         loadComponent: () => import('./check-your-answers/variation-details-check-your-answers.component'),
       },
       {
-        path: VariationDetailsReviewWizardStep.DETAILS,
+        path: 'variation-details',
         title: 'Variation details',
         data: { backlink: '../../../', breadcrumb: false },
-        canActivate: [canActivateVariationDetails],
-        loadComponent: () => import('@requests/common').then((m) => m.VariationDetailsComponent),
-      },
-      {
-        path: '**',
-        redirectTo: VariationDetailsReviewWizardStep.DECISION,
+        loadComponent: () => import('./details/variation-details.component').then((c) => c.VariationDetailsComponent),
       },
     ],
   },

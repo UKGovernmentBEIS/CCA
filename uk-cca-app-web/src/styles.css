@@ -1,0 +1,72 @@
+/* Import GOV.UK CSS variables */
+@import 'styles/govuk-spacing.css';
+@import 'styles/govuk-colors.css';
+@import 'styles/multiple-file-input.css';
+@import 'styles/side-navigation.css';
+@import 'styles/flex.css';
+
+.govuk-width-container {
+  min-width: 1200px;
+}
+
+.tag-width {
+  strong {
+    max-width: 100% !important;
+  }
+}
+
+.x-scroll {
+  overflow-x: scroll;
+
+  .max-content-width {
+    min-width: 100%;
+    width: max-content;
+  }
+}
+
+.selection-text {
+  display: flex;
+
+  p {
+    margin-left: 10px;
+    color: #505a5f;
+  }
+}
+
+.selection-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    margin: 10px 0 15px 10px;
+  }
+}
+
+a[role='button'] {
+  text-decoration: underline;
+  color: var(--govuk-link-visited-colour);
+  cursor: pointer;
+}
+
+.pre-line {
+  white-space: pre-line;
+}
+
+.overflow-auto {
+  overflow: auto;
+
+  &.overflow-auto-table {
+    padding-left: 1px;
+    padding-right: 1px;
+  }
+}
+
+.govuk-tag-heading-align > h1 {
+  display: flex;
+  align-items: center;
+
+  span {
+    margin-left: 20px;
+    margin-bottom: 15px;
+  }
+}

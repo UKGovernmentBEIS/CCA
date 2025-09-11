@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { FacilityDetails } from 'cca-api';
 
 export enum ApplicationReasonTypeEnum {
-  NEW_AGREEMENT = 'New agreement',
+  NEW_AGREEMENT = 'New entrant',
   CHANGE_OF_OWNERSHIP = 'Change of ownership',
 }
 

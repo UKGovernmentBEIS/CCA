@@ -12,3 +12,6 @@ export const selectGtmContainerId: StateSelector<ConfigState, string> = createSe
 export const selectSubsistenceFeesRunTriggerDate: StateSelector<ConfigState, string> = createSelector(
   (state) => state.subsistenceFeesRunTriggerDate,
 );
+
+export const selectUnderlyingAgreementSchemeParticipationFlagCutOffDate: StateSelector<ConfigState, string> =
+  createSelector((state) => state.underlyingAgreementSchemeParticipationFlagCutOffDate);

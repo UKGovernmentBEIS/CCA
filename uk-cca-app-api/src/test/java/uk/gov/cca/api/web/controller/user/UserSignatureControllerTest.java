@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserSignatureControllerTest {
+class UserSignatureControllerTest {
 
     private static final String CONTROLLER_PATH = "/v1.0/user-signatures";
     

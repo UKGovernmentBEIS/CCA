@@ -17,7 +17,7 @@ export class CountiesDirective implements OnInit {
     private readonly changeDetectorRef: ChangeDetectorRef,
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.apiService
       .getUkCounties()
       .pipe(
@@ -31,7 +31,7 @@ export class CountiesDirective implements OnInit {
         ),
       )
       .subscribe((res) => {
-        this.selectComponent.options = res;
+        this.selectComponent.options.set(res);
         this.changeDetectorRef.markForCheck();
       });
   }

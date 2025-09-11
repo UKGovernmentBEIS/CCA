@@ -1,31 +1,45 @@
-import { TaskSection } from '@netz/common/model';
+import { TaskItem, TaskSection } from '@netz/common/model';
 import {
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
   BaselineAndTargetPeriodsSubtasks,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
+  sortFacilitiesById,
   TaskItemStatus,
-  transformFacilities,
   UnderlyingAgreementVariationDecisionRequestActionPayload,
   VARIATION_DETAILS_SUBTASK,
 } from '@requests/common';
 
+import { Facility } from 'cca-api';
+
+function activeFacilitiesToTaskItems(
+  facilities: Facility[],
+  reviewSectionsCompleted: Record<string, string>,
+): TaskItem[] {
+  return sortFacilitiesById(facilities)
+    .filter((facility) => ['NEW', 'LIVE'].includes(facility.status))
+    .map((facility) => ({
+      status: reviewSectionsCompleted?.[facility.facilityId] ?? '',
+      link: `facility/${facility.facilityId}`,
+      linkText: `${facility.facilityDetails.name} (${facility.facilityId})`,
+    }));
+}
+
+function excludedFacilitiesToTaskItems(
+  facilities: Facility[],
+  reviewSectionsCompleted: Record<string, string>,
+): TaskItem[] {
+  return sortFacilitiesById(facilities)
+    .filter((facility) => facility.status === 'EXCLUDED')
+    .map((facility) => ({
+      status: reviewSectionsCompleted?.[facility.facilityId] ?? '',
+      link: `facility/${facility.facilityId}`,
+      linkText: `${facility.facilityDetails.name} (${facility.facilityId})`,
+    }));
+}
+
 export function getAllUnderlyingAgreementVariationReviewTimelineSections(
   payload: UnderlyingAgreementVariationDecisionRequestActionPayload,
 ): TaskSection[] {
-  const facilities = transformFacilities(
-    payload?.underlyingAgreement?.facilities,
-    ['NEW', 'LIVE'],
-    payload?.reviewSectionsCompleted,
-    '',
-  );
-
-  const excludedFacilities = transformFacilities(
-    payload?.underlyingAgreement?.facilities,
-    ['EXCLUDED'],
-    payload?.reviewSectionsCompleted,
-    '',
-  );
-
   return [
     {
       title: 'Variation details',
@@ -49,11 +63,11 @@ export function getAllUnderlyingAgreementVariationReviewTimelineSections(
     },
     {
       title: 'Facilities',
-      tasks: facilities,
+      tasks: activeFacilitiesToTaskItems(payload?.underlyingAgreement?.facilities, payload?.reviewSectionsCompleted),
     },
     {
       title: 'Excluded Facilities',
-      tasks: [...excludedFacilities],
+      tasks: excludedFacilitiesToTaskItems(payload?.underlyingAgreement?.facilities, payload?.reviewSectionsCompleted),
     },
     {
       title: 'Baseline and Targets',

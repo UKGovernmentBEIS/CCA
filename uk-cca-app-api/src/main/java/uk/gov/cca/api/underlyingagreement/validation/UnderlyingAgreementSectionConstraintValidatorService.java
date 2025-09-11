@@ -18,7 +18,7 @@ public abstract class UnderlyingAgreementSectionConstraintValidatorService<T ext
 
     private final DataValidator<T> validator;
 
-    protected abstract List<UnderlyingAgreementViolation> validateSection(T section, UnderlyingAgreementContainer container);
+    protected abstract List<UnderlyingAgreementViolation> validateSection(T section, UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext);
 
     protected abstract String getSectionName();
 

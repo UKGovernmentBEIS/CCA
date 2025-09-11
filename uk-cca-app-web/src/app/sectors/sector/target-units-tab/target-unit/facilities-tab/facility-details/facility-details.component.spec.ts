@@ -5,7 +5,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { screen } from '@testing-library/dom';
 
 import { mockFacilityDetails } from '../test/mock-data';
-import FacilityDetailsComponent from './facility-details.component';
+import { FacilityDetailsComponent } from './facility-details.component';
 
 describe('FacilityDetailsComponent', () => {
   let component: FacilityDetailsComponent;

@@ -14,7 +14,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParam
 import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { FacilityDataDetailsDTO } from '../model/facilityDataDetailsDTO';
+import { FacilityInfoDTO } from '../model/facilityInfoDTO';
 import { FacilitySearchResults } from '../model/facilitySearchResults';
 
 import { BASE_PATH } from '../variables';
@@ -88,25 +88,25 @@ export class FacilityInfoViewService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getFacilityDetailsById(facilityId: string): Observable<FacilityDataDetailsDTO>;
+  public getFacilityDetailsById(facilityId: string): Observable<FacilityInfoDTO>;
   public getFacilityDetailsById(
     facilityId: string,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<FacilityDataDetailsDTO>>;
+  ): Observable<HttpResponse<FacilityInfoDTO>>;
   public getFacilityDetailsById(
     facilityId: string,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<FacilityDataDetailsDTO>>;
+  ): Observable<HttpEvent<FacilityInfoDTO>>;
   public getFacilityDetailsById(
     facilityId: string,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<FacilityDataDetailsDTO>;
+  ): Observable<FacilityInfoDTO>;
   public getFacilityDetailsById(
     facilityId: string,
     observe: any = 'body',
@@ -140,7 +140,7 @@ export class FacilityInfoViewService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<FacilityDataDetailsDTO>(
+    return this.httpClient.get<FacilityInfoDTO>(
       `${this.configuration.basePath}/v1.0/facilities/${encodeURIComponent(String(facilityId))}`,
       {
         responseType: responseType_ as any,

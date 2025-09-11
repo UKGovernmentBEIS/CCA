@@ -1,4 +1,4 @@
-import { AsyncPipe, NgForOf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -18,15 +18,19 @@ describe('TabsComponent', () => {
 
   @Component({
     standalone: true,
-    imports: [TabsComponent, AsyncPipe, TabDirective, NgForOf],
+    imports: [TabsComponent, AsyncPipe, TabDirective],
     template: `
       <govuk-tabs>
-        <ng-template govukTab *ngFor="let tab of tabs$ | async" [id]="tab.id" [label]="tab.label">
-          {{ tab.body }}
-        </ng-template>
+        @for (tab of tabs$ | async; track tab) {
+          <ng-template govukTab [id]="tab.id" [label]="tab.label">
+            {{ tab.body }}
+          </ng-template>
+        }
+
         <ng-template govukTab id="paragraph2" label="Another paragraph">
           <p>This is another paragraph</p>
         </ng-template>
+
         <ng-template govukTab [id]="syncTab.id" [label]="syncTab.label"></ng-template>
       </govuk-tabs>
     `,

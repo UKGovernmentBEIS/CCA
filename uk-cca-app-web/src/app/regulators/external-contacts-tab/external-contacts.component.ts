@@ -9,29 +9,31 @@ import { CaExternalContactDTO, CaExternalContactsService } from 'cca-api';
 @Component({
   selector: 'cca-external-contacts',
   templateUrl: './external-contacts.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink, ButtonDirective, TableComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExternalContactsComponent {
   private readonly externalContactsService = inject(CaExternalContactsService);
 
-  contactsResponse = toSignal(this.externalContactsService.getCaExternalContacts());
-  sorting = signal<SortEvent>({ column: 'lastUpdatedDate', direction: 'ascending' });
-  contacts = computed(() => {
+  protected readonly contactsResponse = toSignal(this.externalContactsService.getCaExternalContacts());
+  protected readonly sorting = signal<SortEvent>({ column: 'lastUpdatedDate', direction: 'ascending' });
+
+  protected readonly contacts = computed(() => {
     const contacts = this.contactsResponse()?.caExternalContacts || [];
     return contacts.slice().sort(this.sortContacts(this.sorting()));
   });
-  isEditable = computed(() => this.contactsResponse()?.isEditable);
 
-  editableColumns: GovukTableColumn<CaExternalContactDTO>[] = [
+  protected readonly isEditable = computed(() => this.contactsResponse()?.isEditable);
+
+  protected readonly editableColumns: GovukTableColumn<CaExternalContactDTO>[] = [
     { field: 'name', header: 'Displayed name', isSortable: true, isHeader: true },
     { field: 'email', header: 'Email address', isSortable: true },
     { field: 'description', header: 'Description' },
     { field: null, header: null },
   ];
 
-  nonEditableColumns = this.editableColumns.slice(0, 3);
+  protected readonly nonEditableColumns = this.editableColumns.slice(0, 3);
 
   private sortContacts(sorting: SortEvent): (a: CaExternalContactDTO, b: CaExternalContactDTO) => number {
     return (a, b) => {

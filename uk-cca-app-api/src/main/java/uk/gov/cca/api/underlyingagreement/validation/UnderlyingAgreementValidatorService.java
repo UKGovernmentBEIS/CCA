@@ -18,8 +18,8 @@ public class UnderlyingAgreementValidatorService {
 
     private final List<UnderlyingAgreementSectionContextValidator> underlyingAgreementSectionContextValidators;
 
-    public void validate(UnderlyingAgreementContainer container) {
-        List<BusinessValidationResult> validationResults = getValidationResults(container);
+    public void validate(UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
+        List<BusinessValidationResult> validationResults = getValidationResults(container, underlyingAgreementValidationContext);
         boolean isValid = validationResults.stream().allMatch(BusinessValidationResult::isValid);
 
         if(!isValid) {
@@ -27,11 +27,31 @@ public class UnderlyingAgreementValidatorService {
         }
     }
 
-    public List<BusinessValidationResult> getValidationResults(UnderlyingAgreementContainer container) {
+    public List<BusinessValidationResult> getValidationResults(UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
+
+        return invokeContextValidators(underlyingAgreementSectionContextValidators, container, underlyingAgreementValidationContext);
+    }
+    
+    public List<BusinessValidationResult> getValidationResultsExceptFacilities(UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
+
+    	// Remove facilities validator
+    	List<UnderlyingAgreementSectionContextValidator> validatorsWithoutFacilities =
+    			underlyingAgreementSectionContextValidators.stream()
+    			.filter(validator -> !(validator instanceof UnderlyingAgreementFacilitiesContextValidatorService))
+    			.toList();
+    	
+        return invokeContextValidators(validatorsWithoutFacilities, container, underlyingAgreementValidationContext);
+    }
+    
+    private List<BusinessValidationResult> invokeContextValidators(
+    		List<UnderlyingAgreementSectionContextValidator> underlyingAgreementSectionContextValidators,
+    		UnderlyingAgreementContainer container,
+            UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
+    	
         List<BusinessValidationResult> validationResults = new ArrayList<>();
 
         // Perform validations
-        underlyingAgreementSectionContextValidators.forEach(v -> validationResults.add(v.validate(container)));
+        underlyingAgreementSectionContextValidators.forEach(v -> validationResults.add(v.validate(container, underlyingAgreementValidationContext)));
 
         return validationResults;
     }

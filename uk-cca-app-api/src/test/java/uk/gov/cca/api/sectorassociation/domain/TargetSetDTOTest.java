@@ -14,11 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class TargetSetDTOTest {
+class TargetSetDTOTest {
     private static Validator validator;
 
     @BeforeAll
-    public static void setUp() {
+    static void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
     }

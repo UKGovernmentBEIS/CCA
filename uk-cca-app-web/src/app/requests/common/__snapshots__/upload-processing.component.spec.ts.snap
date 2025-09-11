@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PerformanceDataUploadProcessingComponent should show summary values 1`] = `
+<cca-upload-processing>
+  <govuk-notification-banner
+    data-testid="upload-processing-banner"
+  >
+    <div
+      aria-labelledby="govuk-notification-banner-title"
+      class="govuk-notification-banner"
+      role="region"
+    >
+      <div
+        class="govuk-notification-banner__header"
+      >
+        <h2
+          class="govuk-notification-banner__title"
+          id="govuk-notification-banner-title"
+        >
+        </h2>
+      </div>
+      <div
+        class="govuk-notification-banner__content"
+      >
+        <h3
+          class="govuk-heading-m"
+        >
+          Your files are being uploaded
+        </h3>
+        <p>
+          This page will automatically update once the files are uploaded.
+        </p>
+      </div>
+    </div>
+  </govuk-notification-banner>
+</cca-upload-processing>
+`;

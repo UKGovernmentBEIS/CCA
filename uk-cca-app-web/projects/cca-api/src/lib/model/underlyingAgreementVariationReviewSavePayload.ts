@@ -20,7 +20,7 @@ export interface UnderlyingAgreementVariationReviewSavePayload {
   underlyingAgreementTargetUnitDetails: UnderlyingAgreementTargetUnitDetails;
   underlyingAgreementVariationDetails: UnderlyingAgreementVariationDetails;
   facilities: Facility[];
-  targetPeriod5Details: TargetPeriod5Details;
-  targetPeriod6Details: TargetPeriod6Details;
+  targetPeriod5Details?: TargetPeriod5Details;
+  targetPeriod6Details?: TargetPeriod6Details;
   authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence;
 }

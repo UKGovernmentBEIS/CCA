@@ -1,7 +1,8 @@
 @if (!isPasswordReset) {
   @if (isSummaryDisplayed()) {
-    <govuk-error-summary [form]="form"></govuk-error-summary>
+    <govuk-error-summary [form]="form" />
   }
+
   <cca-wizard-step
     (formSubmit)="onSubmit()"
     [formGroup]="form"
@@ -21,14 +22,16 @@
       <div class="govuk-panel govuk-panel--confirmation">
         <div class="govuk-panel__body">You have successfully reset your password</div>
       </div>
-      <p class="govuk-body">We have sent a confirmation email to {{ email }}</p>
+
+      <p>We have sent a confirmation email to {{ email }}</p>
       <h2 class="govuk-heading-m">What happens next</h2>
-      <p class="govuk-body">
+      <p>
         You can
         <a class="govuk-link" [routerLink]="[]" (click)="onSignInAgain()">sign in to the CCA service</a>
         with your new password.
       </p>
-      <cca-back-to-top></cca-back-to-top>
+
+      <cca-back-to-top />
     </div>
   </div>
 }

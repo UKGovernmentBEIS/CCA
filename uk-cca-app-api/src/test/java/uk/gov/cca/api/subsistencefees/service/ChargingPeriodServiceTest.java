@@ -36,14 +36,14 @@ class ChargingPeriodServiceTest {
     void getChargingYear() {
         LocalDate currentDate = LocalDate.of(2025, 5, 25);
 
-        ChargingPeriod Y2025 = ChargingPeriod.builder()
+        ChargingPeriod y2025 = ChargingPeriod.builder()
                 .startDate(LocalDate.of(2025, 4, 1))
                 .endDate(LocalDate.of(2026, 3, 31))
                 .chargingYear(Year.of(2025))
                 .build();
 
         when(chargingPeriodRepository.findChargingYear(currentDate))
-                .thenReturn(Optional.of(Y2025.getChargingYear()));
+                .thenReturn(Optional.of(y2025.getChargingYear()));
 
         Year result = chargingPeriodService.getChargingYear(currentDate);
 

@@ -1,30 +1,29 @@
 @if (files(); as files) {
-  <div [class.cca-hidden]="files.length === 0" class="cca-multi-file__uploaded-files govuk-body">
+  <div [class.cca-hidden]="files.length === 0" class="cca-multi-file__uploaded-files">
     @if (listTitle()) {
       <h2 [class]="'govuk-heading-' + headerSize()">{{ listTitle() }}</h2>
     }
 
     @if (files.length === 1) {
-      <div class="govuk-summary-list cca-multi-file-upload__list">
+      <div class="govuk-summary-list">
         <div aria-live="polite" class="govuk-summary-list__value cca-multi-file-upload__message">
           <ng-container
             *ngTemplateOutlet="
               files[0].errors ? error : files[0].progress === 1 ? success : progress;
               context: { $implicit: files[0], message: files[0].errors ? files[0].errors : null }
             "
-          ></ng-container>
+          />
         </div>
 
         <div class="govuk-summary-list__actions cca-multi-file-upload__actions">
           <ng-container
             [ngTemplateOutlet]="fileDeleteButton"
             [ngTemplateOutletContext]="{ fileIndex: 0, file: files[0] }"
-          >
-          </ng-container>
+          />
         </div>
       </div>
     } @else {
-      <dl class="govuk-summary-list cca-multi-file-upload__list">
+      <dl class="govuk-summary-list">
         @for (file of files; track file; let i = $index) {
           <div class="govuk-summary-list__row cca-multi-file-upload__row">
             <dd aria-live="polite" class="govuk-summary-list__value cca-multi-file-upload__message">
@@ -33,15 +32,14 @@
                   file.errors ? error : file.progress === 1 ? success : progress;
                   context: { $implicit: file, message: file.errors ? file.errors : null }
                 "
-              ></ng-container>
+              />
             </dd>
 
             <dd class="govuk-summary-list__actions cca-multi-file-upload__actions">
               <ng-container
                 [ngTemplateOutlet]="fileDeleteButton"
                 [ngTemplateOutletContext]="{ fileIndex: i, file: file }"
-              >
-              </ng-container>
+              />
             </dd>
           </div>
         }
@@ -52,7 +50,7 @@
       <button
         (click)="fileDelete.emit(fileIndex)"
         [disabled]="isDisabled()"
-        class="cca-multi-file-upload__delete govuk-!-margin-bottom-0"
+        class="govuk-!-margin-bottom-0"
         govukSecondaryButton
         name="delete"
         type="button"

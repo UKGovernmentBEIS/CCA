@@ -16,7 +16,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,7 +78,7 @@ class RequestTaskAssignmentControllerTest {
     private RequestTaskAssignmentQueryService requestTaskAssignmentQueryService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
 
@@ -216,7 +215,7 @@ class RequestTaskAssignmentControllerTest {
     private List<AssigneeUserInfoDTO> buildMockUserInfoList(List<String> userIds) {
         return userIds.stream()
             .map(userId -> AssigneeUserInfoDTO.builder().id(userId).firstName(userId).lastName(userId).build())
-            .collect(Collectors.toList());
+            .toList();
     }
 
 }

@@ -7,9 +7,9 @@ import { PasswordStrengthMeterComponent } from 'angular-password-strength-meter'
 @Component({
   selector: 'cca-password',
   templateUrl: './password.component.html',
-  viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
   standalone: true,
   imports: [TextInputComponent, ReactiveFormsModule, PasswordStrengthMeterComponent, TagComponent, ButtonDirective],
+  viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
 })
 export class PasswordComponent {
   @Input() passwordLabel = 'Create a password to activate your account';

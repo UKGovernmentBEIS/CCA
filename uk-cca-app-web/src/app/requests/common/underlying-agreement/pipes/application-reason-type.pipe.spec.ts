@@ -11,7 +11,7 @@ describe('ApplicationReasonTypePipe', () => {
     let transformation: string;
 
     transformation = pipe.transform('NEW_AGREEMENT');
-    expect(transformation).toEqual('New agreement');
+    expect(transformation).toEqual('New entrant');
 
     transformation = pipe.transform('CHANGE_OF_OWNERSHIP');
     expect(transformation).toEqual('Change of ownership');

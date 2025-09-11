@@ -14,6 +14,7 @@ export const roleOptions: GovukSelectOption<RoleCode>[] = [
   { text: 'Administrator user', value: 'sector_user_administrator' },
   { text: 'Basic user', value: 'sector_user_basic_user' },
 ];
+
 export const validateRoleCode = (a: unknown): a is RoleCode =>
   typeof a === 'string' && (a === 'sector_user_administrator' || a === 'sector_user_basic_user');
 

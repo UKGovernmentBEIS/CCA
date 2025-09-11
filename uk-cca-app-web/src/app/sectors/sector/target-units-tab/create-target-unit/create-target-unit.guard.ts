@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, CanDeactivateFn, createUrlTreeFromSnapshot, UrlTree } from '@angular/router';
 
-import { SectorAssociationSchemeDTO } from 'cca-api';
+import { SectorAssociationSchemesDTO } from 'cca-api';
 
 import { CreateTargetUnitStore } from './create-target-unit.store';
 import { isTargetUnitDetailsCompleted, isWizardCompleted } from './create-target-unit.wizard';
@@ -10,7 +10,7 @@ export const CanActivateTargetUnitCreationStep: CanActivateFn = (route): boolean
   const change = route.queryParamMap.get('change') === 'true';
   const payload = inject(CreateTargetUnitStore).state;
   const subSectorsExist =
-    (route.data.subSectorScheme as SectorAssociationSchemeDTO)?.subsectorAssociationSchemes?.length > 0;
+    (route.data.subSectorScheme as SectorAssociationSchemesDTO)?.subsectorAssociations?.length > 0;
 
   if (change && isWizardCompleted(payload, subSectorsExist)) return true;
   if (!change && isWizardCompleted(payload, subSectorsExist)) return createUrlTreeFromSnapshot(route, ['../summary']);
@@ -21,7 +21,7 @@ export const CanActivateTargetUnitCreationStep: CanActivateFn = (route): boolean
 export const CanActivateTargetUnitCreationSummary: CanActivateFn = (route): boolean | UrlTree => {
   const payload = inject(CreateTargetUnitStore).state;
   const subSectorsExist =
-    (route.data.subSectorScheme as SectorAssociationSchemeDTO)?.subsectorAssociationSchemes?.length > 0;
+    (route.data.subSectorScheme as SectorAssociationSchemesDTO)?.subsectorAssociations?.length > 0;
 
   return isWizardCompleted(payload, subSectorsExist) || createUrlTreeFromSnapshot(route, ['../']);
 };

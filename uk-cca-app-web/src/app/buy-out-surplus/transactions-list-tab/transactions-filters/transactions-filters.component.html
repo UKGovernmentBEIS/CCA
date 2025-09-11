@@ -1,0 +1,41 @@
+<cca-utility-panel heading="Filters">
+  <form [formGroup]="filtersForm" (ngSubmit)="apply()">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div
+          govuk-text-input
+          formControlName="term"
+          label="Target unit ID, operator name, transaction ID or sector ID"
+          widthClass="govuk-!-width-full"
+        ></div>
+      </div>
+
+      <div class="govuk-grid-column-one-quarter">
+        <div
+          govuk-select
+          formControlName="targetPeriodType"
+          [options]="targetPeriodOptions"
+          label="Period"
+          widthClass="govuk-!-width-full"
+        ></div>
+      </div>
+
+      <div class="govuk-grid-column-one-quarter">
+        <div
+          govuk-select
+          formControlName="buyOutSurplusPaymentStatus"
+          [options]="statusOptions"
+          label="Status"
+          widthClass="govuk-!-width-full"
+        ></div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        <button govukButton type="submit" class="govuk-!-margin-right-3">Apply</button>
+        <button govukSecondaryButton type="button" (click)="clear()">Clear</button>
+      </div>
+    </div>
+  </form>
+</cca-utility-panel>

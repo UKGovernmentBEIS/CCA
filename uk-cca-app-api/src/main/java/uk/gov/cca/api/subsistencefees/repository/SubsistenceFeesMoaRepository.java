@@ -2,7 +2,9 @@ package uk.gov.cca.api.subsistencefees.repository;
 
 import java.util.Optional;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,9 @@ public interface SubsistenceFeesMoaRepository extends JpaRepository<SubsistenceF
 		+ "inner join SubsistenceFeesMoaFacility smf on smf.subsistenceFeesMoaTargetUnit.id = smtu.id "
 		+ "where sm.id = :moaId group by sm.id")
 	Optional<SubsistenceFeesMoaDetails> getMoaDetailsById(Long moaId);
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	Optional<SubsistenceFeesMoa> findMoaById(Long moaId);
 	
     Optional<SubsistenceFeesMoa> findByIdAndFileDocumentUuid(Long id, String fileDocumentUuid);
 

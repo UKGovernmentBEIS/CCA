@@ -239,4 +239,20 @@
             <dropNotNullConstraint tableName="facility_data" columnName="address_id"/>
         </rollback>
     </changeSet>
+
+    <changeSet id="0_1_0_FACILITY_DATA_ADD_PARTICIPATING_SCHEME_VERSIONS" author="P70383">
+        <addColumn tableName="facility_data">
+            <column name="participating_scheme_versions" type="jsonb" remarks="The facility participating scheme versions">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <sql>
+            update facility_data
+            set participating_scheme_versions = '["CCA_2"]';
+        </sql>
+        <addNotNullConstraint tableName="facility_data" columnName="participating_scheme_versions"/>
+        <rollback>
+            <dropColumn tableName="facility_data" columnName="participating_scheme_versions"/>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

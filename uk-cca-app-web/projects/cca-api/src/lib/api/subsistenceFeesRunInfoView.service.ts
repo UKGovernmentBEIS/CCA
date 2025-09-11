@@ -143,7 +143,7 @@ export class SubsistenceFeesRunInfoViewService {
     }
 
     return this.httpClient.get<SubsistenceFeesRunDetailsDTO>(
-      `${this.configuration.basePath}/v1.0/subsistence-fees-runs/${encodeURIComponent(String(runId))}`,
+      `${this.configuration.basePath}/v1.0/subsistence-fees/runs/${encodeURIComponent(String(runId))}`,
       {
         responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
@@ -233,7 +233,7 @@ export class SubsistenceFeesRunInfoViewService {
     }
 
     return this.httpClient.post<SubsistenceFeesMoaSearchResults>(
-      `${this.configuration.basePath}/v1.0/subsistence-fees-runs/${encodeURIComponent(String(runId))}/moas`,
+      `${this.configuration.basePath}/v1.0/subsistence-fees/runs/${encodeURIComponent(String(runId))}/moas`,
       subsistenceFeesMoaSearchCriteria,
       {
         responseType: responseType_ as any,
@@ -320,7 +320,7 @@ export class SubsistenceFeesRunInfoViewService {
     }
 
     return this.httpClient.get<SubsistenceFeesRunSearchResults>(
-      `${this.configuration.basePath}/v1.0/subsistence-fees-runs/`,
+      `${this.configuration.basePath}/v1.0/subsistence-fees/runs/`,
       {
         params: queryParameters,
         responseType: responseType_ as any,

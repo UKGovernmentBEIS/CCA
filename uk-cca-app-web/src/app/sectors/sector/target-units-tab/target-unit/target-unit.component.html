@@ -1,17 +1,24 @@
-<div class="row-flex align-items-end">
-  <div class="col-flex-three-quarters">
-    <netz-page-heading size="l" [caption]="accountDetails.targetUnitAccountDetails.businessId">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <netz-page-heading
+      size="l"
+      [caption]="accountDetails.targetUnitAccountDetails.businessId"
+      class="govuk-tag-heading-align"
+    >
       {{ accountDetails.targetUnitAccountDetails.name }}
-      <span class="govuk-tag-heading-align">
-        <govuk-tag [color]="accountDetails.targetUnitAccountDetails.status | statusColorPipe">
-          {{ accountDetails.targetUnitAccountDetails.status | accountStatus }}
+
+      <span>
+        <govuk-tag [color]="accountDetails.targetUnitAccountDetails.status | statusColor">
+          {{ accountDetails.targetUnitAccountDetails.status | status }}
         </govuk-tag>
       </span>
     </netz-page-heading>
   </div>
 
-  <div class="col-flex-one-quarter">
-    <button govukButton type="button" routerLink="process-actions" class="float-right">Start a new task</button>
+  <div class="govuk-grid-column-one-quarter" style="text-align: end">
+    <button class="govuk-!-margin-top-3" govukButton type="button" routerLink="./process-actions">
+      Start a new task
+    </button>
   </div>
 </div>
 
@@ -30,11 +37,15 @@
     </ng-template>
 
     <ng-template govukTabLazy id="reports" label="Reports">
-      <cca-tu-reports-tab-component></cca-tu-reports-tab-component>
+      <cca-tu-reports-tab-component />
     </ng-template>
 
     <ng-template govukTabLazy id="users-and-contacts" label="Users and contacts">
       <cca-users-and-contacts />
+    </ng-template>
+
+    <ng-template govukTabLazy id="buyout-surplus" label="Buy-out and surplus">
+      <cca-buyout-and-surplus-tab />
     </ng-template>
   </govuk-tabs>
 </section>

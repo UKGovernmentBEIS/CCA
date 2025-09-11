@@ -11,13 +11,20 @@ export const FACILITIES_LIST_ROUTES: Routes = [
     path: ':facilityId',
     canActivate: [setCurrentFacility],
     canDeactivate: [resetCurrentFacility],
+    data: {
+      breadcrumb: ({ targetUnit }) => ({
+        text: `${targetUnit.targetUnitAccountDetails.name}`,
+        fragment: 'facilities',
+      }),
+    },
     children: [
       {
         path: 'details',
         title: 'Facility details',
         data: { backlink: false },
         resolve: { facilityDetails: FacilityDetailsResolver },
-        loadComponent: () => import('./facility-details/facility-details.component'),
+        loadComponent: () =>
+          import('./facility-details/facility-details.component').then((c) => c.FacilityDetailsComponent),
       },
       {
         path: 'edit',
@@ -26,6 +33,16 @@ export const FACILITIES_LIST_ROUTES: Routes = [
         resolve: { facilityDetails: FacilityDetailsResolver },
         canActivate: [() => inject(AuthStore).select(selectUserRoleType)() === 'REGULATOR'],
         loadComponent: () => import('./edit-facility-details/edit-facility-details.component'),
+      },
+      {
+        path: ':certificationPeriod/change-certification-status',
+        data: { backlink: '../../details', breadcrumb: false },
+        resolve: { facilityDetails: FacilityDetailsResolver },
+        canActivate: [() => inject(AuthStore).select(selectUserRoleType)() === 'REGULATOR'],
+        loadComponent: () =>
+          import('./change-certification-status/change-certification-status.component').then(
+            (c) => c.ChangeCertificationStatusComponent,
+          ),
       },
     ],
   },

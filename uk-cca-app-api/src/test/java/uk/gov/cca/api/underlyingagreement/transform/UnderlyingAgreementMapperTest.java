@@ -2,12 +2,15 @@ package uk.gov.cca.api.underlyingagreement.transform;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 import uk.gov.cca.api.common.domain.MeasurementType;
+import uk.gov.cca.api.common.domain.SchemeData;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementEntity;
@@ -27,7 +30,7 @@ class UnderlyingAgreementMapperTest {
         Facility facility1 = Facility.builder().facilityItem(FacilityItem.builder().facilityId("id1").build()).build();
         Facility facility2 = Facility.builder().facilityItem(FacilityItem.builder().facilityId("id2").build()).build();
         final UnderlyingAgreementContainer unaContainer = UnderlyingAgreementContainer.builder()
-        		.sectorMeasurementType(MeasurementType.CARBON_KG)
+        		.schemeDataMap(Map.of(SchemeVersion.CCA_2, SchemeData.builder().sectorMeasurementType(MeasurementType.CARBON_KG).build()))
         		.underlyingAgreement(UnderlyingAgreement.builder()
         				.targetPeriod5Details(TargetPeriod5Details.builder()
         						.exist(Boolean.FALSE)
@@ -48,7 +51,7 @@ class UnderlyingAgreementMapperTest {
         assertThat(actual.getAccountId()).isEqualTo(accountId);
         assertThat(actual.getFileDocumentUuid()).isEqualTo("uuid");
         assertThat(actual.getConsolidationNumber()).isEqualTo(1);
-        assertThat(actualContainer.getSectorMeasurementType()).isEqualTo(MeasurementType.CARBON_KG);
+        assertThat(actualContainer.getSchemeDataMap().get(SchemeVersion.CCA_2).getSectorMeasurementType()).isEqualTo(MeasurementType.CARBON_KG);
         assertThat(actualContainer.getUnderlyingAgreement().getTargetPeriod5Details()).isEqualTo(unaContainer.getUnderlyingAgreement().getTargetPeriod5Details());
         assertThat(actualContainer.getUnderlyingAgreement().getFacilities()).isEqualTo(unaContainer.getUnderlyingAgreement().getFacilities());
     }

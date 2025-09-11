@@ -14,6 +14,23 @@ import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-una-summary-target-unit-details',
+  template: `
+    <div>
+      <netz-page-heading>Target unit details</netz-page-heading>
+
+      <ng-template #contentTpl let-showOriginal="showOriginal">
+        <cca-summary [data]="showOriginal ? summaryDataOriginal : summaryDataCurrent" />
+      </ng-template>
+
+      <cca-highlight-diff>
+        <ng-container slot="previous" *ngTemplateOutlet="contentTpl; context: { showOriginal: true }" />
+        <ng-container slot="current" *ngTemplateOutlet="contentTpl; context: { showOriginal: false }" />
+      </cca-highlight-diff>
+    </div>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [
     PageHeadingComponent,
@@ -22,10 +39,9 @@ import { generateDownloadUrl } from '@shared/utils';
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
-  templateUrl: './review-target-unit-details-summary.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class ReviewTargetUnitDetailsSummaryComponent {
+export class ReviewTargetUnitDetailsSummaryComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
   private readonly downloadUrl = generateDownloadUrl(

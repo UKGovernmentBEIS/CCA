@@ -7,8 +7,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataContainer;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
@@ -158,7 +158,7 @@ class PerformanceDataSpreadsheetProcessingServiceTest {
                 .thenReturn(templateType);
         when(tp6PerformanceDataSpreadsheetTemplateValidator.getDocumentTemplateType())
                 .thenReturn(TargetPeriodDocumentTemplate.REPORTING_SPREADSHEETS_DOWNLOAD_TP6);
-        when(tp6PerformanceDataSpreadsheetProcessingExtractDataService.extractData(accountId, metadata, accountReportFile))
+        when(tp6PerformanceDataSpreadsheetProcessingExtractDataService.extractData(metadata, accountReportFile))
                 .thenReturn(performanceData);
         when(tp6PerformanceDataSpreadsheetTemplateValidator.validateData(performanceData))
                 .thenReturn(BusinessValidationResult.valid());
@@ -187,7 +187,7 @@ class PerformanceDataSpreadsheetProcessingServiceTest {
         verify(tp6PerformanceDataSpreadsheetTemplateValidator, times(1))
                 .getDocumentTemplateType();
         verify(tp6PerformanceDataSpreadsheetProcessingExtractDataService, times(1))
-                .extractData(accountId, metadata, accountReportFile);
+                .extractData(metadata, accountReportFile);
         verify(tp6PerformanceDataSpreadsheetTemplateValidator, times(1))
                 .validateData(performanceData);
         verify(tp6PerformanceDataSpreadsheetProcessingExtractDataService, times(1))
@@ -249,7 +249,7 @@ class PerformanceDataSpreadsheetProcessingServiceTest {
                 .thenReturn(templateType);
         when(tp6PerformanceDataSpreadsheetTemplateValidator.getDocumentTemplateType())
                 .thenReturn(TargetPeriodDocumentTemplate.REPORTING_SPREADSHEETS_DOWNLOAD_TP6);
-        when(tp6PerformanceDataSpreadsheetProcessingExtractDataService.extractData(accountId, metadata, accountReportFile))
+        when(tp6PerformanceDataSpreadsheetProcessingExtractDataService.extractData(metadata, accountReportFile))
                 .thenReturn(performanceData);
         when(tp6PerformanceDataSpreadsheetTemplateValidator.validateData(performanceData))
                 .thenReturn(BusinessValidationResult.valid());
@@ -292,7 +292,7 @@ class PerformanceDataSpreadsheetProcessingServiceTest {
         verify(tp6PerformanceDataSpreadsheetTemplateValidator, times(1))
                 .getDocumentTemplateType();
         verify(tp6PerformanceDataSpreadsheetProcessingExtractDataService, times(1))
-                .extractData(accountId, metadata, accountReportFile);
+                .extractData(metadata, accountReportFile);
         verify(tp6PerformanceDataSpreadsheetTemplateValidator, times(1))
                 .validateData(performanceData);
         verify(tp6PerformanceDataSpreadsheetProcessingExtractDataService, times(1))
@@ -341,7 +341,7 @@ class PerformanceDataSpreadsheetProcessingServiceTest {
                 .thenReturn(templateType);
         when(tp6PerformanceDataSpreadsheetTemplateValidator.getDocumentTemplateType())
                 .thenReturn(TargetPeriodDocumentTemplate.REPORTING_SPREADSHEETS_DOWNLOAD_TP6);
-        when(tp6PerformanceDataSpreadsheetProcessingExtractDataService.extractData(accountId, metadata, accountReportFile))
+        when(tp6PerformanceDataSpreadsheetProcessingExtractDataService.extractData(metadata, accountReportFile))
                 .thenReturn(performanceData);
         when(tp6PerformanceDataSpreadsheetTemplateValidator.validateData(performanceData))
                 .thenReturn(BusinessValidationResult.invalid(List.of(
@@ -401,7 +401,7 @@ class PerformanceDataSpreadsheetProcessingServiceTest {
                 .thenReturn(TargetPeriodDocumentTemplate.REPORTING_SPREADSHEETS_DOWNLOAD_TP6);
         when(tp6PerformanceDataSpreadsheetTemplateValidator.getDocumentTemplateType())
                 .thenReturn(TargetPeriodDocumentTemplate.REPORTING_SPREADSHEETS_DOWNLOAD_TP6);
-        when(tp6PerformanceDataSpreadsheetProcessingExtractDataService.extractData(accountId, metadata, accountReportFile))
+        when(tp6PerformanceDataSpreadsheetProcessingExtractDataService.extractData(metadata, accountReportFile))
                 .thenThrow(new Exception("Test"));
 
         // Invoke
@@ -418,7 +418,7 @@ class PerformanceDataSpreadsheetProcessingServiceTest {
         verify(tp6PerformanceDataSpreadsheetTemplateValidator, times(1))
                 .getDocumentTemplateType();
         verify(tp6PerformanceDataSpreadsheetProcessingExtractDataService, times(1))
-                .extractData(accountId, metadata, accountReportFile);
+                .extractData(metadata, accountReportFile);
         verifyNoMoreInteractions(requestService);
         verifyNoInteractions(underlyingAgreementQueryService, accountReferenceDetailsService, accountPerformanceDataStatusService);
     }

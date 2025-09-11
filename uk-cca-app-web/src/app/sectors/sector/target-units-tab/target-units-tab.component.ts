@@ -1,10 +1,10 @@
 import { LowerCasePipe, UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { distinctUntilChanged, map, switchMap, tap } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs';
 
 import { AuthStore, selectUserId } from '@netz/common/auth';
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -13,19 +13,17 @@ import {
   ButtonDirective,
   GovukTableColumn,
   SelectComponent,
-  SortEvent,
   TableComponent,
   TagComponent,
 } from '@netz/govuk-components';
 import { PaginationComponent } from '@shared/components';
-import { TargetUnitStatusColorPipe } from '@shared/pipes';
+import { StatusColorPipe } from '@shared/pipes';
 
 import {
   SectorAssociationAuthoritiesService,
+  SectorAssociationTargetUnitAccountsInfoService,
   TargetUnitAccountInfoDTO,
   TargetUnitAccountInfoResponseDTO,
-  TargetUnitAccountInfoViewService,
-  TargetUnitAccountsSiteContactsService,
 } from 'cca-api';
 
 type TargetUnitFormModel = FormGroup<{
@@ -37,11 +35,13 @@ type TargetUnitFormModel = FormGroup<{
 }>;
 
 type State = {
-  currentPage: number;
   targetUnits: TargetUnitAccountInfoDTO[];
   editable: boolean;
   totalItems: number;
 };
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 50;
 
 @Component({
   selector: 'cca-sector-target-units-tab',
@@ -54,7 +54,7 @@ type State = {
     SelectComponent,
     ButtonDirective,
     TagComponent,
-    TargetUnitStatusColorPipe,
+    StatusColorPipe,
     PaginationComponent,
     LowerCasePipe,
     UpperCasePipe,
@@ -64,55 +64,15 @@ type State = {
 })
 export class SectorTargetUnitsTabComponent {
   private readonly sectorAssociationAuthoritiesService = inject(SectorAssociationAuthoritiesService);
-  private readonly targetUnitService = inject(TargetUnitAccountInfoViewService);
-  private readonly targetUnitSiteContactsService = inject(TargetUnitAccountsSiteContactsService);
+  private readonly sectorAssociationTargetUnitAccountsService = inject(SectorAssociationTargetUnitAccountsInfoService);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
-  private readonly sectorId = +this.activatedRoute.snapshot.paramMap.get('sectorId');
   private readonly userId = inject(AuthStore).select(selectUserId);
+  private readonly sectorId = +this.activatedRoute.snapshot.paramMap.get('sectorId');
 
-  readonly pageSize = 50;
-
-  private readonly state = signal<State>({
-    currentPage: +this.activatedRoute.snapshot.queryParamMap.get('page') || 1,
-    editable: true,
-    targetUnits: [],
-    totalItems: 0,
-  });
-
-  protected readonly editable = computed(() => this.state().editable);
-
-  protected readonly targetUnits = computed(() => {
-    const tus = this.state().targetUnits;
-    const sorting = this.sorting();
-
-    if (!sorting) return tus;
-
-    return tus.sort((a, b) => {
-      const diff = a[sorting.column]?.localeCompare(b[sorting.column], 'en-GB', {
-        numeric: true,
-        sensitivity: 'base',
-      });
-
-      return diff * (sorting.direction === 'ascending' ? 1 : -1);
-    });
-  });
-
-  readonly sectorNames = computed(() => {
-    const namesMap = new Map();
-
-    if (!this.sectorUsersAuthorities()) return namesMap;
-
-    this.sectorUsersAuthorities().forEach((r) => namesMap.set(r.userId, transformUsername(r)));
-    return namesMap;
-  });
-
-  private readonly currentPage = computed(() => this.state().currentPage);
-  private readonly currentPage$ = toObservable(this.currentPage);
-  protected readonly count = computed(() => this.state().totalItems);
-  private readonly sorting = signal<SortEvent>({ column: 'id', direction: 'ascending' });
+  private readonly queryParams = toSignal(this.activatedRoute.queryParamMap);
 
   private sectorUsersAuthorities = toSignal(
     this.sectorAssociationAuthoritiesService
@@ -127,6 +87,39 @@ export class SectorTargetUnitsTabComponent {
     { field: 'status', header: 'Status' },
   ];
 
+  readonly state = signal<State>({
+    editable: false,
+    targetUnits: [],
+    totalItems: 0,
+  });
+
+  readonly currentPage = computed(() => {
+    const params = this.queryParams();
+    return +params?.get('page') || DEFAULT_PAGE;
+  });
+
+  readonly pageSize = computed(() => {
+    const params = this.queryParams();
+    return +params?.get('pageSize') || DEFAULT_PAGE_SIZE;
+  });
+
+  protected readonly editable = computed(() => this.state().editable);
+
+  protected readonly targetUnits = computed(() => this.state().targetUnits);
+
+  protected readonly sectorNames = computed(() => {
+    const namesMap = new Map();
+    const authorities = this.sectorUsersAuthorities();
+
+    if (!authorities?.length) return namesMap;
+
+    for (const user of authorities) {
+      namesMap.set(user.userId, transformUsername(user));
+    }
+
+    return namesMap;
+  });
+
   protected readonly sectorUserOptions = computed(() =>
     this.sectorUsersAuthorities()
       ? [{ text: 'Unassigned', value: null }].concat(
@@ -138,71 +131,53 @@ export class SectorTargetUnitsTabComponent {
       : [],
   );
 
-  canCreateTargetUnit = computed(() => !!this.sectorUsersAuthorities()?.find((u) => u.userId === this.userId()));
+  protected readonly canCreateTargetUnit = computed(
+    () => !!this.sectorUsersAuthorities()?.find((u) => u.userId === this.userId()),
+  );
 
   protected readonly targetUnitsForm = this.fb.group({
     targetUnits: this.fb.array<TargetUnitFormModel>([]),
   });
 
   constructor() {
-    effect(() => {
-      this.patchTargetUnitsForm(this.targetUnits());
-    });
-
-    this.currentPage$
+    this.activatedRoute.queryParamMap
       .pipe(
-        takeUntilDestroyed(),
-        distinctUntilChanged(),
-        switchMap((page) =>
-          this.targetUnitService.getTargetUnitAccountsWithSiteContacts(this.sectorId, page - 1, this.pageSize),
+        map((params) => ({
+          page: +params.get('page') || DEFAULT_PAGE,
+          pageSize: +params.get('pageSize') || DEFAULT_PAGE_SIZE,
+        })),
+        switchMap(({ page, pageSize }) =>
+          this.sectorAssociationTargetUnitAccountsService.getTargetUnitAccountsWithSiteContacts(
+            this.sectorId,
+            page - 1,
+            pageSize,
+          ),
         ),
-        tap(this.update),
+        tap(this.updateState),
       )
       .subscribe();
   }
 
-  private update = ({
-    editable,
-    accountsWithSiteContact: targetUnits,
-    totalItems,
-  }: TargetUnitAccountInfoResponseDTO): void => {
-    this.state.update((state) => ({
-      ...state,
-      editable,
-      targetUnits,
-      totalItems,
-    }));
-  };
-
-  private patchTargetUnitsForm(targetUnits: TargetUnitAccountInfoDTO[]) {
-    targetUnits.forEach((tu, idx) => {
-      this.targetUnitsForm.controls.targetUnits.setControl(
-        idx,
-        this.fb.group({
-          id: tu.accountId,
-          name: tu.businessId,
-          status: tu.status,
-          assignedTo: tu.siteContactUserId,
-          targetUnitID: tu.accountName,
-        }),
-      );
-    });
-  }
-
-  refresh(): void {
-    this.fetchTargetUnits().subscribe(this.update);
+  refresh() {
+    this.fetchTargetUnits().pipe(tap(this.updateState)).subscribe();
   }
 
   fetchTargetUnits() {
-    return this.targetUnitService.getTargetUnitAccountsWithSiteContacts(
+    return this.sectorAssociationTargetUnitAccountsService.getTargetUnitAccountsWithSiteContacts(
       this.sectorId,
-      this.state().currentPage - 1,
-      this.pageSize,
+      this.currentPage() - 1,
+      this.pageSize(),
     );
   }
 
-  handlePageChange(page: number) {
-    this.state.update((state) => ({ ...state, currentPage: page }));
+  onPageChange(page: number) {
+    if (page === this.currentPage()) return;
+    this.handleQueryParamsNavigation({ page });
+  }
+
+  onPageSizeChange(pageSize: number) {
+    if (pageSize === this.pageSize()) return;
+    this.handleQueryParamsNavigation({ pageSize });
   }
 
   onAddNewTargetUnit() {
@@ -212,7 +187,7 @@ export class SectorTargetUnitsTabComponent {
   }
 
   onSubmit() {
-    this.targetUnitSiteContactsService
+    this.sectorAssociationTargetUnitAccountsService
       .updateTargetUnitAccountSiteContacts(
         this.sectorId,
         this.targetUnitsForm.getRawValue().targetUnits.map((tu) => ({
@@ -221,5 +196,41 @@ export class SectorTargetUnitsTabComponent {
         })),
       )
       .subscribe();
+  }
+
+  private updateState = ({
+    editable,
+    accountsWithSiteContact: targetUnits,
+    totalItems,
+  }: TargetUnitAccountInfoResponseDTO) => {
+    this.state.update(() => ({ editable, targetUnits, totalItems }));
+    this.patchTargetUnitsForm(targetUnits);
+  };
+
+  private patchTargetUnitsForm(targetUnits: TargetUnitAccountInfoDTO[]) {
+    const formArray = this.targetUnitsForm.controls.targetUnits;
+
+    formArray.clear();
+
+    for (const tu of targetUnits) {
+      formArray.push(
+        this.fb.group({
+          id: [tu.accountId],
+          name: [tu.businessId],
+          status: [tu.status],
+          assignedTo: [tu.siteContactUserId],
+          targetUnitID: [tu.accountName],
+        }),
+      );
+    }
+  }
+
+  private handleQueryParamsNavigation(pagination: Partial<{ page: number; pageSize: number }>) {
+    this.router.navigate([], {
+      queryParams: { ...pagination },
+      queryParamsHandling: 'merge',
+      relativeTo: this.activatedRoute,
+      fragment: this.activatedRoute.snapshot.fragment,
+    });
   }
 }

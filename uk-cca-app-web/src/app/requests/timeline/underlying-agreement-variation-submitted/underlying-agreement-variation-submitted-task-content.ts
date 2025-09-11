@@ -1,25 +1,8 @@
 import { TaskSection } from '@netz/common/model';
-import { transformFacilities, UNAVariationRequestTaskPayload } from '@requests/common';
 
 const routePrefix = 'underlying-agreement-variation-submitted';
 
-export function getAllUnderlyingAgreementVariationSections(payload: UNAVariationRequestTaskPayload): TaskSection[] {
-  const facilities = transformFacilities(
-    payload?.underlyingAgreement?.facilities,
-    ['NEW', 'LIVE'],
-    null,
-    routePrefix,
-    '',
-  );
-
-  const excludedFacilities = transformFacilities(
-    payload?.underlyingAgreement?.facilities,
-    ['EXCLUDED'],
-    null,
-    routePrefix,
-    '',
-  );
-
+export function getAllUnderlyingAgreementVariationSections(): TaskSection[] {
   return [
     {
       title: 'Variation details',
@@ -49,12 +32,7 @@ export function getAllUnderlyingAgreementVariationSections(payload: UNAVariation
           link: `${routePrefix}/manage-facilities`,
           linkText: 'Manage facilities list',
         },
-        ...facilities,
       ],
-    },
-    {
-      title: 'Excluded Facilities',
-      tasks: [...excludedFacilities],
     },
     {
       title: 'Baseline and Targets',

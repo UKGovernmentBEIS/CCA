@@ -11,6 +11,7 @@ import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.repository.TargetUnitAccountRepository;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataCreationDTO;
@@ -26,6 +27,7 @@ import uk.gov.cca.api.underlyingagreement.repository.UnderlyingAgreementReposito
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.netz.api.account.service.AccountSearchAdditionalKeywordService;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.files.attachments.domain.FileAttachment;
@@ -62,8 +64,11 @@ public class UnderlyingAgreementMigrationService {
     public void migrateUnderlyingAgreement(String targetUnitId, UnderlyingAgreementMigrationContainer migrationContainer, List<String> migrationResults) {
 
         UnderlyingAgreementContainer unaContainer = migrationContainer.getUnderlyingAgreementContainer();
+        final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
+                .schemeVersion(SchemeVersion.CCA_2)
+                .build();
 
-        final Long pesistentAccountId = migrationContainer.getPersistentAccountId();
+        final Long persistentAccountId = migrationContainer.getPersistentAccountId();
         final FileInfoDTO underlyingAgreementDocument = migrationContainer.getFileDocument();
 
         try {
@@ -82,49 +87,49 @@ public class UnderlyingAgreementMigrationService {
 
             // Persist live facilities before validating the underlying agreement
             Set<Facility> liveFacilities = filterByStatus(unaContainer.getUnderlyingAgreement().getFacilities(), FacilityStatus.LIVE);
-            saveFacilitiesData(liveFacilities, pesistentAccountId, migrationContainer.getFacilitiesCreatedDate());
+            saveFacilitiesData(liveFacilities, persistentAccountId, migrationContainer.getFacilitiesCreatedDate());
 
-            underlyingAgreementValidatorService.validate(unaContainer);
+            underlyingAgreementValidatorService.validate(unaContainer, underlyingAgreementValidationContext);
 
             Set<Facility> newFacilities = filterByStatus(unaContainer.getUnderlyingAgreement().getFacilities(), FacilityStatus.NEW);
-            saveFacilitiesData(newFacilities, pesistentAccountId, migrationContainer.getFacilitiesCreatedDate());
+            saveFacilitiesData(newFacilities, persistentAccountId, migrationContainer.getFacilitiesCreatedDate());
 
             activateFacilities(unaContainer);
 
             removeFileAttachmentPrefixAndSave(unaContainer, migrationContainer.getFileAttachments());
 
-            saveUnderlyingAgreement(migrationContainer, pesistentAccountId);
+            saveUnderlyingAgreement(migrationContainer, persistentAccountId);
 
-            updateAccountStatus(pesistentAccountId);
+            updateAccountStatus(persistentAccountId);
 
-            saveFacilityKeywords(pesistentAccountId, unaContainer);
+            saveFacilityKeywords(persistentAccountId, unaContainer);
 
         } catch (BusinessException e) {
             Arrays.asList(e.getData()).forEach(violation -> {
                 if (violation instanceof UnderlyingAgreementViolation underlyingAgreementViolation) {
                     migrationResults.add(UnderlyingAgreementMigrationUtil.constructErrorMessage(targetUnitId,
-                            pesistentAccountId,
+                            persistentAccountId,
                             underlyingAgreementViolation.getSectionName(),
                             underlyingAgreementViolation.getMessage(),
                             getData(underlyingAgreementViolation)));
                 } else {
                     migrationResults.add(UnderlyingAgreementMigrationUtil.constructErrorMessage(targetUnitId,
-                            pesistentAccountId,
+                            persistentAccountId,
                             e.getMessage(),
-                            Arrays.asList(e.getData()).stream().map(Object::toString).collect(Collectors.joining(","))));
+                            Arrays.stream(e.getData()).map(Object::toString).collect(Collectors.joining(","))));
                 }
             });
 
             throw e;
         } catch (ConstraintViolationException e) {
-            //run validators anyway to collect all errors. Validators should be made null safe
-            e.getConstraintViolations().forEach((error -> {
+            // Run validators anyway to collect all errors. Validators should be made null safe
+            e.getConstraintViolations().forEach((error ->
                 migrationResults.add(UnderlyingAgreementMigrationUtil.constructErrorMessage(targetUnitId,
-                        pesistentAccountId,
-                        e.getMessage()));
-            }));
+                        persistentAccountId,
+                        e.getMessage()))));
 
-            List<BusinessValidationResult> validationResults = underlyingAgreementValidatorService.getValidationResults(unaContainer);
+            List<BusinessValidationResult> validationResults = underlyingAgreementValidatorService
+                    .getValidationResults(unaContainer, underlyingAgreementValidationContext);
 
             boolean isValid = validationResults.stream().allMatch(BusinessValidationResult::isValid);
 
@@ -132,23 +137,23 @@ public class UnderlyingAgreementMigrationService {
                 validationResults.forEach(error -> error.getViolations().forEach(violation ->
                         migrationResults.add(UnderlyingAgreementMigrationUtil.constructErrorMessage(
                                 targetUnitId,
-                                pesistentAccountId,
-                                ((UnderlyingAgreementViolation) violation).getSectionName(),
+                                persistentAccountId,
+                                violation.getSectionName(),
                                 ((UnderlyingAgreementViolation) violation).getMessage(),
                                 getData(((UnderlyingAgreementViolation) violation))))));
             }
             throw e;
         } catch (Exception e) {
-            migrationResults.add(UnderlyingAgreementMigrationUtil.constructErrorMessage(targetUnitId, pesistentAccountId, e.getMessage()));
+            migrationResults.add(UnderlyingAgreementMigrationUtil.constructErrorMessage(targetUnitId, persistentAccountId, e.getMessage()));
             throw e;
         }
 
-        migrationResults.add(UnderlyingAgreementMigrationUtil.constructSuccessMessage(targetUnitId, pesistentAccountId));
+        migrationResults.add(UnderlyingAgreementMigrationUtil.constructSuccessMessage(targetUnitId, persistentAccountId));
 
     }
 
-    private void saveUnderlyingAgreement(UnderlyingAgreementMigrationContainer unaMigrationContainer, final Long pesistentAccountId) {
-        UnderlyingAgreementEntity entity = createUnderlyingAgreement(unaMigrationContainer, pesistentAccountId);
+    private void saveUnderlyingAgreement(UnderlyingAgreementMigrationContainer unaMigrationContainer, final Long persistentAccountId) {
+        UnderlyingAgreementEntity entity = createUnderlyingAgreement(unaMigrationContainer, persistentAccountId);
         underlyingAgreementRepository.save(entity);
     }
 

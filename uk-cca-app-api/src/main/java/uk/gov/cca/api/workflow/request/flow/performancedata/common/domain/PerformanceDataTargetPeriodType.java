@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 
 @Getter
 @AllArgsConstructor

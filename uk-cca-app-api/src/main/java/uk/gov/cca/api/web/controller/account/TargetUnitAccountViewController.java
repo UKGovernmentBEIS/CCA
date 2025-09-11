@@ -1,6 +1,8 @@
 package uk.gov.cca.api.web.controller.account;
 
 import jakarta.validation.constraints.Size;
+
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +23,14 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
-import uk.gov.cca.api.account.domain.dto.TargetUnitAccountInfoResponseDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountHeaderInfoDTO;
 import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
-import uk.gov.cca.api.account.service.TargetUnitAccountSiteContactService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.cca.api.web.orchestrator.account.dto.TargetUnitAccountDetailsResponseDTO;
 import uk.gov.cca.api.web.orchestrator.account.service.TargetUnitAccountQueryServiceOrchestrator;
 import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria;
+import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria.SortBy;
 import uk.gov.netz.api.account.domain.dto.AccountSearchResults;
 import uk.gov.netz.api.account.service.AccountSearchServiceDelegator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -51,7 +52,6 @@ import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 @Tag(name = "Target Unit Account info view")
 public class TargetUnitAccountViewController {
 
-    private final TargetUnitAccountSiteContactService targetUnitAccountSiteContactService;
     private final TargetUnitAccountQueryServiceOrchestrator targetUnitAccountQueryServiceOrchestrator;
     private final AccountSearchServiceDelegator accountSearchServiceDelegator;
     private final TargetUnitAccountQueryService targetUnitAccountQueryService;
@@ -65,16 +65,19 @@ public class TargetUnitAccountViewController {
     public ResponseEntity<AccountSearchResults> searchUserAccounts(
             @Parameter(hidden = true) AppUser appUser,
             @RequestParam(value = "term", required = false) @Size(min = 3, max = 256) @Parameter(name = "term", description = "The term to search") String term,
-            @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Long page,
-            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}") Long pageSize
+            @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Integer page,
+            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}") Integer pageSize
     ) {
-        return new ResponseEntity<>(
+    	return new ResponseEntity<>(
                 accountSearchServiceDelegator.getAccountsByUserAndSearchCriteria(
                         appUser,
                         AccountSearchCriteria.builder()
                                 .term(term)
                                 .paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
-                                .build()), HttpStatus.OK);
+                                .sortBy(SortBy.ACCOUNT_BUSINESS_ID)
+                                .direction(Direction.ASC)
+                                .build()), 
+                HttpStatus.OK);
     }
 
     @GetMapping(path = "/{accountId}")
@@ -93,30 +96,6 @@ public class TargetUnitAccountViewController {
             @PathVariable("accountId") @Parameter(description = "The account id") Long accountId) {
 
         return new ResponseEntity<>(targetUnitAccountQueryServiceOrchestrator.getTargetUnitAccountDetailsById(accountId), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/sector-association/{sectorId}")
-    @Operation(summary = "Retrieves the target unit accounts and their contacts")
-    @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
-    	content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = TargetUnitAccountInfoResponseDTO.class))})
-    @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
-    	content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
-    	content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @Authorized(resourceId = "#sectorId")
-    public ResponseEntity<TargetUnitAccountInfoResponseDTO> getTargetUnitAccountsWithSiteContacts(
-    		@Parameter(hidden = true) AppUser appUser, 
-    		@PathVariable("sectorId") @Parameter(description = "The sector association id") Long sectorId,
-            @RequestParam("page") @Parameter(name = "page", description = "The page number starting from zero")
-            @Min(value = 0, message = "{parameter.page.typeMismatch}")
-            @NotNull(message = "{parameter.page.typeMismatch}") Integer page,
-            @RequestParam("size") @Parameter(name = "size", description = "The page size")
-            @Min(value = 1, message = "{parameter.pageSize.typeMismatch}")
-            @NotNull(message = "{parameter.pageSize.typeMismatch}") Integer pageSize) {   	
-    	
-        return new ResponseEntity<>(
-        		targetUnitAccountSiteContactService.getTargetUnitAccountsWithSiteContact(appUser, sectorId, page, pageSize), 
-        		HttpStatus.OK);
     }
 
     @GetMapping("/{id}/header-info")

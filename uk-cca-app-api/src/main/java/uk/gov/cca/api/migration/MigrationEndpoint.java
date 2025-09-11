@@ -24,22 +24,18 @@ public class MigrationEndpoint {
             .filter(service -> service.getResource().equals(resource))
             .findAny()
             .orElseThrow(() -> new UnsupportedOperationException("resource not supported"));
-
-        switch (mode) {
-            case DRY:
+        
+        return switch (mode) {
+            case DRY -> {
                 try {
                     migrationService.migrateDryRun(ids);
                 } catch (DryRunException e) {
-                    return e.getErrors();
+                    yield e.getErrors();
                 }
-
-                return Collections.emptyList();
-            case COMMIT:
-                return migrationService.migrate(ids);
-            default:
-                break;
-        }
-
-        return Collections.emptyList();
+                yield Collections.emptyList();
+            }
+            case COMMIT -> migrationService.migrate(ids);
+        };
+        
     }
 }

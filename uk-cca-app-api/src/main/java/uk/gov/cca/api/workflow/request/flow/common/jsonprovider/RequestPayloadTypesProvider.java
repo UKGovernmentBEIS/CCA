@@ -3,6 +3,7 @@ package uk.gov.cca.api.workflow.request.flow.common.jsonprovider;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.ADMIN_TERMINATION_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.BUY_OUT_SURPLUS_ACCOUNT_PROCESSING_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.BUY_OUT_SURPLUS_RUN_REQUEST_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_CERTIFICATION_RUN_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_DOWNLOAD_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_GENERATE_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_PROCESSING_PAYLOAD;
@@ -26,6 +27,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.facilitycertification.common.domain.FacilityCertificationRunRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateDataProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.common.domain.PerformanceDataGenerateRequestPayload;
@@ -38,8 +40,8 @@ import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.Sec
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.subsistencefeesrun.domain.SubsistenceFeesRunRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.targetunitmoa.domain.TargetUnitMoaRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.domain.TargetUnitAccountCreationRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.netz.api.common.config.jackson.JsonSubTypesProvider;
 
 @Component
@@ -69,7 +71,9 @@ public class RequestPayloadTypesProvider implements JsonSubTypesProvider {
 				new NamedType(TargetUnitMoaRequestPayload.class, TARGET_UNIT_MOA_REQUEST_PAYLOAD),
 
 				new NamedType(BuyOutSurplusRunRequestPayload.class, BUY_OUT_SURPLUS_RUN_REQUEST_PAYLOAD),
-				new NamedType(BuyOutSurplusAccountProcessingRequestPayload.class, BUY_OUT_SURPLUS_ACCOUNT_PROCESSING_PAYLOAD)
+				new NamedType(BuyOutSurplusAccountProcessingRequestPayload.class, BUY_OUT_SURPLUS_ACCOUNT_PROCESSING_PAYLOAD),
+
+				new NamedType(FacilityCertificationRunRequestPayload.class, FACILITY_CERTIFICATION_RUN_REQUEST_PAYLOAD)
 		);
 	}
 

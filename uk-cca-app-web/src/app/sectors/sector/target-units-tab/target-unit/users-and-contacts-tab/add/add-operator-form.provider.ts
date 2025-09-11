@@ -17,6 +17,7 @@ export const ADD_OPERATOR_FORM = new InjectionToken<AddOperatorForm>('ADD_OPERAT
 
 export const AddOperatorFormProvider: Provider = {
   provide: ADD_OPERATOR_FORM,
+  deps: [FormBuilder],
   useFactory: (fb: FormBuilder) =>
     fb.group(
       {
@@ -35,5 +36,4 @@ export const AddOperatorFormProvider: Provider = {
       },
       { updateOn: 'submit' },
     ),
-  deps: [FormBuilder],
 };

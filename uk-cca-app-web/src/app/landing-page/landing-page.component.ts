@@ -4,7 +4,6 @@ import { RouterLink } from '@angular/router';
 
 import { AuthStore, selectIsLoggedIn, selectLoginStatus } from '@netz/common/auth';
 import { PageHeadingComponent } from '@netz/common/components';
-import { GovukComponentsModule } from '@netz/govuk-components';
 import { BackToTopComponent, ServiceBannerComponent } from '@shared/components';
 import { AuthService } from '@shared/services';
 
@@ -17,23 +16,16 @@ interface ViewModel {
 
 @Component({
   selector: 'cca-landing-page',
-  standalone: true,
   templateUrl: './landing-page.component.html',
+  standalone: true,
+  imports: [PageHeadingComponent, RouterLink, BackToTopComponent, NgTemplateOutlet, ServiceBannerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    PageHeadingComponent,
-    RouterLink,
-    BackToTopComponent,
-    NgTemplateOutlet,
-    GovukComponentsModule,
-    ServiceBannerComponent,
-  ],
 })
 export class LandingPageComponent {
   private readonly authStore = inject(AuthStore);
   protected readonly authService = inject(AuthService);
 
-  vm = computed<ViewModel>(() => ({
+  protected readonly vm = computed<ViewModel>(() => ({
     isLoggedIn: this.authStore.select(selectIsLoggedIn)(),
     status: this.authStore.select(selectLoginStatus)(),
   }));

@@ -2,11 +2,9 @@ package uk.gov.cca.api.workflow.request.flow.admintermination.submit.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.admintermination.common.service.AdminTerminationOfficialNoticeService;
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
@@ -27,7 +25,7 @@ public class AdminTerminationSubmittedService {
     private final RequestService requestService;
     private final CcaRequestActionUserInfoResolver ccaRequestActionUserInfoResolver;
     private final CcaOfficialNoticeSendService ccaOfficialNoticeSendService;
-    private final AdminTerminationOfficialNoticeService adminTerminationOfficialNoticeService;
+    private final AdminTerminationSubmitOfficialNoticeService adminTerminationSubmitOfficialNoticeService;
 
     public void submit(final String requestId) {
 
@@ -44,7 +42,7 @@ public class AdminTerminationSubmittedService {
                 .getOfficialNoticeToDefaultRecipients(request);
 
         // Generate official notice
-        FileInfoDTO officialNotice = adminTerminationOfficialNoticeService.generateOfficialNotice(request);
+        FileInfoDTO officialNotice = adminTerminationSubmitOfficialNoticeService.generateOfficialNotice(request);
         requestPayload.setOfficialNotice(officialNotice);
 
         // Create request action
@@ -65,6 +63,6 @@ public class AdminTerminationSubmittedService {
                 request.getPayload().getRegulatorAssignee());
 
         // Send official notice
-        adminTerminationOfficialNoticeService.sendOfficialNotice(request, officialNotice, ccaDecisionNotification);
+        adminTerminationSubmitOfficialNoticeService.sendOfficialNotice(request, officialNotice, ccaDecisionNotification);
     }
 }

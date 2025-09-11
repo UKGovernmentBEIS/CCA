@@ -17,7 +17,6 @@ import { Observable } from 'rxjs';
 import { AccountSearchResults } from '../model/accountSearchResults';
 import { TargetUnitAccountDetailsResponseDTO } from '../model/targetUnitAccountDetailsResponseDTO';
 import { TargetUnitAccountHeaderInfoDTO } from '../model/targetUnitAccountHeaderInfoDTO';
-import { TargetUnitAccountInfoResponseDTO } from '../model/targetUnitAccountInfoResponseDTO';
 
 import { BASE_PATH } from '../variables';
 import { Configuration } from '../configuration';
@@ -217,111 +216,6 @@ export class TargetUnitAccountInfoViewService {
     return this.httpClient.get<TargetUnitAccountDetailsResponseDTO>(
       `${this.configuration.basePath}/v1.0/target-unit-accounts/${encodeURIComponent(String(accountId))}`,
       {
-        responseType: responseType_ as any,
-        withCredentials: this.configuration.withCredentials,
-        headers: headers,
-        observe: observe,
-        reportProgress: reportProgress,
-      },
-    );
-  }
-
-  /**
-   * Retrieves the target unit accounts and their contacts
-   * @param sectorId The sector association id
-   * @param page The page number starting from zero
-   * @param size The page size
-   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-   * @param reportProgress flag to report request and response progress.
-   */
-  public getTargetUnitAccountsWithSiteContacts(
-    sectorId: number,
-    page: number,
-    size: number,
-  ): Observable<TargetUnitAccountInfoResponseDTO>;
-  public getTargetUnitAccountsWithSiteContacts(
-    sectorId: number,
-    page: number,
-    size: number,
-    observe: 'response',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<TargetUnitAccountInfoResponseDTO>>;
-  public getTargetUnitAccountsWithSiteContacts(
-    sectorId: number,
-    page: number,
-    size: number,
-    observe: 'events',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<TargetUnitAccountInfoResponseDTO>>;
-  public getTargetUnitAccountsWithSiteContacts(
-    sectorId: number,
-    page: number,
-    size: number,
-    observe: 'body',
-    reportProgress?: boolean,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<TargetUnitAccountInfoResponseDTO>;
-  public getTargetUnitAccountsWithSiteContacts(
-    sectorId: number,
-    page: number,
-    size: number,
-    observe: any = 'body',
-    reportProgress = false,
-    options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<any> {
-    if (sectorId === null || sectorId === undefined) {
-      throw new Error(
-        'Required parameter sectorId was null or undefined when calling getTargetUnitAccountsWithSiteContacts.',
-      );
-    }
-    if (page === null || page === undefined) {
-      throw new Error(
-        'Required parameter page was null or undefined when calling getTargetUnitAccountsWithSiteContacts.',
-      );
-    }
-    if (size === null || size === undefined) {
-      throw new Error(
-        'Required parameter size was null or undefined when calling getTargetUnitAccountsWithSiteContacts.',
-      );
-    }
-
-    let queryParameters = new HttpParams({ encoder: this.encoder });
-    if (page !== undefined && page !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, page as any, 'page');
-    }
-    if (size !== undefined && size !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, size as any, 'size');
-    }
-
-    let headers = this.defaultHeaders;
-
-    // authentication (bearerAuth) required
-    const credential = this.configuration.lookupCredential('bearerAuth');
-    if (credential) {
-      headers = headers.set('Authorization', 'Bearer ' + credential);
-    }
-
-    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-    if (httpHeaderAcceptSelected === undefined) {
-      // to determine the Accept header
-      const httpHeaderAccepts: string[] = ['application/json'];
-      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-    }
-    if (httpHeaderAcceptSelected !== undefined) {
-      headers = headers.set('Accept', httpHeaderAcceptSelected);
-    }
-
-    let responseType_: 'text' | 'json' = 'json';
-    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-      responseType_ = 'text';
-    }
-
-    return this.httpClient.get<TargetUnitAccountInfoResponseDTO>(
-      `${this.configuration.basePath}/v1.0/target-unit-accounts/sector-association/${encodeURIComponent(String(sectorId))}`,
-      {
-        params: queryParameters,
         responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,
         headers: headers,

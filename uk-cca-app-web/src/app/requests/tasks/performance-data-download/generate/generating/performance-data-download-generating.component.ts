@@ -8,7 +8,7 @@ import { NotificationBannerComponent } from '@netz/govuk-components';
   template: `
     <govuk-notification-banner>
       <h3 class="govuk-heading-m">Files are being generated</h3>
-      <span class="govuk-body">
+      <span>
         This may take several minutes to complete.
         <br />
         You can wait or return to the dashboard and click on the task to continue.

@@ -44,11 +44,7 @@
                 "output": "/assets/"
               }
             ],
-            "styles": ["src/styles.scss"],
-            "stylePreprocessorOptions": {
-              "includePaths": ["node_modules/govuk-frontend/dist/govuk/"]
-            },
-            "scripts": [],
+            "styles": ["node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.css", "src/styles.css"],
             "allowedCommonJsDependencies": [
               "keycloak-js",
               "clean-deep",

@@ -22,7 +22,7 @@ public class BuyOutSurplusViolation extends BusinessViolation {
     @Getter
     public enum BuyOutSurplusViolationMessage {
         PROCESS_FAILED("Target unit account process failed"),
-        GENERATE_CSV_FAILED("Generate csv failed"),
+        PREVIOUS_PAID_FEES_FAILED("Target unit account previous paid fees could not be processed"),
         ;
 
         private final String message;

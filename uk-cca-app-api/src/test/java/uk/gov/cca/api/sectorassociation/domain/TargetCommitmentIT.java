@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class TargetCommitmentIT extends AbstractContainerBaseTest {
+class TargetCommitmentIT extends AbstractContainerBaseTest {
 
     @Autowired
     private EntityManager entityManager;
@@ -38,6 +38,7 @@ public class TargetCommitmentIT extends AbstractContainerBaseTest {
         entityManager.persist(targetSet);
         entityManager.flush();
     }
+
     @Test
     void testSchemeTargetCommitmentPersistence() {
         TargetCommitment targetCommitment = TargetCommitment.builder()

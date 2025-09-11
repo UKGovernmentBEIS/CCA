@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
 
-import { BasePage } from '@netz/common/testing';
+import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
 
 import { RequestTwoFaResetComponent } from './request-two-fa-reset.component';
 
@@ -18,7 +18,8 @@ describe('RequestTwoFaResetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RequestTwoFaResetComponent, RouterTestingModule],
+      imports: [RequestTwoFaResetComponent],
+      providers: [{ provide: ActivatedRoute, useValue: new ActivatedRouteStub() }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RequestTwoFaResetComponent);

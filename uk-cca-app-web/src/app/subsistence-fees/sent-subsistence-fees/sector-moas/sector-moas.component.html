@@ -1,101 +1,105 @@
-<h2 class="govuk-heading-m">Sector MoAs ({{ subFeesDetails?.sectorMoasCount }})</h2>
+@if (subFeesDetails(); as subFeesDetails) {
+  <h2 class="govuk-heading-m">Sector MoAs ({{ subFeesDetails.sectorMoasCount }})</h2>
 
-@if (subFeesDetails?.sectorMoasCount > 0) {
-  <cca-utility-panel heading="Filters">
-    <form [formGroup]="searchForm" (ngSubmit)="onApplyFilters()">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-third">
-          <div
-            widthClass="govuk-!-width-full"
-            formControlName="term"
-            govuk-text-input
-            label="Transaction ID, sector ID or name"
-          ></div>
-        </div>
-
-        <div class="govuk-grid-column-two-thirds">
+  @if (subFeesDetails.sectorMoasCount > 0) {
+    <cca-utility-panel heading="Filters">
+      <form [formGroup]="searchForm" (ngSubmit)="onApplyFilters()">
+        <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-third">
             <div
-              govuk-select
               widthClass="govuk-!-width-full"
-              [options]="paymentStatusOptions"
-              label="Payment status"
-              formControlName="paymentStatus"
+              formControlName="term"
+              govuk-text-input
+              label="Transaction ID, sector ID or name"
             ></div>
           </div>
 
-          <div class="govuk-grid-column-one-third">
-            <div
-              govuk-select
-              widthClass="govuk-!-width-full"
-              label="Marking of facilities"
-              [options]="markingOfFacilitiesOptions"
-              formControlName="markFacilitiesStatus"
-            ></div>
+          <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-column-one-third">
+              <div
+                govuk-select
+                widthClass="govuk-!-width-full"
+                [options]="paymentStatusOptions"
+                label="Payment status"
+                formControlName="paymentStatus"
+              ></div>
+            </div>
+
+            <div class="govuk-grid-column-one-third">
+              <div
+                govuk-select
+                widthClass="govuk-!-width-full"
+                label="Marking of facilities"
+                [options]="markingOfFacilitiesOptions"
+                formControlName="markFacilitiesStatus"
+              ></div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <button class="govuk-!-margin-right-3" netzPendingButton govukButton type="submit">Apply</button>
-          <button netzPendingButton govukSecondaryButton type="button" (click)="onClearFilters()">Clear</button>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-quarter">
+            <button class="govuk-!-margin-right-3" netzPendingButton govukButton type="submit">Apply</button>
+            <button netzPendingButton govukSecondaryButton type="button" (click)="onClearFilters()">Clear</button>
+          </div>
         </div>
-      </div>
-    </form>
-  </cca-utility-panel>
+      </form>
+    </cca-utility-panel>
 
-  <div class="x-scroll govuk-!-margin-top-6">
-    <div class="max-content-width">
-      <div class="overflow-auto overflow-auto-table">
-        <govuk-table [columns]="tableColumns" [data]="state().subsistenceFeesMoas">
-          <ng-template let-column="column" let-row="row">
-            @switch (column.field) {
-              @case ('transactionId') {
-                <a
-                  [routerLink]="['sector-moas', row['moaId'], 'details']"
-                  [relativeTo]="activatedRoute"
-                  class="govuk-link"
-                >
-                  {{ row[column.field] }}
-                </a>
+    <div class="x-scroll govuk-!-margin-top-6">
+      <div class="max-content-width">
+        <div class="overflow-auto overflow-auto-table">
+          <govuk-table [columns]="tableColumns" [data]="state().subsistenceFeesMoas">
+            <ng-template let-column="column" let-row="row">
+              @switch (column.field) {
+                @case ('transactionId') {
+                  <a
+                    [routerLink]="['sector-moas', row['moaId'], 'details']"
+                    [relativeTo]="activatedRoute"
+                    class="govuk-link"
+                  >
+                    {{ row[column.field] }}
+                  </a>
+                }
+
+                @case ('name') {
+                  <span>{{ row['businessId'] }} - {{ row[column.field] }}</span>
+                }
+
+                @case ('paymentStatus') {
+                  <govuk-tag [color]="row[column.field] | statusColor: 'grey'" class="tag-width">
+                    {{ row[column.field] | status }}
+                  </govuk-tag>
+                }
+
+                @case ('markFacilitiesStatus') {
+                  <div class="govuk-!-width-full">
+                    <span>{{ row[column.field] | status }}</span>
+                  </div>
+                }
+
+                @case ('currentTotalAmount') {
+                  <span>{{ row[column.field] | number }}</span>
+                }
+
+                @case ('outstandingTotalAmount') {
+                  <span>{{ row[column.field] | number }}</span>
+                }
               }
+            </ng-template>
+          </govuk-table>
 
-              @case ('name') {
-                <span>{{ row['businessId'] }} - {{ row[column.field] }}</span>
-              }
-
-              @case ('paymentStatus') {
-                <govuk-tag [color]="row[column.field] | subsistenceFeesRunPaymentStatusTagColor" class="failure-tag">
-                  {{ row[column.field] | subsistenceFeesRunPaymentStatus }}
-                </govuk-tag>
-              }
-
-              @case ('markFacilitiesStatus') {
-                <div class="govuk-!-width-full">
-                  <span>{{ row[column.field] | subsistenceFeesRunMarkFacilitiesStatus }}</span>
-                </div>
-              }
-
-              @case ('currentTotalAmount') {
-                <span>{{ row[column.field] | number }}</span>
-              }
-
-              @case ('outstandingTotalAmount') {
-                <span>{{ row[column.field] | number }}</span>
-              }
-            }
-          </ng-template>
-        </govuk-table>
-
-        <cca-pagination
-          [count]="state().totalItems"
-          (currentPageChange)="handlePageChange($event)"
-          [pageSize]="state().pageSize"
-        />
+          <cca-pagination
+            [count]="state().totalItems"
+            [currentPage]="state().currentPage"
+            [pageSize]="state().pageSize"
+            (pageChange)="onPageChange($event)"
+            (pageSizeChange)="onPageSizeChange($event)"
+          />
+        </div>
       </div>
     </div>
-  </div>
-} @else {
-  <p class="govuk-body govuk-!-margin-top-6">No sector MoAs were sent during this payment request.</p>
+  } @else {
+    <p class="govuk-!-margin-top-6">No sector MoAs were sent during this payment request.</p>
+  }
 }

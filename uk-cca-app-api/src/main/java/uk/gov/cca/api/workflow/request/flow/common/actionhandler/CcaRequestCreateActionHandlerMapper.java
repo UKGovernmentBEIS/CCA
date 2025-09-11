@@ -22,9 +22,7 @@ public class CcaRequestCreateActionHandlerMapper {
                 .filter(handler -> enabledWorkflowValidator.isWorkflowEnabled(requestType))
                 .filter(handler -> requestType.equals(handler.getRequestType()))
                 .findFirst()
-                .orElseThrow(() -> {
-                    throw new BusinessException(ErrorCode.RESOURCE_NOT_FOUND);
-                });
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
     }
 }
 

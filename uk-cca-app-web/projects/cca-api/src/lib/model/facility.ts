@@ -13,6 +13,7 @@ import { FacilityDetails } from './facilityDetails';
 import { Apply70Rule } from './apply70Rule';
 import { EligibilityDetailsAndAuthorisation } from './eligibilityDetailsAndAuthorisation';
 import { TargetUnitAccountContactDTO } from './targetUnitAccountContactDTO';
+import { Cca3FacilityBaselineAndTargets } from './cca3FacilityBaselineAndTargets';
 import { FacilityExtent } from './facilityExtent';
 
 export interface Facility {
@@ -24,4 +25,5 @@ export interface Facility {
   eligibilityDetailsAndAuthorisation: EligibilityDetailsAndAuthorisation;
   facilityExtent: FacilityExtent;
   apply70Rule: Apply70Rule;
+  cca3BaselineAndTargets?: Cca3FacilityBaselineAndTargets;
 }

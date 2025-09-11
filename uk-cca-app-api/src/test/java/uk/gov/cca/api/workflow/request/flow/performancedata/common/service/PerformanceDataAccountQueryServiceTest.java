@@ -17,10 +17,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiod.domain.dto.TargetPeriodDTO;
-import uk.gov.cca.api.targetperiod.service.TargetPeriodService;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,8 +35,7 @@ class PerformanceDataAccountQueryServiceTest {
     private AccountPerformanceDataStatusQueryService accountPerformanceDataStatusQueryService;
 
     @Test
-    void testGetCandidateAccountsForPerformanceDataReportingBySector() {
-        final PerformanceDataSubmissionType submissionType = PerformanceDataSubmissionType.PRIMARY;
+    void getCandidateAccountsForPerformanceDataReportingBySector() {
         final Long sectorAssociationId = 123L;
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
         final TargetPeriodDTO targetPeriodDTO = TargetPeriodDTO.builder()
@@ -53,11 +51,11 @@ class PerformanceDataAccountQueryServiceTest {
 
         when(targetPeriodService.getTargetPeriodByBusinessId(targetPeriodType)).thenReturn(targetPeriodDTO);
         when(accountPerformanceDataStatusQueryService
-                .getAccountsForPerformanceDataReportingBySector(sectorAssociationId, targetPeriodDTO.getId(), submissionType))
+                .getAccountsForPerformanceDataReportingBySector(sectorAssociationId, targetPeriodDTO.getId()))
                 .thenReturn(mockAccounts);
 
         List<TargetUnitAccountBusinessInfoDTO> result = performanceDataAccountQueryService
-                .getCandidateAccountsForPerformanceDataReportingBySector(sectorAssociationId, targetPeriodType, submissionType);
+                .getCandidateAccountsForPerformanceDataReportingBySector(sectorAssociationId, targetPeriodType);
 
         assertNotNull(result);
         assertFalse(result.isEmpty());
@@ -67,7 +65,7 @@ class PerformanceDataAccountQueryServiceTest {
 
         verify(targetPeriodService, times(1)).getTargetPeriodByBusinessId(targetPeriodType);
         verify(accountPerformanceDataStatusQueryService, times(1))
-                .getAccountsForPerformanceDataReportingBySector(sectorAssociationId, targetPeriodDTO.getId(), submissionType);
+                .getAccountsForPerformanceDataReportingBySector(sectorAssociationId, targetPeriodDTO.getId());
         verifyNoMoreInteractions(targetPeriodService, accountPerformanceDataStatusQueryService);
     }
 }

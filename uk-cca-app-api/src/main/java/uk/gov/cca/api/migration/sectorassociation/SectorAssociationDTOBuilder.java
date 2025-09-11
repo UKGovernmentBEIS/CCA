@@ -2,12 +2,14 @@ package uk.gov.cca.api.migration.sectorassociation;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.stereotype.Service;
 
 import uk.gov.cca.api.common.domain.MeasurementType;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.migration.MigrationEndpoint;
 import uk.gov.cca.api.migration.MigrationUtil;
 import uk.gov.cca.api.sectorassociation.domain.dto.AddressDTO;
@@ -16,8 +18,8 @@ import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDocumentDTO;
-import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationSchemeDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationSchemesDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.TargetCommitmentDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.TargetSetDTO;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.AgreementType;
@@ -89,10 +91,13 @@ public class SectorAssociationDTOBuilder {
         return sectorSchemeDTO;
     }
     
-    public SubsectorAssociationSchemeDTO constructSubsectorAssociationSchemeDTO(SubSectorAssociationVO vo) {
-        return SubsectorAssociationSchemeDTO.builder()
-                .subsectorAssociation(SubsectorAssociationDTO.builder().name(vo.getName()).build())
-                .targetSet(constructTargetSet(vo.getTargetSet())).build();
+    public SubsectorAssociationSchemesDTO constructSubsectorAssociationSchemeDTO(SubSectorAssociationVO vo) {
+        return SubsectorAssociationSchemesDTO.builder()
+                .name(vo.getName())
+                .subsectorAssociationSchemeMap(Map.of(SchemeVersion.CCA_2, SubsectorAssociationSchemeDTO.builder()
+                		.targetSet(constructTargetSet(vo.getTargetSet()))
+                		.build()))
+                .build();
     }
 
     private TargetSetDTO constructTargetSet(TargetSetVO vo) {

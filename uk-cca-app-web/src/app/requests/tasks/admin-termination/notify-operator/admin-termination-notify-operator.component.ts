@@ -17,7 +17,21 @@ import { AdminTerminationTaskService } from '../services/admin-termination-task.
 
 @Component({
   selector: 'cca-admin-termination-notify-operator',
-  templateUrl: './admin-termination-notify-operator.component.html',
+  template: `
+    <cca-wizard-step
+      (formSubmit)="onSubmit()"
+      [formGroup]="form"
+      caption="Notify operator of decision"
+      heading="Select who should receive the termination notification"
+      data-testid="admin-termination-notify-operator-form"
+      submitText="Confirm and complete"
+    >
+      <cca-notify-operator-of-decision />
+    </cca-wizard-step>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [
     NotifyOperatorOfDecisionComponent,

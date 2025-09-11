@@ -58,7 +58,7 @@ class ItemControllerTest {
     private static final String BASE_PATH = "/v1.0/items";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         List<ItemService> services = List.of(itemOperatorService, itemRegulatorService);
         ItemController itemController = new ItemController(services);
 

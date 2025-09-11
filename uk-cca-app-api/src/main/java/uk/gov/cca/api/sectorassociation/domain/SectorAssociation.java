@@ -1,5 +1,8 @@
 package uk.gov.cca.api.sectorassociation.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.annotations.NamedQuery;
 
 import jakarta.persistence.CascadeType;
@@ -12,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -46,11 +50,6 @@ import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
                 + "on sa.sectorAssociationContact.id = sac.id "
                 + "where sa.id in (:sectorIds)")
 @NamedQuery(
-        name = SectorAssociation.NAMED_QUERY_FIND_SECTOR_ASSOCIATIONS_SITE_CONTACTS,
-        query = "SELECT new uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSiteContactInfoDTO(sa.id, concat(sa.acronym,' - ', sa.name), sa.facilitatorUserId) "
-                + "FROM SectorAssociation sa "
-                + "WHERE sa.competentAuthority = :competentAuthority")
-@NamedQuery(
         name = SectorAssociation.NAMED_QUERY_FIND_SECTOR_ASSOCIATIONS_IDS_BY_COMPETENT_AUTHORITY,
         query = "SELECT sa.id FROM SectorAssociation sa WHERE sa.competentAuthority = :ca")
 @NamedQuery(
@@ -58,13 +57,12 @@ import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
         query = "SELECT sa.acronym FROM SectorAssociation sa WHERE sa.id = :id")
 @NamedQuery(
         name = SectorAssociation.NAMED_QUERY_FIND_SECTOR_ASSOCIATION_ID_BY_ACRONYM,
-        query = "SELECT sa.ID FROM SectorAssociation sa WHERE sa.acronym = :acronym")
+        query = "SELECT sa.id FROM SectorAssociation sa WHERE sa.acronym = :acronym")
 
 public class SectorAssociation {
 
     public static final String NAMED_QUERY_FIND_SECTOR_ASSOCIATIONS_INFO_BY_COMPETENT_AUTHORITY = "SectorAssociation.findSectorAssociationsByCompetentAuthority";
     public static final String NAMED_QUERY_FIND_SECTOR_ASSOCIATIONS_INFO_BY_SECTORS = "SectorAssociation.findSectorAssociationsBySectors";
-    public static final String NAMED_QUERY_FIND_SECTOR_ASSOCIATIONS_SITE_CONTACTS = "SectorAssociation.findSectorAssociationSiteContacts";
     public static final String NAMED_QUERY_FIND_SECTOR_ASSOCIATIONS_IDS_BY_COMPETENT_AUTHORITY = "SectorAssociation.findSectorAssociationsIdsByCompetentAuthority";
     public static final String NAMED_QUERY_FIND_SECTOR_ASSOCIATION_ACRONYM_BY_ID = "SectorAssociation.findSectorAssociationAcronymById";
     public static final String NAMED_QUERY_FIND_SECTOR_ASSOCIATION_ID_BY_ACRONYM = "SectorAssociation.findSectorAssociationIdByAcronym";
@@ -108,4 +106,12 @@ public class SectorAssociation {
     @JoinColumn(name = "sector_association_contact_id")
     @NotNull
     private SectorAssociationContact sectorAssociationContact;
+    
+    @Builder.Default
+    @OneToMany(mappedBy = "sectorAssociation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SubsectorAssociation> subsectorAssociations = new ArrayList<>();
+    
+    @Builder.Default
+    @OneToMany(mappedBy = "sectorAssociation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SectorAssociationScheme> sectorAssociationSchemes = new ArrayList<>();
 }

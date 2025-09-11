@@ -48,7 +48,7 @@ class AdminTerminationSubmittedServiceTest {
     private CcaOfficialNoticeSendService ccaOfficialNoticeSendService;
 
     @Mock
-    private AdminTerminationOfficialNoticeService adminTerminationOfficialNoticeService;
+    private AdminTerminationSubmitOfficialNoticeService adminTerminationSubmitOfficialNoticeService;
 
     @Test
     void submit() {
@@ -97,7 +97,7 @@ class AdminTerminationSubmittedServiceTest {
         when(requestService.findRequestById(requestId)).thenReturn(request);
         when(ccaRequestActionUserInfoResolver.getUsersInfo(ccaDecisionNotification, request)).thenReturn(usersInfo);
         when(ccaOfficialNoticeSendService.getOfficialNoticeToDefaultRecipients(request)).thenReturn(defaultContacts);
-        when(adminTerminationOfficialNoticeService.generateOfficialNotice(request))
+        when(adminTerminationSubmitOfficialNoticeService.generateOfficialNotice(request))
                 .thenReturn(file);
 
         // Invoke
@@ -110,11 +110,11 @@ class AdminTerminationSubmittedServiceTest {
                 .getUsersInfo(ccaDecisionNotification, request);
         verify(ccaOfficialNoticeSendService, times(1))
                 .getOfficialNoticeToDefaultRecipients(request);
-        verify(adminTerminationOfficialNoticeService, times(1))
+        verify(adminTerminationSubmitOfficialNoticeService, times(1))
                 .generateOfficialNotice(request);
         verify(requestService, times(1))
                 .addActionToRequest(request, actionPayload, CcaRequestActionType.ADMIN_TERMINATION_APPLICATION_SUBMITTED, regulator);
-        verify(adminTerminationOfficialNoticeService, times(1))
+        verify(adminTerminationSubmitOfficialNoticeService, times(1))
                 .sendOfficialNotice(request, file, ccaDecisionNotification);
     }
 }

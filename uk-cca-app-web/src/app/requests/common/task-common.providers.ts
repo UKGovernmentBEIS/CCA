@@ -17,15 +17,11 @@ export const taskStatusTagMap: TaskStatusTagMap = {
   },
   [TaskItemStatus.CANNOT_START_YET]: {
     text: 'Cannot start yet',
-    color: 'grey',
+    color: null,
   },
   [TaskItemStatus.IN_PROGRESS]: {
     text: 'In progress',
-    color: 'blue',
-  },
-  [TaskItemStatus.APPROVED]: {
-    text: 'Approved',
-    color: 'green',
+    color: 'light-blue',
   },
   [TaskItemStatus.ACCEPTED]: {
     text: 'Accepted',

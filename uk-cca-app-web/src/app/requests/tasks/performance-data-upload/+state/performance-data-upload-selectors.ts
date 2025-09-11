@@ -1,6 +1,5 @@
 import { createDescendingSelector, requestTaskQuery, RequestTaskState, StateSelector } from '@netz/common/store';
-
-import { PerformanceDataUploadPayload } from '../../../common/performance-data/performance-data.types';
+import { PerformanceDataUploadPayload } from '@requests/common';
 
 const selectPerformanceDataUploadPayload: StateSelector<RequestTaskState, PerformanceDataUploadPayload> =
   createDescendingSelector(
@@ -17,6 +16,7 @@ const selectPerformanceDataUpload = createDescendingSelector(
   selectPerformanceDataUploadPayload,
   (payload) => payload?.performanceDataUpload,
 );
+
 const selectProcessCompleted = createDescendingSelector(
   selectPerformanceDataUploadPayload,
   (payload) => payload?.processCompleted,

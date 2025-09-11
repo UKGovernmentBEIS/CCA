@@ -6,8 +6,8 @@ import {
 } from 'cca-api';
 
 import { TaskItemStatus } from '../../task-item-status';
-import { UNAReviewRequestTaskPayload, UNAVariationReviewRequestTaskPayload } from '../underlying-agreement.types';
-import { overallDecisionStatus } from '../utils';
+import { overallDecisionStatus } from '../../utils';
+import { FacilityItemViewModel, UNAReviewRequestTaskPayload, UNAVariationReviewRequestTaskPayload } from '../types';
 import { underlyingAgreementQuery } from './underlying-agreement.selectors';
 
 const selectSectorAssociationId = createDescendingSelector(
@@ -58,13 +58,25 @@ const selectFacilitySubtaskDecision = (facility: string) =>
       payload.facilitiesReviewGroupDecisions[facility],
   );
 
+const selectFacilitiesItems: StateSelector<RequestTaskState, FacilityItemViewModel[]> = createDescendingSelector(
+  underlyingAgreementQuery.selectPayload,
+  (payload: UNAReviewRequestTaskPayload) =>
+    payload.underlyingAgreement?.facilities?.map((f) => ({
+      name: f.facilityDetails.name,
+      facilityId: f.facilityId,
+      status: f.status,
+      workflowStatus: (payload.reviewSectionsCompleted?.[f.facilityId] as TaskItemStatus) ?? TaskItemStatus.UNDECIDED,
+    })) ?? [],
+);
+
 const selectDetermination = createDescendingSelector(
   underlyingAgreementQuery.selectPayload,
-  (payload: UNAReviewRequestTaskPayload | UNAVariationReviewRequestTaskPayload) => payload.determination,
+  (payload: UNAReviewRequestTaskPayload | UNAVariationReviewRequestTaskPayload) =>
+    payload.determination || { type: null },
 );
 
 const selectDeterminationSubmitted = createDescendingSelector(underlyingAgreementQuery.selectPayload, (payload) =>
-  [TaskItemStatus.APPROVED, TaskItemStatus.REJECTED].includes(overallDecisionStatus(payload)),
+  [TaskItemStatus.ACCEPTED, TaskItemStatus.REJECTED].includes(overallDecisionStatus(payload)),
 );
 
 export const underlyingAgreementReviewQuery = {
@@ -77,4 +89,5 @@ export const underlyingAgreementReviewQuery = {
   selectFacilitySubtaskDecision,
   selectDetermination,
   selectDeterminationSubmitted,
+  selectFacilitiesItems,
 };

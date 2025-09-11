@@ -38,8 +38,8 @@ describe('Summary Component', () => {
   it('should handle change and prewrap options', async () => {
     summaryData.forEach((section) => {
       section.data.forEach((item) => {
-        if (item.prewrap) {
-          expect(screen.getByText(item.value[0]).classList.contains('pre-wrap')).toBeTruthy();
+        if (item.preline) {
+          expect(screen.getByText(item.value[0]).classList.contains('pre-line')).toBeTruthy();
         }
       });
     });

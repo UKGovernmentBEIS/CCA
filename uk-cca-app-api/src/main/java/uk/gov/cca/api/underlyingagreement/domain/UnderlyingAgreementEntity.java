@@ -7,8 +7,6 @@ import org.hibernate.annotations.Type;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,7 +21,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uk.gov.cca.api.common.domain.MeasurementType;
 
 @Getter
 @Setter
@@ -63,11 +60,6 @@ public class UnderlyingAgreementEntity {
     @NotNull
     private Long accountId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "measurement_type")
-    @NotNull
-    private MeasurementType measurementType;
-
     @Column(name = "file_document_uuid")
     private String fileDocumentUuid;
 
@@ -81,7 +73,6 @@ public class UnderlyingAgreementEntity {
     public UnderlyingAgreementEntity(UnderlyingAgreementContainer underlyingAgreementContainer, Long accountId) {
         this.underlyingAgreementContainer = underlyingAgreementContainer;
         this.accountId = accountId;
-        this.measurementType = underlyingAgreementContainer.getSectorMeasurementType();
         this.consolidationNumber = CONSOLIDATION_NUMBER_DEFAULT_VALUE;
         this.activationDate = LocalDateTime.now();
     }

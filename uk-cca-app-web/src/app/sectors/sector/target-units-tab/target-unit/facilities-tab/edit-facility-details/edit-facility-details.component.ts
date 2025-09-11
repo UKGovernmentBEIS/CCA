@@ -12,7 +12,7 @@ import {
 } from '@netz/govuk-components';
 import { WizardStepComponent } from '@shared/components';
 
-import { FacilityDataDetailsDTO, UpdateFacilityDataService } from 'cca-api';
+import { FacilityInfoDTO, UpdateFacilityDataService } from 'cca-api';
 
 import {
   EDIT_FACILITY_DETAILS_FORM_PROVIDER,
@@ -41,7 +41,7 @@ export default class EditFacilityDetailsComponent {
   private readonly router = inject(Router);
   private readonly updateFacilityDataService = inject(UpdateFacilityDataService);
 
-  protected readonly facilityDetails = this.activatedRoute.snapshot.data.facilityDetails as FacilityDataDetailsDTO;
+  protected readonly facilityDetails = this.activatedRoute.snapshot.data.facilityDetails as FacilityInfoDTO;
   protected readonly today = new Date();
 
   protected readonly form = inject<EditFacilityDetailsFormModel>(EDIT_FACILITY_DETAILS_FORM_PROVIDER);

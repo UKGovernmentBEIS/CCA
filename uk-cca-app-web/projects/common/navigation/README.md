@@ -1,6 +1,7 @@
 # NAVIGATION
 
 ## Specs
+
 - Use the breadcrumb to depict where users are within a website's structure and allow them to move between levels.
 
 - The backlink component should never be used together with breadcrumbs according to the GDS guidelines. Source: [Back link](https://design-system.service.gov.uk/components/back-link/)
@@ -35,6 +36,7 @@ export const ROUTES: Routes = [
     ],
   },
 ];
+
 Assuming the user is on the heroes route the expected output is:
 
 Home > Heroes.
@@ -45,8 +47,9 @@ The url of the link is determined by the route tree. This can also be ovewritten
 
 The `breadcrumb` property found in each route can be one of the following:
 
-- `string`: This is for when the route's breadcrumb is a static string e.g.
-- `function`: This is for when the breacrumb text is dynamic. The function takes as input the route resolve data.
+- `string`: This is for when the route's breadcrumb is a static string e.g. In this case, the breadcrumb link is generated from code.
+- `object`: This is for when you need additional properties like a fragment, a custom link, or query params.
+- `function`: This is for when the breacrumb properties are dynamic. The function takes as input the route resolve data and can return either a string or an object with `text`, `link`, and possibly `fragment` and `queryParams` properties.
 - `false`: You can hide a breadcrumb by passing false as a value.
 
 ### Examples
@@ -61,12 +64,19 @@ export const ROUTES: Routes = [
       {
         path: 'heroes',
         component: HeroListComponent,
+        data: { breadcrumb: 'Heroes' },
         children: [
           {
             path:':id',
             resolve: { name: resolveHeroNameFn }
-            data: { breacrumb: (name) => `Super hero named ${name}`} // dynamically adding the breacrumb text
-          }
+            data: { breadcrumb: ({ name }) => `Super hero named ${name}`} // dynamically adding the breadcrumb text
+            children: [
+              {
+                path: '',
+                component: HeroComponent,
+              }
+            ]
+          },
         ]
       },
       {
@@ -74,12 +84,19 @@ export const ROUTES: Routes = [
         component: AboutComponent,
         data: { breadcrumb: false }, // hides the breadcrumb
       },
+      {
+        path: 'settings',
+        component: SettingsComponent,
+        data: { 
+          breadcrumb: { text: 'Settings', fragment: 'user-profile', link:'/settings' } // breadcrumb with fragment
+        },
+      },
     ],
   },
 ];
 ```
-You can completely overwrite the breadcrumb and add your own links. This can be done simply at the component level.
-This is mandatory when dealing with breacrumbs that include fragments and/or query params.
+You can still completely overwrite the breadcrumb at the component level.
+While fragments can now be set directly in the route data, this approach is useful when you need more control over the breadcrumb links or when you need to include query parameters.
 
 breacrumb element type
 ```typescript
@@ -157,7 +174,3 @@ const route = {
   component: EnvironmentalManagementComponent,
 };
 ```
-
-## TODO:
-
-- Add breadcrumbs to vir, dre, actions(installation) and permit-notification routes

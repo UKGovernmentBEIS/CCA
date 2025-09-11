@@ -42,7 +42,7 @@ describe('CountyAddressInputComponent', () => {
       <form [formGroup]="form">
         <fieldset govukFieldset>
           <legend govukLegend>What is your address?</legend>
-          <cca-county-address-input formGroupName="address"></cca-county-address-input>
+          <cca-county-address-input formGroupName="address" />
         </fieldset>
       </form>
     `,
@@ -67,9 +67,7 @@ describe('CountyAddressInputComponent', () => {
       imports: [TestComponent],
       providers: [{ provide: CountyService, useValue: mockCountyService }],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     hostComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(CountyAddressInputComponent)).componentInstance;
@@ -83,7 +81,8 @@ describe('CountyAddressInputComponent', () => {
   it('should render address labels', () => {
     const inputs = fixture.debugElement.queryAll(By.directive(TextInputComponent));
     const getLabel = (element: HTMLElement) => element.querySelector('label');
-    expect(inputs.map((input) => getLabel(input.nativeElement).textContent)).toEqual([
+
+    expect(inputs.map((input) => getLabel(input.nativeElement).textContent.trim())).toEqual([
       'Address line 1',
       'Address line 2 (optional)',
       'Town or city',
@@ -95,6 +94,7 @@ describe('CountyAddressInputComponent', () => {
   it('should set autocomplete attributes', () => {
     const inputs = fixture.debugElement.queryAll(By.directive(TextInputComponent));
     const getInput = (element: HTMLElement) => element.querySelector('input');
+
     expect(inputs.map((input) => getInput(input?.nativeElement).autocomplete)).toEqual([
       'address-line1',
       'address-line2',

@@ -1,6 +1,6 @@
 import { transformAdminTerminationReason } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { transformAttachmentsAndFileUUIDsToDownloadableFiles } from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 
 import { AdminTerminationReasonDetails } from 'cca-api';
 
@@ -14,18 +14,16 @@ export function toAdminTerminationReasonSummaryData(
 ): SummaryData {
   return new SummaryFactory()
     .addSection('', `../${ReasonForAdminTerminationWizardStep.REASON_DETAILS}`)
-    .addRow('Termination reason', transformAdminTerminationReason(adminTerminationReasonDetails.reason), {
+    .addTextAreaRow('Termination reason', transformAdminTerminationReason(adminTerminationReasonDetails.reason), {
       change: isEditable,
-      prewrap: true,
     })
-    .addRow('Explain why the account is being terminated', adminTerminationReasonDetails.explanation, {
+    .addTextAreaRow('Explain why the account is being terminated', adminTerminationReasonDetails.explanation, {
       change: isEditable,
     })
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsAndFileUUIDsToDownloadableFiles(
-        adminTerminationReasonDetails.relevantFiles,
-        adminTerminationSubmitAttachments,
+      fileUtils.toDownloadableFiles(
+        fileUtils.extractAttachments(adminTerminationReasonDetails.relevantFiles, adminTerminationSubmitAttachments),
         downloadUrl,
       ),
       { change: isEditable },

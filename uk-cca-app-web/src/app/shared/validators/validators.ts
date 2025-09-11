@@ -1,4 +1,4 @@
-import { UntypedFormGroup, ValidatorFn } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import { GovukValidators, MessageValidatorFn } from '@netz/govuk-components';
 
@@ -23,6 +23,24 @@ export function facilityIDValidators(requiredMessage: string, patternMessage: st
     GovukValidators.required(requiredMessage),
     GovukValidators.pattern(new RegExp(`^[A-Z0-9_]+-F[0-9]{5}$`), patternMessage),
   ];
+}
+
+export function futureDateValidator(errorMessage: string): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const date = new Date();
+    return control.value && control.value > date ? { invalidDate: errorMessage } : null;
+  };
+}
+
+export function dateRangeValidator(startDate: string | Date, endDate: string | Date, errorMsg: string): ValidatorFn {
+  const min = new Date(startDate);
+  const max = new Date(endDate);
+
+  return (control: AbstractControl): ValidationErrors | null => {
+    const value = new Date(control.value);
+
+    return value < min || value > max ? { invalidDateRange: errorMsg } : null;
+  };
 }
 
 export const CCAGovukValidators = {

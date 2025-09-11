@@ -1,6 +1,7 @@
 package uk.gov.cca.api.workflow.request.flow.subsistencefees.subsistencefeesrun.service;
 
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
@@ -69,7 +70,7 @@ public class SubsistenceFeesRunGenerateReportService {
 									);
 				}
 				
-				final byte[] generatedFile = sw.toString().getBytes("UTF-8");
+				final byte[] generatedFile = sw.toString().getBytes(StandardCharsets.UTF_8);
 				final FileInfoDTO reportFile = fileDocumentService.createFileDocument(generatedFile, request.getId() + " subsistence fees summary report.csv");
 				
 				//update payload

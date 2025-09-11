@@ -11,7 +11,14 @@ import { toWithdrawAdminTerminationReasonSummaryData } from '../../../withdraw-a
 
 @Component({
   selector: 'cca-reason-for-withdraw-admin-termination-summary',
-  templateUrl: './reason-for-withdraw-admin-termination-summary.component.html',
+  template: `
+    <div>
+      <netz-page-heading caption="Withdraw admin termination">Summary</netz-page-heading>
+      <cca-summary [data]="summaryData" />
+    </div>
+
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [SummaryComponent, PageHeadingComponent, ReturnToTaskOrActionPageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

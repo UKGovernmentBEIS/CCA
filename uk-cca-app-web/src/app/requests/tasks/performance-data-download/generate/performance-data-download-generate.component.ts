@@ -34,6 +34,7 @@ import {
 
 @Component({
   selector: 'cca-performance-data-download-generate',
+  templateUrl: './performance-data-download-generate.component.html',
   standalone: true,
   imports: [
     SummaryListComponent,
@@ -46,7 +47,6 @@ import {
     PerformanceDataDownloadGeneratingComponent,
     PerformanceDataDownloadGeneratedComponent,
   ],
-  templateUrl: './performance-data-download-generate.component.html',
   providers: [PerformanceDataDownloadGenerateFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -55,23 +55,37 @@ export class PerformanceDataDownloadGenerateComponent implements OnInit {
   private readonly tasksService = inject(TasksService);
   private readonly businessErrorService = inject(BusinessErrorService);
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly taskId = +this.activatedRoute.snapshot.paramMap.get('taskId');
   private readonly destroyRef = inject(DestroyRef);
 
+  protected readonly form = inject<GeneratePerformanceDataFormModel>(GENERATE_PERFORMANCE_DATA_FORM);
+
+  private readonly taskId = +this.activatedRoute.snapshot.paramMap.get('taskId');
   private readonly interval = 10000; // ms
-  readonly form = inject<GeneratePerformanceDataFormModel>(GENERATE_PERFORMANCE_DATA_FORM);
-  readonly targetPeriodsOptions: GovukSelectOption<PerformanceDataTargetPeriodEnum.TP6>[] = [
+
+  protected readonly targetPeriodsOptions: GovukSelectOption<PerformanceDataTargetPeriodEnum.TP6>[] = [
     {
       value: PerformanceDataTargetPeriodEnum.TP6,
       text: PerformanceDataTargetPeriodEnum.TP6,
     },
   ];
-  readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
-  readonly sectorAssociationInfo = this.requestTaskStore.select(
+
+  protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
+
+  protected readonly sectorAssociationInfo = this.requestTaskStore.select(
     performanceDataDownloadQuery.selectSectorAssociationInfo,
   );
-  readonly targetPeriodType = this.requestTaskStore.select(performanceDataDownloadQuery.selectTargetPeriodType);
-  readonly processCompleted = this.requestTaskStore.select(performanceDataDownloadQuery.selectProcessCompleted);
+
+  protected readonly targetPeriodType = this.requestTaskStore.select(
+    performanceDataDownloadQuery.selectTargetPeriodType,
+  );
+
+  protected readonly processCompleted = this.requestTaskStore.select(
+    performanceDataDownloadQuery.selectProcessCompleted,
+  );
+
+  ngOnInit() {
+    if (this.processCompleted() === false) this.fetchTaskItemInfo().subscribe();
+  }
 
   onSubmit() {
     this.tasksService
@@ -95,12 +109,6 @@ export class PerformanceDataDownloadGenerateComponent implements OnInit {
         this.requestTaskStore.setPayload(response);
         this.fetchTaskItemInfo().subscribe();
       });
-  }
-
-  ngOnInit(): void {
-    if (this.processCompleted() === false) {
-      this.fetchTaskItemInfo().subscribe();
-    }
   }
 
   private fetchTaskItemInfo(): Observable<unknown> {

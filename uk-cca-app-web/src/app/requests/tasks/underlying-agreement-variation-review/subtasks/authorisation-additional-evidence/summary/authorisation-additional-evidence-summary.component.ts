@@ -15,6 +15,22 @@ import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-authorisation-additional-evidence-summary',
+  template: `
+    <div>
+      <netz-page-heading caption="Authorisation and additional evidence">Summary</netz-page-heading>
+
+      <ng-template #contentTpl let-showOriginal="showOriginal">
+        <cca-summary [data]="showOriginal ? summaryDataOriginal : summaryDataCurrent" />
+      </ng-template>
+
+      <cca-highlight-diff>
+        <ng-container slot="previous" *ngTemplateOutlet="contentTpl; context: { showOriginal: true }" />
+        <ng-container slot="current" *ngTemplateOutlet="contentTpl; context: { showOriginal: false }" />
+      </cca-highlight-diff>
+    </div>
+
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [
     PageHeadingComponent,
@@ -23,7 +39,6 @@ import { generateDownloadUrl } from '@shared/utils';
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
-  templateUrl: './authorisation-additional-evidence-summary.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class AuthorisationAdditionalEvidenceSummaryComponent {

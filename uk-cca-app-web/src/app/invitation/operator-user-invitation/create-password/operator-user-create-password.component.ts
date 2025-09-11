@@ -13,14 +13,14 @@ import { OperatorUserInvitationStore } from '../store';
   selector: 'cca-operator-user-create-password',
   template: `
     @if (isErrorSummaryDisplayed()) {
-      <govuk-error-summary [form]="form"></govuk-error-summary>
+      <govuk-error-summary [form]="form" />
     }
 
-    <div class="govuk-body govuk-!-width-three-quarters">
+    <div class="govuk-!-width-three-quarters">
       <netz-page-heading [caption]="'Create user account'">Create a password</netz-page-heading>
 
       <form (ngSubmit)="onSubmit()" [formGroup]="form" data-testid="invited-operator-user-password-form">
-        <cca-password></cca-password>
+        <cca-password />
         <button netzPendingButton govukButton type="submit">Continue</button>
       </form>
     </div>
@@ -41,9 +41,10 @@ export class OperatorUserCreatePasswordComponent {
   private readonly store = inject(OperatorUserInvitationStore);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  readonly form = inject<FormGroup>(PASSWORD_FORM);
 
-  isErrorSummaryDisplayed = signal(false);
+  protected readonly form = inject<FormGroup>(PASSWORD_FORM);
+
+  protected readonly isErrorSummaryDisplayed = signal(false);
 
   onSubmit() {
     if (this.form.invalid) {

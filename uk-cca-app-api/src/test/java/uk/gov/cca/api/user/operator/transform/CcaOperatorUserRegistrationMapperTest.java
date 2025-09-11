@@ -9,12 +9,12 @@ import uk.gov.cca.api.user.operator.domain.CcaOperatorUserRegistrationWithCreden
 
 import static org.junit.Assert.assertEquals;
 
-public class CcaOperatorUserRegistrationMapperTest {
+class CcaOperatorUserRegistrationMapperTest {
 
     private CcaOperatorUserRegistrationMapper mapper;
 
     @BeforeEach
-    public void init() {
+    void init() {
         mapper = Mappers.getMapper(CcaOperatorUserRegistrationMapper.class);
     }
 

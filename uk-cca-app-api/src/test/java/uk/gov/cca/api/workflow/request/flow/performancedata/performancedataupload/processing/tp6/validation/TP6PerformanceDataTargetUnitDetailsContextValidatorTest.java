@@ -298,7 +298,7 @@ class TP6PerformanceDataTargetUnitDetailsContextValidatorTest {
     }
 
     @Test
-    void validate_with_sector_throughput_VALID() {
+    void validate_with_throughput_VALID() {
         final PerformanceDataReferenceDetails referenceDetails = PerformanceDataReferenceDetails.builder()
                 .accountDetails(TargetUnitAccountDetailsDTO.builder()
                         .businessId("businessId")
@@ -306,12 +306,12 @@ class TP6PerformanceDataTargetUnitDetailsContextValidatorTest {
                         .build())
                 .underlyingAgreement(UnderlyingAgreementDTO.builder()
                         .underlyingAgreementContainer(UnderlyingAgreementContainer.builder()
-                                .sectorThroughputUnit("tonne")
                                 .underlyingAgreement(UnderlyingAgreement.builder()
                                         .facilities(Set.of(Facility.builder().build()))
                                         .targetPeriod6Details(TargetPeriod6Details.builder()
                                                 .targetComposition(TargetComposition.builder()
                                                         .measurementType(MeasurementType.ENERGY_KWH)
+                                                        .throughputUnit("tonne")
                                                         .build())
                                                 .baselineData(BaselineData.builder()
                                                         .baselineDate(LocalDate.of(2024, 9, 2))

@@ -29,21 +29,14 @@ export const CanActivateFinalDecisionReasonStep: CanActivateFn = (route: Activat
   if (!change && !isWizardCompleted(finalDecisionReasonDetails)) return true;
   if (change && isWizardCompleted(finalDecisionReasonDetails)) return true;
 
-  if (!isEditable)
-    return createUrlTreeFromSnapshot(route, ['../', AdminTerminationFinalDecisionTerminateAgreementWizardStep.SUMMARY]);
+  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', 'summary']);
 
   if (!change && isWizardCompleted(finalDecisionReasonDetails)) {
     if (finalDecisionSectionsCompleted[ADMIN_TERMINATION_FINAL_DECISION_SUBTASK] === TaskItemStatus.COMPLETED)
-      return createUrlTreeFromSnapshot(route, [
-        '../',
-        AdminTerminationFinalDecisionTerminateAgreementWizardStep.SUMMARY,
-      ]);
+      return createUrlTreeFromSnapshot(route, ['../', 'summary']);
 
     if (finalDecisionSectionsCompleted[ADMIN_TERMINATION_FINAL_DECISION_SUBTASK] === TaskItemStatus.IN_PROGRESS)
-      return createUrlTreeFromSnapshot(route, [
-        '../',
-        AdminTerminationFinalDecisionTerminateAgreementWizardStep.CHECK_YOUR_ANSWERS,
-      ]);
+      return createUrlTreeFromSnapshot(route, ['../', 'check-your-answers']);
   }
 
   return true;
@@ -64,8 +57,7 @@ export const CanActivateFinalDecisionReasonCheckYourAnswers: CanActivateFn = (
 
   const isEditable = requestTaskStore.select(requestTaskQuery.selectIsEditable)();
 
-  if (!isEditable)
-    return createUrlTreeFromSnapshot(route, ['../', AdminTerminationFinalDecisionTerminateAgreementWizardStep.SUMMARY]);
+  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', 'summary']);
 
   if (!isWizardCompleted(finalDecisionReasonDetails)) {
     return createUrlTreeFromSnapshot(route, [
@@ -75,7 +67,7 @@ export const CanActivateFinalDecisionReasonCheckYourAnswers: CanActivateFn = (
   }
 
   if (finalDecisionSectionsCompleted[ADMIN_TERMINATION_FINAL_DECISION_SUBTASK] === TaskItemStatus.COMPLETED) {
-    return createUrlTreeFromSnapshot(route, ['../', AdminTerminationFinalDecisionTerminateAgreementWizardStep.SUMMARY]);
+    return createUrlTreeFromSnapshot(route, ['../', 'summary']);
   }
 
   return true;
@@ -103,9 +95,7 @@ export const CanActivateFinalDecisionReasonSummary: CanActivateFn = (
   }
 
   if (finalDecisionSectionsCompleted[ADMIN_TERMINATION_FINAL_DECISION_SUBTASK] === TaskItemStatus.IN_PROGRESS) {
-    return createUrlTreeFromSnapshot(route, [
-      AdminTerminationFinalDecisionTerminateAgreementWizardStep.CHECK_YOUR_ANSWERS,
-    ]);
+    return createUrlTreeFromSnapshot(route, ['check-your-answers']);
   }
 
   return true;

@@ -10,13 +10,13 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Repository;
 import uk.gov.cca.api.account.domain.QTargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
-import uk.gov.cca.api.targetperiod.domain.QTargetPeriod;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.QTargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.QAccountPerformanceDataStatus;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.QPerformanceDataEntity;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetPeriodResultType;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountsPerformanceReportDTO;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountsPerformanceReportItemDTO;
-import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountsPerformanceReportSearchCriteria;
+import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountPerformanceDataReportListDTO;
+import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountPerformanceDataReportItemDTO;
+import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountPerformanceDataReportSearchCriteria;
 
 import java.time.LocalDate;
 
@@ -26,7 +26,7 @@ public class PerformanceDataReportRepository {
     @PersistenceContext
     private EntityManager entityManager;
     
-    public SectorAccountsPerformanceReportDTO getSectorAccountsPerformanceReportBySearchCriteria(Long sectorAssociationId, SectorAccountsPerformanceReportSearchCriteria criteria) {
+    public SectorAccountPerformanceDataReportListDTO getSectorAccountPerformanceDataReportListBySearchCriteria(Long sectorAssociationId, SectorAccountPerformanceDataReportSearchCriteria criteria) {
         QTargetUnitAccount targetUnitAccount = QTargetUnitAccount.targetUnitAccount;
         QTargetPeriod targetPeriod = QTargetPeriod.targetPeriod;
         QAccountPerformanceDataStatus accountPerformanceDataStatus = QAccountPerformanceDataStatus.accountPerformanceDataStatus;
@@ -37,18 +37,16 @@ public class PerformanceDataReportRepository {
         whereClause.and(targetUnitAccount.sectorAssociationId.eq(sectorAssociationId));
         whereClause.and( (
                 targetUnitAccount.status.eq(TargetUnitAccountStatus.LIVE)
-                    .and(targetPeriod.endDate.goe(Expressions.dateTemplate(LocalDate.class, "CAST({0} AS DATE)", targetUnitAccount.acceptedDate)))
             ).or(
                 targetUnitAccount.status.eq(TargetUnitAccountStatus.TERMINATED)
-                    .and(targetPeriod.endDate.goe(Expressions.dateTemplate(LocalDate.class, "CAST({0} AS DATE)", targetUnitAccount.acceptedDate)))
-                    .and(targetPeriod.performanceDataStartDate.loe(Expressions.dateTemplate(LocalDate.class, "CAST({0} AS DATE)",targetUnitAccount.terminatedDate)))
-                    .and(targetPeriod.buyOutStartDate.gt(Expressions.dateTemplate(LocalDate.class, "CAST({0} AS DATE)",targetUnitAccount.terminatedDate)))
+                    .and(targetPeriod.endDate.lt(Expressions.dateTemplate(LocalDate.class, "CAST({0} AS DATE)", targetUnitAccount.terminatedDate)))
             )
+            .and(targetPeriod.endDate.goe(Expressions.dateTemplate(LocalDate.class, "CAST({0} AS DATE)", targetUnitAccount.acceptedDate)))
         );
         
         // optional filters
-        if(!ObjectUtils.isEmpty(criteria.getTargetUnitBusinessId())) {
-            whereClause.and(targetUnitAccount.businessId.likeIgnoreCase('%' + criteria.getTargetUnitBusinessId() + '%'));
+        if(!ObjectUtils.isEmpty(criteria.getTargetUnitAccountBusinessId())) {
+            whereClause.and(targetUnitAccount.businessId.likeIgnoreCase('%' + criteria.getTargetUnitAccountBusinessId() + '%'));
         }
         
         if(criteria.getSubmissionType() != null) {
@@ -63,9 +61,9 @@ public class PerformanceDataReportRepository {
         }
         
         // query
-        JPAQuery<SectorAccountsPerformanceReportItemDTO> query = new JPAQuery<>(entityManager);
+        JPAQuery<SectorAccountPerformanceDataReportItemDTO> query = new JPAQuery<>(entityManager);
 
-        JPAQuery<SectorAccountsPerformanceReportItemDTO> jpaQuery = query.select(Projections.constructor(SectorAccountsPerformanceReportItemDTO.class,
+        JPAQuery<SectorAccountPerformanceDataReportItemDTO> jpaQuery = query.select(Projections.constructor(SectorAccountPerformanceDataReportItemDTO.class,
                 targetUnitAccount.id,
                 targetUnitAccount.businessId,
                 targetUnitAccount.name,
@@ -84,11 +82,11 @@ public class PerformanceDataReportRepository {
             .leftJoin(accountPerformanceDataStatus.lastPerformanceData, performanceData)
             .where(whereClause)
             .orderBy(targetUnitAccount.businessId.asc())
-            .offset(criteria.getPaging().getPageNumber() * criteria.getPaging().getPageSize())
+            .offset((long)criteria.getPaging().getPageNumber() * criteria.getPaging().getPageSize())
             .limit(criteria.getPaging().getPageSize());
         
-        return SectorAccountsPerformanceReportDTO.builder()
-                .performanceReportItems(jpaQuery.fetch())
+        return SectorAccountPerformanceDataReportListDTO.builder()
+                .performanceDataReportItems(jpaQuery.fetch())
                 .total(jpaQuery.fetchCount())
                 .build();
 

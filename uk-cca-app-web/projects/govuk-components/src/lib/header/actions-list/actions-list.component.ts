@@ -5,7 +5,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
   standalone: true,
   template: `
     <div class="header-actions">
-      <ng-content></ng-content>
+      <ng-content />
     </div>
   `,
   styles: `
@@ -19,7 +19,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-
   encapsulation: ViewEncapsulation.None,
 })
 export class HeaderActionsListComponent {}

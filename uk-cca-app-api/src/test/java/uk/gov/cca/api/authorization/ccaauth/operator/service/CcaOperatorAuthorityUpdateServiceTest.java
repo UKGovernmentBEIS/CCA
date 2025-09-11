@@ -16,13 +16,12 @@ import uk.gov.netz.api.authorization.operator.service.OperatorAuthorityUpdateVal
 import uk.gov.netz.api.authorization.core.repository.AuthorityRepository;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-public class CcaOperatorAuthorityUpdateServiceTest {
+class CcaOperatorAuthorityUpdateServiceTest {
 
     @Mock
     private OperatorAuthorityUpdateValidator operatorAuthorityUpdateValidator;
@@ -37,12 +36,12 @@ public class CcaOperatorAuthorityUpdateServiceTest {
     private CcaOperatorAuthorityUpdateService ccaOperatorAuthorityUpdateService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testUpdateAccountOperatorAuthorities_Success() {
+    void testUpdateAccountOperatorAuthorities_Success() {
         Authority authority = new Authority();
         authority.setId(1L);
         authority.setAccountId(1L);
@@ -64,7 +63,7 @@ public class CcaOperatorAuthorityUpdateServiceTest {
     }
 
     @Test
-    public void testUpdateAccountOperatorAuthorities_EmptyList() {
+    void testUpdateAccountOperatorAuthorities_EmptyList() {
         Long accountId = 1L;
 
         ccaOperatorAuthorityUpdateService.updateAccountOperatorAuthorities(Arrays.asList(), accountId);
@@ -75,7 +74,7 @@ public class CcaOperatorAuthorityUpdateServiceTest {
     }
 
     @Test
-    public void testUpdateAccountOperatorAuthorities_NoNotify() {
+    void testUpdateAccountOperatorAuthorities_NoNotify() {
         Authority authority = new Authority();
         authority.setId(1L);
         authority.setAccountId(1L);
@@ -97,7 +96,7 @@ public class CcaOperatorAuthorityUpdateServiceTest {
     }
 
     @Test
-    public void testUpdateAccountOperatorAuthorities_InvalidStatuses() {
+    void testUpdateAccountOperatorAuthorities_InvalidStatuses() {
         Authority authority = new Authority();
         authority.setId(1L);
         authority.setAccountId(1L);

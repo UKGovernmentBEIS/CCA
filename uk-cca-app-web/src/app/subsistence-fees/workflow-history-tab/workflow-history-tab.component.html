@@ -18,8 +18,8 @@
 
           @case ('requestStatus') {
             <div class="govuk-!-width-full">
-              <govuk-tag [color]="row[column.field] | paymentRequestStatusTagColor" class="failure-tag">
-                {{ row[column.field] | paymentRequestProcessStatus }}
+              <govuk-tag [color]="row[column.field] | statusColor" class="tag-width">
+                {{ row[column.field] | status }}
               </govuk-tag>
             </div>
           }
@@ -41,8 +41,10 @@
 
     <cca-pagination
       [count]="state().totalWorkflowHistoryItems"
-      (currentPageChange)="handlePageChange($event)"
+      [currentPage]="state().currentPage"
       [pageSize]="state().pageSize"
-    ></cca-pagination>
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    />
   </div>
 }

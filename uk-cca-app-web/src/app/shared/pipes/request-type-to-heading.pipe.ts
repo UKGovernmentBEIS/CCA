@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { PerformanceDataSpreadsheetProcessingRequestMetadata } from 'cca-api';
+import {
+  PerformanceAccountTemplateProcessingRequestMetadata,
+  PerformanceDataSpreadsheetProcessingRequestMetadata,
+} from 'cca-api';
 import { RequestMetadata } from 'cca-api';
 
 @Pipe({ name: 'requestTypeToHeading', pure: true, standalone: true })
@@ -19,8 +22,14 @@ export class RequestTypeToHeadingPipe implements PipeTransform {
       case 'ADMIN_TERMINATION':
         return 'Admin termination';
 
+      case 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING':
+        return 'Buy-out and surplus';
+
       case 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING':
         return `Report Submission ${(metadata as PerformanceDataSpreadsheetProcessingRequestMetadata).performanceDataTargetPeriodType}`;
+
+      case 'PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING':
+        return `PAT Report Submission ${(metadata as PerformanceAccountTemplateProcessingRequestMetadata).targetPeriodType} Final`;
     }
   }
 }

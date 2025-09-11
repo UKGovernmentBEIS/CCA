@@ -19,7 +19,7 @@ export interface PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload {
   reportPackages: string[];
   fileReports?: FileReports;
   csvReportFile?: FileInfoDTO;
-  errorMessage?: string;
+  processingStatus?: 'NOT_STARTED_YET' | 'IN_PROGRESS' | 'COMPLETED';
+  errorType?: 'CSV_GENERATION_FAILED' | 'REPORT_PACKAGE_MISSING' | 'EXTRACT_VALIDATE_PERSIST_GENERIC_ERROR';
   uploadAttachments?: Record<string, string>;
-  processingCompleted?: boolean;
 }

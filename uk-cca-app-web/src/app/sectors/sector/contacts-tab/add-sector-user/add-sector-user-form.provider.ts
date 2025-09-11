@@ -16,8 +16,10 @@ export const ADD_SECTOR_FORM = new InjectionToken<AddSectorFormModel>('Add secto
 
 export const AddSectorFormProvider: Provider = {
   provide: ADD_SECTOR_FORM,
+  deps: [FormBuilder, ActivatedRoute],
   useFactory: (fb: FormBuilder, route: ActivatedRoute) => {
     const role = route.snapshot.queryParamMap.get('role');
+
     return fb.group(
       {
         firstName: fb.control('', GovukValidators.required('Enter the user’s first name')),
@@ -34,5 +36,4 @@ export const AddSectorFormProvider: Provider = {
       },
     );
   },
-  deps: [FormBuilder, ActivatedRoute],
 };

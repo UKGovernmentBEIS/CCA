@@ -58,10 +58,9 @@ describe('RadioOptionComponent', () => {
   });
 
   it('should display custom labels', () => {
-    expect(Array.from(element.querySelectorAll('.govuk-radios__label')).map((label) => label.textContent)).toEqual([
-      'First',
-      'Second',
-    ]);
+    expect(
+      Array.from(element.querySelectorAll('.govuk-radios__label')).map((label) => label.textContent.trim()),
+    ).toEqual(['First', 'Second']);
   });
 
   it('should hide and reveal conditional content', () => {

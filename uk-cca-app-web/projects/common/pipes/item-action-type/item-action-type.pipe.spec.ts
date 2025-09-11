@@ -1,9 +1,7 @@
 import { ItemActionTypePipe } from './item-action-type.pipe';
 
 describe('ItemActionTypePipe', () => {
-  let pipe: ItemActionTypePipe;
-
-  beforeAll(() => (pipe = new ItemActionTypePipe()));
+  const pipe = new ItemActionTypePipe();
 
   it('create an instance', () => {
     expect(pipe).toBeTruthy();
@@ -39,6 +37,9 @@ describe('ItemActionTypePipe', () => {
       'Admin termination final decision submitted',
     );
     expect(pipe.transform('ADMIN_TERMINATION_APPLICATION_CANCELLED')).toEqual('Admin termination cancelled');
+    expect(pipe.transform('ADMIN_TERMINATION_PEER_REVIEW_REQUESTED')).toEqual('Peer review requested');
+    expect(pipe.transform('ADMIN_TERMINATION_APPLICATION_PEER_REVIEWER_ACCEPTED')).toEqual('Peer review agreement');
+    expect(pipe.transform('ADMIN_TERMINATION_APPLICATION_PEER_REVIEWER_REJECTED')).toEqual('Peer review disagreement');
 
     expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_APPLICATION_SUBMITTED')).toEqual(
       'Underlying agreement variation application submitted',
@@ -55,8 +56,14 @@ describe('ItemActionTypePipe', () => {
     expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_APPLICATION_CANCELLED')).toEqual(
       'Underlying agreement variation application cancelled',
     );
+    expect(pipe.transform('UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW_REQUESTED')).toEqual('Peer review requested');
+    expect(pipe.transform('UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEWER_ACCEPTED')).toEqual('Peer review agreement');
+    expect(pipe.transform('UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEWER_REJECTED')).toEqual(
+      'Peer review disagreement',
+    );
 
     expect(pipe.transform('PERFORMANCE_DATA_SPREADSHEET_PROCESSING_SUBMITTED')).toEqual('Performance report submitted');
+    expect(pipe.transform('PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED')).toEqual('PAT report submitted');
 
     expect(pipe.transform('SUBSISTENCE_FEES_RUN_SUBMITTED')).toEqual('Subsistence fees payment request run submitted');
     expect(pipe.transform('SUBSISTENCE_FEES_RUN_COMPLETED')).toEqual('Subsistence fees payment request run completed');
@@ -65,6 +72,12 @@ describe('ItemActionTypePipe', () => {
     );
     expect(pipe.transform('SECTOR_MOA_GENERATED')).toEqual('Sector MoA generated');
     expect(pipe.transform('TARGET_UNIT_MOA_GENERATED')).toEqual('Subsistence fees payment request received');
+
+    expect(pipe.transform('BUY_OUT_SURPLUS_RUN_SUBMITTED')).toEqual('Buy-out and surplus batch run submitted');
+    expect(pipe.transform('BUY_OUT_SURPLUS_RUN_COMPLETED')).toEqual('Buy-out and surplus batch run completed');
+    expect(pipe.transform('BUY_OUT_SURPLUS_RUN_COMPLETED_WITH_FAILURES')).toEqual(
+      'Buy-out and surplus batch run completed with failures',
+    );
 
     expect(pipe.transform(undefined)).toEqual('Approved Application');
   });

@@ -1,8 +1,6 @@
-version: "3"
-
 services:
   postgres-cca:
-    image: postgres
+    image: postgres:15
     volumes:
       - postgres-data-cca:/var/lib/postgresql/data
     environment:

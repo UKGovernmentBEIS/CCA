@@ -1,15 +1,14 @@
-import { AsyncPipe, DOCUMENT, KeyValue, KeyValuePipe, NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, DOCUMENT, KeyValue, KeyValuePipe, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Inject,
-  Input,
   OnChanges,
-  QueryList,
-  ViewChild,
-  ViewChildren,
+  input,
+  viewChildren,
+  viewChild,
+  inject,
 } from '@angular/core';
 import { AbstractControl, FormControlStatus, NgForm, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
@@ -23,32 +22,31 @@ import { NestedMessageValidationErrors } from './nested-message-validation-error
 @Component({
   selector: 'govuk-error-summary',
   standalone: true,
-  imports: [RouterLink, NgForOf, KeyValuePipe, AsyncPipe, NgIf, NgTemplateOutlet],
+  imports: [RouterLink, KeyValuePipe, AsyncPipe, NgTemplateOutlet],
   templateUrl: './error-summary.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ErrorSummaryComponent implements OnChanges, AfterViewInit {
-  @Input() form: UntypedFormGroup | NgForm;
+  private readonly document = inject(DOCUMENT);
+  private readonly formService = inject(FormService);
+  private readonly title = inject(Title);
 
-  @ViewChildren('anchor', { read: ElementRef }) inputs: QueryList<ElementRef<HTMLAnchorElement>>;
-  @ViewChild('container', { read: ElementRef }) container: ElementRef<HTMLDivElement>;
+  readonly form = input<UntypedFormGroup | NgForm>(null);
+
+  readonly inputs = viewChildren('anchor', { read: ElementRef });
+  readonly container = viewChild('container', { read: ElementRef });
 
   errorList$: Observable<NestedMessageValidationErrors>;
 
   private formControl: UntypedFormGroup;
 
-  constructor(
-    @Inject(DOCUMENT) private readonly document,
-    private readonly formService: FormService,
-    private readonly title: Title,
-  ) {}
-
   ngOnChanges(): void {
-    this.formControl = this.form instanceof UntypedFormGroup ? this.form : this.form.control;
+    const form = this.form();
+    this.formControl = form instanceof UntypedFormGroup ? form : form.control;
 
-    const statusChanges: Observable<FormControlStatus> = this.form.statusChanges;
+    const statusChanges: Observable<FormControlStatus> = this.form().statusChanges;
     this.errorList$ = statusChanges.pipe(
-      startWith(this.form.status),
+      startWith(this.form().status),
       map((status) => status === 'INVALID' && this.getAbstractControlErrors(this.formControl)),
       tap((errors) => {
         const currentTitle = this.title.getTitle();
@@ -64,18 +62,14 @@ export class ErrorSummaryComponent implements OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.container?.nativeElement?.scrollIntoView) {
-      this.container.nativeElement.scrollIntoView();
-    }
-    if (this.container?.nativeElement?.focus) {
-      this.container.nativeElement.focus();
-    }
+    const container = this.container();
+    if (container?.nativeElement?.scrollIntoView) container.nativeElement.scrollIntoView();
+    if (container?.nativeElement?.focus) container.nativeElement.focus();
   }
 
   errorClick(path: string): void {
-    if (!path) {
-      return;
-    }
+    if (!path) return;
+
     const labelOrLegend = this.document.getElementById(`l.${path}`);
     if (labelOrLegend) {
       labelOrLegend.scrollIntoView();
@@ -100,13 +94,10 @@ export class ErrorSummaryComponent implements OnChanges, AfterViewInit {
         }
       }
     }
+
     // Case text, textarea, select
-    if (!targetInput) {
-      targetInput = this.document.getElementById(path);
-    }
-    if (targetInput) {
-      targetInput.focus({ preventScroll: true });
-    }
+    if (!targetInput) targetInput = this.document.getElementById(path);
+    if (targetInput) targetInput.focus({ preventScroll: true });
   }
 
   sortByPosition = (

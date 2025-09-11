@@ -24,10 +24,6 @@ exports[`VariationDetailsSummaryComponent should display the correct header and 
       </h1>
     </netz-page-heading>
     <cca-summary>
-      <h2
-        class="govuk-heading-m"
-      >
-      </h2>
       <dl
         class="govuk-summary-list govuk-!-margin-bottom-9"
         govuk-summary-list=""
@@ -43,7 +39,7 @@ exports[`VariationDetailsSummaryComponent should display the correct header and 
             Target Unit/Facility changes
           </dt>
           <dd
-            class="pre-wrap govuk-summary-list__value"
+            class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
              Amend the 70% rule evaluation for one or more facilities 
@@ -71,7 +67,7 @@ exports[`VariationDetailsSummaryComponent should display the correct header and 
             Amend the target currency to
           </dt>
           <dd
-            class="pre-wrap govuk-summary-list__value"
+            class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
              change the throughput unit 
@@ -99,7 +95,7 @@ exports[`VariationDetailsSummaryComponent should display the correct header and 
             Explain what you are changing and the reason for the changes
           </dt>
           <dd
-            class="pre-wrap govuk-summary-list__value"
+            class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
              Variation reason 
@@ -214,9 +210,11 @@ exports[`VariationDetailsSummaryComponent should display the correct header and 
         </div>
       </dl>
     </cca-summary>
-  </div><netz-return-to-task-or-action-page>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Review underlying agreement variation 

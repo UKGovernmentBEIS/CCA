@@ -25,6 +25,7 @@ export function fetchUserDetailsAndUpdateStore(
     const regulatorUsersService = inject(RegulatorUsersService);
     const usersService = inject(UsersService);
     const store = inject(DetailsStore);
+
     return (
       isCurrentUser
         ? (usersService.getCurrentUser() as Observable<RegulatorUserDTO | RegulatorCurrentUserDTO>)

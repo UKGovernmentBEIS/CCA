@@ -50,8 +50,8 @@ public class PerformanceDataSpreadsheetGenerateCreateRequestService {
 				.getTargetUnitAccountDetails(accountId);
 		final int reportVersion = accountPerformanceDataStatusQueryService
 				.getNextAccountPerformanceDataReportVersion(accountId, parentRequestPayload.getTargetPeriodType().getReferenceTargetPeriod());
-		final PerformanceDataContainer lastUploadedReport = accountPerformanceDataStatusQueryService
-				.getLastUploadedReport(accountId, parentRequestPayload.getTargetPeriodType().getReferenceTargetPeriod())
+		final PerformanceDataContainer lastUploadedPerformanceData = accountPerformanceDataStatusQueryService
+				.getLastUploadedPerformanceData(accountId, parentRequestPayload.getTargetPeriodType().getReferenceTargetPeriod())
 				.orElse(null);
 
 		final RequestParams requestParams = RequestParams.builder()
@@ -76,7 +76,7 @@ public class PerformanceDataSpreadsheetGenerateCreateRequestService {
 						.targetUnitAccountDetails(targetUnitAccountDetails)
 						.reportVersion(reportVersion)
 						.submissionType(parentRequestPayload.getSubmissionType())
-						.lastUploadedReport(lastUploadedReport)
+						.lastUploadedReport(lastUploadedPerformanceData)
 						.build())
 				.processVars(Map.of(
 						CcaBpmnProcessConstants.PERFORMANCE_DATA_GENERATE_REQUEST_BUSINESS_KEY, parentRequestBusinessKey,

@@ -1,0 +1,56 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Variation details"
+  heading="Describe the changes"
+  data-testid="variation-details-form"
+>
+  <div class="govuk-!-width-two-thirds">
+    <p>Select the changes that apply to this variation</p>
+    <div govukInsetText>
+      <p>Any changes to items must be made through the task list.</p>
+      <p>You can add or exclude a facility or change its name in the Manage facilities section.</p>
+      <p>
+        If you are making a change to the eligibility percentage, the operator may need to agree to a new underlying
+        agreement, even if there are no changes to the original underlying agreement.
+      </p>
+    </div>
+
+    <h2 class="govuk-heading-m">Target unit and facility changes</h2>
+    <div formControlName="facilityChanges" govuk-checkboxes>
+      @for (option of facilityChanges; track option) {
+        <govuk-checkbox [value]="option" [label]="option | variationChanges" />
+      }
+    </div>
+
+    <h2 class="govuk-heading-m">Amend the baseline and target due to</h2>
+    <div formControlName="baselineChanges" govuk-checkboxes>
+      @for (option of baselineChanges; track option) {
+        <govuk-checkbox [value]="option.value" [label]="option.value | variationChanges" [hint]="option?.hint" />
+      }
+    </div>
+
+    <h2 class="govuk-heading-m">Amend the target currency to</h2>
+    <div formControlName="targetCurrencyChanges" govuk-checkboxes>
+      @for (option of targetCurrencyChanges; track option) {
+        <govuk-checkbox [value]="option" [label]="option | variationChanges" />
+      }
+    </div>
+
+    <h2 class="govuk-heading-m">Other</h2>
+    <div formControlName="otherChanges" govuk-checkboxes>
+      @for (option of otherChanges; track option) {
+        <govuk-checkbox [value]="option" [label]="option | variationChanges" />
+      }
+    </div>
+
+    <div
+      govuk-textarea
+      label="Explain what you are changing and the reason for the changes"
+      formControlName="reason"
+    ></div>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

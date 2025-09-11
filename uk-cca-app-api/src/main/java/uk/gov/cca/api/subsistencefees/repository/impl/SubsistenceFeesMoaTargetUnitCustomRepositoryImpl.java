@@ -54,7 +54,7 @@ public class SubsistenceFeesMoaTargetUnitCustomRepositoryImpl implements Subsist
                 .where(moaTargetUnit.subsistenceFeesMoa.id.eq(moaId))
                 .groupBy(moaTargetUnit.id, account.businessId, account.name)
                 .orderBy(account.businessId.asc())
-                .offset(criteria.getPaging().getPageNumber() * criteria.getPaging().getPageSize())
+                .offset((long)criteria.getPaging().getPageNumber() * criteria.getPaging().getPageSize())
                 .limit(criteria.getPaging().getPageSize());
 
         // Apply filters

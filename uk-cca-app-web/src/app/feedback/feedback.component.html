@@ -6,13 +6,16 @@
   </div>
 } @else {
   <netz-page-heading size="l">Help us improve the CCA service</netz-page-heading>
+
   @if (isErrorSummaryDisplayed | async) {
-    <govuk-error-summary [form]="feedbackForm"></govuk-error-summary>
+    <govuk-error-summary [form]="feedbackForm" />
   }
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <p class="govuk-body">Use this form to suggest an improvement or give feedback about the CCA service.</p>
+      <p>Use this form to suggest an improvement or give feedback about the CCA service.</p>
       <h1 class="govuk-heading-m">Satisfaction survey</h1>
+
       <form (ngSubmit)="onSubmit()" [formGroup]="feedbackForm" id="feedback-form">
         <div
           formControlName="userRegistrationRate"
@@ -20,90 +23,102 @@
           legend="How would you rate your experience with the user registration and the two-factor authentication method?"
         >
           @for (option of rateOptionsWithoutNotApplicable; track option) {
-            <govuk-radio-option [label]="rateOptionLabel(option)" [value]="option"> </govuk-radio-option>
+            <govuk-radio-option [label]="rateOptionLabel(option)" [value]="option" />
           }
         </div>
+
         <div
           formControlName="userRegistrationRateReason"
           govuk-textarea
           [maxLength]="1200"
           label="Why did you give this rating? (optional)"
         ></div>
+
         <div
           formControlName="onlineGuidanceRate"
           govuk-radio
           legend="How would you rate your experience of the online guidance and communication regarding the service?"
         >
           @for (option of rateOptions; track option) {
-            <govuk-radio-option [label]="rateOptionLabel(option)" [value]="option"> </govuk-radio-option>
+            <govuk-radio-option [label]="rateOptionLabel(option)" [value]="option" />
           }
         </div>
+
         <div
           formControlName="onlineGuidanceRateReason"
           govuk-textarea
           [maxLength]="1200"
           label="Why did you give this rating? (optional)"
         ></div>
+
         <div
           formControlName="creatingAccountRate"
           govuk-radio
           legend="How would you rate your experience of claiming an account?"
         >
           @for (option of rateOptions; track option) {
-            <govuk-radio-option [label]="rateOptionLabel(option)" [value]="option"> </govuk-radio-option>
+            <govuk-radio-option [label]="rateOptionLabel(option)" [value]="option" />
           }
         </div>
+
         <div
           formControlName="creatingAccountRateReason"
           govuk-textarea
           [maxLength]="1200"
           label="Why did you give this rating? (optional)"
         ></div>
+
         <div
           formControlName="onBoardingRate"
           govuk-radio
           legend="How would you rate your experience with the on-boarding, identity and security checks?"
         >
           @for (option of rateOptions; track option) {
-            <govuk-radio-option [label]="rateOptionLabel(option)" [value]="option"> </govuk-radio-option>
+            <govuk-radio-option [label]="rateOptionLabel(option)" [value]="option" />
           }
         </div>
+
         <div
           formControlName="onBoardingRateReason"
           govuk-textarea
           [maxLength]="1200"
           label="Why did you give this rating? (optional)"
         ></div>
+
         <div
           formControlName="tasksRate"
           govuk-radio
           legend="How would you rate your experience with viewing, searching and responding to tasks?"
         >
           @for (option of rateOptions; track option) {
-            <govuk-radio-option [label]="rateOptionLabel(option)" [value]="option"> </govuk-radio-option>
+            <govuk-radio-option [label]="rateOptionLabel(option)" [value]="option" />
           }
         </div>
+
         <div
           formControlName="tasksRateReason"
           govuk-textarea
           [maxLength]="1200"
           label="Why did you give this rating? (optional)"
         ></div>
+
         <div
           formControlName="satisfactionRate"
           govuk-radio
           legend="How would you rate your overall experience with this service so far?"
         >
           @for (option of rateOptionsWithoutNotApplicable; track option) {
-            <govuk-radio-option [label]="rateOptionLabel(option)" [value]="option"> </govuk-radio-option>
+            <govuk-radio-option [label]="rateOptionLabel(option)" [value]="option" />
           }
         </div>
+
         <div
           formControlName="satisfactionRateReason"
           govuk-textarea
           [maxLength]="1200"
           label="Why did you give this rating? (optional)"
         ></div>
+
         <div
           formControlName="improvementSuggestion"
           govuk-textarea
@@ -111,6 +126,7 @@
           label="How could we improve the service?"
           hint="If you would like to be contacted about your response, please add your name and email at the end of your comments in the text box below. Do not include any other personal or financial information, for example your National Insurance number or credit card details."
         ></div>
+
         <div>
           <button netzPendingButton govukButton type="submit">Send feedback</button>
         </div>

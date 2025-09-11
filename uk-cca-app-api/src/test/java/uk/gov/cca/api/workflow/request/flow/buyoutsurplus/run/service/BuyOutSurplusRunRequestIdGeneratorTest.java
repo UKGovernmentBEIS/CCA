@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestMetadata;
@@ -73,7 +73,7 @@ class BuyOutSurplusRunRequestIdGeneratorTest {
         String result = generator.generateRequestId(10L, params);
 
         // Verify
-        assertThat(result).isEqualTo("BS-TP6010");
+        assertThat(result).isEqualTo("BOS-TP6010");
     }
 
     @Test
@@ -83,6 +83,6 @@ class BuyOutSurplusRunRequestIdGeneratorTest {
 
     @Test
     void getPrefix() {
-        assertThat(generator.getPrefix()).isEqualTo("BS");
+        assertThat(generator.getPrefix()).isEqualTo("BOS");
     }
 }

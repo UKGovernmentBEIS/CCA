@@ -13,7 +13,6 @@ import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.Reque
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskType;
-import uk.gov.netz.api.workflow.request.core.domain.constants.RequestStatuses;
 import uk.gov.netz.api.workflow.request.core.repository.RequestTaskRepository;
 
 import java.util.Arrays;
@@ -26,7 +25,7 @@ import static org.mockito.Mockito.*;
 import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 
 @ExtendWith(MockitoExtension.class)
-public class SectorUserRequestTaskAssignmentServiceTest {
+class SectorUserRequestTaskAssignmentServiceTest {
 
     @InjectMocks
     private SectorUserRequestTaskAssignmentService sectorRequestTaskAssignmentService;
@@ -109,7 +108,7 @@ public class SectorUserRequestTaskAssignmentServiceTest {
         Long sectorAssociationId = 1L;
 
         // Mock the dependencies
-        when(requestTaskRepository.findByAssigneeAndRequestStatus(userDeleted, RequestStatuses.IN_PROGRESS)).thenReturn(requestTasks);
+        when(requestTaskRepository.findByAssignee(userDeleted)).thenReturn(requestTasks);
         when(targetUnitAccountQueryService.getAllTargetUnitAccountIdsBySectorAssociationId(sectorAssociationId)).thenReturn(accountsBySectorId);
 
         // Call the method
@@ -142,7 +141,7 @@ public class SectorUserRequestTaskAssignmentServiceTest {
         Long sectorAssociationId = 1L;
 
         // Mock the dependencies to return no matching account IDs
-        when(requestTaskRepository.findByAssigneeAndRequestStatus(userDeleted, RequestStatuses.IN_PROGRESS)).thenReturn(requestTasks);
+        when(requestTaskRepository.findByAssignee(userDeleted)).thenReturn(requestTasks);
         when(targetUnitAccountQueryService.getAllTargetUnitAccountIdsBySectorAssociationId(sectorAssociationId)).thenReturn(Collections.emptyList());
 
         // Call the method

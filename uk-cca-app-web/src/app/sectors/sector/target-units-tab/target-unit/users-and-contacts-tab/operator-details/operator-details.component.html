@@ -1,7 +1,0 @@
-@if (operatorUserDetails) {
-  <netz-page-heading>{{ operatorUserDetails.firstName }} {{ operatorUserDetails.lastName }}</netz-page-heading>
-
-  <cca-summary [data]="summaryData" />
-
-  <a class="govuk-link" routerLink="/2fa/change" fragment="target-units"> Reset two factor authentication </a>
-}

@@ -10,14 +10,15 @@ import { toUnderlyingAgreementActivatedSummaryData } from './underlying-agreemen
 
 @Component({
   selector: 'cca-underlying-agreement-activated',
+  template: `<cca-summary [data]="summaryData()" />`,
   standalone: true,
   imports: [SummaryComponent],
-  template: ` <cca-summary [data]="summaryData()" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementActivatedComponent {
   private readonly requestActionStore = inject(RequestActionStore);
-  readonly activatedPayload: Signal<UnderlyingAgreementActivatedRequestActionPayload> = computed(() => {
+
+  protected readonly activatedPayload: Signal<UnderlyingAgreementActivatedRequestActionPayload> = computed(() => {
     return {
       officialNotice: this.requestActionStore.select(underlyingAgreementActivatedQuery.selectOfficialNotice)(),
       usersInfo: this.requestActionStore.select(underlyingAgreementActivatedQuery.selectUsersInfo)(),
@@ -36,5 +37,6 @@ export class UnderlyingAgreementActivatedComponent {
       )(),
     } as UnderlyingAgreementActivatedRequestActionPayload;
   });
-  readonly summaryData = computed(() => toUnderlyingAgreementActivatedSummaryData(this.activatedPayload()));
+
+  protected readonly summaryData = computed(() => toUnderlyingAgreementActivatedSummaryData(this.activatedPayload()));
 }

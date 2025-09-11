@@ -6,12 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
-import org.springframework.util.ObjectUtils;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
-import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataContainer;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
-import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetComposition;
 import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDTO;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.generate.tp6.domain.TP6Data;
 import uk.gov.netz.api.common.config.MapperConfig;
@@ -26,7 +23,7 @@ public interface TP6DataMapper {
     @Mapping(target = "sector", source = "sectorAcronym")
     @Mapping(target = "targetType", source = "underlyingAgreement.underlyingAgreementContainer.underlyingAgreement.targetPeriod6Details.targetComposition.agreementCompositionType.description")
     @Mapping(target = "measurementUnit", source = "underlyingAgreement.underlyingAgreementContainer.underlyingAgreement.targetPeriod6Details.targetComposition.measurementType.unit")
-    @Mapping(target = "throughputUnit", source = "underlyingAgreement", qualifiedByName = "getThroughputUnit")
+    @Mapping(target = "throughputUnit", source = "underlyingAgreement.underlyingAgreementContainer.underlyingAgreement.targetPeriod6Details.targetComposition.throughputUnit")
     @Mapping(target = "baselineDate", source = "underlyingAgreement.underlyingAgreementContainer.underlyingAgreement.targetPeriod6Details.baselineData.baselineDate")
     @Mapping(target = "baselineEnergy", source = "underlyingAgreement.underlyingAgreementContainer.underlyingAgreement.targetPeriod6Details.baselineData.energy")
     @Mapping(target = "baselineThroughput", source = "underlyingAgreement.underlyingAgreementContainer.underlyingAgreement.targetPeriod6Details.baselineData.throughput")
@@ -74,21 +71,6 @@ public interface TP6DataMapper {
         return improvement
                 .movePointLeft(2)
                 .setScale(9, RoundingMode.HALF_UP);
-    }
-
-    @Named("getThroughputUnit")
-    default String getThroughputUnit(UnderlyingAgreementDTO underlyingAgreement) {
-        TargetComposition targetComposition = underlyingAgreement.getUnderlyingAgreementContainer()
-                .getUnderlyingAgreement()
-                .getTargetPeriod6Details()
-                .getTargetComposition();
-
-        if (ObjectUtils.isEmpty(targetComposition.getThroughputUnit())
-                && !AgreementCompositionType.NOVEM.equals(targetComposition.getAgreementCompositionType())) {
-            return underlyingAgreement.getUnderlyingAgreementContainer().getSectorThroughputUnit();
-        }
-
-        return targetComposition.getThroughputUnit();
     }
 
 }

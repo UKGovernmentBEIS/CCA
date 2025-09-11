@@ -1,0 +1,29 @@
+@if (emailTemplate(); as emailTemplate) {
+  <netz-page-heading>Edit {{ emailTemplate.name }}</netz-page-heading>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="form()" id="template-form">
+    <div class="govuk-grid-row govuk-!-margin-bottom-5">
+      <div class="govuk-grid-column-full">
+        <div
+          formControlName="subject"
+          govuk-text-input
+          label="Email subject"
+          aria-description="email subject input"
+        ></div>
+      </div>
+
+      <div class="govuk-grid-column-full">
+        <div
+          formControlName="message"
+          govuk-textarea
+          label="Email message"
+          aria-description="email message text area input"
+        ></div>
+      </div>
+
+      <button netzPendingButton govukButton type="submit" class="govuk-!-margin-left-3">Confirm and complete</button>
+    </div>
+  </form>
+
+  <cca-summary [data]="data()" />
+}

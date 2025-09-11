@@ -3,19 +3,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
-import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { TextareaComponent } from '@netz/govuk-components';
-import { OverallDecisionWizardStep, underlyingAgreementReviewQuery } from '@requests/common';
+import { TasksApiService, underlyingAgreementReviewQuery } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
 
-import { UnderlyingAgreementReviewTaskService } from '../../../services/underlying-agreement-review-task.service';
+import { createSaveDeterminationActionDTO } from '../../../transform';
+import { resetDeterminationStatus } from '../../../utils';
 import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } from './additional-info.provider';
 
 @Component({
   selector: 'cca-explanation-component',
-  standalone: true,
   template: `
     <cca-wizard-step
       [formGroup]="form"
@@ -24,12 +23,13 @@ import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } 
       (formSubmit)="submit()"
     >
       <div govuk-textarea formControlName="additionalInfo" hint="This will be included in the official notice."></div>
-      <cca-multiple-file-input [baseDownloadUrl]="downloadUrl" formControlName="files"></cca-multiple-file-input>
+      <cca-multiple-file-input [baseDownloadUrl]="downloadUrl" formControlName="files" />
     </cca-wizard-step>
+
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-    <netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>
+    <netz-return-to-task-or-action-page />
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     WizardStepComponent,
     TextareaComponent,
@@ -38,12 +38,14 @@ import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } 
     ReturnToTaskOrActionPageComponent,
   ],
   providers: [provideAdditionalInfo()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdditionalInfoComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
-  private readonly taskService = inject(TaskService);
+  private readonly tasksApiService = inject(TasksApiService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly store = inject(RequestTaskStore);
 
   protected readonly form = inject<AdditionalInfoFormModel>(ADDITIONAL_INFO_FORM);
 
@@ -55,19 +57,27 @@ export class AdditionalInfoComponent {
   protected readonly caption = this.determination.type === 'ACCEPTED' ? 'Accept' : 'Reject';
 
   submit() {
-    const underlyingAgreementReviewTaskService = this.taskService as UnderlyingAgreementReviewTaskService;
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+    const currReviewSectionsCompleted = this.store.select(
+      underlyingAgreementReviewQuery.selectReviewSectionsCompleted,
+    )();
 
+    const reviewSectionsCompleted = resetDeterminationStatus(currReviewSectionsCompleted);
+
+    const determination = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)();
     const files = this.form.value.files.map((f) => f.uuid);
-    underlyingAgreementReviewTaskService
-      .saveReviewDetermination({
-        additionalInformation: this.form.value.additionalInfo,
-        files,
-      })
-      .subscribe(() =>
-        this.router.navigate(['../', OverallDecisionWizardStep.CHECK_ANSWERS], {
-          relativeTo: this.activatedRoute,
-          queryParamsHandling: 'preserve',
-        }),
-      );
+
+    const payload = createSaveDeterminationActionDTO(
+      requestTaskId,
+      { ...determination, additionalInformation: this.form.value.additionalInfo, files },
+      reviewSectionsCompleted,
+    );
+
+    this.tasksApiService.saveRequestTaskAction(payload).subscribe(() => {
+      this.router.navigate(['../', 'check-your-answers'], {
+        relativeTo: this.activatedRoute,
+        queryParamsHandling: 'preserve',
+      });
+    });
   }
 }

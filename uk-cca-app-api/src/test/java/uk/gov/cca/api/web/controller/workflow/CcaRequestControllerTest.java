@@ -54,7 +54,7 @@ import uk.gov.netz.api.workflow.request.flow.common.domain.RequestCreateActionEm
 import uk.gov.netz.api.workflow.request.flow.common.jsonprovider.RequestCreateActionPayloadCommonTypesProvider;
 
 @ExtendWith(MockitoExtension.class)
-public class CcaRequestControllerTest {
+class CcaRequestControllerTest {
     private static final String BASE_PATH = "/v1.0/cca-requests";
 
     private MockMvc mockMvc;
@@ -83,7 +83,7 @@ public class CcaRequestControllerTest {
     private CountyService countyService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
 

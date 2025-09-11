@@ -7,7 +7,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 
 import { SubsistenceFeesComponent } from './subsistence-fees.component';
 import { SubsistenceFeesStore } from './subsistence-fees.store';
-import { subsistenceFeesStateMockData } from './tests/mock-data';
+import { subsistenceFeesStateMockData } from './testing/mock-data';
 
 describe('SubsistenceFeesComponent', () => {
   let component: SubsistenceFeesComponent;

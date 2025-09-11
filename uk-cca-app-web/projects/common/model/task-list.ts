@@ -8,4 +8,5 @@ export interface TaskItem {
   status: string;
   linkText: string;
   link?: string;
+  hint?: string;
 }

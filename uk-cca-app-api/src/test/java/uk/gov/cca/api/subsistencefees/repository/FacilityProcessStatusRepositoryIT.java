@@ -19,6 +19,7 @@ import uk.gov.cca.api.account.domain.FinancialIndependenceStatus;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.FacilityAddress;
 import uk.gov.cca.api.facility.domain.FacilityData;
 import uk.gov.cca.api.subsistencefees.domain.FacilityProcessStatus;
@@ -30,6 +31,7 @@ import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -40,7 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
+class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
 
     @Autowired
     private FacilityProcessStatusRepository repository;
@@ -49,7 +51,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
     private EntityManager entityManager;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         // set up addresses
         FacilityAddress address1 = getFacilityAddress();
         entityManager.persist(address1);
@@ -156,6 +158,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         final FacilityData eligibleAccountFacility = FacilityData.builder()
                 .facilityId("ADS_1-F00014") // already charged
                 .accountId(nonEligibleIndependentAccount.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("site1")
                 .schemeExitDate(null)
                 .chargeStartDate(LocalDate.of(2025, 1, 1))
@@ -167,6 +170,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         final FacilityData eligibleSectorFacility1 = FacilityData.builder()
                 .facilityId("ADS_1-F00015")
                 .accountId(eligibleNonIndependentAccount.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil2")
                 .address(address2)
                 .schemeExitDate(null)
@@ -178,6 +182,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         final FacilityData eligibleSectorFacility2 = FacilityData.builder()
                 .facilityId("ADS_1-F00025")
                 .accountId(eligibleNonIndependentAccount.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil25")
                 .address(address6)
                 .schemeExitDate(null)
@@ -189,6 +194,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         final FacilityData eligibleSectorFacility3 = FacilityData.builder()
                 .facilityId("ADS_1-F00035")
                 .accountId(eligibleNonIndependentAccount.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil35")
                 .address(address7)
                 .schemeExitDate(null)
@@ -200,6 +206,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         final FacilityData nonEligibleSectorFacility1 = FacilityData.builder()
                 .facilityId("ADS_1-F00045")
                 .accountId(eligibleNonIndependentAccount.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil45")
                 .address(address8)
                 .schemeExitDate(null)
@@ -211,6 +218,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         final FacilityData nonEligibleSectorFacility2 = FacilityData.builder()
                 .facilityId("ADS_1-F00055")
                 .accountId(eligibleNonIndependentAccount.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil55")
                 .address(address9)
                 .schemeExitDate(null)
@@ -222,6 +230,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         final FacilityData nonEligibleAccountFacility1 = FacilityData.builder()
                 .facilityId("ADS_1-F00016")
                 .accountId(nonEligibleIndependentAccount.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("terminal3")
                 .address(address3)
                 .chargeStartDate(LocalDate.of(2024, 12, 1))
@@ -234,6 +243,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         final FacilityData nonEligibleAccountFacility2 = FacilityData.builder()
                 .facilityId("ADS_1-F00017")
                 .accountId(nonEligibleIndependentAccount.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("terminal3")
                 .address(address4)
                 .chargeStartDate(LocalDate.of(2025, 1, 1))
@@ -246,6 +256,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         final FacilityData eligibleAccountFacilityForEligbleAccount1 = FacilityData.builder()
                 .facilityId("ADS_1-F00018")
                 .accountId(eligibleIndependentAccount.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil5")
                 .address(address5)
                 .schemeExitDate(null)
@@ -257,6 +268,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         final FacilityData eligibleAccountFacilityForEligibleAccount2 = FacilityData.builder()
                 .facilityId("ADS_1-F00028")
                 .accountId(eligibleIndependentAccount.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil28")
                 .address(address10)
                 .schemeExitDate(null)
@@ -268,6 +280,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         final FacilityData nonEligibleAccountFacilityForEligibleAccount1 = FacilityData.builder()
                 .facilityId("ADS_1-F00038")
                 .accountId(eligibleIndependentAccount.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil38")
                 .address(address11)
                 .schemeExitDate(null)
@@ -279,6 +292,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         final FacilityData nonEligibleAccountFacilityForEligibleAccount2 = FacilityData.builder()
                 .facilityId("ADS_1-F00048")
                 .accountId(eligibleIndependentAccount.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil48")
                 .address(address12)
                 .schemeExitDate(null)
@@ -323,8 +337,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         List<EligibleFacilityDTO> eligibleFacilitiesForSubsistenceFeesRun =
                 repository.findSectorFacilitiesForSubsistenceFeesRun(sectorAssociationId, chargingYear, firstDateOfChargingYear, endDateOfChargingYear);
 
-        assertThat(eligibleFacilitiesForSubsistenceFeesRun.isEmpty()).isFalse();
-        assertThat(eligibleFacilitiesForSubsistenceFeesRun.size()).isEqualTo(3);
+        assertThat(eligibleFacilitiesForSubsistenceFeesRun).isNotEmpty().hasSize(3);
     }
 
     @Test
@@ -337,7 +350,7 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         List<EligibleFacilityDTO> eligibleFacilitiesForSubsistenceFeesRun =
                 repository.findSectorFacilitiesForSubsistenceFeesRun(sectorAssociationId, chargingYear, firstDateOfChargingYear, endDateOfChargingYear);
 
-        assertThat(eligibleFacilitiesForSubsistenceFeesRun.isEmpty()).isTrue();
+        assertThat(eligibleFacilitiesForSubsistenceFeesRun).isEmpty();
     }
 
     @Test
@@ -350,12 +363,18 @@ public class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest
         List<EligibleFacilityDTO> facilities =
                 repository.findAccountFacilitiesForSubsistenceFeesRun(accountId, chargingYear, firstDateOfChargingYear, endDateOfChargingYear);
 
-        assertThat(facilities.size()).isEqualTo(2);
+        assertThat(facilities).hasSize(2);
         assertThat(facilities.getFirst().getFacilityId()).isEqualTo("ADS_1-F00018");
     }
 
+    @Test
+    void findAllByRunIdAndFacilityIdIn() {
+        List<FacilityProcessStatus> result = repository.findAllByRunIdAndFacilityIdIn(1L, Collections.singleton(1L));
+        assertThat(result).hasSize(1);
+    }
+
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         repository.deleteAll();
         flushAndClear();
     }

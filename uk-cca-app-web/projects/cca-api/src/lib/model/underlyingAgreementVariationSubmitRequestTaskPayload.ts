@@ -18,6 +18,7 @@ import { UnderlyingAgreementContainer } from './underlyingAgreementContainer';
 export interface UnderlyingAgreementVariationSubmitRequestTaskPayload {
   payloadType?: string;
   sendEmailNotification?: boolean;
+  workflowSchemeVersion?: 'CCA_2' | 'CCA_3';
   accountReferenceData?: AccountReferenceData;
   originalUnderlyingAgreementContainer?: UnderlyingAgreementContainer;
   underlyingAgreement?: UnderlyingAgreementVariationPayload;

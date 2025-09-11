@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { BasePage, MockType } from '@netz/common/testing';
+import { ActivatedRouteStub, BasePage, MockType } from '@netz/common/testing';
 
 import { UsersService } from 'cca-api';
 
@@ -14,10 +14,10 @@ describe('FeedbackComponent', () => {
   let fixture: ComponentFixture<FeedbackComponent>;
   let hostElement: HTMLElement;
 
+  let page: Page;
   const usersService: MockType<UsersService> = {
     provideUserFeedback: jest.fn().mockReturnValue(of(null)),
   };
-  let page: Page;
 
   class Page extends BasePage<FeedbackComponent> {
     get userRegistrationRateRadios() {
@@ -104,19 +104,23 @@ describe('FeedbackComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, FeedbackComponent],
-      providers: [{ provide: UsersService, useValue: usersService }],
+      imports: [FeedbackComponent],
+      providers: [
+        { provide: UsersService, useValue: usersService },
+        { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
+      ],
     }).compileComponents();
-  });
 
-  afterEach(() => jest.clearAllMocks());
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(FeedbackComponent);
     component = fixture.componentInstance;
     hostElement = fixture.nativeElement;
     page = new Page(fixture);
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+    jest.clearAllMocks();
   });
 
   it('should create', () => {

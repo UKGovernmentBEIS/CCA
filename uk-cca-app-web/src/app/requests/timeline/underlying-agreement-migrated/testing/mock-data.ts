@@ -30,7 +30,7 @@ const underlyingAgreementTargetUnitDetails: UnderlyingAgreementTargetUnitDetails
   responsiblePersonDetails: responsiblePersonDetails,
   operatorType: 'LIMITED_COMPANY',
   isCompanyRegistrationNumber: true,
-  companyRegistrationNumber: 'test',
+  companyRegistrationNumber: 'test1234',
 };
 
 const facilityDetails: FacilityDetails = {

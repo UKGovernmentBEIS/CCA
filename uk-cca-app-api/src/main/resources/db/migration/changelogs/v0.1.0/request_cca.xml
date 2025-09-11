@@ -1418,5 +1418,661 @@
             </sql>
         </rollback>
     </changeSet>
+
+    <changeSet id="0_1_0_ADD_FACILITY_CERTIFICATION_RUN" author="P70383">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'FACILITY_CERTIFICATION_RUN', 'Generate a new facility certification run', 'PROCESS_FACILITY_CERTIFICATION_RUN', 'SYSTEM', true, false, false, false, 'CA');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'FACILITY_CERTIFICATION_RUN';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_FACILITY_CERTIFICATION_ACCOUNT_PROCESSING" author="P70383">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'FACILITY_CERTIFICATION_ACCOUNT_PROCESSING', 'Generate a new facility certification for target unit account', 'PROCESS_FACILITY_CERTIFICATION_ACCOUNT_PROCESSING', 'SYSTEM', false, false, false, false, 'ACCOUNT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'FACILITY_CERTIFICATION_ACCOUNT_PROCESSING';
+            </sql>
+        </rollback>
+    </changeSet>
     
+    <changeSet id="0_1_0_RENAME_SIC_CODE_IN_REQUEST_ACTION_AND_CONVERT_TO_ARRAY" author="apostolouk@unisystems.gr">
+    	<comment>Convert existing value to array</comment>
+        <sql>
+            update request_action
+			set payload = jsonb_set(payload, '{payload, sicCode}', jsonb_build_array(payload -> 'payload' -> 'sicCode'), false)
+			where payload->'payload' ?? 'sicCode';
+        </sql>
+        <comment>Rename sicCode to sicCodes by removing old value and adding the new one</comment>
+        <sql>
+            update request_action
+			set payload = jsonb_set(payload, '{payload, sicCodes}', payload -> 'payload' -> 'sicCode') #- '{payload, sicCode}'
+			where payload->'payload' ?? 'sicCode';
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_REQUEST_ACTIONS_UNA_ADD_FACILITY_PARTICIPATING_SCHEME_VERSIONS" author="P70383">
+        <comment>Add CCA schema versions in request action payload</comment>
+        <sql>
+            UPDATE request_action
+            SET payload = jsonb_set(payload, '{underlyingAgreement,facilities}', (
+                SELECT jsonb_agg( jsonb_set(element, '{facilityDetails}', element -> 'facilityDetails' || '{"participatingSchemeVersions": ["CCA_2"]}') )
+                FROM jsonb_array_elements(payload -> 'underlyingAgreement'->'facilities') element
+            ))
+            WHERE type IN ('UNDERLYING_AGREEMENT_APPLICATION_SUBMITTED', 'UNDERLYING_AGREEMENT_APPLICATION_REJECTED',
+                           'UNDERLYING_AGREEMENT_APPLICATION_ACCEPTED', 'UNDERLYING_AGREEMENT_APPLICATION_ACTIVATED',
+                           'UNDERLYING_AGREEMENT_APPLICATION_MIGRATED',
+                           'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_SUBMITTED', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REJECTED',
+                           'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACCEPTED', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACTIVATED')
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_RENAME_APPROVED_STATUS_TO_ACCEPTED_FOR_REVIEW_SECTIONS_FOR_REQUEST_PAYLOAD" author="apostolouk@unisystems.gr">
+        <sql>
+            update request
+			set payload = jsonb_set(payload, '{reviewSectionsCompleted}', REPLACE((payload-> 'reviewSectionsCompleted')::TEXT, '"APPROVED"', '"ACCEPTED"')::JSONB)
+			where jsonb_path_exists(payload-> 'reviewSectionsCompleted', '$.** ? (@ == "APPROVED")');
+        </sql>
+    </changeSet>
+
+	<changeSet id="0_1_0_RENAME_APPROVED_STATUS_TO_ACCEPTED_FOR_REVIEW_SECTIONS_FOR_REQUEST_TASK_PAYLOAD" author="apostolouk@unisystems.gr">
+        <sql>
+            update request_task
+			set payload = jsonb_set(payload, '{reviewSectionsCompleted}', REPLACE((payload-> 'reviewSectionsCompleted')::TEXT, '"APPROVED"', '"ACCEPTED"')::JSONB)
+			where jsonb_path_exists(payload-> 'reviewSectionsCompleted', '$.** ? (@ == "APPROVED")');
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_RENAME_APPROVED_STATUS_TO_ACCEPTED_FOR_REVIEW_SECTIONS_FOR_REQUEST_ACTION_PAYLOAD" author="apostolouk@unisystems.gr">
+        <sql>
+            update request_action
+			set payload = jsonb_set(payload, '{reviewSectionsCompleted}', REPLACE((payload-> 'reviewSectionsCompleted')::TEXT, '"APPROVED"', '"ACCEPTED"')::JSONB)
+			where jsonb_path_exists(payload-> 'reviewSectionsCompleted', '$.** ? (@ == "APPROVED")');
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_COPY_SECTOR_THROUGHPUT_UNIT_TO_THROUGHPUT_UNIT_FOR_REQUEST_PAYLOAD" author="apostolouk@unisystems.gr">
+        <sql>
+            update request
+			set payload = jsonb_set(payload, '{underlyingAgreement, targetPeriod6Details, targetComposition, throughputUnit}', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			where payload -> 'underlyingAgreement' -> 'targetPeriod6Details' -> 'targetComposition' ->> 'isTargetUnitThroughputMeasured' = 'false'
+			and payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit' is not null;
+
+			update request
+			set payload = jsonb_set(payload, '{underlyingAgreement, targetPeriod5Details, details, targetComposition, throughputUnit}', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			where payload -> 'underlyingAgreement' -> 'targetPeriod5Details' -> 'details' -> 'targetComposition' ->> 'isTargetUnitThroughputMeasured' = 'false'
+			and payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit' is not null;
+        </sql>
+    </changeSet>
+
+	<changeSet id="0_1_0_COPY_SECTOR_THROUGHPUT_UNIT_TO_THROUGHPUT_UNIT_FOR_REQUEST_TASK_PAYLOAD" author="apostolouk@unisystems.gr">
+        <sql>
+            update request_task
+			set payload = jsonb_set(payload, '{underlyingAgreement, targetPeriod6Details, targetComposition, throughputUnit}', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			where payload -> 'underlyingAgreement' -> 'targetPeriod6Details' -> 'targetComposition' ->> 'isTargetUnitThroughputMeasured' = 'false'
+			and payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit' is not null;
+
+			update request_task
+			set payload = jsonb_set(payload, '{underlyingAgreement, targetPeriod5Details, details, targetComposition, throughputUnit}', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			where payload -> 'underlyingAgreement' -> 'targetPeriod5Details' -> 'details' -> 'targetComposition' ->> 'isTargetUnitThroughputMeasured' = 'false'
+			and payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit' is not null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_COPY_SECTOR_THROUGHPUT_UNIT_TO_THROUGHPUT_UNIT_FOR_REQUEST_ACTION_PAYLOAD" author="apostolouk@unisystems.gr">
+        <sql>
+            update request_action
+			set payload = jsonb_set(payload, '{underlyingAgreement, targetPeriod6Details, targetComposition, throughputUnit}', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			where payload -> 'underlyingAgreement' -> 'targetPeriod6Details' -> 'targetComposition' ->> 'isTargetUnitThroughputMeasured' = 'false'
+			and payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit' is not null;
+
+			update request_action
+			set payload = jsonb_set(payload, '{underlyingAgreement, targetPeriod5Details, details, targetComposition, throughputUnit}', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			where payload -> 'underlyingAgreement' -> 'targetPeriod5Details' -> 'details' -> 'targetComposition' ->> 'isTargetUnitThroughputMeasured' = 'false'
+			and payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit' is not null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_COPY_SECTOR_THROUGHPUT_UNIT_TO_UNA_PROPOSED_THROUGHPUT_UNIT_IN_REQUEST_PAYLOAD" author="loukerip">
+        <sql>
+            update request r
+			set payload = jsonb_set(payload, '{underlyingAgreementProposed, targetPeriod6Details, targetComposition, throughputUnit}', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			where payload -> 'underlyingAgreementProposed' -> 'targetPeriod6Details' -> 'targetComposition' ->> 'isTargetUnitThroughputMeasured' = 'false'
+			and payload ?? 'underlyingAgreementProposed'
+			and payload ?? 'accountReferenceData'
+			and payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit' is not null
+			and exists (select 1 from request_type rt2  
+            				where  rt2.id = r.type_id 
+            				and rt2.code  = 'UNDERLYING_AGREEMENT_VARIATION');
+
+			update request r
+			set payload = jsonb_set(payload, '{underlyingAgreementProposed, targetPeriod5Details, details, targetComposition, throughputUnit}', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			where payload -> 'underlyingAgreementProposed' -> 'targetPeriod5Details' -> 'details' -> 'targetComposition' ->> 'isTargetUnitThroughputMeasured' = 'false'
+			and payload ?? 'underlyingAgreementProposed'
+			and payload ?? 'accountReferenceData'
+			and payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit' is not null
+			and  exists (select 1 from request_type rt2  
+            				where  rt2.id = r.type_id 
+            				and rt2.code  = 'UNDERLYING_AGREEMENT_VARIATION');
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_COPY_SECTOR_THROUGHPUT_UNIT_TO_THROUGHPUT_UNIT_FOR_REQUEST_TASK_HISTORY_PAYLOAD" author="apostolouk@unisystems.gr">
+        <sql>
+            update request_task_history
+			set payload = jsonb_set(payload, '{underlyingAgreement, targetPeriod6Details, targetComposition, throughputUnit}', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			where payload -> 'underlyingAgreement' -> 'targetPeriod6Details' -> 'targetComposition' ->> 'isTargetUnitThroughputMeasured' = 'false'
+			and payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit' is not null;
+
+			update request_task_history
+			set payload = jsonb_set(payload, '{underlyingAgreement, targetPeriod5Details, details, targetComposition, throughputUnit}', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			where payload -> 'underlyingAgreement' -> 'targetPeriod5Details' -> 'details' -> 'targetComposition' ->> 'isTargetUnitThroughputMeasured' = 'false'
+			and payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit' is not null;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_ADMIN_TERMINATION_PEER_REVIEW_REQUESTED_ADMIN_TERMINATION_SUBMIT_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'ADMIN_TERMINATION_REQUEST_PEER_REVIEW', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+                FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+                WHERE rtt.code = 'ADMIN_TERMINATION_APPLICATION_SUBMIT'
+                AND rtat.code = 'ADMIN_TERMINATION_REQUEST_PEER_REVIEW';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                    SELECT id from request_task_action_type where code = 'ADMIN_TERMINATION_REQUEST_PEER_REVIEW');
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'ADMIN_TERMINATION_REQUEST_PEER_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_ADMIN_TERMINATION_APPLICATION_PEER_REVIEW_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'ADMIN_TERMINATION_APPLICATION_PEER_REVIEW', true, '', 'PEER_REVIEW',
+                   (SELECT id FROM request_type WHERE code = 'ADMIN_TERMINATION'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'ADMIN_TERMINATION_APPLICATION_PEER_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPE_FOR_ADMIN_TERMINATION_APPLICATION_PEER_REVIEW_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'ADMIN_TERMINATION_SUBMIT_PEER_REVIEW_DECISION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+                FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+                WHERE rtt.code = 'ADMIN_TERMINATION_APPLICATION_PEER_REVIEW'
+                AND rtat.code = 'ADMIN_TERMINATION_SUBMIT_PEER_REVIEW_DECISION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'ADMIN_TERMINATION_SUBMIT_PEER_REVIEW_DECISION');
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'ADMIN_TERMINATION_SUBMIT_PEER_REVIEW_DECISION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_ADMIN_TERMINATION_WAIT_FOR_PEER_REVIEW_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'ADMIN_TERMINATION_WAIT_FOR_PEER_REVIEW', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'ADMIN_TERMINATION'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'ADMIN_TERMINATION_WAIT_FOR_PEER_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_ADMIN_PEER_REVIEW_UPLOAD_ATTACHMENT_ACTION_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'PEER_REVIEW_UPLOAD_ATTACHMENT', false)
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_action_type
+                WHERE code = 'PEER_REVIEW_UPLOAD_ATTACHMENT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ASSOCIATE_PEER_REVIEW_UPLOAD_ATTACHMENT_WITH_TASK_TYPE_FOR_ADMIN_TERMINATION_APPLICATION_PEER_REVIEW" author="P70311">
+        <sql>
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+                FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+                WHERE rtt.code = 'ADMIN_TERMINATION_APPLICATION_PEER_REVIEW'
+                AND rtat.code = 'PEER_REVIEW_UPLOAD_ATTACHMENT';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'PEER_REVIEW_UPLOAD_ATTACHMENT');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_MOVE_SECTOR_THROUGHPUT_UNIT_AND_MEASURENT_TYPE_TO_SCHEME_DATA_FOR_REQUEST_ACTION_PAYLOAD" author="apostolouk@unisystems.gr">
+        <sql>
+            update request_action
+			set
+			payload = jsonb_set(payload, '{accountReferenceData, sectorAssociationDetails}',
+			jsonb_build_object('subsectorAssociationName', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'subsectorAssociationName', 'schemeDataMap',
+			jsonb_build_object('CCA_2', jsonb_build_object('sectorMeasurementType', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'measurementType',
+			'sectorThroughputUnit', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			)))
+			where payload ?? 'accountReferenceData';
+        </sql>
+    </changeSet>
+    
+    <changeSet id="0_1_0_POPULATE_TARGET_UNIT_ACCOUNT_CREATION_SUBMITTED_WITH_SUBSECTOR_NAME" author="apostolouk@unisystems.gr">
+        <sql>
+            UPDATE request_action ra
+			SET payload = jsonb_set(
+    			ra.payload,
+    			'{payload,subsectorAssociationName}',
+    			to_jsonb(sa.name)
+			)
+			FROM subsector_association sa
+			WHERE ra.type = 'TARGET_UNIT_ACCOUNT_CREATION_SUBMITTED'
+ 			 AND (ra.payload -> 'payload' ->> 'subsectorAssociationId') IS NOT NULL
+ 			 AND sa.id = (ra.payload -> 'payload' ->> 'subsectorAssociationId')::bigint;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_UNDERLYING_AGREEMENT_PEER_REVIEW_REQUESTED_FOR_UNDERLYING_AGREEMENT_APPLICATION_REVIEW_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_REQUEST_PEER_REVIEW', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_REQUEST_PEER_REVIEW';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_REQUEST_PEER_REVIEW');
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'UNDERLYING_AGREEMENT_REQUEST_PEER_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW', true, '', 'PEER_REVIEW',
+                   (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPE_FOR_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_SUBMIT_PEER_REVIEW_DECISION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_SUBMIT_PEER_REVIEW_DECISION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_SUBMIT_PEER_REVIEW_DECISION');
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'UNDERLYING_AGREEMENT_SUBMIT_PEER_REVIEW_DECISION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_WAIT_FOR_PEER_REVIEW_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_WAIT_FOR_PEER_REVIEW', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_WAIT_FOR_PEER_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ASSOCIATE_PEER_REVIEW_UPLOAD_ATTACHMENT_WITH_TASK_TYPE_FOR_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW" author="P70311">
+        <sql>
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW'
+              AND rtat.code = 'PEER_REVIEW_UPLOAD_ATTACHMENT';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'PEER_REVIEW_UPLOAD_ATTACHMENT')
+                AND request_task_type_id IN (
+                SELECT id from request_task_type where code = 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW');
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_CCA3_ADJUSTMENTS_FOR_IN_PROGRESS_VARIATIONS"  author="loukerip@unisystems.gr">
+    	<sql>
+    		UPDATE request_task rt
+            SET payload = jsonb_set(payload, '{underlyingAgreement, facilities}', (
+                SELECT jsonb_agg( jsonb_set(element, '{facilityDetails}', element -> 'facilityDetails' || '{"participatingSchemeVersions": ["CCA_2"]}') )
+                FROM jsonb_array_elements(payload -> 'underlyingAgreement'->'facilities') element
+            ))
+            where exists (select 1 from request_task_type rtt
+            				where  rtt.id = rt.type_id
+            				and rtt.code  IN ('UNDERLYING_AGREEMENT_VARIATION_SUBMIT', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW') )
+            				;
+ 			
+ 			
+ 			UPDATE request_task rt
+            SET payload = jsonb_set(payload, '{originalUnderlyingAgreementContainer, underlyingAgreement, facilities}', (
+                SELECT jsonb_agg( jsonb_set(element, '{facilityDetails}', element -> 'facilityDetails' || '{"participatingSchemeVersions": ["CCA_2"]}') )
+                FROM jsonb_array_elements(payload -> 'originalUnderlyingAgreementContainer' -> 'underlyingAgreement'->'facilities') element
+            ))
+            where exists (select 1 from request_task_type rtt 
+            				where  rtt.id = rt.type_id
+            				and rtt.code  IN ('UNDERLYING_AGREEMENT_VARIATION_SUBMIT', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW') )
+            				;
+ 			 
+ 			 update request_task rt
+ 			 set payload = jsonb_set(rt.payload, '{workflowSchemeVersion}', '"CCA_2"')
+			 where exists (select 1 from request_task_type rtt 
+            					where  rtt.id = rt.type_id
+            					and rtt.code  IN ('UNDERLYING_AGREEMENT_VARIATION_SUBMIT', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW') )
+            					;
+ 			  
+ 			  
+ 			update request_task rt
+			set payload = jsonb_set(payload, '{accountReferenceData, sectorAssociationDetails}',
+			jsonb_build_object('subsectorAssociationName', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'subsectorAssociationName', 'schemeDataMap',
+			jsonb_build_object('CCA_2', jsonb_build_object('sectorMeasurementType', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'measurementType',
+			'sectorThroughputUnit', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			)))
+			where payload ?? 'accountReferenceData'
+			and payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'measurementType' is not null
+			and  exists (select 1 from request_task_type rtt 
+        					where  rtt.id = rt.type_id
+        					and rtt.code  IN ('UNDERLYING_AGREEMENT_VARIATION_SUBMIT', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW') )
+        					;
+ 			
+ 			update request_task rt
+ 			set payload = jsonb_set(payload, '{originalUnderlyingAgreementContainer, schemeDataMap}',
+			jsonb_build_object('CCA_2', jsonb_build_object('sectorMeasurementType', payload -> 'originalUnderlyingAgreementContainer' -> 'sectorMeasurementType')))		
+            where exists (select 1 from request_task_type rtt 
+        					where  rtt.id = rt.type_id
+        					and rtt.code  IN ('UNDERLYING_AGREEMENT_VARIATION_SUBMIT', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW') )
+            and payload -> 'originalUnderlyingAgreementContainer' -> 'sectorMeasurementType' is not null
+            ;
+ 			
+ 			
+ 			update request_task rt
+ 			set payload = jsonb_set(payload, '{originalUnderlyingAgreementContainer, schemeDataMap, CCA_2, sectorThroughputUnit}', payload -> 'originalUnderlyingAgreementContainer' -> 'sectorThroughputUnit')
+            where exists (select 1 from request_task_type rtt 
+        					where  rtt.id = rt.type_id
+        					and rtt.code  IN ('UNDERLYING_AGREEMENT_VARIATION_SUBMIT', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW') )
+            and payload -> 'originalUnderlyingAgreementContainer' -> 'sectorThroughputUnit' is  not null
+            ;
+ 			
+ 			
+ 			update request_task rt
+ 			set payload = payload #- '{originalUnderlyingAgreementContainer, sectorMeasurementType}'  #- '{originalUnderlyingAgreementContainer, sectorThroughputUnit}' 
+            where exists (select 1 from request_task_type rtt 
+        					where  rtt.id = rt.type_id
+        					and rtt.code  IN ('UNDERLYING_AGREEMENT_VARIATION_SUBMIT', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW') )
+        	and payload -> 'originalUnderlyingAgreementContainer' -> 'sectorMeasurementType' is not null
+            ;
+ 			
+ 			
+ 			 update request r
+ 			 set payload = jsonb_set(r.payload, '{workflowSchemeVersion}', '"CCA_2"')
+			 where exists (select 1 from request_type rt2  
+            				where  rt2.id = r.type_id 
+            				and rt2.code  = 'UNDERLYING_AGREEMENT_VARIATION')
+ 			 and r.status = 'IN_PROGRESS'
+ 			 ;
+ 			 
+ 			 
+ 			UPDATE request r
+            SET payload = jsonb_set(payload, '{underlyingAgreement, facilities}', (
+                SELECT jsonb_agg( jsonb_set(element, '{facilityDetails}', element -> 'facilityDetails' || '{"participatingSchemeVersions": ["CCA_2"]}') )
+                FROM jsonb_array_elements(payload -> 'underlyingAgreement'->'facilities') element
+            ))
+            where exists (select 1 from request_type rt2  
+            				where  rt2.id = r.type_id 
+            				and rt2.code  = 'UNDERLYING_AGREEMENT_VARIATION')
+ 			and r.status = 'IN_PROGRESS'
+            and payload ?? 'underlyingAgreement'
+ 			and payload -> 'underlyingAgreement' -> 'facilities'  is  not null
+ 			;
+ 			
+ 			
+ 			UPDATE  request r
+            SET payload = jsonb_set(payload, '{underlyingAgreementProposed, facilities}', (
+                SELECT jsonb_agg( jsonb_set(element, '{facilityDetails}', element -> 'facilityDetails' || '{"participatingSchemeVersions": ["CCA_2"]}') )
+                FROM jsonb_array_elements(payload -> 'underlyingAgreementProposed' -> 'facilities') element
+            ))
+            where exists (select 1 from request_type rt2  
+            				where  rt2.id = r.type_id 
+            				and rt2.code  = 'UNDERLYING_AGREEMENT_VARIATION')
+ 			and r.status = 'IN_PROGRESS'
+            and payload ?? 'underlyingAgreementProposed'
+            and payload -> 'underlyingAgreementProposed' -> 'facilities' is  not null
+            ;	
+            
+ 			
+ 			UPDATE  request r
+            SET payload = jsonb_set(payload, '{originalUnderlyingAgreementContainer, underlyingAgreement, facilities}', (
+                SELECT jsonb_agg( jsonb_set(element, '{facilityDetails}', element -> 'facilityDetails' || '{"participatingSchemeVersions": ["CCA_2"]}') )
+                FROM jsonb_array_elements(payload -> 'originalUnderlyingAgreementContainer' -> 'underlyingAgreement'->'facilities') element
+            ))
+            where exists (select 1 from request_type rt2  
+            				where  rt2.id = r.type_id 
+            				and rt2.code  = 'UNDERLYING_AGREEMENT_VARIATION')
+ 			and r.status = 'IN_PROGRESS'
+            and payload -> 'originalUnderlyingAgreementContainer' -> 'underlyingAgreement' -> 'facilities' is  not null
+            ;
+ 			 
+ 			update request r
+ 			set payload = jsonb_set(payload, '{originalUnderlyingAgreementContainer, schemeDataMap}',
+			jsonb_build_object('CCA_2', jsonb_build_object('sectorMeasurementType', payload -> 'originalUnderlyingAgreementContainer' -> 'sectorMeasurementType')))		
+            where exists (select 1 from request_type rt2  
+            				where  rt2.id = r.type_id 
+            				and rt2.code  = 'UNDERLYING_AGREEMENT_VARIATION')
+            	and r.status = 'IN_PROGRESS'
+            	and payload -> 'originalUnderlyingAgreementContainer' -> 'sectorMeasurementType' is not null
+            	;
+ 			
+ 			
+ 			update request r
+ 			set payload = jsonb_set(payload, '{originalUnderlyingAgreementContainer, schemeDataMap, CCA_2, sectorThroughputUnit}', payload -> 'originalUnderlyingAgreementContainer' -> 'sectorThroughputUnit')
+            where   exists (select 1 from request_type rt2  
+            				where  rt2.id = r.type_id 
+            				and rt2.code  = 'UNDERLYING_AGREEMENT_VARIATION')
+ 			and r.status = 'IN_PROGRESS'
+ 			and payload -> 'originalUnderlyingAgreementContainer' -> 'sectorThroughputUnit' is  not null
+ 			;
+ 			
+ 			update request r
+ 			set payload = payload #- '{originalUnderlyingAgreementContainer, sectorMeasurementType}'  #- '{originalUnderlyingAgreementContainer, sectorThroughputUnit}' 
+            where  exists (select 1 from request_type rt2  
+            				where  rt2.id = r.type_id 
+            				and rt2.code  = 'UNDERLYING_AGREEMENT_VARIATION')
+ 			and r.status = 'IN_PROGRESS'
+ 			and payload -> 'originalUnderlyingAgreementContainer' -> 'sectorMeasurementType' is not null
+ 			;
+ 			
+ 			
+ 			update request r
+			set payload = jsonb_set(payload, '{accountReferenceData, sectorAssociationDetails}',
+			jsonb_build_object('subsectorAssociationName', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'subsectorAssociationName', 'schemeDataMap',
+			jsonb_build_object('CCA_2', jsonb_build_object('sectorMeasurementType', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'measurementType',
+			'sectorThroughputUnit', payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'throughputUnit')
+			)))
+			where  exists (select 1 from request_type rt2  
+            				where  rt2.id = r.type_id 
+            				and rt2.code  = 'UNDERLYING_AGREEMENT_VARIATION')
+ 			and r.status = 'IN_PROGRESS'
+ 			and payload ?? 'accountReferenceData'
+			and payload -> 'accountReferenceData' -> 'sectorAssociationDetails' -> 'measurementType' is not null
+			;
+ 			
+ 			update request r
+			set metadata = '{"type": "UNDERLYING_AGREEMENT_VARIATION", "workflowSchemeVersion": "CCA_2"}'::jsonb
+			where  exists (select 1 from request_type rt2  
+            				where  rt2.id = r.type_id 
+            				and rt2.code  = 'UNDERLYING_AGREEMENT_VARIATION')
+            and metadata is null
+            ;
+    	</sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW_REQUESTED_FOR_UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_REQUEST_PEER_REVIEW', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_VARIATION_REQUEST_PEER_REVIEW';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_VARIATION_REQUEST_PEER_REVIEW');
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_REQUEST_PEER_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW', true, '', 'PEER_REVIEW',
+                   (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT_VARIATION'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPE_FOR_UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT_PEER_REVIEW_DECISION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW'
+              AND rtat.code = 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT_PEER_REVIEW_DECISION';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT_PEER_REVIEW_DECISION');
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT_PEER_REVIEW_DECISION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'UNDERLYING_AGREEMENT_VARIATION'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ASSOCIATE_PEER_REVIEW_UPLOAD_ATTACHMENT_WITH_TASK_TYPE_FOR_UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW" author="P70311">
+        <sql>
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW'
+              AND rtat.code = 'PEER_REVIEW_UPLOAD_ATTACHMENT';
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code = 'PEER_REVIEW_UPLOAD_ATTACHMENT')
+                AND request_task_type_id IN (
+                SELECT id from request_task_type where code = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW');
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

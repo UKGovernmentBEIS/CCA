@@ -27,7 +27,6 @@ export class GlobalErrorHandlingService implements ErrorHandler {
   }
 
   handleHttpError(res: HttpErrorResponse): Observable<never> {
-    console.log(res);
     const urlContained = this.excludedUrls.some((url) => new RegExp(url).test(res.url));
 
     if (!urlContained) {

@@ -1,15 +1,11 @@
 import { SummaryFactory } from '@shared/components';
-import {
-  Attachments,
-  transformAttachmentsToDownloadableFiles,
-  transformFileInfoToDownloadableFile,
-} from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 
 import { FileInfoDTO } from 'cca-api';
 
 type MigratedPayloadData = {
   underlyingAgreementDocument: FileInfoDTO;
-  underlyingAgreementAttachments: Attachments;
+  underlyingAgreementAttachments: Record<string, string>;
 };
 
 export function toUnderlyingAgreementMigratedSummaryData(payload: MigratedPayloadData) {
@@ -18,11 +14,11 @@ export function toUnderlyingAgreementMigratedSummaryData(payload: MigratedPayloa
     .addRow('Application', 'Underlying agreement application', { link: 'underlying-agreement-submitted' })
     .addFileListRow(
       'Active underlying agreement',
-      transformFileInfoToDownloadableFile(payload.underlyingAgreementDocument ?? [], 'file-download'),
+      fileUtils.toDownloadableDocument([payload.underlyingAgreementDocument], 'file-download'),
     )
     .addFileListRow(
       'Attached documents',
-      transformAttachmentsToDownloadableFiles(payload.underlyingAgreementAttachments, 'file-download'),
+      fileUtils.toDownloadableFiles(payload.underlyingAgreementAttachments, 'file-download'),
     )
     .create();
 }

@@ -145,7 +145,7 @@ export const mockUnderlyingAgreementVariationReview: UnderlyingAgreementVariatio
     },
     operatorType: 'LIMITED_COMPANY',
     isCompanyRegistrationNumber: true,
-    companyRegistrationNumber: '1111',
+    companyRegistrationNumber: '11111111',
   },
   facilities,
   targetPeriod5Details: {
@@ -186,7 +186,7 @@ export const mockUnderlyingAgreementVariationReview: UnderlyingAgreementVariatio
 export const mockTargetUnitDetails: TargetUnitAccountDetails = {
   operatorName: 'test',
   operatorType: 'LIMITED_COMPANY',
-  companyRegistrationNumber: 'test',
+  companyRegistrationNumber: 'testtest',
   address: {
     line1: 'accountrefdata operator address line 1',
     line2: 'accountrefdata operator address line 2',
@@ -239,24 +239,17 @@ export const mockUNAVariationReviewRequestTaskPayload: UNAVariationReviewRequest
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
   underlyingAgreement: mockUnderlyingAgreementVariationReview,
   originalUnderlyingAgreementContainer: {
-    sectorMeasurementType: 'ENERGY_KWH',
-    underlyingAgreement: mockUnderlyingAgreementVariationReview,
-    sectionsCompleted: {
-      'ADS_1-F00001': 'COMPLETED',
-      'ADS_1-F00002': 'COMPLETED',
-      underlyingAgreementVariationDetails: 'COMPLETED',
-      manageFacilities: 'COMPLETED',
-      targetPeriod5Details: 'COMPLETED',
-      targetPeriod6Details: 'COMPLETED',
-      authorisationAndAdditionalEvidence: 'COMPLETED',
-      underlyingAgreementTargetUnitDetails: 'COMPLETED',
+    schemeDataMap: {
+      ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'kWh' },
     },
-    sectorThroughputUnit: 'kWh',
+    underlyingAgreement: mockUnderlyingAgreementVariationReview,
     underlyingAgreementAttachments: {
       manufacturingProcessFile: 'manufacturingProcessFile.xlsx',
       processFlowFile: 'processFlowFile.xlsx',
@@ -264,6 +257,7 @@ export const mockUNAVariationReviewRequestTaskPayload: UNAVariationReviewRequest
       eligibleProcessFile: 'eligibleProcessFile.xlsx',
       activitiesDescriptionFile: 'activitiesDescriptionFile.xlsx',
       evidenceFile: 'evidenceFile.xlsx',
+      '2f611a22-bd5f-4fd4-b00f-c20bfb2706c9': 'authorization.pdf',
     },
   },
   sectionsCompleted: {
@@ -283,16 +277,17 @@ export const mockUNAVariationReviewRequestTaskPayload: UNAVariationReviewRequest
     eligibleProcessFile: 'eligibleProcessFile.xlsx',
     activitiesDescriptionFile: 'activitiesDescriptionFile.xlsx',
     evidenceFile: 'evidenceFile.xlsx',
+    '2f611a22-bd5f-4fd4-b00f-c20bfb2706c9': 'authorization.pdf',
   },
   reviewSectionsCompleted: {
-    'ADS_1-F00001': 'APPROVED',
+    'ADS_1-F00001': 'ACCEPTED',
     'ADS_1-F00002': 'REJECTED',
-    underlyingAgreementVariationDetails: 'APPROVED',
-    targetPeriod5Details: 'APPROVED',
-    targetPeriod6Details: 'APPROVED',
-    authorisationAndAdditionalEvidence: 'APPROVED',
-    underlyingAgreementTargetUnitDetails: 'APPROVED',
-    overallDecision: 'APPROVED',
+    underlyingAgreementVariationDetails: 'ACCEPTED',
+    targetPeriod5Details: 'ACCEPTED',
+    targetPeriod6Details: 'ACCEPTED',
+    authorisationAndAdditionalEvidence: 'ACCEPTED',
+    underlyingAgreementTargetUnitDetails: 'ACCEPTED',
+    overallDecision: 'ACCEPTED',
   },
   reviewGroupDecisions: {
     VARIATION_DETAILS: {

@@ -41,7 +41,7 @@ public class SubsistenceFeesRunQueryService implements SubsistenceFeesRunAuthori
 
     private final FacilityProcessStatusRepository facilityProcessStatusRepository;
     private final SubsistenceFeesRunRepository subsistenceFeesRunRepository;
-    private final SubsistenceFeesMapper SUBSISTENCE_FEES_MAPPER = Mappers.getMapper(SubsistenceFeesMapper.class);
+    private static final SubsistenceFeesMapper SUBSISTENCE_FEES_MAPPER = Mappers.getMapper(SubsistenceFeesMapper.class);
 
     private static final MonthDay startMonthDay = MonthDay.of(1, 1);
     private static final MonthDay endMonthDay = MonthDay.of(12, 31);
@@ -82,8 +82,8 @@ public class SubsistenceFeesRunQueryService implements SubsistenceFeesRunAuthori
 
     private Pageable getPageable(PagingRequest pagingRequest) {
         return PageRequest.of(
-                pagingRequest.getPageNumber().intValue(),
-                pagingRequest.getPageSize().intValue(),
+                pagingRequest.getPageNumber(),
+                pagingRequest.getPageSize(),
                 Sort.by(Direction.DESC, "submissionDate"));
     }
 

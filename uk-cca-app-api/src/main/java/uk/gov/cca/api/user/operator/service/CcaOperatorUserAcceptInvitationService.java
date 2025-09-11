@@ -59,7 +59,7 @@ public class CcaOperatorUserAcceptInvitationService {
         CcaAuthorityDetails ccaAuthorityDetails = ccaAuthorityDetailsRepository.findCcaAuthorityDetailsByAuthorityId(authority.getId());
         OperatorUserDTO userDTO = this.operatorUserAuthService.getUserById(authority.getUserId());
 
-        final String accountName = targetUnitAccountQueryService.getAccountName(accountId);
+        final String accountName = targetUnitAccountQueryService.getAccountBusinessIdAndName(accountId);
 
         final OperatorUserWithAuthorityDTO operatorUserWithAuthorityDTO = operatorUserAcceptInvitationMapper
                 .toOperatorUserWithAuthorityDTO(userDTO, authority, accountName);

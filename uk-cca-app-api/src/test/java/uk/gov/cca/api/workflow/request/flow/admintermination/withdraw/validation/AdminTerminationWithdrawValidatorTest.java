@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminTerminationWithdrawValidatorTest {
+class AdminTerminationWithdrawValidatorTest {
 
     @InjectMocks
     private AdminTerminationWithdrawValidator adminTerminationWithdrawValidator;

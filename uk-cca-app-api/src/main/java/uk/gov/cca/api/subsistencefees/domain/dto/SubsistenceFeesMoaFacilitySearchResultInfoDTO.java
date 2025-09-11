@@ -23,4 +23,6 @@ public class SubsistenceFeesMoaFacilitySearchResultInfoDTO {
     private FacilityPaymentStatus markFacilitiesStatus;
     
     private LocalDate paymentDate;
+    
+    private boolean hasHistory;
 }

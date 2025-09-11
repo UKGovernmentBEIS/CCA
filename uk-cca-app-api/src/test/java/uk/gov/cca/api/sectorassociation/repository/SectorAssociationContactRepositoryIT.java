@@ -19,7 +19,7 @@ import uk.gov.netz.api.common.AbstractContainerBaseTest;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class SectorAssociationContactRepositoryIT extends AbstractContainerBaseTest {
+class SectorAssociationContactRepositoryIT extends AbstractContainerBaseTest {
 
     @Autowired
     private SectorAssociationContactRepository repository;

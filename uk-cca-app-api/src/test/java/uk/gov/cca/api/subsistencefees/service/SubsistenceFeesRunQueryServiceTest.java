@@ -1,9 +1,7 @@
 package uk.gov.cca.api.subsistencefees.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -13,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.cca.api.subsistencefees.domain.FacilityPaymentStatus;
 import uk.gov.cca.api.subsistencefees.domain.PaymentStatus;
 import uk.gov.cca.api.subsistencefees.domain.SubsistenceFeesRun;
@@ -26,7 +23,6 @@ import uk.gov.cca.api.subsistencefees.domain.dto.transform.SubsistenceFeesRunMoa
 import uk.gov.cca.api.subsistencefees.domain.dto.transform.SubsistenceFeesRunSearchResultInfo;
 import uk.gov.cca.api.subsistencefees.repository.FacilityProcessStatusRepository;
 import uk.gov.cca.api.subsistencefees.repository.SubsistenceFeesRunRepository;
-import uk.gov.cca.api.subsistencefees.transform.SubsistenceFeesMapper;
 import uk.gov.netz.api.authorization.core.domain.AppAuthority;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.domain.PagingRequest;
@@ -57,13 +53,6 @@ class SubsistenceFeesRunQueryServiceTest {
 
     @Mock
     private SubsistenceFeesRunRepository subsistenceFeesRunRepository;
-
-    private static final SubsistenceFeesMapper subsistenceFeesMapper = Mappers.getMapper(SubsistenceFeesMapper.class);
-
-    @BeforeEach
-    public void init() {
-        ReflectionTestUtils.setField(subsistenceFeesRunQueryService, "SUBSISTENCE_FEES_MAPPER", subsistenceFeesMapper);
-    }
 
     @Test
     void isSectorEligibleForSubsistenceFeesRun() {
@@ -134,7 +123,7 @@ class SubsistenceFeesRunQueryServiceTest {
 
         // verify
         verify(facilityProcessStatusRepository, times(1)).findSectorFacilitiesForSubsistenceFeesRun(sectorAssociationId, chargingYear, firstDateOfChargingYear, endDateOfChargingYear);
-        assertThat(sectorEligibleFacilitiesForSubsistenceFeesRun.contains(eligibleFacilityDTO)).isTrue();
+        assertThat(sectorEligibleFacilitiesForSubsistenceFeesRun).contains(eligibleFacilityDTO);
     }
 
     @Test
@@ -160,7 +149,7 @@ class SubsistenceFeesRunQueryServiceTest {
 
         // verify
         verify(facilityProcessStatusRepository, times(1)).findAccountFacilitiesForSubsistenceFeesRun(accountId, chargingYear, firstDateOfChargingYear, endDateOfChargingYear);
-        assertThat(accountEligibleFacilitiesForSubsistenceFeesRun.contains(eligibleFacilityDTO)).isTrue();
+        assertThat(accountEligibleFacilitiesForSubsistenceFeesRun).contains(eligibleFacilityDTO);
     }
 
     @Test
@@ -171,7 +160,7 @@ class SubsistenceFeesRunQueryServiceTest {
                         .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                         .build()))
                 .build();
-        final PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0L).pageSize(50L).build();
+        final PagingRequest pagingRequest = PagingRequest.builder().pageNumber(0).pageSize(50).build();
         final Pageable pageable = getPageable();
         final SubsistenceFeesRun run = SubsistenceFeesRun.builder().id(1L).businessId("S2501").build();
         final Page<SubsistenceFeesRun> page = new PageImpl<>(List.of(run));

@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
-import uk.gov.cca.api.targetperiod.domain.dto.TargetPeriodDTO;
-import uk.gov.cca.api.targetperiod.service.TargetPeriodService;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.utils.PerformanceDataUtility;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
@@ -76,7 +76,7 @@ public class PerformanceDataDownloadGenerateActionHandler
 
         List<TargetUnitAccountBusinessInfoDTO> eligibleAccounts = performanceDataAccountQueryService
                 .getCandidateAccountsForPerformanceDataReportingBySector(
-                        sectorAssociation.getId(), actionPayload.getTargetPeriodType().getReferenceTargetPeriod(), submissionType);
+                        sectorAssociation.getId(), actionPayload.getTargetPeriodType().getReferenceTargetPeriod());
         Set<Long> eligibleAccountIds = eligibleAccounts.stream()
                 .map(TargetUnitAccountBusinessInfoDTO::getAccountId)
                 .collect(Collectors.toSet());

@@ -58,7 +58,8 @@ describe('TextInputComponent', () => {
     fixtureNumericComponent = TestBed.createComponent(TestNumericComponent);
     hostTestComponent = fixtureTestComponent.componentInstance;
     hostNumericComponent = fixtureNumericComponent.componentInstance;
-    testComponent = fixtureTestComponent.debugElement.query(By.directive(TextInputComponent)).componentInstance;
+    testComponent = fixtureTestComponent.debugElement.query(By.directive(TextInputComponent))
+      .componentInstance as TextInputComponent;
     numericComponent = fixtureNumericComponent.debugElement.query(By.directive(TextInputComponent)).componentInstance;
     fixtureTestComponent.detectChanges();
     fixtureNumericComponent.detectChanges();
@@ -209,35 +210,5 @@ describe('TextInputComponent', () => {
       'Form control',
     ]);
     expect(element.querySelector('.govuk-visually-hidden').textContent).toEqual('hidden');
-  });
-
-  it('should display labelSize classes', () => {
-    const hostElement: HTMLElement = fixtureTestComponent.nativeElement;
-    const label = hostElement.querySelector('label');
-
-    testComponent.isLabelHidden = false;
-    fixtureTestComponent.detectChanges();
-
-    expect(label.className).toEqual('govuk-label');
-
-    testComponent.labelSize = 'normal';
-    fixtureTestComponent.detectChanges();
-
-    expect(label.className).toEqual('govuk-label');
-
-    testComponent.labelSize = 'small';
-    fixtureTestComponent.detectChanges();
-
-    expect(label.className).toEqual('govuk-label govuk-label--s');
-
-    testComponent.labelSize = 'medium';
-    fixtureTestComponent.detectChanges();
-
-    expect(label.className).toEqual('govuk-label govuk-label--m');
-
-    testComponent.labelSize = 'large';
-    fixtureTestComponent.detectChanges();
-
-    expect(label.className).toEqual('govuk-label govuk-label--l');
   });
 });

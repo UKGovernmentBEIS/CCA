@@ -1320,4 +1320,448 @@ This is an automatic email - please do not reply to this address.')
             <param name="fileDocumentName" value="SC_L001_Target_Unit_MoA.docx"/>
         </customChange>
     </changeSet>
+
+    <changeSet id="0_1_0_insert_PRIMARY_BUY_OUT_document_template" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="L001_Initial Buy-Out MoA.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'PRIMARY_BUY_OUT',
+                       'Buy-out primary notice',
+                       'ENGLAND',
+                       'Buy-out and surplus batch run',
+                       '2025-03-20 00:00:00',
+                       (select id from file_document_template where file_name = 'L001_Initial Buy-Out MoA.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'Buy-out primary notice' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'L001_Initial Buy-Out MoA.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_insert_SECONDARY_BUY_OUT_document_template" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="L002_Secondary Buy-Out MoA.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'SECONDARY_BUY_OUT',
+                       'Buy-out secondary  notice',
+                       'ENGLAND',
+                       'Buy-out and surplus batch run',
+                       '2025-03-20 00:00:00',
+                       (select id from file_document_template where file_name = 'L002_Secondary Buy-Out MoA.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'Buy-out secondary  notice' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'L002_Secondary Buy-Out MoA.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_insert_SECONDARY_OVERPAYMENT_BUY_OUT_document_template" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="L003_Secondary Buy-Out Overpayment Letter v01.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'SECONDARY_OVERPAYMENT_BUY_OUT',
+                       'Buy-out secondary overpayment letter',
+                       'ENGLAND',
+                       'Buy-out and surplus batch run',
+                       '2025-03-20 00:00:00',
+                       (select id from file_document_template where file_name = 'L003_Secondary Buy-Out Overpayment Letter v01.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'Buy-out secondary overpayment letter' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'L003_Secondary Buy-Out Overpayment Letter v01.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_target_percentage_in_UNDERLYING_AGREEMENT_template" author="apostolouk@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT"/>
+            <param name="fileDocumentName" value="Updated UnA template - v03.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_SECONDARY_BUY_OUT_document_template_change_invoicedTotalBuyoutFee" author="P70383">
+        <comment>Update L002_Secondary Buy-Out MoA.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="SECONDARY_BUY_OUT"/>
+            <param name="fileDocumentName" value="L002_Secondary Buy-Out MoA.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_SECONDARY_OVERPAYMENT_BUY_OUT_document_template_change_invoicedTotalBuyoutFee" author="P70383">
+        <comment>Update L003_Secondary Buy-Out Overpayment Letter v01.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="SECONDARY_OVERPAYMENT_BUY_OUT"/>
+            <param name="fileDocumentName" value="L003_Secondary Buy-Out Overpayment Letter v01.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_SECONDARY_OVERPAYMENT_BUY_OUT_document_template_surplus_gained_format" author="P70383">
+        <comment>Update L003_Secondary Buy-Out Overpayment Letter v01.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="SECONDARY_OVERPAYMENT_BUY_OUT"/>
+            <param name="fileDocumentName" value="L003_Secondary Buy-Out Overpayment Letter v01.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_PRIMARY_BUY_OUT_document_template_change_buy_out" author="P70383">
+        <comment>Update L001_Initial Buy-Out MoA.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="PRIMARY_BUY_OUT"/>
+            <param name="fileDocumentName" value="L001_Initial Buy-Out MoA.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_SECONDARY_BUY_OUT_document_template_change_buy_out" author="P70383">
+        <comment>Update L002_Secondary Buy-Out MoA.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="SECONDARY_BUY_OUT"/>
+            <param name="fileDocumentName" value="L002_Secondary Buy-Out MoA.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_SECONDARY_OVERPAYMENT_BUY_OUT_document_template_change_buy_out" author="P70383">
+        <comment>Update L003_Secondary Buy-Out Overpayment Letter v01.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="SECONDARY_OVERPAYMENT_BUY_OUT"/>
+            <param name="fileDocumentName" value="L003_Secondary Buy-Out Overpayment Letter v01.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_PRIMARY_BUY_OUT_document_template_change_payee_address_and_bank_details" author="loukerip">
+        <comment>Update payee address and bank details in L001_Initial Buy-Out MoA.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="PRIMARY_BUY_OUT"/>
+            <param name="fileDocumentName" value="L001_Initial Buy-Out MoA.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_SECONDARY_BUY_OUT_document_template_change_payee_address" author="loukerip">
+        <comment>Update payee address and bank details in L002_Secondary Buy-Out MoA.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="SECONDARY_BUY_OUT"/>
+            <param name="fileDocumentName" value="L002_Secondary Buy-Out MoA.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_PRIMARY_BUY_OUT_document_template_update_content" author="loukerip">
+        <comment>Update content for L001_Initial Buy-Out MoA.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="PRIMARY_BUY_OUT"/>
+            <param name="fileDocumentName" value="L001_Initial Buy-Out MoA.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_SECONDARY_BUY_OUT_document_template_update_content" author="loukerip">
+        <comment>Update content for L002_Secondary Buy-Out MoA.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="SECONDARY_BUY_OUT"/>
+            <param name="fileDocumentName" value="L002_Secondary Buy-Out MoA.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_insert_REFUND_CLAIM_FORM_BUY_OUT_document_template" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="Buyout Refund Claim Form.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id,
+                process_required,
+                convert_required)
+            values (
+                       nextval('document_template_seq'),
+                       'REFUND_CLAIM_FORM_BUY_OUT',
+                       'Buyout Refund Claim Form',
+                       'ENGLAND',
+                       'Buy-out and surplus batch run',
+                       '2025-06-11 00:00:00',
+                       (select id from file_document_template where file_name = 'Buyout Refund Claim Form.docx' order by id desc limit 1),
+                       (select id from notification_template where name = 'GenericEmailTemplate'),
+                       false,
+                       false);
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'Buyout Refund Claim Form' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'Buyout Refund Claim Form.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_GENERIC_EMAIL_TEMPLATE_update_configuration_for_operator_role" author="vvitzilaios">
+        <comment>Updates the configuration to include the Generic Email Template in Operator Emails</comment>
+        <sql>
+            update notification_template
+            set competent_authority = 'ENGLAND',
+                event_trigger = 'Multiple_events',
+                workflow = 'Multiple_workflows',
+                role_type = 'OPERATOR',
+                is_managed = true
+            where name = 'GenericEmailTemplate'
+        </sql>
+        <rollback>
+            update notification_template
+            set event_trigger = null,
+                workflow = null,
+                role_type = null,
+                is_managed = false
+            where name = 'GenericEmailTemplate'
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_GENERIC_EXPIRATION_REMINDER_TEMPLATE_update_configuration_for_operator_role" author="vvitzilaios">
+        <comment>Updates the configuration to include the Generic Expiration Reminder Template in Operator Emails</comment>
+        <sql>
+            update notification_template
+            set competent_authority = 'ENGLAND',
+                event_trigger = 'Multiple_events',
+                workflow = 'Multiple_workflows',
+                role_type = 'OPERATOR',
+                is_managed = true
+            where name = 'Generic Expiration Reminder Template'
+        </sql>
+        <rollback>
+            update notification_template
+            set event_trigger = null,
+                workflow = null,
+                role_type = null,
+                is_managed = false
+            where name = 'Generic Expiration Reminder Template'
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_GENERIC_SECTOR_EMAIL_TEMPLATE_update_configuration_for_sector_user_role" author="vvitzilaios">
+        <comment>Updates the configuration to include the Generic Sector Email Template in Sector User Emails</comment>
+        <sql>
+            update notification_template
+            set competent_authority = 'ENGLAND',
+                event_trigger = 'Multiple_events',
+                workflow = 'Multiple_workflows',
+                role_type = 'SECTOR_USER',
+                is_managed = true
+            where name = 'GenericSectorEmailTemplate'
+        </sql>
+        <rollback>
+            update notification_template
+            set event_trigger = null,
+                workflow = null,
+                role_type = null,
+                is_managed = false
+            where name = 'GenericSectorEmailTemplate'
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_1_UPDATE_DOCUMENT_TEMPLATE_role_type_from_notification_template" author="vvitzilaios">
+        <comment>Populate role_type in document_template from related notification_template records</comment>
+        <sql>
+        <![CDATA[
+            UPDATE document_template
+            SET role_type = nt.role_type
+                FROM notification_template nt
+            WHERE document_template.notification_template_id = nt.id;
+            ]]>
+    </sql>
+        <rollback>
+            <sql>
+                UPDATE document_template
+                SET role_type = NULL
+                WHERE notification_template_id IS NOT NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_NOTIFICATION_TEMPLATE_fix_naming_convention" author="vvitzilaios">
+        <comment>Fixes event trigger and workflow naming convention</comment>
+        <sql>
+            update notification_template
+            set event_trigger = 'Multiple events'
+            where event_trigger = 'Multiple_events';
+
+            update notification_template
+            set workflow = 'Multiple workflows'
+            where workflow = 'Multiple_workflows';
+        </sql>
+    </changeSet>
+
+	<changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_REFUSAL_document_template_sector_variables" author="apostolouk@unisystems.gr">
+        <comment>Update sector variables for AA_L001_Underlying_Agreement_Application_Refusal.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_REJECTED"/>
+            <param name="fileDocumentName" value="AA_L001_Underlying_Agreement_Application_Refusal.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_PROPOSED_document_template_sector_variables" author="apostolouk@unisystems.gr">
+        <comment>Update sector variables for AA_L002_Proposed_Underlying_Agreement.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_ACCEPTED"/>
+            <param name="fileDocumentName" value="AA_L002_Proposed_Underlying_Agreement.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_ACTIVATED_document_template_sector_variables" author="apostolouk@unisystems.gr">
+        <comment>Update sector variables for AA_L003_Underlying_Agreement_Activated.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_ACTIVATED"/>
+            <param name="fileDocumentName" value="AA_L003_Underlying_Agreement_Activated.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_ADMIN_TERMINATION_ADMINISTRATIVE_SUBMITTED_document_template_sector_variables" author="apostolouk@unisystems.gr">
+        <comment>Update sector variables for AIT_L001_Administrative_Termination.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="ADMIN_TERMINATION_ADMINISTRATIVE_SUBMITTED"/>
+            <param name="fileDocumentName" value="AIT_L001_Administrative_Termination.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_ADMIN_TERMINATION_REGULATORY_SUBMITTED_document_template_sector_variables" author="apostolouk@unisystems.gr">
+        <comment>Update sector variables for AIT_L002_Regulatory_Termination_Right_Of_Appeal.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="ADMIN_TERMINATION_REGULATORY_SUBMITTED"/>
+            <param name="fileDocumentName" value="AIT_L002_Regulatory_Termination_Right_Of_Appeal.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_ADMIN_TERMINATION_REGULATORY_TERMINATED_document_template_sector_variables" author="apostolouk@unisystems.gr">
+        <comment>Update sector variables for AIT_L003_Regulatory_Termination.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="ADMIN_TERMINATION_REGULATORY_TERMINATED"/>
+            <param name="fileDocumentName" value="AIT_L003_Regulatory_Termination.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_VARIATION_REJECTED_document_template_sector_variables" author="apostolouk@unisystems.gr">
+        <comment>Update sector variables for CR_L001_Variation_Refused.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_REJECTED"/>
+            <param name="fileDocumentName" value="CR_L001_Variation_Refused.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_document_template_sector_variables" author="apostolouk@unisystems.gr">
+        <comment>Update sector variables for CR_L002_Variation_Approved.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_ACCEPTED"/>
+            <param name="fileDocumentName" value="CR_L002_Variation_Approved.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_SECTOR_MOA_document_template_sector_variables" author="apostolouk@unisystems.gr">
+        <comment>Update sector variables for SC_L002_Sector_MoA.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="SECTOR_MOA"/>
+            <param name="fileDocumentName" value="SC_L002_Sector_MoA.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_document_template_sector_variables" author="apostolouk@unisystems.gr">
+        <comment>Update sector variables for Updated UnA template - v03.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT"/>
+            <param name="fileDocumentName" value="Updated UnA template - v03.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_DOCUMENT_TEMPLATE_notification_template_id" author="P70311">
+        <comment>Update notification template id for Target Unit MoA document</comment>
+        <sql>
+        <![CDATA[
+            UPDATE document_template
+            SET notification_template_id = nt.id
+                FROM notification_template nt
+            WHERE type = 'TARGET_UNIT_MOA' and nt.name = 'GenericEmailTemplate';
+            ]]>
+    </sql>
+        <rollback>
+            <sql>
+                UPDATE document_template
+                SET notification_template_id = nt.id
+                FROM notification_template nt
+                WHERE type = 'TARGET_UNIT_MOA' and nt.name = 'GenericSectorEmailTemplate';
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

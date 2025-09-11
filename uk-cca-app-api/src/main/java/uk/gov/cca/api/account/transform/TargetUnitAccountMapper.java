@@ -7,6 +7,7 @@ import org.mapstruct.Named;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountContact;
 import uk.gov.cca.api.account.domain.TargetUnitAccountContactType;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
@@ -19,6 +20,8 @@ import java.util.List;
 public interface TargetUnitAccountMapper {
 
     TargetUnitAccountHeaderInfoDTO toTargetUnitAccountHeaderInfoDTO(TargetUnitAccount account);
+    
+    TargetUnitAccountBusinessInfoDTO toTargetUnitAccountBusinessInfoDTO(TargetUnitAccount account);
 
     @Mapping(target = "id", source = "accountId")
     TargetUnitAccount toTargetUnitAccount(TargetUnitAccountDTO accountDTO, Long accountId);

@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
-import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeService;
+import uk.gov.cca.api.sectorassociation.service.SubsectorAssociationService;
 import uk.gov.netz.api.common.exception.BusinessException;
 
 import java.util.List;
@@ -26,7 +26,7 @@ class TargetUnitAccountCreationValidationServiceTest {
     private TargetUnitAccountCreationValidationService targetUnitAccountCreationValidationService;
 
     @Mock
-    private SectorAssociationSchemeService sectorAssociationSchemeService;
+    private SubsectorAssociationService subsectorAssociationService;
 
     @Test
     void validate() {
@@ -38,14 +38,14 @@ class TargetUnitAccountCreationValidationServiceTest {
                 .subsectorAssociationId(subsectorAssociationId)
                 .build();
 
-        when(sectorAssociationSchemeService.getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId))
+        when(subsectorAssociationService.getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId))
                 .thenReturn(subsectorAssociationIds);
 
         // Invoke
         targetUnitAccountCreationValidationService.validate(accountDTO);
 
         // Verify
-        verify(sectorAssociationSchemeService, times(1))
+        verify(subsectorAssociationService, times(1))
                 .getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId);
     }
 
@@ -57,14 +57,14 @@ class TargetUnitAccountCreationValidationServiceTest {
                 .sectorAssociationId(sectorAssociationId)
                 .build();
 
-        when(sectorAssociationSchemeService.getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId))
+        when(subsectorAssociationService.getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId))
                 .thenReturn(subsectorAssociationIds);
 
         // Invoke
         targetUnitAccountCreationValidationService.validate(accountDTO);
 
         // Verify
-        verify(sectorAssociationSchemeService, times(1))
+        verify(subsectorAssociationService, times(1))
                 .getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId);
     }
 
@@ -78,7 +78,7 @@ class TargetUnitAccountCreationValidationServiceTest {
                 .subsectorAssociationId(subsectorAssociationId)
                 .build();
 
-        when(sectorAssociationSchemeService.getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId))
+        when(subsectorAssociationService.getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId))
                 .thenReturn(subsectorAssociationIds);
 
         // Invoke
@@ -88,7 +88,7 @@ class TargetUnitAccountCreationValidationServiceTest {
         // Verify
         assertThat(businessException.getErrorCode())
                 .isEqualTo(TARGET_UNIT_ACCOUNT_SUB_SECTOR_ASSOCIATION_NOT_RELATED_TO_SECTOR_ASSOCIATION);
-        verify(sectorAssociationSchemeService, times(1))
+        verify(subsectorAssociationService, times(1))
                 .getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId);
     }
 
@@ -100,7 +100,7 @@ class TargetUnitAccountCreationValidationServiceTest {
                 .sectorAssociationId(sectorAssociationId)
                 .build();
 
-        when(sectorAssociationSchemeService.getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId))
+        when(subsectorAssociationService.getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId))
                 .thenReturn(subsectorAssociationIds);
 
         // Invoke
@@ -110,7 +110,7 @@ class TargetUnitAccountCreationValidationServiceTest {
         // Verify
         assertThat(businessException.getErrorCode())
                 .isEqualTo(TARGET_UNIT_ACCOUNT_SUB_SECTOR_ASSOCIATION_NOT_RELATED_TO_SECTOR_ASSOCIATION);
-        verify(sectorAssociationSchemeService, times(1))
+        verify(subsectorAssociationService, times(1))
                 .getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId);
     }
 
@@ -124,7 +124,7 @@ class TargetUnitAccountCreationValidationServiceTest {
                 .subsectorAssociationId(subsectorAssociationId)
                 .build();
 
-        when(sectorAssociationSchemeService.getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId))
+        when(subsectorAssociationService.getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId))
                 .thenReturn(subsectorAssociationIds);
 
         // Invoke
@@ -134,7 +134,7 @@ class TargetUnitAccountCreationValidationServiceTest {
         // Verify
         assertThat(businessException.getErrorCode())
                 .isEqualTo(TARGET_UNIT_ACCOUNT_SUB_SECTOR_ASSOCIATION_NOT_RELATED_TO_SECTOR_ASSOCIATION);
-        verify(sectorAssociationSchemeService, times(1))
+        verify(subsectorAssociationService, times(1))
                 .getSubsectorAssociationIdsBySectorAssociationId(sectorAssociationId);
     }
 }

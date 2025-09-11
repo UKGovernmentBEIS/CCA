@@ -4,27 +4,34 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
-import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   DECISION_FORM_PROVIDER,
   DecisionWithDateComponent,
   DecisionWithDateFormModel,
   facilityDecisionFormProvider,
-  FacilityWizardReviewStep,
+  OVERALL_DECISION_SUBTASK,
+  TaskItemStatus,
+  TasksApiService,
   toFacilitySummaryDataWithStatus,
+  UNAVariationReviewRequestTaskPayload,
   underlyingAgreementQuery,
   underlyingAgreementVariationQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
+import { produce } from 'immer';
 
-import { UnderlyingAgreementVariationReviewTaskService } from '../../../services/underlying-agreement-variation-review-task.service';
+import { UnderlyingAgreementVariationFacilityReviewDecision } from 'cca-api';
+
+import { resetDetermination } from 'src/app/requests/tasks/underlying-agreement-review/utils';
+
+import { createSaveFacilityDecisionActionDTO } from '../../../transform';
 
 @Component({
   selector: 'cca-facility-decision',
   templateUrl: './facility-decision.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     SummaryComponent,
     PageHeadingComponent,
@@ -36,12 +43,12 @@ import { UnderlyingAgreementVariationReviewTaskService } from '../../../services
     NgTemplateOutlet,
   ],
   providers: [facilityDecisionFormProvider()],
-  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityDecisionComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly taskService = inject(TaskService);
+  private readonly tasksApiService = inject(TasksApiService);
   private readonly router = inject(Router);
 
   protected readonly form = inject<DecisionWithDateFormModel>(DECISION_FORM_PROVIDER);
@@ -81,12 +88,50 @@ export class FacilityDecisionComponent {
   );
 
   submit() {
-    (this.taskService as UnderlyingAgreementVariationReviewTaskService)
-      .saveFacilityDecision(this.form.value, this.facility())
-      .subscribe(() => {
-        this.router.navigate(['../', FacilityWizardReviewStep.CHECK_YOUR_ANSWERS], {
-          relativeTo: this.activatedRoute,
-        });
-      });
+    const payload = this.requestTaskStore.select(
+      requestTaskQuery.selectRequestTaskPayload,
+    )() as UNAVariationReviewRequestTaskPayload;
+
+    const facility = this.facility();
+    const formValue = this.form.value;
+
+    // If the facility is new and the decision type is ACCEPTED, we need to set the change start date.
+    let changeStartDate: boolean;
+    if (this.facility().status === 'NEW' && formValue.type === 'ACCEPTED') changeStartDate = !!formValue.changeDate[0];
+
+    // Create the decision object
+    const decision: UnderlyingAgreementVariationFacilityReviewDecision = {
+      type: formValue.type,
+      changeStartDate,
+      startDate: formValue.startDate as any, // bypass incorrect api type. Should be date, it is string
+      details: {
+        notes: formValue.notes,
+        files: formValue.files.map((f) => f.uuid),
+      },
+      facilityStatus: facility.status,
+    };
+
+    // Update review sections completed
+    const reviewSectionsCompleted = produce(payload.reviewSectionsCompleted, (draft) => {
+      draft[facility.facilityId] = TaskItemStatus.UNDECIDED;
+      draft[OVERALL_DECISION_SUBTASK] = TaskItemStatus.UNDECIDED;
+    });
+
+    // Clear determination type
+    const determination = resetDetermination(payload.determination);
+
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+
+    const dto = createSaveFacilityDecisionActionDTO(
+      requestTaskId,
+      facility.facilityId,
+      reviewSectionsCompleted,
+      decision,
+      determination,
+    );
+
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
+      this.router.navigate(['../', 'check-your-answers'], { relativeTo: this.activatedRoute });
+    });
   }
 }

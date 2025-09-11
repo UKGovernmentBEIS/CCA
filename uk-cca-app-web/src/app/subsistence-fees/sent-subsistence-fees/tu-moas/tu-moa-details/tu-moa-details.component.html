@@ -1,89 +1,160 @@
-@if (moaDetails) {
+@if (state().moaTUDetails; as moaTUDetails) {
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <netz-page-heading [caption]="'Target unit MoA'" size="xl" data-testid="page-heading">
-        {{ moaDetails.transactionId }}
-        <span class="govuk-tag-heading-align">
-          <govuk-tag [color]="moaDetails.paymentStatus | subsistenceFeesRunPaymentStatusTagColor" class="failure-tag">
-            {{ moaDetails.paymentStatus | subsistenceFeesRunPaymentStatus }}
+    <div class="govuk-grid-column-full">
+      <netz-page-heading
+        [caption]="'Target unit MoA'"
+        size="xl"
+        data-testid="page-heading"
+        class="govuk-tag-heading-align"
+      >
+        {{ moaTUDetails.transactionId }}
+
+        <span>
+          <govuk-tag [color]="moaTUDetails.paymentStatus | statusColor: 'grey'" class="tag-width">
+            {{ moaTUDetails.paymentStatus | status }}
           </govuk-tag>
         </span>
       </netz-page-heading>
     </div>
   </div>
 
-  @if (data) {
-    <cca-summary [data]="data" />
+  @if (summaryData()) {
+    <cca-summary [data]="summaryData()" />
+
+    @if (isReceivedAmountHigherThanTotal()) {
+      <govuk-warning-text assistiveText="">
+        The received payment amount is higher than the required current total amount. You should check the received
+        payments again, or contact the sector association or operator.
+      </govuk-warning-text>
+    }
   }
 }
 
 @if (state().facilities) {
-  <div class="govuk-body">
-    <cca-utility-panel heading="Filters">
-      <form [formGroup]="searchForm" (ngSubmit)="onApplyFilters()">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-third">
-            <div
-              widthClass="govuk-!-width-full"
-              formControlName="term"
-              govuk-text-input
-              label="Enter facility Id or site name"
-            ></div>
-          </div>
-
-          <div class="govuk-grid-column-one-third">
-            <div
-              govuk-select
-              widthClass="govuk-!-width-full"
-              label="Marking of facilities"
-              [options]="markingOfFacilitiesOptions"
-              formControlName="markFacilitiesStatus"
-            ></div>
-          </div>
+  <cca-utility-panel heading="Filters">
+    <form [formGroup]="searchForm" (ngSubmit)="onApplyFilters()">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <div
+            widthClass="govuk-!-width-full"
+            formControlName="term"
+            govuk-text-input
+            label="Enter facility Id or site name"
+          ></div>
         </div>
 
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-quarter">
-            <button class="govuk-!-margin-right-3" netzPendingButton govukButton type="submit">Apply</button>
-            <button netzPendingButton govukSecondaryButton type="button" (click)="onClearFilters()">Clear</button>
-          </div>
+        <div class="govuk-grid-column-one-third">
+          <div
+            govuk-select
+            widthClass="govuk-!-width-full"
+            label="Marking of facilities"
+            [options]="markingOfFacilitiesOptions"
+            formControlName="markFacilitiesStatus"
+          ></div>
         </div>
-      </form>
-    </cca-utility-panel>
+      </div>
 
-    <div class="x-scroll govuk-!-margin-top-6">
-      <div class="max-content-width">
-        <div class="overflow-auto overflow-auto-table">
-          <govuk-table [columns]="tableColumns" [data]="state().facilities">
-            <ng-template let-column="column" let-row="row">
-              @switch (column.field) {
-                @case ('facilityId') {
-                  <span>{{ row[column.field] }}</span>
-                }
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          <button class="govuk-!-margin-right-3" netzPendingButton govukButton type="submit">Apply</button>
+          <button netzPendingButton govukSecondaryButton type="button" (click)="onClearFilters()">Clear</button>
+        </div>
+      </div>
+    </form>
+  </cca-utility-panel>
 
-                @case ('facilityName') {
-                  <span>{{ row[column.field] }}</span>
-                }
+  @if (hasSelectableRows()) {
+    <div class="govuk-grid-row govuk-!-margin-top-6">
+      <div class="govuk-grid-column-one-half selection-text">
+        <p>{{ selectedFacilities().size }} selected facilities</p>
+      </div>
 
-                @case ('markFacilitiesStatus') {
-                  <div class="govuk-!-width-full">
-                    <span>{{ row[column.field] | subsistenceFeesRunMarkFacilitiesStatus }}</span>
-                  </div>
-                }
+      <div class="govuk-grid-column-one-half selection-actions">
+        <button
+          govukSecondaryButton
+          type="button"
+          [disabled]="selectedFacilities().size === 0"
+          (click)="onMark('paid')"
+        >
+          Mark as paid
+        </button>
 
-                @case ('paymentDate') {
-                  <span>{{ row[column.field] | date: 'dd MMM yyyy' }}</span>
+        <button
+          govukSecondaryButton
+          type="button"
+          [disabled]="selectedFacilities().size === 0"
+          (click)="onMark('in-progress')"
+        >
+          Mark as in progress
+        </button>
+
+        @if (state().userRoleType === 'REGULATOR') {
+          <button
+            govukSecondaryButton
+            type="button"
+            [disabled]="selectedFacilities().size === 0"
+            (click)="onMark('cancelled')"
+          >
+            Mark as cancelled
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <div class="x-scroll govuk-!-margin-top-6">
+    <div class="max-content-width">
+      <div class="overflow-auto overflow-auto-table">
+        <cca-table
+          [columns]="tableColumns"
+          [data]="tableData()"
+          [selectedRows]="selectedFacilities()"
+          [showSelectAllCheckbox]="hasSelectableRows()"
+          (rowSelectionChange)="onSelectChange($event)"
+          (allRowsSelectionChange)="onSelectWholePageChange($event)"
+        >
+          <ng-template let-column="column" let-row="row">
+            @switch (column.field) {
+              @case ('facilityId') {
+                <span>{{ row[column.field] }}</span>
+              }
+
+              @case ('facilityName') {
+                <span>{{ row[column.field] }}</span>
+              }
+
+              @case ('markFacilitiesStatus') {
+                <div class="govuk-!-width-full">
+                  <span>{{ row[column.field] | status }}</span>
+                </div>
+              }
+
+              @case ('paymentDate') {
+                <span>{{ row[column.field] | date: 'dd MMM yyyy' }}</span>
+              }
+
+              @case ('markingHistory') {
+                @if (row['hasHistory']) {
+                  <a
+                    [routerLink]="['mark-facilities', 'history', row['moaFacilityId']]"
+                    [relativeTo]="activatedRoute"
+                    class="govuk-link"
+                  >
+                    View history
+                  </a>
                 }
               }
-            </ng-template>
-          </govuk-table>
+            }
+          </ng-template>
+        </cca-table>
 
-          <cca-pagination
-            [count]="state().totalItems"
-            (currentPageChange)="handlePageChange($event)"
-            [pageSize]="state().pageSize"
-          />
-        </div>
+        <cca-pagination
+          [count]="state().totalFacilityItems"
+          [currentPage]="currentPage()"
+          [pageSize]="pageSize()"
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        />
       </div>
     </div>
   </div>

@@ -3,7 +3,7 @@
   <span govukFieldsetHint>{{ hint }}</span>
 
   @if (shouldDisplayErrors) {
-    <govuk-error-message [errors]="control.errors"></govuk-error-message>
+    <govuk-error-message [errors]="control.errors" />
   }
 
   <div [formGroup]="formGroup" class="govuk-grid-row">
@@ -43,7 +43,7 @@
             type="tel"
           />
         } @else {
-          <p [attr.data-test-id]="id" class="govuk-body">
+          <p [attr.data-test-id]="id">
             {{ valueTransform(control.value) }}
           </p>
         }

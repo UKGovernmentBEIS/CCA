@@ -16,13 +16,12 @@ import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.user.core.service.auth.UserAuthService;
 import uk.gov.netz.api.user.operator.domain.OperatorUserInvitationDTO;
 import uk.gov.netz.api.user.operator.service.OperatorUserNotificationGateway;
-import uk.gov.netz.api.userinfoapi.AuthenticationStatus;
 import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
@@ -68,14 +67,14 @@ class CcaOperatorUserInvitationServiceTest {
         String authorityUuid = "authorityUuid";
         AppUser currentUser = createAppUser(currentUserId, OPERATOR);
         final CcaOperatorUserInvitationDTO ccaOperatorUserInvitationDTO = createCcaOperatorUserInvitationDTO(email, userRoleCode);
-        final UserInfoDTO userInfoDTO = createUserInfoDTO(userId, AuthenticationStatus.PENDING);
+        final UserInfoDTO userInfoDTO = createUserInfoDTO(userId);
         OperatorUserInvitationDTO operatorUserInvitationDTO = OperatorUserInvitationDTO.builder().email(email).roleCode(userRoleCode).build();
 
         when(operatorUserInvitationMapper.toUserInvitationDTO(ccaOperatorUserInvitationDTO)).thenReturn(operatorUserInvitationDTO);
         when(authUserService.getUserByEmail(ccaOperatorUserInvitationDTO.getEmail())).thenReturn(Optional.of(userInfoDTO));
         when(existingOperatorUserInvitationService.addExistingUserToTargetUnit(ccaOperatorUserInvitationDTO, accountId, userId, currentUser))
                 .thenReturn(authorityUuid);
-        when(targetUnitAccountQueryService.getAccountName(accountId)).thenReturn(accountName);
+        when(targetUnitAccountQueryService.getAccountBusinessIdAndName(accountId)).thenReturn(accountName);
 
         service.inviteUserToAccount(accountId, ccaOperatorUserInvitationDTO, currentUser);
 
@@ -104,7 +103,7 @@ class CcaOperatorUserInvitationServiceTest {
         when(authUserService.getUserByEmail(operatorUserInvitationDTO.getEmail())).thenReturn(Optional.empty());
         when(operatorUserRegistrationService.registerUserToAccountWithStatusPending(ccaOperatorUserInvitationDTO, accountId, currentUser))
                 .thenReturn(authorityUuid);
-        when(targetUnitAccountQueryService.getAccountName(accountId)).thenReturn(accountName);
+        when(targetUnitAccountQueryService.getAccountBusinessIdAndName(accountId)).thenReturn(accountName);
 
         service.inviteUserToAccount(accountId, ccaOperatorUserInvitationDTO, currentUser);
 
@@ -116,7 +115,7 @@ class CcaOperatorUserInvitationServiceTest {
     }
 
     @Test
-    void inviteUserToAccountWhenRegulatorRegisteredExists() throws Exception {
+    void inviteUserToAccountWhenRegulatorRegisteredExists() {
         String userId = "254cad93-d1f5-4951-bb0e-e9b0a1586844";
         String userRoleCode = "regulator_administrator";
         String email = "email";
@@ -126,13 +125,13 @@ class CcaOperatorUserInvitationServiceTest {
         String authorityUuid = "authorityUuid";
         AppUser currentUser = createAppUser(currentUserId, REGULATOR);
         final CcaOperatorUserInvitationDTO ccaOperatorUserInvitationDTO = createCcaOperatorUserInvitationDTO(email, userRoleCode);
-        final UserInfoDTO userInfoDTO = createUserInfoDTO(userId, AuthenticationStatus.REGISTERED);
+        final UserInfoDTO userInfoDTO = createUserInfoDTO(userId);
         OperatorUserInvitationDTO operatorUserInvitationDTO = OperatorUserInvitationDTO.builder().email(email).roleCode(userRoleCode).build();
 
         when(authUserService.getUserByEmail(operatorUserInvitationDTO.getEmail())).thenReturn(Optional.of(userInfoDTO));
         when(existingOperatorUserInvitationService.addExistingUserToTargetUnit(ccaOperatorUserInvitationDTO, accountId, userId, currentUser))
                 .thenThrow(new BusinessException(ErrorCode.USER_ROLE_ALREADY_EXISTS));
-        when(targetUnitAccountQueryService.getAccountName(accountId)).thenReturn(accountName);
+        when(targetUnitAccountQueryService.getAccountBusinessIdAndName(accountId)).thenReturn(accountName);
 
         BusinessException businessException =
                 assertThrows(BusinessException.class, () -> service.inviteUserToAccount(accountId, ccaOperatorUserInvitationDTO, currentUser));
@@ -157,10 +156,11 @@ class CcaOperatorUserInvitationServiceTest {
         return CcaOperatorUserInvitationDTO.builder()
                 .email(email)
                 .contactType(ContactType.OPERATOR)
+                .roleCode(roleCode)
                 .build();
     }
 
-    private UserInfoDTO createUserInfoDTO(String userId, AuthenticationStatus authenticationStatus) {
+    private UserInfoDTO createUserInfoDTO(String userId) {
         UserInfoDTO user = new UserInfoDTO();
         user.setUserId(userId);
         return user;

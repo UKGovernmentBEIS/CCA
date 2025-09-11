@@ -25,6 +25,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+
 @ExtendWith(MockitoExtension.class)
 class TargetUnitAccountCreationServiceTest {
 
@@ -60,7 +62,7 @@ class TargetUnitAccountCreationServiceTest {
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .operatorType(TargetUnitAccountOperatorType.PARTNERSHIP)
                 .companyRegistrationNumber("companyRegistrationNumber")
-                .sicCode("sicCode")
+                .sicCodes(List.of("sicCode"))
                 .sectorAssociationId(sectorAssociationId)
                 .address(AccountAddressDTO.builder().build())
                 .administrativeContactDetails(getAdministrativeContactDetailsDTO())
@@ -76,7 +78,7 @@ class TargetUnitAccountCreationServiceTest {
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .operatorType(TargetUnitAccountOperatorType.PARTNERSHIP)
                 .companyRegistrationNumber("companyRegistrationNumber")
-                .sicCode("sicCode")
+                .sicCodes(List.of("sicCode"))
                 .sectorAssociationId(sectorAssociationId)
                 .address(AccountAddressDTO.builder().build())
                 .administrativeContactDetails(getPersistedAdministrativeContactDetailsDTO())

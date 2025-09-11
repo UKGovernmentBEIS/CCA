@@ -18,13 +18,10 @@
 
 @if (sameAddressExists()) {
   <div formControlName="sameAddress" govuk-checkboxes>
-    <govuk-checkbox
-      [value]="true"
-      label="The responsible person address is the same as the operator address"
-    ></govuk-checkbox>
+    <govuk-checkbox [value]="true" label="The responsible person address is the same as the operator address" />
   </div>
 }
 
 <div formGroupName="address">
-  <cca-account-address-input></cca-account-address-input>
+  <cca-account-address-input />
 </div>

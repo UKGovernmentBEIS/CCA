@@ -19,6 +19,7 @@ describe('Add operator Component', () => {
       providers: [provideHttpClient(), provideHttpClientTesting()],
       configureTestBed: (testbed) => {
         testbed.overrideProvider(ActivatedRoute, { useValue: new ActivatedRouteStub({ targetUnitId: 1 }) });
+
         const mockProvider = mockClass(OperatorUsersInvitationService);
         mockProvider.inviteOperatorUserToAccount = jest.fn().mockReturnValue(
           throwError(
@@ -34,10 +35,12 @@ describe('Add operator Component', () => {
               }),
           ),
         );
+
         testbed.overrideProvider(OperatorUsersInvitationService, { useValue: mockProvider });
       },
     });
   });
+
   it('should render preform content', () => {
     expect(screen.getByText('Add an operator user')).toBeInTheDocument();
     expect(screen.getByText('This user will have permission to:')).toBeInTheDocument();
@@ -46,6 +49,7 @@ describe('Add operator Component', () => {
     expect(screen.getByText('view target period reports')).toBeInTheDocument();
     expect(screen.getByText('You should only add a user authorised to perform these actions.')).toBeInTheDocument();
   });
+
   it('should render form', () => {
     expect(screen.getByTestId('add-operator-form')).toBeInTheDocument();
     expect(document.getElementById('firstName')).toBeInTheDocument();
@@ -53,12 +57,15 @@ describe('Add operator Component', () => {
     expect(document.getElementById('email')).toBeInTheDocument();
     expect(document.getElementById('contactType')).toBeInTheDocument();
   });
+
   it('should render error when operator already exists', async () => {
     const userEvent = UserEvent.setup();
+
     await userEvent.type(document.getElementById('firstName'), 'Operator');
     await userEvent.type(document.getElementById('lastName'), 'Admin');
     await userEvent.type(document.getElementById('email'), 'regulator_admin@cca.uk');
     await userEvent.click(screen.getByText('Submit'));
+
     expect(
       screen.getAllByText(
         'This email address is already in use. You must enter a different email address for this user to add them as an operator user',

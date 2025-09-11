@@ -2,18 +2,17 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { PendingRequestService } from '@netz/common/services';
 import { WizardStepComponent } from '@shared/components';
 
 import {
-  SectorAssociationSchemeDTO,
+  SectorAssociationSchemesDTO,
   TargetUnitAccountDetailsResponseDTO,
   UpdateTargetUnitAccountService,
 } from 'cca-api';
 
 import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
 import { TargetUnitDetailsInputComponent } from '../../../common/components/target-unit-details-input/target-unit-details-input.component';
-import { TargetUnitCreationFormModel } from '../../../common/components/target-unit-details-input/target-unit-details-input-controls';
+import { TargetUnitCreationFormModel } from '../../../common/types';
 import { EDIT_TARGET_UNIT_DETAILS_FORM, EditDetailsFormProvider } from './edit-details-form.provider';
 
 @Component({
@@ -25,24 +24,27 @@ import { EDIT_TARGET_UNIT_DETAILS_FORM, EditDetailsFormProvider } from './edit-d
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditDetailsComponent {
-  readonly form = inject<FormGroup<TargetUnitCreationFormModel>>(EDIT_TARGET_UNIT_DETAILS_FORM);
-  readonly pendingRequest = inject(PendingRequestService);
   private readonly updateTargetUnitAccountService = inject(UpdateTargetUnitAccountService);
   private readonly store = inject(ActiveTargetUnitStore);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  accountDetails: TargetUnitAccountDetailsResponseDTO = this.store.state;
-  readonly subSectors = (this.route.snapshot.data?.subSectorScheme as SectorAssociationSchemeDTO)
-    ?.subsectorAssociationSchemes;
+  protected readonly form = inject<FormGroup<TargetUnitCreationFormModel>>(EDIT_TARGET_UNIT_DETAILS_FORM);
+
+  protected readonly accountDetails: TargetUnitAccountDetailsResponseDTO = this.store.state;
+  protected readonly subSectors = (this.route.snapshot.data?.subSectorScheme as SectorAssociationSchemesDTO)
+    ?.subsectorAssociations;
 
   onSubmit() {
+    // filter null values for SIC codes
+    const sicCodes = this.form.value.sicCodes.filter((val) => !!val);
+
     this.updateTargetUnitAccountService
       .updateTargetUnitAccountSicCode(+this.route.snapshot.paramMap.get('targetUnitId'), {
-        sicCode: this.form.value.sicCode,
+        sicCodes: sicCodes,
       })
       .subscribe(() => {
-        this.store.updateTargetUnitAccountSicCode({ sicCode: this.form.value.sicCode });
+        this.store.updateTargetUnitAccountSicCode({ sicCodes: sicCodes });
         this.router.navigate(['../..'], { relativeTo: this.route });
       });
   }

@@ -1,0 +1,9 @@
+[
+  {
+    "label": "Test Current File",
+    "command": "node",
+    "args": ["./node_modules/.bin/jest", "${ZED_FILE}", "-c", "./src/jest.config.js"],
+    "reveal": "always",
+    "hide": "never"
+  }
+]

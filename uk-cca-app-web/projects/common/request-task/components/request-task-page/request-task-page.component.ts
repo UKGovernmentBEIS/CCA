@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   effect,
+  inject,
   Inject,
   Injector,
   runInInjectionContext,
@@ -28,6 +29,7 @@ import { ItemDTO, RequestActionInfoDTO, RequestTaskDTO, RequestTaskItemDTO } fro
 
 import { REQUEST_TASK_PAGE_CONTENT } from '../../request-task.providers';
 import { RequestTaskPageContentFactoryMap } from '../../request-task.types';
+import { TimelineItemLinkPipe } from '@netz/common/pipes';
 
 type ViewModel = {
   requestTask: RequestTaskDTO;
@@ -54,18 +56,21 @@ type ViewModel = {
   encapsulation: ViewEncapsulation.None,
   imports: [
     PageHeadingComponent,
-    NgIf,
     TaskHeaderInfoComponent,
     NgComponentOutlet,
     RelatedTasksComponent,
     TimelineComponent,
     TimelineItemComponent,
-    NgFor,
     RelatedActionsComponent,
     TaskListComponent,
+    TimelineItemLinkPipe,
   ],
 })
 export class RequestTaskPageComponent {
+  private readonly store = inject(RequestTaskStore);
+  private readonly injector = inject(Injector);
+  private readonly contentFactoryMap = inject<RequestTaskPageContentFactoryMap>(REQUEST_TASK_PAGE_CONTENT);
+
   vm: Signal<ViewModel> = computed(() => {
     const requestTask = this.store.select(requestTaskQuery.selectRequestTask)();
     if (!requestTask) {
@@ -98,12 +103,7 @@ export class RequestTaskPageComponent {
     };
   });
 
-  constructor(
-    private readonly store: RequestTaskStore,
-    @Inject(REQUEST_TASK_PAGE_CONTENT)
-    private readonly contentFactoryMap: RequestTaskPageContentFactoryMap,
-    protected readonly injector: Injector,
-  ) {
+  constructor() {
     effect(() => {
       if (!!this.vm() && !this.vm().contentComponent && !this.vm().sections) {
         throw new Error(

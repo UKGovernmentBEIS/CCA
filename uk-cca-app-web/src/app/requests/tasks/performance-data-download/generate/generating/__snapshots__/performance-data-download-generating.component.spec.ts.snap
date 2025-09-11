@@ -15,7 +15,6 @@ exports[`PerformanceDataDownloadGeneratingComponent should show summary values 1
           class="govuk-notification-banner__title"
           id="govuk-notification-banner-title"
         >
-          Important
         </h2>
       </div>
       <div
@@ -26,9 +25,7 @@ exports[`PerformanceDataDownloadGeneratingComponent should show summary values 1
         >
           Files are being generated
         </h3>
-        <span
-          class="govuk-body"
-        >
+        <span>
            This may take several minutes to complete. 
           <br />
            You can wait or return to the dashboard and click on the task to continue. 

@@ -1,5 +1,5 @@
-<span [id]="identifier + '-error'" class="govuk-error-message">
-  <span class="govuk-!-display-block" *ngFor="let error of errors | keyvalue">
-    <span class="govuk-visually-hidden">Error:</span> {{ error.value }}
-  </span>
+<span [id]="identifier() + '-error'" class="govuk-error-message">
+  @for (error of errors() | keyvalue; track error) {
+    <span class="govuk-!-display-block"> <span class="govuk-visually-hidden">Error:</span> {{ error.value }} </span>
+  }
 </span>

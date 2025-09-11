@@ -1,10 +1,9 @@
 import { TaskSection } from '@netz/common/model';
-import { transformFacilities } from '@requests/common';
 
-import { Facility } from 'cca-api';
+import { UnderlyingAgreementPayload } from 'cca-api';
 
-export function getAllUnderlyingAgreementSections(facilities: Facility[], prefix = ''): TaskSection[] {
-  return [
+export function getAllUnderlyingAgreementSections(una: UnderlyingAgreementPayload, prefix = ''): TaskSection[] {
+  const sections: TaskSection[] = [
     {
       title: 'Target unit',
       tasks: [
@@ -23,10 +22,12 @@ export function getAllUnderlyingAgreementSections(facilities: Facility[], prefix
           link: `${prefix}manage-facilities`,
           linkText: 'Manage facilities list',
         },
-        ...transformFacilities(facilities, [], null, prefix),
       ],
     },
-    {
+  ];
+
+  if (una?.targetPeriod5Details && una?.targetPeriod6Details) {
+    sections.push({
       title: 'Baseline and Targets',
       tasks: [
         {
@@ -40,16 +41,19 @@ export function getAllUnderlyingAgreementSections(facilities: Facility[], prefix
           linkText: 'TP6 (2024)',
         },
       ],
-    },
-    {
-      title: 'Authorization details',
-      tasks: [
-        {
-          status: '',
-          link: `${prefix}authorisation-additional-evidence`,
-          linkText: 'Authorisation and additional evidence',
-        },
-      ],
-    },
-  ];
+    });
+  }
+
+  sections.push({
+    title: 'Authorization details',
+    tasks: [
+      {
+        status: '',
+        link: `${prefix}authorisation-additional-evidence`,
+        linkText: 'Authorisation and additional evidence',
+      },
+    ],
+  });
+
+  return sections;
 }

@@ -20,11 +20,21 @@ export enum ItemActionEnum {
   UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACTIVATED = 'Underlying agreement variation activated',
   UNDERLYING_AGREEMENT_VARIATION_APPLICATION_CANCELLED = 'Underlying agreement variation application cancelled',
   PERFORMANCE_DATA_SPREADSHEET_PROCESSING_SUBMITTED = 'Performance report submitted',
+  PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED = 'PAT report submitted',
   SUBSISTENCE_FEES_RUN_SUBMITTED = 'Subsistence fees payment request run submitted',
   SUBSISTENCE_FEES_RUN_COMPLETED = 'Subsistence fees payment request run completed',
   SUBSISTENCE_FEES_RUN_COMPLETED_WITH_FAILURES = 'Subsistence fees payment request run completed with failures',
   SECTOR_MOA_GENERATED = 'Sector MoA generated',
   TARGET_UNIT_MOA_GENERATED = 'Subsistence fees payment request received',
+  BUY_OUT_SURPLUS_RUN_SUBMITTED = 'Buy-out and surplus batch run submitted',
+  BUY_OUT_SURPLUS_RUN_COMPLETED = 'Buy-out and surplus batch run completed',
+  BUY_OUT_SURPLUS_RUN_COMPLETED_WITH_FAILURES = 'Buy-out and surplus batch run completed with failures',
+  ADMIN_TERMINATION_PEER_REVIEW_REQUESTED = 'Peer review requested',
+  ADMIN_TERMINATION_APPLICATION_PEER_REVIEWER_ACCEPTED = 'Peer review agreement',
+  ADMIN_TERMINATION_APPLICATION_PEER_REVIEWER_REJECTED = 'Peer review disagreement',
+  UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW_REQUESTED = 'Peer review requested',
+  UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEWER_ACCEPTED = 'Peer review agreement',
+  UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEWER_REJECTED = 'Peer review disagreement',
 }
 
 @Pipe({ name: 'itemActionType', standalone: true, pure: true })

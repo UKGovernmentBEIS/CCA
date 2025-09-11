@@ -17,6 +17,7 @@ describe('EditFinancialIndependenceComponent', () => {
   let component: EditFinancialIndependenceComponent;
   let fixture: ComponentFixture<EditFinancialIndependenceComponent>;
   let store: ActiveTargetUnitStore;
+
   const updateTargetUnitAccountService = mockClass(UpdateTargetUnitAccountService);
   updateTargetUnitAccountService.updateTargetUnitAccountFinancialIndependenceStatusCode.mockReturnValue(of({}));
 

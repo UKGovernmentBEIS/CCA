@@ -1,7 +1,9 @@
 package uk.gov.cca.api.migration.account;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +56,7 @@ public class TargetUnitAccountDTOBuilder {
                 .companyRegistrationNumber(targetUnitVO.getCompanyRegistrationNumber())
                 .registrationNumberMissingReason(StringUtils.isNotBlank(targetUnitVO.getCompanyRegistrationNumber()) ? null : REGISTRATION_NUMBER_MISSING_REASON)
                 .financialIndependenceStatus(Boolean.TRUE.equals(targetUnitVO.getFinanciallyIndependent()) ? FinancialIndependenceStatus.FINANCIALLY_INDEPENDENT : FinancialIndependenceStatus.NON_FINANCIALLY_INDEPENDENT)
-                .sicCode(targetUnitVO.getSicCode())
+                .sicCodes(targetUnitVO.getSicCode() != null ? new ArrayList<>(Collections.singletonList(targetUnitVO.getSicCode())): null)
                 .sectorAssociationId(sectorId)
                 .subsectorAssociationId(subSectorId)
                 .status(TargetUnitAccountStatus.NEW)

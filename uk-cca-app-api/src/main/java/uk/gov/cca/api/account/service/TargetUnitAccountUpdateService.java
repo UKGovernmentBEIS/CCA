@@ -37,11 +37,11 @@ public class TargetUnitAccountUpdateService {
 
     @Transactional
     @AccountStatus(expression = "{#status == 'NEW' || #status == 'LIVE'}")
-    public void updateTargetUnitAccountSicCode(Long accountId, UpdateTargetUnitAccountSicCodeDTO updateTargetUnitAccountDetails) {
+    public void updateTargetUnitAccountSicCodes(Long accountId, UpdateTargetUnitAccountSicCodeDTO updateTargetUnitAccountDetails) {
         TargetUnitAccount account = targetUnitAccountRepository.findById(accountId)
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
 
-        account.setSicCode(updateTargetUnitAccountDetails.getSicCode());
+        account.setSicCodes(updateTargetUnitAccountDetails.getSicCodes());
     }
 
     @Transactional

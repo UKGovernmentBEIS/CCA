@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
+import { Component } from '@angular/core';
 
 import { ErrorMessageComponent } from '../error-message';
 import { GovukValidators } from '../error-message';
@@ -11,28 +11,30 @@ describe('TextareaComponent', () => {
   @Component({
     standalone: true,
     imports: [TextareaComponent, ReactiveFormsModule],
-    template: '<div govuk-textarea [formControl]="control" [maxLength]="maxLength"></div>',
+    template: `
+      <div govuk-textarea [formControl]="control" [maxLength]="maxLength" [label]="label" [labelSize]="labelSize"></div>
+    `,
   })
   class TestComponent {
     control = new FormControl();
     maxLength: number;
+    label: string;
+    labelSize: string;
   }
 
   let component: TextareaComponent;
   let hostComponent: TestComponent;
-  let fixture: ComponentFixture<TestComponent>;
+  let hostComponentFixture: ComponentFixture<TestComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, BrowserModule, TextareaComponent, TestComponent, ErrorMessageComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TestComponent);
-    hostComponent = fixture.componentInstance;
-    component = fixture.debugElement.query(By.directive(TextareaComponent)).componentInstance;
-    fixture.detectChanges();
+    hostComponentFixture = TestBed.createComponent(TestComponent);
+    hostComponent = hostComponentFixture.componentInstance;
+    component = hostComponentFixture.debugElement.query(By.directive(TextareaComponent)).componentInstance;
+    hostComponentFixture.detectChanges();
   });
 
   it('should create', () => {
@@ -40,10 +42,10 @@ describe('TextareaComponent', () => {
   });
 
   it('should disable the textarea', () => {
-    hostComponent.control.disable();
-    fixture.detectChanges();
+    component.control.disable();
+    hostComponentFixture.detectChanges();
 
-    const hostElement: HTMLElement = fixture.nativeElement;
+    const hostElement: HTMLElement = hostComponentFixture.nativeElement;
     const textarea = hostElement.querySelector<HTMLTextAreaElement>('textarea');
 
     expect(textarea.disabled).toBeTruthy();
@@ -51,10 +53,10 @@ describe('TextareaComponent', () => {
 
   it('should assign value', () => {
     const stringValue = 'This is a test';
-    hostComponent.control.patchValue(stringValue);
-    fixture.detectChanges();
+    component.control.patchValue(stringValue);
+    hostComponentFixture.detectChanges();
 
-    const hostElement: HTMLElement = fixture.nativeElement;
+    const hostElement: HTMLElement = hostComponentFixture.nativeElement;
     const textarea = hostElement.querySelector<HTMLTextAreaElement>('textarea');
     expect(textarea.value).toEqual(stringValue);
   });
@@ -62,29 +64,29 @@ describe('TextareaComponent', () => {
   it('should emit value', () => {
     const stringValue = ' This is a test \n Test \n\n';
 
-    expect(hostComponent.control.value).toBeNull();
+    expect(component.control.value).toBeNull();
 
-    hostComponent.control.patchValue(stringValue);
+    component.control.patchValue(stringValue);
 
-    expect(hostComponent.control.value).toEqual('This is a test \n Test');
+    expect(component.control.value).toEqual('This is a test \n Test');
   });
 
   it('should show character count info and error', () => {
-    const element: HTMLElement = fixture.nativeElement;
+    const element: HTMLElement = hostComponentFixture.nativeElement;
     expect(element.querySelector('.govuk-character-count__message')).toBeNull();
 
     hostComponent.maxLength = 10;
-    hostComponent.control.clearValidators();
-    hostComponent.control.setValidators(GovukValidators.maxLength(10, 'no more than 10'));
-    hostComponent.control.updateValueAndValidity();
-    fixture.detectChanges();
+    component.control.clearValidators();
+    component.control.setValidators(GovukValidators.maxLength(10, 'no more than 10'));
+    component.control.updateValueAndValidity();
+    hostComponentFixture.detectChanges();
 
     expect(element.querySelector('.govuk-character-count__message').textContent.trim()).toEqual('');
     expect(element.querySelector('.govuk-character-count__message.govuk-error-message')).toBeNull();
 
     const withinLimit = '1234567890';
-    hostComponent.control.setValue(withinLimit);
-    fixture.detectChanges();
+    component.control.setValue(withinLimit);
+    hostComponentFixture.detectChanges();
 
     expect(element.querySelector('.govuk-character-count__message').textContent.trim()).toEqual(
       'You have 0 characters remaining',
@@ -92,44 +94,43 @@ describe('TextareaComponent', () => {
     expect(element.querySelector('.govuk-character-count__message.govuk-error-message')).toBeNull();
 
     const stringValue = '12345678901';
-    hostComponent.control.setValue(stringValue);
-    fixture.detectChanges();
+    component.control.setValue(stringValue);
+    hostComponentFixture.detectChanges();
 
     expect(element.querySelector('.govuk-character-count__message.govuk-error-message')).toBeTruthy();
     expect(element.querySelector('.govuk-character-count__message.govuk-error-message').textContent.trim()).toEqual(
       'You have 1 character too many',
     );
     expect(element.querySelector('.govuk-form-group--error')).toBeTruthy();
-    expect(fixture.nativeElement.querySelectorAll('.govuk-error-message')[0].textContent).toContain('no more than 10');
+    expect(hostComponentFixture.nativeElement.querySelectorAll('.govuk-error-message')[0].textContent).toContain(
+      'no more than 10',
+    );
   });
 
   it('should display labelSize classes', () => {
-    const hostElement: HTMLElement = fixture.nativeElement;
+    const hostElement: HTMLElement = hostComponentFixture.nativeElement;
     const label = hostElement.querySelector('label');
 
-    component.isLabelHidden = false;
-    fixture.detectChanges();
+    expect(label.className).toEqual('govuk-label govuk-visually-hidden');
 
-    expect(label.className).toEqual('govuk-label');
+    hostComponent.labelSize = 'normal';
+    hostComponentFixture.detectChanges();
 
-    component.labelSize = 'normal';
-    fixture.detectChanges();
+    expect(label.className).toEqual('govuk-label govuk-visually-hidden');
 
-    expect(label.className).toEqual('govuk-label');
+    hostComponent.labelSize = 'small';
+    hostComponentFixture.detectChanges();
 
-    component.labelSize = 'small';
-    fixture.detectChanges();
+    expect(label.className).toEqual('govuk-label govuk-visually-hidden govuk-label--s');
 
-    expect(label.className).toEqual('govuk-label govuk-label--s');
+    hostComponent.labelSize = 'medium';
+    hostComponentFixture.detectChanges();
 
-    component.labelSize = 'medium';
-    fixture.detectChanges();
+    expect(label.className).toEqual('govuk-label govuk-visually-hidden govuk-label--m');
 
-    expect(label.className).toEqual('govuk-label govuk-label--m');
+    hostComponent.labelSize = 'large';
+    hostComponentFixture.detectChanges();
 
-    component.labelSize = 'large';
-    fixture.detectChanges();
-
-    expect(label.className).toEqual('govuk-label govuk-label--l');
+    expect(label.className).toEqual('govuk-label govuk-visually-hidden govuk-label--l');
   });
 });

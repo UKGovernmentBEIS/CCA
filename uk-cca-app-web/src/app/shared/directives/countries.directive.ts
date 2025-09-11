@@ -17,7 +17,7 @@ export class CountriesDirective implements OnInit {
     private readonly changeDetectorRef: ChangeDetectorRef,
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.apiService
       .getUkCountries()
       .pipe(
@@ -40,7 +40,7 @@ export class CountriesDirective implements OnInit {
         const walesIndex = res.findIndex((c) => c.text === 'Wales');
         res.splice(walesIndex + 1, 0, { text: '--', value: '' });
 
-        this.selectComponent.options = res;
+        this.selectComponent.options.set(res);
         this.changeDetectorRef.markForCheck();
       });
   }

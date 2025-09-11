@@ -40,8 +40,18 @@ export const tableRows = [
     type: 'Admin termination',
   },
   {
+    permission: 'ADMIN_TERMINATION_PEER_REVIEW',
+    task: 'Peer Review Admin Termination',
+    type: 'Admin termination',
+  },
+  {
     permission: 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW',
     task: 'Review application for underlying agreement',
+    type: 'Underlying agreement',
+  },
+  {
+    permission: 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW',
+    task: 'Peer review Application for Underlying agreement ',
     type: 'Underlying agreement',
   },
   {

@@ -5,9 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
+import { TasksApiService } from '@requests/common';
 
 import { mockRequestTaskItemDTO } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import VariationDetailsCheckYourAnswersComponent from './variation-details-check-your-answers.component';
@@ -19,14 +19,15 @@ describe('VariationDetailsCheckYourAnswersComponent', () => {
   let page: Page;
 
   const route = new ActivatedRouteStub();
-  const unaTaskService: Partial<jest.Mocked<TaskService>> = {
-    submitSubtask: jest.fn().mockReturnValue(of({})),
+  const mockTasksApiService: Partial<jest.Mocked<TasksApiService>> = {
+    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
   };
 
   class Page extends BasePage<VariationDetailsCheckYourAnswersComponent> {
     get header() {
       return this.query<HTMLHeadingElement>('h1');
     }
+
     get summaryListValues() {
       return this.queryAll<HTMLDivElement>('.govuk-summary-list__row')
         .map((row) => [
@@ -35,6 +36,7 @@ describe('VariationDetailsCheckYourAnswersComponent', () => {
         ])
         .map((pair) => pair.map((element) => element?.textContent?.trim()));
     }
+
     get submitButton() {
       return this.query<HTMLButtonElement>('button[type="button"]');
     }
@@ -48,7 +50,7 @@ describe('VariationDetailsCheckYourAnswersComponent', () => {
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },
-        { provide: TaskService, useValue: unaTaskService },
+        { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Review underlying agreement variation' },
       ],
@@ -85,11 +87,16 @@ describe('VariationDetailsCheckYourAnswersComponent', () => {
   });
 
   it('should submit', () => {
-    const taskServiceSpy = jest.spyOn(unaTaskService, 'submitSubtask');
+    const apiServiceSpy = jest.spyOn(mockTasksApiService, 'saveRequestTaskAction');
 
     page.submitButton.click();
     fixture.detectChanges();
 
-    expect(taskServiceSpy).toHaveBeenCalledWith('underlyingAgreementVariationDetails');
+    expect(apiServiceSpy).toHaveBeenCalledTimes(1);
+    expect(apiServiceSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requestTaskActionType: 'UNDERLYING_AGREEMENT_VARIATION_SAVE_APPLICATION_REVIEW',
+      }),
+    );
   });
 });

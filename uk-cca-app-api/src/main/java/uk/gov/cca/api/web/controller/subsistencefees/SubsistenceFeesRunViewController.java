@@ -37,7 +37,7 @@ import uk.gov.netz.api.security.Authorized;
 import uk.gov.netz.api.security.AuthorizedRole;
 
 @RestController
-@RequestMapping(path = "/v1.0/subsistence-fees-runs/")
+@RequestMapping(path = "/v1.0/subsistence-fees/runs/")
 @RequiredArgsConstructor
 @Tag(name = "Subsistence fees run info view")
 public class SubsistenceFeesRunViewController {
@@ -55,8 +55,8 @@ public class SubsistenceFeesRunViewController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @AuthorizedRole(roleType = {REGULATOR})
     public ResponseEntity<SubsistenceFeesRunSearchResults> getSubsistenceFeesRuns(@Parameter(hidden = true) AppUser appUser,
-    		@RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Long page,
-            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}") Long pageSize) {
+    		@RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Integer page,
+            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}") Integer pageSize) {
         return new ResponseEntity<>(subsistenceFeesRunQueryService.getSubsistenceFeesRuns(appUser,
         		PagingRequest.builder().pageNumber(page).pageSize(pageSize).build()), HttpStatus.OK);
     }

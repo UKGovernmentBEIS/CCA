@@ -20,8 +20,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -31,7 +34,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriod;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.netz.api.common.config.YearAttributeConverter;
 
 @Getter
@@ -42,8 +45,19 @@ import uk.gov.netz.api.common.config.YearAttributeConverter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @EntityListeners({AuditingEntityListener.class})
-@Table(name = "tpr_performance_account_template_data")
+@Table(name = "tpr_performance_account_template_data", uniqueConstraints = @UniqueConstraint(columnNames = {
+		"account_id", "target_period_year" }))
+@NamedQueries({
+    @NamedQuery(
+            name = PerformanceAccountTemplateDataEntity.NAMED_QUERY_FIND_REPORT_VERSION_BY_ACCOUNT_ID_AND_TARGET_PERIOD_YEAR,
+            query = "select COALESCE(MAX(pat.reportVersion), 0) "
+                + "from PerformanceAccountTemplateDataEntity pat "
+                + "where pat.accountId = :accountId and pat.targetPeriodYear = :targetPeriodYear "
+    )
+})
 public class PerformanceAccountTemplateDataEntity {
+	
+	public static final String NAMED_QUERY_FIND_REPORT_VERSION_BY_ACCOUNT_ID_AND_TARGET_PERIOD_YEAR = "PerformanceAccountTemplateDataEntity.NAMED_QUERY_FIND_REPORT_VERSION_BY_ACCOUNT_ID_AND_TARGET_PERIOD_YEAR";
 
 	@Id
     @SequenceGenerator(name = "performance_account_template_data_id_generator", sequenceName = "tpr_performance_account_template_data_seq", allocationSize = 1)

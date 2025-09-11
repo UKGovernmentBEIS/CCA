@@ -1,0 +1,19 @@
+<netz-page-heading class="govuk-tag-heading-align">
+  {{ transactionSummary.transactionCode }}
+
+  <span>
+    <strong class="govuk-tag govuk-tag--{{ transactionSummary.paymentStatus | statusColor }}">
+      {{ transactionSummary.paymentStatus | status }}
+    </strong>
+  </span>
+</netz-page-heading>
+
+<govuk-tabs [queryParamsHandling]="'replace'">
+  <ng-template govukTabLazy id="transaction-details" label="Details">
+    <cca-transaction-details-tab />
+  </ng-template>
+
+  <ng-template govukTabLazy id="change-history" label="Change history">
+    <cca-transaction-history-tab />
+  </ng-template>
+</govuk-tabs>

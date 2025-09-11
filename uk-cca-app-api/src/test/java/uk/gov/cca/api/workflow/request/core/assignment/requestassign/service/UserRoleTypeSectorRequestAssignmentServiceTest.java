@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 
 @ExtendWith(MockitoExtension.class)
-public class UserRoleTypeSectorRequestAssignmentServiceTest {
+class UserRoleTypeSectorRequestAssignmentServiceTest {
 
     @InjectMocks
     private UserRoleTypeSectorUserRequestAssignmentService userRoleTypeSectorUserRequestAssignmentService;

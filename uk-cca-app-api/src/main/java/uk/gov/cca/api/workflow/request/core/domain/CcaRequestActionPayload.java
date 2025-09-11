@@ -14,5 +14,5 @@ import uk.gov.netz.api.workflow.request.core.domain.RequestActionPayload;
 @AllArgsConstructor
 public class CcaRequestActionPayload extends RequestActionPayload {
 
-    private String businessId;
+    private String businessId; //account business id
 }

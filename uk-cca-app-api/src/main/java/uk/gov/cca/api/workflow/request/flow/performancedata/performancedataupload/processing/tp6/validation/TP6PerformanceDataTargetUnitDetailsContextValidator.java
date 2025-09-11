@@ -90,10 +90,8 @@ public class TP6PerformanceDataTargetUnitDetailsContextValidator extends TP6Perf
         if(performanceData.getTargetType().equals(AgreementCompositionType.NOVEM)) {
             throughputUnit = null;
         }
-        else{
-            String unaThroughputUnit = underlyingAgreement.getTargetPeriod6Details().getTargetComposition().getThroughputUnit();
-            String sectorThroughputUnit = referenceDetails.getUnderlyingAgreement().getUnderlyingAgreementContainer().getSectorThroughputUnit();
-            throughputUnit = unaThroughputUnit != null ? unaThroughputUnit : sectorThroughputUnit;
+        else {
+            throughputUnit = underlyingAgreement.getTargetPeriod6Details().getTargetComposition().getThroughputUnit();
         }
 
         violations.addAll(TP6PerformanceDataUploadValidationHelper.getViolations(this.getSectionName(),

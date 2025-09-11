@@ -1,0 +1,19 @@
+@if (details(); as details) {
+  <netz-page-heading [caption]="details.facilityId">{{ details.siteName }}</netz-page-heading>
+
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-9">Subsistence fees marking history</h2>
+
+  @for (item of details.markingStatusHistoryList; track $index) {
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
+      Facility marked as {{ item.paymentStatus | status }} by {{ item.submitter }}
+    </h3>
+
+    <p class="govuk-!-margin-bottom-1 govuk-!-margin-top-1" data-testid="date-info">
+      {{ item.submissionDate | govukDate: 'datetime' }}
+    </p>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-top-3 govuk-!-margin-bottom-3" />
+  } @empty {
+    <p>There are no history details to display.</p>
+  }
+}

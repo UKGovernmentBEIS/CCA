@@ -98,7 +98,7 @@
   <h2 class="govuk-heading-m">Credentials</h2>
 
   @if (isCurrentUser) {
-    <cca-two-fa-link [title]="'Change two factor authentication'" [link]="'/2fa/change'"> </cca-two-fa-link>
+    <cca-two-fa-link [title]="'Change two factor authentication'" [link]="'/2fa/change'" />
   } @else if (isEditable && sectorUserId) {
     <cca-two-fa-link
       [title]="'Reset two-factor authentication'"
@@ -107,7 +107,6 @@
       [userName]="userFullName"
       [role]="'SECTOR_USER'"
       [sectorAssociationId]="sectorAssociationId"
-    >
-    </cca-two-fa-link>
+    />
   }
 }

@@ -2,6 +2,8 @@ package uk.gov.cca.api.workflow.request.core.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationInfoService;
@@ -32,13 +34,17 @@ public class SectorReferenceDetailsService {
                 sectorAssociationInfoService.getSectorAssociationMeasurementInfo(sectorAssociationId, subSectorAssociationId));
     }
 
-    public SectorAssociationSchemeDTO getSectorAssociationSchemeBySectorAssociationId(Long sectorAssociationId) {
-        return sectorAssociationSchemeService.getSectorAssociationSchemeBySectorAssociationId(sectorAssociationId);
-    }
-
     public SectorAssociationInfo getSectorAssociationInfo(Long sectorAssociationId) {
         return sectorReferenceDataMapper.toSectorAssociationInfo(
                 sectorAssociationQueryService.getSectorAssociationInfoNameDTO(sectorAssociationId));
+    }
+    
+    public SectorAssociationSchemeDTO getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(Long sectorAssociationId, SchemeVersion version) {
+        return sectorAssociationSchemeService.getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(sectorAssociationId, version);
+    }
+    
+    public String getSectorAssociationAcronymAndNameBySectorAssociationId(Long sectorAssociationId) {
+        return sectorAssociationQueryService.getSectorAssociationAcronymAndName(sectorAssociationId);
     }
 
     public List<SectorAssociationInfo> getSectorAssociationsInfo(List<Long> sectorAssociationIds) {

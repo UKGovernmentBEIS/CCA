@@ -16,6 +16,7 @@ export type AccountAddressFormModel = {
 
 export function createAccountAddressForm(address: AccountAddressDTO) {
   const fb = inject(FormBuilder);
+
   return fb.group<AccountAddressFormModel>({
     line1: fb.control(address?.line1 ?? null, [
       GovukValidators.required('Enter address line 1, typically the building and street'),

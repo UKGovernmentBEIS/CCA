@@ -18,7 +18,7 @@ public class UnderlyingAgreementAuthorisationAndAdditionalEvidenceContextValidat
     }
 
     @Override
-    protected List<UnderlyingAgreementViolation> validateSection(AuthorisationAndAdditionalEvidence section, UnderlyingAgreementContainer container) {
+    protected List<UnderlyingAgreementViolation> validateSection(AuthorisationAndAdditionalEvidence section, UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
         // Validate data
@@ -32,12 +32,12 @@ public class UnderlyingAgreementAuthorisationAndAdditionalEvidenceContextValidat
     }
 
     @Override
-    public BusinessValidationResult validate(UnderlyingAgreementContainer container) {
+    public BusinessValidationResult validate(UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
         AuthorisationAndAdditionalEvidence section = container.getUnderlyingAgreement().getAuthorisationAndAdditionalEvidence();
 
         List<UnderlyingAgreementViolation> violations = super.validateEmptySection(section);
         if (violations.isEmpty()) {
-            violations = this.validateSection(section, container);
+            violations = this.validateSection(section, container, underlyingAgreementValidationContext);
         }
 
         return BusinessValidationResult.builder().valid(violations.isEmpty()).violations(violations).build();

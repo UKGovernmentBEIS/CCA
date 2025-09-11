@@ -16,9 +16,21 @@ import { OperatorUserInvitationStore } from '../store';
 
 @Component({
   selector: 'cca-set-password-only',
-  templateUrl: './set-password-only.component.html',
+  template: `
+    @if (isErrorSummaryDisplayed()) {
+      <govuk-error-summary [form]="form" />
+    }
+
+    <div class="govuk-!-width-three-quarters">
+      <netz-page-heading [caption]="'Create user account'">Create a password</netz-page-heading>
+
+      <form (ngSubmit)="onSubmitPassword()" [formGroup]="form" data-testid="invited-operator-user-password-form">
+        <cca-password />
+        <button netzPendingButton govukButton type="submit">Continue</button>
+      </form>
+    </div>
+  `,
   standalone: true,
-  providers: [passwordFormFactory],
   imports: [
     PageHeadingComponent,
     PasswordComponent,
@@ -27,6 +39,7 @@ import { OperatorUserInvitationStore } from '../store';
     ButtonDirective,
     PendingButtonDirective,
   ],
+  providers: [passwordFormFactory],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SetPasswordOnlyComponent {
@@ -35,11 +48,11 @@ export class SetPasswordOnlyComponent {
   private readonly operatorUsersRegistrationService = inject(OperatorUsersRegistrationService);
   private readonly store = inject(OperatorUserInvitationStore);
 
-  readonly form = inject<FormGroup>(PASSWORD_FORM);
+  protected readonly form = inject<FormGroup>(PASSWORD_FORM);
 
   protected readonly storeUser = this.store.state;
 
-  isErrorSummaryDisplayed = signal(false);
+  protected readonly isErrorSummaryDisplayed = signal(false);
 
   onSubmitPassword() {
     if (this.form.invalid) {

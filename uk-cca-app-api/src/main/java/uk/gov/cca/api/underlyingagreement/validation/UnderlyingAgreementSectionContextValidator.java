@@ -5,5 +5,5 @@ import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 
 public interface UnderlyingAgreementSectionContextValidator {
 
-    BusinessValidationResult validate(UnderlyingAgreementContainer container);
+    BusinessValidationResult validate(UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext);
 }

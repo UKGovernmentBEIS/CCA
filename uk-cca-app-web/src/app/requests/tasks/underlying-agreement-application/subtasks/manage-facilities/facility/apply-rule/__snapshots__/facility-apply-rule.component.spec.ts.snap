@@ -1,0 +1,140 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FacilityApplyRuleComponent should show form values 1`] = `
+<cca-facility-apply-rule
+  activatedRoute={[Function Object]}
+  energyConsumedEligible={[Function Function]}
+  energyConsumedProvisionValue={[Function Function]}
+  energyConsumedValue={[Function Function]}
+  facility={[Function Function]}
+  facilityId={[Function String]}
+  form={[Function FormGroup]}
+  isLessThan70={[Function Function]}
+  router={[Function _Router]}
+  store={[Function _RequestTaskStore]}
+  tasksApiService={[Function Object]}
+>
+  <cca-wizard-step
+    class="ng-untouched ng-pristine ng-invalid"
+    data-testid="facility-extend-form"
+    heading="Apply the 70% rule"
+  >
+    <form
+      class="ng-untouched ng-pristine ng-invalid"
+      novalidate=""
+    >
+      <netz-page-heading>
+        <h1
+          class="govuk-heading-l"
+        >
+          Apply the 70% rule
+        </h1>
+      </netz-page-heading>
+      <div
+        class="govuk-!-width-two-thirds"
+      >
+        <div
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+          formcontrolname="energyConsumed"
+          govuk-text-input=""
+          hint="Enter the amount of energy consumed by the eligible activities and any directly associated activities (the installation) over a recent 12 month period as a percentage of the total energy used by the site over the same period. Enter a number between 0% and 100%."
+          inputtype="number"
+          label="Energy consumed in the installation"
+          suffix="%"
+          widthclass="govuk-input--width-5"
+        >
+          <label
+            class="govuk-label"
+            for="energyConsumed"
+            id="l.energyConsumed"
+          >
+             Energy consumed in the installation 
+          </label>
+          <div
+            class="govuk-hint"
+            id="energyConsumed-hint"
+          >
+             Enter the amount of energy consumed by the eligible activities and any directly associated activities (the installation) over a recent 12 month period as a percentage of the total energy used by the site over the same period. Enter a number between 0% and 100%. 
+          </div>
+          <div
+            class="govuk-input__wrapper"
+          >
+            <input
+              autocomplete="on"
+              class="govuk-input govuk-input--width-5"
+              id="energyConsumed"
+              name="energyConsumed"
+              type="text"
+            />
+            <div
+              aria-hidden="true"
+              class="govuk-input__suffix"
+            >
+              %
+            </div>
+          </div>
+        </div>
+        <p>
+          Energy consumed in eligible facility
+        </p>
+        <cca-file-input
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+          formcontrolname="evidenceFile"
+          hint="Upload data that supports any estimations and shows any formulas used"
+          label="Evidence"
+        >
+          <div
+            class="cca-multi-file-upload cca-multi-file-upload--enhanced"
+          >
+            <label
+              class="govuk-label"
+              for="evidenceFile"
+              id="l.evidenceFile"
+            >
+              Evidence
+            </label>
+            <span
+              class="govuk-hint govuk-!-display-block"
+              id="evidenceFile-hint"
+            >
+              Upload data that supports any estimations and shows any formulas used
+            </span>
+            <input
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              class="govuk-file-upload"
+              id="evidenceFile"
+              name="evidenceFile"
+              type="file"
+            />
+            <cca-file-upload-list>
+              <div
+                class="cca-multi-file__uploaded-files cca-hidden"
+              >
+                <dl
+                  class="govuk-summary-list"
+                >
+                </dl>
+              </div>
+            </cca-file-upload-list>
+          </div>
+        </cca-file-input>
+      </div>
+      <button
+        class="govuk-button"
+        govukbutton=""
+        netzpendingbutton=""
+        type="submit"
+      >
+        Continue
+      </button>
+    </form>
+  </cca-wizard-step><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><a
+    class="govuk-link"
+    href="/"
+  >
+     Return to: Manage facilities 
+  </a>
+</cca-facility-apply-rule>
+`;

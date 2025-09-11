@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
+import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemesDTO;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeDocumentService;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationSchemeService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
@@ -32,9 +32,9 @@ public class SectorAssociationSchemeController {
     private final SectorAssociationSchemeDocumentService sectorAssociationSchemeDocumentService;
 
     @GetMapping
-    @Operation(summary = "Retrieves the sector association scheme that corresponds to the provided sector id")
+    @Operation(summary = "Retrieves the sector association schemes that correspond to the provided sector id")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
-            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = SectorAssociationSchemeDTO.class))})
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = SectorAssociationSchemesDTO.class))})
     @ApiResponse(responseCode = "400", description = SwaggerApiInfo.AUTHORITY_USER_NOT_RELATED_TO_CA,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
@@ -42,9 +42,9 @@ public class SectorAssociationSchemeController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#sectorId")
-    public ResponseEntity<SectorAssociationSchemeDTO> getSectorAssociationSchemeBySectorAssociationId(
+    public ResponseEntity<SectorAssociationSchemesDTO> getSectorAssociationSchemeBySectorAssociationId(
             @PathVariable("sectorId") @Parameter(description = "The sector association id") Long sectorId) {
-        return new ResponseEntity<>(sectorAssociationSchemeService.getSectorAssociationSchemeBySectorAssociationId(sectorId), HttpStatus.OK);
+        return new ResponseEntity<>(sectorAssociationSchemeService.getSectorAssociationSchemesBySectorAssociationId(sectorId), HttpStatus.OK);
     }
 
     @GetMapping(path = "/document")

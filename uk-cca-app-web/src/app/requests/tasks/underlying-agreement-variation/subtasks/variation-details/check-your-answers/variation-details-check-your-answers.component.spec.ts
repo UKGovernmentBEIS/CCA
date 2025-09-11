@@ -5,9 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { TaskService } from '@netz/common/forms';
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
+import { TasksApiService } from '@requests/common';
 
 import { mockRequestTaskItemDTO } from '../../../testing/mock-data';
 import VariationDetailsCheckYourAnswersComponent from './variation-details-check-your-answers.component';
@@ -19,8 +19,8 @@ describe('VariationDetailsCheckYourAnswersComponent', () => {
   let page: Page;
 
   const route = new ActivatedRouteStub();
-  const unaTaskService: Partial<jest.Mocked<TaskService>> = {
-    submitSubtask: jest.fn().mockReturnValue(of({})),
+  const mockTasksApiService: Partial<jest.Mocked<TasksApiService>> = {
+    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
   };
 
   class Page extends BasePage<VariationDetailsCheckYourAnswersComponent> {
@@ -48,7 +48,7 @@ describe('VariationDetailsCheckYourAnswersComponent', () => {
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },
-        { provide: TaskService, useValue: unaTaskService },
+        { provide: TasksApiService, useValue: mockTasksApiService },
       ],
     }).compileComponents();
 
@@ -80,11 +80,16 @@ describe('VariationDetailsCheckYourAnswersComponent', () => {
   });
 
   it('should submit', () => {
-    const taskServiceSpy = jest.spyOn(unaTaskService, 'submitSubtask');
+    const apiServiceSpy = jest.spyOn(mockTasksApiService, 'saveRequestTaskAction');
 
     page.submitButton.click();
     fixture.detectChanges();
 
-    expect(taskServiceSpy).toHaveBeenCalledWith('underlyingAgreementVariationDetails');
+    expect(apiServiceSpy).toHaveBeenCalledTimes(1);
+    expect(apiServiceSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requestTaskActionType: 'UNDERLYING_AGREEMENT_VARIATION_SAVE_APPLICATION',
+      }),
+    );
   });
 });

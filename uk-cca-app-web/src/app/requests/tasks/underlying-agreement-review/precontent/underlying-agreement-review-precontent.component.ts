@@ -10,12 +10,22 @@ import { ConfigService } from '@shared/config';
 @Component({
   selector: 'cca-underlying-agreement-review-precontent',
   template: `
+    @if (determinationSubmitted && isEditable) {
+      <button
+        netzPendingButton
+        govukButton
+        type="button"
+        class="govuk-!-margin-right-3"
+        (click)="onSendForPeerReview()"
+      >
+        Send for peer review
+      </button>
+    }
+
     @if (determinationSubmitted && isEditable && notifyEnabled) {
-      <div class="govuk-body">
-        <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
-          Notify operator of decision
-        </button>
-      </div>
+      <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
+        Notify operator of decision
+      </button>
     }
   `,
   standalone: true,
@@ -24,7 +34,6 @@ import { ConfigService } from '@shared/config';
 })
 export class UnderlyingAgreementReviewPrecontentComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
-
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly config = inject(ConfigService);
@@ -39,5 +48,9 @@ export class UnderlyingAgreementReviewPrecontentComponent {
 
   onNotifyOperatorOfDecision() {
     this.router.navigate(['underlying-agreement-review', 'notify-operator'], { relativeTo: this.activatedRoute });
+  }
+
+  onSendForPeerReview() {
+    this.router.navigate(['underlying-agreement-review', 'send-for-peer-review'], { relativeTo: this.activatedRoute });
   }
 }

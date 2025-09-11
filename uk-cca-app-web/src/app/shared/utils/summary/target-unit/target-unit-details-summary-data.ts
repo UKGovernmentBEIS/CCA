@@ -1,12 +1,12 @@
 import { DatePipe } from '@angular/common';
 
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { financialIndependenceStatusTypeMap, operatorTypeMap } from '@shared/pipes';
+import { operatorTypeMap, StatusPipe } from '@shared/pipes';
 
 import { TargetUnitAccountDetailsResponseDTO } from 'cca-api';
 
 import { getAddressAsArray } from '../../address';
-import { transformFileInfoToDownloadableFile } from '../../file-attachments-transformations';
+import { fileUtils } from '../../files';
 import { transformPhoneNumber } from '../../phone';
 
 export function toTargetUnitDetailsSummaryData(
@@ -15,34 +15,51 @@ export function toTargetUnitDetailsSummaryData(
   isFinancialIndependenceEditable: boolean,
   downloadURL: string,
 ): SummaryData {
-  if (!details) {
-    return;
-  }
+  if (!details) return;
 
   const responsiblePerson = details.targetUnitAccountDetails.responsiblePerson;
   const administrativePerson = details.targetUnitAccountDetails.administrativeContactDetails;
 
-  const summaryDetails = new SummaryFactory()
+  const factory = new SummaryFactory();
+
+  if (['LIVE', 'TERMINATED'].includes(details.targetUnitAccountDetails.status)) {
+    factory
+      .addSection('Active Underlying Agreement')
+      .addFileListRow(
+        'Downloadable version',
+        fileUtils.toDownloadableDocument([details.underlyingAgreementDetails.fileDocument], downloadURL),
+      )
+      .addRow(
+        'Activation date',
+        new DatePipe('en-GB').transform(details.underlyingAgreementDetails.activationDate, 'dd MMM y'),
+      );
+  }
+
+  factory
     .addSection('Target unit details', 'edit/details')
     .addRow('Operator name', details.targetUnitAccountDetails.name)
     .addRow('Operator type', operatorTypeMap[details.targetUnitAccountDetails.operatorType])
-    .addRow(
-      'Company registration number',
-      details.targetUnitAccountDetails.companyRegistrationNumber ??
-        details.targetUnitAccountDetails.registrationNumberMissingReason,
-    )
-    .addRow('Standard industrial classification (SIC) code', details.targetUnitAccountDetails.sicCode, {
+    .addRow('Company number', details.targetUnitAccountDetails.companyRegistrationNumber ?? 'Not provided');
+
+  if (details.targetUnitAccountDetails.registrationNumberMissingReason) {
+    factory.addRow(
+      'Reason for not having a registration number',
+      details.targetUnitAccountDetails.registrationNumberMissingReason,
+    );
+  }
+
+  factory
+    .addRow('Standard industrial classification (SIC) codes', details.targetUnitAccountDetails.sicCodes, {
       change: isEditable,
       appendChangeParam: false,
     })
     .addRow('Subsector', details.subsectorAssociation?.name)
 
     .addSection('Financial independence', 'edit/financial-independence')
-    .addRow(
-      'Status',
-      financialIndependenceStatusTypeMap[details.targetUnitAccountDetails.financialIndependenceStatus],
-      { change: isFinancialIndependenceEditable, appendChangeParam: false },
-    )
+    .addRow('Status', new StatusPipe().transform(details.targetUnitAccountDetails.financialIndependenceStatus), {
+      change: isFinancialIndependenceEditable,
+      appendChangeParam: false,
+    })
 
     .addSection('Operator address')
     .addRow('Address', getAddressAsArray(details.targetUnitAccountDetails.address))
@@ -70,24 +87,7 @@ export function toTargetUnitDetailsSummaryData(
     .addRow('Address', getAddressAsArray(administrativePerson.address), {
       change: isEditable,
       appendChangeParam: false,
-    })
-    .create();
+    });
 
-  if (['LIVE', 'TERMINATED'].includes(details.targetUnitAccountDetails.status)) {
-    const activeUnASection = new SummaryFactory()
-      .addSection('Active Underlying Agreement')
-      .addFileListRow(
-        'Downloadable version',
-        transformFileInfoToDownloadableFile(details.underlyingAgreementDetails.fileDocument, downloadURL),
-      )
-      .addRow(
-        'Activation date',
-        new DatePipe('en-GB').transform(details.underlyingAgreementDetails.activationDate, 'dd MMM y'),
-      )
-      .create();
-
-    return activeUnASection.concat(summaryDetails);
-  }
-
-  return summaryDetails;
+  return factory.create();
 }

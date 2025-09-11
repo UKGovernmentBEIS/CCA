@@ -1,11 +1,11 @@
 @if (accountHeaderInfo(); as accountHeaderInfo) {
   <div class="govuk-phase-banner">
-    <div class="govuk-phase-banner__content">
+    <p class="govuk-phase-banner__content">
       <span class="govuk-!-font-weight-bold" data-testId="name">{{ accountHeaderInfo.name }}</span>
       <span class="govuk-!-padding-left-3 govuk-!-font-weight-bold" data-testId="businessId">{{
         accountHeaderInfo.businessId
       }}</span>
       <span class="govuk-!-padding-left-3" data-testId="status">{{ 'Status: ' + accountHeaderInfo.status }}</span>
-    </div>
+    </p>
   </div>
 }

@@ -15,7 +15,7 @@ describe('ConfirmationComponent', () => {
       return this.query('.govuk-panel__title').innerHTML.trim();
     }
     get text() {
-      return this.query<HTMLParagraphElement>('.govuk-body').innerHTML.trim();
+      return this.query<HTMLParagraphElement>('p').innerHTML.trim();
     }
   }
 

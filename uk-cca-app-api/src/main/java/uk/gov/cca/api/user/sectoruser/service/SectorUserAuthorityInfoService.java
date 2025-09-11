@@ -18,7 +18,6 @@ import uk.gov.netz.api.authorization.core.domain.dto.UserAuthorityDTO;
 import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,7 +62,7 @@ public class SectorUserAuthorityInfoService {
                                                 .filter(info -> info.getUserId().equals(authority.getUserId()))
                                                 .findFirst()
                                                 .orElse(new UserInfoDTO())))
-                        .collect(Collectors.toList());
+                        .toList();
 
         return SectorUsersAuthoritiesInfoDTO.builder().authorities(sectorUserAuthorityInfoDTOS).editable(sectorUserAuthorities.isEditable()).build();
     }

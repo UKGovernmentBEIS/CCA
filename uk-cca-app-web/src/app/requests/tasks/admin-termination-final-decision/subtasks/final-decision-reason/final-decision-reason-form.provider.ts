@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
-import { transformAttachmentsToFilesWithUUIDs, transformFilesToUUIDsList } from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 import { textFieldValidators } from '@shared/validators';
 
 import { AdminTerminationFinalDecisionReasonDetails } from 'cca-api';
@@ -32,13 +32,13 @@ export const FinalDecisionReasonFormProvider: Provider = {
       AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionAttachments,
     )();
 
-    const files = transformAttachmentsToFilesWithUUIDs(reasonDetails.relevantFiles, attachments);
+    const files = fileUtils.toFiles(reasonDetails.relevantFiles, attachments);
 
     return fb.group({
       explanation: fb.control(reasonDetails.explanation, textFieldValidators('reason why of your decision')),
       relevantFiles: requestTaskFileService.buildFormControl(
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
-        transformFilesToUUIDsList(files),
+        fileUtils.toUUIDs(files),
         attachments,
         'ADMIN_TERMINATION_UPLOAD_ATTACHMENT',
         false,

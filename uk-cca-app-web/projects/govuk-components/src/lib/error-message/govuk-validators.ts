@@ -109,6 +109,10 @@ export class GovukValidators {
     return GovukValidators.pattern(regex, `Enter a number up to ${decimalDigits} decimal places`);
   };
 
+  static nonZero(message = 'Value cannot be zero'): MessageValidatorFn {
+    return GovukValidators.builder(message, this.nonZeroValidator());
+  }
+
   private static isPositiveNumber(): ValidatorFn {
     return (control: AbstractControl): Record<string, boolean> | null => {
       const inputNumValue = Number(control.value);
@@ -215,6 +219,17 @@ export class GovukValidators {
       ) {
         return { incomplete: true };
       }
+      return null;
+    };
+  }
+
+  private static nonZeroValidator(): ValidatorFn {
+    return (control: AbstractControl): Record<string, boolean> | null => {
+      if (control.value === null || control.value === undefined || control.value === '') return null;
+
+      const numValue = Number(control.value);
+      if (!Number.isNaN(numValue) && numValue === 0) return { nonZero: true };
+
       return null;
     };
   }

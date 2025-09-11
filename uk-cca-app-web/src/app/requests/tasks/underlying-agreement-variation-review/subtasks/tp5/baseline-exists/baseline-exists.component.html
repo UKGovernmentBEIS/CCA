@@ -1,0 +1,25 @@
+@if (showNotificationBanner) {
+  <govuk-notification-banner heading="Important">
+    <h3>You can skip this section</h3>
+
+    <p id="notification-content">
+      Providing information for TP5 is optional because you are applying for a new agreement.
+    </p>
+  </govuk-notification-banner>
+}
+
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  [caption]="'TP5 (2021-2023)'"
+  heading="Are you providing baseline and target information for TP5 (2021 to 2023)?"
+  data-testid="baseline-exists-form"
+>
+  <div formControlName="exist" govuk-radio>
+    <govuk-radio-option [value]="true" [label]="'Yes'" />
+    <govuk-radio-option [value]="false" [label]="'No'" />
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

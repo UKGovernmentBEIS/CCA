@@ -5,14 +5,17 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { combineLatest, expand, map, Observable, of, switchMap, timer } from 'rxjs';
 
 import {
-  AccountTargetPeriodReportingService,
+  BuyOutAndSurplusTransactionInfoViewService,
   FileAttachmentsService,
   FileDocumentsService,
   FileToken,
   RequestActionAttachmentsHandlingService,
   RequestActionFileDocumentsHandlingService,
   RequestTaskAttachmentsHandlingService,
-  SubsistenceFeesMoAInfoViewService,
+  SubsistenceFeesMoAReceivedAmountControllerService,
+  SubsistenceFeesMoAViewService,
+  TargetPeriodPerformanceAccountTemplateDataReportOfTheAccountService,
+  TargetPeriodPerformanceDataReportOfTheAccountService,
   UnderlyingAgreementsService,
 } from 'cca-api';
 
@@ -25,7 +28,7 @@ export type FileDownloadInfo = {
   selector: 'cca-file-download',
   template: `
     <h1 class="govuk-heading-l">Your download has started</h1>
-    <p class="govuk-body">You should see your downloads in the downloads folder.</p>
+    <p>You should see your downloads in the downloads folder.</p>
     <a class="govuk-link" [href]="url$ | async" download #anchor>Click to restart download if it fails</a>
   `,
   standalone: true,
@@ -37,29 +40,39 @@ export class FileDownloadComponent implements AfterViewChecked {
   private readonly requestTaskAttachmentsHandlingService = inject(RequestTaskAttachmentsHandlingService);
   private readonly requestActionAttachmentsHandlingService = inject(RequestActionAttachmentsHandlingService);
   private readonly requestActionFileDocumentsHandlingService = inject(RequestActionFileDocumentsHandlingService);
-  private readonly subsistenceFeesMoAInfoViewService = inject(SubsistenceFeesMoAInfoViewService);
+  private readonly subsistenceFeesMoAViewService = inject(SubsistenceFeesMoAViewService);
+  private readonly subsistenceFeesMoAReceivedAmountControllerService = inject(
+    SubsistenceFeesMoAReceivedAmountControllerService,
+  );
   private readonly fileAttachmentsService = inject(FileAttachmentsService);
   private readonly fileDocumentsService = inject(FileDocumentsService);
   private readonly underlyingAgreementsService = inject(UnderlyingAgreementsService);
-  private readonly accountTargetPeriodReportingService = inject(AccountTargetPeriodReportingService);
+  private readonly targetPeriodPerformanceDataReportOfTheAccountService = inject(
+    TargetPeriodPerformanceDataReportOfTheAccountService,
+  );
+  private readonly targetPeriodPerformanceAccountTemplateDataReportOfTheAccountService = inject(
+    TargetPeriodPerformanceAccountTemplateDataReportOfTheAccountService,
+  );
+  private readonly buyOutAndSurplusTransactionInfoViewService = inject(BuyOutAndSurplusTransactionInfoViewService);
 
-  anchor = viewChild<ElementRef<HTMLAnchorElement>>('anchor');
+  protected readonly anchor = viewChild<ElementRef<HTMLAnchorElement>>('anchor');
 
   private hasDownloadedOnce = false;
   private fileDownloadAttachmentPath = `${this.fileAttachmentsService.configuration.basePath}/v1.0/file-attachments/`;
   private fileDownloadDocumentPath = `${this.fileDocumentsService.configuration.basePath}/v1.0/file-documents/`;
 
-  url$ = this.activatedRoute.paramMap.pipe(
+  readonly url$ = this.activatedRoute.paramMap.pipe(
     map((params): FileDownloadInfo => {
-      console.log(params);
       if (params.has('actionId')) return this.requestActionDownloadInfo(params);
 
       if (params.has('taskId')) return this.requestTaskDownloadInfo(params);
 
-      if (params.has('targetUnitId') && params.has('targetPeriodType'))
+      if (params.has('targetUnitId') && params.has('targetPeriodType') && params.has('reportType'))
         return this.targetUnitAccountDownloadInfo(params);
 
       if (params.has('moaId')) return this.subsistenceFeesMoasDownloadInfo(params);
+
+      if (params.has('transactionId')) return this.buyOutAndSurplusDownloadInfo(params);
 
       return this.underlyingAgreementDownloadInfo(params);
     }),
@@ -109,15 +122,15 @@ export class FileDownloadComponent implements AfterViewChecked {
         ),
         fileType: 'document',
       };
-    } else {
-      return {
-        request: this.requestActionAttachmentsHandlingService.generateRequestActionGetFileAttachmentToken(
-          Number(params.get('actionId')),
-          params.get('uuid'),
-        ),
-        fileType: 'attachment',
-      };
     }
+
+    return {
+      request: this.requestActionAttachmentsHandlingService.generateRequestActionGetFileAttachmentToken(
+        Number(params.get('actionId')),
+        params.get('uuid'),
+      ),
+      fileType: 'attachment',
+    };
   }
 
   private underlyingAgreementDownloadInfo(params: ParamMap): FileDownloadInfo {
@@ -131,23 +144,61 @@ export class FileDownloadComponent implements AfterViewChecked {
   }
 
   private subsistenceFeesMoasDownloadInfo(params: ParamMap): FileDownloadInfo {
+    if (params.get('fileType') === 'document') {
+      return {
+        request: this.subsistenceFeesMoAViewService.generateGetSubsistenceFeesMoaDocumentToken(
+          +params.get('moaId'),
+          params.get('uuid'),
+        ),
+        fileType: 'document',
+      };
+    }
+
     return {
-      request: this.subsistenceFeesMoAInfoViewService.generateGetSubsistenceFeesMoaDocumentToken(
+      request: this.subsistenceFeesMoAReceivedAmountControllerService.generateGetMoaReceivedAmountEvidenceFileToken(
         +params.get('moaId'),
         params.get('uuid'),
       ),
-      fileType: 'document',
+      fileType: 'attachment',
     };
   }
 
   private targetUnitAccountDownloadInfo(params: ParamMap): FileDownloadInfo {
+    const targetPeriod = params.get('targetPeriodType');
+    const requestedReportType = params.get('reportType');
+
+    if (requestedReportType === 'PERFORMANCE') {
+      return {
+        request:
+          this.targetPeriodPerformanceDataReportOfTheAccountService.generateGetAccountPerformanceDataReportAttachmentToken(
+            +params.get('targetUnitId'),
+            (targetPeriod as 'TP5') || 'TP6',
+            params.get('uuid'),
+          ),
+        fileType: 'attachment',
+      };
+    }
+
+    if (requestedReportType === 'PAT') {
+      return {
+        request:
+          this.targetPeriodPerformanceAccountTemplateDataReportOfTheAccountService.generateGetAccountPerformanceAccountTemplateDataReportAttachmentToken(
+            +params.get('targetUnitId'),
+            (targetPeriod as 'TP5') || 'TP6',
+            params.get('uuid'),
+          ),
+        fileType: 'attachment',
+      };
+    }
+  }
+
+  private buyOutAndSurplusDownloadInfo(params: ParamMap): FileDownloadInfo {
     return {
-      request: this.accountTargetPeriodReportingService.generateGetAccountPerformanceReportAttachmentToken(
-        +params.get('targetUnitId'),
-        (params.get('targetPeriodType') as 'TP5') || 'TP6',
+      request: this.buyOutAndSurplusTransactionInfoViewService.generateBuyOutSurplusTransactionDocumentToken(
+        +params.get('transactionId'),
         params.get('uuid'),
       ),
-      fileType: 'attachment',
+      fileType: 'document',
     };
   }
 }

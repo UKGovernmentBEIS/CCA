@@ -41,7 +41,7 @@ public class TP6PerformanceDataSpreadsheetProcessingExtractDataService implement
     private static final TP6CalculatedPerformanceDataMapper TP6_CALCULATED_PERFORMANCE_DATA_MAPPER = Mappers.getMapper(TP6CalculatedPerformanceDataMapper.class);
 
     @Override
-    public TP6PerformanceData extractData(Long accountId, PerformanceDataSpreadsheetProcessingRequestMetadata metadata, FileDTO file) throws Exception {
+    public TP6PerformanceData extractData(PerformanceDataSpreadsheetProcessingRequestMetadata metadata, FileDTO file) throws Exception {
         TP6PerformanceData tp6PerformanceData = TP6PerformanceData.builder()
                 .type(metadata.getPerformanceDataTargetPeriodType())
                 .submissionType(metadata.getSubmissionType())

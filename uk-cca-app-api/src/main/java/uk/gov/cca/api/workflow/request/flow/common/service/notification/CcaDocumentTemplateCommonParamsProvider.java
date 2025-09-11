@@ -3,11 +3,12 @@ package uk.gov.cca.api.workflow.request.flow.common.service.notification;
 import org.springframework.stereotype.Service;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
+import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.notification.template.domain.TargetUnitAccountTemplateParams;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
-import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationDetails;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.service.SectorReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransformationMapper;
@@ -25,8 +26,11 @@ import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.user.core.service.auth.UserAuthService;
 import uk.gov.netz.api.user.regulator.domain.RegulatorUserDTO;
 import uk.gov.netz.api.user.regulator.service.RegulatorUserAuthService;
+import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateCommonParamsAbstractProvider;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -67,14 +71,6 @@ public class CcaDocumentTemplateCommonParamsProvider extends DocumentTemplateCom
         final TargetUnitAccountDetailsDTO accountDetails = accountReferenceDetailsService.getTargetUnitAccountDetails(accountId);
         final TargetUnitAccountContactDTO responsiblePerson = accountDetails.getResponsiblePerson();
 
-
-        final SectorAssociationContactDTO sectorAssociationContact = accountReferenceDetailsService.getSectorAssociationContactByAccountId(accountId);
-        SectorAssociationDetails sectorAssociationDetails = sectorReferenceDetailsService.getSectorAssociationMeasurementDetails(
-                accountDetails.getSectorAssociationId(), accountDetails.getSubsectorAssociationId());
-        final SectorAssociationSchemeDTO sectorScheme = sectorReferenceDetailsService.getSectorAssociationSchemeBySectorAssociationId(accountDetails.getSectorAssociationId());
-        // sector Contact Location
-        String sectorContactAddressString = documentTemplateTransformationMapper.constructAddressDTO(sectorAssociationContact.getAddress());
-
         return TargetUnitAccountTemplateParams.builder()
                 .name(accountDetails.getName())
                 .companyRegistrationNumber(accountDetails.getCompanyRegistrationNumber())
@@ -84,33 +80,18 @@ public class CcaDocumentTemplateCommonParamsProvider extends DocumentTemplateCom
                 .primaryContactEmail(responsiblePerson.getEmail())
                 .location(documentTemplateTransformationMapper.constructAccountAddressDTO(responsiblePerson.getAddress()))
                 .competentAuthority(accountDetails.getCompetentAuthority())
-                // sectorInformation
-                .sectorName(accountReferenceDetailsService.getSectorAssociationNameByAccountId(accountId))
-                .sectorIdentifier(accountReferenceDetailsService.getSectorAssociationAcronymAndNameByAccountId(accountId))
-                .sectorContactFullName("%s %s".formatted(sectorAssociationContact.getFirstName(), sectorAssociationContact.getLastName()))
-                .sectorContactEmail(sectorAssociationContact.getEmail())
-                .sectorContactLocation(sectorContactAddressString)
-                .sectorThroughputUnit(sectorAssociationDetails.getThroughputUnit())
-                .umaDate(documentTemplateTransformationMapper.formatUmaDate(sectorScheme.getUmaDate()))
-                .definition(sectorScheme.getSectorDefinition())
                 .build();
     }
 
-    public TemplateParams getSectorTemplateParams(String signatory, Long sectorAssociationId, TemplateParams documentTemplateParams) {
-        final SectorAssociationDTO sectorAssociationDetails = sectorReferenceDetailsService.getSectorAssociationDetails(sectorAssociationId);
-        final SectorAssociationContactDTO sectorAssociationContact = sectorAssociationDetails.getSectorAssociationContact();
-        final String sectorContactAddressString = documentTemplateTransformationMapper.constructAddressDTO(sectorAssociationContact.getAddress());
-        final Map<String, String> commonParams = Map.of(
-                "sectorId", sectorAssociationDetails.getSectorAssociationDetails().getAcronym(),
-                "sectorAssociationName", sectorAssociationDetails.getSectorAssociationDetails().getLegalName(),
-                "sectorContactFullName", "%s %s".formatted(sectorAssociationContact.getFirstName(), sectorAssociationContact.getLastName()),
-                "sectorContactAddress", sectorContactAddressString);
-
-        final Map<String, Object> params = Stream.of(commonParams, documentTemplateParams.getParams())
+    public TemplateParams getSectorAndCaAndSignatoryTemplateParams(String signatory, Long sectorAssociationId, TemplateParams documentTemplateParams) {
+    	// Sector params
+    	final Map<String, String> sectorParams = getSectorTemplateParams(sectorAssociationId, SchemeVersion.CCA_2);
+        final Map<String, Object> params = Stream.of(sectorParams, documentTemplateParams.getParams())
                 .flatMap(map -> map.entrySet().stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         // CA params
+        final SectorAssociationDTO sectorAssociationDetails = sectorReferenceDetailsService.getSectorAssociationDetails(sectorAssociationId);
         final CompetentAuthorityEnum competentAuthority = sectorAssociationDetails.getSectorAssociationDetails().getCompetentAuthority();
         final CompetentAuthorityTemplateParams competentAuthorityParams = CompetentAuthorityTemplateParams.builder()
                 .competentAuthority(competentAuthorityService.getCompetentAuthorityDTO(competentAuthority))
@@ -125,6 +106,7 @@ public class CcaDocumentTemplateCommonParamsProvider extends DocumentTemplateCom
             FileDTO signatorySignature = this.userAuthService.getUserSignature(signatureInfo.getUuid())
                     .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, signatureInfo.getUuid()));
 
+            // Signatory params
             final SignatoryTemplateParams signatoryParams = SignatoryTemplateParams.builder()
                     .fullName(signatoryUser.getFullName())
                     .jobTitle(signatoryUser.getJobTitle())
@@ -137,5 +119,40 @@ public class CcaDocumentTemplateCommonParamsProvider extends DocumentTemplateCom
                     .params(params)
                     .build();
         }
+    }
+    
+    public Map<String, String> getSectorTemplateParams(Request request, SchemeVersion version) {
+		    	
+    	return request.getRequestResourcesMap().get(CcaResourceType.SECTOR_ASSOCIATION) != null 
+    			? getSectorTemplateParams(Long.parseLong(request.getRequestResourcesMap().get(CcaResourceType.SECTOR_ASSOCIATION)), version) 
+    					: Collections.emptyMap();
+    }
+    
+    private Map<String, String> getSectorTemplateParams(Long sectorAssociationId, SchemeVersion version) {
+    	final SectorAssociationDTO sectorAssociationDetails = sectorReferenceDetailsService
+    			.getSectorAssociationDetails(sectorAssociationId);
+        final SectorAssociationContactDTO sectorAssociationContact = sectorAssociationDetails.getSectorAssociationContact();
+        final String sectorContactAddressString = documentTemplateTransformationMapper
+        		.constructAddressDTO(sectorAssociationContact.getAddress());
+        
+        Map<String, String> paramMap = new HashMap<>(Map.of(
+                "sectorAcronym", sectorAssociationDetails.getSectorAssociationDetails().getAcronym(),
+                "sectorAcronymAndName", sectorReferenceDetailsService.getSectorAssociationAcronymAndNameBySectorAssociationId(sectorAssociationId),
+                "sectorName", sectorAssociationDetails.getSectorAssociationDetails().getCommonName(),
+                "sectorLegalName", sectorAssociationDetails.getSectorAssociationDetails().getLegalName(),
+                "sectorContactFullName", "%s %s".formatted(sectorAssociationContact.getFirstName(), sectorAssociationContact.getLastName()),
+                "sectorContactEmail", sectorAssociationContact.getEmail(),
+                "sectorContactAddress", sectorContactAddressString));
+        
+        // Add sector scheme data if version is specified
+        if (version != null) {
+        	final SectorAssociationSchemeDTO sectorScheme = sectorReferenceDetailsService
+        			.getSectorAssociationSchemeBySectorAssociationIdAndSchemeVersion(sectorAssociationId, version);
+        	
+        	paramMap.putAll(new HashMap<>(Map.of(
+        			"umaDate", documentTemplateTransformationMapper.formatUmaDate(sectorScheme.getUmaDate()),
+                    "sectorDefinition", sectorScheme.getSectorDefinition())));
+        }
+        return paramMap;
     }
 }

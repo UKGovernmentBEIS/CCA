@@ -67,7 +67,7 @@ class CaExternalContactControllerTest {
     private AppUserAuthorizationService appUserAuthorizationService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
 
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect authorizedAspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);

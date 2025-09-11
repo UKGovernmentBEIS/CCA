@@ -19,7 +19,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminTerminationCancelActionHandlerTest {
+class AdminTerminationCancelActionHandlerTest {
 
     @Mock
     private WorkflowService workflowService;
@@ -31,7 +31,7 @@ public class AdminTerminationCancelActionHandlerTest {
     private AdminTerminationCancelActionHandler handler;
 
     @Test
-    public void testProcess() {
+    void testProcess() {
         Long requestTaskId = 1L;
         String requestTaskActionType = "ADMIN_TERMINATION_CANCEL_APPLICATION";
         String processTaskId = UUID.randomUUID().toString();

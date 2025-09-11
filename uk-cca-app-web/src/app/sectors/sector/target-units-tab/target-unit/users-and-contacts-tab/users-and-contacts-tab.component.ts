@@ -54,24 +54,16 @@ export class UsersAndContactsTabComponent {
 
   private _users = signal<SectorUserAuthorityInfoDTO[]>([]);
 
-  readonly sorting = signal<SortEvent | null>(null);
-  readonly isEditable = signal(false);
+  protected readonly sorting = signal<SortEvent | null>(null);
+  protected readonly isEditable = signal(false);
 
-  readonly currentUserId = this.authStore.select(selectUserId);
-  readonly roleType = this.authStore.select(selectUserRoleType);
+  protected readonly currentUserId = this.authStore.select(selectUserId);
+  protected readonly roleType = this.authStore.select(selectUserRoleType);
 
-  readonly usersForm = this.fb.group({ users: this.fb.array<TargetUnitUserFormModel>([]) });
-  readonly targetUnitId = this.activatedRoute.snapshot.paramMap.get('targetUnitId');
+  protected readonly usersForm = this.fb.group({ users: this.fb.array<TargetUnitUserFormModel>([]) });
+  protected readonly targetUnitId = this.activatedRoute.snapshot.paramMap.get('targetUnitId');
 
-  get usersFormArray() {
-    return this.usersForm.controls.users;
-  }
-
-  constructor() {
-    this.refresh();
-  }
-
-  readonly users = computed(() => {
+  protected readonly users = computed(() => {
     const sorting = this.sorting();
     const users: SectorUserAuthorityInfoDTO[] = this._users();
 
@@ -83,7 +75,7 @@ export class UsersAndContactsTabComponent {
     });
   });
 
-  readonly targetUnitUsersColumns: GovukTableColumn[] = [
+  protected readonly targetUnitUsersColumns: GovukTableColumn[] = [
     { field: 'name', header: 'Name', isSortable: true },
     { field: 'roleName', header: 'User type' },
     { field: 'contactType', header: 'Contact type' },
@@ -91,15 +83,23 @@ export class UsersAndContactsTabComponent {
     { field: 'deleteBtn', header: 'Actions' },
   ];
 
-  readonly authorityStatuses: GovukSelectOption[] = [
+  protected readonly authorityStatuses: GovukSelectOption[] = [
     { text: 'Active', value: 'ACTIVE' },
     { text: 'Disabled', value: 'DISABLED' },
   ];
 
-  readonly authorityStatusesAccepted: GovukSelectOption[] = [
+  protected readonly authorityStatusesAccepted: GovukSelectOption[] = [
     { text: 'Accepted', value: 'ACCEPTED' },
     { text: 'Active', value: 'ACTIVE' },
   ];
+
+  get usersFormArray() {
+    return this.usersForm.controls.users;
+  }
+
+  constructor() {
+    this.refresh();
+  }
 
   refresh() {
     this.operatorAuthorities.getAccountOperatorAuthorities(+this.targetUnitId).subscribe((r) => {

@@ -23,7 +23,6 @@ import uk.gov.netz.api.referencedata.service.CountyService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -49,7 +48,7 @@ class ReferenceDataControllerTest {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(referenceDataController)
                 .setControllerAdvice(new ExceptionControllerAdvice())
                 .build();
@@ -98,12 +97,12 @@ class ReferenceDataControllerTest {
                 .code(countryCode)
                 .name(countryCode + "_name")
                 .officialName(countryCode + "_official").build())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<County> buildCounties(String... countyNames) {
         return Arrays.stream(countyNames)
                 .map(countyName -> new County((long)Objects.hash(countyName), countyName))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

@@ -28,11 +28,11 @@ export class EditAdministrativeContactComponent {
   private readonly store = inject(ActiveTargetUnitStore);
   private readonly router = inject(Router);
 
-  readonly form = inject<FormGroup<AdministrativeContactDetailsFormModel>>(
+  protected readonly form = inject<FormGroup<AdministrativeContactDetailsFormModel>>(
     EDIT_TARGET_UNIT_ADMINISTRATIVE_CONTACT_FORM,
   );
 
-  accountDetails = this.store.state;
+  protected readonly accountDetails = this.store.state;
 
   onSubmit() {
     this.updateTargetUnitAccountService

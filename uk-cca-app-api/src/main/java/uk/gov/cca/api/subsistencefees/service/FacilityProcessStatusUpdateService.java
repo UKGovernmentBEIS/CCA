@@ -19,7 +19,7 @@ import java.util.List;
 public class FacilityProcessStatusUpdateService {
 
     private final FacilityProcessStatusRepository facilityProcessStatusRepository;
-    private final SubsistenceFeesMapper SUBSISTENCE_FEES_MAPPER = Mappers.getMapper(SubsistenceFeesMapper.class);
+    private static final SubsistenceFeesMapper SUBSISTENCE_FEES_MAPPER = Mappers.getMapper(SubsistenceFeesMapper.class);
 
     @Transactional
     public void createFacilityProcessStatusData(@NotEmpty @Valid List<@NotNull FacilityProcessStatusCreationDTO> dtoList) {

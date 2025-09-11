@@ -58,7 +58,7 @@ import uk.gov.netz.api.security.AuthorizedRoleAspect;
 @ExtendWith(MockitoExtension.class)
 class SubsistenceFeesRunViewControllerTest {
 
-	private static final String SUBSISTENCE_FEES_CONTROLLER_PATH = "/v1.0/subsistence-fees-runs/";
+	private static final String SUBSISTENCE_FEES_CONTROLLER_PATH = "/v1.0/subsistence-fees/runs/";
 
     private MockMvc mockMvc;
 
@@ -78,12 +78,12 @@ class SubsistenceFeesRunViewControllerTest {
     private SubsistenceFeesRunQueryService subsistenceFeesRunQueryService;
     
     @Mock
-    private SubsistenceFeesMoaQueryService subsistenceFeesΜoaQueryService;
+    private SubsistenceFeesMoaQueryService subsistenceFeesMoaQueryService;
     
     private final ObjectMapper mapper = new ObjectMapper();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
         AuthorizedRoleAspect authorizedRoleAspect = new AuthorizedRoleAspect(roleAuthorizationService, authorizationAspectUserResolver);
@@ -108,8 +108,8 @@ class SubsistenceFeesRunViewControllerTest {
     @Test
     void getSubsistenceFeesRuns() throws Exception {
         final AppUser user = AppUser.builder().roleType(REGULATOR).build();
-        final long page = 0;
-        final long pageSize = 30;
+        final int page = 0;
+        final int pageSize = 30;
         PagingRequest pagingRequest = PagingRequest.builder().pageNumber(page).pageSize(pageSize).build();
         SubsistenceFeesRunSearchResultInfoDTO dto = new SubsistenceFeesRunSearchResultInfoDTO(1L, "S2501", null, null, null, null, null);
         SubsistenceFeesRunSearchResults results = SubsistenceFeesRunSearchResults.builder()
@@ -135,8 +135,8 @@ class SubsistenceFeesRunViewControllerTest {
     @Test
     void getSubsistenceFeesRuns_forbidden() throws Exception {
         final AppUser user = AppUser.builder().roleType(SECTOR_USER).userId("userId").build();
-        final long page = 0;
-        final long pageSize = 30;
+        final int page = 0;
+        final int pageSize = 30;
         PagingRequest pagingRequest = PagingRequest.builder().pageNumber(page).pageSize(pageSize).build();
         
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
@@ -198,8 +198,8 @@ class SubsistenceFeesRunViewControllerTest {
     @Test
     void getSubsistenceFeesRunMoas() throws Exception {
         final AppUser user = AppUser.builder().roleType(REGULATOR).build();
-        final long page = 0;
-        final long pageSize = 30;
+        final int page = 0;
+        final int pageSize = 30;
         final long runId = 1L;
         PagingRequest pagingRequest = PagingRequest.builder().pageNumber(page).pageSize(pageSize).build();
         SubsistenceFeesMoaSearchCriteria criteria = SubsistenceFeesMoaSearchCriteria.builder()
@@ -214,7 +214,7 @@ class SubsistenceFeesRunViewControllerTest {
         		.build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(subsistenceFeesΜoaQueryService.getSubsistenceFeesRunMoas(runId, criteria)).thenReturn(results);
+        when(subsistenceFeesMoaQueryService.getSubsistenceFeesRunMoas(runId, criteria)).thenReturn(results);
 
         mockMvc.perform(MockMvcRequestBuilders.post(SUBSISTENCE_FEES_CONTROLLER_PATH + runId + "/moas")
         		.content(mapper.writeValueAsString(criteria))
@@ -225,14 +225,14 @@ class SubsistenceFeesRunViewControllerTest {
                 .andExpect(jsonPath("$.subsistenceFeesMoas[0].transactionId").value("CCACM1200"));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(subsistenceFeesΜoaQueryService, times(1)).getSubsistenceFeesRunMoas(runId,criteria);
+        verify(subsistenceFeesMoaQueryService, times(1)).getSubsistenceFeesRunMoas(runId,criteria);
     }
 
     @Test
     void getSubsistenceFeesRunMoas_forbidden() throws Exception {
         final AppUser user = AppUser.builder().roleType(SECTOR_USER).userId("userId").build();
-        final long page = 0;
-        final long pageSize = 30;
+        final int page = 0;
+        final int pageSize = 30;
         final long runId = 1L;
         PagingRequest pagingRequest = PagingRequest.builder().pageNumber(page).pageSize(pageSize).build();
         SubsistenceFeesMoaSearchCriteria criteria = SubsistenceFeesMoaSearchCriteria.builder()
@@ -251,6 +251,6 @@ class SubsistenceFeesRunViewControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
         		.andExpect(status().isForbidden());
 
-        verify(subsistenceFeesΜoaQueryService, never()).getSubsistenceFeesRunMoas(runId, criteria);
+        verify(subsistenceFeesMoaQueryService, never()).getSubsistenceFeesRunMoas(runId, criteria);
     }
 }

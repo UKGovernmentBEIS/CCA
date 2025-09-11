@@ -4,9 +4,9 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'cca-email-sent',
   templateUrl: './email-sent.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmailSentComponent {
   @Input() email: string;

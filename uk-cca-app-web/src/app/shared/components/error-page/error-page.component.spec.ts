@@ -12,7 +12,7 @@ describe('ErrorPageComponent', () => {
   @Component({
     template: `
       <cca-error-page heading="Test heading">
-        <p class="govuk-body">Some text</p>
+        <p>Some text</p>
       </cca-error-page>
     `,
     standalone: true,
@@ -24,9 +24,7 @@ describe('ErrorPageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TestComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     component = fixture.debugElement.query(By.directive(ErrorPageComponent)).componentInstance;
     element = fixture.nativeElement;

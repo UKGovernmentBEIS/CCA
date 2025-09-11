@@ -10,7 +10,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import uk.gov.cca.api.sectorassociation.domain.SectorAssociationSchemeDocument;
 import uk.gov.netz.api.common.AbstractContainerBaseTest;
 import uk.gov.netz.api.files.common.domain.FileStatus;
 
@@ -20,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
-public class SectorAssociationSchemeDocumentIT extends AbstractContainerBaseTest {
+class SectorAssociationSchemeDocumentIT extends AbstractContainerBaseTest {
 
     @Autowired
     private EntityManager entityManager;

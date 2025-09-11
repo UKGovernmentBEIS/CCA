@@ -6,7 +6,7 @@ This project is intended as a "skeleton" application for jumpstarting new DESNZ 
 
 ## Installation
 
-### Prerequisites
+The current node version required can be found under `.nvmrc` file. Make sure you follow the minor version specific there.
 
 In order to successfully build and run the project you should first install the
 local dependencies:
@@ -36,26 +36,6 @@ and follow a semver approach.
 
 ## Build
 
-The libraries of the project must be build first if there are new versions. To build both libraries at once, run the custom script:
-
-```shell script
-yarn prebuild
-```
-
-If you want to build only the `govuk-components` library you can run:
-
-```shell script
-yarn build:govuk-components
-```
-
-If you want to build only the `cca-api` library you can run:
-
-```shell script
-yarn build:cca-api
-```
-
-The build artifacts will be stored in the `dist/` directory.
-
 To build the application you should run the following command:
 
 ```shell script
@@ -70,7 +50,7 @@ yarn build:production
 
 ## Development server
 
-To start the application using the Angular's development server run:
+After building the project, you can start the application using the Angular's development server run:
 
 ```shell script
 yarn start
@@ -129,43 +109,10 @@ yarn test:frontend:coverage
 The coverage can the be found in the command line or in the `coverage/` folder which
 will be generated inside the parent folder of each project.
 
-## Functional Tests
-
-Typically, each Jira Story represents one Confluence Page.
-Confluence pages include the Scenarios that the app has to cover for a certain feature to be considered complete.
-
-In CCA, we create specific files that test the Confluence Scenarios exclusively. We use [RouterTestingHarness](https://angular.dev/api/router/testing/RouterTestingHarness) and [Testing Library](https://testing-library.com/), in order to approach the process
-from a black-box testing perspective and making sure that every Scenario is clearly covered in our tests.
-
-**Each functional test suite should cover one feature set, as described by the scenarios in the respective Confluence Page.**
-
-### Technical details
-
-We use the [RouterTestingHarness](https://angular.dev/api/router/testing/RouterTestingHarness) for implementing our functional tests. [Here are some examples for the RouterTestingHarness in Angular](https://dev.to/this-is-angular/testing-routed-components-with-routertestingharness-22dl).
-RouterTestingHarness, combined with TestingLibrary, allows us to test user-like
-behavior, in coordination with some real routing inside our testing environment.
-
-Here are some common caveats to keep in mind, while working with the RouterTestingHarness:
-
-- When navigating to a new page, make sure to run `await harness.fixture.whenStable()`. This code block give time to the Angular TestingLibrary
-  environment to run any pending change detection cycles as well as send any http requests so that the httpTestingController can catch them.
-- Use `httpTestingController` to mock requests and responses. It's extremely convenient and it does not mess with spies and mock implementations
-  of services.
-- In general, when your tests do not render the template you would expect, use `screen.debug()` and play with `harness.fixture.detectChanges()`
-  along with `await harness.fixture.whenStable()`.
-
-_Edit: Due to the instability and changes of the confluence pages, we decided not to continue with this testing approach._
-
 ## Snapshot testing
 
 Due to the nature of the deadlines we decided to use [Snapshot testing](https://jestjs.io/docs/snapshot-testing). Snapshot testing does a good test on the rendered mark up but does not test http action and we currently don't use it after any mutations on the
 DOM. It's a suboptimal for of testing for us right now, but it will provide _some_ coverage.
-
-### Example
-
-The indicative example for a functional test suite is found under `src/app/sectors/specs/invite-sector.spec.ts`
-
-Note: For password related tests, take a look at `src/app/invitation/sector-user-invitation/specs/sector-user-invitation.spec.ts`
 
 ## Release plan and changelog generation
 

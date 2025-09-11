@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`createProposedUnderlyingAgreementVariationPayload should create the correct payload when all decisions are approved: all-decisions-accepted 1`] = `
+exports[`createProposedUnderlyingAgreementVariationPayload should create the correct payload when all decisions are accepted: all-decisions-accepted 1`] = `
 {
   "authorisationAndAdditionalEvidence": {
     "additionalEvidenceAttachmentIds": [],
@@ -267,7 +267,7 @@ exports[`createProposedUnderlyingAgreementVariationPayload should create the cor
     },
   },
   "underlyingAgreementTargetUnitDetails": {
-    "companyRegistrationNumber": "1111",
+    "companyRegistrationNumber": "11112222",
     "isCompanyRegistrationNumber": true,
     "operatorAddress": {
       "city": "una operator addr city",
@@ -458,7 +458,7 @@ exports[`createProposedUnderlyingAgreementVariationPayload should create the cor
     },
   },
   "underlyingAgreementTargetUnitDetails": {
-    "companyRegistrationNumber": "test",
+    "companyRegistrationNumber": "test1234",
     "isCompanyRegistrationNumber": true,
     "operatorAddress": {
       "city": "accountrefdata operator address city",
@@ -652,7 +652,7 @@ exports[`createProposedUnderlyingAgreementVariationPayload should handle mixed d
     },
   },
   "underlyingAgreementTargetUnitDetails": {
-    "companyRegistrationNumber": "1111",
+    "companyRegistrationNumber": "11112222",
     "isCompanyRegistrationNumber": true,
     "operatorAddress": {
       "city": "una operator addr city",
@@ -841,7 +841,7 @@ exports[`createProposedUnderlyingAgreementVariationPayload should transform targ
     },
   },
   "underlyingAgreementTargetUnitDetails": {
-    "companyRegistrationNumber": "test",
+    "companyRegistrationNumber": "test1234",
     "isCompanyRegistrationNumber": true,
     "operatorAddress": {
       "city": "accountrefdata operator address city",

@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   template: `
     <h2 class="govuk-heading-m">Timeline</h2>
     <hr class="govuk-!-margin-bottom-3" />
-    <ng-content></ng-content>
+    <ng-content />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

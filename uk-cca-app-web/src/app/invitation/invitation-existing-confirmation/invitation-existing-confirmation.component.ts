@@ -8,7 +8,6 @@ import { SectorUserInvitationStore } from '../sector-user-invitation/sector-user
 
 @Component({
   selector: 'cca-invitation-existing-confirmation',
-  standalone: true,
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
@@ -21,6 +20,7 @@ import { SectorUserInvitationStore } from '../sector-user-invitation/sector-user
       </div>
     </div>
   `,
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PanelComponent, RouterLink, SectorUserRoleCodePipe],
 })

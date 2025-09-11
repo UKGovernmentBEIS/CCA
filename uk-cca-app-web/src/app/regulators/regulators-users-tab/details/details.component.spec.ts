@@ -1,4 +1,5 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -49,8 +50,9 @@ describe('RegulatorDetailsComponent', () => {
     };
 
     const component = await render(DetailsComponent, {
-      imports: [HttpClientTestingModule],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         DetailsStore,
         {
           provide: ActivatedRoute,
@@ -100,7 +102,7 @@ describe('RegulatorDetailsComponent', () => {
 
   it('should show radios if editable is true', async () => {
     await bootstrap(routeEdit);
-    expect(document.querySelectorAll("input[type='radio']")).toHaveLength(10);
+    expect(document.querySelectorAll("input[type='radio']")).toHaveLength(12);
   });
 
   it('change permissions on administrator click', async () => {
@@ -112,11 +114,13 @@ describe('RegulatorDetailsComponent', () => {
     expect(document.getElementById('permissions.MANAGE_USERS_AND_CONTACTS-optionEXECUTE')).toBeChecked();
     expect(document.getElementById('permissions.MANAGE_SECTOR_USERS-optionEXECUTE')).toBeChecked();
     expect(document.getElementById('permissions.ADMIN_TERMINATION_SUBMISSION-optionEXECUTE')).toBeChecked();
+    expect(document.getElementById('permissions.ADMIN_TERMINATION_PEER_REVIEW-optionEXECUTE')).toBeChecked();
     expect(document.getElementById('permissions.MANAGE_SECTOR_ASSOCIATIONS-optionNONE')).not.toBeChecked();
     expect(document.getElementById('permissions.ASSIGN_REASSIGN_TASKS-optionNONE')).not.toBeChecked();
     expect(document.getElementById('permissions.MANAGE_USERS_AND_CONTACTS-optionNONE')).not.toBeChecked();
     expect(document.getElementById('permissions.MANAGE_SECTOR_USERS-optionNONE')).not.toBeChecked();
     expect(document.getElementById('permissions.ADMIN_TERMINATION_SUBMISSION-optionNONE')).not.toBeChecked();
+    expect(document.getElementById('permissions.ADMIN_TERMINATION_PEER_REVIEW-optionNONE')).not.toBeChecked();
   });
 
   it('change permissions on base user click', async () => {
@@ -128,11 +132,13 @@ describe('RegulatorDetailsComponent', () => {
     expect(document.getElementById('permissions.MANAGE_USERS_AND_CONTACTS-optionEXECUTE')).not.toBeChecked();
     expect(document.getElementById('permissions.MANAGE_SECTOR_USERS-optionEXECUTE')).not.toBeChecked();
     expect(document.getElementById('permissions.ADMIN_TERMINATION_SUBMISSION-optionEXECUTE')).not.toBeChecked();
+    expect(document.getElementById('permissions.ADMIN_TERMINATION_PEER_REVIEW-optionEXECUTE')).not.toBeChecked();
     expect(document.getElementById('permissions.MANAGE_SECTOR_ASSOCIATIONS-optionNONE')).toBeChecked();
     expect(document.getElementById('permissions.ASSIGN_REASSIGN_TASKS-optionNONE')).not.toBeChecked();
     expect(document.getElementById('permissions.MANAGE_USERS_AND_CONTACTS-optionNONE')).toBeChecked();
     expect(document.getElementById('permissions.MANAGE_SECTOR_USERS-optionNONE')).toBeChecked();
     expect(document.getElementById('permissions.ADMIN_TERMINATION_SUBMISSION-optionNONE')).toBeChecked();
+    expect(document.getElementById('permissions.ADMIN_TERMINATION_PEER_REVIEW-optionNONE')).toBeChecked();
   });
 
   it('should render viewer properly', async () => {

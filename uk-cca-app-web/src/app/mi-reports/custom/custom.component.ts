@@ -16,10 +16,10 @@ import { MiReportsExportService } from '../core/mi-reports-export.service';
 
 @Component({
   selector: 'cca-custom',
-  standalone: true,
   templateUrl: './custom.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [PageHeadingComponent, ReactiveFormsModule, TextareaComponent, ButtonDirective, PendingButtonDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomReportComponent {
   private readonly fb = inject(FormBuilder);
@@ -27,9 +27,9 @@ export class CustomReportComponent {
   private readonly miReportsExportService = inject(MiReportsExportService);
   private readonly pendingRequest = inject(PendingRequestService);
 
-  errorMessage = signal(null);
+  protected readonly errorMessage = signal(null);
 
-  reportOptionsForm: FormGroup = this.fb.group({
+  protected readonly reportOptionsForm: FormGroup = this.fb.group({
     query: [null, [GovukValidators.required('Query must not be empty')]],
   });
 

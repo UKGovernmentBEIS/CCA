@@ -2,7 +2,7 @@
   <label [for]="id" [class]="currentLabelSize" id="{{ 'l.' + id }}">{{ label() }}</label>
 
   @if (text()) {
-    <span class="govuk-body">{{ text() }}</span>
+    <span>{{ text() }}</span>
   }
 
   @if (showFilesizeHint()) {
@@ -17,7 +17,7 @@
   }
 
   @if (shouldDisplayErrors) {
-    <govuk-error-message [errors]="control.errors" [identifier]="id"> </govuk-error-message>
+    <govuk-error-message [errors]="control.errors" [identifier]="id" />
   }
 
   <input

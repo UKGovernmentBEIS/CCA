@@ -29,7 +29,6 @@ import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsUpdat
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationUpdateService;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.netz.api.security.Authorized;
-import uk.gov.netz.api.security.AuthorizedRole;
 
 @RestController
 @RequestMapping(path = "/v1.0/sector-association/{id}")

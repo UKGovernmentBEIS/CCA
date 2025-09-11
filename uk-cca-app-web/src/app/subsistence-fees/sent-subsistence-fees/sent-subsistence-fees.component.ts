@@ -1,13 +1,13 @@
-import { AfterViewChecked, ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
-import { BreadcrumbService } from '@netz/common/navigation';
 import { TabLazyDirective, TabsComponent, TagComponent } from '@netz/govuk-components';
 import { SummaryComponent } from '@shared/components';
-import { SubsistenceFeesRunPaymentStatusPipe, SubsistenceFeesRunPaymentStatusTagColorPipe } from '@shared/pipes';
+import { StatusColorPipe, StatusPipe } from '@shared/pipes';
 
-import { SubsistenceFeesRunDetailsDTO } from 'cca-api';
+import { SubsistenceFeesRunInfoViewService } from 'cca-api';
 
 import { SectorMoasComponent } from './sector-moas/sector-moas.component';
 import { toSentSubsistenceFeesDetails } from './sent-subsistence-fees-details-data';
@@ -22,35 +22,26 @@ import { TuMoasComponent } from './tu-moas/tu-moas.component';
     PageHeadingComponent,
     TabsComponent,
     TabLazyDirective,
-    SubsistenceFeesRunPaymentStatusPipe,
-    SubsistenceFeesRunPaymentStatusTagColorPipe,
+    StatusPipe,
+    StatusColorPipe,
     SummaryComponent,
     SectorMoasComponent,
     TuMoasComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SentSubsistenceFeesComponent implements AfterViewChecked {
-  private readonly router = inject(Router);
+export class SentSubsistenceFeesComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly breadcrumbService = inject(BreadcrumbService);
+  private readonly subsistenceFeesRunInfoViewService = inject(SubsistenceFeesRunInfoViewService);
 
-  readonly subFeesDetails = this.activatedRoute.snapshot.data.subFeesDetails as SubsistenceFeesRunDetailsDTO;
-  readonly navigationState = { returnUrl: this.router.url };
+  private readonly runId = +this.activatedRoute.snapshot.paramMap.get('runId');
 
-  readonly data = toSentSubsistenceFeesDetails(this.subFeesDetails);
+  protected readonly subFeesDetails = toSignal(
+    this.subsistenceFeesRunInfoViewService.getSubsistenceFeesRunDetailsById(this.runId),
+  );
 
-  ngAfterViewChecked(): void {
-    this.breadcrumbService.show([
-      {
-        text: 'Dashboard',
-        link: ['/', 'dashboard'],
-      },
-      {
-        text: 'Subsistence fees',
-        link: ['/', 'subsistence-fees'],
-        fragment: 'sent-subsistence-fees',
-      },
-    ]);
-  }
+  protected readonly data = computed(() => {
+    const details = this.subFeesDetails();
+    return toSentSubsistenceFeesDetails(details);
+  });
 }

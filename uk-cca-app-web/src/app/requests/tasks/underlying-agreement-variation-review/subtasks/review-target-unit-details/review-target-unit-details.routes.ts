@@ -1,63 +1,65 @@
 import { Routes } from '@angular/router';
 
-import { ReviewTargetUnitDetailsReviewWizardStep } from '@requests/common';
+import { ReviewTargetUnitDetailsWizardStep } from '@requests/common';
 
-import {
-  canActivateTargetUnitDetails,
-  canActivateTargetUnitDetailsCheckYourAnswers,
-  canActivateTargetUnitDetailsDecision,
-  canActivateTargetUnitDetailsSummary,
-} from './review-target-unit-details.guard';
+import { reviewTargetUnitDetailsRedirectGuard } from './review-target-unit-details-redirect.guard';
 
 export const REVIEW_TARGET_UNIT_DETAILS_ROUTES: Routes = [
   {
     path: '',
     children: [
       {
-        path: ReviewTargetUnitDetailsReviewWizardStep.SUMMARY,
+        path: '',
+        canActivate: [reviewTargetUnitDetailsRedirectGuard],
+        children: [],
+      },
+      {
+        path: 'summary',
         title: 'Review target unit details',
-        canActivate: [canActivateTargetUnitDetailsSummary],
         data: { backlink: '../../../', breadcrumb: false },
-        loadComponent: () => import('./summary/review-target-unit-details-summary.component'),
+        loadComponent: () =>
+          import('./summary/review-target-unit-details-summary.component').then(
+            (c) => c.ReviewTargetUnitDetailsSummaryComponent,
+          ),
       },
       {
-        path: ReviewTargetUnitDetailsReviewWizardStep.DECISION,
-        title: 'Target unit details',
-        canActivate: [canActivateTargetUnitDetailsDecision],
+        path: 'decision',
+        title: 'Target unit details decision',
         data: { backlink: '../../../', breadcrumb: false },
-        loadComponent: () => import('./decision/review-target-unit-details-decision.component'),
+        loadComponent: () =>
+          import('./decision/review-target-unit-details-decision.component').then(
+            (c) => c.ReviewTargetUnitDetailsDecisionComponent,
+          ),
       },
       {
-        path: ReviewTargetUnitDetailsReviewWizardStep.CHECK_YOUR_ANSWERS,
+        path: 'check-your-answers',
         title: 'Check your answers',
-        canActivate: [canActivateTargetUnitDetailsCheckYourAnswers],
         data: { backlink: '../../../', breadcrumb: false },
-        loadComponent: () => import('./check-your-answers/review-target-unit-details-check-your-answers.component'),
+        loadComponent: () =>
+          import('./check-your-answers/review-target-unit-details-check-your-answers.component').then(
+            (c) => c.ReviewTargetUnitDetailsCheckYourAnswersComponent,
+          ),
       },
       {
-        path: ReviewTargetUnitDetailsReviewWizardStep.TARGET_UNIT_DETAILS,
+        path: ReviewTargetUnitDetailsWizardStep.TARGET_UNIT_DETAILS,
         title: 'Edit target unit details',
-        canActivate: [canActivateTargetUnitDetails],
         data: { backlink: '../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((m) => m.TargetUnitDetailsReviewComponent),
+        loadComponent: () =>
+          import('./target-unit-details/target-unit-details.component').then((c) => c.TargetUnitDetailsComponent),
       },
       {
-        path: ReviewTargetUnitDetailsReviewWizardStep.OPERATOR_ADDRESS,
+        path: ReviewTargetUnitDetailsWizardStep.OPERATOR_ADDRESS,
         title: 'Edit operator address',
-        canActivate: [canActivateTargetUnitDetails],
         data: { backlink: '../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((m) => m.OperatorAddressComponent),
+        loadComponent: () =>
+          import('./operator-address/operator-address.component').then((c) => c.OperatorAddressComponent),
       },
       {
-        path: ReviewTargetUnitDetailsReviewWizardStep.RESPONSIBLE_PERSON,
+        path: ReviewTargetUnitDetailsWizardStep.RESPONSIBLE_PERSON,
         title: 'Edit responsible person',
-        canActivate: [canActivateTargetUnitDetails],
         data: { backlink: '../', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((m) => m.ResponsiblePersonComponent),
-      },
-      {
-        path: '**',
-        redirectTo: ReviewTargetUnitDetailsReviewWizardStep.DECISION,
+        loadComponent: () =>
+          import('./responsible-person/responsible-person.component').then((c) => c.ResponsiblePersonComponent),
       },
     ],
   },

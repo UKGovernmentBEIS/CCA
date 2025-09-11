@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckYourAnswersComponent should show summary values 1`] = `
+<cca-peer-review-decision-check-your-answers
+  downloadUrl={[Function String]}
+  peerReviewStore={[Function AdminTerminationPeerReviewStore]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  route={[Function ActivatedRouteStub]}
+  router={[Function _Router]}
+  summaryData={[Function Function]}
+  taskId={[Function Number]}
+  tasksService={[Function _TasksService]}
+>
+  <div
+    class="govuk-grid-row"
+  >
+    <div
+      class="govuk-grid-column-two-thirds"
+    >
+      <h1
+        class="govuk-heading-l"
+      >
+        Check your answers
+      </h1>
+      <cca-summary>
+      </cca-summary>
+      <button
+        class="govuk-!-margin-top-6 govuk-button"
+        govukbutton=""
+        type="button"
+      >
+        Confirm and complete
+      </button>
+      <p
+        class="govuk-body govuk-!-margin-top-6"
+      >
+        <a
+          class="govuk-link"
+          href="/"
+          routerlink="../../"
+        >
+          Return to: Peer review admin termination request
+        </a>
+      </p>
+    </div>
+  </div>
+</cca-peer-review-decision-check-your-answers>
+`;

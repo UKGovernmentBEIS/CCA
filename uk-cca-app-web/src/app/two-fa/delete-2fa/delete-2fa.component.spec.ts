@@ -32,9 +32,7 @@ describe('Delete2faComponent', () => {
       ],
       declarations: [],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(Delete2faComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);

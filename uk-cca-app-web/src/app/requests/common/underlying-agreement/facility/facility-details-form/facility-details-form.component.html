@@ -1,0 +1,85 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  [caption]="facility() ? facility()?.facilityDetails?.name : 'Add facility'"
+  heading="Facility details"
+>
+  <div class="govuk-!-width-two-thirds">
+    <div formControlName="name" govuk-text-input label="Site name"></div>
+
+    @if (facility()?.facilityId) {
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Facility ID</h3>
+      <p class="govuk-!-margin-top-1">{{ facility()?.facilityId }}</p>
+    }
+
+    <div
+      formControlName="isCoveredByUkets"
+      govuk-radio
+      legend="Are the activities carried out by this facility included in the UKETS?"
+      hint="If some or all of the activities carried out in this facility are regulated activities under the UK ETS scheme, you must enter the UK ETS permit identifier"
+    >
+      <govuk-radio-option [value]="true" [label]="'Yes'">
+        <ng-container govukConditionalContent>
+          <div
+            widthClass="govuk-!-width-one-third"
+            formControlName="uketsId"
+            govuk-text-input
+            label="UK ETS installation/permit Identifier"
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+      <govuk-radio-option [value]="false" [label]="'No'" />
+    </div>
+
+    <div formControlName="applicationReason" govuk-radio legend="Application reason">
+      <govuk-radio-option [value]="'NEW_AGREEMENT'" [label]="'NEW_AGREEMENT' | applicationReasonType" />
+      <govuk-radio-option [value]="'CHANGE_OF_OWNERSHIP'" [label]="'CHANGE_OF_OWNERSHIP' | applicationReasonType" />
+    </div>
+
+    @if (showChangeOfOwnershipCtrls()) {
+      <div
+        widthClass="govuk-!-width-one-third"
+        formControlName="previousFacilityId"
+        govuk-text-input
+        label="Previous facility ID"
+        hint="You must enter a previous facility ID if the facility is transferring from a different underlying agreement"
+      ></div>
+
+      @if (showSchemeParticipationChoice()) {
+        <label for="schemeParticipationChoice">Will this facility participate in the CCA3 (2026-2030) scheme?</label>
+        <p class="govuk-hint govuk-!-margin-0">
+          Select yes if you expect this facility to be included in an agreement beyond 30 June 2027. Improvement targets
+          will be applied to this facility for TP7 (2026), TP8 (2027 to 2028) and TP9 (2029 to 2030).
+        </p>
+        <p class="govuk-hint govuk-!-margin-0">
+          Select no if no future improvement targets will be applied to this facility. The agreement will end on 30 June
+          2027.
+        </p>
+        <div formControlName="schemeParticipationChoice" govuk-radio>
+          <govuk-radio-option [value]="true" [label]="'Yes'" />
+          <govuk-radio-option [value]="false" [label]="'No'" />
+        </div>
+      }
+    }
+
+    <div class="govuk-!-margin-bottom-9">
+      <p class="govuk-!-margin-bottom-0">Scheme participation</p>
+      <p class="govuk-hint govuk-!-margin-top-1">
+        This indicates whether the facility participates in CCA2 (2013-2024), CCA3 (2026-2030) or both
+      </p>
+      <p>{{ schemeParticipation() }}</p>
+    </div>
+
+    <h2 class="govuk-heading-m">Facility address</h2>
+    <div formControlName="sameAddress" govuk-checkboxes>
+      <govuk-checkbox [value]="true" label="The facility address is the same as target unit address" />
+    </div>
+
+    <div formGroupName="facilityAddress">
+      <cca-account-address-input />
+    </div>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" [routerLink]="[returnPath]">Return to: Manage facilities</a>

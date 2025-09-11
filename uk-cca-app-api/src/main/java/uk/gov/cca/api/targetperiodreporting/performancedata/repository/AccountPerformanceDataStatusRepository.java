@@ -12,20 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.LockModeType;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.AccountPerformanceDataStatus;
 
 @Repository
 @Transactional(readOnly = true)
 public interface AccountPerformanceDataStatusRepository extends JpaRepository<AccountPerformanceDataStatus, Long> {
 
-	@Query(name = AccountPerformanceDataStatus.NAMED_QUERY_FIND_ELIGIBLE_ACCOUNTS_FOR_PRIMARY_PERFORMANCE_DATA_REPORTING_BY_SECTOR)
-	List<TargetUnitAccountBusinessInfoDTO> findEligibleAccountsForPrimaryPerformanceDataReportingBySector(Long sectorAssociationId,
-																										  Long targetPeriodId);
-
-	@Query(name = AccountPerformanceDataStatus.NAMED_QUERY_FIND_ELIGIBLE_ACCOUNTS_FOR_SECONDARY_PERFORMANCE_DATA_REPORTING_BY_SECTOR)
-	List<TargetUnitAccountBusinessInfoDTO> findEligibleAccountsForSecondaryPerformanceDataReportingBySector(Long sectorAssociationId,
-																											Long targetPeriodId);
+	@Query(name = AccountPerformanceDataStatus.NAMED_QUERY_FIND_ELIGIBLE_ACCOUNTS_FOR_PERFORMANCE_DATA_REPORTING_BY_SECTOR)
+	List<TargetUnitAccountBusinessInfoDTO> findEligibleAccountsForPerformanceDataReportingBySector(Long sectorAssociationId, Long targetPeriodId);
 
 	@EntityGraph(attributePaths = { "targetPeriod", "lastPerformanceData" })
 	Optional<AccountPerformanceDataStatus> findWithDetailsByAccountIdAndTargetPeriodBusinessId(Long accountId,

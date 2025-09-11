@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -27,6 +28,10 @@ public class BuyOutSurplusAccountState implements Serializable {
     private String businessId;
 
     private boolean succeeded;
+
+    private String transactionCode;
+
+    private BuyOutSurplusPaymentStatus paymentStatus;
 
     @Builder.Default
     private List<String> errors = new ArrayList<>();

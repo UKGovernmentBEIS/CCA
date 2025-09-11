@@ -52,7 +52,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -91,7 +90,7 @@ class MiReportControllerTest {
     private static final String ACCOUNT_ID = "emitterId";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
     	objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerSubtypes(new MiReportParamsTypesProvider().getTypes().toArray(NamedType[]::new));
@@ -307,7 +306,7 @@ class MiReportControllerTest {
         		.stream()
         		.map(type -> MiReportEntity.builder().miReportType(type).competentAuthority(CompetentAuthorityEnum.ENGLAND))
         		.map(e -> factory.createProjection(MiReportSearchResult.class, e))
-        		.collect(Collectors.toList());
+        		.toList();
     }
 
 }

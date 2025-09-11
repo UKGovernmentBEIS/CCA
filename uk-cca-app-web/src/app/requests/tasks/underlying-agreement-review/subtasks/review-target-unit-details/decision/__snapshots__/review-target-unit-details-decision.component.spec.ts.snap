@@ -19,6 +19,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
       >
         Target unit details
       </h2>
+      
       <dl
         class="govuk-summary-list govuk-!-margin-bottom-9"
         govuk-summary-list=""
@@ -39,6 +40,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
           >
             
             
+            
              Flying Company 3 
             
             
@@ -57,6 +59,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             </a>
           </dd>
           
+          
         </div>
         <div
           class="govuk-summary-list__row"
@@ -72,6 +75,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
             
             
              Limited company 
@@ -92,6 +96,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             </a>
           </dd>
           
+          
         </div>
         <div
           class="govuk-summary-list__row"
@@ -101,7 +106,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Company registration number
+            Company number
           </dt>
           <dd
             class="govuk-summary-list__value"
@@ -109,7 +114,8 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
           >
             
             
-             123123123123 
+            
+             AB123456 
             
             
             
@@ -127,6 +133,44 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             </a>
           </dd>
           
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Reason for not having a registration number
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            
+            
+            
+              
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/target-unit-details?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+          
         </div>
         <div
           class="govuk-summary-list__row"
@@ -142,6 +186,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
             
             
              SUBSECTOR_1 
@@ -162,16 +207,19 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             </a>
           </dd>
           
+          
         </div>
         
         
         
       </dl>
+      
       <h2
         class="govuk-heading-m"
       >
         Operator address
       </h2>
+      
       <dl
         class="govuk-summary-list govuk-!-margin-bottom-9"
         govuk-summary-list=""
@@ -190,6 +238,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
             
             
              Address 
@@ -230,16 +279,19 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             </a>
           </dd>
           
+          
         </div>
         
         
         
       </dl>
+      
       <h2
         class="govuk-heading-m"
       >
         Responsible Person
       </h2>
+      
       <dl
         class="govuk-summary-list govuk-!-margin-bottom-9"
         govuk-summary-list=""
@@ -260,6 +312,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
           >
             
             
+            
              Operator 
             
             
@@ -278,6 +331,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             </a>
           </dd>
           
+          
         </div>
         <div
           class="govuk-summary-list__row"
@@ -293,6 +347,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
             
             
              Admin 
@@ -313,6 +368,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             </a>
           </dd>
           
+          
         </div>
         <div
           class="govuk-summary-list__row"
@@ -328,6 +384,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
             
             
              responsible_person@cca.uk 
@@ -348,6 +405,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             </a>
           </dd>
           
+          
         </div>
         <div
           class="govuk-summary-list__row"
@@ -363,6 +421,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            
             
             
              Address 
@@ -403,11 +462,13 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
             </a>
           </dd>
           
+          
         </div>
         
         
         
       </dl>
+      
       
     </cca-summary>
     <cca-wizard-step
@@ -478,14 +539,12 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
                       class="govuk-label govuk-radios__label"
                       for="type-option0"
                     >
-                      Accepted
-                      
+                       Accepted 
                       
                       
                     </label>
                     
                   </div>
-                  
                   
                   
                   
@@ -504,14 +563,12 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
                       class="govuk-label govuk-radios__label"
                       for="type-option1"
                     >
-                      Rejected
-                      
+                       Rejected 
                       
                       
                     </label>
                     
                   </div>
-                  
                   
                   
                   
@@ -553,69 +610,65 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
               class="cca-multi-file-upload cca-multi-file-upload--enhanced"
             >
               <div
-                class="cca-multi-file-upload__upload"
+                class="govuk-form-group"
               >
-                <div
-                  class="govuk-form-group"
+                <label
+                  class="govuk-label govuk-label--m"
+                  for="files"
+                  id="l.files"
                 >
+                  Upload evidence (optional)
+                </label>
+                <span
+                  class="govuk-hint"
+                  id="files-hint-file-size"
+                >
+                   Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
+                </span>
+                
+                
+                
+                <div
+                  class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
+                >
+                  <input
+                    accept="*/*"
+                    aria-labelledby="l.files ld.files"
+                    class="govuk-file-upload cca-multi-file-upload__input"
+                    id="files"
+                    multiple=""
+                    name="files"
+                    type="file"
+                  />
+                  <p
+                    class="govuk-body"
+                  >
+                    Drag and drop files here or
+                  </p>
                   <label
-                    class="govuk-label govuk-label--null"
+                    class="govuk-button govuk-button--secondary"
                     for="files"
-                    id="l.files"
+                    id="ld.files"
                   >
-                    Upload evidence (optional)
+                     Choose files 
                   </label>
-                  <span
-                    class="govuk-hint"
-                    id="files-hint-file-size"
-                  >
-                     Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
-                  </span>
-                  
-                  
-                  
                   <div
-                    class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
+                    aria-live="polite"
+                    class="govuk-visually-hidden"
+                    role="status"
                   >
-                    <input
-                      accept="*/*"
-                      aria-labelledby="l.files ld.files"
-                      class="govuk-file-upload cca-multi-file-upload__input"
-                      id="files"
-                      multiple=""
-                      name="files"
-                      type="file"
-                    />
-                    <p
-                      class="govuk-body"
-                    >
-                      Drag and drop files here or
-                    </p>
-                    <label
-                      class="govuk-button govuk-button--secondary"
-                      for="files"
-                      id="ld.files"
-                    >
-                       Choose files 
-                    </label>
-                    <div
-                      aria-live="polite"
-                      class="govuk-visually-hidden"
-                      role="status"
-                    >
-                      
-                    </div>
+                    
                   </div>
                 </div>
               </div>
               <cca-file-upload-list>
                 <div
-                  class="cca-multi-file__uploaded-files govuk-body cca-hidden"
+                  class="cca-multi-file__uploaded-files cca-hidden"
                 >
                   
                   
                   <dl
-                    class="govuk-summary-list cca-multi-file-upload__list"
+                    class="govuk-summary-list"
                   >
                     
                   </dl>
@@ -648,7 +701,7 @@ exports[`Review Target Unit Details Decision should match snapshot 1`] = `
   />
   <netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Review application for underlying agreement 

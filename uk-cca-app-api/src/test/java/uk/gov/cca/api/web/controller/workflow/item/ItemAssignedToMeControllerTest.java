@@ -68,7 +68,7 @@ class ItemAssignedToMeControllerTest {
     private RoleAuthorizationService roleAuthorizationService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         List<ItemAssignedToMeService> services = List.of(itemAssignedToMeSectorUserService, itemAssignedToMeRegulatorService);
         ItemAssignedToMeController itemController = new ItemAssignedToMeController(services);
 
@@ -100,7 +100,7 @@ class ItemAssignedToMeControllerTest {
         ItemDTOResponse itemDTOResponse = ItemDTOResponse.builder().build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
-        when(itemAssignedToMeRegulatorService.getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build()))
+        when(itemAssignedToMeRegulatorService.getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build()))
                 .thenReturn(itemDTOResponse);
         when(itemAssignedToMeSectorUserService.getRoleType()).thenReturn(SECTOR_USER);
         when(itemAssignedToMeRegulatorService.getRoleType()).thenReturn(RoleTypeConstants.REGULATOR);
@@ -111,7 +111,7 @@ class ItemAssignedToMeControllerTest {
                 .andExpect(status().isOk());
 
         verify(itemAssignedToMeRegulatorService, times(1))
-                .getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+                .getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
         verify(itemAssignedToMeSectorUserService, never())
         		.getItemsAssignedToMe(any(), any(PagingRequest.class));
     }
@@ -123,7 +123,7 @@ class ItemAssignedToMeControllerTest {
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(appUser);
         when(itemAssignedToMeSectorUserService
-                .getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build())).thenReturn(itemDTOResponse);
+                .getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build())).thenReturn(itemDTOResponse);
         when(itemAssignedToMeSectorUserService.getRoleType()).thenReturn(SECTOR_USER);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -132,7 +132,7 @@ class ItemAssignedToMeControllerTest {
                 .andExpect(status().isOk());
 
         verify(itemAssignedToMeSectorUserService, times(1))
-                .getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0L).pageSize(10L).build());
+                .getItemsAssignedToMe(appUser, PagingRequest.builder().pageNumber(0).pageSize(10).build());
         verify(itemAssignedToMeRegulatorService, never())
                 .getItemsAssignedToMe(any(), any(PagingRequest.class));
     }

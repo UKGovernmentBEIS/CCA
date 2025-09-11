@@ -4,14 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-import uk.gov.cca.api.web.util.FileDtoMapper;
 import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FileDtoMapperTest {
+class FileDtoMapperTest {
 
     private FileDtoMapper mapper = Mappers.getMapper(FileDtoMapper.class);
 

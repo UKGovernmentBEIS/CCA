@@ -23,6 +23,7 @@ describe('RegulatorInvitationComponent', () => {
   let route: ActivatedRoute;
   let regulatorUsersRegistrationService: jest.Mocked<RegulatorUsersRegistrationService>;
   let store: InvitedRegulatorUserStore;
+
   class Page extends BasePage<RegulatorInvitationComponent> {
     get emailValue() {
       return this.getInputValue<string>('#email');
@@ -54,9 +55,7 @@ describe('RegulatorInvitationComponent', () => {
         provideZxvbnServiceForPSM(),
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(RegulatorInvitationComponent);
     component = fixture.componentInstance;
     page = new Page(fixture);
@@ -130,6 +129,7 @@ describe('RegulatorInvitationComponent', () => {
     expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).toHaveBeenCalledTimes(
       1,
     );
+
     expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).toHaveBeenCalledWith({
       invitationToken: 'token',
       password: 'ThisIsAStrongP@ssw0rd',

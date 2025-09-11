@@ -1,18 +1,18 @@
-import { AsyncPipe, NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChildren,
+  contentChildren,
+  effect,
   ElementRef,
-  EventEmitter,
-  Input,
+  inject,
+  input,
   OnDestroy,
   OnInit,
-  Output,
-  QueryList,
-  ViewChildren,
+  output,
+  viewChildren,
 } from '@angular/core';
 import { ActivatedRoute, NavigationStart, QueryParamsHandling, Router, RouterLink } from '@angular/router';
 
@@ -24,8 +24,9 @@ import { TabLazyDirective } from './tab/tab-lazy.directive';
 
 @Component({
   selector: 'govuk-tabs',
+  templateUrl: './tabs.component.html',
   standalone: true,
-  imports: [NgForOf, AsyncPipe, NgTemplateOutlet, RouterLink, NgIf],
+  imports: [AsyncPipe, NgTemplateOutlet, RouterLink],
   styles: `
     .badge {
       color: white;
@@ -36,26 +37,35 @@ import { TabLazyDirective } from './tab/tab-lazy.directive';
       text-decoration: none;
     }
   `,
-  templateUrl: './tabs.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsComponent implements OnInit, AfterContentInit, OnDestroy {
-  @Input() title: string;
-  @Input() queryParamsHandling: QueryParamsHandling = 'preserve';
-  @ContentChildren(TabBaseDirective, { descendants: false }) tabList: QueryList<TabBaseDirective>;
-  @ContentChildren(TabDirective, { descendants: false }) tabEagerList: QueryList<TabDirective>;
-  @ContentChildren(TabLazyDirective, { descendants: false }) tabLazyList: QueryList<TabLazyDirective>;
-  @ViewChildren('anchor') anchorList: QueryList<ElementRef<HTMLAnchorElement>>;
-  @Output() readonly selectedTab = new EventEmitter<string>();
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly cdRef = inject(ChangeDetectorRef);
+
+  readonly title = input<string>();
+  readonly queryParamsHandling = input<QueryParamsHandling>('preserve');
+
+  readonly tabList = contentChildren(TabBaseDirective, { descendants: false });
+  readonly tabEagerList = contentChildren(TabDirective, { descendants: false });
+  readonly tabLazyList = contentChildren(TabLazyDirective, { descendants: false });
+
+  readonly anchorList = viewChildren<ElementRef<HTMLAnchorElement>>('anchor');
+
+  readonly selectedTab = output<string>();
 
   private shouldFocusAnchor: boolean;
   private subscriptions = new Subscription();
 
-  constructor(
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly cdRef: ChangeDetectorRef,
-  ) {}
+  constructor() {
+    effect(() => {
+      if (this.tabList()) {
+        this.setTargetTab(this.activatedRoute.snapshot.fragment);
+        this.cdRef.detectChanges();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.subscriptions.add(
@@ -69,19 +79,12 @@ export class TabsComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit(): void {
-    this.subscriptions.add(this.route.fragment.subscribe((fragment) => this.setTargetTab(fragment)));
-    this.subscriptions.add(
-      this.tabList.changes.subscribe(() => {
-        this.setTargetTab(this.route.snapshot.fragment);
-        this.cdRef.detectChanges();
-      }),
-    );
-    this.tabList.map((tab) =>
+    this.subscriptions.add(this.activatedRoute.fragment.subscribe((fragment) => this.setTargetTab(fragment)));
+
+    this.tabList().map((tab) =>
       this.subscriptions.add(
         tab.isSelected.subscribe((value) => {
-          if (value) {
-            this.selectedTab.emit(tab.id);
-          }
+          if (value) this.selectedTab.emit(tab.id());
         }),
       ),
     );
@@ -97,21 +100,23 @@ export class TabsComponent implements OnInit, AfterContentInit, OnDestroy {
     switch (event.key) {
       case 'ArrowLeft':
       case 'ArrowUp':
-        targetTab = this.tabList.find((_, i) => i === index - 1);
+        targetTab = this.tabList().find((_, i) => i === index - 1);
         break;
+
       case 'ArrowRight':
       case 'ArrowDown':
-        targetTab = this.tabList.find((_, i) => i === index + 1);
+        targetTab = this.tabList().find((_, i) => i === index + 1);
         break;
     }
 
     if (targetTab) {
       this.shouldFocusAnchor = true;
+
       this.router.navigate(['.'], {
-        fragment: targetTab.id,
-        queryParamsHandling: this.queryParamsHandling,
+        fragment: targetTab.id(),
+        queryParamsHandling: this.queryParamsHandling(),
         state: this.getState(),
-        relativeTo: this.route,
+        relativeTo: this.activatedRoute,
       });
     }
   }
@@ -121,23 +126,19 @@ export class TabsComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   private setTargetTab(fragment: string): void {
-    if (this.tabList.length === 0) {
-      return;
-    }
+    if (this.tabList().length === 0) return;
 
-    const currentTab = this.tabList.find((tab) => tab.isSelected.getValue());
-    const targetTab = this.tabList.find((tab) => tab.id === fragment);
+    const currentTab = this.tabList().find((tab) => tab.isSelected.getValue());
+    const targetTab = this.tabList().find((tab) => tab.id() === fragment);
+
     if (!targetTab) {
-      if (!currentTab) {
-        this.tabList.first.isSelected.next(true);
-      }
+      if (!currentTab) this.tabList()[0].isSelected.next(true);
       this.shouldFocusAnchor = false;
       return;
     }
 
-    if (currentTab) {
-      currentTab.isSelected.next(false);
-    }
+    if (currentTab) currentTab.isSelected.next(false);
+
     targetTab.isSelected.next(true);
     targetTab.cdRef.detectChanges();
 
@@ -148,11 +149,7 @@ export class TabsComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   private anchorFocus(targetTab: TabBaseDirective) {
-    const targetAnchor = this.anchorList?.find(
-      (_, i) => i === this.tabList.toArray().indexOf(targetTab),
-    )?.nativeElement;
-    if (targetAnchor && targetAnchor !== document.activeElement) {
-      targetAnchor.focus();
-    }
+    const targetAnchor = this.anchorList()?.find((_, i) => i === this.tabList().indexOf(targetTab))?.nativeElement;
+    if (targetAnchor && targetAnchor !== document.activeElement) targetAnchor.focus();
   }
 }

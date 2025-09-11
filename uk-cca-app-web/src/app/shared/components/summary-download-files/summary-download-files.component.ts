@@ -14,10 +14,10 @@ import { DownloadableFile } from '@shared/utils';
       }
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SummaryDownloadFilesComponent {
-  files = input.required<DownloadableFile[]>();
+  protected readonly files = input.required<DownloadableFile[]>();
 }

@@ -29,10 +29,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
         class="govuk-!-display-none"
       >
         <cca-summary>
-          <h2
-            class="govuk-heading-m"
-          >
-          </h2>
           <dl
             class="govuk-summary-list govuk-!-margin-bottom-9"
             govuk-summary-list=""
@@ -57,6 +53,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
                     href="/tasks/null/file-download/2f611a22-bd5f-4fd4-b00f-c20bfb2706c9"
                     target="_blank"
                   >
+                    authorisation_document.pdf
                   </a>
                 </cca-summary-download-files>
               </dd>
@@ -109,10 +106,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
         class="govuk-!-display-none"
       >
         <cca-summary>
-          <h2
-            class="govuk-heading-m"
-          >
-          </h2>
           <dl
             class="govuk-summary-list govuk-!-margin-bottom-9"
             govuk-summary-list=""
@@ -137,6 +130,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
                     href="/tasks/null/file-download/5a4b3c2d-1e2f-3g4h-5i6j-7k8l9m0n1o2p"
                     target="_blank"
                   >
+                    authorisation_original.pdf
                   </a>
                 </cca-summary-download-files>
               </dd>
@@ -172,6 +166,7 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
                     href="/tasks/null/file-download/abcd1234-5678-90ef-ghij-klmnopqrstuv"
                     target="_blank"
                   >
+                    additional_evidence_original.pdf
                   </a>
                 </cca-summary-download-files>
               </dd>
@@ -193,9 +188,6 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
       <div
         class="highlight"
       >
-        <h2
-          class="govuk-heading-m"
-        />
         <dl
           class="govuk-summary-list govuk-!-margin-bottom-9"
         >
@@ -214,7 +206,19 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
                 class="govuk-link"
                 href="/tasks/null/file-download/2f611a22-bd5f-4fd4-b00f-c20bfb2706c9"
                 target="_blank"
-              />
+              >
+                <del
+                  class="diffmod"
+                >
+                  authorisation_original
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  authorisation_document
+                </ins>
+                .pdf
+              </a>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -242,7 +246,13 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
                 class="govuk-link"
                 href="/tasks/null/file-download/abcd1234-5678-90ef-ghij-klmnopqrstuv"
                 target="_blank"
-              />
+              >
+                <del
+                  class="diffmod"
+                >
+                  additional_evidence_original.pdf
+                </del>
+              </a>
               <span>
                 <ins
                   class="diffmod"
@@ -265,9 +275,11 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
         </dl>
       </div>
     </cca-highlight-diff>
-  </div><netz-return-to-task-or-action-page>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Apply to vary the underlying agreement 

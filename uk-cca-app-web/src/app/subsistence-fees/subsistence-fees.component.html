@@ -1,13 +1,13 @@
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-three-quarters">
     <netz-page-heading size="xl">Subsistence fees payment requests</netz-page-heading>
   </div>
 
-  <div class="govuk-grid-column-one-third govuk-!-padding-top-1">
+  <div class="govuk-grid-column-one-quarter" style="text-align: end">
     <button
+      class="govuk-!-margin-top-1"
       govukButton
       type="button"
-      class="float-right"
       [disabled]="!canInitiateSubsistenceRun()"
       (click)="onNewPaymentRequest()"
     >

@@ -37,15 +37,14 @@ exports[`AdditionalInfoComponent should match snapshot for AdditionalInfoCompone
           for="additionalInfo"
           id="l.additionalInfo"
         >
-           Insert text details
+           
 
         </label>
         <div
           class="govuk-hint"
           id="additionalInfo-hint"
         >
-           This will be included in the official notice.
-
+           This will be included in the official notice. 
         </div>
         
         
@@ -66,69 +65,65 @@ exports[`AdditionalInfoComponent should match snapshot for AdditionalInfoCompone
           class="cca-multi-file-upload cca-multi-file-upload--enhanced"
         >
           <div
-            class="cca-multi-file-upload__upload"
+            class="govuk-form-group"
           >
-            <div
-              class="govuk-form-group"
+            <label
+              class="govuk-label govuk-label--m"
+              for="files"
+              id="l.files"
             >
+              Upload a file
+            </label>
+            <span
+              class="govuk-hint"
+              id="files-hint-file-size"
+            >
+               Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
+            </span>
+            
+            
+            
+            <div
+              class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
+            >
+              <input
+                accept="*/*"
+                aria-labelledby="l.files ld.files"
+                class="govuk-file-upload cca-multi-file-upload__input"
+                id="files"
+                multiple=""
+                name="files"
+                type="file"
+              />
+              <p
+                class="govuk-body"
+              >
+                Drag and drop files here or
+              </p>
               <label
-                class="govuk-label govuk-label--null"
+                class="govuk-button govuk-button--secondary"
                 for="files"
-                id="l.files"
+                id="ld.files"
               >
-                Upload a file
+                 Choose files 
               </label>
-              <span
-                class="govuk-hint"
-                id="files-hint-file-size"
-              >
-                 Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
-              </span>
-              
-              
-              
               <div
-                class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
+                aria-live="polite"
+                class="govuk-visually-hidden"
+                role="status"
               >
-                <input
-                  accept="*/*"
-                  aria-labelledby="l.files ld.files"
-                  class="govuk-file-upload cca-multi-file-upload__input"
-                  id="files"
-                  multiple=""
-                  name="files"
-                  type="file"
-                />
-                <p
-                  class="govuk-body"
-                >
-                  Drag and drop files here or
-                </p>
-                <label
-                  class="govuk-button govuk-button--secondary"
-                  for="files"
-                  id="ld.files"
-                >
-                   Choose files 
-                </label>
-                <div
-                  aria-live="polite"
-                  class="govuk-visually-hidden"
-                  role="status"
-                >
-                  
-                </div>
+                
               </div>
             </div>
           </div>
           <cca-file-upload-list>
             <div
-              class="cca-multi-file__uploaded-files govuk-body cca-hidden"
+              class="cca-multi-file__uploaded-files cca-hidden"
             >
               
               
               <dl
-                class="govuk-summary-list cca-multi-file-upload__list"
+                class="govuk-summary-list"
               >
                 
               </dl>
@@ -159,7 +154,7 @@ exports[`AdditionalInfoComponent should match snapshot for AdditionalInfoCompone
   />
   <netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Review application for underlying agreement 

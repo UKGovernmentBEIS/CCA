@@ -7,7 +7,7 @@ import uk.gov.cca.api.facility.domain.FacilityAddress;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FacilityAddressMapperTest {
+class FacilityAddressMapperTest {
 
     private final FacilityAddressMapper mapper = Mappers.getMapper(FacilityAddressMapper.class);
 

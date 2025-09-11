@@ -35,7 +35,7 @@ public class FacilityItemVO {
     private AccountAddressVO address;
     private String phoneNumber;
 
-    //EligibilityDetailsAndAuthorisation;
+    //EligibilityDetailsAndAuthorisation
     private String adjacentFacilityId;
     private String agreementType;
     private Boolean erpAuthorisationExists;

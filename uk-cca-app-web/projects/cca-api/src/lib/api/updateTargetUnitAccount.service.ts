@@ -370,7 +370,7 @@ export class UpdateTargetUnitAccountService {
   }
 
   /**
-   * Updates TargetUnit Account Sic code
+   * Updates TargetUnit Account Sic codes
    * @param accountId The account id
    * @param updateTargetUnitAccountSicCodeDTO
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.

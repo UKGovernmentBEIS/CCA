@@ -1,12 +1,12 @@
 import { inject } from '@angular/core';
-import { CanActivateFn } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot, UrlTree } from '@angular/router';
 
-import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { RequestTaskStore } from '@netz/common/store';
+import { OverallDecisionWizardStep, underlyingAgreementReviewQuery } from '@requests/common';
 
-import { reviewSectionsCompleted } from '../../utils';
-
-export const canActivateOverallDecision: CanActivateFn = (): boolean => {
+export const canActivateOverallDecision: CanActivateFn = (route: ActivatedRouteSnapshot): boolean | UrlTree => {
   const requestTaskStore = inject(RequestTaskStore);
-  const payload = requestTaskStore.select(requestTaskQuery.selectRequestTaskPayload)();
-  return reviewSectionsCompleted(payload);
+  const determinationSubmitted = requestTaskStore.select(underlyingAgreementReviewQuery.selectDeterminationSubmitted)();
+  if (determinationSubmitted) return createUrlTreeFromSnapshot(route, ['summary']);
+  return createUrlTreeFromSnapshot(route, [OverallDecisionWizardStep.AVAILABLE_ACTIONS]);
 };

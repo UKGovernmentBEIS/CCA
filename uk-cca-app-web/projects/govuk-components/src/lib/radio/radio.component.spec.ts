@@ -1,4 +1,3 @@
-import { NgForOf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -10,23 +9,19 @@ import { RadioOptionComponent } from './radio-option/radio-option.component';
 describe('RadioComponent', () => {
   @Component({
     standalone: true,
-    imports: [RadioComponent, ReactiveFormsModule, RadioOptionComponent, NgForOf],
+    imports: [RadioComponent, ReactiveFormsModule, RadioOptionComponent],
     template: `
       <div govuk-radio [formControl]="control">
-        <govuk-radio-option
-          *ngFor="let option of options"
-          [value]="option.value"
-          [label]="option.label"
-        ></govuk-radio-option>
+        @for (option of options; track option) {
+          <govuk-radio-option [value]="option.value" [label]="option.label"></govuk-radio-option>
+        }
       </div>
 
       <form [formGroup]="form">
         <div govuk-radio formControlName="radio">
-          <govuk-radio-option
-            *ngFor="let option of options"
-            [value]="option.value"
-            [label]="option.label"
-          ></govuk-radio-option>
+          @for (option of options; track option) {
+            <govuk-radio-option [value]="option.value" [label]="option.label"></govuk-radio-option>
+          }
         </div>
       </form>
     `,

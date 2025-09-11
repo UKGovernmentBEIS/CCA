@@ -10,6 +10,6 @@ import uk.gov.netz.api.configuration.domain.ui.UIConfigurationPropertiesDTO;
 @Mapper(componentModel = "spring", config = MapperConfig.class)
 public interface UIPropertiesMapper {
 
-	UIPropertiesDTO toUIPropertiesDTO(UIConfigurationPropertiesDTO uiConfigurationProperties, LocalDate subsistenceFeesRunTriggerDate);
+	UIPropertiesDTO toUIPropertiesDTO(UIConfigurationPropertiesDTO uiConfigurationProperties, LocalDate subsistenceFeesRunTriggerDate, LocalDate underlyingAgreementSchemeParticipationFlagCutOffDate);
 	
 }

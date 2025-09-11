@@ -5,10 +5,7 @@ import {
   transformUserContacts,
 } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
-import {
-  transformAttachmentsAndFileUUIDsToDownloadableFiles,
-  transformFileInfoToDownloadableFile,
-} from '@shared/utils';
+import { fileUtils } from '@shared/utils';
 
 import {
   AdminTerminationWithdrawReasonDetails,
@@ -29,35 +26,31 @@ export function toAdminTerminationWithdrawSubmittedTimelineSummaryData(
 ): SummaryData {
   return new SummaryFactory()
     .addSection('Details')
-    .addRow(
+    .addTextAreaRow(
       'Explain why you are withdrawing the admin termination',
       adminTerminationWithdrawReasonDetails.explanation,
-      {
-        prewrap: true,
-      },
     )
     .addFileListRow(
       'Uploaded files',
-      transformAttachmentsAndFileUUIDsToDownloadableFiles(
-        adminTerminationWithdrawReasonDetails.relevantFiles,
-        adminTerminationWithdrawAttachments,
+      fileUtils.toDownloadableFiles(
+        fileUtils.extractAttachments(
+          adminTerminationWithdrawReasonDetails.relevantFiles,
+          adminTerminationWithdrawAttachments,
+        ),
         downloadUrl,
       ),
     )
+
     .addSection('Official notice recipients')
-    .addRow(
-      'Users',
-      [
-        ...transformUserContacts(defaultContacts),
-        ...extractSectorUsersFromUsersInfo(usersInfo, decisionNotification.sectorUsers),
-        ...extractOperatorUsersFromUsersInfo(usersInfo, decisionNotification.operators),
-      ],
-      { prewrap: true },
-    )
+    .addTextAreaRow('Users', [
+      ...transformUserContacts(defaultContacts),
+      ...extractSectorUsersFromUsersInfo(usersInfo, decisionNotification.sectorUsers),
+      ...extractOperatorUsersFromUsersInfo(usersInfo, decisionNotification.operators),
+    ])
     .addRow(
       'Name and signature on the official notice',
       extractSignatoryUserFromUsersInfo(usersInfo, decisionNotification.signatory),
     )
-    .addFileListRow('Official notice', transformFileInfoToDownloadableFile(officialNotice, downloadUrl))
+    .addFileListRow('Official notice', fileUtils.toDownloadableDocument([officialNotice], downloadUrl))
     .create();
 }

@@ -1,4 +1,4 @@
-<div class="govuk-body govuk-!-width-two-thirds">
+<div class="govuk-!-width-two-thirds">
   <cca-wizard-step
     (formSubmit)="onSubmit()"
     [formGroup]="form"
@@ -19,7 +19,7 @@
 
     <h2 class="govuk-heading-m">Did the facility exit the scheme before the start of the current charging year?</h2>
     <div formControlName="hasFacilityExited" govuk-radio>
-      <govuk-radio-option [value]="false" [label]="'No'"></govuk-radio-option>
+      <govuk-radio-option [value]="false" [label]="'No'" />
 
       <govuk-radio-option [value]="true" [label]="'Yes, set scheme exit date'">
         <ng-container govukConditionalContent>

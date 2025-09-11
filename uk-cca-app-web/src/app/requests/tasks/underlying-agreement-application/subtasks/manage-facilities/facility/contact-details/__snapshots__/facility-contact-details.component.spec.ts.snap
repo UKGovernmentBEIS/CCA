@@ -1,0 +1,431 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FacilityContactDetailsComponent should show form values 1`] = `
+<cca-facility-contact-details
+  activatedRoute={[Function Object]}
+  facility={[Function Function]}
+  facilityId={[Function String]}
+  form={[Function FormGroup]}
+  router={[Function _Router]}
+  store={[Function _RequestTaskStore]}
+  tasksApiService={[Function TasksApiService]}
+>
+  <cca-wizard-step
+    class="ng-untouched ng-pristine ng-valid"
+    data-testid="add-facility-contact-form"
+    heading="Facility contact details"
+  >
+    <form
+      class="ng-untouched ng-pristine ng-valid"
+      novalidate=""
+    >
+      <netz-page-heading>
+        <span
+          class="govuk-caption-l"
+        >
+          Facility 1
+        </span>
+        <h1
+          class="govuk-heading-l"
+        >
+          Facility contact details
+        </h1>
+      </netz-page-heading>
+      <div
+        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+        formcontrolname="sameContact"
+        govuk-checkboxes=""
+      >
+        <fieldset
+          class="govuk-fieldset"
+          govukfieldset=""
+          id="sameContact"
+        >
+          <legend
+            class="govuk-fieldset__legend govuk-fieldset__legend--l"
+            govuklegend=""
+            id="l.sameContact"
+          >
+          </legend>
+          <div
+            class="govuk-checkboxes"
+          >
+            <div
+              class="govuk-checkboxes__item"
+            >
+              <input
+                aria-describedby="sameContact-0-item-hint"
+                class="govuk-checkboxes__input"
+                id="sameContact-0"
+                name="sameContact"
+                type="checkbox"
+                value="true"
+              />
+              <label
+                class="govuk-label govuk-checkboxes__label"
+                for="sameContact-0"
+              >
+                 The facility contact details are the same as the target unit administrative contact details 
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <h2
+        class="govuk-heading-m"
+      >
+        Name
+      </h2>
+      <div
+        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+        formcontrolname="firstName"
+        govuk-text-input=""
+        label="First name"
+        widthclass="govuk-!-width-one-half"
+      >
+        <label
+          class="govuk-label"
+          for="firstName"
+          id="l.firstName"
+        >
+           First name 
+        </label>
+        <input
+          autocomplete="on"
+          class="govuk-input govuk-!-width-one-half"
+          id="firstName"
+          name="firstName"
+          type="text"
+        />
+      </div>
+      <div
+        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+        formcontrolname="lastName"
+        govuk-text-input=""
+        label="Last name"
+        widthclass="govuk-!-width-one-half"
+      >
+        <label
+          class="govuk-label"
+          for="lastName"
+          id="l.lastName"
+        >
+           Last name 
+        </label>
+        <input
+          autocomplete="on"
+          class="govuk-input govuk-!-width-one-half"
+          id="lastName"
+          name="lastName"
+          type="text"
+        />
+      </div>
+      <div
+        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+        formcontrolname="email"
+        govuk-text-input=""
+        inputtype="email"
+        label="Email address"
+        widthclass="govuk-!-width-one-half"
+      >
+        <label
+          class="govuk-label"
+          for="email"
+          id="l.email"
+        >
+           Email address 
+        </label>
+        <input
+          autocomplete="on"
+          class="govuk-input govuk-!-width-one-half"
+          id="email"
+          name="email"
+          type="email"
+        />
+      </div>
+      <h2
+        class="govuk-heading-m"
+      >
+        Address
+      </h2>
+      <div
+        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+        formcontrolname="sameAddress"
+        govuk-checkboxes=""
+      >
+        <fieldset
+          class="govuk-fieldset"
+          govukfieldset=""
+          id="sameAddress"
+        >
+          <legend
+            class="govuk-fieldset__legend govuk-fieldset__legend--l"
+            govuklegend=""
+            id="l.sameAddress"
+          >
+          </legend>
+          <div
+            class="govuk-checkboxes"
+          >
+            <div
+              class="govuk-checkboxes__item"
+            >
+              <input
+                aria-describedby="sameAddress-0-item-hint"
+                class="govuk-checkboxes__input"
+                id="sameAddress-0"
+                name="sameAddress"
+                type="checkbox"
+                value="true"
+              />
+              <label
+                class="govuk-label govuk-checkboxes__label"
+                for="sameAddress-0"
+              >
+                 Use the facility address 
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        class="ng-untouched ng-pristine ng-valid"
+        formgroupname="address"
+      >
+        <cca-account-address-input>
+          <div
+            autocomplete="address-line1"
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="line1"
+            govuk-text-input=""
+            label="Address line 1"
+            widthclass="govuk-!-width-two-thirds"
+          >
+            <label
+              class="govuk-label"
+              for="address.line1"
+              id="l.address.line1"
+            >
+               Address line 1 
+            </label>
+            <input
+              autocomplete="address-line1"
+              class="govuk-input govuk-!-width-two-thirds"
+              id="address.line1"
+              name="address.line1"
+              type="text"
+            />
+          </div>
+          <div
+            autocomplete="address-line2"
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="line2"
+            govuk-text-input=""
+            label="Address line 2 (optional)"
+            widthclass="govuk-!-width-two-thirds"
+          >
+            <label
+              class="govuk-label"
+              for="address.line2"
+              id="l.address.line2"
+            >
+               Address line 2 (optional) 
+            </label>
+            <input
+              autocomplete="address-line2"
+              class="govuk-input govuk-!-width-two-thirds"
+              id="address.line2"
+              name="address.line2"
+              type="text"
+            />
+          </div>
+          <div
+            autocomplete="address-level2"
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="city"
+            govuk-text-input=""
+            label="Town or city"
+            widthclass="govuk-!-width-one-third"
+          >
+            <label
+              class="govuk-label"
+              for="address.city"
+              id="l.address.city"
+            >
+               Town or city 
+            </label>
+            <input
+              autocomplete="address-level2"
+              class="govuk-input govuk-!-width-one-third"
+              id="address.city"
+              name="address.city"
+              type="text"
+            />
+          </div>
+          <div
+            autocomplete="county"
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="county"
+            govuk-text-input=""
+            label="County (optional)"
+            widthclass="govuk-!-width-one-third"
+          >
+            <label
+              class="govuk-label"
+              for="address.county"
+              id="l.address.county"
+            >
+               County (optional) 
+            </label>
+            <input
+              autocomplete="county"
+              class="govuk-input govuk-!-width-one-third"
+              id="address.county"
+              name="address.county"
+              type="text"
+            />
+          </div>
+          <div
+            autocomplete="postal-code"
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="postcode"
+            govuk-text-input=""
+            label="Postcode"
+            widthclass="govuk-!-width-one-third"
+          >
+            <label
+              class="govuk-label"
+              for="address.postcode"
+              id="l.address.postcode"
+            >
+               Postcode 
+            </label>
+            <input
+              autocomplete="postal-code"
+              class="govuk-input govuk-!-width-one-third"
+              id="address.postcode"
+              name="address.postcode"
+              type="text"
+            />
+          </div>
+          <div
+            ccacountries=""
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="country"
+            govuk-select=""
+            label="Country"
+            labelsize="small"
+          >
+            <label
+              class="govuk-label"
+              for="address.country"
+              id="l.address.country"
+            >
+               Country
+            </label>
+            <select
+              class="govuk-select ng-untouched ng-pristine ng-valid"
+              govukformerror=""
+              id="address.country"
+              name="address.country"
+            >
+            </select>
+          </div>
+        </cca-account-address-input>
+      </div>
+      <h2
+        class="govuk-heading-m"
+      >
+        Phone number
+      </h2>
+      <div
+        cca-phone-input=""
+        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+        formcontrolname="phoneNumber"
+        label="Phone number 1"
+      >
+        <fieldset
+          class="govuk-fieldset"
+          govukfieldset=""
+          id="fieldset"
+        >
+          <legend
+            govuklegend=""
+            hidden=""
+          >
+            Phone number 1
+          </legend>
+          <span
+            govukfieldsethint=""
+          >
+          </span>
+          <div
+            class="govuk-grid-row ng-untouched ng-pristine ng-valid"
+          >
+            <div
+              class="govuk-grid-column-one-quarter"
+            >
+              <div
+                class="govuk-form-group"
+              >
+                <label
+                  class="govuk-label"
+                  for="phoneNumber.countryCode"
+                  id="l.phoneNumber"
+                >
+                  Country code
+                </label>
+                <select
+                  autocomplete="tel-country-code"
+                  class="govuk-select ng-untouched ng-pristine ng-valid"
+                  formcontrolname="countryCode"
+                  id="phoneNumber.countryCode"
+                  name="phoneNumber.countryCode"
+                >
+                </select>
+              </div>
+            </div>
+            <div
+              class="govuk-grid-column-one-half"
+            >
+              <div
+                class="govuk-form-group"
+              >
+                <label
+                  class="govuk-label"
+                  for="phoneNumber"
+                >
+                  Phone number 1
+                </label>
+                <input
+                  autocomplete="tel-national"
+                  class="govuk-input govuk-!-width-full ng-untouched ng-pristine ng-valid"
+                  formcontrolname="number"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="tel"
+                />
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <button
+        class="govuk-button"
+        govukbutton=""
+        netzpendingbutton=""
+        type="submit"
+      >
+        Continue
+      </button>
+    </form>
+  </cca-wizard-step><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><a
+    class="govuk-link"
+    href="/"
+  >
+     Return to: Manage facilities 
+  </a>
+</cca-facility-contact-details>
+`;

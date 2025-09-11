@@ -11,7 +11,6 @@ import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.RequestTaskAssignmentService;
 import uk.gov.netz.api.workflow.request.core.assignment.taskassign.service.UserRoleRequestTaskAssignmentService;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
-import uk.gov.netz.api.workflow.request.core.domain.constants.RequestStatuses;
 import uk.gov.netz.api.workflow.request.core.repository.RequestTaskRepository;
 
 import java.util.List;
@@ -43,7 +42,7 @@ public class SectorUserRequestTaskAssignmentService implements UserRoleRequestTa
     }
 
     public void assignTasksToSiteContactOrRelease(String userDeleted, Long sectorAssociationId) {
-        List<RequestTask> requestTasks = this.requestTaskRepository.findByAssigneeAndRequestStatus(userDeleted, RequestStatuses.IN_PROGRESS);
+        List<RequestTask> requestTasks = this.requestTaskRepository.findByAssignee(userDeleted);
         if (CollectionUtils.isNotEmpty(requestTasks)) {
 
             List<Long> accountsBySectorId = targetUnitAccountQueryService.getAllTargetUnitAccountIdsBySectorAssociationId(sectorAssociationId);

@@ -1,27 +1,25 @@
 @if (status() === 'INVALID' && form.touched) {
-  <govuk-error-summary [form]="form"></govuk-error-summary>
+  <govuk-error-summary [form]="form" />
 }
 
 <div class="govuk-grid-row" data-testid="add-sector-user-form">
   <netz-page-heading size="l" caption="Add new user">{{ title }}</netz-page-heading>
 
-  <p class="govuk-body">This user will have permission to:</p>
+  <p>This user will have permission to:</p>
   @if (isAdmin) {
     <ul class="govuk-list govuk-list--bullet">
       <li>add and remove other users</li>
       <li>perform all tasks related to target units and facilities</li>
       <li>submit target period reporting</li>
     </ul>
-    <p class="govuk-body">
-      You should only add a user who has been authorised to perform these actions by the sector association.
-    </p>
+    <p>You should only add a user who has been authorised to perform these actions by the sector association.</p>
   } @else {
     <ul class="govuk-list govuk-list--bullet">
       <li>view account details</li>
       <li>perform all tasks related to target units and facilities</li>
       <li>submit target period reports</li>
     </ul>
-    <p class="govuk-body">They will not be able to add and remove other users from your account.</p>
+    <p>They will not be able to add and remove other users from your account.</p>
   }
 
   <form (ngSubmit)="onSubmit()" [formGroup]="form">
@@ -39,11 +37,13 @@
         by email.
       </p>
     </div>
+
     <div formControlName="contactType" govuk-radio legend="Contact type" [isInline]="true">
       @for (option of contactTypeOptions; track option.value) {
-        <govuk-radio-option [label]="option.text" [value]="option.value"></govuk-radio-option>
+        <govuk-radio-option [label]="option.text" [value]="option.value" />
       }
     </div>
+
     <button netzPendingButton govukButton type="submit">Submit</button>
   </form>
 </div>

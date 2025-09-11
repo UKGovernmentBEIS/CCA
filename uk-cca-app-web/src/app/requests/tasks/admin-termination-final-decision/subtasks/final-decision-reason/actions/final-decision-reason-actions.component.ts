@@ -16,7 +16,24 @@ import {
 
 @Component({
   selector: 'cca-final-decision-reason-actions',
-  templateUrl: './final-decision-reason-actions.component.html',
+  template: `
+    <netz-page-heading>Admin termination final decision</netz-page-heading>
+    <h3 class="govuk-heading-m">Available actions</h3>
+    <p>You must select the admin termination final decision.</p>
+
+    <div class="govuk-button-group">
+      <button (click)="onSelect('TERMINATE_AGREEMENT')" netzPendingButton govukButton type="button">
+        Terminate agreement
+      </button>
+
+      <button (click)="onSelect('WITHDRAW_TERMINATION')" govukSecondaryButton type="button">
+        Withdraw termination
+      </button>
+    </div>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [PageHeadingComponent, ButtonDirective, PendingButtonDirective, ReturnToTaskOrActionPageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -64,14 +64,14 @@ class RegulatorRequestTaskAssignmentServiceTest {
         addResourcesToRequest(accountId, request);
         RequestTask requestTask = RequestTask.builder().request(request).assignee(userId).build();
 
-        when(requestTaskRepository.findByAssigneeAndRequestStatus(userId, RequestStatuses.IN_PROGRESS))
+        when(requestTaskRepository.findByAssignee(userId))
                 .thenReturn(List.of(requestTask));
         when(targetUnitAccountQueryService.getAccountById(accountId)).thenReturn(targetUnitAccount);
         when(sectorAssociationQueryService.getSectorAssociationFacilitatorUserId(sectorAssociationId)).thenReturn(facilitatorUserId);
 
         ccaRegulatorRequestTaskAssignmentService.assignTasksToSiteContactOrRelease(userId);
 
-        verify(requestTaskRepository, times(1)).findByAssigneeAndRequestStatus(userId, RequestStatuses.IN_PROGRESS);
+        verify(requestTaskRepository, times(1)).findByAssignee(userId);
         verify(requestTaskAssignmentService, times(1)).assignToUser(requestTask, facilitatorUserId);
         verify(targetUnitAccountQueryService, times(1)).getAccountById(accountId);
         verify(sectorAssociationQueryService, times(1)).getSectorAssociationFacilitatorUserId(sectorAssociationId);
@@ -81,7 +81,7 @@ class RegulatorRequestTaskAssignmentServiceTest {
     void assignTasksToSiteContactOrRelease_no_tasks_found_for_user() {
         String userId = "userId";
 
-        when(requestTaskRepository.findByAssigneeAndRequestStatus(userId, RequestStatuses.IN_PROGRESS))
+        when(requestTaskRepository.findByAssignee(userId))
                 .thenReturn(Collections.emptyList());
 
         ccaRegulatorRequestTaskAssignmentService.assignTasksToSiteContactOrRelease(userId);
@@ -107,7 +107,7 @@ class RegulatorRequestTaskAssignmentServiceTest {
         RequestTask requestTask = RequestTask.builder().request(request).assignee(userId).build();
 
         when(requestTaskRepository
-                .findByAssigneeAndRequestStatus(userId, RequestStatuses.IN_PROGRESS))
+                .findByAssignee(userId))
                 .thenReturn(List.of(requestTask));
         when(targetUnitAccountQueryService.getAccountById(accountId)).thenReturn(targetUnitAccount);
         when(sectorAssociationQueryService.getSectorAssociationFacilitatorUserId(sectorAssociationId)).thenReturn(null);
@@ -137,7 +137,7 @@ class RegulatorRequestTaskAssignmentServiceTest {
         addResourcesToRequest(accountId, request);
         RequestTask requestTask = RequestTask.builder().request(request).assignee(userId).build();
 
-        when(requestTaskRepository.findByAssigneeAndRequestStatus(userId, RequestStatuses.IN_PROGRESS))
+        when(requestTaskRepository.findByAssignee(userId))
                 .thenReturn(List.of(requestTask));
         when(targetUnitAccountQueryService.getAccountById(accountId)).thenReturn(targetUnitAccount);
         when(sectorAssociationQueryService.getSectorAssociationFacilitatorUserId(sectorAssociationId)).thenReturn(facilitatorUserId);
@@ -172,7 +172,7 @@ class RegulatorRequestTaskAssignmentServiceTest {
         RequestTask requestTask = RequestTask.builder().request(request).assignee(userId).build();
 
         when(requestTaskRepository
-                .findByAssigneeAndRequestStatus(userId, RequestStatuses.IN_PROGRESS))
+                .findByAssignee(userId))
                 .thenReturn(List.of(requestTask));
         when(targetUnitAccountQueryService.getAccountById(accountId)).thenReturn(targetUnitAccount);
         when(sectorAssociationQueryService.getSectorAssociationFacilitatorUserId(sectorAssociationId)).thenReturn(facilitatorUserId);

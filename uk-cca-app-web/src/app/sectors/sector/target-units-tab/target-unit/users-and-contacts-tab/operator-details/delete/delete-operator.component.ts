@@ -37,9 +37,9 @@ export class DeleteOperatorComponent {
   private readonly accountId = this.route.snapshot.paramMap.get('targetUnitId');
   private readonly userId = this.route.snapshot.paramMap.get('userId');
 
-  readonly operator = this.store.state.details;
+  protected readonly operator = this.store.state.details;
 
-  isConfirmationDisplayed = signal(false);
+  protected readonly isConfirmationDisplayed = signal(false);
 
   onDeleteOperator() {
     this.operatorAuthoritiesService

@@ -14,7 +14,7 @@ class OperatorUserInvitationMapperTest {
     private OperatorUserInvitationMapper mapper;
 
     @BeforeEach
-    public void init() {
+    void init() {
         mapper = Mappers.getMapper(OperatorUserInvitationMapper.class);
     }
 

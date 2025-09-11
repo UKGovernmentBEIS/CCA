@@ -59,16 +59,18 @@ export class AppComponent implements OnInit {
 
   private readonly userState = this.authStore.select(selectUserState);
   private readonly roleType = this.authStore.select(selectUserRoleType);
-  readonly isLoggedIn = this.authStore.select(selectIsLoggedIn);
-  readonly subsistenceFeesHideMenu = this.configService.isFeatureEnabled('subsistenceFeesHideMenu');
+  protected readonly isLoggedIn = this.authStore.select(selectIsLoggedIn);
+  protected readonly subsistenceFeesHideMenu = this.configService.isFeatureEnabled('subsistenceFeesHideMenu');
 
-  isAuthorized = computed(() => this.isLoggedIn() && this.userState().status === 'ENABLED');
-  showRegulators = computed(() => this.isAuthorized() && this.roleType() === 'REGULATOR');
-  showSectors = computed(() => this.isAuthorized());
+  protected readonly isAuthorized = computed(() => this.isLoggedIn() && this.userState().status === 'ENABLED');
+  protected readonly showRegulators = computed(() => this.isAuthorized() && this.roleType() === 'REGULATOR');
+  protected readonly showSectors = computed(() => this.isAuthorized());
 
-  showCookiesBanner = toSignal(this.cookiesService.accepted$.pipe(map((cookiesAccepted) => !cookiesAccepted)));
+  protected readonly showCookiesBanner = toSignal(
+    this.cookiesService.accepted$.pipe(map((cookiesAccepted) => !cookiesAccepted)),
+  );
 
-  ngOnInit(): void {
+  ngOnInit() {
     const appTitle = this.titleService.getTitle();
 
     this.router.events

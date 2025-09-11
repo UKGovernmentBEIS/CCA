@@ -1,27 +1,33 @@
 <div [class.govuk-form-group--error]="shouldDisplayErrors" class="govuk-form-group">
   <fieldset [id]="identifier" govukFieldset>
-    <legend [size]="legendSize" govukLegend>
-      <ng-container *ngIf="legend; else customLegend">{{ legend }}</ng-container>
-      <ng-template #customLegend>
+    <legend [size]="legendSize()" govukLegend>
+      @if (legend()) {
+        {{ legend() }}
+      } @else {
         <ng-content select="[govukLegend]"></ng-content>
-      </ng-template>
+      }
     </legend>
-    <div *ngIf="hint" govukFieldsetHint [innerHTML]="hint"></div>
-    <govuk-error-message
-      *ngIf="shouldDisplayErrors"
-      [errors]="control.errors"
-      [identifier]="identifier"
-    ></govuk-error-message>
+
+    @if (hint()) {
+      <div govukFieldsetHint [innerHTML]="hint()"></div>
+    }
+
+    @if (shouldDisplayErrors) {
+      <govuk-error-message [errors]="control.errors" [identifier]="identifier"></govuk-error-message>
+    }
+
     <div
-      [class.govuk-radios--inline]="isInline"
-      [class.govuk-radios--small]="radioSize === 'medium'"
+      [class.govuk-radios--inline]="isInline()"
+      [class.govuk-radios--small]="radioSize() === 'medium'"
       class="govuk-radios"
     >
-      <ng-container *ngFor="let option of options">
-        <div *ngIf="option.divider" class="govuk-radios__divider">or</div>
-        <ng-container [ngTemplateOutlet]="option.optionTemplate"></ng-container>
-        <ng-container [ngTemplateOutlet]="option.conditionalTemplate"></ng-container>
-      </ng-container>
+      @for (option of options(); track option) {
+        @if (option.divider()) {
+          <div class="govuk-radios__divider">or</div>
+        }
+        <ng-container [ngTemplateOutlet]="option.optionTemplate()"></ng-container>
+        <ng-container [ngTemplateOutlet]="option.conditionalTemplate()"></ng-container>
+      }
     </div>
   </fieldset>
 </div>

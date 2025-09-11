@@ -37,7 +37,7 @@ public class TargetUnitAccountUpdateController {
     private final TargetUnitAccountUpdateService targetUnitAccountUpdateService;
 
     @PatchMapping(path = "/sic")
-    @Operation(summary = "Updates TargetUnit Account Sic code")
+    @Operation(summary = "Updates TargetUnit Account Sic codes")
     @ApiResponse(responseCode = "204", description = SwaggerApiInfo.NO_CONTENT)
     @ApiResponse(responseCode = "400", description = SwaggerApiInfo.UPDATE_TARGET_UNIT_ACCOUNT_ERROR_BAD_REQUEST,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
@@ -51,10 +51,10 @@ public class TargetUnitAccountUpdateController {
     public ResponseEntity<Void> updateTargetUnitAccountSicCode(
             @PathVariable("accountId") @Parameter(description = "The account id")
             Long accountId,
-            @RequestBody @Valid @Parameter(description = "The updated data for sic code", required = true)
+            @RequestBody @Valid @Parameter(description = "The updated data for sic codes", required = true)
             UpdateTargetUnitAccountSicCodeDTO updateTargetUnitAccountSicCodeDTO) {
 
-        targetUnitAccountUpdateService.updateTargetUnitAccountSicCode(accountId, updateTargetUnitAccountSicCodeDTO);
+        targetUnitAccountUpdateService.updateTargetUnitAccountSicCodes(accountId, updateTargetUnitAccountSicCodeDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

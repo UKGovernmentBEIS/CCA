@@ -16,7 +16,6 @@ import uk.gov.netz.api.authorization.core.repository.RoleRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -25,7 +24,7 @@ import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PER
 
 
 @ExtendWith(MockitoExtension.class)
-public class CcaAuthorityAssignmentServiceTest {
+class CcaAuthorityAssignmentServiceTest {
     @InjectMocks
     private CcaAuthorityAssignmentService authorityAssignmentService;
     @Mock
@@ -94,7 +93,7 @@ public class CcaAuthorityAssignmentServiceTest {
         );
 
         authorityAssignmentService.updateAuthorityWithPermissions(ccaAuthorityDetails.getAuthority(),
-                expectedAuthPermissions.stream().map(AuthorityPermission::getPermission).collect(Collectors.toList()));
+                expectedAuthPermissions.stream().map(AuthorityPermission::getPermission).toList());
 
         assertThat(authority.getAuthorityPermissions()).containsExactlyInAnyOrderElementsOf(expectedAuthPermissions);
     }

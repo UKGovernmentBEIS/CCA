@@ -15,6 +15,7 @@ describe('GlobalErrorHandlingService', () => {
   let service: GlobalErrorHandlingService;
   let router: Router;
   let authStore: AuthStore;
+
   const authService = mockClass(AuthService);
 
   beforeEach(() => {

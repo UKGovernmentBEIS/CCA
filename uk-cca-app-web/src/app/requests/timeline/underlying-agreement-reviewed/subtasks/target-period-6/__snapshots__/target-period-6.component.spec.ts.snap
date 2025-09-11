@@ -117,25 +117,6 @@ exports[`TargetPeriod6Component should match snapshot 1`] = `
              kg 
           </dd>
         </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Upload evidence
-          </dt>
-          <dd
-            class="govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-            <span>
-              No files provided
-            </span>
-          </dd>
-        </div>
       </dl>
       <h2
         class="govuk-heading-m"
@@ -191,7 +172,7 @@ exports[`TargetPeriod6Component should match snapshot 1`] = `
             Explain why you are using a different baseline year
           </dt>
           <dd
-            class="govuk-summary-list__value"
+            class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
              test 

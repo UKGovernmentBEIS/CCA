@@ -30,33 +30,34 @@ describe('SectorSchemeTabComponent', () => {
   });
 
   it('should render all titles', () => {
-    expect(screen.getByText('Umbrella')).toBeInTheDocument();
-    expect(screen.getByText('Target currency')).toBeInTheDocument();
-    expect(screen.getByText('Sector commitment')).toBeInTheDocument();
+    expect(screen.getByText('Scheme')).toBeInTheDocument();
+    expect(screen.getByText('CCA2 (2013-2024)')).toBeInTheDocument();
     expect(screen.getByText('Subsectors')).toBeInTheDocument();
   });
 
-  it('should render "Umbrella" section', () => {
-    const umbrellaList = document.querySelectorAll("[data-testid='umbrella-list'] div");
+  it('should render "Umbrella agreement" section', () => {
+    const summaryList = document.querySelector('dl[govuk-summary-list]');
+    const umbrellaRow = Array.from(summaryList.querySelectorAll('div[govuksummarylistrow]')).find(
+      (div) => div.querySelector('dt').textContent === 'Umbrella agreement CCA2',
+    );
 
-    const elements = [];
-
-    umbrellaList.forEach((div) => {
-      elements.push([div.querySelector('dt').textContent, div.querySelector('dd').textContent]);
-    });
-
-    expect(elements).toEqual([['Current umbrella agreement', ' file-name (pdf, 20KB) ']]);
+    expect(umbrellaRow).toBeTruthy();
+    expect(umbrellaRow.querySelector('dt').textContent).toBe('Umbrella agreement CCA2');
+    expect(umbrellaRow.querySelector('dd').textContent).toContain('file-name (pdf, 20KB)');
   });
 
-  it('should render the details hint in "Target currency" and "Sector commitment" section', () => {
-    expect(screen.getAllByText("You can see more information in the subsector's details.")).toHaveLength(2);
+  it('should render the subsector hint message', () => {
+    const hint = document.querySelector('p');
+    expect(hint).toHaveTextContent(
+      'You can find more information about currency and sector commitment in the subsector',
+    );
   });
 
-  it('should populate the table accordingly', async () => {
+  it('should populate the subsector table accordingly', async () => {
     const table = document.querySelector('govuk-table');
 
-    mockSectorScheme.subsectorAssociationSchemes.forEach(async (scheme) => {
-      const schemeEl = await screen.findByText(scheme.subsectorAssociation.name);
+    mockSectorScheme.subsectorAssociations.forEach(async (subsector) => {
+      const schemeEl = await screen.findByText(subsector.name);
 
       expect(table).toContainElement(schemeEl);
     });

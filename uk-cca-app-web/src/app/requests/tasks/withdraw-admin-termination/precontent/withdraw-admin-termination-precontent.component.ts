@@ -13,11 +13,9 @@ import { REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK } from '../withdraw-admin
   selector: 'cca-withdraw-admin-termination-precontent',
   template: `
     @if (isReasonForWithdrawAdminTerminationCompleted && isEditable) {
-      <div class="govuk-body">
-        <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
-          Notify operator of decision
-        </button>
-      </div>
+      <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
+        Notify operator of decision
+      </button>
     }
   `,
   standalone: true,

@@ -1,12 +1,12 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
 
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { SubsistenceFeesRunPaymentStatusPipe } from '@shared/pipes';
+import { StatusPipe } from '@shared/pipes';
 
 import { SubsistenceFeesRunDetailsDTO } from 'cca-api';
 
 export function toSentSubsistenceFeesDetails(details: SubsistenceFeesRunDetailsDTO): SummaryData {
-  const statusPipe = new SubsistenceFeesRunPaymentStatusPipe();
+  const statusPipe = new StatusPipe();
   const datePipe = new DatePipe('en-GB');
   const decimalPipe = new DecimalPipe('en-GB');
 

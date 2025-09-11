@@ -50,7 +50,7 @@ class TargetUnitAccountQueryServiceTest {
 	private static final AccountAddressMapper accountAddressMapper = Mappers.getMapper(AccountAddressMapper.class);
     
 	@BeforeEach
-    public void init() {
+    void init() {
         ReflectionTestUtils.setField(service, "targetUnitAccountMapper", targetUnitAccountMapper);
         ReflectionTestUtils.setField(targetUnitAccountMapper, "accountAddressMapper", accountAddressMapper);
     }
@@ -67,7 +67,7 @@ class TargetUnitAccountQueryServiceTest {
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .operatorType(TargetUnitAccountOperatorType.PARTNERSHIP)
                 .companyRegistrationNumber("companyRegistrationNumber")
-                .sicCode("sicCode")
+                .sicCodes(List.of("sicCode"))
                 .creationDate(now)
                 .sectorAssociationId(123L)
                 .status(TargetUnitAccountStatus.NEW)
@@ -82,7 +82,7 @@ class TargetUnitAccountQueryServiceTest {
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .operatorType(TargetUnitAccountOperatorType.PARTNERSHIP)
                 .companyRegistrationNumber("companyRegistrationNumber")
-                .sicCode("sicCode")
+                .sicCodes(List.of("sicCode"))
                 .creationDate(now)
                 .sectorAssociationId(123L)
                 .status(TargetUnitAccountStatus.NEW)
@@ -108,7 +108,7 @@ class TargetUnitAccountQueryServiceTest {
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .operatorType(TargetUnitAccountOperatorType.PARTNERSHIP)
                 .companyRegistrationNumber("companyRegistrationNumber")
-                .sicCode("sicCode")
+                .sicCodes(List.of("sicCode"))
                 .creationDate(now)
                 .sectorAssociationId(123L)
                 .status(TargetUnitAccountStatus.NEW)
@@ -155,9 +155,40 @@ class TargetUnitAccountQueryServiceTest {
 
         verify(repository).findAllIdsBySectorAssociationId(sectorAssociationId);
     }
+    
+    @Test
+    void getAccountName() {
+        final Long accountId = 1L;
+        final String name = "Test Account";
+        final TargetUnitAccount targetUnitAccount =
+                buildAccount(accountId, name, "dfdf", TargetUnitAccountStatus.LIVE, 2L);
+
+        when(repository.findById(accountId)).thenReturn(Optional.of(targetUnitAccount));
+
+        final String accountName = service.getAccountName(accountId);
+
+        assertEquals("Test Account", accountName);
+        verify(repository).findById(accountId);
+    }
+    
+    @Test
+    void getAccountName_NotFound() {
+        final Long accountId = 1L;
+        
+        when(repository.findById(accountId)).thenReturn(Optional.empty());
+
+        BusinessException thrown = assertThrows(
+                BusinessException.class,
+                () -> service.getAccountName(accountId),
+                "Expected getAccountName to throw, but it didn't"
+        );
+
+        assertEquals(ErrorCode.RESOURCE_NOT_FOUND, thrown.getErrorCode());
+        verify(repository).findById(accountId);
+    }
 
     @Test
-    void getAccountNameTest() {
+    void getAccountBusinessIdAndName() {
         final Long accountId = 1L;
         final String businessId = "AIC/800544";
         final String name = "Test Account";
@@ -166,19 +197,19 @@ class TargetUnitAccountQueryServiceTest {
 
         when(repository.findById(accountId)).thenReturn(Optional.of(targetUnitAccount));
 
-        final String accountName = service.getAccountName(accountId);
+        final String accountName = service.getAccountBusinessIdAndName(accountId);
 
         assertEquals("AIC/800544 - Test Account", accountName);
         verify(repository).findById(accountId);
     }
 
     @Test
-    void getAccountNameTest_NotFound() {
+    void getAccountBusinessIdAndName_NotFound() {
         final Long accountId = 1L;
 
         BusinessException thrown = assertThrows(
                 BusinessException.class,
-                () -> service.getAccountName(accountId),
+                () -> service.getAccountBusinessIdAndName(accountId),
                 "Expected getAccountName to throw, but it didn't"
         );
 

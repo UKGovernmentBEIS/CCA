@@ -71,6 +71,7 @@ describe('Edit sector user spec', () => {
         return s;
       }),
     });
+
     await harness.fixture.whenStable();
     harness.detectChanges();
     await checkThatSectorUserDetailsAreUpdated('reg1 basic1');

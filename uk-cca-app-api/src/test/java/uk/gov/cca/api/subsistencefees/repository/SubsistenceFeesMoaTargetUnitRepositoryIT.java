@@ -7,10 +7,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
@@ -26,6 +30,7 @@ import uk.gov.cca.api.account.domain.FinancialIndependenceStatus;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.FacilityAddress;
 import uk.gov.cca.api.facility.domain.FacilityData;
 import uk.gov.cca.api.subsistencefees.domain.FacilityPaymentStatus;
@@ -39,6 +44,7 @@ import uk.gov.netz.api.common.AbstractContainerBaseTest;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Testcontainers
 @DataJpaTest
 @Import(ObjectMapper.class)
@@ -53,7 +59,7 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
     private final LocalDateTime submissionDate = LocalDateTime.of(2025, 4, 1, 12, 22, 44);
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
     	// set up facility addresses
         FacilityAddress address1 = FacilityAddress.builder()
                 .line1("123 Test Street")
@@ -163,6 +169,7 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
         FacilityData facilityData1 = FacilityData.builder()
                 .facilityId("ADS_1-F00014")
                 .accountId(account1.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("site1")
                 .schemeExitDate(null)
                 .chargeStartDate(LocalDate.of(2025, 1, 1))
@@ -174,6 +181,7 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
         FacilityData facilityData2 = FacilityData.builder()
                 .facilityId("ADS_1-F00015")
                 .accountId(account1.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil2")
                 .address(address2)
                 .schemeExitDate(null)
@@ -185,6 +193,7 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
         FacilityData facilityData3 = FacilityData.builder()
                 .facilityId("ADS_1-F00016")
                 .accountId(account2.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("terminal3")
                 .address(address3)
                 .chargeStartDate(LocalDate.of(2024, 1, 1))
@@ -197,6 +206,7 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
         FacilityData facilityData4 = FacilityData.builder()
                 .facilityId("ADS_1-F00017")
                 .accountId(account2.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("terminal3")
                 .address(address4)
                 .chargeStartDate(LocalDate.of(2024, 1, 1))
@@ -209,6 +219,7 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
         FacilityData facilityData5 = FacilityData.builder()
                 .facilityId("ADS_1-F00018")
                 .accountId(account3.getId())
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil5")
                 .address(address5)
                 .schemeExitDate(null)
@@ -301,6 +312,7 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
     }
 
     @Test
+    @Order(1)
     void getMoaTargetUnitDetailsById() {
     	SubsistenceFeesMoaTargetUnitDetailsDTO details1 = new SubsistenceFeesMoaTargetUnitDetailsDTO(1L, "businessId1", 
     			"name1", new BigDecimal("370.00"), submissionDate, new BigDecimal("185.00"), new BigDecimal("370.00"), 2L, 1L);
@@ -309,17 +321,24 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
 
     	Optional<SubsistenceFeesMoaTargetUnitDetailsDTO> result1 = repository.getMoaTargetUnitDetailsById(1L);
 
-    	assertThat(result1).isNotEmpty();
-        assertThat(result1.get()).isEqualTo(details1);
+    	assertThat(result1).isNotEmpty().contains(details1);
         
         Optional<SubsistenceFeesMoaTargetUnitDetailsDTO> result2 = repository.getMoaTargetUnitDetailsById(3L);
 
-    	assertThat(result2).isNotEmpty();
-        assertThat(result2.get()).isEqualTo(details2);
+    	assertThat(result2).isNotEmpty().contains(details2);
+    }
+
+    @Test
+    @Order(2)
+    void findMoaTargetUnitIdsByMoaId() {
+
+        Set<Long> moaTargetUnits = repository.findMoaTargetUnitIdsByMoaId(2L);
+
+        assertThat(moaTargetUnits).isNotEmpty().hasSize(3);
     }
     
     @AfterEach
-    public void flushAndClear() {
+    void flushAndClear() {
     	entityManager.flush();
         entityManager.clear();
     }

@@ -6,13 +6,12 @@ import {
   ElementRef,
   EmbeddedViewRef,
   HostBinding,
-  Input,
   OnDestroy,
   OnInit,
-  Optional,
   Renderer2,
-  Self,
   ViewContainerRef,
+  input,
+  inject,
 } from '@angular/core';
 import { ControlContainer, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 
@@ -22,25 +21,23 @@ import { ErrorMessageComponent } from '../../error-message';
 
 @Directive({ selector: '[govukFormError]', standalone: true })
 export class FormErrorDirective implements OnDestroy, OnInit, DoCheck {
-  @Input() id: string;
+  private readonly formControl = inject(NgControl, { self: true });
+  private readonly elementRef = inject(ElementRef);
+  private readonly viewContainer = inject(ViewContainerRef);
+  private readonly renderer = inject(Renderer2);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly container = inject(ControlContainer, { optional: true });
+
+  readonly id = input<string>();
 
   private readonly destroy$ = new Subject<void>();
   private touch$ = new BehaviorSubject(false);
   private errorComponent: ComponentRef<ErrorMessageComponent>;
   private isSubmitted = false;
 
-  constructor(
-    @Self() private readonly formControl: NgControl,
-    private readonly elementRef: ElementRef,
-    private readonly viewContainer: ViewContainerRef,
-    private readonly renderer: Renderer2,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    @Optional() private readonly container: ControlContainer,
-  ) {}
-
   @HostBinding('attr.id')
   get identifier(): string {
-    return this.id;
+    return this.id();
   }
 
   private get nativeElement(): HTMLElement {
@@ -78,7 +75,7 @@ export class FormErrorDirective implements OnDestroy, OnInit, DoCheck {
 
   private attachErrorComponent() {
     this.errorComponent = this.viewContainer.createComponent(ErrorMessageComponent);
-    this.errorComponent.instance.identifier = this.id;
+    this.errorComponent.instance.identifier.set(this.id());
 
     const htmlElement: HTMLElement = (this.errorComponent.hostView as EmbeddedViewRef<ErrorMessageComponent>)
       .rootNodes[0];

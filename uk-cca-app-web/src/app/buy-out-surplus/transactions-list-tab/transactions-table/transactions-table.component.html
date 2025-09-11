@@ -1,0 +1,43 @@
+<govuk-table [columns]="columns" [data]="state().transactions">
+  <ng-template let-column="column" let-row="row">
+    @switch (column.field) {
+      @case ('accountBusinessId') {
+        <span class="govuk-!-font-weight-bold">{{ row.accountBusinessId }}</span>
+      }
+
+      @case ('operatorName') {
+        <span>{{ row.operatorName }}</span>
+      }
+
+      @case ('transactionCode') {
+        <a [routerLink]="['transactions', row.id]" fragment="transaction-details" class="govuk-link">
+          <span>{{ row.transactionCode }}</span>
+        </a>
+      }
+
+      @case ('creationDate') {
+        <span>{{ row.creationDate | govukDate: 'date' }}</span>
+      }
+
+      @case ('paymentStatus') {
+        <span class="govuk-tag govuk-tag--{{ row.paymentStatus | statusColor }}">{{ row.paymentStatus | status }}</span>
+      }
+
+      @case ('buyOutFee') {
+        <span>{{ row.buyOutFee | number }}</span>
+      }
+
+      @default {
+        <span>{{ row[column.field] }}</span>
+      }
+    }
+  </ng-template>
+</govuk-table>
+
+<cca-pagination
+  [count]="state().totalItems"
+  [currentPage]="state().currentPage"
+  [pageSize]="state().pageSize"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+/>

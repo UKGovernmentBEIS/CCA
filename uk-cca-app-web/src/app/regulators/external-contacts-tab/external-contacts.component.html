@@ -17,14 +17,17 @@
           {{ row[column.field] }}
         }
       }
+
       @case ('email') {
         <a class="govuk-link" href="mailto:{{ row[column.field] }}">{{ row[column.field] }}</a>
       }
+
       @case (null) {
         @if (isEditable()) {
           <a [routerLink]="['external-contacts', row.id, 'delete']" class="govuk-link">Delete</a>
         }
       }
+
       @default {
         {{ row[column.field] }}
       }

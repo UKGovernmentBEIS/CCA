@@ -1,0 +1,187 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FacilityEligibilityDetailsComponent should test that the form renders properly 1`] = `
+<cca-facility-eligibility-details
+  activatedRoute={[Function Object]}
+  agreementType={[Function Function]}
+  agreementTypeOptions={[Function Array]}
+  caOptions={[Function Array]}
+  erpAuthorisationExists={[Function Function]}
+  facility={[Function Function]}
+  facilityId={[Function String]}
+  form={[Function FormGroup]}
+  isAuthorisation={[Function Function]}
+  isEnvironmental={[Function Function]}
+  router={[Function _Router]}
+  store={[Function _RequestTaskStore]}
+  tasksApiService={[Function TasksApiService]}
+>
+  <cca-wizard-step
+    class="ng-untouched ng-pristine ng-invalid"
+    data-testid="add-facility-eligibility-details-form"
+    heading="CCA eligibility details and authorisation"
+  >
+    <form
+      class="ng-untouched ng-pristine ng-invalid"
+      novalidate=""
+    >
+      <netz-page-heading>
+        <h1
+          class="govuk-heading-l"
+        >
+          CCA eligibility details and authorisation
+        </h1>
+      </netz-page-heading>
+      <div
+        class="govuk-!-width-two-thirds"
+      >
+        <div
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+          formcontrolname="isConnectedToExistingFacility"
+          govuk-radio=""
+          legend="Is the facility adjacent to or connected to an existing CCA facility?"
+        >
+          <div
+            class="govuk-form-group"
+          >
+            <fieldset
+              class="govuk-fieldset"
+              govukfieldset=""
+              id="isConnectedToExistingFacility"
+            >
+              <legend
+                class="govuk-fieldset__legend"
+                govuklegend=""
+                id="l.isConnectedToExistingFacility"
+              >
+                 Is the facility adjacent to or connected to an existing CCA facility? 
+              </legend>
+              <div
+                class="govuk-radios"
+              >
+                <div
+                  class="govuk-radios__item"
+                >
+                  <input
+                    aria-controls="isConnectedToExistingFacility-option0-conditional"
+                    class="govuk-radios__input"
+                    id="isConnectedToExistingFacility-option0"
+                    name="isConnectedToExistingFacility"
+                    type="radio"
+                    value="true"
+                  />
+                  <label
+                    class="govuk-label govuk-radios__label"
+                    for="isConnectedToExistingFacility-option0"
+                  >
+                     Yes 
+                  </label>
+                </div>
+                <div
+                  class="govuk-radios__conditional govuk-radios__conditional--hidden"
+                  id="isConnectedToExistingFacility-option0-conditional"
+                >
+                  <div
+                    cca-text-input=""
+                    class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine"
+                    formcontrolname="adjacentFacilityId"
+                    label="Specify facility ID of adjacent facility"
+                    widthclass="govuk-!-width-one-half"
+                  >
+                    <label
+                      class="govuk-label"
+                      for="adjacentFacilityId"
+                      id="l.adjacentFacilityId"
+                    >
+                      Specify facility ID of adjacent facility
+                    </label>
+                    <p>
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="govuk-radios__item"
+                >
+                  <input
+                    class="govuk-radios__input"
+                    id="isConnectedToExistingFacility-option1"
+                    name="isConnectedToExistingFacility"
+                    type="radio"
+                    value="false"
+                  />
+                  <label
+                    class="govuk-label govuk-radios__label"
+                    for="isConnectedToExistingFacility-option1"
+                  >
+                     No 
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div
+          class="govuk-!-width-three-quarters"
+        >
+          <label
+            for="agreementType"
+          >
+             What is the legal basis for this facility being considered an eligible activity? 
+          </label>
+          <p
+            class="govuk-hint"
+          >
+             Activities carried out in facilities are considered to be eligible if they are or would be regulated under the Environmental Permitting Regulations (EPR), or, they are part of a sector that has been identified as energy intensive 
+          </p>
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+            formcontrolname="agreementType"
+            govuk-select=""
+            widthclass="govuk-!-width-full"
+          >
+            <label
+              class="govuk-label govuk-visually-hidden"
+              for="agreementType"
+              id="l.agreementType"
+            >
+               Select
+            </label>
+            <select
+              class="govuk-select govuk-!-width-full ng-untouched ng-pristine ng-invalid"
+              govukformerror=""
+              id="agreementType"
+              name="agreementType"
+            >
+              <option
+                value="0: ENVIRONMENTAL_PERMITTING_REGULATIONS"
+              >
+                 Environmental Permitting Regulations (EPR) 
+              </option>
+              <option
+                value="1: ENERGY_INTENSIVE"
+              >
+                 Energy Intensive 
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <button
+        class="govuk-button"
+        govukbutton=""
+        netzpendingbutton=""
+        type="submit"
+      >
+        Continue
+      </button>
+    </form>
+  </cca-wizard-step><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><a
+    class="govuk-link"
+    href="/"
+  >
+     Return to: Manage facilities 
+  </a>
+</cca-facility-eligibility-details>
+`;

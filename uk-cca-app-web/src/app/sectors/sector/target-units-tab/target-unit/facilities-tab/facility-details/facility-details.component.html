@@ -1,12 +1,12 @@
-@if (facilityDetails; as details) {
-  <div class="row-flex align-items-end">
-    <div class="col-flex-three-quarters">
-      <netz-page-heading size="l" [caption]="details.facilityId">
+@if (facilityInfoDTO; as details) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <netz-page-heading size="l" [caption]="details.facilityId" class="govuk-tag-heading-align">
         {{ details.siteName }}
 
-        <span class="govuk-tag-heading-align">
+        <span>
           <govuk-tag [color]="details.status === 'LIVE' ? 'green' : 'red'">
-            {{ details.status | facilityStatus }}
+            {{ details.status | status }}
           </govuk-tag>
         </span>
       </netz-page-heading>
@@ -71,4 +71,42 @@
       }
     </div>
   </dl>
+
+  <h2 class="govuk-heading-m">Certification Period</h2>
+  @for (certificationDetails of details.facilityCertificationDetails; track certificationDetails.certificationPeriod) {
+    <dl govuk-summary-list>
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Certification period</dt>
+        <dd govukSummaryListRowValue>
+          {{ certificationDetails.certificationPeriod }}
+        </dd>
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Current status</dt>
+        <dd govukSummaryListRowValue>
+          {{ certificationDetails.status | status }}
+        </dd>
+        @if (roleType() === 'REGULATOR') {
+          <dd govukSummaryListRowActions>
+            <a
+              class="govuk-link"
+              routerLink="../{{ certificationDetails.certificationPeriod }}/change-certification-status"
+              [queryParams]="queryParams"
+              >Change</a
+            >
+          </dd>
+        }
+      </div>
+
+      @if (certificationDetails.status === 'CERTIFIED') {
+        <div govukSummaryListRow>
+          <dt govukSummaryListRowKey>Certification duration</dt>
+          <dd govukSummaryListRowValue>
+            {{ certificationDetails.startDate | duration: certificationDetails.certificationPeriodEndDate }}
+          </dd>
+        </div>
+      }
+    </dl>
+  }
 }

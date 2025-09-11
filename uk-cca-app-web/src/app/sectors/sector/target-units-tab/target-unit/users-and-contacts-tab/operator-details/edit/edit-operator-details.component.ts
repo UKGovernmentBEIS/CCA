@@ -55,7 +55,7 @@ export class EditOperatorDetailsComponent {
   private readonly router = inject(Router);
   private readonly store = inject(ActiveOperatorStore);
 
-  readonly form = inject<FormGroup<OperatorUserDetailsFormModel>>(TARGET_UNIT_OPERATOR_USER_DETAILS_FORM);
+  protected readonly form = inject<FormGroup<OperatorUserDetailsFormModel>>(TARGET_UNIT_OPERATOR_USER_DETAILS_FORM);
 
   private readonly targetUnitId = +this.activatedRoute.snapshot.paramMap.get('targetUnitId');
   private readonly operatorUserId = this.activatedRoute.snapshot.paramMap.get('userId');
@@ -63,7 +63,7 @@ export class EditOperatorDetailsComponent {
   private readonly currentUserId = inject(AuthStore).select(selectUserId);
   private readonly isCurrentUser = this.currentUserId() === this.operatorUserId;
 
-  contactTypeOptions: { text: string; value: OperatorContactType }[] = [
+  protected readonly contactTypeOptions: { text: string; value: OperatorContactType }[] = [
     {
       text: 'Operator',
       value: 'OPERATOR',

@@ -52,7 +52,7 @@ class CcaOperatorAuthorityQueryServiceTest {
                 .roleType(OPERATOR)
                 .authorities(List.of(appAuthority)).build();
 
-        final OperatorAuthorityDTO operatorAuthorityDTO_1 = OperatorAuthorityDTO.builder()
+        final OperatorAuthorityDTO operatorAuthorityDTO1 = OperatorAuthorityDTO.builder()
         		.userId("user_1")
         		.roleName(roleName)
         		.roleCode(roleCode)
@@ -61,7 +61,7 @@ class CcaOperatorAuthorityQueryServiceTest {
         		.contactType(ContactType.OPERATOR)
         		.build();
 
-        final OperatorAuthorityDTO operatorAuthorityDTO_2 = OperatorAuthorityDTO.builder()
+        final OperatorAuthorityDTO operatorAuthorityDTO2 = OperatorAuthorityDTO.builder()
         		.userId("user_2")
         		.roleName(roleName)
         		.roleCode(roleCode)
@@ -71,14 +71,14 @@ class CcaOperatorAuthorityQueryServiceTest {
         		.build();
 
         when(accountAuthorizationResourceService.hasUserScopeToAccount(appUser, accountId, Scope.EDIT_USER)).thenReturn(false);
-        when(ccaAuthorityRepository.findAuthoritiesWithDetailsByAccountId(accountId)).thenReturn(List.of(operatorAuthorityDTO_1, operatorAuthorityDTO_2));
+        when(ccaAuthorityRepository.findAuthoritiesWithDetailsByAccountId(accountId)).thenReturn(List.of(operatorAuthorityDTO1, operatorAuthorityDTO2));
 
         //invoke
         final OperatorAuthoritiesDTO operatorAuthorities = operatorAuthorityQueryService.getOperatorAuthorities(appUser, accountId);
 
         //assert
-        assertThat(operatorAuthorities.getAuthorities().size()).isEqualTo(2);
-        assertThat(operatorAuthorities.isEditable()).isEqualTo(false);
+        assertThat(operatorAuthorities.getAuthorities()).hasSize(2);
+        assertThat(operatorAuthorities.isEditable()).isFalse();
 
         verify(accountAuthorizationResourceService, times(1)).hasUserScopeToAccount(appUser, accountId, Scope.EDIT_USER);
         verify(ccaAuthorityRepository, times(1)).findAuthoritiesWithDetailsByAccountId(accountId);

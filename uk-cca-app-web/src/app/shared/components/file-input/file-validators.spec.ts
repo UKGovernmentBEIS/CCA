@@ -32,6 +32,7 @@ describe('FileValidators', () => {
   it('should apply a single file validator to multiple files', () => {
     const validator: MessageValidatorFn = (control) =>
       control.value.uuid ? null : { required: 'The file is required' };
+
     const formControl = new FormControl();
     formControl.setValue([{ uuid: 1 }, { uuid: null }]);
 

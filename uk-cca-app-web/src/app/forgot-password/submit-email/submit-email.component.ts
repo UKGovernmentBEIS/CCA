@@ -15,10 +15,10 @@ import { EmailSentComponent } from '../email-sent/email-sent.component';
   imports: [ReactiveFormsModule, BackToTopComponent, EmailSentComponent, TextInputComponent, ButtonDirective],
 })
 export class SubmitEmailComponent {
-  isSummaryDisplayed: boolean;
-  isEmailSent: boolean;
+  protected isSummaryDisplayed: boolean;
+  protected isEmailSent: boolean;
 
-  form = this.fb.group({
+  protected readonly form = this.fb.group({
     email: [
       null,
       [

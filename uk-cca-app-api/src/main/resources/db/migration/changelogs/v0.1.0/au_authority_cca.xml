@@ -321,4 +321,185 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_PERM_ADMIN_TERMINATION_PEER_REVIEW_cca_au_role_permission" author="P70311">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission)
+            SELECT nextval('au_role_permission_seq'), id, 'PERM_ADMIN_TERMINATION_PEER_REVIEW'
+            FROM au_role
+            WHERE code IN ('regulator_administrator', 'regulator_basic_user');
+        </sql>
+        <rollback>
+            delete from au_role_permission
+            where permission = 'PERM_ADMIN_TERMINATION_PEER_REVIEW'
+            and role_id in
+            ( select id
+            from au_role
+            where code in ( 'regulator_administrator', 'regulator_basic_user'));
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_regulator_users_with_permission_PERM_ADMIN_TERMINATION_PEER_REVIEW" author="P70311">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+                     join au_role r on au.code = r.code
+                     join au_role_permission rp on r.id = rp.role_id
+            where r.code in ('regulator_administrator', 'regulator_basic_user')
+              and rp.permission = 'PERM_ADMIN_TERMINATION_PEER_REVIEW'
+              and exists (select 1
+                          from au_authority au2
+                                   join au_authority_permission aap on aap.authority_id = au2.id
+                          where au.id = au2.id
+                            and aap.permission = 'PERM_ADMIN_TERMINATION_SUBMISSION');
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission
+                where permission = 'PERM_ADMIN_TERMINATION_PEER_REVIEW'
+                and authority_id in (select au.id
+                from au_authority au
+                join au_role r on au.code = r.code
+                where r.code in('regulator_administrator', 'regulator_basic_user'));
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_PERM_UNDERLYING_AGREEMENT_PEER_REVIEW_cca_au_role_permission" author="P70311">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission)
+            SELECT nextval('au_role_permission_seq'), id, 'PERM_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW'
+            FROM au_role
+            WHERE code IN ('regulator_administrator', 'regulator_basic_user');
+        </sql>
+        <rollback>
+            delete from au_role_permission
+            where permission = 'PERM_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW'
+            and role_id in
+            ( select id
+            from au_role
+            where code in ( 'regulator_administrator', 'regulator_basic_user'));
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_regulator_users_with_permission_PERM_UNDERLYING_AGREEMENT_PEER_REVIEW" author="P70311">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, rp.permission
+            from au_authority au
+                     join au_role r on au.code = r.code
+                     join au_role_permission rp on r.id = rp.role_id
+            where r.code in ('regulator_administrator', 'regulator_basic_user')
+              and rp.permission = 'PERM_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW'
+              and exists (select 1
+                          from au_authority au2
+                                   join au_authority_permission aap on aap.authority_id = au2.id
+                          where au.id = au2.id
+                            and aap.permission = 'PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW');
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission
+                where permission = 'PERM_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW'
+                and authority_id in (select au.id
+                from au_authority au
+                join au_role r on au.code = r.code
+                where r.code in('regulator_administrator', 'regulator_basic_user'));
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW_cca_au_role_permission" author="P70311">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission)
+            SELECT nextval('au_role_permission_seq'), id, 'PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW'
+            FROM au_role
+            WHERE code IN ('regulator_administrator', 'regulator_basic_user');
+        </sql>
+        <rollback>
+            delete from au_role_permission
+            where permission = 'PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW'
+            and role_id in
+            ( select id
+            from au_role
+            where code in ( 'regulator_administrator', 'regulator_basic_user'));
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_fix_populate_regulator_users_with_permission_PERM_ADMIN_TERMINATION_PEER_REVIEW" author="P70311">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, 'PERM_ADMIN_TERMINATION_PEER_REVIEW'
+            from au_authority au
+            where au.competent_authority is not null
+              and exists (select 1
+                          from au_authority au2
+                                   join au_authority_permission aap on aap.authority_id = au2.id
+                          where au.id = au2.id
+                            and aap.permission = 'PERM_ADMIN_TERMINATION_SUBMISSION')
+              and not exists (select 1
+                              from au_authority au2
+                                       join au_authority_permission aap on aap.authority_id = au2.id
+                              where au.id = au2.id
+                                and aap.permission = 'PERM_ADMIN_TERMINATION_PEER_REVIEW');
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission
+                where permission = 'PERM_ADMIN_TERMINATION_PEER_REVIEW'
+                and authority_id in (select au.id
+                from au_authority au where au.competent_authority is not null);
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_fix_populate_regulator_users_with_permission_PERM_UNDERLYING_AGREEMENT_PEER_REVIEW" author="P70311">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, 'PERM_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW'
+            from au_authority au
+            where au.competent_authority is not null
+              and exists (select 1
+                          from au_authority au2
+                                   join au_authority_permission aap on aap.authority_id = au2.id
+                          where au.id = au2.id
+                            and aap.permission = 'PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW')
+              and not exists (select 1
+                              from au_authority au2
+                                       join au_authority_permission aap on aap.authority_id = au2.id
+                              where au.id = au2.id
+                                and aap.permission = 'PERM_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW');
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission
+                where permission = 'PERM_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW'
+                and authority_id in (select au.id
+                from au_authority au where au.competent_authority is not null);
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_regulator_users_with_permission_PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW" author="P70311">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, 'PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW'
+            from au_authority au
+            where au.competent_authority is not null
+              and exists (select 1
+                          from au_authority au2
+                                   join au_authority_permission aap on aap.authority_id = au2.id
+                          where au.id = au2.id
+                            and aap.permission = 'PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW');
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission
+                where permission = 'PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW'
+                and authority_id in (select au.id
+                from au_authority au where au.competent_authority is not null);
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

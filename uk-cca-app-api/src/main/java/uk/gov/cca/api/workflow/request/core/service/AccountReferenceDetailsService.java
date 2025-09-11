@@ -8,7 +8,6 @@ import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
 import uk.gov.cca.api.account.service.TargetUnitAccountService;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationInfoService;
-import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationDetails;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
@@ -27,7 +26,6 @@ public class AccountReferenceDetailsService {
     private final TargetUnitAccountQueryService targetUnitAccountQueryService;
     private final SectorAssociationInfoService sectorAssociationInfoService;
     private final AccountReferenceDataMapper accountReferenceDataMapper;
-    private final SectorAssociationQueryService sectorAssociationQueryService;
     private final SectorReferenceDetailsService sectorReferenceDetailsService;
 
     public TargetUnitAccountDetailsDTO getTargetUnitAccountDetails(Long accountId) {
@@ -37,16 +35,6 @@ public class AccountReferenceDetailsService {
     public SectorAssociationContactDTO getSectorAssociationContactByAccountId(Long accountId) {
         Long sectorAssociationId = getTargetUnitAccountDetails(accountId).getSectorAssociationId();
         return sectorAssociationInfoService.getSectorAssociationContact(sectorAssociationId);
-    }
-
-    public String getSectorAssociationNameByAccountId(Long accountId) {
-        long sectorAssociationId = getTargetUnitAccountDetails(accountId).getSectorAssociationId();
-        return sectorAssociationQueryService.getSectorAssociationName(sectorAssociationId);
-    }
-
-    public String getSectorAssociationAcronymAndNameByAccountId(Long accountId) {
-        long sectorAssociationId = getTargetUnitAccountDetails(accountId).getSectorAssociationId();
-        return sectorAssociationQueryService.getSectorAssociationAcronymAndName(sectorAssociationId);
     }
 
     public AccountReferenceData getAccountReferenceData(Long accountId) {
@@ -65,7 +53,7 @@ public class AccountReferenceDetailsService {
 
     public Map<TargetUnitAccountDTO, SectorAssociationInfo> getTargetUnitAccountsAndSectorsDetails(List<Long> accountIds) {
         List<TargetUnitAccountDTO> accountsDetails = targetUnitAccountQueryService.getAccountsByIds(accountIds);
-        List<Long> sectorIds = accountsDetails.stream().map(TargetUnitAccountDTO::getSectorAssociationId).collect(Collectors.toList());
+        List<Long> sectorIds = accountsDetails.stream().map(TargetUnitAccountDTO::getSectorAssociationId).toList();
         Map<Long, SectorAssociationInfo> sectorsDetails = sectorReferenceDetailsService.getSectorAssociationsInfo(sectorIds).stream().
                 collect(Collectors.toMap(SectorAssociationInfo::getId, Function.identity()));
         return accountsDetails.stream().

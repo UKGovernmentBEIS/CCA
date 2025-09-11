@@ -6,8 +6,9 @@ import { CONTACTS_ROUTES } from './contacts-tab/contacts.routes';
 import { DETAILS_ROUTES } from './details-tab/details.routes';
 import { SCHEME_ROUTES } from './scheme-tab/scheme.routes';
 import { SUBSISTENCE_FEES_TAB_ROUTES } from './subsistence-fees-tab/subsistence-fees-tab.routes';
+import { IsAllowedUserGuard } from './subsistence-fees-tab/subsitence-fees-tab.guard';
 import { TARGET_UNIT_ROUTES } from './target-units-tab/target-unit.routes';
-import { WORKFLOW_DETAILS_ROUTES } from './target-units-tab/workflow-history-tab/workflow-details/workflow-details.routes';
+import { WORKFLOW_DETAILS_ROUTES } from './workflow-history-tab/workflow-details/workflow-details.routes';
 
 export const SECTOR_ROUTES: Routes = [
   {
@@ -21,9 +22,14 @@ export const SECTOR_ROUTES: Routes = [
     path: 'target-units',
     children: TARGET_UNIT_ROUTES,
   },
-  ...WORKFLOW_DETAILS_ROUTES,
+  {
+    path: 'workflow-details',
+    canActivate: [IsAllowedUserGuard],
+    children: WORKFLOW_DETAILS_ROUTES,
+  },
   {
     path: 'subsistence-fees',
+    canActivate: [IsAllowedUserGuard],
     children: SUBSISTENCE_FEES_TAB_ROUTES,
   },
   {

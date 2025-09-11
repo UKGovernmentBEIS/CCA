@@ -1,0 +1,35 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="TP6 (2024)"
+  heading="Add targets"
+  data-testid="add-targets-form"
+>
+  <p>Add improvement target for the target period</p>
+
+  <div
+    widthClass="govuk-!-width-one-quarter"
+    formControlName="improvement"
+    suffix="%"
+    label="Percentage improvement (%)"
+    hint="Enter a number less than 100 with up to 7 decimal places without special characters"
+    inputType="number"
+    cca-text-input
+  ></div>
+
+  <section data-testid="target">
+    @if (targetComposition.agreementCompositionType !== 'NOVEM') {
+      <p class="govuk-label">Target ({{ baselineUnitsSuffix }})</p>
+
+      @if (showTargets()) {
+        <p>{{ (targets() | number: '1.0-7') + ' ' + baselineUnitsSuffix }}</p>
+      }
+    } @else {
+      <p class="govuk-label">Target ({{ baselineUnitsSuffix }})</p>
+      <span class="govuk-hint">The numerical target cannot be calculated for the Novem target type</span>
+    }
+  </section>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

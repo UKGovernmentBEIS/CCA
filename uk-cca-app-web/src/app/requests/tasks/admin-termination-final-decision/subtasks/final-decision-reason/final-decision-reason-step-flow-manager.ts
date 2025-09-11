@@ -16,7 +16,7 @@ export class FinalDecisionReasonStepFlowManager extends WizardFlowManager {
         return of(`../${AdminTerminationFinalDecisionTerminateAgreementWizardStep.REASON_DETAILS}`);
 
       case AdminTerminationFinalDecisionTerminateAgreementWizardStep.REASON_DETAILS:
-        return of(`../${AdminTerminationFinalDecisionTerminateAgreementWizardStep.CHECK_YOUR_ANSWERS}`);
+        return of(`../${'check-your-answers'}`);
     }
   }
 }

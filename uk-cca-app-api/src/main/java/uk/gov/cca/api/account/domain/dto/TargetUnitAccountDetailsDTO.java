@@ -1,5 +1,7 @@
 package uk.gov.cca.api.account.domain.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +26,7 @@ public class TargetUnitAccountDetailsDTO {
     private TargetUnitAccountOperatorType operatorType;
     private String companyRegistrationNumber;
     private String registrationNumberMissingReason;
-    private String sicCode;
+    private List<String> sicCodes;
     private Long sectorAssociationId;
     private Long subsectorAssociationId;
     private FinancialIndependenceStatus financialIndependenceStatus;

@@ -51,7 +51,7 @@ public class ItemSectorUserRepository {
                 .where(constructWherePredicate(userId, assignmentType, requestTask, requestResource,
                         scopedUserRequestTaskTypes))
                 .orderBy(requestTask.startDate.desc())
-                .offset(paging.getPageNumber() * paging.getPageSize())
+                .offset((long)paging.getPageNumber() * paging.getPageSize())
                 .limit(paging.getPageSize());
 
         return ItemPage.builder()

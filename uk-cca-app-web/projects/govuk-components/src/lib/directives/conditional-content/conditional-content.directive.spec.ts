@@ -1,4 +1,4 @@
-import { Component, QueryList, ViewChildren } from '@angular/core';
+import { Component, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -34,7 +34,7 @@ describe('ConditionalContentDirective', () => {
     `,
   })
   class TestComponent {
-    @ViewChildren(ConditionalContentDirective) conditionals: QueryList<ConditionalContentDirective>;
+    readonly conditionals = viewChildren(ConditionalContentDirective);
 
     form = new FormGroup({
       first: new FormControl(),
@@ -61,7 +61,7 @@ describe('ConditionalContentDirective', () => {
   });
 
   it('should disable all nested controls and groups', () => {
-    hostComponent.conditionals.get(0).disableControls();
+    hostComponent.conditionals().at(0).disableControls();
     fixture.detectChanges();
 
     expect(hostComponent.form.get('first').disabled).toBeTruthy();
@@ -76,7 +76,7 @@ describe('ConditionalContentDirective', () => {
     hostComponent.form.disable();
     fixture.detectChanges();
 
-    hostComponent.conditionals.get(0).enableControls();
+    hostComponent.conditionals().at(0).enableControls();
     fixture.detectChanges();
 
     expect(hostComponent.form.get('first').disabled).toBeFalsy();
@@ -86,7 +86,7 @@ describe('ConditionalContentDirective', () => {
     expect(hostComponent.form.get(['group', 'fourth']).disabled).toBeFalsy();
     expect(hostComponent.form.get('nestedGroup').disabled).toBeTruthy();
 
-    hostComponent.conditionals.get(1).enableControls();
+    hostComponent.conditionals().at(1).enableControls();
     fixture.detectChanges();
 
     expect(hostComponent.form.get('second').disabled).toBeFalsy();

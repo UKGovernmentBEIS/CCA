@@ -37,6 +37,7 @@ describe('SectorListComponenet', () => {
 
   it('should populate the table accordingly', async () => {
     const table = document.querySelector('govuk-table');
+
     mockSectors.forEach(async (sector) => {
       const sectorEl = await screen.findByText(sector.sector);
       const mainContactEl = await screen.findByText(sector.mainContact);
@@ -62,25 +63,23 @@ describe('SectorListComponenet', () => {
 
     // asc sorting
     fireEvent.click(sectorHeaderEl);
-    sectors.sort((a, b) => {
-      return a.sector > b.sector ? 1 : -1;
-    });
+    sectors.sort((a, b) => a.sector.localeCompare(b.sector, 'en-GB', { numeric: true, sensitivity: 'base' }));
 
-    const rows = document.querySelectorAll('tr td:first-child a');
+    let rows = document.querySelectorAll('tr td:first-child a');
     rows.forEach((row, idx) => expect(row.innerHTML).toEqual(sectors[idx].sector));
 
     // desc sorting
     fireEvent.click(sectorHeaderEl);
-    sectors.sort((a, b) => {
-      return a.sector > b.sector ? 1 : -1;
-    });
+    sectors.sort((a, b) => b.sector.localeCompare(a.sector, 'en-GB', { numeric: true, sensitivity: 'base' }));
 
+    rows = document.querySelectorAll('tr td:first-child a');
     rows.forEach((row, idx) => expect(row.innerHTML).toEqual(sectors[idx].sector));
   });
 
   it('should sort columns based on main contact', async () => {
     const mainContact = await screen.findByText('Main Contact');
     const sectors = JSON.parse(JSON.stringify(mockSectors));
+
     // asc sorting
     fireEvent.click(mainContact);
     sectors.sort((a, b) => {

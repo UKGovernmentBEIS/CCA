@@ -1,14 +1,14 @@
 package uk.gov.cca.api.subsistencefees.repository;
 
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import uk.gov.cca.api.subsistencefees.domain.SubsistenceFeesMoaTargetUnit;
 import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaTargetUnitDetailsDTO;
+
+import java.util.Optional;
+import java.util.Set;
 
 @Repository
 @Transactional(readOnly = true)
@@ -26,4 +26,7 @@ public interface SubsistenceFeesMoaTargetUnitRepository
 		+ "inner join SubsistenceFeesMoaFacility smf on smf.subsistenceFeesMoaTargetUnit.id = smtu.id "
 		+ "where smtu.id = :moaTargetUnitId group by smtu.id, a.businessId, a.name, sm.submissionDate ")
 	Optional<SubsistenceFeesMoaTargetUnitDetailsDTO> getMoaTargetUnitDetailsById(Long moaTargetUnitId);
+
+	@Query(value = "select id from SubsistenceFeesMoaTargetUnit where subsistenceFeesMoa.id = :moaId")
+	Set<Long> findMoaTargetUnitIdsByMoaId(Long moaId);
 }

@@ -23,9 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.cca.api.web.orchestrator.template.dto.NotificationTemplateViewDTO;
+import uk.gov.cca.api.web.orchestrator.template.service.NotificationTemplateQueryServiceOrchestrator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.domain.PagingRequest;
-import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateDTO;
 import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateSearchCriteria;
 import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateSearchResults;
 import uk.gov.netz.api.notification.template.domain.dto.NotificationTemplateUpdateDTO;
@@ -33,6 +34,8 @@ import uk.gov.netz.api.notification.template.service.NotificationTemplateQuerySe
 import uk.gov.netz.api.notification.template.service.NotificationTemplateUpdateService;
 import uk.gov.netz.api.security.Authorized;
 import uk.gov.netz.api.security.AuthorizedRole;
+
+import java.util.List;
 
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
@@ -44,7 +47,8 @@ public class NotificationTemplateController {
 
     private final NotificationTemplateQueryService notificationTemplateQueryService;
     private final NotificationTemplateUpdateService notificationTemplateUpdateService;
-
+    private final NotificationTemplateQueryServiceOrchestrator notificationTemplateQueryServiceOrchestrator;
+    
     @GetMapping(path = "/v1.0/notification-templates")
     @Operation(summary = "Retrieves the notification templates associated with current user")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
@@ -56,27 +60,28 @@ public class NotificationTemplateController {
     @AuthorizedRole(roleType = REGULATOR)
     public ResponseEntity<NotificationTemplateSearchResults> getCurrentUserNotificationTemplates(
             @Parameter(hidden = true) AppUser appUser,
-            @RequestParam(value = "role")  @NotNull @Parameter(name = "role", description = "The role type") String roleType,
+            @RequestParam(value = "roleTypes", required = false) @Parameter(name = "roleTypes", description = "The list of role types", example = "OPERATOR") List<String> roleTypes,
             @RequestParam(value = "term", required = false) @Size(min = 3, max = 256) @Parameter(name = "term", description = "The term to search") String term,
-            @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Long page,
-            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}")  Long pageSize
+            @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Integer page,
+            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}")  Integer pageSize
     ) {
         return new ResponseEntity<>(
-            notificationTemplateQueryService.getNotificationTemplatesBySearchCriteria(
-                NotificationTemplateSearchCriteria.builder()
-                    .competentAuthority(appUser.getCompetentAuthority())
-                    .term(term)
-                    .roleType(roleType)
-                    .paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
-                    .build()
-            ),
-            HttpStatus.OK);
+                notificationTemplateQueryService.getNotificationTemplatesBySearchCriteria(
+                        NotificationTemplateSearchCriteria.builder()
+                                .competentAuthority(appUser.getCompetentAuthority())
+                                .term(term)
+                                .roleTypes(roleTypes)
+                                .paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
+                                .build()
+                ),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping(path = "/v1.0/notification-templates/{id}")
     @Operation(summary = "Retrieves the notification template with the provided id")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
-            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = NotificationTemplateDTO.class))})
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = NotificationTemplateViewDTO.class))})
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND,
@@ -84,9 +89,9 @@ public class NotificationTemplateController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#id")
-    public ResponseEntity<NotificationTemplateDTO> getNotificationTemplateById(
+    public ResponseEntity<NotificationTemplateViewDTO> getNotificationTemplateById(
             @Parameter(description = "The notification template id") @PathVariable("id") Long id) {
-        return new ResponseEntity<>(notificationTemplateQueryService.getManagedNotificationTemplateById(id), HttpStatus.OK);
+        return new ResponseEntity<>(notificationTemplateQueryServiceOrchestrator.getManagedNotificationTemplateById(id), HttpStatus.OK);
     }
 
     @PutMapping(path = "/v1.0/notification-templates/{id}")

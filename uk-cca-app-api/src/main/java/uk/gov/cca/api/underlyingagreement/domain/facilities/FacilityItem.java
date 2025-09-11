@@ -11,9 +11,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
+import uk.gov.netz.api.common.validation.SpELExpression;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,6 +23,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@SpELExpression(expression = "{#facilityDetails?.participatingSchemeVersions?.contains('CCA_3') == (#cca3BaselineAndTargets != null)}",
+        message = "underlyingagreement.facilities.cca3BaselineAndTargets")
 public class FacilityItem {
 
     @NotNull
@@ -47,6 +51,9 @@ public class FacilityItem {
     @NotNull
     @Valid
     private Apply70Rule apply70Rule;
+
+    @Valid
+    private Cca3FacilityBaselineAndTargets cca3BaselineAndTargets;
 
     @JsonIgnore
     public Set<UUID> getAttachmentIds(){
@@ -76,6 +83,16 @@ public class FacilityItem {
         if(apply70Rule != null && apply70Rule.getEvidenceFile() != null) {
             attachments.add(apply70Rule.getEvidenceFile());
         }
+
+        Optional.ofNullable(cca3BaselineAndTargets).ifPresent(bt -> {
+            if(bt.getTargetComposition() != null && bt.getTargetComposition().getCalculatorFile() != null) {
+                attachments.add(bt.getTargetComposition().getCalculatorFile());
+            }
+
+            if(bt.getBaselineData() != null) {
+                attachments.addAll(bt.getBaselineData().getGreenfieldEvidences());
+            }
+        });
 
         return Collections.unmodifiableSet(attachments);
     }

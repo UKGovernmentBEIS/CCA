@@ -6,6 +6,13 @@ export const SENT_SUBSISTENCE_FEES_ROUTES: Routes = [
   {
     path: ':runId',
     resolve: { subFeesDetails: SentSubsistenceFeesDetailsResolver },
+    data: {
+      breadcrumb: {
+        text: 'Subsistence fees',
+        fragment: 'sent-subsistence-fees',
+        link: '/subsistence-fees',
+      },
+    },
     children: [
       {
         path: '',

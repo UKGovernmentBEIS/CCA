@@ -18,7 +18,6 @@ import { ActiveSectorUserStore } from '../active-sector-user.store';
   selector: 'cca-sector-user-details',
   templateUrl: './sector-user-details.component.html',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PageHeadingComponent,
     SummaryListComponent,
@@ -30,22 +29,23 @@ import { ActiveSectorUserStore } from '../active-sector-user.store';
     PhoneNumberPipe,
     RouterLink,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorUserDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly store = inject(ActiveSectorUserStore);
   private readonly currentUserId = inject(AuthStore).select(selectUserId);
 
-  readonly queryParams: Params = { change: true };
-  readonly sectorUserId = this.activatedRoute.snapshot.paramMap.get('sectorUserId');
-  readonly sectorAssociationId = this.activatedRoute.snapshot.paramMap.get('sectorId');
+  protected readonly queryParams: Params = { change: true };
+  protected readonly sectorUserId = this.activatedRoute.snapshot.paramMap.get('sectorUserId');
+  protected readonly sectorAssociationId = this.activatedRoute.snapshot.paramMap.get('sectorId');
 
-  readonly isCurrentUser = this.currentUserId() === this.sectorUserId;
-  readonly isEditable = this.store.state.editable;
+  protected readonly isCurrentUser = this.currentUserId() === this.sectorUserId;
+  protected readonly isEditable = this.store.state.editable;
 
-  readonly details = this.store.state.details;
-  readonly changeLink = this.currentUserId() === this.sectorUserId || this.store.state.editable;
-  readonly changeContactType = this.store.state.editable;
+  protected readonly details = this.store.state.details;
+  protected readonly changeLink = this.currentUserId() === this.sectorUserId || this.store.state.editable;
+  protected readonly changeContactType = this.store.state.editable;
 
-  userFullName = `${this.details.firstName} ${this.details.lastName}`;
+  protected readonly userFullName = `${this.details.firstName} ${this.details.lastName}`;
 }

@@ -77,6 +77,7 @@ describe('Invite Sector Spec', () => {
     harness.detectChanges();
     expect(screen.getByTestId('sector-user-type-form')).toBeVisible();
   }));
+
   test('Alternative Scenario 1: User provides an existing user’s email for this Sector', fakeAsync(async () => {
     const id = 231;
     const user = UserEvent.setup();

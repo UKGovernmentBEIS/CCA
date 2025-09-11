@@ -20,6 +20,7 @@ describe('Invite operator confirmation ', () => {
         targetUnitStore.setState({ targetUnitAccountDetails: mockTargetUnitAccountDetails });
       },
     });
+
     fixture.detectChanges();
   });
 

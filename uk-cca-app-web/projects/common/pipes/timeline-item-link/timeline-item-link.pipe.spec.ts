@@ -22,6 +22,7 @@ describe('TimelineItemLinkPipe', () => {
       'UNDERLYING_AGREEMENT_APPLICATION_CANCELLED',
       'ADMIN_TERMINATION_APPLICATION_CANCELLED',
       'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_CANCELLED',
+      'ADMIN_TERMINATION_PEER_REVIEW_REQUESTED',
 
       'RDE_ACCEPTED',
       'RDE_CANCELLED',
@@ -35,6 +36,8 @@ describe('TimelineItemLinkPipe', () => {
       'VERIFICATION_STATEMENT_CANCELLED',
 
       'SUBSISTENCE_FEES_RUN_SUBMITTED',
+
+      'BUY_OUT_SURPLUS_RUN_SUBMITTED',
     ];
 
     noLinkActionTypes.forEach((type) => {
@@ -59,6 +62,11 @@ describe('TimelineItemLinkPipe', () => {
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
 
     requestAction.type = 'UNDERLYING_AGREEMENT_APPLICATION_REJECTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEWER_ACCEPTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+    requestAction.type = 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEWER_REJECTED';
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 
@@ -98,6 +106,28 @@ describe('TimelineItemLinkPipe', () => {
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
 
     requestAction.type = 'TARGET_UNIT_MOA_GENERATED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+  });
+
+  it('should return link for buy-out and surplus batch', () => {
+    requestAction.type = 'BUY_OUT_SURPLUS_RUN_COMPLETED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'BUY_OUT_SURPLUS_RUN_COMPLETED_WITH_FAILURES';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'TP6_BUY_OUT_ACCOUNT_PROCESSING_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'TP6_SURPLUS_ACCOUNT_PROCESSING_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+  });
+
+  it('should return link for Performance data and PAT', () => {
+    requestAction.type = 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED';
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 

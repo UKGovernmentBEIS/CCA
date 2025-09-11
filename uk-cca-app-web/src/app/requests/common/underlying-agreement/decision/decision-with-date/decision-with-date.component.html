@@ -1,0 +1,38 @@
+<h2 class="govuk-heading-m">What is your decision on the information submitted?</h2>
+<span class="govuk-hint">Use your judgement to make minor changes within the details if needed</span>
+<div govuk-radio formControlName="type">
+  @if (isNewFacility()) {
+    <govuk-radio-option label="Accepted" value="ACCEPTED">
+      <ng-container govukConditionalContent>
+        <div govuk-checkboxes formControlName="changeDate">
+          <govuk-checkbox [value]="true" label="I want to change the subsistence charge start date from the default.">
+            <ng-container govukConditionalContent>
+              <div
+                formControlName="startDate"
+                govuk-date-input
+                label="Start date of paying the subsistence charge fee"
+              ></div>
+            </ng-container>
+          </govuk-checkbox>
+        </div>
+
+        <govuk-details summary=" More information on the subsistence charge start date ">
+          <p>
+            By default, this facility will become eligible for a subsistence charge fee as soon as their assent to the
+            underlying agreement is uploaded by the administrator. If the facility has already paid for the current year
+            whilst it was part of a previous target unit, you may need to override this default date.
+          </p>
+
+          <p>Please note that the subsistence charge period starts on 1 January each year.</p>
+        </govuk-details>
+      </ng-container>
+    </govuk-radio-option>
+  } @else {
+    <govuk-radio-option label="Accepted" value="ACCEPTED" />
+  }
+
+  <govuk-radio-option label="Rejected" value="REJECTED" />
+</div>
+
+<div govuk-textarea label="Notes (optional)" formControlName="notes"></div>
+<cca-multiple-file-input formControlName="files" [baseDownloadUrl]="downloadUrl" label="Upload evidence (optional)" />

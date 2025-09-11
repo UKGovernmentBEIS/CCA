@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.netz.api.workflow.request.core.domain.RequestMetadata;
 
 @Data
@@ -17,6 +17,6 @@ import uk.gov.netz.api.workflow.request.core.domain.RequestMetadata;
 public class BuyOutSurplusRunRequestMetadata extends RequestMetadata {
 
     private TargetPeriodType targetPeriodType;
-    private Integer totalAccounts;
-    private Integer failedAccounts;
+    private Long totalAccounts;
+    private Long failedAccounts;
 }

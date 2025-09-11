@@ -42,7 +42,7 @@ class PerformanceAccountTemplateProcessingCompletedServiceTest {
 		cut.completed(requestId, accountId, accountReport);
 		
 		assertThat(requestPayload.getAccountFileReports()).hasSize(1);
-		assertThat(requestPayload.getAccountFileReports().get(accountId)).isEqualTo(accountReport);
+		assertThat(requestPayload.getAccountFileReports()).containsEntry(accountId, accountReport);
 		
 		verify(requestService, times(1)).findRequestById(requestId);
 	}

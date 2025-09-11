@@ -11,7 +11,7 @@ const INITIAL_STATE: TargetUnitAccountPayload = {
   operatorType: null,
   companyRegistrationNumber: null,
   registrationNumberMissingReason: null,
-  sicCode: null,
+  sicCodes: null,
   subsectorAssociationId: null,
   address: null,
   responsiblePerson: null,

@@ -14,8 +14,8 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParam
 import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { DocumentTemplateDTO } from '../model/documentTemplateDTO';
 import { DocumentTemplateSearchResults } from '../model/documentTemplateSearchResults';
+import { DocumentTemplateViewDTO } from '../model/documentTemplateViewDTO';
 
 import { BASE_PATH } from '../variables';
 import { Configuration } from '../configuration';
@@ -100,6 +100,7 @@ export class DocumentTemplatesService {
    * Retrieves the document templates associated with current user
    * @param page The page number starting from zero
    * @param size The page size
+   * @param roleTypes The list of role types
    * @param term The term to search
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
@@ -107,11 +108,13 @@ export class DocumentTemplatesService {
   public getCurrentUserDocumentTemplates(
     page: number,
     size: number,
+    roleTypes?: string[],
     term?: string,
   ): Observable<DocumentTemplateSearchResults>;
   public getCurrentUserDocumentTemplates(
     page: number,
     size: number,
+    roleTypes: string[],
     term: string,
     observe: 'response',
     reportProgress?: boolean,
@@ -120,6 +123,7 @@ export class DocumentTemplatesService {
   public getCurrentUserDocumentTemplates(
     page: number,
     size: number,
+    roleTypes: string[],
     term: string,
     observe: 'events',
     reportProgress?: boolean,
@@ -128,6 +132,7 @@ export class DocumentTemplatesService {
   public getCurrentUserDocumentTemplates(
     page: number,
     size: number,
+    roleTypes: string[],
     term: string,
     observe: 'body',
     reportProgress?: boolean,
@@ -136,6 +141,7 @@ export class DocumentTemplatesService {
   public getCurrentUserDocumentTemplates(
     page: number,
     size: number,
+    roleTypes?: string[],
     term?: string,
     observe: any = 'body',
     reportProgress = false,
@@ -149,6 +155,11 @@ export class DocumentTemplatesService {
     }
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
+    if (roleTypes) {
+      roleTypes.forEach((element) => {
+        queryParameters = this.addToHttpParams(queryParameters, element as any, 'roleTypes');
+      });
+    }
     if (term !== undefined && term !== null) {
       queryParameters = this.addToHttpParams(queryParameters, term as any, 'term');
     }
@@ -201,25 +212,25 @@ export class DocumentTemplatesService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getDocumentTemplateById(id: number): Observable<DocumentTemplateDTO>;
+  public getDocumentTemplateById(id: number): Observable<DocumentTemplateViewDTO>;
   public getDocumentTemplateById(
     id: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<DocumentTemplateDTO>>;
+  ): Observable<HttpResponse<DocumentTemplateViewDTO>>;
   public getDocumentTemplateById(
     id: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<DocumentTemplateDTO>>;
+  ): Observable<HttpEvent<DocumentTemplateViewDTO>>;
   public getDocumentTemplateById(
     id: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<DocumentTemplateDTO>;
+  ): Observable<DocumentTemplateViewDTO>;
   public getDocumentTemplateById(
     id: number,
     observe: any = 'body',
@@ -253,7 +264,7 @@ export class DocumentTemplatesService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<DocumentTemplateDTO>(
+    return this.httpClient.get<DocumentTemplateViewDTO>(
       `${this.configuration.basePath}/v1.0/document-templates/${encodeURIComponent(String(id))}`,
       {
         responseType: responseType_ as any,

@@ -27,16 +27,16 @@ export const CanActivateReasonForAdminTerminationDetails: CanActivateFn = (
   )();
 
   const isEditable = requestTaskStore.select(requestTaskQuery.selectIsEditable)();
-  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', ReasonForAdminTerminationWizardStep.SUMMARY]);
+  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', 'summary']);
 
   if (!change && !isWizardCompleted(adminTerminationReasonDetails)) return true;
   if (change && isWizardCompleted(adminTerminationReasonDetails)) return true;
 
   if (!change && isWizardCompleted(adminTerminationReasonDetails)) {
     if (adminTerminationSectionsCompleted[REASON_FOR_ADMIN_TERMINATION_SUBTASK] === TaskItemStatus.COMPLETED) {
-      return createUrlTreeFromSnapshot(route, ['../', ReasonForAdminTerminationWizardStep.SUMMARY]);
+      return createUrlTreeFromSnapshot(route, ['../', 'summary']);
     } else if (adminTerminationSectionsCompleted[REASON_FOR_ADMIN_TERMINATION_SUBTASK] === TaskItemStatus.IN_PROGRESS) {
-      return createUrlTreeFromSnapshot(route, ['../', ReasonForAdminTerminationWizardStep.CHECK_YOUR_ANSWERS]);
+      return createUrlTreeFromSnapshot(route, ['../', 'check-your-answers']);
     }
   }
 
@@ -58,14 +58,14 @@ export const CanActivateReasonForAdminTerminationCheckYourAnswers: CanActivateFn
 
   const isEditable = requestTaskStore.select(requestTaskQuery.selectIsEditable)();
 
-  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', ReasonForAdminTerminationWizardStep.SUMMARY]);
+  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', 'summary']);
 
   if (!isWizardCompleted(adminTerminationReasonDetails)) {
     return createUrlTreeFromSnapshot(route, ['../', ReasonForAdminTerminationWizardStep.REASON_DETAILS]);
   }
 
   if (adminTerminationSectionsCompleted[REASON_FOR_ADMIN_TERMINATION_SUBTASK] === TaskItemStatus.COMPLETED) {
-    return createUrlTreeFromSnapshot(route, ['../', ReasonForAdminTerminationWizardStep.SUMMARY]);
+    return createUrlTreeFromSnapshot(route, ['../', 'summary']);
   }
 
   return true;
@@ -93,7 +93,7 @@ export const CanActivateReasonForAdminTerminationSummary: CanActivateFn = (
   }
 
   if (adminTerminationSectionsCompleted[REASON_FOR_ADMIN_TERMINATION_SUBTASK] === TaskItemStatus.IN_PROGRESS) {
-    return createUrlTreeFromSnapshot(route, [ReasonForAdminTerminationWizardStep.CHECK_YOUR_ANSWERS]);
+    return createUrlTreeFromSnapshot(route, ['check-your-answers']);
   }
 
   return true;

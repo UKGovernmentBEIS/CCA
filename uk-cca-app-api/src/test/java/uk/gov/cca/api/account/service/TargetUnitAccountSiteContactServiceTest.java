@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
+
 import uk.gov.cca.api.account.domain.CcaAccountContactType;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
@@ -22,8 +22,10 @@ import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaScope;
 import uk.gov.cca.api.authorization.ccaauth.rules.services.resource.SectorAssociationAuthorizationResourceService;
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.service.SectorUserAuthorityService;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
+import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria;
 import uk.gov.netz.api.authorization.core.domain.AppAuthority;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.common.domain.PagingRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,22 +41,25 @@ import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 @ExtendWith(MockitoExtension.class)
-public class TargetUnitAccountSiteContactServiceTest {
+class TargetUnitAccountSiteContactServiceTest {
+
+	@InjectMocks
+    private TargetUnitAccountSiteContactService targetUnitAccountSiteContactService;
 
     @Mock
     private TargetUnitAccountRepository targetUnitAccountRepository;
 
     @Mock
-    private TargetUnitAccountQueryService targetUnitAccountQueryService;
+    private CcaAccountSearchService accountSearchService;
     
     @Mock
-    SectorAssociationAuthorizationResourceService sectorAssociationAuthorizationResourceService;
+    private SectorAssociationAuthorizationResourceService sectorAssociationAuthorizationResourceService;
+
+    @Mock
+    private TargetUnitAccountQueryService targetUnitAccountQueryService;
 
     @Mock
     private SectorUserAuthorityService sectorUserAuthorityService;
-
-    @InjectMocks
-    private TargetUnitAccountSiteContactService targetUnitAccountSiteContactService;
 
     @Mock
     private SectorAssociationQueryService sectorAssociationQueryService;
@@ -62,7 +67,7 @@ public class TargetUnitAccountSiteContactServiceTest {
     private AppUser user;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         user = AppUser.builder().roleType(REGULATOR).authorities(
             List.of(AppAuthority.builder()
                 .build()))
@@ -97,12 +102,13 @@ public class TargetUnitAccountSiteContactServiceTest {
         assertEquals(Optional.of("facilidatorId"), actual);
     }
 
-
-
     @Test
     void getTargetUnitAccountsWithSiteContact() {
         final Integer page = 0;
         final Integer pageSize = 25;
+        AccountSearchCriteria accountSearchCriteria = AccountSearchCriteria.builder()
+        		.paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
+        		.build();
         final Long sectorAssociationId = 1L;
         
         List<TargetUnitAccountInfoDTO> contacts = List.of(
@@ -111,23 +117,66 @@ public class TargetUnitAccountSiteContactServiceTest {
         
         Page<TargetUnitAccountInfoDTO> pagedAccounts = new PageImpl<>(contacts, PageRequest.of(0, 2), contacts.size());
         
-        when(targetUnitAccountRepository.findTargetUnitAccountsWithSiteContact(PageRequest.of(page, pageSize), sectorAssociationId, CcaAccountContactType.TU_SITE_CONTACT))
+        when(accountSearchService.searchAccountsWithSiteContact(sectorAssociationId, CcaAccountContactType.TU_SITE_CONTACT,
+        		accountSearchCriteria))
         	.thenReturn(pagedAccounts);
         when(sectorAssociationAuthorizationResourceService.hasUserScopeToSectorAssociation(user, CcaScope.EDIT_SECTOR_ASSOCIATION, sectorAssociationId))
             .thenReturn(true);
 
         TargetUnitAccountInfoResponseDTO
-            response = targetUnitAccountSiteContactService.getTargetUnitAccountsWithSiteContact(user, sectorAssociationId, page, pageSize);
+            response = targetUnitAccountSiteContactService.getTargetUnitAccountsWithSiteContact(user, sectorAssociationId, accountSearchCriteria);
 
         assertEquals(pagedAccounts.getContent(), response.getAccountsWithSiteContact());
         assertEquals(pagedAccounts.getTotalElements(), response.getTotalItems());
         assertTrue(response.isEditable());
 
         verify(sectorAssociationAuthorizationResourceService).hasUserScopeToSectorAssociation(user, CcaScope.EDIT_SECTOR_ASSOCIATION, sectorAssociationId);
+		verify(accountSearchService, times(1)).searchAccountsWithSiteContact(
+				sectorAssociationId,
+				CcaAccountContactType.TU_SITE_CONTACT,
+				AccountSearchCriteria.builder().paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
+        		.build());
     }
 
     @Test
-    @Transactional
+    void getTargetUnitAccountsWithSiteContact_OperatorUser() {
+        final Integer page = 0;
+        final Integer pageSize = 25;
+        AccountSearchCriteria accountSearchCriteria = AccountSearchCriteria.builder()
+        		.paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
+        		.build();
+
+        final Long sectorAssociationId = 1L;
+        final AppUser operatorUser = createOperatorUser();
+
+        List<TargetUnitAccountInfoDTO> contacts = List.of(
+                new TargetUnitAccountInfoDTO(1L, "ACC-T00001", "Account name1", TargetUnitAccountStatus.LIVE, "userId1"),
+                new TargetUnitAccountInfoDTO(2L, "ACC-T00002", "Account name2", TargetUnitAccountStatus.LIVE, "userId2"));
+
+        Page<TargetUnitAccountInfoDTO> pagedAccounts = new PageImpl<>(contacts, PageRequest.of(0, 2), contacts.size());
+
+        when(accountSearchService.searchAccountsWithSiteContactAndAccountsIds(sectorAssociationId, operatorUser.getAccounts(), CcaAccountContactType.TU_SITE_CONTACT,
+        		accountSearchCriteria))
+                .thenReturn(pagedAccounts);
+        when(sectorAssociationAuthorizationResourceService.hasUserScopeToSectorAssociation(operatorUser, CcaScope.EDIT_SECTOR_ASSOCIATION, sectorAssociationId))
+                .thenReturn(false);
+
+        TargetUnitAccountInfoResponseDTO
+		response = targetUnitAccountSiteContactService.getTargetUnitAccountsWithSiteContact(operatorUser,
+				sectorAssociationId, accountSearchCriteria);
+
+        assertEquals(pagedAccounts.getContent(), response.getAccountsWithSiteContact());
+        assertEquals(pagedAccounts.getTotalElements(), response.getTotalItems());
+
+        verify(sectorAssociationAuthorizationResourceService).hasUserScopeToSectorAssociation(operatorUser, CcaScope.EDIT_SECTOR_ASSOCIATION, sectorAssociationId);
+		verify(accountSearchService, times(1)).searchAccountsWithSiteContactAndAccountsIds(
+				sectorAssociationId,
+				operatorUser.getAccounts(), CcaAccountContactType.TU_SITE_CONTACT,
+				AccountSearchCriteria.builder().paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
+        		.build());
+    }
+
+    @Test
     void updateTargetUnitAccountSiteContacts() {
     	Long sectorAssociationId = 1L;
         List<TargetUnitAccountSiteContactDTO> siteContacts = List.of(
@@ -147,7 +196,6 @@ public class TargetUnitAccountSiteContactServiceTest {
     }
 
     @Test
-    @Transactional
     void removeUserFromTargetUnitAccountSiteContact() {
         String userId = "userId1";
         Long sectorAssociationId = 1L;
@@ -175,30 +223,4 @@ public class TargetUnitAccountSiteContactServiceTest {
         return AppUser.builder().roleType(OPERATOR).authorities(List.of(authority1, authority2)).build();
     }
 
-    @Test
-    void getTargetUnitAccountsWithSiteContact_OperatorUser() {
-        final Integer page = 0;
-        final Integer pageSize = 25;
-        final Long sectorAssociationId = 1L;
-        final AppUser operatorUser = createOperatorUser();
-
-        List<TargetUnitAccountInfoDTO> contacts = List.of(
-                new TargetUnitAccountInfoDTO(1L, "ACC-T00001", "Account name1", TargetUnitAccountStatus.LIVE, "userId1"),
-                new TargetUnitAccountInfoDTO(2L, "ACC-T00002", "Account name2", TargetUnitAccountStatus.LIVE, "userId2"));
-
-        Page<TargetUnitAccountInfoDTO> pagedAccounts = new PageImpl<>(contacts, PageRequest.of(0, 2), contacts.size());
-
-        when(targetUnitAccountRepository.findTargetUnitAccountWithSiteContactAndAccountsIds(PageRequest.of(page, pageSize), sectorAssociationId, operatorUser.getAccounts(), CcaAccountContactType.TU_SITE_CONTACT))
-                .thenReturn(pagedAccounts);
-        when(sectorAssociationAuthorizationResourceService.hasUserScopeToSectorAssociation(operatorUser, CcaScope.EDIT_SECTOR_ASSOCIATION, sectorAssociationId))
-                .thenReturn(false);
-
-        TargetUnitAccountInfoResponseDTO
-                response = targetUnitAccountSiteContactService.getTargetUnitAccountsWithSiteContact(operatorUser, sectorAssociationId, page, pageSize);
-
-        assertEquals(pagedAccounts.getContent(), response.getAccountsWithSiteContact());
-        assertEquals(pagedAccounts.getTotalElements(), response.getTotalItems());
-
-        verify(sectorAssociationAuthorizationResourceService).hasUserScopeToSectorAssociation(operatorUser, CcaScope.EDIT_SECTOR_ASSOCIATION, sectorAssociationId);
-    }
 }

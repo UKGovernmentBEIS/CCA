@@ -1,6 +1,5 @@
 package uk.gov.cca.api.facility.repository;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.FacilityAddress;
 import uk.gov.cca.api.facility.domain.FacilityData;
 import uk.gov.netz.api.common.AbstractContainerBaseTest;
@@ -40,7 +40,7 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
     private EntityManager entityManager;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         FacilityAddress address1 = FacilityAddress.builder()
                 .line1("123 Test Street")
                 .city("Test City")
@@ -68,6 +68,7 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
         final FacilityData facility1 = FacilityData.builder()
                 .facilityId("ADS_1-F00014")
                 .accountId(1L)
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("site1")
                 .address(address1)
                 .createdDate(LocalDateTime.now())
@@ -77,6 +78,7 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
         final FacilityData facility2 = FacilityData.builder()
                 .facilityId("ADS_1-F00015")
                 .accountId(2L)
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil2")
                 .address(address2)
                 .createdDate(LocalDateTime.now())
@@ -86,6 +88,7 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
         final FacilityData facility3 = FacilityData.builder()
                 .facilityId("ADS_1-F00016")
                 .accountId(1L)
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("terminal3")
                 .address(address3)
                 .closedDate(LocalDateTime.of(2024, 8, 1, 12, 0))
@@ -155,8 +158,20 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
         assertThat(facilities.getFirst()).isEqualTo("ADS_1-F00016");
     }
 
+    @Test
+    void findByFacilityIdAndClosedDateIsNull() {
+
+        Optional<FacilityData> facilityDataOptional = repository.findByFacilityIdAndClosedDateIsNull("ADS_1-F00014");
+
+        assertThat(facilityDataOptional).isPresent();
+        assertThat(facilityDataOptional.get().getFacilityId()).isEqualTo("ADS_1-F00014");
+        assertThat(facilityDataOptional.get().getClosedDate()).isNull();
+        assertThat(facilityDataOptional.get().getParticipatingSchemeVersions())
+                .isEqualTo(Set.of(SchemeVersion.CCA_2));
+    }
+
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         repository.deleteAll();
         flushAndClear();
     }

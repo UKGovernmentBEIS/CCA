@@ -1,4 +1,5 @@
 import { mockTargetUnitDetails } from '@requests/common';
+import { SchemeVersion } from '@shared/types';
 
 import { UnderlyingAgreementVariationReviewRequestTaskPayload } from 'cca-api';
 
@@ -28,7 +29,10 @@ const basePayload: UnderlyingAgreementVariationReviewRequestTaskPayload = {
     targetUnitAccountDetails: mockTargetUnitDetails,
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
-      measurementType: 'ENERGY_KWH',
+      schemeDataMap: {
+        [SchemeVersion.CCA_2]: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'tonne' },
+        [SchemeVersion.CCA_3]: { sectorMeasurementType: 'ENERGY_KWH' },
+      },
     },
   },
 };
@@ -61,7 +65,7 @@ describe('createProposedUnderlyingAgreementVariationPayload', () => {
     expect(result).toMatchSnapshot('all-decisions-rejected');
   });
 
-  it('should create the correct payload when all decisions are approved', () => {
+  it('should create the correct payload when all decisions are accepted', () => {
     const payload: UnderlyingAgreementVariationReviewRequestTaskPayload = {
       ...basePayload,
       reviewGroupDecisions: {

@@ -10,5 +10,6 @@ export const CanEditSectorUserGuard: CanActivateFn = (route: ActivatedRouteSnaps
   const sectorUserId = route.paramMap.get('sectorUserId');
   const currentUserId = inject(AuthStore).select(selectUserId);
   const isCurrentUser = currentUserId() === sectorUserId;
+
   return isCurrentUser || store.state.editable;
 };

@@ -2,7 +2,6 @@ package uk.gov.cca.api.workflow.request.flow.performancedata.performancedatauplo
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -19,9 +18,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiod.domain.dto.TargetPeriodDTO;
-import uk.gov.cca.api.targetperiod.service.TargetPeriodService;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.service.PerformanceDataAccountQueryService;
@@ -115,7 +114,7 @@ class PerformanceDataUploadProcessingActionHandlerTest {
 
         when(requestTaskService.findTaskById(requestTaskId)).thenReturn(requestTask);
         when(performanceDataAccountQueryService
-                .getCandidateAccountsForPerformanceDataReportingBySector(eq(sectorId), eq(TargetPeriodType.TP6), any()))
+                .getCandidateAccountsForPerformanceDataReportingBySector(sectorId, TargetPeriodType.TP6))
                 .thenReturn(activeAccounts);
         when(performanceDataUploadService.submit(requestTask, performanceDataUpload, activeAccounts)).thenReturn(accountReportsFiles);
         when(targetPeriodService.getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod()))
@@ -130,7 +129,7 @@ class PerformanceDataUploadProcessingActionHandlerTest {
                 .isFalse();
         verify(requestTaskService, times(1)).findTaskById(requestTaskId);
         verify(performanceDataAccountQueryService, times(1))
-                .getCandidateAccountsForPerformanceDataReportingBySector(eq(sectorId), eq(TargetPeriodType.TP6), any());
+                .getCandidateAccountsForPerformanceDataReportingBySector(sectorId, TargetPeriodType.TP6);
         verify(performanceDataUploadService, times(1))
                 .submit(requestTask, performanceDataUpload, activeAccounts);
         verify(targetPeriodService, times(1))
@@ -171,7 +170,7 @@ class PerformanceDataUploadProcessingActionHandlerTest {
 
         when(requestTaskService.findTaskById(requestTaskId)).thenReturn(requestTask);
         when(performanceDataAccountQueryService
-                .getCandidateAccountsForPerformanceDataReportingBySector(eq(sectorId), eq(TargetPeriodType.TP6), any()))
+                .getCandidateAccountsForPerformanceDataReportingBySector(sectorId, TargetPeriodType.TP6))
                 .thenReturn(List.of());
         when(targetPeriodService.getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod()))
                 .thenReturn(targetPeriodDTO);
@@ -185,7 +184,7 @@ class PerformanceDataUploadProcessingActionHandlerTest {
                 .isFalse();
         verify(requestTaskService, times(1)).findTaskById(requestTaskId);
         verify(performanceDataAccountQueryService, times(1))
-                .getCandidateAccountsForPerformanceDataReportingBySector(eq(sectorId), eq(TargetPeriodType.TP6), any());
+                .getCandidateAccountsForPerformanceDataReportingBySector(sectorId, TargetPeriodType.TP6);
         verify(targetPeriodService, times(1))
                 .getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod());
         verify(performanceDataUploadService, times(1))

@@ -47,4 +47,12 @@ public class FtpProperties {
     @Valid
     @NotBlank
     private String serverUnaAttachmentsDirectory;
+
+    @Valid
+    @NotBlank
+    private String serverFacilityCertificationDirectory;
+    
+    @Valid
+    @NotBlank
+    private String serverFacilityCertificationSourceFile;
 }

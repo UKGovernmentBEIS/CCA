@@ -26,6 +26,7 @@ describe('ProvideEvidenceCheckAnswersComponent', () => {
     get header() {
       return this.query<HTMLHeadingElement>('h1');
     }
+
     get summaryListValues() {
       return this.queryAll<HTMLDivElement>('.govuk-summary-list__row')
         .map((row) => [
@@ -34,6 +35,7 @@ describe('ProvideEvidenceCheckAnswersComponent', () => {
         ])
         .map((pair) => pair.map((element) => element?.textContent?.trim()));
     }
+
     get submitButton() {
       return this.query<HTMLButtonElement>('button[type="button"]');
     }

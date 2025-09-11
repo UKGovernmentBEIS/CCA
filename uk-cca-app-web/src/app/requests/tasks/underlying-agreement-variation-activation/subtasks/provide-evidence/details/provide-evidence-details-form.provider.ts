@@ -5,7 +5,6 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
-import { transformAttachmentsToFilesWithUUIDs, transformFilesToUUIDsList } from '@shared/utils';
 
 import { UnderlyingAgreementActivationDetails } from 'cca-api';
 
@@ -32,14 +31,10 @@ export const ProvideEvidenceDetailsFormProvider: Provider = {
       underlyingAgreementVariationActivationQuery.selectUnderlyingAgreementActivationAttachments,
     )();
 
-    const evidenceFiles = activationDetails?.evidenceFiles
-      ? transformAttachmentsToFilesWithUUIDs(activationDetails?.evidenceFiles, attachments)
-      : [];
-
     return fb.group({
       evidenceFiles: requestTaskFileService.buildFormControl(
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
-        transformFilesToUUIDsList(evidenceFiles),
+        activationDetails?.evidenceFiles || [],
         attachments,
         'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_UPLOAD_ATTACHMENT',
         true,

@@ -12,7 +12,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class FacilitySearchResultInfoDTO {
 
-    private String id;
+    private Long id;
+
+    private String facilityId;
 
     private String siteName;
 

@@ -1,96 +1,127 @@
-@if (currentPage | async; as page) {
-  <nav class="govuk-pagination">
-    <p class="govuk-visually-hidden">Pagination navigation</p>
+<nav class="govuk-pagination" aria-label="Pagination navigation">
+  <p class="govuk-visually-hidden">Pagination navigation</p>
 
-    @if (page > 1) {
-      <div class="govuk-pagination__prev">
-        <a
-          [fragment]="route.fragment | async"
-          [queryParams]="{ page: page > 2 ? page - 1 : 1 }"
-          [state]="{ scrollSkip: true }"
-          class="govuk-link govuk-pagination__link"
-          queryParamsHandling="merge"
-          rel="prev"
-          [routerLink]="[]"
+  @if (currentPage() > 1) {
+    <div class="govuk-pagination__prev">
+      <a
+        class="govuk-link govuk-pagination__link"
+        rel="prev"
+        href="javascript:void(0)"
+        (click)="onPreviousPage()"
+        (keydown.enter)="onPreviousPage()"
+        (keydown.space)="onPreviousPage(); $event.preventDefault()"
+        role="button"
+        tabindex="1"
+        aria-label="Go to previous page"
+      >
+        <svg
+          class="govuk-pagination__icon govuk-pagination__icon--prev"
+          xmlns="http://www.w3.org/2000/svg"
+          height="13"
+          width="15"
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 15 13"
         >
-          <svg
-            class="govuk-pagination__icon govuk-pagination__icon--prev"
-            xmlns="http://www.w3.org/2000/svg"
-            height="13"
-            width="15"
-            aria-hidden="true"
-            focusable="false"
-            viewBox="0 0 15 13"
-          >
-            <path
-              d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"
-            ></path>
-          </svg>
-          <span class="govuk-pagination__link-title"> Previous<span class="govuk-visually-hidden"> page</span> </span>
-        </a>
-      </div>
-    }
+          <path
+            d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"
+          ></path>
+        </svg>
+        <span class="govuk-pagination__link-title"> Previous<span class="govuk-visually-hidden"> page</span> </span>
+      </a>
+    </div>
+  }
 
-    @if (totalPages > 1) {
-      <ul class="govuk-pagination__list">
-        @if (!hideNumbers) {
-          @for (pageNumber of pageNumbers; track pageNumber; let isFirst = $first; let isLast = $last) {
-            @if (isFirst || isLast || isDisplayed(pageNumber, page) || isDots(pageNumber, page)) {
-              <li
-                [class.govuk-pagination__item--current]="page === pageNumber"
-                [class.govuk-pagination__item--ellipses]="isDots(pageNumber, page)"
-                class="govuk-pagination__item"
-              >
-                @if (!isDots(pageNumber, page)) {
-                  <a
-                    [fragment]="route.fragment | async"
-                    [queryParams]="{ page: pageNumber }"
-                    [state]="{ scrollSkip: true }"
-                    class="govuk-link govuk-pagination__link"
-                    queryParamsHandling="merge"
-                    [attr.aria-label]="'Page ' + pageNumber"
-                    [attr.aria-current]="page === pageNumber ? 'page' : null"
-                    [routerLink]="[]"
-                  >
-                    {{ pageNumber }}
-                  </a>
-                } @else {
-                  &ctdot;
-                }
-              </li>
-            }
+  @if (totalPages() > 1) {
+    <ul class="govuk-pagination__list">
+      @if (!hideNumbers()) {
+        @for (pageNumber of pageNumbers(); track pageNumber) {
+          @if ($first || $last || isDisplayed(pageNumber, currentPage()) || isDots(pageNumber, currentPage())) {
+            <li
+              [class.govuk-pagination__item--current]="currentPage() === pageNumber"
+              [class.govuk-pagination__item--ellipses]="isDots(pageNumber, currentPage())"
+              class="govuk-pagination__item"
+            >
+              @if (!isDots(pageNumber, currentPage())) {
+                <a
+                  class="govuk-link govuk-pagination__link"
+                  href="javascript:void(0)"
+                  (click)="onPageChange(pageNumber)"
+                  (keydown.enter)="onPageChange(pageNumber)"
+                  (keydown.space)="onPageChange(pageNumber); $event.preventDefault()"
+                  role="button"
+                  [attr.tabindex]="$index + 2"
+                  [attr.aria-label]="'Go to page ' + pageNumber"
+                  [attr.aria-current]="currentPage() === pageNumber ? 'page' : null"
+                >
+                  {{ pageNumber }}
+                </a>
+              } @else {
+                &ctdot;
+              }
+            </li>
           }
         }
-      </ul>
-    }
+      }
+    </ul>
+  }
 
-    @if (page !== pageNumbers.length) {
-      <div class="govuk-pagination__next">
-        <a
-          class="govuk-link govuk-pagination__link"
-          rel="next"
-          [fragment]="route.fragment | async"
-          [queryParams]="{ page: page < totalPages ? page + 1 : totalPages }"
-          [state]="{ scrollSkip: true }"
-          queryParamsHandling="merge"
-          [routerLink]="[]"
+  @if (currentPage() < totalPages()) {
+    <div class="govuk-pagination__next">
+      <a
+        class="govuk-link govuk-pagination__link"
+        rel="next"
+        href="javascript:void(0)"
+        (click)="onNextPage()"
+        (keydown.enter)="onNextPage()"
+        (keydown.space)="onNextPage(); $event.preventDefault()"
+        role="button"
+        [attr.tabindex]="pageNumbers().length + 2"
+        aria-label="Go to next page"
+      >
+        <span class="govuk-pagination__link-title"> Next<span class="govuk-visually-hidden"> page</span> </span>
+        <svg
+          class="govuk-pagination__icon govuk-pagination__icon--next"
+          xmlns="http://www.w3.org/2000/svg"
+          height="13"
+          width="15"
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 15 13"
         >
-          <span class="govuk-pagination__link-title"> Next<span class="govuk-visually-hidden"> page</span> </span>
-          <svg
-            class="govuk-pagination__icon govuk-pagination__icon--next"
-            xmlns="http://www.w3.org/2000/svg"
-            height="13"
-            width="15"
-            aria-hidden="true"
-            focusable="false"
-            viewBox="0 0 15 13"
+          <path
+            d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"
+          ></path>
+        </svg>
+      </a>
+    </div>
+  }
+
+  @if (count() > 0) {
+    <div class="govuk-grid-row row-flex govuk-!-margin-right-3 govuk-!-margin-left-3 pagination-items-row">
+      <label class="govuk-label govuk-!-margin-right-3" for="pageSize"> Rows per page </label>
+      <form [formGroup]="pageSizeForm">
+        <div class="govuk-form-group">
+          <select
+            formControlName="pageSize"
+            class="govuk-select"
+            style="min-width: fit-content"
+            id="pageSize"
+            name="pageSize"
+            (change)="onPageSizeChange()"
+            tabindex="0"
           >
-            <path
-              d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"
-            ></path>
-          </svg>
-        </a>
-      </div>
-    }
-  </nav>
-}
+            @for (option of pageSizeNumbers; track $index) {
+              <option [value]="option.value">{{ option.text }}</option>
+            }
+          </select>
+        </div>
+      </form>
+
+      <p id="show-items" class="govuk-!-margin-left-3 govuk-!-margin-right-3">
+        Showing <strong>{{ getStartingItem() }}</strong> to <strong>{{ getEndingItem() }}</strong> from
+        <strong>{{ count() }}</strong> results
+      </p>
+    </div>
+  }
+</nav>

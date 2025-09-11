@@ -7,7 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import uk.gov.cca.api.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.netz.api.common.validation.SpELExpression;
 import uk.gov.netz.api.workflow.request.core.domain.RequestCreateActionPayload;
 
 @Data
@@ -15,6 +16,7 @@ import uk.gov.netz.api.workflow.request.core.domain.RequestCreateActionPayload;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@SpELExpression(expression = "#targetPeriodType eq 'TP6'")
 public class BuyOutSurplusRunCreateActionPayload extends RequestCreateActionPayload {
 
     @NotNull

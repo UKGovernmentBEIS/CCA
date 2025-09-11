@@ -1,19 +1,24 @@
-<label [class.govuk-visually-hidden]="isLabelHidden" [for]="identifier" [id]="'l.' + identifier" class="govuk-label">
-  {{ currentLabel }}
+<label [class.govuk-visually-hidden]="isLabelHidden()" [for]="identifier" [id]="'l.' + identifier" class="govuk-label">
+  {{ currentLabel() }}
 </label>
-<govuk-error-message *ngIf="shouldDisplayErrors" [errors]="control.errors" [identifier]="identifier">
-</govuk-error-message>
+
+@if (shouldDisplayErrors) {
+  <govuk-error-message [errors]="control.errors" [identifier]="identifier" />
+}
+
 <select
   [formControl]="control"
   [id]="identifier"
   [attr.name]="identifier"
-  [ngClass]="widthClass"
+  [ngClass]="widthClass()"
   class="govuk-select"
   [class.govuk-select--error]="shouldDisplayErrors"
   govukFormError
 >
-  <option *ngFor="let option of options" [attr.disabled]="option.disabled || null" [ngValue]="option.value">
-    {{ option.text }}
-  </option>
-  <ng-content></ng-content>
+  @for (option of options(); track option) {
+    <option [attr.disabled]="option.disabled || null" [ngValue]="option.value">
+      {{ option.text }}
+    </option>
+  }
+  <ng-content />
 </select>

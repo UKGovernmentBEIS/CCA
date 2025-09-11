@@ -1,5 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 
+import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { render } from '@testing-library/angular';
 import { screen } from '@testing-library/dom';
@@ -10,13 +11,19 @@ import { SectorComponent } from './sector.component';
 
 describe('SectorComponent', () => {
   let store: ActiveSectorStore;
+  let authStore: AuthStore;
+
   beforeEach(async () => {
     await render(SectorComponent, {
-      providers: [ActiveSectorStore],
+      providers: [ActiveSectorStore, AuthStore],
       configureTestBed: (testbed) => {
         testbed.overrideProvider(ActivatedRoute, { useValue: new ActivatedRouteStub({ sectorId: 1 }) });
+
         store = testbed.inject(ActiveSectorStore);
         store.setState(mockSectorDetails);
+
+        authStore = testbed.inject(AuthStore);
+        authStore.setUserState({ roleType: 'REGULATOR', status: 'ENABLED', userId: '12345' });
       },
     });
   });

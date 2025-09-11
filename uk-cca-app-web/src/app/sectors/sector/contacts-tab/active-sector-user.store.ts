@@ -8,6 +8,7 @@ type ActiveSectorUserStoreType = {
   editable: boolean;
   details: SectorUserAuthorityDetailsDTO;
 };
+
 const initialState: ActiveSectorUserStoreType = {
   editable: false,
   details: null,

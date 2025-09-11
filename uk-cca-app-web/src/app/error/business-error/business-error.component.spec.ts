@@ -27,9 +27,6 @@ describe('BusinessErrorComponent', () => {
     }).compileComponents();
 
     TestBed.inject(BusinessErrorService).showError(error);
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(BusinessErrorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -29,10 +29,6 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
         class="govuk-!-display-none"
       >
         <cca-summary>
-          <h2
-            class="govuk-heading-m"
-          >
-          </h2>
           <dl
             class="govuk-summary-list govuk-!-margin-bottom-9"
             govuk-summary-list=""
@@ -57,6 +53,7 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
                     href="/tasks/null/file-download/2f611a22-bd5f-4fd4-b00f-c20bfb2706c9"
                     target="_blank"
                   >
+                    authorization.pdf
                   </a>
                 </cca-summary-download-files>
               </dd>
@@ -205,10 +202,6 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
         class="govuk-!-display-none"
       >
         <cca-summary>
-          <h2
-            class="govuk-heading-m"
-          >
-          </h2>
           <dl
             class="govuk-summary-list govuk-!-margin-bottom-9"
             govuk-summary-list=""
@@ -233,6 +226,7 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
                     href="/tasks/null/file-download/2f611a22-bd5f-4fd4-b00f-c20bfb2706c9"
                     target="_blank"
                   >
+                    authorization.pdf
                   </a>
                 </cca-summary-download-files>
               </dd>
@@ -380,9 +374,6 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
       <div
         class="highlight"
       >
-        <h2
-          class="govuk-heading-m"
-        />
         <dl
           class="govuk-summary-list govuk-!-margin-bottom-9"
         >
@@ -401,7 +392,9 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
                 class="govuk-link"
                 href="/tasks/null/file-download/2f611a22-bd5f-4fd4-b00f-c20bfb2706c9"
                 target="_blank"
-              />
+              >
+                authorization.pdf
+              </a>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -528,7 +521,7 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
     </cca-highlight-diff>
   </div><netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Review underlying agreement variation 

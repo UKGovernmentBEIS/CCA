@@ -9,7 +9,7 @@ import uk.gov.netz.api.userinfoapi.UserInfoDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NoticeRecipientMapperTest {
+class NoticeRecipientMapperTest {
 
     private final NoticeRecipientMapper mapper = Mappers.getMapper(NoticeRecipientMapper.class);
 

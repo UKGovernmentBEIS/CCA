@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
-import { GovukComponentsModule } from '@netz/govuk-components';
+import { ActivatedRouteStub } from '@netz/common/testing';
+import { TextInputComponent } from '@netz/govuk-components';
 
 import { WizardStepComponent } from './wizard-step.component';
 
@@ -28,7 +29,7 @@ describe('WizardStepComponent', () => {
         <div govuk-text-input formControlName="text" label="Text"></div>
       </cca-wizard-step>
     `,
-    imports: [WizardStepComponent, GovukComponentsModule, ReactiveFormsModule],
+    imports: [WizardStepComponent, ReactiveFormsModule, TextInputComponent],
   })
   class TestComponent {
     formGroup = new FormGroup({
@@ -40,11 +41,10 @@ describe('WizardStepComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, PageHeadingComponent, TestComponent],
+      imports: [PageHeadingComponent, TestComponent],
+      providers: [{ provide: ActivatedRoute, useValue: new ActivatedRouteStub() }],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     element = fixture.nativeElement;
     hostComponent = fixture.componentInstance;

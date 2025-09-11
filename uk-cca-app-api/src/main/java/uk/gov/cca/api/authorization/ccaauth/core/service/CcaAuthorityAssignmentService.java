@@ -54,15 +54,15 @@ public class CcaAuthorityAssignmentService {
         final List<String> permissions = role.getRolePermissions()
                 .stream()
                 .map(RolePermission::getPermission)
-                .collect(Collectors.toList());
+                .toList();
 
         return this.updateAuthorityWithPermissions(authority, permissions);
     }
 
     public Authority updateAuthorityWithPermissions(Authority authority, List<String> permissions) {
-        permissions.forEach((permission) -> {
-            this.addPermissionToAuthority(authority, permission);
-        });
+        permissions.forEach(permission ->
+            this.addPermissionToAuthority(authority, permission)
+        );
         return authority;
     }
 

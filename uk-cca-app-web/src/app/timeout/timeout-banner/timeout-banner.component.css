@@ -1,0 +1,39 @@
+.govuk-timeout-warning {
+  display: none;
+  padding: var(--govuk-spacing-6);
+  max-width: 500px;
+}
+
+.govuk-timeout-warning .govuk-button {
+  margin: 0 var(--govuk-spacing-2) var(--govuk-spacing-3) 0;
+}
+
+@media (min-width: 641px) {
+  .govuk-timeout-warning .govuk-button {
+    margin-bottom: var(--govuk-spacing-0);
+  }
+}
+
+.govuk-timeout-warning[open] {
+  display: block;
+}
+
+.govuk-timeout-warning[open] + .backdrop {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.govuk-timeout-warning[open]::backdrop {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.govuk-timeout-warning-overlay {
+  overflow: hidden;
+}
+
+.js-enabled .govuk-timeout-warning-fallback {
+  display: none;
+}
+
+.tabular-numbers {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}

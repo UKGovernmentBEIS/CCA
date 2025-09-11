@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Directive, HostListener, OnDestroy, OnInit, input, output } from '@angular/core';
 
 import { debounceTime, Subject, Subscription } from 'rxjs';
 
@@ -7,8 +7,10 @@ import { debounceTime, Subject, Subscription } from 'rxjs';
   standalone: true,
 })
 export class DebounceClickDirective implements OnInit, OnDestroy {
-  @Input() debounceTime = 500;
-  @Output() readonly debounceClick = new EventEmitter<MouseEvent>();
+  readonly debounceTime = input(500);
+
+  readonly debounceClick = output<MouseEvent>();
+
   private subscription = new Subscription();
   private clicks = new Subject<MouseEvent>();
 
@@ -19,7 +21,7 @@ export class DebounceClickDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.clicks
-      .pipe(debounceTime(this.debounceTime))
+      .pipe(debounceTime(this.debounceTime()))
       .subscribe((e: MouseEvent) => this.debounceClick.emit(e));
   }
 

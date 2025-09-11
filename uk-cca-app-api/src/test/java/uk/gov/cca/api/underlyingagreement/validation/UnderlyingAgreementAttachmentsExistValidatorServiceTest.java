@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("unchecked")
 @ExtendWith(MockitoExtension.class)
 class UnderlyingAgreementAttachmentsExistValidatorServiceTest {
 
@@ -52,7 +54,7 @@ class UnderlyingAgreementAttachmentsExistValidatorServiceTest {
                 .thenReturn(true);
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(SchemeVersion.CCA_3));
 
         // Verify
         assertThat(result.isValid()).isTrue();
@@ -78,7 +80,7 @@ class UnderlyingAgreementAttachmentsExistValidatorServiceTest {
                 .thenReturn(false);
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(SchemeVersion.CCA_3));
 
         // Verify
         assertThat(result.isValid()).isFalse();
@@ -101,7 +103,7 @@ class UnderlyingAgreementAttachmentsExistValidatorServiceTest {
                 .build();
 
         // Invoke
-        BusinessValidationResult result = validatorService.validate(container);
+        BusinessValidationResult result = validatorService.validate(container, new UnderlyingAgreementValidationContext(SchemeVersion.CCA_3));
 
         // Verify
         assertThat(result.isValid()).isFalse();

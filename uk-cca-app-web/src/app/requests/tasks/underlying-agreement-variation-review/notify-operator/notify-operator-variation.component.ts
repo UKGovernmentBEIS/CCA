@@ -6,13 +6,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
-import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { CheckboxComponent, CheckboxesComponent, SelectComponent } from '@netz/govuk-components';
 import {
   NOTIFY_OPERATOR_OF_DECISION_FORM,
   NotifyOperatorOfDecisionFormModel,
   NotifyOperatorOfDecisionFormProvider,
+  TasksApiService,
   toDecisionNotification,
   transform,
   underlyingAgreementQuery,
@@ -27,15 +27,16 @@ import {
   NoticeRecipientsService,
   RegulatorAuthoritiesService,
   TasksService,
+  UnderlyingAgreementVariationReviewRequestTaskPayload,
 } from 'cca-api';
 
-import { UnderlyingAgreementVariationReviewTaskService } from '../services/underlying-agreement-variation-review-task.service';
+import { createNotifyOperatorActionDTO } from '../transform';
+import { createProposedUnderlyingAgreementVariationPayload } from '../utils';
 
 @Component({
   selector: 'cca-notify-operator-variation',
-  standalone: true,
   templateUrl: './notify-operator-variation.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -46,32 +47,33 @@ import { UnderlyingAgreementVariationReviewTaskService } from '../services/under
     NoticeRecipientsTypePipe,
   ],
   providers: [NotifyOperatorOfDecisionFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotifyOperatorVariationComponent {
-  private readonly requestTaskStore = inject(RequestTaskStore);
+  private readonly store = inject(RequestTaskStore);
   private readonly caExternalContactsService = inject(CaExternalContactsService);
   private readonly noticeRecipientsService = inject(NoticeRecipientsService);
   private readonly tasksService = inject(TasksService);
   private readonly regulatorAuthoritiesService = inject(RegulatorAuthoritiesService);
-  private readonly taskService = inject(TaskService);
+  private readonly tasksApiService = inject(TasksApiService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
 
-  readonly form = inject<NotifyOperatorOfDecisionFormModel>(NOTIFY_OPERATOR_OF_DECISION_FORM);
+  protected readonly form = inject<NotifyOperatorOfDecisionFormModel>(NOTIFY_OPERATOR_OF_DECISION_FORM);
 
-  private readonly accountId = this.requestTaskStore.select(requestTaskQuery.selectRequestInfo)()?.accountId;
-  private readonly taskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+  private readonly accountId = this.store.select(requestTaskQuery.selectRequestInfo)()?.accountId;
+  private readonly taskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
   private readonly defaultNoticeRecipients = toSignal(this.tasksService.getDefaultNoticeRecipients(this.taskId));
 
   private readonly sectorContact = computed(() =>
     this.defaultNoticeRecipients()?.find((nr) => nr.type === 'SECTOR_CONTACT'),
   );
 
-  readonly externalContacts = toSignal(
+  protected readonly externalContacts = toSignal(
     this.caExternalContactsService.getCaExternalContacts().pipe(map((r) => r.caExternalContacts)),
   );
 
-  readonly regulatorAuthorities = toSignal(
+  protected readonly regulatorAuthorities = toSignal(
     this.regulatorAuthoritiesService.getCaRegulators().pipe(
       map((r) =>
         r?.caUsers.map((rua) => ({
@@ -82,20 +84,19 @@ export class NotifyOperatorVariationComponent {
     ),
   );
 
-  readonly additionalUsers = toSignal(this.noticeRecipientsService.getAdditionalNoticeRecipients(this.accountId));
+  protected readonly additionalUsers = toSignal(
+    this.noticeRecipientsService.getAdditionalNoticeRecipients(this.accountId),
+  );
 
-  readonly defaultUsers = computed(() => {
+  protected readonly defaultUsers = computed(() => {
     const recipients: NoticeRecipientDTO[] = [];
 
-    const tudDecision = this.requestTaskStore.select(
-      underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'),
-    )()?.type;
+    const tudDecision = this.store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))()
+      ?.type;
 
-    const accountReferenceData = this.requestTaskStore.select(underlyingAgreementQuery.selectAccountReferenceData)();
+    const accountReferenceData = this.store.select(underlyingAgreementQuery.selectAccountReferenceData)();
 
-    const targetUnitDetails = this.requestTaskStore.select(
-      underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails,
-    )();
+    const targetUnitDetails = this.store.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)();
 
     const originalResponsiblePerson = transform(accountReferenceData).responsiblePersonDetails;
 
@@ -115,12 +116,17 @@ export class NotifyOperatorVariationComponent {
       });
     }
 
-    recipients.push({
-      email: accountReferenceData.targetUnitAccountDetails.administrativeContactDetails.email,
-      firstName: accountReferenceData.targetUnitAccountDetails.administrativeContactDetails.firstName,
-      lastName: accountReferenceData.targetUnitAccountDetails.administrativeContactDetails.lastName,
-      type: 'ADMINISTRATIVE_CONTACT',
-    });
+    const administrativeContact = this.defaultNoticeRecipients()?.find(
+      (nr: NoticeRecipientDTO) => nr.type === 'ADMINISTRATIVE_CONTACT',
+    );
+    if (administrativeContact) {
+      recipients.push({
+        email: administrativeContact.email,
+        firstName: administrativeContact.firstName,
+        lastName: administrativeContact.lastName,
+        type: 'ADMINISTRATIVE_CONTACT',
+      });
+    }
 
     if (this.sectorContact()) {
       recipients.push({
@@ -135,10 +141,17 @@ export class NotifyOperatorVariationComponent {
   });
 
   onSubmit() {
-    (this.taskService as UnderlyingAgreementVariationReviewTaskService)
-      .notifyOperator(toDecisionNotification(this.form.value))
-      .subscribe(() => {
-        this.router.navigate(['./confirmation'], { relativeTo: this.activatedRoute });
-      });
+    const payload = this.store.select(
+      underlyingAgreementQuery.selectPayload,
+    )() as UnderlyingAgreementVariationReviewRequestTaskPayload;
+
+    const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
+    const notification = toDecisionNotification(this.form.value);
+    const proposedUnderlyingAgreement = createProposedUnderlyingAgreementVariationPayload(payload);
+    const dto = createNotifyOperatorActionDTO(requestTaskId, notification, proposedUnderlyingAgreement);
+
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
+      this.router.navigate(['./confirmation'], { relativeTo: this.activatedRoute });
+    });
   }
 }

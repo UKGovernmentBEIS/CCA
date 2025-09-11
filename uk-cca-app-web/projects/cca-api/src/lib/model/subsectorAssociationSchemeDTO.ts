@@ -10,9 +10,7 @@
  * Do not edit the class manually.
  */
 import { TargetSetDTO } from './targetSetDTO';
-import { SubsectorAssociationDTO } from './subsectorAssociationDTO';
 
 export interface SubsectorAssociationSchemeDTO {
-  subsectorAssociation: SubsectorAssociationDTO;
   targetSet: TargetSetDTO;
 }

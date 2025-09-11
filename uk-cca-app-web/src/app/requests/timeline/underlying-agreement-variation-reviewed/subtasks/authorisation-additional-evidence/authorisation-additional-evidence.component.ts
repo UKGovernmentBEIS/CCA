@@ -12,15 +12,20 @@ import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+s
 
 @Component({
   selector: 'cca-timeline-variation-review-authorisation-additional-evidence',
+  template: `
+    <div>
+      <netz-page-heading>Authorisation and additional evidence</netz-page-heading>
+      <cca-summary [data]="summaryData()" />
+    </div>
+  `,
   standalone: true,
   imports: [PageHeadingComponent, SummaryComponent],
-  templateUrl: './authorisation-additional-evidence.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthorisationAdditionalEvidenceComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
-  readonly summaryData = computed(() =>
+  protected readonly summaryData = computed(() =>
     toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
       this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAuthorisationAndAdditionalEvidence)(),
       this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),

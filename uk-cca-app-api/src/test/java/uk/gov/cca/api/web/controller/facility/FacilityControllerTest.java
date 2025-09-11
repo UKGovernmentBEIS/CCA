@@ -15,9 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
-import uk.gov.cca.api.web.orchestrator.facility.FacilityIdGeneratorServiceOrchestrator;
+import uk.gov.cca.api.web.orchestrator.facility.service.FacilityIdGeneratorServiceOrchestrator;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.netz.api.security.AppSecurityComponent;
@@ -29,6 +30,8 @@ import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
+
+import java.util.Set;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -64,7 +67,7 @@ class FacilityControllerTest {
     private FacilityDataQueryService facilityDataQueryService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
         AuthorizedRoleAspect authorizedRoleAspect = new AuthorizedRoleAspect(roleAuthorizationService, authorizationAspectUserResolver);
@@ -127,25 +130,26 @@ class FacilityControllerTest {
     }
     
     @Test
-    void isActiveFacility() throws Exception {
+    void getActiveFacilityParticipatingSchemeVersions() throws Exception {
         final String facilityId = "SA-F00001";
         final AppUser user = AppUser.builder().roleType(SECTOR_USER).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(facilityDataQueryService.isActiveFacility(facilityId)).thenReturn(true);
+        when(facilityDataQueryService.getActiveFacilityParticipatingSchemeVersions(facilityId))
+                .thenReturn(Set.of(SchemeVersion.CCA_2));
 
         mockMvc.perform(MockMvcRequestBuilders.get(FACILITY_CONTROLLER_PATH + "/facilityId")
         		.param("facilityId", facilityId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(true)));
+                .andExpect(content().json(Set.of(SchemeVersion.CCA_2.name()).toString()));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(facilityDataQueryService, times(1)).isActiveFacility(facilityId);
+        verify(facilityDataQueryService, times(1)).getActiveFacilityParticipatingSchemeVersions(facilityId);
     }
 
     @Test
-    void isActiveFacility_forbidden() throws Exception {
+    void getSchemeVersionsIfFacility_IsActive_forbidden() throws Exception {
         final AppUser user = AppUser.builder().roleType(OPERATOR).userId("userId").build();
         final String facilityId = "SA-F00001";
 
@@ -161,6 +165,6 @@ class FacilityControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
 
-        verify(facilityDataQueryService, never()).isActiveFacility(facilityId);
+        verify(facilityDataQueryService, never()).getActiveFacilityParticipatingSchemeVersions(facilityId);
     }
 }

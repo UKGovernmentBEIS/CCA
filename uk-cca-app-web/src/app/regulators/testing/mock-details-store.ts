@@ -9,6 +9,7 @@ export const editorUserState: DetailsStoreType = {
     MANAGE_SECTOR_ASSOCIATIONS: 'NONE',
     MANAGE_SECTOR_USERS: 'NONE',
     ADMIN_TERMINATION_SUBMISSION: 'NONE',
+    ADMIN_TERMINATION_PEER_REVIEW: 'NONE',
   },
   regulatorRoles: [
     {
@@ -20,6 +21,7 @@ export const editorUserState: DetailsStoreType = {
         MANAGE_SECTOR_ASSOCIATIONS: 'EXECUTE',
         MANAGE_SECTOR_USERS: 'EXECUTE',
         ADMIN_TERMINATION_SUBMISSION: 'EXECUTE',
+        ADMIN_TERMINATION_PEER_REVIEW: 'EXECUTE',
       },
     },
     {
@@ -31,6 +33,7 @@ export const editorUserState: DetailsStoreType = {
         MANAGE_SECTOR_ASSOCIATIONS: 'NONE',
         MANAGE_SECTOR_USERS: 'NONE',
         ADMIN_TERMINATION_SUBMISSION: 'NONE',
+        ADMIN_TERMINATION_PEER_REVIEW: 'NONE',
       },
     },
   ],
@@ -40,6 +43,7 @@ export const editorUserState: DetailsStoreType = {
     MANAGE_SECTOR_ASSOCIATIONS: ['NONE', 'EXECUTE'],
     MANAGE_SECTOR_USERS: ['NONE', 'EXECUTE'],
     ADMIN_TERMINATION_SUBMISSION: ['NONE', 'EXECUTE'],
+    ADMIN_TERMINATION_PEER_REVIEW: ['NONE', 'EXECUTE'],
   },
   user: {
     email: 'regulator_admin@cca.uk',
@@ -63,6 +67,7 @@ export const addUserState: DetailsStoreType = {
     MANAGE_SECTOR_ASSOCIATIONS: ['NONE', 'EXECUTE'],
     MANAGE_SECTOR_USERS: ['NONE', 'EXECUTE'],
     ADMIN_TERMINATION_SUBMISSION: ['NONE', 'EXECUTE'],
+    ADMIN_TERMINATION_PEER_REVIEW: ['NONE', 'EXECUTE'],
   },
   regulatorRoles: [
     {
@@ -74,6 +79,7 @@ export const addUserState: DetailsStoreType = {
         MANAGE_SECTOR_ASSOCIATIONS: 'EXECUTE',
         MANAGE_SECTOR_USERS: 'EXECUTE',
         ADMIN_TERMINATION_SUBMISSION: 'EXECUTE',
+        ADMIN_TERMINATION_PEER_REVIEW: 'EXECUTE',
       },
     },
     {
@@ -85,6 +91,7 @@ export const addUserState: DetailsStoreType = {
         MANAGE_SECTOR_ASSOCIATIONS: 'NONE',
         MANAGE_SECTOR_USERS: 'NONE',
         ADMIN_TERMINATION_SUBMISSION: 'NONE',
+        ADMIN_TERMINATION_PEER_REVIEW: 'NONE',
       },
     },
   ],
@@ -98,6 +105,7 @@ export const viewerUserState: DetailsStoreType = {
     MANAGE_SECTOR_ASSOCIATIONS: 'NONE',
     MANAGE_SECTOR_USERS: 'NONE',
     ADMIN_TERMINATION_SUBMISSION: 'NONE',
+    ADMIN_TERMINATION_PEER_REVIEW: 'NONE',
   },
   user: {
     email: 'regulator_user_2@cca.uk',

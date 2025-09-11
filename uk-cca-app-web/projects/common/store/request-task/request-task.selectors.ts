@@ -1,6 +1,5 @@
 import { pipe } from 'rxjs';
 
-import { isBefore } from 'date-fns';
 import { produce } from 'immer';
 
 import {
@@ -106,7 +105,7 @@ const selectRelatedTasks: StateSelector<RequestTaskState, ItemDTO[]> = createAgg
 
 const selectTimeline: StateSelector<RequestTaskState, RequestActionInfoDTO[]> = createSelector((state) =>
   produce(state?.timeline, (timeline) =>
-    timeline.sort((a, b) => (isBefore(new Date(a.creationDate), new Date(b.creationDate)) ? 1 : -1)),
+    timeline.sort((a, b) => new Date(a.creationDate).getTime() - new Date(b.creationDate).getTime()),
   ),
 );
 

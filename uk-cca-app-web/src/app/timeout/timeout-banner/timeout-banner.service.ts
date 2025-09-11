@@ -25,13 +25,13 @@ export class TimeoutBannerService {
     return this.refreshTokenParsedExp - this.refreshTokenParsedIat;
   }
 
-  timeOffsetSeconds = environment.timeoutBanner.timeOffsetSeconds;
-
-  timeExtensionAllowed$ = new BehaviorSubject<boolean>(true);
-  isVisible$ = new BehaviorSubject<boolean>(false);
-
-  countDownTime$ = new BehaviorSubject<number>(this.calculateCountdownTime());
   private initialRefreshTokenExpOffset = this.refreshTokenExpOffset;
+
+  protected readonly countDownTime$ = new BehaviorSubject<number>(this.calculateCountdownTime());
+
+  readonly timeOffsetSeconds = environment.timeoutBanner.timeOffsetSeconds;
+  readonly timeExtensionAllowed$ = new BehaviorSubject<boolean>(true);
+  readonly isVisible$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly keycloak: KeycloakService,
@@ -53,6 +53,7 @@ export class TimeoutBannerService {
               this.timeExtensionAllowed$.next(false);
             }
             break;
+
           case KeycloakEventType.OnAuthLogout:
             this.idleLogout();
             break;

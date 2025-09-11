@@ -6,9 +6,9 @@ import { RelatedTasksComponent, TimelineItemComponent } from '@netz/common/compo
 import { PageHeadingComponent } from '@netz/common/components';
 import { TimelineItemLinkPipe } from '@netz/common/pipes';
 import { TabLazyDirective, TabsComponent, TagComponent } from '@netz/govuk-components';
-import { RequestStatusTagColorPipe } from '@shared/pipes';
+import { StatusColorPipe } from '@shared/pipes';
 import { RequestTypeToHeadingPipe } from '@shared/pipes';
-import { WorkflowStatusPipe } from '@shared/pipes';
+import { StatusPipe } from '@shared/pipes';
 
 import { ItemDTOResponse, RequestActionInfoDTO, RequestDetailsDTO } from 'cca-api';
 
@@ -23,13 +23,13 @@ type WorkflowDetailsViewModel = {
   templateUrl: './workflow-details.component.html',
   standalone: true,
   imports: [
-    WorkflowStatusPipe,
+    StatusPipe,
     TagComponent,
     PageHeadingComponent,
     TabsComponent,
     TimelineItemLinkPipe,
     TabLazyDirective,
-    RequestStatusTagColorPipe,
+    StatusColorPipe,
     RequestTypeToHeadingPipe,
     RelatedTasksComponent,
     TimelineComponent,
@@ -42,9 +42,9 @@ export class WorkflowDetailsComponent {
   private readonly router = inject(Router);
 
   private readonly data = this.activatedRoute.snapshot.data['workflowDetailsItemsAndActions'];
-  readonly navigationState = { returnUrl: this.router.url };
+  protected readonly navigationState = { returnUrl: this.router.url };
 
-  readonly details: WorkflowDetailsViewModel = {
+  protected readonly details: WorkflowDetailsViewModel = {
     workflowDetails: this.data.workflowDetails,
     requestItems: this.data.requestItems,
     requestActions: this.data.requestActions,

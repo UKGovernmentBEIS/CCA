@@ -16,7 +16,7 @@
       </strong>
     </div>
 
-    <govuk-details class="govuk-body" summary="Help with uploading" data-testid="performance-upload-details">
+    <govuk-details summary="Help with uploading" data-testid="performance-upload-details">
       <p>To upload your target period reporting spreadsheets:</p>
       <ul>
         <li>
@@ -60,7 +60,7 @@
 }
 
 @if (performanceDataUpload()?.performanceDataTargetPeriodType && !processCompleted()) {
-  <cca-performance-data-upload-processing />
+  <cca-upload-processing />
 }
 
 @if (processCompleted()) {
@@ -68,5 +68,4 @@
 }
 
 <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-
 <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true">Return to: Dashboard</a>

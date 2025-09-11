@@ -7,7 +7,7 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
   router={[Function _Router]}
   summaryDataCurrent={[Function Array]}
   summaryDataOriginal={[Function Array]}
-  taskService={[Function Object]}
+  tasksApiService={[Function Object]}
 >
   <div>
     <netz-page-heading
@@ -91,13 +91,13 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Company registration number
+                Company number
               </dt>
               <dd
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 test 
+                 11112222 
               </dd>
             </div>
             <div
@@ -108,13 +108,12 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Subsector
+                Reason for not having a registration number
               </dt>
               <dd
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 SUBSECTOR_2 
               </dd>
             </div>
           </dl>
@@ -362,13 +361,29 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Company registration number
+                Company number
               </dt>
               <dd
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 test 
+                 test1234 
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Reason for not having a registration number
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
               </dd>
             </div>
             <div
@@ -635,12 +650,32 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
             <dt
               class="govuk-summary-list__key"
             >
-              Company registration number
+              Company number
             </dt>
             <dd
               class="govuk-summary-list__value"
             >
-               test 
+              <del
+                class="diffmod"
+              >
+                test
+              </del>
+              <ins
+                class="diffmod"
+              >
+                111
+              </ins>
+              12
+              <del
+                class="diffmod"
+              >
+                34
+              </del>
+              <ins
+                class="diffmod"
+              >
+                222
+              </ins>
             </dd>
           </div>
           <div
@@ -649,12 +684,33 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
             <dt
               class="govuk-summary-list__key"
             >
-              Subsector
+              Reason for not having a registration number
             </dt>
             <dd
               class="govuk-summary-list__value"
             >
-               SUBSECTOR_2 
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              <del
+                class="diffdel"
+              >
+                Subsector
+              </del>
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <del
+                class="diffdel"
+              >
+                 SUBSECTOR_2 
+              </del>
             </dd>
           </div>
         </dl>
@@ -1077,9 +1133,11 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
     >
       Confirm and complete
     </button>
-  </div><netz-return-to-task-or-action-page>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
     <a
-      govuklink=""
+      class="govuk-link"
       href="/undefined"
     >
        Return to: Apply to vary the underlying agreement 

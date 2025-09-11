@@ -8,15 +8,18 @@ import { getAllUnderlyingAgreementVariationReviewTimelineSections } from '../und
 
 @Component({
   selector: 'cca-underlying-agreement-variation-review-task-list',
+  template: `
+    <netz-page-heading>Underlying agreement variation</netz-page-heading>
+    <netz-task-list [sections]="sections()" />
+  `,
   standalone: true,
   imports: [TaskListComponent, PageHeadingComponent],
-  templateUrl: './underlying-agreement-variation-reviewed-task-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementVariationReviewedTaskListComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
-  sections = computed(() =>
+  protected readonly sections = computed(() =>
     getAllUnderlyingAgreementVariationReviewTimelineSections(
       this.requestActionStore.select(underlyingAgreementVariationReviewedRequestActionQuery.selectPayload)(),
     ),

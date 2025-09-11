@@ -23,14 +23,15 @@ export const CanActivateVariationDetails: CanActivateFn = (route: ActivatedRoute
   if (!change && !isWizardCompleted(variationDetails)) return true;
   if (change && isWizardCompleted(variationDetails)) return true;
 
-  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', VariationDetailsWizardStep.SUMMARY]);
+  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', 'summary']);
 
   if (!change && isWizardCompleted(variationDetails)) {
     if (sectionsCompleted[VARIATION_DETAILS_SUBTASK] === TaskItemStatus.COMPLETED) {
-      return createUrlTreeFromSnapshot(route, ['../', VariationDetailsWizardStep.SUMMARY]);
+      return createUrlTreeFromSnapshot(route, ['../', 'summary']);
     } else if (sectionsCompleted[VARIATION_DETAILS_SUBTASK] === TaskItemStatus.IN_PROGRESS) {
-      return createUrlTreeFromSnapshot(route, ['../', VariationDetailsWizardStep.CHECK_YOUR_ANSWERS]);
+      return createUrlTreeFromSnapshot(route, ['../', 'check-your-answers']);
     }
+
     return true;
   }
 
@@ -46,14 +47,15 @@ export const CanActivateVariationDetailsCheckYourAnswers: CanActivateFn = (
 
   const variationDetails = store.select(underlyingAgreementVariationQuery.selectVariationDetails)();
 
-  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', VariationDetailsWizardStep.SUMMARY]);
+  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', 'summary']);
   if (!isWizardCompleted(variationDetails)) {
     return createUrlTreeFromSnapshot(route, ['../', VariationDetailsWizardStep.DETAILS]);
   }
 
   if (sectionsCompleted[VARIATION_DETAILS_SUBTASK] === TaskItemStatus.COMPLETED) {
-    return createUrlTreeFromSnapshot(route, ['../', VariationDetailsWizardStep.SUMMARY]);
+    return createUrlTreeFromSnapshot(route, ['../', 'summary']);
   }
+
   return true;
 };
 
@@ -65,11 +67,14 @@ export const CanActivateVariationDetailsSummary: CanActivateFn = (route: Activat
   const variationDetails = store.select(underlyingAgreementVariationQuery.selectVariationDetails)();
 
   if (!isEditable) return true;
+
   if (!isWizardCompleted(variationDetails)) {
     return createUrlTreeFromSnapshot(route, ['../', VariationDetailsWizardStep.DETAILS]);
   }
+
   if (sectionsCompleted[VARIATION_DETAILS_SUBTASK] === TaskItemStatus.IN_PROGRESS) {
-    return createUrlTreeFromSnapshot(route, ['../', VariationDetailsWizardStep.CHECK_YOUR_ANSWERS]);
+    return createUrlTreeFromSnapshot(route, ['../', 'check-your-answers']);
   }
+
   return true;
 };

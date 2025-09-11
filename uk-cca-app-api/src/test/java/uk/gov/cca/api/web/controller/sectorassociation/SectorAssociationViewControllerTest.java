@@ -48,7 +48,7 @@ import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 @ExtendWith({MockitoExtension.class})
-public class SectorAssociationViewControllerTest {
+class SectorAssociationViewControllerTest {
 
     private MockMvc mockMvc;
 
@@ -68,7 +68,7 @@ public class SectorAssociationViewControllerTest {
     private SectorAssociationViewController sectorAssociationViewController;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         final AopProxy aopProxy = getAopProxy(authorizationAspectUserResolver);
 
@@ -194,6 +194,7 @@ public class SectorAssociationViewControllerTest {
         DefaultAopProxyFactory proxyFactory = new DefaultAopProxyFactory();
         return proxyFactory.createAopProxy(aspectJProxyFactory);
     }
+
     private AppUser getAppUser(String roleType) {
         return switch (roleType) {
             case REGULATOR -> {

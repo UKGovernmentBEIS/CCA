@@ -15,6 +15,7 @@ import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-facility-summary',
+  templateUrl: './facility-summary.component.html',
   standalone: true,
   imports: [
     SummaryComponent,
@@ -23,7 +24,6 @@ import { generateDownloadUrl } from '@shared/utils';
     HighlightDiffComponent,
     NgTemplateOutlet,
   ],
-  templateUrl: './facility-summary.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class FacilitySummaryComponent {
@@ -40,21 +40,19 @@ export default class FacilitySummaryComponent {
     underlyingAgreementReviewQuery.selectFacilitySubtaskDecision(this.facilityId),
   )();
 
-  protected readonly facility = computed(() =>
-    this.requestTaskStore
-      .select(underlyingAgreementQuery.selectManageFacilities)()
-      .facilityItems.find((f) => f.facilityId === this.facilityId),
-  );
+  protected readonly facility = this.requestTaskStore.select(
+    this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId)),
+  )();
 
   protected readonly summaryDataOriginal = computed(() =>
     toFacilitySummaryDataWithStatusAndDecision(
-      this.facility().status === 'NEW'
+      this.facility.status === 'NEW'
         ? this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId))()
         : this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalFacility(this.facilityId))(),
       this.decision,
       {
         submit:
-          this.facility().status === 'NEW'
+          this.facility.status === 'NEW'
             ? this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)()
             : this.requestTaskStore.select(
                 underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments,

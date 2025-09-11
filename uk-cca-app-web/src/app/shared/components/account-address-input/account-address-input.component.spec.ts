@@ -20,7 +20,7 @@ describe('AccountAddressInputComponent', () => {
         <fieldset govukFieldset>
           <legend govukLegend>What is your address?</legend>
           <div formGroupName="address">
-            <cca-account-address-input></cca-account-address-input>
+            <cca-account-address-input />
           </div>
         </fieldset>
       </form>
@@ -38,9 +38,7 @@ describe('AccountAddressInputComponent', () => {
       imports: [AccountAddressInputComponent, ReactiveFormsModule],
       providers: [provideHttpClient()],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     hostComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(AccountAddressInputComponent)).componentInstance;

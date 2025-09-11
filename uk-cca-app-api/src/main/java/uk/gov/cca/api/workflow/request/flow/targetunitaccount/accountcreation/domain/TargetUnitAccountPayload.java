@@ -1,5 +1,7 @@
 package uk.gov.cca.api.workflow.request.flow.targetunitaccount.accountcreation.domain;
 
+import java.util.List;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +22,7 @@ import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 @Builder
 @SpELExpression(expression = "{T(java.lang.Boolean).TRUE.equals(#isCompanyRegistrationNumber)  == (#companyRegistrationNumber != null)}", message = "target.unit.account.companyRegistrationNumber.notEmpty")
 @SpELExpression(expression = "{T(java.lang.Boolean).FALSE.equals(#isCompanyRegistrationNumber) == (#registrationNumberMissingReason != null)}", message = "target.unit.account.registrationNumberMissingReason.notEmpty")
+@SpELExpression(expression = "{(#subsectorAssociationId != null) == (#subsectorAssociationName != null)}", message = "target.unit.account.subsectorAssociationName.and.subsectorAssociationId.inconsistency")
 public class TargetUnitAccountPayload {
 
     @NotBlank(message = "{target.unit.account.name.notEmpty}")
@@ -44,10 +47,14 @@ public class TargetUnitAccountPayload {
     @Size(max = 255)
     private String registrationNumberMissingReason;
 
-    @Size(max = 255)
-    private String sicCode;
+    @Size(max = 4)
+    private List<@NotBlank @Size(max = 255)String> sicCodes;
 
     private Long subsectorAssociationId;
+    
+    // Timeline Event specific field
+    @Size(max = 255)
+    private String subsectorAssociationName;
 
     @Valid
     @NotNull(message = "{target.unit.account.address.notEmpty}")

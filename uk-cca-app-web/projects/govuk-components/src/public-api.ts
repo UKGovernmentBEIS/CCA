@@ -30,4 +30,3 @@ export * from './lib/tag';
 export * from './lib/textarea';
 export * from './lib/text-input';
 export * from './lib/warning-text';
-export * from './lib/govuk-components.module';

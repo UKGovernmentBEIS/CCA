@@ -33,6 +33,7 @@ describe('FileUploadService', () => {
         b: { type: HttpEventType.UploadProgress, loaded: 10, total: 15 },
         c: new HttpResponse({ status: HttpStatusCode.Ok, body: { uuid: 'abcd' } }),
       });
+
       const file = new File(['some content'], 'file.txt');
 
       expectObservable(
@@ -52,6 +53,7 @@ describe('FileUploadService', () => {
       const fileB = new File(['some other content'], 'file2.txt');
       const fileC = new File(['some uploaded content'], 'file3.txt');
       const control = new FormControl([{ file: fileA }, { file: fileB }, { file: fileC, uuid: 'abcd' }]);
+
       const upload$ = jest.fn(() =>
         cold<HttpEvent<FileUuidDTO>>('--a---b------c|', {
           a: { type: HttpEventType.UploadProgress, loaded: 5, total: 15 },
@@ -64,6 +66,7 @@ describe('FileUploadService', () => {
         '--------------(c|)',
         { c: null },
       );
+
       expectObservable(service.uploadProgress$).toBe('--(aa)(bb)---(cc)', {
         a: { file: fileA, progress: 5 / 15 },
         b: { file: fileB, progress: 10 / 15 },
@@ -80,8 +83,11 @@ describe('FileUploadService', () => {
       expectObservable(service.upload(request)(control) as Observable<MessageValidationErrors>).toBe('(c|)', {
         c: null,
       });
+
       expectObservable(service.uploadProgress$).toBe('--');
+
       flush();
+
       expect(request).not.toHaveBeenCalled();
     });
   });
@@ -94,8 +100,11 @@ describe('FileUploadService', () => {
       expectObservable(service.uploadMany(request)(control) as Observable<MessageValidationErrors>).toBe('(c|)', {
         c: null,
       });
+
       expectObservable(service.uploadProgress$).toBe('----');
+
       flush();
+
       expect(request).not.toHaveBeenCalled();
     });
   });
@@ -103,15 +112,18 @@ describe('FileUploadService', () => {
   it('should emit file upload events from various validations', () => {
     testScheduler.run(({ cold, expectObservable }) => {
       const controlA = new FormControl({ file: new File(['some content'], 'single-file.txt') });
+
       const controlB = new FormControl([
         { file: new File(['first content'], 'first-file.txt') },
         { file: new File(['second content'], 'second-file.txt') },
       ]);
+
       const error = new HttpErrorResponse({
         status: HttpStatusCode.BadRequest,
         statusText: 'Bad request',
         error: { message: 'File upload failed' },
       });
+
       const upload$ = jest.fn((file: File) =>
         file.name === 'second-file.txt'
           ? cold<HttpEvent<FileUuidDTO>>(

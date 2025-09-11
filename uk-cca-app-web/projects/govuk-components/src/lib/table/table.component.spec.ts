@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -28,12 +27,15 @@ describe('TableComponent', () => {
 
   @Component({
     standalone: true,
-    imports: [TableComponent, NgIf],
+    imports: [TableComponent],
     template: `
       <govuk-table [columns]="columns" [data]="data" [caption]="caption" (sort)="onSort($event)">
         <ng-template let-column="column" let-row="row">
-          <a *ngIf="column.field === 'link'; else plain">{{ row[column.field] }}</a>
-          <ng-template #plain>{{ row[column.field] }}</ng-template>
+          @if (column.field === 'link') {
+            <a>{{ row[column.field] }}</a>
+          } @else {
+            {{ row[column.field] }}
+          }
         </ng-template>
       </govuk-table>
     `,

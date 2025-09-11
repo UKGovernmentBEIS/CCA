@@ -16,7 +16,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminTerminationWithdrawSaveActionHandlerTest {
+class AdminTerminationWithdrawSaveActionHandlerTest {
 
     @InjectMocks
     private AdminTerminationWithdrawSaveActionHandler handler;

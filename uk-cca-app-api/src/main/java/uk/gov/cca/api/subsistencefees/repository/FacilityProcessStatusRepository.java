@@ -26,4 +26,6 @@ public interface FacilityProcessStatusRepository extends JpaRepository<FacilityP
     @Transactional(readOnly = true)
     @Query(name = FacilityProcessStatus.NAMED_QUERY_GET_ACCOUNT_FACILITIES_FOR_SUBSISTENCE_FEES_RUN)
     List<EligibleFacilityDTO> findAccountFacilitiesForSubsistenceFeesRun(long accountId, Year chargingYear, LocalDate firstDateOfChargingYear, LocalDate endDateOfChargingYear);
+
+    List<FacilityProcessStatus> findAllByRunIdAndFacilityIdIn(Long runId, Set<Long> facilityIds);
 }

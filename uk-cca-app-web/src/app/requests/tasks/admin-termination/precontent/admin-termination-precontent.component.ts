@@ -11,7 +11,35 @@ import { REASON_FOR_ADMIN_TERMINATION_SUBTASK } from '../admin-termination.types
 
 @Component({
   selector: 'cca-admin-termination-precontent',
-  templateUrl: './admin-termination-precontent.component.html',
+  template: `
+    @if (isRegulatoryReasonSelected) {
+      <govuk-notification-banner heading="Important">
+        <h3>Admin termination details updated</h3>
+
+        <p id="notification-content">
+          Once you notify the operator, you must allow at least 28 days for the operator to appeal the decision to
+          terminating their agreement. After this time window you may start the final decision for the termination
+          workflow.
+        </p>
+      </govuk-notification-banner>
+    }
+
+    @if (isReasonForAdminTerminationCompleted && isEditable()) {
+      <button
+        class="govuk-!-margin-right-3"
+        netzPendingButton
+        govukButton
+        type="button"
+        (click)="onSendForPeerReview()"
+      >
+        Send for peer review
+      </button>
+
+      <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
+        Notify operator of decision
+      </button>
+    }
+  `,
   standalone: true,
   imports: [NotificationBannerComponent, ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +57,7 @@ export class AdminTerminationPrecontentComponent {
     AdminTerminationQuery.selectAdminTerminationSectionsCompleted,
   )();
 
-  protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();
+  protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
 
   protected readonly isRegulatoryReasonSelected =
     !!this.adminTerminationReasonDetails &&
@@ -42,5 +70,9 @@ export class AdminTerminationPrecontentComponent {
 
   onNotifyOperatorOfDecision() {
     this.router.navigate(['admin-termination', 'notify-operator'], { relativeTo: this.activatedRoute });
+  }
+
+  onSendForPeerReview() {
+    this.router.navigate(['admin-termination', 'send-for-peer-review'], { relativeTo: this.activatedRoute });
   }
 }

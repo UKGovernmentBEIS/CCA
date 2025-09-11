@@ -5,7 +5,6 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
-import { transformAttachmentsToFilesWithUUIDs, transformFilesToUUIDsList } from '@shared/utils';
 import { textFieldValidators } from '@shared/validators';
 
 import { AdminTerminationReasonDetails } from 'cca-api';
@@ -34,11 +33,6 @@ export const ReasonForAdminTerminationFormProvider: Provider = {
       AdminTerminationQuery.selectAdminTerminationSubmitAttachments,
     )();
 
-    const files = transformAttachmentsToFilesWithUUIDs(
-      adminTerminationReasonDetails.relevantFiles,
-      adminTerminationSubmitAttachments,
-    );
-
     return fb.group({
       reason: fb.control(
         adminTerminationReasonDetails?.reason,
@@ -50,7 +44,7 @@ export const ReasonForAdminTerminationFormProvider: Provider = {
       ),
       relevantFiles: requestTaskFileService.buildFormControl(
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
-        transformFilesToUUIDsList(files),
+        adminTerminationReasonDetails.relevantFiles,
         adminTerminationSubmitAttachments,
         'ADMIN_TERMINATION_UPLOAD_ATTACHMENT',
         false,

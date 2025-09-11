@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { GovukValidators } from '@netz/govuk-components';
 
-import { PasswordService } from './password.service';
+import { PasswordValidators } from './password.service';
 
 type PasswordFormModel = {
   email: FormControl<string | null>;
@@ -23,9 +23,9 @@ export const passwordFormFactory: FactoryProvider = {
           validators: [
             GovukValidators.required('Please enter your password'),
             GovukValidators.minLength(12, 'Password must be 12 characters or more'),
-            (control) => PasswordService.strong(control),
+            PasswordValidators.strong,
           ],
-          asyncValidators: (control) => PasswordService.blacklisted(control),
+          asyncValidators: PasswordValidators.blacklisted,
         }),
         validatePassword: fb.control(null, { validators: GovukValidators.required('Re-enter your password') }),
       },

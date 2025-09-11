@@ -21,5 +21,5 @@ export class TuMoaGeneratedComponent {
     requestActionQuery.selectActionPayload,
   )() as TargetUnitMoaGeneratedRequestActionPayload;
 
-  readonly data = toTargetUnitMoaGeneratedSummaryData(this.actionPayload);
+  protected readonly data = toTargetUnitMoaGeneratedSummaryData(this.actionPayload);
 }

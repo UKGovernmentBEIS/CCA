@@ -10,9 +10,7 @@ export class CookiesService {
   accepted$ = new BehaviorSubject(this.accepted());
 
   acceptAllCookies(cookiesExpirationTime: number) {
-    if (!this.cookiesEnabled()) {
-      return;
-    }
+    if (!this.cookiesEnabled()) return;
 
     const d = new Date();
     d.setTime(d.getTime() + Number(cookiesExpirationTime) * 24 * 60 * 60 * 1000); // Valid for 1 year
@@ -88,9 +86,7 @@ export class CookiesService {
       updatedCookie += '; ' + option;
       const optionValue = cookieOptions[option];
 
-      if (optionValue !== true) {
-        updatedCookie += '=' + optionValue;
-      }
+      if (optionValue !== true) updatedCookie += '=' + optionValue;
     });
 
     document.cookie = updatedCookie;
@@ -98,11 +94,7 @@ export class CookiesService {
 
   hasAnalyticsConsent(): boolean {
     const cookieStr = this.getCookie(this.COOKIES_POLICY);
-
-    if (!cookieStr) {
-      return false;
-    }
-
+    if (!cookieStr) return false;
     return JSON.parse(cookieStr).usage;
   }
 }

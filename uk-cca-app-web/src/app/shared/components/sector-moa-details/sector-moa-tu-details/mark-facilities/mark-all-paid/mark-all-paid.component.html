@@ -1,0 +1,24 @@
+<netz-page-heading size="l" data-testid="page-heading" class="govuk-!-margin-bottom-6">
+  Are you sure you want to mark all the facilities of {{ state().moaTUDetails.businessId }} target unit as Paid?
+</netz-page-heading>
+
+<dl govuk-summary-list>
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Target unit ID</dt>
+    <dd govukSummaryListRowValue>{{ state().moaTUDetails.businessId }}</dd>
+  </div>
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Target unit name</dt>
+    <dd govukSummaryListRowValue>{{ state().moaTUDetails.name }}</dd>
+  </div>
+
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Selected facilities</dt>
+    <dd govukSummaryListRowValue>All ({{ state().moaTUDetails.totalFacilities }} facilities)</dd>
+  </div>
+</dl>
+
+<govuk-warning-text assistiveText=""> Any cancelled facilities will not be updated. </govuk-warning-text>
+
+<button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and submit</button>

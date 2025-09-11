@@ -1,9 +1,10 @@
 import { CurrencyPipe, DecimalPipe, PercentPipe } from '@angular/common';
 
 import { GovukDatePipe } from '@netz/common/pipes';
-import { MeasurementTypeToUnitPipe, TargetPeriodOutcomePipe } from '@requests/common';
+import { MeasurementTypeToUnitPipe } from '@requests/common';
 import { SummaryFactory } from '@shared/components';
-import { downloadFileInfoDTOFromAttachmentsUrl } from '@shared/utils';
+import { PerformanceOutcomePipe } from '@shared/pipes';
+import { fileUtils } from '@shared/utils';
 
 import { PerformanceDataUploadedActionPayload } from './performance-data-upload-submitted.types';
 
@@ -11,7 +12,7 @@ export function toPerformanceUploadSubmittedSummaryData(
   payload: PerformanceDataUploadedActionPayload,
   creationDate?: string,
 ) {
-  const tpOutcomePipe = new TargetPeriodOutcomePipe();
+  const performanceOutcomePipe = new PerformanceOutcomePipe();
   const summaryFactory = new SummaryFactory();
   const govUkDatePipe = new GovukDatePipe();
   const decimalPipe = new DecimalPipe('en-GB');
@@ -23,7 +24,7 @@ export function toPerformanceUploadSubmittedSummaryData(
     .addSection('Details')
     .addFileListRow(
       'Uploaded Files',
-      downloadFileInfoDTOFromAttachmentsUrl(payload.accountReportFile, './file-download'),
+      fileUtils.toDownloadableFileFromInfoDTO([payload.accountReportFile], './file-download'),
     )
     .addRow('Submission date', govUkDatePipe.transform(creationDate, 'datetime'))
     .addRow('Submission type', payload?.performanceData?.submissionType === 'PRIMARY' ? 'Primary' : 'Secondary')
@@ -32,9 +33,7 @@ export function toPerformanceUploadSubmittedSummaryData(
     .addRow(
       `Target period performance (${
         payload.performanceData.targetType === 'RELATIVE'
-          ? measurementTypeToUnitPipe.transform(payload?.performanceData?.targetUnitDetails?.energyCarbonUnit) +
-            '/' +
-            payload?.performanceData?.targetUnitDetails?.throughputUnit
+          ? `${measurementTypeToUnitPipe.transform(payload?.performanceData?.targetUnitDetails?.energyCarbonUnit)}/${payload?.performanceData?.targetUnitDetails?.throughputUnit}`
           : measurementTypeToUnitPipe.transform(payload?.performanceData?.targetUnitDetails?.energyCarbonUnit)
       })`,
       decimalPipe.transform(payload?.performanceData?.performanceResult.tpPerformance, '1.3'),
@@ -47,7 +46,10 @@ export function toPerformanceUploadSubmittedSummaryData(
       'Target period improvement to base year %',
       percentPipe.transform(payload?.performanceData?.performanceResult.tpPerformancePercent, '1.3'),
     )
-    .addRow('Target period result', tpOutcomePipe.transform(payload?.performanceData?.performanceResult.tpOutcome));
+    .addRow(
+      'Target period result',
+      performanceOutcomePipe.transform(payload?.performanceData?.performanceResult.tpOutcome),
+    );
 
   if (payload.performanceData.submissionType === 'PRIMARY') {
     summaryFactory
@@ -83,7 +85,7 @@ export function toPerformanceUploadSubmittedSummaryData(
       )
       .addRow(
         'Total target period Buy-out required (tCO2e)',
-        decimalPipe.transform(payload?.performanceData?.secondaryDetermination.priBuyOutCarbon, '1.3'),
+        decimalPipe.transform(payload?.performanceData?.secondaryDetermination.priBuyOutCarbon, '1.0'),
       )
       .addRow(
         'Previous Buy-out required after use of surplus (tCO2e)',

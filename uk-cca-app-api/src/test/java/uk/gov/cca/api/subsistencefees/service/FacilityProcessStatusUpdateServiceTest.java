@@ -29,20 +29,20 @@ class FacilityProcessStatusUpdateServiceTest {
     @Test
     void testCreateFacilityProcessStatusData() {
         Year chargingYear = Year.of(2025);
-        FacilityProcessStatusCreationDTO facilityProcessStatusCreationDTO_1 = FacilityProcessStatusCreationDTO.builder()
+        FacilityProcessStatusCreationDTO facilityProcessStatusCreationDTO1 = FacilityProcessStatusCreationDTO.builder()
                 .runId(1L)
                 .moaType(MoaType.SECTOR_MOA)
                 .chargingYear(chargingYear)
                 .facilityId(1L)
                 .build();
-        FacilityProcessStatusCreationDTO facilityProcessStatusCreationDTO_2 = FacilityProcessStatusCreationDTO.builder()
+        FacilityProcessStatusCreationDTO facilityProcessStatusCreationDTO2 = FacilityProcessStatusCreationDTO.builder()
                 .runId(1L)
                 .moaType(MoaType.SECTOR_MOA)
                 .chargingYear(chargingYear)
                 .facilityId(2L)
                 .build();
 
-        List<FacilityProcessStatusCreationDTO> dtoList = List.of(facilityProcessStatusCreationDTO_1, facilityProcessStatusCreationDTO_2);
+        List<FacilityProcessStatusCreationDTO> dtoList = List.of(facilityProcessStatusCreationDTO1, facilityProcessStatusCreationDTO2);
 
         // invoke
         facilityProcessStatusUpdateService.createFacilityProcessStatusData(dtoList);
@@ -54,14 +54,14 @@ class FacilityProcessStatusUpdateServiceTest {
 
         assertEquals(2, savedFacilities.size());
 
-        FacilityProcessStatus facilityProcessStatus_1 = savedFacilities.get(0);
-        assertEquals(facilityProcessStatusCreationDTO_1.getRunId(), facilityProcessStatus_1.getRunId());
-        assertEquals(facilityProcessStatusCreationDTO_1.getFacilityId(), facilityProcessStatus_1.getFacilityId());
-        assertEquals(facilityProcessStatusCreationDTO_1.getChargingYear(), facilityProcessStatus_1.getChargingYear());
+        FacilityProcessStatus facilityProcessStatus1 = savedFacilities.get(0);
+        assertEquals(facilityProcessStatusCreationDTO1.getRunId(), facilityProcessStatus1.getRunId());
+        assertEquals(facilityProcessStatusCreationDTO1.getFacilityId(), facilityProcessStatus1.getFacilityId());
+        assertEquals(facilityProcessStatusCreationDTO1.getChargingYear(), facilityProcessStatus1.getChargingYear());
 
-        FacilityProcessStatus facilityProcessStatus_2 = savedFacilities.get(1);
-        assertEquals(facilityProcessStatusCreationDTO_2.getRunId(), facilityProcessStatus_2.getRunId());
-        assertEquals(facilityProcessStatusCreationDTO_2.getFacilityId(), facilityProcessStatus_2.getFacilityId());
-        assertEquals(facilityProcessStatusCreationDTO_2.getChargingYear(), facilityProcessStatus_2.getChargingYear());
+        FacilityProcessStatus facilityProcessStatus2 = savedFacilities.get(1);
+        assertEquals(facilityProcessStatusCreationDTO2.getRunId(), facilityProcessStatus2.getRunId());
+        assertEquals(facilityProcessStatusCreationDTO2.getFacilityId(), facilityProcessStatus2.getFacilityId());
+        assertEquals(facilityProcessStatusCreationDTO2.getChargingYear(), facilityProcessStatus2.getChargingYear());
     }
 }

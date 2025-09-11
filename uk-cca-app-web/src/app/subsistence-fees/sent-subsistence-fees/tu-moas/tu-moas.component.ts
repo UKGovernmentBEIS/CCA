@@ -1,23 +1,22 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { tap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
 
 import { GovukTableColumn, TableComponent, TagComponent } from '@netz/govuk-components';
 import { PaginationComponent } from '@shared/components';
-import {
-  SubsistenceFeesRunMarkFacilitiesStatusPipe,
-  SubsistenceFeesRunPaymentStatusPipe,
-  SubsistenceFeesRunPaymentStatusTagColorPipe,
-} from '@shared/pipes';
+import { StatusColorPipe, StatusPipe } from '@shared/pipes';
 
 import {
   SubsistenceFeesMoaSearchResultInfoDTO,
-  SubsistenceFeesRunDetailsDTO,
+  SubsistenceFeesMoaSearchResults,
   SubsistenceFeesRunInfoViewService,
 } from 'cca-api';
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 30;
 
 type TargetUnitMoasState = {
   subsistenceFeesMoas: SubsistenceFeesMoaSearchResultInfoDTO[];
@@ -30,26 +29,28 @@ type TargetUnitMoasState = {
   selector: 'cca-tu-moas',
   templateUrl: './tu-moas.component.html',
   standalone: true,
-  imports: [
-    TableComponent,
-    PaginationComponent,
-    TagComponent,
-    RouterLink,
-    DecimalPipe,
-    SubsistenceFeesRunPaymentStatusTagColorPipe,
-    SubsistenceFeesRunMarkFacilitiesStatusPipe,
-    SubsistenceFeesRunPaymentStatusPipe,
-  ],
+  imports: [TableComponent, PaginationComponent, TagComponent, RouterLink, DecimalPipe, StatusColorPipe, StatusPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TuMoasComponent implements OnInit {
+export class TuMoasComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly subsistenceFeesRunInfoViewService = inject(SubsistenceFeesRunInfoViewService);
-  private readonly destroyref = inject(DestroyRef);
 
-  readonly subFeesDetails = this.activatedRoute.snapshot.data.subFeesDetails as SubsistenceFeesRunDetailsDTO;
+  private readonly runId = +this.activatedRoute.snapshot.paramMap.get('runId');
 
-  readonly tableColumns: GovukTableColumn[] = [
+  protected readonly subFeesDetails = toSignal(
+    this.subsistenceFeesRunInfoViewService.getSubsistenceFeesRunDetailsById(this.runId),
+  );
+
+  readonly state = signal<TargetUnitMoasState>({
+    subsistenceFeesMoas: [],
+    currentPage: +this.activatedRoute.snapshot.paramMap.get('page') || DEFAULT_PAGE,
+    pageSize: +this.activatedRoute.snapshot.paramMap.get('pageSize') || DEFAULT_PAGE_SIZE,
+    totalItems: 0,
+  });
+
+  protected readonly tableColumns: GovukTableColumn[] = [
     { field: 'transactionId', header: 'Transaction ID' },
     { field: 'businessId', header: 'Target unit ID' },
     { field: 'paymentStatus', header: 'Payment status' },
@@ -58,47 +59,55 @@ export class TuMoasComponent implements OnInit {
     { field: 'outstandingTotalAmount', header: 'Outstanding (GBP)' },
   ];
 
-  readonly state = signal<TargetUnitMoasState>({
-    subsistenceFeesMoas: [],
-    currentPage: +this.activatedRoute.snapshot.paramMap.get('page') || 1,
-    totalItems: 0,
-    pageSize: 30,
-  });
-
-  readonly count = computed(() => this.state().totalItems);
-  readonly currentPage = computed(() => this.state().currentPage);
-
-  ngOnInit() {
-    this.fetchMoas().subscribe();
+  constructor() {
+    this.activatedRoute.queryParamMap
+      .pipe(
+        takeUntilDestroyed(),
+        tap((params) => {
+          this.state.update((state) => ({
+            ...state,
+            currentPage: +params.get('page') || DEFAULT_PAGE,
+            pageSize: +params.get('pageSize') || DEFAULT_PAGE_SIZE,
+          }));
+        }),
+        switchMap(() => this.fetchMoas()),
+        tap((results) => this.updateState(results)),
+      )
+      .subscribe();
   }
 
-  handlePageChange(page: number) {
+  onPageChange(page: number) {
     if (page === this.state().currentPage) return;
+    this.handleQueryParamsNavigation({ page });
+  }
 
-    this.state.update((state) => ({
-      ...state,
-      currentPage: page,
-    }));
-
-    this.fetchMoas().subscribe();
+  onPageSizeChange(pageSize: number) {
+    if (pageSize === this.state().pageSize) return;
+    this.handleQueryParamsNavigation({ pageSize });
   }
 
   private fetchMoas() {
-    return this.subsistenceFeesRunInfoViewService
-      .getSubsistenceFeesRunMoas(this.subFeesDetails.runId, {
-        moaType: 'TARGET_UNIT_MOA',
-        pageNumber: this.state().currentPage - 1,
-        pageSize: this.state().pageSize,
-      })
-      .pipe(
-        takeUntilDestroyed(this.destroyref),
-        tap((results) => {
-          this.state.update((state) => ({
-            ...state,
-            subsistenceFeesMoas: results.subsistenceFeesMoas,
-            totalItems: results.total,
-          }));
-        }),
-      );
+    return this.subsistenceFeesRunInfoViewService.getSubsistenceFeesRunMoas(this.runId, {
+      moaType: 'TARGET_UNIT_MOA',
+      pageNumber: this.state().currentPage - 1,
+      pageSize: this.state().pageSize,
+    });
+  }
+
+  private updateState(results: SubsistenceFeesMoaSearchResults) {
+    this.state.update((state) => ({
+      ...state,
+      subsistenceFeesMoas: results.subsistenceFeesMoas,
+      totalItems: results.total,
+    }));
+  }
+
+  private handleQueryParamsNavigation(pagination: Partial<{ page: number; pageSize: number }>) {
+    this.router.navigate([], {
+      queryParams: { ...pagination },
+      queryParamsHandling: 'merge',
+      relativeTo: this.activatedRoute,
+      fragment: 'tu-moas',
+    });
   }
 }

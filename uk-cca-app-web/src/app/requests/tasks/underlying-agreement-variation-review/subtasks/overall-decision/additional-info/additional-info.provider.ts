@@ -2,6 +2,7 @@ import { InjectionToken, Provider } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { GovukValidators } from '@netz/govuk-components';
 import { underlyingAgreementReviewQuery } from '@requests/common';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
@@ -34,7 +35,9 @@ export function provideAdditionalInfo(): Provider {
       );
 
       return fb.group({
-        additionalInfo: fb.control(determination.additionalInformation ?? ''),
+        additionalInfo: fb.control(determination.additionalInformation ?? '', [
+          GovukValidators.maxLength(10000, 'The additional information should not be more than 10000 characters'),
+        ]),
         files: filesControl,
       });
     },

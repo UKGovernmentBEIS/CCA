@@ -1,15 +1,23 @@
 package uk.gov.cca.api.subsistencefees.transform;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.subsistencefees.domain.FacilityPaymentStatus;
 import uk.gov.cca.api.subsistencefees.domain.FacilityProcessStatus;
 import uk.gov.cca.api.subsistencefees.domain.PaymentStatus;
+import uk.gov.cca.api.subsistencefees.domain.SubsistenceFeesMoaFacilityMarkingStatusHistory;
+import uk.gov.cca.api.subsistencefees.domain.SubsistenceFeesMoaReceivedAmountHistory;
 import uk.gov.cca.api.subsistencefees.domain.dto.FacilityProcessStatusCreationDTO;
+import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaFacilityMarkingStatusHistoryDTO;
+import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO;
+import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaReceivedAmountHistoryDTO;
+import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaReceivedAmountInfoDTO;
 import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaSearchResultInfoDTO;
 import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaTargetUnitSearchResultInfoDTO;
 import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesRunDetailsDTO;
@@ -27,6 +35,17 @@ import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 @Mapper(componentModel = "spring", config = MapperConfig.class)
 public interface SubsistenceFeesMapper {
 
+    SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO toSubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO(FacilityBaseInfoDTO facilityBaseInfo, List<SubsistenceFeesMoaFacilityMarkingStatusHistoryDTO> markingStatusHistoryList);
+
+    SubsistenceFeesMoaFacilityMarkingStatusHistoryDTO toSubsistenceFeesMoaFacilityMarkingStatusHistoryDTO(SubsistenceFeesMoaFacilityMarkingStatusHistory history);
+
+	SubsistenceFeesMoaReceivedAmountInfoDTO toSubsistenceFeesMoaReceivedAmountInfoDTO(SubsistenceFeesMoaDetailsDTO moaDetailsDTO, List<SubsistenceFeesMoaReceivedAmountHistoryDTO> receivedAmountHistoryList);
+
+	@Mapping(target = "transactionAmount", source = "receivedAmountHistory.payload.transactionAmount")
+	@Mapping(target = "comments", source = "receivedAmountHistory.payload.comments")
+	@Mapping(target = "evidenceFiles", source = "receivedAmountHistory.payload.evidenceFiles")
+	SubsistenceFeesMoaReceivedAmountHistoryDTO toReceivedAmountHistoryDTO(SubsistenceFeesMoaReceivedAmountHistory receivedAmountHistory);
+
     FacilityProcessStatus toFacilityProcessStatus(FacilityProcessStatusCreationDTO facilityProcessStatusCreationDTO);
 
 	@Mapping(target = "outstandingTotalAmount", expression = "java(BigDecimal.ZERO.max(subsistenceFeesRunSearchResultInfo.getCurrentTotalAmount().subtract(subsistenceFeesRunSearchResultInfo.getReceivedAmount())))")
@@ -42,17 +61,17 @@ public interface SubsistenceFeesMapper {
 	@Mapping(target = "paymentStatus", expression = "java(updatePaymentStatus(subsistenceFeesMoaSearchResultInfo.getCurrentTotalAmount(), subsistenceFeesMoaSearchResultInfo.getReceivedAmount()))")
 	@Mapping(target = "markFacilitiesStatus", expression = "java(updateMarkFacilitiesStatus(subsistenceFeesMoaSearchResultInfo.getCurrentTotalAmount(), subsistenceFeesMoaSearchResultInfo.getFacilityOutstandingAmount()))")
 	SubsistenceFeesMoaSearchResultInfoDTO toSubsistenceFeesMoaSearchResultInfoDTO(SubsistenceFeesMoaSearchResultInfo subsistenceFeesMoaSearchResultInfo);
-	
+
 	@Mapping(target = "paymentStatus", expression = "java(updatePaymentStatus(moaDetails.getCurrentTotalAmount(), moaDetails.getReceivedAmount()))")
 	@Mapping(target = "businessId", source = "businessId")
 	@Mapping(target = "name", source = "name")
 	@Mapping(target = "moaDocument", source = "moaDocument")
 	SubsistenceFeesMoaDetailsDTO toSubsistenceFeesMoaDetailsDTO(
 			SubsistenceFeesMoaDetails moaDetails, String businessId, String name, FileInfoDTO moaDocument);
-	
+
 	@Mapping(target = "markFacilitiesStatus", expression = "java(updateMarkFacilitiesStatus(subsistenceFeesMoaTargetUnitSearchResultInfo.getCurrentTotalAmount(), subsistenceFeesMoaTargetUnitSearchResultInfo.getFacilityOutstandingAmount()))")
 	SubsistenceFeesMoaTargetUnitSearchResultInfoDTO toSubsistenceFeesMoaTargetUnitSearchResultInfoDTO(SubsistenceFeesMoaTargetUnitSearchResultInfo subsistenceFeesMoaTargetUnitSearchResultInfo);
-	
+
 	@Named("paymentStatus")
     default PaymentStatus updatePaymentStatus(BigDecimal currentTotalAmount, BigDecimal receivedAmount) {
 		if (BigDecimal.ZERO.equals(currentTotalAmount)) {

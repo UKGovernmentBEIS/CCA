@@ -13,7 +13,7 @@ export enum PerformanceOutcomeEnum {
   standalone: true,
 })
 export class PerformanceOutcomePipe implements PipeTransform {
-  transform(value: keyof typeof PerformanceOutcomeEnum | null): string {
+  transform(value: string | null): string {
     const text = PerformanceOutcomeEnum[value];
     if (!text) throw new Error('invalid performance outcome');
     return text;

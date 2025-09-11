@@ -16,6 +16,7 @@ public enum CcaErrorCode implements NetzErrorCode {
     /** Codes for Sector Association errors. */
     SECTOR_ASSOCIATION_NOT_RELATED_TO_CA("SECTORASSOC1001", HttpStatus.BAD_REQUEST, "Sector Association is not related to competent authority", true),
     SECTOR_ASSOCIATION_NO_CONTACT_FOUND("SECTORASSOC1002", HttpStatus.BAD_REQUEST, "Sector contact not found", true),
+    SUB_SECTOR_ASSOCIATION_NOT_RELATED_TO_SECTOR_ASSOCIATION("SECTORASSOC1003", HttpStatus.BAD_REQUEST, "Subsector association is not related to sector association", true),
     /** Codes for Sector User errors. */
     ROLE_INVALID_SECTOR_USER_ROLE_CODE("SECTOR1001", HttpStatus.BAD_REQUEST, "Invalid sector user role code", true),
     SECTOR_USER_NOT_ACTIVE("SECTOR1002", HttpStatus.BAD_REQUEST, "Sector User is not active", true),
@@ -46,9 +47,30 @@ public enum CcaErrorCode implements NetzErrorCode {
     UPLOAD_ZIP_FILE_CONTAINS_INVALID_FILE_TYPES("TPRUL1003", HttpStatus.BAD_REQUEST, "Zip file contains invalid file types"),
     INVALID_PERFORMANCE_DATA_UPDATE_ACCOUNT_LOCKED("TPRUL1004", HttpStatus.BAD_REQUEST, "Account is locked for target period reporting"),
     INVALID_PERFORMANCE_DATA_UPDATE_INVALID_REPORT_VERSION("TPRUL1005", HttpStatus.BAD_REQUEST, "Performance data report version is invalid"),
+    /** Codes for Performance Account Template Data errors */
+    PERFORMANCE_ACCOUNT_TEMPLATE_NOT_COMPLETED_YET("PATUL0001", HttpStatus.BAD_REQUEST, "Processing has not been complete yet"),
+    INVALID_PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_FILE_TYPE("PATUL1002", HttpStatus.BAD_REQUEST, "Invalid file type"),
     /** Codes for Subsistence Fee Run errors. */
     SECTOR_MOA_CONTAINS_NO_FACILITIES("SFR1001", HttpStatus.BAD_REQUEST, "Sector MoA contains no facilities"),
-    TARGET_UNIT_MOA_CONTAINS_NO_FACILITIES("SFR1002", HttpStatus.BAD_REQUEST, "Target Unit MoA contains no facilities")
+    TARGET_UNIT_MOA_CONTAINS_NO_FACILITIES("SFR1002", HttpStatus.BAD_REQUEST, "Target Unit MoA contains no facilities"),
+    FILE_EVIDENCE_IS_NOT_RELATED_TO_SUBSISTENCE_FEES_MOA("SFR1003", HttpStatus.BAD_REQUEST, "File evidence is not related to the provided subsistence fees moa"),
+    NEGATIVE_SUBSISTENCE_FEES_MOA_RECEIVED_AMOUNT("SFR1004", HttpStatus.BAD_REQUEST,"Negative subsistence fees moa received amount is not permitted"),
+    ZERO_SUBSISTENCE_FEES_MOA_TRANSACTION_AMOUNT("SFR1006", HttpStatus.BAD_REQUEST,"Zero transaction amount is not allowed for updating subsistence fees moa received amount"),
+    SUBMITTER_HAS_NO_ACCESS_TO_FILE_EVIDENCE("SFR1007", HttpStatus.BAD_REQUEST,"Submitter is not allowed to access the file evidence"),
+    SUBSISTENCE_FEES_MOA_TARGET_UNIT_ID_DOES_NOT_EXIST("SFR1008", HttpStatus.BAD_REQUEST,"Some moa target unit ids do not exist in moa"),
+    SUBSISTENCE_FEES_MOA_FACILITY_ID_DOES_NOT_EXIST("SFR1009", HttpStatus.BAD_REQUEST,"Some moa facility ids do not exist in moa target unit"),
+    /** Codes for Buy Out Surplus Transaction errors. */
+    INVALID_BUY_OUT_SURPLUS_TRANSACTION_PAYMENT_STATUS("BS1001", HttpStatus.BAD_REQUEST, "Invalid payment status"),
+    TERMINATED_BUY_OUT_SURPLUS_TRANSACTION_PAYMENT_STATUS("BS1002", HttpStatus.BAD_REQUEST, "Changes are not allowed because the transaction has been automatically marked as terminated"),
+    FILE_EVIDENCE_IS_NOT_RELATED_TO_TRANSACTION("BS1003", HttpStatus.BAD_REQUEST, "File evidence is not related to the provided transaction"),
+    /** Codes for Facility Certification errors. */
+    INVALID_PROVIDED_ACCOUNTS("CRT1001", HttpStatus.BAD_REQUEST, "Invalid provided accounts"),
+    NO_FACILITIES_FOR_ACCOUNT("CRT1002", HttpStatus.BAD_REQUEST, "No facilities found for account"),
+    FACILITY_CERTIFICATION_RUN_EXIST("CRT1003", HttpStatus.BAD_REQUEST, "Facility certification run already in progress"),
+    FACILITY_CERTIFICATION_START_DATE_OUTSIDE_PERIOD("CRT1004", HttpStatus.BAD_REQUEST, "Invalid provided certified start date"),
+    CERT_STATUS_UPDATE_BEFORE_CERT_PERIOD_START_ERROR("CRT1005", HttpStatus.BAD_REQUEST, "Cannot update the certification status before certification period starting date"),
+    /** Code for Peer Review errors */
+    PEER_REVIEW_ATTACHMENT_NOT_FOUND("PRV1001", HttpStatus.BAD_REQUEST, "Peer review attachment not found")
     ;
 
 

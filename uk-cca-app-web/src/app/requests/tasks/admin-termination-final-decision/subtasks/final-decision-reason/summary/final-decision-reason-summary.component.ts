@@ -12,7 +12,17 @@ import { toFinalDecisionReasonSummaryData } from '../../../final-decision-reason
 
 @Component({
   selector: 'cca-final-decision-reason-summary',
-  templateUrl: './final-decision-reason-summary.component.html',
+  template: `
+    <div>
+      <netz-page-heading data-testid="heading" [caption]="finalDecisionType | finalDecisionType">
+        Summary
+      </netz-page-heading>
+      <cca-summary [data]="summaryData" />
+    </div>
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
   standalone: true,
   imports: [SummaryComponent, PageHeadingComponent, FinalDecisionTypePipe, ReturnToTaskOrActionPageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,7 +33,7 @@ export default class FinalDecisionReasonSummaryComponent {
 
   private readonly taskId = this.activatedRoute.snapshot.paramMap.get('taskId');
 
-  protected readonly downloadUrl = generateDownloadUrl(this.taskId);
+  private readonly downloadUrl = generateDownloadUrl(this.taskId);
 
   protected readonly finalDecisionType = this.requestTaskStore.select(
     AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionReasonDetails,

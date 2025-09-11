@@ -1,28 +1,40 @@
-<div class="govuk-!-margin-bottom-9">
-  <h2 class="govuk-heading-m">{{ heading }}</h2>
-  <hr class="govuk-!-margin-bottom-3" *ngIf="!noBorders" />
+@if (items().length) {
+  <div class="govuk-!-margin-bottom-9">
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-2">{{ heading() }}</h2>
 
-  <div *ngFor="let item of items">
-    <h3 class="govuk-heading-s govuk-!-margin-bottom-1">
-      {{ item.taskType | itemName: item.requestId?.split('-')[1] }}
-    </h3>
+    @if (!noBorders) {
+      <hr class="govuk-!-margin-bottom-3" />
+    }
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <p class="govuk-body float-left" *ngIf="item.daysRemaining !== null && item.daysRemaining !== undefined">
-          Days Remaining: {{ item.daysRemaining | daysRemaining }}
-        </p>
+    @for (item of items(); track item.taskId) {
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-three-quarters">
+          <h3 class="govuk-heading-s govuk-!-margin-bottom-1">
+            {{ item.taskType | itemName: item.requestId?.split('-')[1] }}
+          </h3>
 
-        <a
-          [routerLink]="item | itemLink"
-          [state]="{ isWorkflow: true }"
-          class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0 float-right"
-        >
-          View task
-        </a>
+          @if (item.daysRemaining !== null && item.daysRemaining !== undefined) {
+            <p data-testid="days-remaining" style="float: left">
+              Days Remaining: {{ item.daysRemaining | daysRemaining }}
+            </p>
+          }
+        </div>
+
+        <div class="govuk-grid-column-one-quarter">
+          <a
+            [routerLink]="item | itemLink"
+            [state]="{ isWorkflow: true }"
+            class="govuk-button govuk-button--secondary govuk-!-margin-bottom-2"
+            style="float: right"
+          >
+            View task
+          </a>
+        </div>
+
+        @if (!noBorders) {
+          <hr class="govuk-!-margin-bottom-3" />
+        }
       </div>
-    </div>
-
-    <hr class="govuk-!-margin-bottom-3" *ngIf="!noBorders" />
+    }
   </div>
-</div>
+}

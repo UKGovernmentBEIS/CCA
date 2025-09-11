@@ -50,8 +50,15 @@ describe('TargetUnitAccountSubmittedTimelineComponent', () => {
 
     expect(summaryValues).toEqual([
       [
-        ['Operator name', 'Operator type', 'Company Registration Number', 'Nature of business (SIC) code', 'Subsector'],
-        ['iojasdoiajsdoijas', 'Limited company', '123456789', '', ''],
+        [
+          'Operator name',
+          'Operator type',
+          'Does your company have a registration number?',
+          'Company number',
+          'Standard Industrial Classification (SIC) codes',
+          'Subsector',
+        ],
+        ['iojasdoiajsdoijas', 'Limited company', 'Yes', '123456789', '', ''],
       ],
       [['Address'], ['kjhn  kjhn  87678  AL']],
       [

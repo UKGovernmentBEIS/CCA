@@ -159,13 +159,13 @@ class SectorUserAuthorityUpdateServiceTest {
     }
     
     private CcaAuthority createAuthority(
-    		String userId, String roleCode, Long sectorAssociationId, AuthorityStatus status, String authorityUuid) {
+    		String userId, String roleCode, Long sectorAssociationId, AuthorityStatus authorityStatus, String authorityUuid) {
         return CcaAuthority.builder()
                 .id(1L)
                 .userId(userId)
                 .code(roleCode)
                 .sectorAssociationId(sectorAssociationId)
-                .status(status)
+                .status(authorityStatus)
                 .authorityPermissions(new ArrayList<>())
                 .uuid(authorityUuid)
                 .build();

@@ -4,10 +4,11 @@ import {
   CcaOperatorUserDetailsDTO,
   OperatorAuthoritiesInfoDTO,
   SectorAssociationResponseDTO,
-  SectorAssociationSchemeDTO,
+  SectorAssociationSchemesDTO,
   SectorUserAuthorityDetailsDTO,
-  SubsectorAssociationSchemeDTO,
+  SubsectorAssociationSchemesDTO,
   TargetUnitAccountDetailsDTO,
+  TargetUnitAccountInfoResponseDTO,
   UnderlyingAgreementDetailsDTO,
 } from 'cca-api';
 
@@ -72,65 +73,67 @@ export const mockSectorDetails: SectorAssociationResponseDTO = {
   },
 };
 
-export const mockSectorScheme: SectorAssociationSchemeDTO = {
-  id: 0,
-  umbrellaAgreement: {
-    uuid: 'uuid-ambrella',
-    id: 1,
-    fileName: 'file-name',
-    fileSize: 20,
-    fileType: 'pdf',
-  },
-  targetSet: {
-    id: 0,
-    targetCurrencyType: 'NOVEM',
-    energyOrCarbonUnit: 'kWh',
-    targetCommitments: [
-      {
-        targetImprovement: '0.10',
-        targetPeriod: '2010-2011',
+export const mockSectorScheme: SectorAssociationSchemesDTO = {
+  sectorAssociationSchemeMap: {
+    ['CCA_2']: {
+      id: 0,
+      umbrellaAgreement: {
+        uuid: 'uuid-ambrella',
+        id: 1,
+        fileName: 'file-name',
+        fileSize: 20,
+        fileType: 'pdf',
       },
-      {
-        targetImprovement: '0.15',
-        targetPeriod: '2020-2021',
+      targetSet: {
+        id: 0,
+        targetCurrencyType: 'NOVEM',
+        energyOrCarbonUnit: 'kWh',
+        targetCommitments: [
+          {
+            targetImprovement: '0.10',
+            targetPeriod: '2010-2011',
+          },
+          {
+            targetImprovement: '0.15',
+            targetPeriod: '2020-2021',
+          },
+        ],
       },
-    ],
+    },
   },
-  subsectorAssociationSchemes: [
+  subsectorAssociations: [
     {
       id: 1,
-      subsectorAssociation: {
-        name: 'sub-name-1',
-      },
+      name: 'sub-name-1',
     },
     {
       id: 2,
-      subsectorAssociation: {
-        name: 'sub-name-2',
-      },
+      name: 'sub-name-2',
     },
   ],
 };
 
-export const mockSubSectorDetails: SubsectorAssociationSchemeDTO = {
-  subsectorAssociation: {
-    name: 'sub-sector-name',
-  },
-  targetSet: {
-    id: 0,
-    targetCurrencyType: 'Relative',
-    throughputUnit: 'tonne',
-    energyOrCarbonUnit: 'kWh',
-    targetCommitments: [
-      {
-        targetImprovement: '0.10',
-        targetPeriod: '2010-2011',
+export const mockSubSectorDetails: SubsectorAssociationSchemesDTO = {
+  name: 'sub-sector-name',
+  subsectorAssociationSchemeMap: {
+    ['CCA_2']: {
+      targetSet: {
+        id: 0,
+        targetCurrencyType: 'Relative',
+        throughputUnit: 'tonne',
+        energyOrCarbonUnit: 'kWh',
+        targetCommitments: [
+          {
+            targetImprovement: '0.10',
+            targetPeriod: '2010-2011',
+          },
+          {
+            targetImprovement: '0.15',
+            targetPeriod: '2020-2021',
+          },
+        ],
       },
-      {
-        targetImprovement: '0.15',
-        targetPeriod: '2020-2021',
-      },
-    ],
+    },
   },
 };
 
@@ -236,7 +239,7 @@ export const mockPhoneCodeCoutries = {
     },
   ],
 };
-export const mockTargetUnits = {
+export const mockTargetUnits: TargetUnitAccountInfoResponseDTO = {
   accountsWithSiteContact: [
     {
       accountId: 1,
@@ -261,7 +264,7 @@ export const mockTargetUnits = {
   editable: true,
   totalItems: 3,
 };
-export const mockTargetUnitsNotEditable = {
+export const mockTargetUnitsNotEditable: TargetUnitAccountInfoResponseDTO = {
   accountsWithSiteContact: [
     {
       accountId: 1,
@@ -294,7 +297,7 @@ export const mockTargetUnitAccountDetails: TargetUnitAccountDetailsDTO = {
   name: 'Target unit name 01',
   operatorType: 'LIMITED_COMPANY',
   companyRegistrationNumber: '2636942',
-  sicCode: '01110',
+  sicCodes: ['01110'],
   sectorAssociationId: 1,
   subsectorAssociationId: 1,
   financialIndependenceStatus: 'FINANCIALLY_INDEPENDENT',
@@ -361,7 +364,7 @@ export const mockTargetUnitAccount = (sectorAssociationId) => ({
     name: 'operator name',
     operatorType: 'SOLE_TRADER',
     companyRegistrationNumber: 's',
-    sicCode: 'sicCode',
+    sicCodes: ['sicCode'],
     sectorAssociationId,
     financialIndependenceStatus: 'NON_FINANCIALLY_INDEPENDENT',
     address: {

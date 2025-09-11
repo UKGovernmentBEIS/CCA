@@ -8,10 +8,7 @@ import { SummarySection } from './type';
 })
 export class SummaryQueryParamsPipe implements PipeTransform {
   transform(value: SummarySection) {
-    if (value.appendChangeParam === false) {
-      return {};
-    }
-
+    if (value.appendChangeParam === false) return {};
     return { change: true };
   }
 }

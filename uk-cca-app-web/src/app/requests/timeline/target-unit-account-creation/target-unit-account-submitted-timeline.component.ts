@@ -15,6 +15,8 @@ import { targetUnitCreationTimelineQuery } from './+state/target-unit-account-su
 })
 export class TargetUnitAccountSubmittedTimelineComponent {
   private readonly requestActionStore = inject(RequestActionStore);
+
   private readonly actionPayload = this.requestActionStore.select(targetUnitCreationTimelineQuery.selectPayload)();
+
   protected readonly data = toTargetUnitCreateSubmittedSummaryData(this.actionPayload.payload);
 }

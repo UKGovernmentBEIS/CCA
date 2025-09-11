@@ -1,5 +1,4 @@
-import { NgIf } from '@angular/common';
-import { Component, HostBinding, Input, Optional, Self } from '@angular/core';
+import { Component, HostBinding, input, inject, computed } from '@angular/core';
 import { ControlValueAccessor, NgControl, UntypedFormControl } from '@angular/forms';
 
 import { ErrorMessageComponent } from '../error-message';
@@ -13,18 +12,17 @@ import { FormService } from '../form';
 @Component({
   selector: 'div[govukFileUpload],govuk-file-upload',
   standalone: true,
-  imports: [ErrorMessageComponent, NgIf],
+  imports: [ErrorMessageComponent],
   templateUrl: './file-upload.component.html',
 })
 export class FileUploadComponent implements ControlValueAccessor {
-  @Input()
-  set label(label: string) {
-    this.isLabelHidden = false;
-    this.currentLabel = label;
-  }
+  private readonly ngControl = inject(NgControl, { self: true, optional: true });
+  private readonly formService = inject(FormService);
 
-  @Input() accepted: string;
-  @Input() isMultiple: boolean;
+  readonly accepted = input<string>();
+  readonly isMultiple = input<boolean>();
+  readonly label = input<string>();
+
   @HostBinding('class.govuk-!-display-block') readonly govukDisplayBlock = true;
   @HostBinding('class.govuk-form-group') readonly govukFormGroupClass = true;
 
@@ -32,13 +30,11 @@ export class FileUploadComponent implements ControlValueAccessor {
     return this.control?.invalid && this.control?.touched;
   }
 
-  isLabelHidden = true;
-  currentLabel = 'Legend';
+  isLabelHidden = computed(() => !this.label());
+  currentLabel = computed(() => this.label() ?? 'Upload file');
 
-  constructor(
-    @Self() @Optional() public ngControl: NgControl,
-    private formService: FormService,
-  ) {
+  constructor() {
+    const ngControl = this.ngControl;
     ngControl.valueAccessor = this;
   }
 

@@ -4,7 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { futureDateValidator, underlyingAgreementQuery } from '@requests/common';
+import { underlyingAgreementQuery } from '@requests/common';
+import { futureDateValidator } from '@shared/validators';
 
 export type FacilityItemExcludeFormModel = {
   excludedDate: FormControl<Date>;
@@ -22,7 +23,10 @@ export const FacilityItemExcludeFormProvider: Provider = {
 
     return fb.group<FacilityItemExcludeFormModel>({
       excludedDate: fb.control(excludedDate ? new Date(excludedDate) : null, {
-        validators: [GovukValidators.required('Select a date'), futureDateValidator()],
+        validators: [
+          GovukValidators.required('Select a date'),
+          futureDateValidator('The exclusion date can not be a future date'),
+        ],
       }),
     });
   },

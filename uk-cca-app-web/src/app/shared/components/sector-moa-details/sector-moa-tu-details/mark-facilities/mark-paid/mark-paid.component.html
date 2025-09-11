@@ -1,0 +1,47 @@
+@if (selectedFacility()) {
+  <netz-page-heading size="l" data-testid="page-heading" class="govuk-!-margin-bottom-6">
+    Are you sure you want to mark {{ selectedFacility()?.facilityId }} as Paid?
+  </netz-page-heading>
+
+  <dl govuk-summary-list>
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Target unit ID</dt>
+      <dd govukSummaryListRowValue>{{ state().moaTUDetails.businessId }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Target unit name</dt>
+      <dd govukSummaryListRowValue>{{ state().moaTUDetails.name }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Selected facilities</dt>
+      <dd govukSummaryListRowValue>{{ selectedFacility().facilityId }}</dd>
+    </div>
+  </dl>
+} @else {
+  <netz-page-heading size="l" data-testid="page-heading" class="govuk-!-margin-bottom-6">
+    Are you sure you want to mark the {{ selectedFacilitiessCount() }} selected facilities as Paid?
+  </netz-page-heading>
+
+  <dl govuk-summary-list>
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Target unit ID</dt>
+      <dd govukSummaryListRowValue>{{ state().moaTUDetails.businessId }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Target unit name</dt>
+      <dd govukSummaryListRowValue>{{ state().moaTUDetails.name }}</dd>
+    </div>
+
+    <div govukSummaryListRow>
+      <dt govukSummaryListRowKey>Selected facilities</dt>
+      <dd govukSummaryListRowValue>{{ selectedFacilitiessCount() }} facilities</dd>
+    </div>
+  </dl>
+}
+
+<govuk-warning-text assistiveText=""> Any cancelled facilities will not be updated. </govuk-warning-text>
+
+<button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and submit</button>

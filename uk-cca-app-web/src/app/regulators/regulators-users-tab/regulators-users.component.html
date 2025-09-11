@@ -1,5 +1,5 @@
 @if (isErrorSummaryDisplayed()) {
-  <govuk-error-summary [form]="regulatorsForm"></govuk-error-summary>
+  <govuk-error-summary [form]="regulatorsForm" />
 }
 
 @if (isEditable()) {
@@ -15,7 +15,7 @@
   >
     <ng-template let-column="column" let-index="index" let-row="row">
       <ng-container formArrayName="regulatorsArray">
-        <div [formGroupName]="index" class="cell-container">
+        <div [formGroupName]="index">
           @switch (column.field) {
             @case ('name') {
               @if (isEditable() || row.userId === userId()) {

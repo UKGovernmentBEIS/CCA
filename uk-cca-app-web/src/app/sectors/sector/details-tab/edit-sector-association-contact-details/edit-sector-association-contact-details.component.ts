@@ -43,10 +43,13 @@ export class EditSectorAssociationContactDetailsComponent {
   private readonly router = inject(Router);
   private readonly store = inject(ActiveSectorStore);
 
-  readonly form = inject<FormGroup<SectorAssociationContactDetailsFormModel>>(SECTOR_ASSOCIATION_CONTACT_DETAILS_FORM);
-  sectorAssociationContact = this.store.state.sectorAssociationContact;
+  protected readonly form = inject<FormGroup<SectorAssociationContactDetailsFormModel>>(
+    SECTOR_ASSOCIATION_CONTACT_DETAILS_FORM,
+  );
 
-  returnText = `${this.store.state.sectorAssociationDetails.acronym} - ${this.store.state.sectorAssociationDetails.commonName}`;
+  protected readonly sectorAssociationContact = this.store.state.sectorAssociationContact;
+
+  protected readonly returnText = `${this.store.state.sectorAssociationDetails.acronym} - ${this.store.state.sectorAssociationDetails.commonName}`;
 
   onSubmit() {
     this.form.markAsTouched();

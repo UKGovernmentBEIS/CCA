@@ -1,0 +1,140 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  [caption]="'TP5 (2021-2023)'"
+  heading="Add target composition"
+  data-testid="add-target-composition-form"
+>
+  <div class="govuk-!-margin-top-9 govuk-!-width-two-thirds">
+    <section>
+      <h2 class="govuk-heading-m">Target calculator file</h2>
+
+      <cca-file-input
+        [downloadUrl]="getSingleFileDownloadUrl"
+        formControlName="calculatorFile"
+        label="Upload the completed target calculator file."
+        hint="Provide the 12 months of baseline energy in the target unit for the eligible and target facility,
+        split by fuel type, as well as the calculated targets."
+        [showFilesizeHint]="false"
+        [accepted]="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"
+      />
+    </section>
+
+    <section>
+      <h2 class="govuk-heading-m">Energy or carbon units</h2>
+
+      <div
+        formControlName="sectorAssociationMeasurementType"
+        label="Used by the sector"
+        [valueTransform]="transformMeasurementType"
+        cca-text-input
+      ></div>
+
+      <div
+        widthClass="govuk-!-width-two-thirds"
+        [options]="measurementTypeOptions"
+        formControlName="measurementType"
+        label="Used by the target unit"
+        govuk-select
+      ></div>
+    </section>
+
+    <section>
+      <h2 class="govuk-heading-m">Agreement composition</h2>
+
+      <div formControlName="agreementCompositionType" govuk-radio legend="Select target type">
+        @for (agreementCompositionType of agreementCompositionTypes; track agreementCompositionType) {
+          <govuk-radio-option
+            [value]="agreementCompositionType"
+            [label]="agreementCompositionType | agreementCompositionType"
+          />
+        }
+      </div>
+
+      <govuk-details summary="More information about target types">
+        <p>Types of targets:</p>
+        <p>
+          Numerical improvement targets can be expressed in terms of energy or carbon and can be absolute, relative or
+          Novem.
+        </p>
+        <p>
+          An absolute target is a target to reduce the total energy consumed within the target facility for each target
+          period. For example, 10,000,000 kWh.
+        </p>
+        <p>
+          A relative target is a target to reduce the energy used to produce each unit of throughput in the target
+          facility. For example, 10,000 kWh/tonne product.
+        </p>
+        <p>
+          A Novem target is expressed as the ratio of the target energy consumption to the reference energy, where the
+          reference energy is the energy that would have been consumed in the base year for the same level of throughput
+          and product mix as in the target period.
+        </p>
+        <p>
+          Novem targets can be used when a target unit produces two or more products which have very different energy
+          intensities of production or whose throughput is measured in very different units (for example, m2 and
+          litres). This can avoid distortions created by a changing mix of throughput between the baseline period and
+          the target period.
+        </p>
+      </govuk-details>
+    </section>
+
+    @if (!isAgreementCompositionTypeNovem() && !!agreementCompositionTypeValue()) {
+      <section>
+        @if (sectorAssociationThroughputUnit) {
+          <h2>Throughput units</h2>
+          <div
+            formControlName="sectorAssociationThroughputUnit"
+            label="The umbrella agreement uses a throughput unit of"
+            cca-text-input
+            widthClass="govuk-!-width-two-thirds"
+          ></div>
+
+          <div
+            formControlName="isTargetUnitThroughputMeasured"
+            widthClass="govuk-!-width-two-thirds"
+            [isInline]="true"
+            govuk-radio
+            legend="Is the target unit's throughput measured in units that differ from the umbrella agreement?"
+          >
+            <govuk-radio-option [value]="true" [label]="'Yes'" />
+            <govuk-radio-option [value]="false" [label]="'No'" />
+          </div>
+
+          @if (showDifferentThroughputUnitControls()) {
+            <div
+              formControlName="throughputUnit"
+              widthClass="govuk-!-width-one-third"
+              label="Target unit throughput has a unit of"
+              govuk-text-input
+            ></div>
+
+            <div
+              formControlName="conversionFactor"
+              label="Conversion factor"
+              hint="Enter the factor you use to convert from the target unit throughput unit to the sector throughput unit"
+              inputType="number"
+              widthClass="govuk-!-width-one-third"
+              govuk-text-input
+            ></div>
+
+            <div>
+              <cca-multiple-file-input
+                [baseDownloadUrl]="downloadUrl"
+                label="Upload evidence"
+                hint="Upload evidence for the conversion factor you have provided above"
+                widthClass="govuk-!-width-two-thirds"
+                formControlName="conversionEvidences"
+              />
+            </div>
+          }
+        } @else {
+          <div formControlName="throughputUnit" label="Target unit throughput has a unit of" govuk-text-input></div>
+        }
+      </section>
+    }
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

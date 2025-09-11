@@ -10,7 +10,7 @@ import { KeycloakService } from 'keycloak-angular';
 
 import { ForgotPasswordService } from 'cca-api';
 
-import { ResetPasswordStore } from '../store/reset-password.store';
+import { ResetPasswordStore } from '../+store/reset-password.store';
 import { SubmitOtpComponent } from './submit-otp.component';
 
 describe('SubmitOtpComponent', () => {

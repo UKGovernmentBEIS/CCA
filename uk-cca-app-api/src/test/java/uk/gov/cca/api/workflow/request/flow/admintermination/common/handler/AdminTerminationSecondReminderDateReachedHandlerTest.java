@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaNotificationTemplateWorkflowTaskType.ADMIN_TERMINATION;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminTerminationSecondReminderDateReachedHandlerTest {
+class AdminTerminationSecondReminderDateReachedHandlerTest {
 
     @InjectMocks
     private AdminTerminationSecondReminderDateReachedHandler handler;

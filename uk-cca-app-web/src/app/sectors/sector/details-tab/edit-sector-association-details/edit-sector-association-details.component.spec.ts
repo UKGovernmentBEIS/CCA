@@ -23,6 +23,7 @@ function generateString(length: number): string {
 
 describe('EditSectorAssociationDetailsComponent', () => {
   let store: ActiveSectorStore;
+
   beforeEach(async () => {
     await render(EditSectorAssociationDetailsComponent, {
       providers: [ActiveSectorStore, provideHttpClient(), provideHttpClientTesting()],

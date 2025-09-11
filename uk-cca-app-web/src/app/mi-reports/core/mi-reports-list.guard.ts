@@ -4,7 +4,7 @@ import { map, tap } from 'rxjs';
 
 import { MiReportsService } from 'cca-api';
 
-import { MiReportsStore } from '../store/mi-reports.store';
+import { MiReportsStore } from '../mi-reports.store';
 
 export const miReportsListGuard = () => {
   const store = inject(MiReportsStore);

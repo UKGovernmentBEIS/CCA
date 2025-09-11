@@ -3,17 +3,16 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
-import { TaskService } from '@netz/common/forms';
-import { RequestTaskStore } from '@netz/common/store';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators, TextareaComponent } from '@netz/govuk-components';
-import { OverallDecisionWizardStep, underlyingAgreementReviewQuery } from '@requests/common';
+import { TasksApiService, underlyingAgreementReviewQuery } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 
-import { UnderlyingAgreementReviewTaskService } from '../../../services/underlying-agreement-review-task.service';
+import { createSaveDeterminationActionDTO } from '../../../transform';
+import { resetDeterminationStatus } from '../../../utils';
 
 @Component({
   selector: 'cca-explanation-component',
-  standalone: true,
   template: `
     <cca-wizard-step
       [formGroup]="form"
@@ -23,33 +22,49 @@ import { UnderlyingAgreementReviewTaskService } from '../../../services/underlyi
     >
       <div govuk-textarea formControlName="reason" hint="This will be included in the official notice."></div>
     </cca-wizard-step>
+
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-    <netz-return-to-task-or-action-page></netz-return-to-task-or-action-page>
+    <netz-return-to-task-or-action-page />
   `,
+  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [WizardStepComponent, TextareaComponent, ReactiveFormsModule, ReturnToTaskOrActionPageComponent],
 })
 export class ExplanationComponentComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly fb = inject(FormBuilder);
-  private readonly taskService = inject(TaskService);
+  private readonly tasksApiService = inject(TasksApiService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
 
   private readonly determination = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)();
 
   protected readonly form = this.fb.group({
-    reason: this.fb.control(this.determination.reason, GovukValidators.required('Enter a reason for rejecting.')),
+    reason: this.fb.control(this.determination.reason, [
+      GovukValidators.required('Enter a reason for rejecting.'),
+      GovukValidators.maxLength(10000, 'The reason should not be more than 10000 characters'),
+    ]),
   });
 
   submit() {
-    (this.taskService as UnderlyingAgreementReviewTaskService)
-      .saveReviewDetermination({ reason: this.form.value.reason })
-      .subscribe(() =>
-        this.router.navigate(['../', OverallDecisionWizardStep.ADDITIONAL_INFO], {
-          relativeTo: this.activatedRoute,
-          queryParamsHandling: 'preserve',
-        }),
-      );
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+    const currReviewSectionsCompleted = this.requestTaskStore.select(
+      underlyingAgreementReviewQuery.selectReviewSectionsCompleted,
+    )();
+
+    const reviewSectionsCompleted = resetDeterminationStatus(currReviewSectionsCompleted);
+
+    const payload = createSaveDeterminationActionDTO(
+      requestTaskId,
+      { ...this.determination, reason: this.form.value.reason },
+      reviewSectionsCompleted,
+    );
+
+    this.tasksApiService.saveRequestTaskAction(payload).subscribe(() => {
+      this.router.navigate(['../', 'check-your-answers'], {
+        relativeTo: this.activatedRoute,
+        queryParamsHandling: 'preserve',
+      });
+    });
   }
 }

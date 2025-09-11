@@ -7,7 +7,6 @@ import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.netz.api.authorization.core.domain.Authority;
 import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
 import uk.gov.netz.api.common.exception.BusinessException;
-import uk.gov.netz.api.common.exception.ErrorCode;
 
 @Component
 @RequiredArgsConstructor

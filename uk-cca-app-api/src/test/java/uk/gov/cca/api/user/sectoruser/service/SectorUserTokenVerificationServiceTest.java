@@ -21,7 +21,7 @@ import uk.gov.netz.api.token.JwtTokenAction;
 import uk.gov.netz.api.token.JwtTokenService;
 
 @ExtendWith(MockitoExtension.class)
-public class SectorUserTokenVerificationServiceTest {
+class SectorUserTokenVerificationServiceTest {
 
     @InjectMocks
     private SectorUserTokenVerificationService sectorUserTokenVerificationService;

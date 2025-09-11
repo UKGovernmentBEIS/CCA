@@ -13,7 +13,7 @@ export class ReasonForWithdrawAdminTerminationStepFlowManager extends WizardFlow
   nextStepPath(currentStep: string): Observable<string> {
     switch (currentStep) {
       case ReasonForWithdrawAdminTerminationWizardStep.REASON_DETAILS:
-        return of(`../${ReasonForWithdrawAdminTerminationWizardStep.CHECK_YOUR_ANSWERS}`);
+        return of(`../${'check-your-answers'}`);
     }
   }
 }
