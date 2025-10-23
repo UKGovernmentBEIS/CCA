@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
 import { PageHeadingComponent } from '@netz/common/components';
-import { ButtonDirective, TabLazyDirective, TabsComponent, TagComponent } from '@netz/govuk-components';
+import { TabLazyDirective, TabsComponent, TagComponent } from '@netz/govuk-components';
 import { SummaryComponent } from '@shared/components';
 import { StatusColorPipe, StatusPipe } from '@shared/pipes';
 import { toTargetUnitDetailsSummaryData } from '@shared/utils';
@@ -26,8 +25,6 @@ import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-his
     UsersAndContactsTabComponent,
     SummaryComponent,
     WorkflowHistoryTabComponent,
-    ButtonDirective,
-    RouterLink,
     StatusColorPipe,
     StatusPipe,
     TagComponent,

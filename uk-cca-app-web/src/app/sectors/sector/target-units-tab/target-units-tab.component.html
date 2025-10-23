@@ -1,7 +1,3 @@
-@if (canCreateTargetUnit()) {
-  <button type="button" govukButton (click)="onAddNewTargetUnit()">Add new target unit</button>
-}
-
 <form [formGroup]="targetUnitsForm" id="target-units-form" (ngSubmit)="onSubmit()">
   <govuk-table
     [columns]="targetUnitsColumns"

@@ -6,7 +6,6 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { map, switchMap, tap } from 'rxjs';
 
-import { AuthStore, selectUserId } from '@netz/common/auth';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { transformUsername } from '@netz/common/pipes';
 import {
@@ -69,7 +68,6 @@ export class SectorTargetUnitsTabComponent {
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
-  private readonly userId = inject(AuthStore).select(selectUserId);
   private readonly sectorId = +this.activatedRoute.snapshot.paramMap.get('sectorId');
 
   private readonly queryParams = toSignal(this.activatedRoute.queryParamMap);
@@ -129,10 +127,6 @@ export class SectorTargetUnitsTabComponent {
           })),
         )
       : [],
-  );
-
-  protected readonly canCreateTargetUnit = computed(
-    () => !!this.sectorUsersAuthorities()?.find((u) => u.userId === this.userId()),
   );
 
   protected readonly targetUnitsForm = this.fb.group({
