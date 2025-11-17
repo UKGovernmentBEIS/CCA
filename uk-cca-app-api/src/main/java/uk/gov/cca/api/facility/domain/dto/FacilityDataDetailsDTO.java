@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.facility.domain.FacilityDataStatus;
 
 import java.time.LocalDate;
@@ -17,7 +16,7 @@ public class FacilityDataDetailsDTO {
 
     private Long id;
 
-    private String facilityId;
+    private String facilityBusinessId;
 
     private FacilityDataStatus status;
 
@@ -27,5 +26,5 @@ public class FacilityDataDetailsDTO {
 
     private LocalDate schemeExitDate;
 
-    private AccountAddressDTO address;
+    private FacilityAddressDTO address;
 }

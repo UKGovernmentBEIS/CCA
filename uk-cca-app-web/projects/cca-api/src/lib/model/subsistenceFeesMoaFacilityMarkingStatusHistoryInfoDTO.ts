@@ -12,7 +12,7 @@
 import { SubsistenceFeesMoaFacilityMarkingStatusHistoryDTO } from './subsistenceFeesMoaFacilityMarkingStatusHistoryDTO';
 
 export interface SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO {
-  facilityId?: string;
+  facilityBusinessId?: string;
   siteName?: string;
   markingStatusHistoryList?: SubsistenceFeesMoaFacilityMarkingStatusHistoryDTO[];
 }

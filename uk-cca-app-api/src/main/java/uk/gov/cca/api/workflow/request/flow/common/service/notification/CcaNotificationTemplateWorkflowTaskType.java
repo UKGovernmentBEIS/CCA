@@ -9,7 +9,8 @@ import java.util.stream.Stream;
 @Getter
 public enum CcaNotificationTemplateWorkflowTaskType {
 
-    ADMIN_TERMINATION("Withdraw Admin Termination");
+    ADMIN_TERMINATION("Withdraw Admin Termination"),
+    FACILITY_AUDIT("Track Corrective Actions");
 
     private final String description;
 

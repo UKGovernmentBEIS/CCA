@@ -15,7 +15,6 @@ import { underlyingAgreementRequestActionQuery } from '../timeline-underlying-ag
       <cca-facility-item-list [facilityItems]="manageFacilities()" />
     </div>
   `,
-  standalone: true,
   imports: [PageHeadingComponent, FacilityItemListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

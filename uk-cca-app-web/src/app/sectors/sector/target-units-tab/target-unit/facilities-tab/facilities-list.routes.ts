@@ -4,6 +4,7 @@ import { Routes } from '@angular/router';
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
 import { resetCurrentFacility, setCurrentFacility } from '@requests/common';
 
+import { FacilityAuditStore } from './facility-audit/facility-audit.store';
 import { FacilityDetailsResolver } from './facility-details.resolver';
 
 export const FACILITIES_LIST_ROUTES: Routes = [
@@ -19,7 +20,7 @@ export const FACILITIES_LIST_ROUTES: Routes = [
     },
     children: [
       {
-        path: 'details',
+        path: '',
         title: 'Facility details',
         data: { backlink: false },
         resolve: { facilityDetails: FacilityDetailsResolver },
@@ -29,20 +30,25 @@ export const FACILITIES_LIST_ROUTES: Routes = [
       {
         path: 'edit',
         title: 'Edit facility scheme exit date',
-        data: { backlink: '../details', breadcrumb: false },
+        data: { backlink: '../', breadcrumb: false },
         resolve: { facilityDetails: FacilityDetailsResolver },
         canActivate: [() => inject(AuthStore).select(selectUserRoleType)() === 'REGULATOR'],
         loadComponent: () => import('./edit-facility-details/edit-facility-details.component'),
       },
       {
         path: ':certificationPeriod/change-certification-status',
-        data: { backlink: '../../details', breadcrumb: false },
+        data: { backlink: '../../', breadcrumb: false },
         resolve: { facilityDetails: FacilityDetailsResolver },
         canActivate: [() => inject(AuthStore).select(selectUserRoleType)() === 'REGULATOR'],
         loadComponent: () =>
           import('./change-certification-status/change-certification-status.component').then(
             (c) => c.ChangeCertificationStatusComponent,
           ),
+      },
+      {
+        path: 'audit',
+        providers: [FacilityAuditStore],
+        loadChildren: () => import('./facility-audit/audit.routes').then((r) => r.FACILITY_AUDIT_ROUTES),
       },
     ],
   },

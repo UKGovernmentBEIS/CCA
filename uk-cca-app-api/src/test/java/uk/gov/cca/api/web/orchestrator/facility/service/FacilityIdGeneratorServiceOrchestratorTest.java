@@ -33,18 +33,18 @@ class FacilityIdGeneratorServiceOrchestratorTest {
         final Long identifierId = 1L;
         final Long sectorAssociationId = 1L;
         final Long accountId = 1L;
-        final String facilityId = "SA-F00001";
+        final String facilityBusinessId = "SA-F00001";
         final String acronym = "SA";
 
         FacilityDTO facilityDTOSaved = FacilityDTO.builder()
-                .facilityId(facilityId)
+                .facilityBusinessId(facilityBusinessId)
                 .build();
 
         when(targetUnitAccountQueryService.getAccountSectorAssociationId(accountId)).thenReturn(sectorAssociationId);
         when(facilityIdentifierService.incrementAndGet(sectorAssociationId)).thenReturn(identifierId);
         when(sectorAssociationQueryService.getSectorAssociationAcronymById(sectorAssociationId)).thenReturn(acronym);
 
-        FacilityDTO facilityDTO = facilityIdGeneratorServiceOrchestrator.generateFacilityId(accountId);
+        FacilityDTO facilityDTO = facilityIdGeneratorServiceOrchestrator.generateFacilityBusinessId(accountId);
 
         assertThat(facilityDTO).isEqualTo(facilityDTOSaved);
         verify(facilityIdentifierService, times(1)).incrementAndGet(sectorAssociationId);

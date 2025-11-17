@@ -5,7 +5,6 @@ import { PanelComponent } from '@netz/govuk-components';
 
 @Component({
   selector: 'netz-cancel-confirmation',
-  standalone: true,
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">

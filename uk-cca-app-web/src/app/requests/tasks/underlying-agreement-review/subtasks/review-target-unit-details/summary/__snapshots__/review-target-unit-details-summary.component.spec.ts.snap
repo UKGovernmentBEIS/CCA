@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Review Target Unit Details Summary should render the summary sections and rows 1`] = `
 <cca-una-summary-target-unit-details
@@ -39,7 +39,9 @@ exports[`Review Target Unit Details Summary should render the summary sections a
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Flying Company 3 
+            <span>
+              Flying Company 3
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -67,7 +69,9 @@ exports[`Review Target Unit Details Summary should render the summary sections a
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Limited company 
+            <span>
+              Limited company
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -95,7 +99,9 @@ exports[`Review Target Unit Details Summary should render the summary sections a
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             AB123456 
+            <span>
+              AB123456
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -123,6 +129,8 @@ exports[`Review Target Unit Details Summary should render the summary sections a
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -150,7 +158,9 @@ exports[`Review Target Unit Details Summary should render the summary sections a
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             SUBSECTOR_1 
+            <span>
+              SUBSECTOR_1
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -188,15 +198,25 @@ exports[`Review Target Unit Details Summary should render the summary sections a
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Address 
+            <span>
+              Address
+            </span>
             <br />
-             Apartment 1 
+            <span>
+              Apartment 1
+            </span>
             <br />
-             Addres1 
+            <span>
+              Addres1
+            </span>
             <br />
-             94043 
+            <span>
+              94043
+            </span>
             <br />
-             GB 
+            <span>
+              GB
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -234,7 +254,9 @@ exports[`Review Target Unit Details Summary should render the summary sections a
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Operator 
+            <span>
+              Operator
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -262,7 +284,9 @@ exports[`Review Target Unit Details Summary should render the summary sections a
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Admin 
+            <span>
+              Admin
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -290,7 +314,9 @@ exports[`Review Target Unit Details Summary should render the summary sections a
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             responsible_person@cca.uk 
+            <span>
+              responsible_person@cca.uk
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -318,15 +344,25 @@ exports[`Review Target Unit Details Summary should render the summary sections a
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Address 
+            <span>
+              Address
+            </span>
             <br />
-             Apartment 1 
+            <span>
+              Apartment 1
+            </span>
             <br />
-             Addres1 
+            <span>
+              Addres1
+            </span>
             <br />
-             94043 
+            <span>
+              94043
+            </span>
             <br />
-             GB 
+            <span>
+              GB
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -364,7 +400,9 @@ exports[`Review Target Unit Details Summary should render the summary sections a
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Accepted 
+            <span>
+              Accepted
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -392,7 +430,9 @@ exports[`Review Target Unit Details Summary should render the summary sections a
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             asd 
+            <span>
+              asd
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"

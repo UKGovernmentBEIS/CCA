@@ -1,14 +1,43 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { SelectComponent } from '@netz/govuk-components';
-import { CountryService } from '@shared/services';
-
-import { CountryServiceStub } from 'src/testing/country.service.stub';
 
 import { CountriesDirective } from './countries.directive';
+
+// Mock the COUNTRIES constant that the directive uses
+jest.mock('@shared/services', () => ({
+  COUNTRIES: [
+    {
+      code: 'GB-ENG',
+      name: 'England',
+      officialName: 'England',
+    },
+    {
+      code: 'GB-SCT',
+      name: 'Scotland',
+      officialName: 'Scotland',
+    },
+    {
+      code: 'GB-WLS',
+      name: 'Wales',
+      officialName: 'Wales',
+    },
+    {
+      code: 'PT',
+      name: 'Portugal',
+      officialName: 'The Portuguese Republic',
+    },
+    {
+      code: 'AF',
+      name: 'Afghanistan',
+      officialName: 'Islamic Republic of Afghanistan',
+    },
+  ],
+  UK_COUNTRY_CODES: ['GB-ENG', 'GB-NIR', 'GB-SCT', 'GB-WLS'],
+}));
 
 describe('CountriesDirective', () => {
   let directive: CountriesDirective;
@@ -16,7 +45,6 @@ describe('CountriesDirective', () => {
 
   @Component({
     template: '<div govuk-select ccaCountries [formControl]="country" label="Country"> </div>',
-    standalone: true,
     imports: [CountriesDirective, ReactiveFormsModule, SelectComponent],
   })
   class TestComponent {
@@ -26,7 +54,6 @@ describe('CountriesDirective', () => {
   beforeEach(() => {
     fixture = TestBed.configureTestingModule({
       imports: [TestComponent],
-      providers: [{ provide: CountryService, useClass: CountryServiceStub }],
     }).createComponent(TestComponent);
 
     fixture.detectChanges();
@@ -37,8 +64,23 @@ describe('CountriesDirective', () => {
     expect(directive).toBeTruthy();
   });
 
-  it('should assign countries to select', () => {
+  it('should assign countries to select with correct ordering', fakeAsync(() => {
+    fixture.detectChanges();
+    tick(); // Wait for async operations to complete
+
     const selectElement = fixture.debugElement.query(By.css('select'));
-    expect((selectElement.nativeElement as HTMLSelectElement).options[1].label).toEqual('Afghanistan');
-  });
+    const options = selectElement.nativeElement.options;
+
+    // Check UK countries come first, followed by empty option, then other countries alphabetically
+    expect(options[0].text).toBe('England');
+    expect(options[1].text).toBe('Scotland');
+    expect(options[2].text).toBe('Wales');
+    expect(options[3].text).toBe('--'); // Empty selection after Wales
+    expect(options[4].text).toBe('Afghanistan');
+    expect(options[5].text).toBe('Portugal');
+
+    // Verify values are country codes
+    expect(options[0].value).toBe('0: GB-ENG');
+    expect(options[4].value).toBe('4: AF');
+  }));
 });

@@ -17,7 +17,6 @@ import { underlyingAgreementVariationActivationQuery } from './+state/una-variat
       </button>
     }
   `,
-  standalone: true,
   imports: [ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

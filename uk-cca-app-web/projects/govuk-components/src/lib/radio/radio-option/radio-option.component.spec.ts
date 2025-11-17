@@ -14,7 +14,6 @@ describe('RadioOptionComponent', () => {
   let element: HTMLElement;
 
   @Component({
-    standalone: true,
     imports: [
       RadioComponent,
       ReactiveFormsModule,

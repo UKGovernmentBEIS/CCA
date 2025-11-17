@@ -8,7 +8,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
@@ -37,10 +36,7 @@ import java.util.Set;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "facility_data",
-indexes = {
-        @Index(name = "idx_facility_data_facility_id", columnList = "facility_id", unique = true)
-})
+@Table(name = "facility_data")
 @NamedEntityGraph(
         name = "facility-address-graph",
         attributeNodes = {
@@ -54,9 +50,9 @@ public class FacilityData {
     private Long id;
 
     @EqualsAndHashCode.Include()
-    @Column(name = "facility_id")
+    @Column(name = "business_id")
     @NotNull
-    private String facilityId;
+    private String facilityBusinessId;
 
     @Column(name = "account_id")
     @NotNull

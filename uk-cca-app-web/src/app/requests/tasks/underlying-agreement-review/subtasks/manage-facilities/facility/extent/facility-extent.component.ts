@@ -34,7 +34,6 @@ import {
 @Component({
   selector: 'cca-facility-extent',
   templateUrl: './facility-extent.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,

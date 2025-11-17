@@ -75,6 +75,12 @@ class UnderlyingAgreementVariationReviewServiceTest {
                 .build();
         final UnderlyingAgreementVariationDetails variationDetails = UnderlyingAgreementVariationDetails.builder()
                 .reason("reason").modifications(Collections.singletonList(AMEND_OPERATOR_OR_ORGANISATION_NAME)).build();
+        final Map<UnderlyingAgreementVariationReviewGroup, UnderlyingAgreementReviewDecision> reviewGroupDecisions = Map.of(
+                UnderlyingAgreementVariationReviewGroup.TARGET_UNIT_DETAILS, UnderlyingAgreementReviewDecision.builder().build()
+        );
+        final Map<String, UnderlyingAgreementVariationFacilityReviewDecision> facilitiesReviewGroupDecisions = Map.of(
+                "1", UnderlyingAgreementVariationFacilityReviewDecision.builder().build()
+        );
 
         UnderlyingAgreementVariationReviewRequestTaskPayload reviewRequestTaskPayload =
                 UnderlyingAgreementVariationReviewRequestTaskPayload.builder()
@@ -104,6 +110,8 @@ class UnderlyingAgreementVariationReviewServiceTest {
                                 .authorisationAndAdditionalEvidence(evidence)
                                 .underlyingAgreementVariationDetails(variationDetails)
                                 .build())
+                        .reviewGroupDecisions(reviewGroupDecisions)
+                        .facilitiesReviewGroupDecisions(facilitiesReviewGroupDecisions)
                         .sectionsCompleted(Map.of(UnderlyingAgreementTargetUnitDetails.class.getName(), "COMPLETED"))
                         .reviewSectionsCompleted(Map.of(UnderlyingAgreementTargetUnitDetails.class.getName(), "COMPLETED"))
                         .build();
@@ -134,6 +142,8 @@ class UnderlyingAgreementVariationReviewServiceTest {
                 .isEqualTo(variationDetails);
         assertThat(payloadSaved.getUnderlyingAgreement().getUnderlyingAgreement().getAuthorisationAndAdditionalEvidence())
                 .isEqualTo(evidence);
+        assertThat(payloadSaved.getReviewGroupDecisions()).isEqualTo(reviewGroupDecisions);
+        assertThat(payloadSaved.getFacilitiesReviewGroupDecisions()).isEqualTo(facilitiesReviewGroupDecisions);
         assertThat(payloadSaved.getSectionsCompleted())
                 .containsExactlyInAnyOrderEntriesOf(reviewRequestTaskActionPayload.getSectionsCompleted());
         assertThat(payloadSaved.getReviewSectionsCompleted())

@@ -15,7 +15,6 @@ import { GovukTableColumn, SortEvent } from './table.interface';
 
 @Component({
   selector: 'govuk-table',
-  standalone: true,
   imports: [NgTemplateOutlet],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',

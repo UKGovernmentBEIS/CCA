@@ -21,9 +21,20 @@ export const UNDERLYING_AGREEMENT_WAIT_FOR_PEER_REVIEW_ROUTES: Routes = [
         children: [
           {
             path: ':facilityId',
-            title: 'Facility',
-            data: { backlink: '../../', breadcrumb: false },
-            loadComponent: () => import('@requests/common').then((c) => c.UNAPeerReviewFacilityComponent),
+            children: [
+              {
+                path: '',
+                title: 'Facility',
+                data: { backlink: '../../manage-facilities', breadcrumb: false },
+                loadComponent: () => import('@requests/common').then((c) => c.UNAPeerReviewFacilityComponent),
+              },
+              {
+                path: 'products',
+                title: 'View Products',
+                data: { breadcrumb: false, backlink: '../' },
+                loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsPeerReviewComponent),
+              },
+            ],
           },
         ],
       },

@@ -24,9 +24,9 @@ export type TargetCompositionFormModel = FormGroup<{
   sectorAssociationThroughputUnit: FormControl<string>;
   measurementType: FormControl<TargetComposition['measurementType'] | null>;
   agreementCompositionType: FormControl<TargetComposition['agreementCompositionType']>;
-  isTargetUnitThroughputMeasured: FormControl<boolean>;
-  throughputUnit: FormControl<string>;
-  conversionFactor: FormControl<number>;
+  isTargetUnitThroughputMeasured: FormControl<TargetComposition['isTargetUnitThroughputMeasured']>;
+  throughputUnit: FormControl<TargetComposition['throughputUnit']>;
+  conversionFactor: FormControl<TargetComposition['conversionFactor']>;
   conversionEvidences: FormControl<UuidFilePair[]>;
 }>;
 

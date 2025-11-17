@@ -9,7 +9,6 @@ import { PageHeadingComponent } from '@netz/common/components';
 @Component({
   selector: 'cca-invalid-link',
   templateUrl: './invalid-link.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FacilityComponent should show summary values: facility-summary 1`] = `
 <cca-una-submitted-facility
@@ -48,7 +48,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             ADS_1-F00001 
+            <span>
+              ADS_1-F00001
+            </span>
           </dd>
         </div>
         <div
@@ -65,7 +67,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Facility 1 
+            <span>
+              Facility 1
+            </span>
           </dd>
         </div>
         <div
@@ -82,7 +86,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             No 
+            <span>
+              No
+            </span>
           </dd>
         </div>
         <div
@@ -99,6 +105,8 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
         </div>
         <div
@@ -115,7 +123,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             New entrant 
+            <span>
+              New entrant
+            </span>
           </dd>
         </div>
         <div
@@ -132,6 +142,8 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
         </div>
         <div
@@ -148,7 +160,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             No 
+            <span>
+              No
+            </span>
           </dd>
         </div>
         <div
@@ -165,7 +179,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             CCA2 
+            <span>
+              CCA2
+            </span>
           </dd>
         </div>
         <div
@@ -182,15 +198,25 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Facility Line1 
+            <span>
+              Facility Line1
+            </span>
             <br />
-             Facility Line2 
+            <span>
+              Facility Line2
+            </span>
             <br />
-             Facility City 
+            <span>
+              Facility City
+            </span>
             <br />
-             Facility 14 
+            <span>
+              Facility 14
+            </span>
             <br />
-             GR 
+            <span>
+              GR
+            </span>
           </dd>
         </div>
       </dl>
@@ -217,7 +243,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             FacilityFirst 
+            <span>
+              FacilityFirst
+            </span>
           </dd>
         </div>
         <div
@@ -234,7 +262,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             FacilityLast 
+            <span>
+              FacilityLast
+            </span>
           </dd>
         </div>
         <div
@@ -251,7 +281,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             facility@email.com 
+            <span>
+              facility@email.com
+            </span>
           </dd>
         </div>
         <div
@@ -268,15 +300,25 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Facility Contact Line1 
+            <span>
+              Facility Contact Line1
+            </span>
             <br />
-             Facility Contact Line2 
+            <span>
+              Facility Contact Line2
+            </span>
             <br />
-             Facility Contact City 
+            <span>
+              Facility Contact City
+            </span>
             <br />
-             Facility Contact 14 
+            <span>
+              Facility Contact 14
+            </span>
             <br />
-             GR 
+            <span>
+              GR
+            </span>
           </dd>
         </div>
         <div
@@ -293,7 +335,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             UK (44) 1234567890 
+            <span>
+              UK (44) 1234567890
+            </span>
           </dd>
         </div>
       </dl>
@@ -320,7 +364,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Yes 
+            <span>
+              Yes
+            </span>
           </dd>
         </div>
         <div
@@ -337,7 +383,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             ADS_1-F11111 
+            <span>
+              ADS_1-F11111
+            </span>
           </dd>
         </div>
         <div
@@ -354,7 +402,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Environmental Permitting Regulations (EPR) 
+            <span>
+              Environmental Permitting Regulations (EPR)
+            </span>
           </dd>
         </div>
         <div
@@ -371,7 +421,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Yes 
+            <span>
+              Yes
+            </span>
           </dd>
         </div>
         <div
@@ -388,7 +440,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             authorisation 
+            <span>
+              authorisation
+            </span>
           </dd>
         </div>
         <div
@@ -405,7 +459,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Environment Agency (England) 
+            <span>
+              Environment Agency (England)
+            </span>
           </dd>
         </div>
         <div
@@ -551,7 +607,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Yes 
+            <span>
+              Yes
+            </span>
           </dd>
         </div>
         <div
@@ -603,7 +661,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             50 % 
+            <span>
+              50 %
+            </span>
           </dd>
         </div>
         <div
@@ -620,7 +680,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             40 % 
+            <span>
+              40 %
+            </span>
           </dd>
         </div>
         <div
@@ -637,7 +699,9 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             70 % 
+            <span>
+              70 %
+            </span>
           </dd>
         </div>
         <div
@@ -654,6 +718,8 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
         </div>
         <div

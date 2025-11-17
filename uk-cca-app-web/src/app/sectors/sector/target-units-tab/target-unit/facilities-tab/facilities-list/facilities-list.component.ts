@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { map, switchMap } from 'rxjs';
 
+import { AuthStore, selectUserRoleType } from '@netz/common/auth';
 import { PendingButtonDirective } from '@netz/common/directives';
 import {
   ButtonDirective,
@@ -27,7 +28,6 @@ const DEFAULT_PAGE_SIZE = 50;
 @Component({
   selector: 'cca-facilities-list',
   templateUrl: './facilities-list.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -50,6 +50,7 @@ export class FacilitiesListComponent {
   private readonly router = inject(Router);
   private readonly facilityInfoViewService = inject(FacilityInfoViewService);
   private readonly certificationPeriodViewInfoService = inject(CertificationPeriodViewInfoService);
+  private readonly authStore = inject(AuthStore);
   private readonly datePipe = inject(DatePipe);
 
   private readonly certificationPeriod = toSignal(
@@ -61,6 +62,10 @@ export class FacilitiesListComponent {
 
   private readonly queryParams = toSignal(this.activatedRoute.queryParamMap);
 
+  protected readonly isAllowedUser = computed(() =>
+    ['REGULATOR', 'OPERATOR'].includes(this.authStore.select(selectUserRoleType)()),
+  );
+
   protected readonly tableColumns = computed<GovukTableColumn[]>(() => {
     const period = this.certificationPeriod();
     const range =
@@ -71,16 +76,25 @@ export class FacilitiesListComponent {
           )}`
         : '';
 
-    return [
-      { field: 'id', header: 'ID' },
+    const fields = [
+      { field: 'facilityBusinessId', header: 'ID' },
       { field: 'siteName', header: 'Site name', widthClass: 'govuk-!-width-one-third' },
       { field: 'status', header: 'Status' },
+    ];
+
+    if (this.isAllowedUser()) {
+      fields.push({ field: 'markedForAudit', header: 'Marked for audit' });
+    }
+
+    fields.push(
       { field: 'schemeExitDate', header: 'Scheme exit date' },
       {
         field: 'certificationStatus',
-        header: `Certified status${range ? ' ' + range : ''}`,
+        header: `Certified status${range ? ` ${range}` : ''}`,
       },
-    ];
+    );
+
+    return fields;
   });
 
   readonly form = this.fb.group({
@@ -153,8 +167,6 @@ export class FacilitiesListComponent {
     if (this.form.invalid) return;
 
     const term = this.form.value.term?.trim();
-    if (!term) return;
-
     this.handleQueryParamsNavigation({ term });
   }
 
@@ -165,7 +177,7 @@ export class FacilitiesListComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.pageSize()) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   private handleQueryParamsNavigation(pagination: Partial<{ page: number; pageSize: number; term: string }>) {

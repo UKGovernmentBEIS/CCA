@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.authorization.ccaauth.core.service.AppUserService;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.dto.AddressDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
@@ -27,6 +28,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -328,4 +330,19 @@ class SectorAssociationQueryServiceTest {
         verify(sectorAssociationMapper, times(1)).toSectorAssociationInfoNameDTO(sectorAssociation1);
         verify(sectorAssociationMapper, times(1)).toSectorAssociationInfoNameDTO(sectorAssociation2);
     }
+
+	@Test
+	void shouldReturnSectorAssociationWhenExists() {
+		String acronym = "ADS_1";
+		SchemeVersion version = SchemeVersion.CCA_3;
+
+		SectorAssociation expected = mock(SectorAssociation.class);
+		when(sectorAssociationRepository.findByAcronymAndSectorAssociationSchemesSchemeVersionIs(acronym, version))
+				.thenReturn(Optional.of(expected));
+
+		Optional<SectorAssociation> result = sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme(acronym, version);
+
+		assertTrue(result.isPresent());
+		assertEquals(expected, result.get());
+	}
 }

@@ -25,6 +25,6 @@ describe('TargetTypePipe', () => {
 
   it('should throw an error for invalid input', () => {
     // @ts-expect-error: testing error path
-    expect(() => pipe.transform('INVALID')).toThrowError('invalid targetType. received INVALID');
+    expect(() => pipe.transform('INVALID')).toThrow('invalid targetType. received INVALID');
   });
 });

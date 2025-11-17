@@ -17,8 +17,11 @@ public class CcaDocumentTemplateType {
     // Withdrawal of termination letter
     public static final String ADMIN_TERMINATION_REGULATORY_WITHDRAWN = "ADMIN_TERMINATION_REGULATORY_WITHDRAWN";
     
-    // Updated UnA template - v03
-    public static final String UNDERLYING_AGREEMENT = "UNDERLYING_AGREEMENT";
+    // CCA2 agreement
+    public static final String UNDERLYING_AGREEMENT_CCA2 = "UNDERLYING_AGREEMENT_CCA2";
+    
+    // CCA3 agreement
+    public static final String UNDERLYING_AGREEMENT_CCA3 = "UNDERLYING_AGREEMENT_CCA3";
     
     //AA_L001_Underlying_Agreement_Application_Refusal.docx
     public static final String UNDERLYING_AGREEMENT_REJECTED = "UNDERLYING_AGREEMENT_REJECTED";
@@ -29,11 +32,14 @@ public class CcaDocumentTemplateType {
     // AA_L003_Underlying_Agreement_Activated
     public static final String UNDERLYING_AGREEMENT_ACTIVATED = "UNDERLYING_AGREEMENT_ACTIVATED";
     
-    // CR_L002_Variation_Approved
+    // CCA3 variation proposed agreement cover letter
     public static final String UNDERLYING_AGREEMENT_VARIATION_ACCEPTED = "UNDERLYING_AGREEMENT_VARIATION_ACCEPTED";
 
     // CR_L001_Variation_Refused.docx
     public static final String UNDERLYING_AGREEMENT_VARIATION_REJECTED = "UNDERLYING_AGREEMENT_VARIATION_REJECTED";
+
+    // CCA3 variation termination letter.docx
+    public static final String UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION = "UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION";
 
     // SC_L002_Sector_MoA
     public static final String SECTOR_MOA = "SECTOR_MOA";
@@ -52,4 +58,13 @@ public class CcaDocumentTemplateType {
 
     // Buyout Refund Claim Form.docx
     public static final String REFUND_CLAIM_FORM_BUY_OUT = "REFUND_CLAIM_FORM_BUY_OUT";
+
+    // CCA2 extension cover letter
+    public static final String EXTENSION_NOTICE_CCA2 = "EXTENSION_NOTICE_CCA2";
+
+    // CCA3 migration proposed agreement cover letter.docx
+    public static final String MIGRATION_UNDERLYING_AGREEMENT_ACCEPTED_CCA3 = "MIGRATION_UNDERLYING_AGREEMENT_ACCEPTED_CCA3";
+
+    // CCA3 migration activated agreement cover letter.docx
+    public static final String MIGRATION_UNDERLYING_AGREEMENT_ACTIVATED_CCA3 = "MIGRATION_UNDERLYING_AGREEMENT_ACTIVATED_CCA3";
 }

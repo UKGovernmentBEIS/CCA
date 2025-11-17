@@ -1,0 +1,33 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    caption="Audit reason"
+    heading="Why should this facility be audited?"
+    data-testid="audit-form"
+  >
+    <p class="govuk-!-padding-bottom-4">Select at least one reason to explain why you are auditing this facility</p>
+
+    <h2 class="govuk-heading-m">Audit reasons</h2>
+    <div formControlName="reasonsForAudit" govuk-checkboxes>
+      @for (option of reasonOptions; track option) {
+        <govuk-checkbox
+          [value]="option"
+          [label]="option | facilityAuditReason"
+          [divider]="option === 'OTHER' ? 'or' : null"
+        />
+      }
+    </div>
+
+    <div
+      govuk-textarea
+      label="Comments"
+      labelSize="medium"
+      hint="Provide further details on your reasons for auditing this facility"
+      formControlName="comment"
+    ></div>
+  </cca-wizard-step>
+
+  <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+  <netz-return-to-task-or-action-page />
+</div>

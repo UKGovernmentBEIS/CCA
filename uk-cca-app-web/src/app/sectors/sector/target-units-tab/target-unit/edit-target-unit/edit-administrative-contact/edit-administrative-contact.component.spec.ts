@@ -4,15 +4,25 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, BasePage, mockClass } from '@netz/common/testing';
-import { CountryService } from '@shared/services';
+import { COUNTRIES } from '@shared/services';
 
-import { UpdateTargetUnitAccountService } from 'cca-api';
-
-import { CountryServiceStub } from 'src/testing/country.service.stub';
+import { ReferenceDataService, UpdateTargetUnitAccountService } from 'cca-api';
 
 import { mockTargetUnitAccountDetails } from '../../../../../specs/fixtures/mock';
 import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
 import { EditAdministrativeContactComponent } from './edit-administrative-contact.component';
+
+const mockCountries = [
+  {
+    code: 'GR',
+    name: 'Greece',
+    officialName: 'The Hellenic Republic',
+  },
+];
+
+const mockReferenceDataService = {
+  getReferenceData: jest.fn().mockReturnValue(of({ COUNTRIES: mockCountries })),
+};
 
 describe('EditAdministrativeContactComponent', () => {
   let component: EditAdministrativeContactComponent;
@@ -102,6 +112,10 @@ describe('EditAdministrativeContactComponent', () => {
   }
 
   beforeEach(async () => {
+    // Set the countries before creating the component
+    COUNTRIES.length = 0; // Clear the array
+    COUNTRIES.push(...mockCountries); // Add mock data
+
     activatedRoute = new ActivatedRouteStub({ targetUnitId: '1' });
 
     await TestBed.configureTestingModule({
@@ -109,8 +123,8 @@ describe('EditAdministrativeContactComponent', () => {
       providers: [
         ActiveTargetUnitStore,
         { provide: UpdateTargetUnitAccountService, useValue: updateTargetUnitAccountService },
-        { provide: CountryService, useClass: CountryServiceStub },
         { provide: ActivatedRoute, useValue: activatedRoute },
+        { provide: ReferenceDataService, useValue: mockReferenceDataService },
       ],
     }).compileComponents();
 
@@ -140,7 +154,7 @@ describe('EditAdministrativeContactComponent', () => {
     expect(page.addressPostCodeValue).toEqual(
       mockTargetUnitAccountDetails.administrativeContactDetails.address.postcode,
     );
-    expect(page.addressCountryValue).toEqual('3: GR');
+    expect(page.addressCountryValue).toEqual('1: GR');
     expect(page.addressLine1.disabled).toBeFalsy();
     expect(page.addressLine2.disabled).toBeFalsy();
     expect(page.addressCity.disabled).toBeFalsy();

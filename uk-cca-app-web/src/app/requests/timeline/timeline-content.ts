@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { getItemActionHeader } from '@netz/common/pipes';
 import { RequestActionPageContentFactoryMap } from '@netz/common/request-action';
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
-import { PeerReviewSubmittedComponent } from '@requests/common';
+import { PeerReviewSubmittedComponent, UNAVariationRequestTaskPayload } from '@requests/common';
 
 import { UnderlyingAgreementSubmittedRequestActionPayload } from 'cca-api';
 
@@ -12,6 +12,9 @@ import { AdminTerminationSubmittedTimelineComponent } from './admin-termination-
 import { AdminTerminationWithdrawSubmittedTimelineComponent } from './admin-termination-withdraw-submitted/admin-termination-withdraw-submitted-timeline.component';
 import { BuyOutFeeCalculatedComponent } from './buy-out-fee-calculated/buy-out-fee-calculated.component';
 import { BuyOutSurplusBatchRunCompletedComponent } from './buy-out-surplus-batch-run-completed/buy-out-surplus-batch-run-completed.component';
+import { Cca2ExtensionComponent } from './cca2-extension/cca2-extension.component';
+import { Cca3MigrationActivatedComponent } from './cca3-migration/activated/cca3-migration-activated.component';
+import { Cca3MigrationCompletedComponent } from './cca3-migration/completed/cca3-migration-completed.component';
 import { PATUploadSubmittedComponent } from './performance-account-template-upload-submitted/pat-upload-submitted.component';
 import { PerformanceDataUploadSubmittedComponent } from './performance-data-upload-submitted/performance-data-upload-submitted.component';
 import { SectorMoaGeneratedComponent } from './sector-moa-generated/sector-moa-generated.component';
@@ -167,10 +170,13 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
   UNDERLYING_AGREEMENT_VARIATION_APPLICATION_SUBMITTED: () => {
     const store = inject(RequestActionStore);
     const action = store.select(requestActionQuery.selectAction)();
+    const payload = store.select(requestActionQuery.selectActionPayload)();
 
     return {
       header: getItemActionHeader(action),
-      sections: getAllUnderlyingAgreementVariationSections(),
+      sections: getAllUnderlyingAgreementVariationSections(
+        (payload as UNAVariationRequestTaskPayload)?.underlyingAgreement,
+      ),
     };
   },
 
@@ -201,6 +207,26 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     return {
       header: getItemActionHeader(action),
       component: UnderlyingAgreementVariationActivatedComponent,
+    };
+  },
+
+  UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEWER_ACCEPTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: PeerReviewSubmittedComponent,
+    };
+  },
+
+  UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEWER_REJECTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: PeerReviewSubmittedComponent,
     };
   },
 
@@ -301,6 +327,36 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     return {
       header: getItemActionHeader(action),
       component: SurplusCalculatedComponent,
+    };
+  },
+
+  CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: Cca3MigrationCompletedComponent,
+    };
+  },
+
+  CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: Cca3MigrationActivatedComponent,
+    };
+  },
+
+  CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: Cca2ExtensionComponent,
     };
   },
 };

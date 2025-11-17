@@ -25,7 +25,7 @@ export class CountryServiceStub implements Partial<CountryService> {
     },
   ];
 
-  getUkCountries(): Observable<Country[]> {
+  getCountries(): Observable<Country[]> {
     return of(this.countries);
   }
 

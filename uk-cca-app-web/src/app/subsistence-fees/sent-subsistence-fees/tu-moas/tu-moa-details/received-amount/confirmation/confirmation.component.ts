@@ -16,7 +16,6 @@ import { SubsistenceFeesMoAViewService } from 'cca-api';
       >
     }
   `,
-  standalone: true,
   imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

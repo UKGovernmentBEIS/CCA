@@ -54,5 +54,18 @@
             where key = 'ui.features.unaHideNotifyOperator';
         </rollback>
     </changeSet>
+
+    <changeSet id="0_1_0_expose_una_notify_operator_btn" author="vourdoukasd">
+        <sql>
+            update configuration
+            set value = 'false'
+            where key = 'ui.features.unaHideNotifyOperator';
+        </sql>
+        <rollback>
+            update configuration
+            set value = 'true'
+            where key = 'ui.features.unaHideNotifyOperator';
+        </rollback>
+    </changeSet>
         
 </databaseChangeLog>

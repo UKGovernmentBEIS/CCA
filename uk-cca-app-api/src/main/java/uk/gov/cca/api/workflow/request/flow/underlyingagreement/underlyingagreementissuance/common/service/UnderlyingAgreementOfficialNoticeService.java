@@ -1,8 +1,11 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.service;
 
 import lombok.RequiredArgsConstructor;
+
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import uk.gov.cca.api.notification.template.constants.CcaDocumentTemplateType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.service.CcaDecisionNotificationUsersService;
@@ -14,6 +17,7 @@ import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -52,7 +56,8 @@ public class UnderlyingAgreementOfficialNoticeService {
                 decisionNotification,
                 CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACCEPTED,
                 CcaDocumentTemplateType.UNDERLYING_AGREEMENT_ACCEPTED,
-                "Proposed underlying agreement cover letter.pdf");
+                "Proposed underlying agreement cover letter.pdf"
+                );
     }
     
     public CompletableFuture<FileInfoDTO> generateActivatedOfficialNotice(final String requestId) {
@@ -64,17 +69,20 @@ public class UnderlyingAgreementOfficialNoticeService {
                 decisionNotification,
                 CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACTIVATED,
                 CcaDocumentTemplateType.UNDERLYING_AGREEMENT_ACTIVATED,
-                "Activated underlying agreement cover letter.pdf");
+                "Activated underlying agreement cover letter.pdf"
+                );
 	}
 
     public void sendOfficialNotice(String requestId) {
         final Request request = requestService.findRequestById(requestId);
         final UnderlyingAgreementRequestPayload requestPayload = (UnderlyingAgreementRequestPayload) request.getPayload();
         final CcaDecisionNotification decisionNotification = requestPayload.getDecisionNotification();
-        final List<FileInfoDTO> attachments =
-                requestPayload.getUnderlyingAgreementDocument() != null ?
-                    List.of(requestPayload.getOfficialNotice(), requestPayload.getUnderlyingAgreementDocument()) :
-                    List.of(requestPayload.getOfficialNotice());
+        
+        final List<FileInfoDTO> attachments = new ArrayList<>();
+        attachments.add(requestPayload.getOfficialNotice());
+        if (!ObjectUtils.isEmpty(requestPayload.getUnderlyingAgreementDocuments())) {
+        	attachments.addAll(requestPayload.getUnderlyingAgreementDocuments().values());
+        }
 
         ccaOfficialNoticeSendService.sendOfficialNotice(attachments, request,
         		ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification));

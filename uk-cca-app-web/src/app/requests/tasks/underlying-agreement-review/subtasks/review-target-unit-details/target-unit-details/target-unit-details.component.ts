@@ -4,15 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { RadioComponent, RadioOptionComponent, SelectComponent, TextInputComponent } from '@netz/govuk-components';
 import {
-  ConditionalContentDirective,
-  RadioComponent,
-  RadioOptionComponent,
-  SelectComponent,
-  TextInputComponent,
-} from '@netz/govuk-components';
-import {
+  isTargetUnitDetailsWizardCompleted,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
+  ReviewTargetUnitDetailsWizardStep,
   TARGET_UNIT_DETAILS_REVIEW_FORM,
   TargetUnitDetailsReviewFormModel,
   TargetUnitDetailsReviewFormProvider,
@@ -24,7 +20,12 @@ import { WizardStepComponent } from '@shared/components';
 import { operatorTypeOptions } from '@shared/pipes';
 import { produce } from 'immer';
 
-import { SectorAssociationSchemeService, SubsectorAssociationInfoDTO } from 'cca-api';
+import {
+  SectorAssociationSchemeService,
+  SubsectorAssociationInfoDTO,
+  UnderlyingAgreementApplySavePayload,
+  UnderlyingAgreementReviewRequestTaskPayload,
+} from 'cca-api';
 
 import { createSaveActionDTO, toUnderlyingAgreementSaveReviewPayload } from '../../../transform';
 import { applySaveActionSideEffects } from '../../../utils';
@@ -32,7 +33,6 @@ import { applySaveActionSideEffects } from '../../../utils';
 @Component({
   selector: 'cca-target-unit-details',
   templateUrl: './target-unit-details.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -40,7 +40,6 @@ import { applySaveActionSideEffects } from '../../../utils';
     RadioComponent,
     RadioOptionComponent,
     SelectComponent,
-    ConditionalContentDirective,
     ReturnToTaskOrActionPageComponent,
   ],
   providers: [TargetUnitDetailsReviewFormProvider],
@@ -84,33 +83,8 @@ export class TargetUnitDetailsComponent implements OnInit {
     const payload = this.store.select(requestTaskQuery.selectRequestTaskPayload)();
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
 
-    const selectedSubsectorAssociationName = computed(
-      () => this.subsectors().find((ssa) => ssa.id === this.form.value.subsectorAssociationId)?.name,
-    );
-
     const actionPayload = toUnderlyingAgreementSaveReviewPayload(payload);
-
-    const updatedPayload = produce(actionPayload, (draft) => {
-      draft.underlyingAgreementTargetUnitDetails.operatorName = this.form.value.operatorName;
-      draft.underlyingAgreementTargetUnitDetails.operatorType = this.form.value.operatorType;
-      draft.underlyingAgreementTargetUnitDetails.isCompanyRegistrationNumber =
-        this.form.value.isCompanyRegistrationNumber;
-
-      if (this.form.value.isCompanyRegistrationNumber) {
-        draft.underlyingAgreementTargetUnitDetails.companyRegistrationNumber =
-          this.form.value.companyRegistrationNumber;
-        draft.underlyingAgreementTargetUnitDetails.registrationNumberMissingReason = null;
-      } else {
-        draft.underlyingAgreementTargetUnitDetails.registrationNumberMissingReason =
-          this.form.value.registrationNumberMissingReason;
-        draft.underlyingAgreementTargetUnitDetails.companyRegistrationNumber = null;
-      }
-
-      if (this.form.value.subsectorAssociationId) {
-        draft.underlyingAgreementTargetUnitDetails.subsectorAssociationId = this.form.value.subsectorAssociationId;
-        draft.underlyingAgreementTargetUnitDetails.subsectorAssociationName = selectedSubsectorAssociationName();
-      }
-    });
+    const updatedPayload = updateTUDetails(actionPayload, this.form, this.subsectors());
 
     const { determination, reviewSectionsCompleted, sectionsCompleted } = applySaveActionSideEffects(
       this.store.select(underlyingAgreementReviewQuery.selectDetermination)(),
@@ -125,8 +99,32 @@ export class TargetUnitDetailsComponent implements OnInit {
       sectionsCompleted,
     });
 
-    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['../decision'], { relativeTo: this.activatedRoute });
-    });
+    this.tasksApiService
+      .saveRequestTaskAction(dto)
+      .subscribe((payload: UnderlyingAgreementReviewRequestTaskPayload) => {
+        const path = isTargetUnitDetailsWizardCompleted(
+          payload.underlyingAgreement?.underlyingAgreementTargetUnitDetails,
+        )
+          ? '../decision'
+          : `../${ReviewTargetUnitDetailsWizardStep.OPERATOR_ADDRESS}`;
+
+        this.router.navigate([path], { relativeTo: this.activatedRoute });
+      });
   }
+}
+
+function updateTUDetails(
+  payload: UnderlyingAgreementApplySavePayload,
+  form: FormGroup<TargetUnitDetailsReviewFormModel>,
+  subSectors: SubsectorAssociationInfoDTO[],
+): UnderlyingAgreementApplySavePayload {
+  return produce(payload, (draft) => {
+    draft.underlyingAgreementTargetUnitDetails = {
+      ...draft.underlyingAgreementTargetUnitDetails,
+      ...form.getRawValue(),
+      subsectorAssociationName: subSectors.find(
+        (subsector) => subsector.id === form.controls.subsectorAssociationId?.value,
+      )?.name,
+    };
+  });
 }

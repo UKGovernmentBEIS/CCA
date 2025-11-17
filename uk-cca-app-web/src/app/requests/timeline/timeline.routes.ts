@@ -80,6 +80,10 @@ export const TIMELINE_ROUTES: Routes = [
           ),
       },
       {
+        path: 'cca3-migration',
+        loadChildren: () => import('./cca3-migration/cca3-migration.routes').then((r) => r.CCA3_MIGRATION_ROUTES),
+      },
+      {
         path: 'file-download/:uuid',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },

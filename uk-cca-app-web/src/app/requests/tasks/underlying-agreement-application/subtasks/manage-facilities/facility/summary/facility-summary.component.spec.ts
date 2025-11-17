@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -26,6 +28,8 @@ describe('FacilitySummaryComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FacilitySummaryComponent],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         RequestTaskStore,
         {
           provide: ActivatedRoute,
@@ -122,6 +126,15 @@ describe('FacilitySummaryComponent', () => {
                       energy: '70',
                       usedReportingMechanism: true,
                       energyCarbonFactor: '90',
+                    },
+                    facilityBaselineEnergyConsumption: {
+                      totalFixedEnergy: '100',
+                      hasVariableEnergy: true,
+                      variableEnergyType: 'TOTALS',
+                      baselineVariableEnergy: '200',
+                      totalThroughput: '50',
+                      throughputUnit: 'tonnes',
+                      variableEnergyConsumptionDataByProduct: [],
                     },
                     facilityTargets: {
                       improvements: {

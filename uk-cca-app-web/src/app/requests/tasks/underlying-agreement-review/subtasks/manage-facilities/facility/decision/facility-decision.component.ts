@@ -53,7 +53,6 @@ import { resetDetermination } from '../../../../utils';
     RouterLink,
   ],
   providers: [facilityDecisionFormProvider()],
-  standalone: true,
 })
 export class FacilityDecisionComponent {
   private readonly store = inject(RequestTaskStore);

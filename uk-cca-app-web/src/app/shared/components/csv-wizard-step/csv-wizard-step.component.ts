@@ -14,7 +14,6 @@ import { CsvErrorSummaryComponent } from '../csv-error-summary/csv-error-summary
 @Component({
   selector: 'cca-csv-wizard-step',
   templateUrl: './csv-wizard-step.component.html',
-  standalone: true,
   imports: [
     RouterLink,
     AsyncPipe,

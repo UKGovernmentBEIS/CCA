@@ -16,7 +16,6 @@ describe('PendingButtonDirective', () => {
   let page: Page;
 
   @Component({
-    standalone: true,
     template: ` <button netzPendingButton govukButton type="submit" (click)="startRequest()">Submit</button> `,
     providers: [PendingRequestService],
     imports: [PendingButtonDirective, ButtonDirective],

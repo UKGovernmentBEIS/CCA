@@ -5,7 +5,6 @@ import { PageHeadingComponent } from '@netz/common/components';
 @Component({
   selector: 'cca-legislation',
   templateUrl: './legislation.component.html',
-  standalone: true,
   imports: [PageHeadingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

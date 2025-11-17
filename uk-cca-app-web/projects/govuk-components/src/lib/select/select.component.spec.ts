@@ -7,7 +7,6 @@ import { SelectComponent } from './select.component';
 
 describe('SelectComponent', () => {
   @Component({
-    standalone: true,
     imports: [SelectComponent, ReactiveFormsModule],
     template: `
       <div

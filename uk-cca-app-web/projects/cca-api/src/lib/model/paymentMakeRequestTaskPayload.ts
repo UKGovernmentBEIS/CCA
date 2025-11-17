@@ -14,7 +14,7 @@ import { BankAccountDetailsDTO } from './bankAccountDetailsDTO';
 export interface PaymentMakeRequestTaskPayload {
   payloadType?: string;
   sendEmailNotification?: boolean;
-  amount?: number;
+  amount?: string;
   paymentRefNum?: string;
   creationDate?: string;
   paymentMethodTypes?: ('BANK_TRANSFER' | 'CREDIT_OR_DEBIT_CARD')[];

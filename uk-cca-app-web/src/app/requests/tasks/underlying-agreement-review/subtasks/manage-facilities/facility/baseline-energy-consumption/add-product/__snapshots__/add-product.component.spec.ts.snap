@@ -1,0 +1,271 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`AddProductComponent should render the form with the correct initial values 1`] = `
+<cca-add-product
+  activatedRoute={[Function Object]}
+  baselineYearOptions={[Function Array]}
+  destroyRef={[Function NodeInjectorDestroyRef]}
+  facilityId={[Function String]}
+  facilityIndex="0"
+  facilityThroughputUnit={[Function String]}
+  form={[Function FormGroup]}
+  formBuilder={[Function _FormBuilder]}
+  hasFormErrors={[Function Function]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  tasksApiService={[Function Object]}
+  una={[Function Object]}
+>
+  <form
+    class="ng-untouched ng-pristine ng-invalid"
+    novalidate=""
+  >
+    <div
+      class="ng-untouched ng-pristine ng-invalid"
+    >
+      <cca-add-product-item>
+        <div
+          class="govuk-!-margin-bottom-6"
+        >
+          <h3
+            class="govuk-heading-m"
+          >
+            Product 1
+          </h3>
+          <div
+            class="govuk-grid-row govuk-!-margin-bottom-2"
+          >
+            <div
+              class="govuk-grid-column-three-quarters"
+            >
+              <div
+                class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+                formcontrolname="productName"
+                govuk-text-input=""
+                label="Product name"
+                widthclass="govuk-!-width-full"
+              >
+                <label
+                  class="govuk-label"
+                  for="products.0.productName"
+                  id="l.products.0.productName"
+                >
+                   Product name 
+                </label>
+                <input
+                  autocomplete="on"
+                  class="govuk-input govuk-!-width-full"
+                  id="products.0.productName"
+                  name="products.0.productName"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+            formcontrolname="baselineYear"
+            govuk-select=""
+            label="Baseline year"
+            widthclass="govuk-!-width-one-quarter"
+          >
+            <label
+              class="govuk-label"
+              for="products.0.baselineYear"
+              id="l.products.0.baselineYear"
+            >
+               Baseline year
+            </label>
+            <select
+              class="govuk-select govuk-!-width-one-quarter ng-untouched ng-pristine ng-invalid"
+              govukformerror=""
+              id="products.0.baselineYear"
+              name="products.0.baselineYear"
+            >
+              <option
+                value="0: 2030"
+              >
+                 2030 
+              </option>
+              <option
+                value="1: 2029"
+              >
+                 2029 
+              </option>
+              <option
+                value="2: 2028"
+              >
+                 2028 
+              </option>
+              <option
+                value="3: 2027"
+              >
+                 2027 
+              </option>
+              <option
+                value="4: 2026"
+              >
+                 2026 
+              </option>
+              <option
+                value="5: 2025"
+              >
+                 2025 
+              </option>
+              <option
+                value="6: 2024"
+              >
+                 2024 
+              </option>
+              <option
+                value="7: 2023"
+              >
+                 2023 
+              </option>
+              <option
+                value="8: 2022"
+              >
+                 2022 
+              </option>
+            </select>
+          </div>
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+            formcontrolname="baselineVariableEnergy"
+            govuk-text-input=""
+            hint="This value may be entered as zero"
+            inputtype="number"
+            label="Baseline variable energy"
+            widthclass="govuk-!-width-one-quarter"
+          >
+            <label
+              class="govuk-label"
+              for="products.0.baselineVariableEnergy"
+              id="l.products.0.baselineVariableEnergy"
+            >
+               Baseline variable energy 
+            </label>
+            <div
+              class="govuk-hint"
+              id="products.0.baselineVariableEnergy-hint"
+            >
+               This value may be entered as zero 
+            </div>
+            <div
+              class="govuk-input__wrapper"
+            >
+              <input
+                autocomplete="on"
+                class="govuk-input govuk-!-width-one-quarter"
+                id="products.0.baselineVariableEnergy"
+                name="products.0.baselineVariableEnergy"
+                type="text"
+              />
+              <div
+                aria-hidden="true"
+                class="govuk-input__suffix"
+              >
+                kWh
+              </div>
+            </div>
+          </div>
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+            formcontrolname="baselineThroughput"
+            govuk-text-input=""
+            hint="For facilities where SRM is used, this must be the adjusted throughput"
+            label="Baseline year throughput"
+            widthclass="govuk-!-width-one-quarter"
+          >
+            <label
+              class="govuk-label"
+              for="products.0.baselineThroughput"
+              id="l.products.0.baselineThroughput"
+            >
+               Baseline year throughput 
+            </label>
+            <div
+              class="govuk-hint"
+              id="products.0.baselineThroughput-hint"
+            >
+               For facilities where SRM is used, this must be the adjusted throughput 
+            </div>
+            <input
+              autocomplete="on"
+              class="govuk-input govuk-!-width-one-quarter"
+              id="products.0.baselineThroughput"
+              name="products.0.baselineThroughput"
+              type="text"
+            />
+          </div>
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+            formcontrolname="throughputUnit"
+            govuk-text-input=""
+            label="Throughput unit"
+            widthclass="govuk-!-width-one-quarter"
+          >
+            <label
+              class="govuk-label"
+              for="products.0.throughputUnit"
+              id="l.products.0.throughputUnit"
+            >
+               Throughput unit 
+            </label>
+            <input
+              autocomplete="on"
+              class="govuk-input govuk-!-width-one-quarter"
+              id="products.0.throughputUnit"
+              name="products.0.throughputUnit"
+              type="text"
+            />
+          </div>
+          <div
+            class="govuk-form-group govuk-!-margin-top-4"
+          >
+            <p
+              class="govuk-label govuk-label--s"
+            >
+              Energy intensity
+            </p>
+            <p
+              class="govuk-hint"
+            >
+              Automatically calculated
+            </p>
+            <p
+              class="govuk-body govuk-!-margin-bottom-0"
+            >
+               -- 
+            </p>
+          </div>
+        </div>
+      </cca-add-product-item>
+    </div>
+    <div
+      class="govuk-button-group govuk-grid-row"
+    >
+      <div
+        class="govuk-grid-column-full"
+      >
+        <button
+          class="govuk-button govuk-button--secondary govuk-!-margin-bottom-5"
+          type="button"
+        >
+           Add product 
+        </button>
+      </div>
+      <div
+        class="govuk-grid-column-full govuk-!-margin-top-5"
+      >
+        <button
+          class="govuk-button"
+          type="submit"
+        >
+          Save and continue
+        </button>
+      </div>
+    </div>
+  </form>
+</cca-add-product>
+`;

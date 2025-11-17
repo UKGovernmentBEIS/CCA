@@ -11,7 +11,6 @@ import { EmailSentComponent } from '../email-sent/email-sent.component';
 @Component({
   selector: 'cca-submit-email',
   templateUrl: './submit-email.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, BackToTopComponent, EmailSentComponent, TextInputComponent, ButtonDirective],
 })
 export class SubmitEmailComponent {

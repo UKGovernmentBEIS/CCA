@@ -15,7 +15,6 @@ import { generateDownloadUrl } from '@shared/utils';
 @Component({
   selector: 'cca-authorisation-additional-evidence-summary',
   templateUrl: './authorisation-additional-evidence-summary.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     SummaryComponent,

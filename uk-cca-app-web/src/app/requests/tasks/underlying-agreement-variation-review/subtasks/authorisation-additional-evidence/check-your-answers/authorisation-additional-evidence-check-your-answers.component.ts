@@ -7,6 +7,7 @@ import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import {
+  areEntitiesIdentical,
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
   TaskItemStatus,
   TasksApiService,
@@ -45,7 +46,6 @@ import { createSaveActionDTO } from '../../../transform';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [
     ButtonDirective,
     PageHeadingComponent,
@@ -67,22 +67,45 @@ export default class AuthorisationAdditionalEvidenceCheckYourAnswersComponent {
 
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 
+  private readonly isEditable = this.store.select(requestTaskQuery.selectIsEditable)();
+  private readonly reviewAttachments = this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
+
+  private readonly currentAdditionalEvidence = this.store.select(
+    underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence,
+  )();
+  private readonly currentAttachments = this.store.select(
+    underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments,
+  )();
+
+  private readonly originalAdditionalEvidence = this.store.select(
+    underlyingAgreementVariationQuery.selectOriginalAuthorisationAndAdditionalEvidence,
+  )();
+  private readonly originalAttachments = this.store.select(
+    underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments,
+  )();
+
+  private readonly areIdentical = areEntitiesIdentical(this.currentAdditionalEvidence, this.originalAdditionalEvidence);
+
+  private readonly decision = this.store.select(
+    underlyingAgreementReviewQuery.selectSubtaskDecision('AUTHORISATION_AND_ADDITIONAL_EVIDENCE'),
+  )();
+
   protected readonly summaryDataOriginal = toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
-    this.store.select(underlyingAgreementVariationQuery.selectOriginalAuthorisationAndAdditionalEvidence)(),
-    this.store.select(underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments)(),
-    this.store.select(requestTaskQuery.selectIsEditable)(),
+    this.originalAdditionalEvidence,
+    this.originalAttachments,
+    this.isEditable,
     this.downloadUrl,
-    this.store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('AUTHORISATION_AND_ADDITIONAL_EVIDENCE'))(),
-    this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
+    this.decision,
+    this.reviewAttachments,
   );
 
   protected readonly summaryDataCurrent = toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
-    this.store.select(underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence)(),
-    this.store.select(underlyingAgreementQuery.selectUnderlyingAgreementSubmitAttachments)(),
-    this.store.select(requestTaskQuery.selectIsEditable)(),
+    this.currentAdditionalEvidence,
+    this.currentAttachments,
+    this.isEditable,
     this.downloadUrl,
-    this.store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('AUTHORISATION_AND_ADDITIONAL_EVIDENCE'))(),
-    this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),
+    this.decision,
+    this.reviewAttachments,
   );
 
   onSubmit() {
@@ -96,13 +119,12 @@ export default class AuthorisationAdditionalEvidenceCheckYourAnswersComponent {
       underlyingAgreementReviewQuery.selectReviewSectionsCompleted,
     )();
 
-    const decision = this.store.select(
-      underlyingAgreementReviewQuery.selectSubtaskDecision('AUTHORISATION_AND_ADDITIONAL_EVIDENCE'),
-    )();
-
     const reviewSectionsCompleted = produce(currentReviewSectionsCompleted, (draft) => {
-      draft[AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK] =
-        decision.type === 'ACCEPTED' ? TaskItemStatus.ACCEPTED : TaskItemStatus.REJECTED;
+      draft[AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK] = this.areIdentical
+        ? TaskItemStatus.UNCHANGED
+        : this.decision.type === 'ACCEPTED'
+          ? TaskItemStatus.ACCEPTED
+          : TaskItemStatus.REJECTED;
     });
 
     const dto = createSaveActionDTO(
@@ -112,6 +134,8 @@ export default class AuthorisationAdditionalEvidenceCheckYourAnswersComponent {
         sectionsCompleted: payload.sectionsCompleted,
         reviewSectionsCompleted,
         determination: payload.determination,
+        reviewGroupDecisions: payload.reviewGroupDecisions,
+        facilitiesReviewGroupDecisions: payload.facilitiesReviewGroupDecisions,
       },
     );
 

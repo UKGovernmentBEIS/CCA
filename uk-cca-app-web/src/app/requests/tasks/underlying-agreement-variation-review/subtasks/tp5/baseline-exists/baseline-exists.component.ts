@@ -19,7 +19,7 @@ import { WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../transform';
-import { resetDetermination } from '../../../utils';
+import { deleteDecision, resetDetermination } from '../../../utils';
 import {
   BASELINE_EXISTS_FORM,
   BaselineExistsFormModel,
@@ -29,7 +29,6 @@ import {
 @Component({
   selector: 'cca-baseline-exists',
   templateUrl: './baseline-exists.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -56,6 +55,10 @@ export class BaselineExistsComponent {
       requestTaskQuery.selectRequestTaskPayload,
     )() as UNAVariationReviewRequestTaskPayload;
 
+    const originalPayload = (
+      this.store.select(requestTaskQuery.selectRequestTaskPayload)() as UNAVariationReviewRequestTaskPayload
+    )?.originalUnderlyingAgreementContainer;
+
     const actionPayload = toUnderlyingAgreementVariationReviewSavePayload(payload);
     const baselineExists = this.form.get('exist')?.value;
 
@@ -64,6 +67,13 @@ export class BaselineExistsComponent {
     });
 
     updatedPayload = applyTp5ExistSideEffect(updatedPayload);
+
+    const originalTP5Exist = originalPayload?.underlyingAgreement?.targetPeriod5Details.exist;
+    const currentTP5Exist = updatedPayload?.targetPeriod5Details.exist;
+    const areIdentical = currentTP5Exist === originalTP5Exist;
+
+    const currentDecisions = this.store.select(underlyingAgreementReviewQuery.selectReviewGroupDecisions)();
+    const decisions = areIdentical ? deleteDecision(currentDecisions, 'TARGET_PERIOD5_DETAILS') : currentDecisions;
 
     const currentReviewSectionsCompleted = this.store.select(
       underlyingAgreementReviewQuery.selectReviewSectionsCompleted,
@@ -82,14 +92,20 @@ export class BaselineExistsComponent {
     const dto = createSaveActionDTO(requestTaskId, updatedPayload, {
       determination,
       reviewSectionsCompleted,
+      reviewGroupDecisions: decisions,
+      facilitiesReviewGroupDecisions: this.store.select(
+        underlyingAgreementReviewQuery.selectFacilityReviewGroupDecisions,
+      )(),
     });
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      if (baselineExists) {
-        this.router.navigate([`../${BaseLineAndTargetsStep.TARGET_COMPOSITION}`], { relativeTo: this.activatedRoute });
-      } else {
-        this.router.navigate(['../decision'], { relativeTo: this.activatedRoute });
-      }
+      const targetPath = areIdentical
+        ? '../check-your-answers'
+        : baselineExists
+          ? `../${BaseLineAndTargetsStep.TARGET_COMPOSITION}`
+          : '../decision';
+
+      this.router.navigate([targetPath], { relativeTo: this.activatedRoute });
     });
   }
 }

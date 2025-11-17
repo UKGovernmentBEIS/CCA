@@ -15,7 +15,6 @@ describe('SummaryListComponent', () => {
   let fixture3: ComponentFixture<TemplateTestComponent>;
 
   @Component({
-    standalone: true,
     imports: [SummaryListComponent],
     template: '<dl govuk-summary-list [details]="details"></dl>',
   })
@@ -27,7 +26,6 @@ describe('SummaryListComponent', () => {
   }
 
   @Component({
-    standalone: true,
     imports: [SummaryListComponent],
     template: `
       <dl govuk-summary-list [details]="details">
@@ -48,7 +46,6 @@ describe('SummaryListComponent', () => {
   }
 
   @Component({
-    standalone: true,
     imports: [SummaryListComponent, SummaryListRowKeyDirective, SummaryListRowDirective, SummaryListRowValueDirective],
     template: `
       <dl govuk-summary-list [details]="details">

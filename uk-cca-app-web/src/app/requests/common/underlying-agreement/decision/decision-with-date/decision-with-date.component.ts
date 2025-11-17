@@ -22,7 +22,6 @@ import { underlyingAgreementQuery } from '../../+state';
 @Component({
   selector: 'cca-decision-with-date',
   templateUrl: './decision-with-date.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RadioComponent,

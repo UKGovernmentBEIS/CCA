@@ -25,7 +25,6 @@ import { AccountSearchResultInfoDTO } from 'cca-api';
       </govuk-table>
     </div>
   `,
-  standalone: true,
   imports: [TagComponent, TableComponent, StatusPipe, RouterLink, StatusColorPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

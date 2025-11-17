@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   selector: 'govuk-phase-banner',
   templateUrl: './phase-banner.component.html',
   styleUrl: './phase-banner.component.scss',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PhaseBannerComponent {

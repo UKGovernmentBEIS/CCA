@@ -12,7 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { FormService } from './form.service';
 
-@Directive({ standalone: true })
+@Directive()
 export abstract class FormInput implements ControlValueAccessor, OnInit, OnDestroy {
   @HostBinding('class.govuk-!-display-block') readonly govukDisplayBlock = true;
   @HostBinding('class.govuk-form-group') readonly govukFormGroupClass = true;

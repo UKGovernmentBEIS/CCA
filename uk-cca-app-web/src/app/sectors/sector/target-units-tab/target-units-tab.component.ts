@@ -1,11 +1,12 @@
 import { LowerCasePipe, UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { map, switchMap, tap } from 'rxjs';
 
+import { AuthStore, selectUserId } from '@netz/common/auth';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { transformUsername } from '@netz/common/pipes';
 import {
@@ -45,7 +46,6 @@ const DEFAULT_PAGE_SIZE = 50;
 @Component({
   selector: 'cca-sector-target-units-tab',
   templateUrl: './target-units-tab.component.html',
-  standalone: true,
   imports: [
     RouterLink,
     ReactiveFormsModule,
@@ -68,9 +68,8 @@ export class SectorTargetUnitsTabComponent {
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
+  private readonly userId = inject(AuthStore).select(selectUserId);
   private readonly sectorId = +this.activatedRoute.snapshot.paramMap.get('sectorId');
-
-  private readonly queryParams = toSignal(this.activatedRoute.queryParamMap);
 
   private sectorUsersAuthorities = toSignal(
     this.sectorAssociationAuthoritiesService
@@ -91,18 +90,9 @@ export class SectorTargetUnitsTabComponent {
     totalItems: 0,
   });
 
-  readonly currentPage = computed(() => {
-    const params = this.queryParams();
-    return +params?.get('page') || DEFAULT_PAGE;
-  });
-
-  readonly pageSize = computed(() => {
-    const params = this.queryParams();
-    return +params?.get('pageSize') || DEFAULT_PAGE_SIZE;
-  });
-
+  protected readonly currentPage = signal(DEFAULT_PAGE);
+  protected readonly pageSize = signal(DEFAULT_PAGE_SIZE);
   protected readonly editable = computed(() => this.state().editable);
-
   protected readonly targetUnits = computed(() => this.state().targetUnits);
 
   protected readonly sectorNames = computed(() => {
@@ -129,6 +119,10 @@ export class SectorTargetUnitsTabComponent {
       : [],
   );
 
+  protected readonly canCreateTargetUnit = computed(
+    () => !!this.sectorUsersAuthorities()?.find((u) => u.userId === this.userId()),
+  );
+
   protected readonly targetUnitsForm = this.fb.group({
     targetUnits: this.fb.array<TargetUnitFormModel>([]),
   });
@@ -136,17 +130,20 @@ export class SectorTargetUnitsTabComponent {
   constructor() {
     this.activatedRoute.queryParamMap
       .pipe(
-        map((params) => ({
-          page: +params.get('page') || DEFAULT_PAGE,
-          pageSize: +params.get('pageSize') || DEFAULT_PAGE_SIZE,
-        })),
-        switchMap(({ page, pageSize }) =>
-          this.sectorAssociationTargetUnitAccountsService.getTargetUnitAccountsWithSiteContacts(
+        takeUntilDestroyed(),
+        switchMap((paramMap) => {
+          const page = +paramMap.get('page') || this.currentPage();
+          const pageSize = +paramMap.get('pageSize') || this.pageSize();
+
+          this.currentPage.set(page);
+          this.pageSize.set(pageSize);
+
+          return this.sectorAssociationTargetUnitAccountsService.getTargetUnitAccountsWithSiteContacts(
             this.sectorId,
             page - 1,
             pageSize,
-          ),
-        ),
+          );
+        }),
         tap(this.updateState),
       )
       .subscribe();
@@ -171,7 +168,7 @@ export class SectorTargetUnitsTabComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.pageSize()) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   onAddNewTargetUnit() {

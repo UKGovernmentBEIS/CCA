@@ -11,7 +11,6 @@ import { toPatReportSubmittedSummaryData } from './report-submitted-summary-data
     <h1 class="govuk-heading-l">{{ targetPeriodName }}</h1>
     <cca-summary [data]="summaryData" />
   `,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

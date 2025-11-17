@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Directive, inject, input, OnChanges, TemplateRef } f
 
 import { BehaviorSubject } from 'rxjs';
 
-@Directive({ standalone: true })
+@Directive()
 export abstract class TabBaseDirective implements OnChanges {
   readonly cdRef = inject(ChangeDetectorRef);
   readonly templateRef = inject(TemplateRef<void>);

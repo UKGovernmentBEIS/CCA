@@ -66,7 +66,7 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(address3);
 
         final FacilityData facility1 = FacilityData.builder()
-                .facilityId("ADS_1-F00014")
+                .facilityBusinessId("ADS_1-F00014")
                 .accountId(1L)
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("site1")
@@ -76,7 +76,7 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(facility1);
 
         final FacilityData facility2 = FacilityData.builder()
-                .facilityId("ADS_1-F00015")
+                .facilityBusinessId("ADS_1-F00015")
                 .accountId(2L)
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil2")
@@ -86,7 +86,7 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(facility2);
 
         final FacilityData facility3 = FacilityData.builder()
-                .facilityId("ADS_1-F00016")
+                .facilityBusinessId("ADS_1-F00016")
                 .accountId(1L)
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("terminal3")
@@ -100,42 +100,33 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
     }
 
     @Test
-    void findByFacilityId() {
-        final String facilityId = "ADS_1-F00016";
+    void existsByFacilityBusinessId() {
+        final String facilityBusinessId = "ADS_1-F00016";
 
-        Optional<FacilityData> facilityData = repository.findByFacilityId(facilityId);
-
-        assertThat(facilityData).isPresent();
-    }
-
-    @Test
-    void existsByFacilityId() {
-        final String facilityId = "ADS_1-F00016";
-
-        boolean exists = repository.existsByFacilityId(facilityId);
+        boolean exists = repository.existsByFacilityBusinessId(facilityBusinessId);
 
         assertThat(exists).isTrue();
     }
 
     @Test
-    void existsByFacilityIdAndClosedDateIsNull() {
-        final String facilityId = "ADS_1-F00016";
+    void existsByFacilityBusinessIdAndClosedDateIsNull() {
+        final String facilityBusinessId = "ADS_1-F00016";
 
-        boolean exists = repository.existsByFacilityIdAndClosedDateIsNull(facilityId);
+        boolean exists = repository.existsByFacilityBusinessIdAndClosedDateIsNull(facilityBusinessId);
 
         assertThat(exists).isFalse();
     }
 
     @Test
-    void findAllByFacilityIdIn() {
-        final String facilityId1 = "ADS_1-F00015";
-        final String facilityId2 = "ADS_1-F00016";
+    void findAllByFacilityBusinessIdIn() {
+        final String facilityBusinessId1 = "ADS_1-F00015";
+        final String facilityBusinessId2 = "ADS_1-F00016";
 
-        List<FacilityData> facilities = repository.findAllByFacilityIdIn(Set.of(facilityId1, facilityId2));
+        List<FacilityData> facilities = repository.findAllByFacilityBusinessIdIn(Set.of(facilityBusinessId1, facilityBusinessId2));
 
         assertThat(facilities).hasSize(2);
-        assertThat(facilities.stream().map(FacilityData::getFacilityId).collect(Collectors.toSet()))
-                .isEqualTo(Set.of(facilityId1, facilityId2));
+        assertThat(facilities.stream().map(FacilityData::getFacilityBusinessId).collect(Collectors.toSet()))
+                .isEqualTo(Set.of(facilityBusinessId1, facilityBusinessId2));
     }
 
     @Test
@@ -143,28 +134,28 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
         List<FacilityData> facilities = repository.findFacilityDataByAccountIdAndClosedDateIsNull(1L);
 
         assertThat(facilities).hasSize(1);
-        assertThat(facilities.getFirst().getFacilityId()).isEqualTo("ADS_1-F00014");
+        assertThat(facilities.getFirst().getFacilityBusinessId()).isEqualTo("ADS_1-F00014");
     }
 
     @Test
     void searchFacilityDataByAccountIdAndTerm() {
         final int pageSize = 30;
-        final Pageable pageable = PageRequest.of(0, pageSize, Sort.by("facilityId"));
+        final Pageable pageable = PageRequest.of(0, pageSize, Sort.by("facilityBusinessId"));
 
         Page<FacilityData> results = repository.searchFacilityDataByAccountIdAndTerm(pageable, 1L, "term");
 
-        List<String> facilities = results.stream().map(FacilityData::getFacilityId).toList();
+        List<String> facilities = results.stream().map(FacilityData::getFacilityBusinessId).toList();
         assertThat(facilities).hasSize(1);
         assertThat(facilities.getFirst()).isEqualTo("ADS_1-F00016");
     }
 
     @Test
-    void findByFacilityIdAndClosedDateIsNull() {
+    void findByFacilityBusinessIdAndClosedDateIsNull() {
 
-        Optional<FacilityData> facilityDataOptional = repository.findByFacilityIdAndClosedDateIsNull("ADS_1-F00014");
+        Optional<FacilityData> facilityDataOptional = repository.findByFacilityBusinessIdAndClosedDateIsNull("ADS_1-F00014");
 
         assertThat(facilityDataOptional).isPresent();
-        assertThat(facilityDataOptional.get().getFacilityId()).isEqualTo("ADS_1-F00014");
+        assertThat(facilityDataOptional.get().getFacilityBusinessId()).isEqualTo("ADS_1-F00014");
         assertThat(facilityDataOptional.get().getClosedDate()).isNull();
         assertThat(facilityDataOptional.get().getParticipatingSchemeVersions())
                 .isEqualTo(Set.of(SchemeVersion.CCA_2));

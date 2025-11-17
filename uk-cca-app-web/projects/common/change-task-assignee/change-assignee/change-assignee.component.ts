@@ -30,7 +30,6 @@ interface ViewModel {
 
 @Component({
   selector: 'netz-change-assignee',
-  standalone: true,
   templateUrl: './change-assignee.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UserFullNamePipe],

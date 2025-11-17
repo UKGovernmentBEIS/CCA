@@ -13,7 +13,6 @@ import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
 @Component({
   selector: 'cca-edit-financial-independence',
   templateUrl: './edit-financial-independence.component.html',
-  standalone: true,
   imports: [SelectComponent, ReactiveFormsModule, WizardStepComponent, RouterLink],
   providers: [StatusPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,

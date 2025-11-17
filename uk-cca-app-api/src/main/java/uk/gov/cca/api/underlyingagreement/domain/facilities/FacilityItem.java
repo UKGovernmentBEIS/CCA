@@ -27,6 +27,7 @@ import java.util.UUID;
         message = "underlyingagreement.facilities.cca3BaselineAndTargets")
 public class FacilityItem {
 
+	// The facility business id
     @NotNull
     @Size(max = 255)
     @Pattern(regexp = "^[A-Z0-9_]+-F\\d{5}$", message = "underlyingagreement.facilities.facilityId")

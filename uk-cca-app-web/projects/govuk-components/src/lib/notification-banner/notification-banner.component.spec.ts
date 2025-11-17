@@ -11,7 +11,6 @@ describe('NotificationBannerComponent', () => {
   let element: HTMLElement;
 
   @Component({
-    standalone: true,
     imports: [NotificationBannerComponent],
     template: `
       <govuk-notification-banner [type]="type" [heading]="heading">

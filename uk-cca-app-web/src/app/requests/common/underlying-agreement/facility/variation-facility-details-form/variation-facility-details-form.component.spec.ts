@@ -13,7 +13,6 @@ import { VariationFacilityDetailsFormComponent } from './variation-facility-deta
 import { VARIATION_FACILITY_DETAILS_FORM } from './variation-facility-details-form.provider';
 
 @Component({
-  standalone: true,
   template: `<form [formGroup]="form"><cca-variation-facility-details-form /></form>`,
   imports: [VariationFacilityDetailsFormComponent, ReactiveFormsModule],
 })
@@ -44,6 +43,8 @@ describe('VariationFacilityDetailsFormComponent', () => {
               uketsId: new FormControl(''),
               applicationReason: new FormControl('NEW_AGREEMENT'),
               previousFacilityId: new FormControl(''),
+              participatingSchemeVersions: new FormControl([]),
+              schemeParticipationChoice: new FormControl(null),
               sameAddress: new FormControl([false]),
               facilityAddress: new FormGroup({
                 city: new FormControl(null),

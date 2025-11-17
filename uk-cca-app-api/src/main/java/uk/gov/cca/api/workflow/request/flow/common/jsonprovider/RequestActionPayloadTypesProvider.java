@@ -10,7 +10,13 @@ import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.Adm
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.TP6BuyOutCalculatedAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.run.domain.BuyOutSurplusRunCompletedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.processing.domain.Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivatedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerReviewDecisionSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaGeneratedRequestActionPayload;
@@ -34,6 +40,12 @@ import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloa
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.ADMIN_TERMINATION_SUBMITTED_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.ADMIN_TERMINATION_WITHDRAW_SUBMITTED_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.BUY_OUT_SURPLUS_RUN_COMPLETED_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.PERFORMANCE_DATA_SPREADSHEET_PROCESSING_SUBMITTED_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.SECTOR_MOA_GENERATED_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.SUBSISTENCE_FEES_RUN_COMPLETED_PAYLOAD;
@@ -99,7 +111,19 @@ public class RequestActionPayloadTypesProvider implements JsonSubTypesProvider {
                 // Buy Out Surplus
                 new NamedType(BuyOutSurplusRunCompletedRequestActionPayload.class, BUY_OUT_SURPLUS_RUN_COMPLETED_PAYLOAD),
                 new NamedType(TP6BuyOutCalculatedAccountProcessingSubmittedRequestActionPayload.class, TP6_BUY_OUT_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD),
-                new NamedType(TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload.class, TP6_SURPLUS_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD)
+                new NamedType(TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload.class, TP6_SURPLUS_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD),
+
+                // CCA3 Existing Facilities Migration
+                new NamedType(Cca3ExistingFacilitiesMigrationAccountProcessingSubmittedRequestActionPayload.class, CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD),
+                new NamedType(Cca3ExistingFacilitiesMigrationAccountProcessingActivatedRequestActionPayload.class, CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED_PAYLOAD),
+
+                // Facility Audit
+                new NamedType(PreAuditReviewSubmittedRequestActionPayload.class, FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED_PAYLOAD),
+                new NamedType(AuditDetailsCorrectiveActionsSubmittedRequestActionPayload.class, FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED_PAYLOAD),
+                new NamedType(AuditTrackCorrectiveActionsSubmittedRequestActionPayload.class, FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED_PAYLOAD),
+
+                // CCA2 Extension Notice
+                new NamedType(Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload.class, CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD)
         );
     }
 

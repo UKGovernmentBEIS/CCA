@@ -11,8 +11,8 @@
  */
 
 export interface BuyOutCalculatedDetails {
-  priBuyOutCarbon: number;
-  priBuyOutCost: number;
-  previousPaidFees: number;
-  buyOutFee: number;
+  priBuyOutCarbon: string;
+  priBuyOutCost: string;
+  previousPaidFees: string;
+  buyOutFee: string;
 }

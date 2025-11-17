@@ -1,5 +1,5 @@
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
+  <div class="govuk-grid-column-three-quarters">
     <netz-page-heading
       size="l"
       [caption]="accountDetails.targetUnitAccountDetails.businessId"
@@ -14,12 +14,18 @@
       </span>
     </netz-page-heading>
   </div>
+
+  <div class="govuk-grid-column-one-quarter" style="text-align: end">
+    <button class="govuk-!-margin-top-3" govukButton type="button" routerLink="./process-actions">
+      Start a new task
+    </button>
+  </div>
 </div>
 
 <section data-testid="target-unit">
   <govuk-tabs queryParamsHandling="replace">
     <ng-template govukTabLazy id="details" label="Details">
-      <cca-summary [data]="summaryData" />
+      <cca-details-summary [isEditableData]="isEditableData" />
     </ng-template>
 
     <ng-template govukTabLazy id="facilities" label="Facilities">

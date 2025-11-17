@@ -1,0 +1,11 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <netz-page-heading [caption]="facility()?.facilityDetails?.name">Split by product</netz-page-heading>
+  </div>
+</div>
+
+<cca-split-by-product-table
+  [products]="products()"
+  [facilityThroughputUnit]="facilityThroughputUnit()"
+  [readOnly]="true"
+/>

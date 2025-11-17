@@ -35,7 +35,6 @@ import {
 @Component({
   selector: 'cca-performance-data-download-generate',
   templateUrl: './performance-data-download-generate.component.html',
-  standalone: true,
   imports: [
     SummaryListComponent,
     SummaryListRowDirective,

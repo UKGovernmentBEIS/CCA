@@ -11,5 +11,6 @@ export const authorisationAdditionalEvidenceRedirectGuard: CanActivateFn = (rout
   const statusPending = sectionStatus === TaskItemStatus.NOT_STARTED || sectionStatus === TaskItemStatus.IN_PROGRESS;
 
   if (statusPending) return createUrlTreeFromSnapshot(route, ['check-your-answers']);
+
   return createUrlTreeFromSnapshot(route, ['summary']);
 };

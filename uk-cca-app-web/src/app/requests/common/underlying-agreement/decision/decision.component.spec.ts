@@ -20,7 +20,6 @@ import { DecisionWithDateFormModel } from './type';
       <cca-decision />
     </form>
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, DecisionComponent],
   providers: [decisionFormProvider('AUTHORISATION_AND_ADDITIONAL_EVIDENCE')],

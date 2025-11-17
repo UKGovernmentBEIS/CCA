@@ -14,15 +14,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.facility.domain.FacilityDataStatus;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilitySearchCriteria;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationStatus;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.CertificationPeriodType;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityCertificationDetailsDTO;
-import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityCertificationSearchResultInfoDTO;
+import uk.gov.cca.api.web.orchestrator.facility.dto.FacilitySearchResultExtendedDTO;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityInfoDTO;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilitySearchResults;
 import uk.gov.cca.api.web.orchestrator.facility.service.FacilityInfoServiceOrchestrator;
@@ -96,15 +96,15 @@ class FacilityViewControllerTest {
     @Test
     void searchFacilities() throws Exception {
         final Long accountId = 1L;
-        final String facilityId = "SA-F00001";
+        final String facilityBusinessId = "SA-F00001";
         final String siteName = "site1";
         final AppUser user = AppUser.builder().roleType(SECTOR_USER).build();
         final String term = "SA-";
         final int page = 0;
         final int pageSize = 30;
 
-        final FacilityCertificationSearchResultInfoDTO facilityCertificationSearchResultInfoDTO =
-                new FacilityCertificationSearchResultInfoDTO(facilityId, siteName, null, FacilityDataStatus.LIVE, FacilityCertificationStatus.CERTIFIED);
+        final FacilitySearchResultExtendedDTO facilitySearchResultExtendedDTO =
+                new FacilitySearchResultExtendedDTO(1L, facilityBusinessId, siteName, null, FacilityDataStatus.LIVE, FacilityCertificationStatus.CERTIFIED, null);
 
 
         final FacilitySearchCriteria facilitySearchCriteria = FacilitySearchCriteria.builder()
@@ -113,12 +113,12 @@ class FacilityViewControllerTest {
                 .build();
 
         final FacilitySearchResults facilitySearchResults = FacilitySearchResults.builder()
-                .facilities(List.of(facilityCertificationSearchResultInfoDTO))
+                .facilities(List.of(facilitySearchResultExtendedDTO))
                 .total(1L)
                 .build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(facilitySearchService.searchFacilities(accountId, facilitySearchCriteria)).thenReturn(facilitySearchResults);
+        when(facilitySearchService.searchFacilities(accountId, user, facilitySearchCriteria)).thenReturn(facilitySearchResults);
 
         //invoke
         mockMvc.perform(MockMvcRequestBuilders
@@ -132,16 +132,16 @@ class FacilityViewControllerTest {
                 .andExpect(jsonPath("$.facilities[0].id").value(facilitySearchResults.getFacilities().get(0).getId()));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(facilitySearchService, times(1)).searchFacilities(accountId, facilitySearchCriteria);
+        verify(facilitySearchService, times(1)).searchFacilities(accountId, user, facilitySearchCriteria);
     }
 
     @Test
     void getFacilityDetailsById() throws Exception {
 
-        final String facilityId = "SA-F00001";
+        final Long facilityId = 1L;
         final String siteName = "site1";
         final AppUser user = AppUser.builder().roleType(SECTOR_USER).build();
-        final AccountAddressDTO accountAddressDTO = AccountAddressDTO.builder()
+        final FacilityAddressDTO accountAddressDTO = FacilityAddressDTO.builder()
                 .line1("line1")
                 .city("Athens")
                 .county("Greece")

@@ -12,25 +12,25 @@ import {
 export const mockFacilitiesList: SubsistenceFeesMoaFacilitySearchResultInfoDTO[] = [
   {
     moaFacilityId: 1,
-    facilityId: 'ADS_52-F00001',
+    facilityBusinessId: 'ADS_52-F00001',
     facilityName: 'fac52-1',
     markFacilitiesStatus: 'IN_PROGRESS',
   },
   {
     moaFacilityId: 2,
-    facilityId: 'ADS_52-F00002',
+    facilityBusinessId: 'ADS_52-F00002',
     facilityName: 'fac52-2',
     markFacilitiesStatus: 'IN_PROGRESS',
   },
   {
     moaFacilityId: 3,
-    facilityId: 'ADS_52-F00003',
+    facilityBusinessId: 'ADS_52-F00003',
     facilityName: 'fac52-3',
     markFacilitiesStatus: 'COMPLETED',
   },
   {
     moaFacilityId: 4,
-    facilityId: 'ADS_52-F00004',
+    facilityBusinessId: 'ADS_52-F00004',
     facilityName: 'fac52-4',
     markFacilitiesStatus: 'CANCELLED',
   },

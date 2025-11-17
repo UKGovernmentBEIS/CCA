@@ -20,7 +20,6 @@ import { SectorAssociationInfoSummaryComponent } from '../sector-association-inf
 @Component({
   selector: 'cca-performance-data-download-generated',
   templateUrl: './performance-data-download-generated.component.html',
-  standalone: true,
   imports: [
     NotificationBannerComponent,
     NgOptimizedImage,

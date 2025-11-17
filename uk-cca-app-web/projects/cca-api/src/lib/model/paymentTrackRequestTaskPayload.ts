@@ -13,6 +13,6 @@
 export interface PaymentTrackRequestTaskPayload {
   payloadType?: string;
   sendEmailNotification?: boolean;
-  amount?: number;
+  amount?: string;
   paymentRefNum?: string;
 }

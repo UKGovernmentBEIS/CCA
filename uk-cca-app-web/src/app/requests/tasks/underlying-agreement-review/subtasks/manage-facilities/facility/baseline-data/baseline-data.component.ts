@@ -35,7 +35,6 @@ import { FACILITY_BASELINE_DATA_FORM, FacilityBaselineDataFormProvider } from '.
 @Component({
   selector: 'cca-baseline-data',
   templateUrl: './baseline-data.component.html',
-  standalone: true,
   imports: [
     RadioComponent,
     RadioOptionComponent,
@@ -98,7 +97,7 @@ export class BaselineDataComponent {
     const actionPayload = toUnderlyingAgreementSaveReviewPayload(payload);
 
     // Create a copy of the facility with updated contact details
-    const updatedPayload = update(actionPayload, this.facilityId, this.form);
+    const updatedPayload = update(actionPayload, this.facilityId, this.form, this.dateIsGreaterThanStartOf2022());
 
     const currentReviewSectionsCompleted = this.store.select(
       underlyingAgreementReviewQuery.selectReviewSectionsCompleted,
@@ -126,25 +125,33 @@ export class BaselineDataComponent {
         if (isFacilityWizardCompleted(facility)) {
           this.router.navigate(['../decision'], { relativeTo: this.activatedRoute });
         } else {
-          this.router.navigate(['../', FacilityWizardStep.TARGETS], { relativeTo: this.activatedRoute });
+          this.router.navigate(['../', FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION], {
+            relativeTo: this.activatedRoute,
+          });
         }
       });
   }
 }
 
-function update(payload: UnderlyingAgreementApplySavePayload, facilityId: string, form: FacilityBaselineDataFormModel) {
+function update(
+  payload: UnderlyingAgreementApplySavePayload,
+  facilityId: string,
+  form: FacilityBaselineDataFormModel,
+  dateIsGreaterThanStartOf2022: boolean,
+) {
   return produce(payload, (draft) => {
-    const facilityIndex = draft.facilities.findIndex((f) => f.facilityId === facilityId);
+    const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
     if (facilityIndex === -1) return;
 
     const baselineDate = form.controls.baselineDate?.value;
     const greenfieldEvidences = fileUtils.toUUIDs(form.controls.greenfieldEvidences?.value);
+    const isTwelveMonths = form.controls.isTwelveMonths?.value;
 
     draft.facilities[facilityIndex].cca3BaselineAndTargets.baselineData = {
-      isTwelveMonths: form.controls.isTwelveMonths?.value,
+      isTwelveMonths,
       baselineDate: baselineDate ? baselineDate.toISOString().split('T')[0] : null, // Format as YYYY-MM-DD
-      explanation: form.controls.explanation?.value,
-      greenfieldEvidences: Array.isArray(greenfieldEvidences) ? greenfieldEvidences : [],
+      explanation: !isTwelveMonths || dateIsGreaterThanStartOf2022 ? form.controls.explanation?.value : null,
+      greenfieldEvidences: Array.isArray(greenfieldEvidences) && !isTwelveMonths ? greenfieldEvidences : [],
       energy: form.controls.energy?.value,
       usedReportingMechanism: form.controls.usedReportingMechanism?.value,
       energyCarbonFactor: form.controls.energyCarbonFactor?.value,

@@ -36,7 +36,7 @@ import java.time.Year;
 )
 @NamedQuery(
         name = FacilityProcessStatus.NAMED_QUERY_GET_SECTOR_FACILITIES_FOR_SUBSISTENCE_FEES_RUN,
-        query = "select new uk.gov.cca.api.subsistencefees.domain.dto.EligibleFacilityDTO(fd.id, fd.facilityId as facilityId, fd.siteName as siteName, acc.businessId as businessId, acc.name as operatorName, acc.id as accountId) " +
+        query = "select new uk.gov.cca.api.subsistencefees.domain.dto.EligibleFacilityDTO(fd.id, fd.facilityBusinessId as facilityBusinessId, fd.siteName as siteName, acc.businessId as businessId, acc.name as operatorName, acc.id as accountId) " +
                 "from FacilityData fd inner join TargetUnitAccount acc on fd.accountId = acc.id " +
                 "where acc.sectorAssociationId = :sectorAssociationId " +
                 "  and acc.financialIndependenceStatus = 'NON_FINANCIALLY_INDEPENDENT' " +
@@ -49,7 +49,7 @@ import java.time.Year;
 )
 @NamedQuery(
         name = FacilityProcessStatus.NAMED_QUERY_GET_ACCOUNT_FACILITIES_FOR_SUBSISTENCE_FEES_RUN,
-        query = "select new uk.gov.cca.api.subsistencefees.domain.dto.EligibleFacilityDTO(fd.id, fd.facilityId as facilityId, fd.siteName as siteName, acc.businessId as businessId, acc.name as operatorName, acc.id as accountId) " +
+        query = "select new uk.gov.cca.api.subsistencefees.domain.dto.EligibleFacilityDTO(fd.id, fd.facilityBusinessId as facilityBusinessId, fd.siteName as siteName, acc.businessId as businessId, acc.name as operatorName, acc.id as accountId) " +
                 "from FacilityData fd inner join TargetUnitAccount acc on fd.accountId = acc.id " +
                 "where acc.id = :accountId " +
                 "  and acc.financialIndependenceStatus = 'FINANCIALLY_INDEPENDENT' " +

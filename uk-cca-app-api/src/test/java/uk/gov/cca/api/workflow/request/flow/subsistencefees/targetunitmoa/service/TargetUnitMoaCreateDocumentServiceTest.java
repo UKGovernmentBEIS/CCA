@@ -51,7 +51,7 @@ class TargetUnitMoaCreateDocumentServiceTest {
         final String accountBusinessId = "accountBusinessId";
         final BigDecimal facilityFee = BigDecimal.valueOf(185);
         final List<EligibleFacilityDTO> facilities = List.of(EligibleFacilityDTO.builder()
-                .facilityId("fId")
+                .facilityBusinessId("fId")
                 .targetUnitBusinessId(accountBusinessId)
                 .build());
         final String parentRequestId = "parentRequestId";

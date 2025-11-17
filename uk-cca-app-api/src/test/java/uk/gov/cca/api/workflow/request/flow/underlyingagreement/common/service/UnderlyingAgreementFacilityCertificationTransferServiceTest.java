@@ -54,16 +54,16 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
         Set<String> facilityIds = Set.of("prevFacilityId");
 
         FacilityBaseInfoDTO prevFacilityData = FacilityBaseInfoDTO.builder()
-                .facilityId("prevFacilityId")
+                .facilityBusinessId("prevFacilityId")
                 .id(2L)
                 .build();
 
         Set<FacilityBaseInfoDTO> createdFacilities = Set.of(FacilityBaseInfoDTO.builder()
-                        .facilityId("newFacilityId")
+                        .facilityBusinessId("newFacilityId")
                         .id(1L)
                         .build(),
                 FacilityBaseInfoDTO.builder()
-                        .facilityId("newFacilityId2")
+                        .facilityBusinessId("newFacilityId2")
                         .id(3L)
                         .build());
 
@@ -94,7 +94,7 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
                 .startDate(LocalDate.of(2025, 5, 5))
                 .build();
 
-        when(facilityDataQueryService.getFacilityBaseInfoList(Set.of("prevFacilityId")))
+        when(facilityDataQueryService.getFacilityBaseInfoListByFacilityBusinessIds(Set.of("prevFacilityId")))
                 .thenReturn(List.of(prevFacilityData));
         when(facilityCertificationService.getFacilityCertifications(Set.of(2L)))
                 .thenReturn(List.of(previousFacilityCertificationDTO));
@@ -103,7 +103,7 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
         facilityCertificationTransferService.processFacilityCertificationsForNewFacilities(createdFacilities, Set.of(facilityItem1, facilityItem2));
 
         // verify
-        verify(facilityDataQueryService, times(1)).getFacilityBaseInfoList(facilityIds);
+        verify(facilityDataQueryService, times(1)).getFacilityBaseInfoListByFacilityBusinessIds(facilityIds);
         verify(facilityCertificationService, times(1)).createFacilityCertifications(List.of(newFacilityCertificationDTO));
     }
 
@@ -114,16 +114,16 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
         Set<String> facilityIds = Set.of("prevFacilityId");
 
         FacilityBaseInfoDTO prevFacilityData = FacilityBaseInfoDTO.builder()
-                .facilityId("prevFacilityId")
+                .facilityBusinessId("prevFacilityId")
                 .id(2L)
                 .build();
 
         Set<FacilityBaseInfoDTO> createdFacilities = Set.of(FacilityBaseInfoDTO.builder()
-                        .facilityId("newFacilityId")
+                        .facilityBusinessId("newFacilityId")
                         .id(1L)
                         .build(),
                 FacilityBaseInfoDTO.builder()
-                        .facilityId("newFacilityId2")
+                        .facilityBusinessId("newFacilityId2")
                         .id(3L)
                         .build());
 
@@ -142,7 +142,7 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
                 .facilityId("newFacilityId2")
                 .build();
 
-        when(facilityDataQueryService.getFacilityBaseInfoList(Set.of("prevFacilityId")))
+        when(facilityDataQueryService.getFacilityBaseInfoListByFacilityBusinessIds(Set.of("prevFacilityId")))
                 .thenReturn(List.of(prevFacilityData));
         when(facilityCertificationService.getFacilityCertifications(Set.of(2L)))
                 .thenReturn(Collections.emptyList());
@@ -151,7 +151,7 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
         facilityCertificationTransferService.processFacilityCertificationsForNewFacilities(createdFacilities, Set.of(facilityItem1, facilityItem2));
 
         // verify
-        verify(facilityDataQueryService, times(1)).getFacilityBaseInfoList(facilityIds);
+        verify(facilityDataQueryService, times(1)).getFacilityBaseInfoListByFacilityBusinessIds(facilityIds);
         verify(facilityCertificationService, never()).createFacilityCertifications(List.of());
     }
 
@@ -165,11 +165,11 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
                 .endDate(LocalDate.of(2027, 7, 31))
                 .build();
         Set<FacilityBaseInfoDTO> createdFacilities = Set.of(FacilityBaseInfoDTO.builder()
-                        .facilityId("newFacilityId")
+                        .facilityBusinessId("newFacilityId")
                         .id(1L)
                         .build(),
                 FacilityBaseInfoDTO.builder()
-                        .facilityId("newFacilityId2")
+                        .facilityBusinessId("newFacilityId2")
                         .id(2L)
                         .build());
 
@@ -187,7 +187,7 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
                 .facilityId("newFacilityId2")
                 .build();
 
-        when(facilityDataQueryService.getFacilityBaseInfoList(Set.of())).thenReturn(List.of());
+        when(facilityDataQueryService.getFacilityBaseInfoListByFacilityBusinessIds(Set.of())).thenReturn(List.of());
         when(facilityCertificationService.getFacilityCertifications(Set.of())).thenReturn(List.of());
 	    when(certificationPeriodService.getCurrentCertificationPeriodOptional())
 			    .thenReturn(Optional.of(currentCP));
@@ -195,7 +195,7 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
         facilityCertificationTransferService.processFacilityCertificationsForNewFacilities(createdFacilities, Set.of(facilityItem1, facilityItem2));
 
         // verify
-        verify(facilityDataQueryService, times(1)).getFacilityBaseInfoList(Set.of());
+        verify(facilityDataQueryService, times(1)).getFacilityBaseInfoListByFacilityBusinessIds(Set.of());
         verify(facilityCertificationService, times(1))
                 .createFacilityCertifications(anyList());
     }
@@ -207,7 +207,7 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
         ReflectionTestUtils.setField(facilityCertificationTransferService, "facilityCertificationNewEntrantsStartDate", "2025-01-01");
 
         FacilityBaseInfoDTO facilityDto = new FacilityBaseInfoDTO();
-        facilityDto.setFacilityId("FAC-123");
+        facilityDto.setFacilityBusinessId("FAC-123");
         facilityDto.setId(1L);
 
         FacilityDetails details = new FacilityDetails();

@@ -12,4 +12,6 @@ public final class CcaEmailNotificationTemplateConstants {
     public static final String TARGET_UNIT_ID = "targetUnit";
     public static final String CONTACT = "contactRegulator";
     public static final String SECTOR_CONTACT = "sectorContact";
+    public static final String FACILITY_NAME = "facilityName";
+    public static final String FACILITY_BUSINESS_ID = "facilityBusinessId";
 }

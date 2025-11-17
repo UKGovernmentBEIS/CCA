@@ -14,7 +14,6 @@ import { FileUpload, FileUploadEvent } from './file-upload-event';
 @Component({
   selector: 'cca-file-input',
   templateUrl: './file-input.component.html',
-  standalone: true,
   imports: [FileUploadListComponent, ErrorMessageComponent, AsyncPipe],
 })
 export class FileInputComponent implements OnInit, ControlValueAccessor {

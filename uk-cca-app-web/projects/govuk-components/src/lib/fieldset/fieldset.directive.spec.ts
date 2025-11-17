@@ -11,7 +11,6 @@ describe('FieldsetDirective', () => {
   let element: HTMLElement;
 
   @Component({
-    standalone: true,
     imports: [FieldsetDirective, FieldsetHintDirective],
     template: `
       <fieldset govukFieldset>

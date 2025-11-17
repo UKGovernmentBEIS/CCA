@@ -9,7 +9,6 @@ describe('ButtonDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
-    standalone: true,
     imports: [ButtonDirective],
     template: `
       <button #simple govukButton (click)="onClick()">Simple button</button>

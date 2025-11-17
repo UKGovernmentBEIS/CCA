@@ -6,7 +6,6 @@ import { PanelComponent } from '@netz/govuk-components';
 @Component({
   selector: 'cca-confirmation',
   templateUrl: './confirmation.component.html',
-  standalone: true,
   imports: [RouterLink, PanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

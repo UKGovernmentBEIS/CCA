@@ -42,7 +42,6 @@ import {
 @Component({
   selector: 'cca-facility-eligibility-details',
   templateUrl: './facility-eligibility-details.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,

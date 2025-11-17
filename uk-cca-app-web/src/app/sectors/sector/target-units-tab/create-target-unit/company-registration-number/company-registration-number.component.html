@@ -1,0 +1,64 @@
+<cca-wizard-step
+  (formSubmit)="onSubmitCompanyRegistrationNumber()"
+  [formGroup]="form"
+  caption="New target unit"
+  heading="Does the applicant have a company number?"
+  data-testid="conpany-registration-number-form"
+>
+  <div class="govuk-!-width-two-thirds">
+    <p class="govuk-hint">
+      If the applicant is registered with Companies House or Mutual Public Register, you must enter their company
+      number.
+    </p>
+
+    <govuk-details summary="Where you can find the company number">
+      <p>You can find the company number on:</p>
+      <ul>
+        <li>
+          The
+          <a
+            href="https://find-and-update.company-information.service.gov.uk/"
+            class="govuk-link"
+            rel="noreferrer noopener"
+          >
+            Companies House website
+          </a>
+        </li>
+        <li>The company's certificate of incorporation</li>
+      </ul>
+
+      <p>
+        If the applicant is registered with the Mutual Public Register, you can find it on the
+        <a href="https://mutuals.fca.org.uk/" class="govuk-link" rel="noreferrer noopener">
+          Mutual Public Register website </a
+        >.
+      </p>
+    </govuk-details>
+
+    <div formControlName="isCompanyRegistrationNumber" govuk-radio>
+      <govuk-radio-option [value]="true" label="Yes, the applicant is registered and has a company number">
+        <ng-container govukConditionalContent>
+          <div
+            widthClass="govuk-input--width-10"
+            formControlName="companyRegistrationNumber"
+            govuk-text-input
+            label="Company number"
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+
+      <govuk-radio-option [value]="false" label="No, the applicant does not have a company number">
+        <ng-container govukConditionalContent>
+          <div
+            formControlName="registrationNumberMissingReason"
+            govuk-text-input
+            label="Tell us why there is no company number"
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+    </div>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" [routerLink]="'../../..'" fragment="target-units"> Return to: Sector target units </a>

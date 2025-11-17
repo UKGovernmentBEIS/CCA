@@ -26,7 +26,6 @@ import { BuyoutAndSurplusTabStore } from './buyout-and-surplus-tab.store';
       }
     `,
   ],
-  standalone: true,
   imports: [
     SummaryListRowDirective,
     SummaryListRowKeyDirective,

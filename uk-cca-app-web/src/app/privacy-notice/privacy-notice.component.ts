@@ -6,7 +6,6 @@ import { BackToTopComponent } from '@shared/components';
 @Component({
   selector: 'cca-privacy-notice',
   templateUrl: './privacy-notice.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, BackToTopComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

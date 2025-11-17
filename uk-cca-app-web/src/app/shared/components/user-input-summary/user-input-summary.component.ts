@@ -14,7 +14,6 @@ import { CcaOperatorUserRegistrationWithCredentialsDTO } from 'cca-api';
 @Component({
   selector: 'cca-user-input-summary-template',
   templateUrl: './user-input-summary.component.html',
-  standalone: true,
   imports: [
     RouterLink,
     PhoneNumberPipe,

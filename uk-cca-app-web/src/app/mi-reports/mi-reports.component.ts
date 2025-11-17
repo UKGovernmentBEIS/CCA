@@ -24,7 +24,6 @@ import { MiReportsStore } from './mi-reports.store';
       </govuk-table>
     </div>
   `,
-  standalone: true,
   imports: [PageHeadingComponent, TableComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

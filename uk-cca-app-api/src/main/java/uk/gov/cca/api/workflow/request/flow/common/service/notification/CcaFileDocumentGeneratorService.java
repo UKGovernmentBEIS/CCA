@@ -41,7 +41,9 @@ public class CcaFileDocumentGeneratorService {
     public CompletableFuture<FileInfoDTO> generateAsync(final Request request, final CcaDecisionNotification decisionNotification,
             String type, String documentTemplateType, String fileNameToGenerate) {
 		
-		return generateAsync(request, decisionNotification, type, documentTemplateType, fileNameToGenerate, null);
+    	TemplateParams templateParams = constructTemplateParams(request, decisionNotification, type, null);
+        
+        return fileDocumentGenerateServiceDelegator.generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate);
 	}
 
     public CompletableFuture<FileInfoDTO> generateAsync(final Request request, final CcaDecisionNotification decisionNotification,
@@ -63,6 +65,7 @@ public class CcaFileDocumentGeneratorService {
         commonTemplateParams.getParams().putAll(documentTemplateParams.getParams());
 
         final TemplateParams templateParams = TemplateParams.builder()
+                .workflowParams(commonTemplateParams.getWorkflowParams())
                 .competentAuthorityParams(commonTemplateParams.getCompetentAuthorityParams())
                 .signatoryParams(commonTemplateParams.getSignatoryParams())
                 .accountParams(commonTemplateParams.getAccountParams())
@@ -71,7 +74,7 @@ public class CcaFileDocumentGeneratorService {
         return fileDocumentGenerateServiceDelegator.generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate);
     }
 
-    private TemplateParams constructTemplateParams(final Request request, final CcaDecisionNotification decisionNotification, String type, SchemeVersion version) {
+    private TemplateParams constructTemplateParams(final Request request, final CcaDecisionNotification decisionNotification, String type, SchemeVersion schemeVersion) {
         DocumentTemplateParamsSourceData params = DocumentTemplateParamsSourceData.builder()
                 .contextActionType(type)
                 .request(request)
@@ -79,18 +82,18 @@ public class CcaFileDocumentGeneratorService {
                 .ccRecipientsEmails(this.ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification))
                 .build();
         TemplateParams templateParams = documentTemplateOfficialNoticeParamsProvider.constructTemplateParams(params);
-        templateParams.getParams().putAll(documentTemplateCommonParamsProvider.getSectorTemplateParams(request, version));
+        templateParams.getParams().putAll(documentTemplateCommonParamsProvider.getSectorTemplateParams(request, schemeVersion));
         return templateParams;
     }
 
-    private TemplateParams constructTemplateParams(final Request request, final String signatory, String type, SchemeVersion version) {
+    private TemplateParams constructTemplateParams(final Request request, final String signatory, String type, SchemeVersion schemeVersion) {
         DocumentTemplateParamsSourceData params = DocumentTemplateParamsSourceData.builder()
                 .contextActionType(type)
                 .request(request)
                 .signatory(signatory)
                 .build();
         TemplateParams templateParams = documentTemplateOfficialNoticeParamsProvider.constructTemplateParams(params);
-        templateParams.getParams().putAll(documentTemplateCommonParamsProvider.getSectorTemplateParams(request, version));
+        templateParams.getParams().putAll(documentTemplateCommonParamsProvider.getSectorTemplateParams(request, schemeVersion));
         return templateParams;
     }
 }

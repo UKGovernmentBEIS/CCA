@@ -22,7 +22,6 @@ import { ButtonDirective } from '@netz/govuk-components';
       </button>
     }
   `,
-  standalone: true,
   imports: [ButtonDirective, PendingButtonDirective, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

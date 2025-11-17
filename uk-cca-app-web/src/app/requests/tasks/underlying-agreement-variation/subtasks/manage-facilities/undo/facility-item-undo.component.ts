@@ -5,7 +5,13 @@ import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
-import { MANAGE_FACILITIES_SUBTASK, TasksApiService, underlyingAgreementQuery } from '@requests/common';
+import {
+  areEntitiesIdentical,
+  resetFacilityNonComparisonFields,
+  TaskItemStatus,
+  TasksApiService,
+  underlyingAgreementQuery,
+} from '@requests/common';
 import { produce } from 'immer';
 
 import {
@@ -19,7 +25,6 @@ import { extractReviewProps } from '../../../utils';
 @Component({
   selector: 'cca-facility-item-undo',
   templateUrl: './facility-item-undo.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, RouterLink, ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -33,28 +38,38 @@ export class FacilityItemUndoComponent {
   protected readonly facility = this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId));
 
   onSubmit() {
-    // Step 1: Get payload from store
     const payload = this.requestTaskStore.select(
       requestTaskQuery.selectRequestTaskPayload,
     )() as UnderlyingAgreementVariationSubmitRequestTaskPayload;
 
-    // Step 2: Transform to save action payload
+    const originalPayload = (
+      this.requestTaskStore.select(
+        requestTaskQuery.selectRequestTaskPayload,
+      )() as UnderlyingAgreementVariationSubmitRequestTaskPayload
+    )?.originalUnderlyingAgreementContainer;
+
     const savePayload = toUnderlyingAgreementVariationSavePayload(payload);
 
-    // Step 3: Apply business logic transformations
+    const currentFacility = savePayload.facilities?.find((f) => f.facilityId === this.facilityId);
+    const originalFacility = originalPayload?.underlyingAgreement?.facilities?.find(
+      (f) => f.facilityId === this.facilityId,
+    );
+
+    const areIdentical = areEntitiesIdentical(
+      resetFacilityNonComparisonFields(currentFacility),
+      resetFacilityNonComparisonFields(originalFacility),
+    );
+
     const updatedPayload = undoFacility(savePayload, this.facilityId);
 
-    // Update sections completed
     const currentSectionsCompleted = this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)();
     const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
-      draft[MANAGE_FACILITIES_SUBTASK] = 'IN_PROGRESS';
+      draft[this.facilityId] = areIdentical ? TaskItemStatus.UNCHANGED : TaskItemStatus.COMPLETED;
     });
 
-    // Create and send DTO
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
     const reviewProps = extractReviewProps(this.requestTaskStore);
-    // we cannot reset the review section here because in this step we do not know if the change of the section
-    // started from the facility wizard, or was simply an exclusion. Thus, we prefer to keep the review section as undecided for safety.
+
     const dto = createRequestTaskActionProcessDTO(requestTaskId, updatedPayload, sectionsCompleted, reviewProps);
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {

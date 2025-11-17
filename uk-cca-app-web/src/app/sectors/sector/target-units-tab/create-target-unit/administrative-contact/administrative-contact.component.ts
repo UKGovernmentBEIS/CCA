@@ -15,7 +15,6 @@ import {
 @Component({
   selector: 'cca-administrative-contact',
   templateUrl: './administrative-contact.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, WizardStepComponent, AdministrativeContactInputComponent],
   providers: [TargetUnitAdministrativeContactFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,

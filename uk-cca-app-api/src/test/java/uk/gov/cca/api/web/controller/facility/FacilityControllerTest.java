@@ -92,22 +92,22 @@ class FacilityControllerTest {
     @Test
     void generateFacilityId() throws Exception {
         final Long accountId = 1L;
-        final String facilityId = "SA-F00001";
+        final String facilityBusinessId = "SA-F00001";
         final AppUser user = AppUser.builder().roleType(SECTOR_USER).build();
 
-        final FacilityDTO facilityDTO = FacilityDTO.builder().facilityId(facilityId).build();
+        final FacilityDTO facilityDTO = FacilityDTO.builder().facilityBusinessId(facilityBusinessId).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(facilityIdGeneratorServiceOrchestrator.generateFacilityId(accountId)).thenReturn(facilityDTO);
+        when(facilityIdGeneratorServiceOrchestrator.generateFacilityBusinessId(accountId)).thenReturn(facilityDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.get(FACILITY_CONTROLLER_PATH + "/generate/" + accountId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(jsonPath("$.facilityId").value(facilityId));
+                .andExpect(jsonPath("$.facilityBusinessId").value(facilityBusinessId));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(facilityIdGeneratorServiceOrchestrator, times(1)).generateFacilityId(accountId);
+        verify(facilityIdGeneratorServiceOrchestrator, times(1)).generateFacilityBusinessId(accountId);
     }
 
     @Test
@@ -118,7 +118,7 @@ class FacilityControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "generateFacilityId", Long.toString(1L), null, null);
+                .authorize(user, "generateFacilityBusinessId", Long.toString(1L), null, null);
 
         mockMvc.perform(
                         MockMvcRequestBuilders
@@ -126,32 +126,32 @@ class FacilityControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
 
-        verify(facilityIdGeneratorServiceOrchestrator, never()).generateFacilityId(anyLong());
+        verify(facilityIdGeneratorServiceOrchestrator, never()).generateFacilityBusinessId(anyLong());
     }
     
     @Test
     void getActiveFacilityParticipatingSchemeVersions() throws Exception {
-        final String facilityId = "SA-F00001";
+        final String facilityBusinessId = "SA-F00001";
         final AppUser user = AppUser.builder().roleType(SECTOR_USER).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(facilityDataQueryService.getActiveFacilityParticipatingSchemeVersions(facilityId))
+        when(facilityDataQueryService.getActiveFacilityParticipatingSchemeVersions(facilityBusinessId))
                 .thenReturn(Set.of(SchemeVersion.CCA_2));
 
-        mockMvc.perform(MockMvcRequestBuilders.get(FACILITY_CONTROLLER_PATH + "/facilityId")
-        		.param("facilityId", facilityId)
+        mockMvc.perform(MockMvcRequestBuilders.get(FACILITY_CONTROLLER_PATH + "/facilityBusinessId")
+        		.param("facilityBusinessId", facilityBusinessId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(Set.of(SchemeVersion.CCA_2.name()).toString()));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(facilityDataQueryService, times(1)).getActiveFacilityParticipatingSchemeVersions(facilityId);
+        verify(facilityDataQueryService, times(1)).getActiveFacilityParticipatingSchemeVersions(facilityBusinessId);
     }
 
     @Test
     void getSchemeVersionsIfFacility_IsActive_forbidden() throws Exception {
         final AppUser user = AppUser.builder().roleType(OPERATOR).userId("userId").build();
-        final String facilityId = "SA-F00001";
+        final String facilityBusinessId = "SA-F00001";
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
@@ -160,11 +160,11 @@ class FacilityControllerTest {
 
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .get(FACILITY_CONTROLLER_PATH + "/facilityId")
-                                .param("facilityId", facilityId)
+                                .get(FACILITY_CONTROLLER_PATH + "/facilityBusinessId")
+                                .param("facilityBusinessId", facilityBusinessId)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
 
-        verify(facilityDataQueryService, never()).getActiveFacilityParticipatingSchemeVersions(facilityId);
+        verify(facilityDataQueryService, never()).getActiveFacilityParticipatingSchemeVersions(facilityBusinessId);
     }
 }

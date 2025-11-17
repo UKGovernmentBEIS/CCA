@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FacilityComponent should match snapshot 1`] = `
 <cca-timeline-review-facility
@@ -48,7 +48,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             ADS_2-F00029 
+            <span>
+              ADS_2-F00029
+            </span>
           </dd>
         </div>
         <div
@@ -65,7 +67,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             aaa 
+            <span>
+              aaa
+            </span>
           </dd>
         </div>
         <div
@@ -82,7 +86,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             No 
+            <span>
+              No
+            </span>
           </dd>
         </div>
         <div
@@ -99,6 +105,8 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
         </div>
         <div
@@ -115,7 +123,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             New entrant 
+            <span>
+              New entrant
+            </span>
           </dd>
         </div>
         <div
@@ -132,6 +142,27 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Will this facility participate in the CCA3 (2026-2030) scheme?
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              Yes
+            </span>
           </dd>
         </div>
         <div
@@ -148,6 +179,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+              Both
+            </span>
           </dd>
         </div>
         <div
@@ -164,15 +198,25 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             test 
+            <span>
+              test
+            </span>
             <br />
-             test 
+            <span>
+              test
+            </span>
             <br />
-             test 
+            <span>
+              test
+            </span>
             <br />
-             test 
+            <span>
+              test
+            </span>
             <br />
-             GR 
+            <span>
+              GR
+            </span>
           </dd>
         </div>
       </dl>
@@ -199,7 +243,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             test 
+            <span>
+              test
+            </span>
           </dd>
         </div>
         <div
@@ -216,7 +262,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             test 
+            <span>
+              test
+            </span>
           </dd>
         </div>
         <div
@@ -233,7 +281,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             test@test.com 
+            <span>
+              test@test.com
+            </span>
           </dd>
         </div>
         <div
@@ -250,15 +300,25 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             test 
+            <span>
+              test
+            </span>
             <br />
-             test 
+            <span>
+              test
+            </span>
             <br />
-             test 
+            <span>
+              test
+            </span>
             <br />
-             test 
+            <span>
+              test
+            </span>
             <br />
-             GR 
+            <span>
+              GR
+            </span>
           </dd>
         </div>
         <div
@@ -275,7 +335,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             GR (30) 6999999999 
+            <span>
+              GR (30) 6999999999
+            </span>
           </dd>
         </div>
       </dl>
@@ -302,7 +364,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             No 
+            <span>
+              No
+            </span>
           </dd>
         </div>
         <div
@@ -319,6 +383,8 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
         </div>
         <div
@@ -335,7 +401,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Energy Intensive 
+            <span>
+              Energy Intensive
+            </span>
           </dd>
         </div>
         <div
@@ -352,6 +420,8 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
         </div>
         <div
@@ -368,6 +438,8 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
         </div>
         <div
@@ -384,6 +456,8 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
         </div>
         <div
@@ -529,7 +603,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             No 
+            <span>
+              No
+            </span>
           </dd>
         </div>
         <div
@@ -575,7 +651,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             75 % 
+            <span>
+              75 %
+            </span>
           </dd>
         </div>
         <div
@@ -592,6 +670,8 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
         </div>
         <div
@@ -608,7 +688,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             100 % 
+            <span>
+              100 %
+            </span>
           </dd>
         </div>
         <div
@@ -625,6 +707,8 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
         </div>
         <div
@@ -676,7 +760,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Accepted 
+            <span>
+              Accepted
+            </span>
           </dd>
         </div>
         <div
@@ -693,7 +779,9 @@ exports[`FacilityComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             ss 
+            <span>
+              ss
+            </span>
           </dd>
         </div>
         <div

@@ -75,7 +75,7 @@ export function toBuyoutFeeCalculatedSummaryData(
   return summary.create();
 }
 
-function addPrimaryBuyout(summary: SummaryFactory, buyOutFee: number): SummaryFactory {
+function addPrimaryBuyout(summary: SummaryFactory, buyOutFee: string): SummaryFactory {
   return summary.addRow('Total buy-out fee (GBP)', decimalPipe.transform(buyOutFee));
 }
 

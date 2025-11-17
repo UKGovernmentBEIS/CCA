@@ -15,7 +15,7 @@ export interface FacilityBaselineData {
   baselineDate: string;
   explanation?: string;
   greenfieldEvidences?: string[];
-  energy: number;
-  usedReportingMechanism?: boolean;
-  energyCarbonFactor: number;
+  energy?: string;
+  usedReportingMechanism: boolean;
+  energyCarbonFactor: string;
 }

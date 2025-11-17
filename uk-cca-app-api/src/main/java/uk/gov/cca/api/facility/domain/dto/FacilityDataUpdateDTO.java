@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 
 import java.time.LocalDate;
@@ -22,14 +21,14 @@ import java.util.Set;
 public class FacilityDataUpdateDTO {
 
     @NotNull
-    private String facilityId;
+    private String facilityBusinessId;
 
     @NotNull
     private String siteName;
 
     @NotNull
     @Valid
-    private AccountAddressDTO facilityAddress;
+    private FacilityAddressDTO facilityAddress;
 
     @PastOrPresent
     private LocalDate closedDate;

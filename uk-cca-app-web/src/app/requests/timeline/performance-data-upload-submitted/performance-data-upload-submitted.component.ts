@@ -9,7 +9,6 @@ import { toPerformanceUploadSubmittedSummaryData } from './performance-data-uplo
 @Component({
   selector: 'cca-performance-data-download-submitted',
   template: `<cca-summary [data]="summaryData()" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

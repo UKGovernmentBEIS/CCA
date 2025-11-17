@@ -8,7 +8,6 @@ import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-overall-decision-summary',
-  standalone: true,
   template: `
     <div>
       <netz-page-heading [caption]="caption">Summary</netz-page-heading>

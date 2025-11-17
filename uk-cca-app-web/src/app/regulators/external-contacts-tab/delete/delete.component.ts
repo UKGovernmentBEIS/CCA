@@ -14,7 +14,6 @@ import { ActiveExternalContactStore } from '../active-external-contact.store';
 @Component({
   selector: 'cca-delete',
   templateUrl: './delete.component.html',
-  standalone: true,
   imports: [ButtonDirective, PanelComponent, RouterLink, WarningTextComponent, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

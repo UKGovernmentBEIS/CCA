@@ -12,7 +12,6 @@ import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
 @Component({
   selector: 'cca-wizard-step',
   templateUrl: './wizard-step.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     AsyncPipe,

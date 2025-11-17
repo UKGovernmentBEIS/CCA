@@ -8,7 +8,6 @@ import { UIConfigurationService } from 'cca-api';
 @Component({
   selector: 'cca-service-banner',
   templateUrl: './service-banner.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServiceBannerComponent {

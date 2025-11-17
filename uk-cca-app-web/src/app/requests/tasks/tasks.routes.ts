@@ -139,6 +139,20 @@ export const TASKS_ROUTES: Routes = [
           ),
       },
       {
+        path: 'underlying-agreement-variation-peer-review',
+        loadChildren: () =>
+          import('./underlying-agreement-variation-peer-review/underlying-agreement-variation-peer-review.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW_ROUTES,
+          ),
+      },
+      {
+        path: 'underlying-agreement-variation-await-peer-review',
+        loadChildren: () =>
+          import(
+            './underlying-agreement-variation-wait-for-peer-review/underlying-agreement-variation-wait-for-peer-review.routes'
+          ).then((r) => r.UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW_ROUTES),
+      },
+      {
         path: 'performance-data-download',
         loadChildren: () =>
           import('./performance-data-download/performance-data-download.routes').then((r) => r.PERFORMANCE_DATA_ROUTES),
@@ -154,6 +168,17 @@ export const TASKS_ROUTES: Routes = [
         path: 'performance-account-template-upload',
         loadChildren: () =>
           import('./performance-account-template-upload/pat-upload.routes').then((r) => r.PAT_UPLOAD_ROUTES),
+      },
+      {
+        path: 'cca3-migration-account-activation',
+        loadChildren: () =>
+          import('./cca3-migration-account-activation/cca3-migration-account-activation.routes').then(
+            (r) => r.CCA3_MIGRATION_ACCOUNT_ACTIVATION_ROUTES,
+          ),
+      },
+      {
+        path: 'pre-audit-review',
+        loadChildren: () => import('./pre-audit-review/pre-audit-review.routes').then((r) => r.PRE_AUDIT_REVIEW_ROUTES),
       },
       {
         path: 'file-download/:uuid',

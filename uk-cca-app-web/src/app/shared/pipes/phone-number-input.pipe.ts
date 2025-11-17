@@ -10,7 +10,7 @@ export function transformPhoneInput(value: PhoneNumberDTO): string {
   const number = value.number || '';
   return `(+${countryCode})${number}`;
 }
-@Pipe({ name: 'phoneNumberInput', standalone: true, pure: true })
+@Pipe({ name: 'phoneNumberInput', pure: true })
 export class PhoneNumberInputPipe implements PipeTransform {
   transform = transformPhoneInput;
 }

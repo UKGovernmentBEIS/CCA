@@ -38,7 +38,10 @@ export function toUnderlyingAgreementVariationActivatedSummaryData(
     )
     .addFileListRow(
       'Official notice',
-      fileUtils.toDownloadableDocument([payload.underlyingAgreementDocument, payload.officialNotice], 'file-download'),
+      fileUtils.toDownloadableDocument(
+        [...Object.values(payload.underlyingAgreementDocuments), ...payload.officialNotices],
+        'file-download',
+      ),
     )
     .create();
 }

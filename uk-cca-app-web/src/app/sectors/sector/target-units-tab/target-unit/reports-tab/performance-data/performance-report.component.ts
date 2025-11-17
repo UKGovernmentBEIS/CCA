@@ -17,7 +17,6 @@ import { toTuReportsSummaryData } from '../tu-reports-summary-data';
 @Component({
   selector: 'cca-performance-report',
   templateUrl: './performance-report.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, SelectComponent, SummaryComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

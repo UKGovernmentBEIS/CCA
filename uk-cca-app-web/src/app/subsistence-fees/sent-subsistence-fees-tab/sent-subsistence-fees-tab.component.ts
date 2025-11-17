@@ -17,7 +17,6 @@ const DEFAULT_PAGE_SIZE = 10;
 @Component({
   selector: 'cca-sent-subsistence-fees-tab',
   templateUrl: './sent-subsistence-fees-tab.component.html',
-  standalone: true,
   imports: [
     RouterLink,
     DatePipe,
@@ -70,7 +69,7 @@ export class SentSubsistenceFeesTabComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.state().pageSize) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   private handleQueryParamsNavigation(pagination: Partial<{ page: number; pageSize: number }>) {

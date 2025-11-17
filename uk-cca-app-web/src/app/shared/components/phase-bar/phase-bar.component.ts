@@ -20,7 +20,6 @@ import { PhaseBannerComponent } from '@netz/govuk-components';
       }
     </govuk-phase-banner>
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PhaseBannerComponent, RouterLink],
 })

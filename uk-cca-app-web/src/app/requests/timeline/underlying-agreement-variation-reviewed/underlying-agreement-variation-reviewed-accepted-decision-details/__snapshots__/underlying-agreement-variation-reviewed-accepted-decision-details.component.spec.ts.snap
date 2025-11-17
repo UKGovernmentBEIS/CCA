@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent should match snapshot 1`] = `
 <div
@@ -63,7 +63,9 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
           
           
           
-           Accept 
+          <span>
+            Accept
+          </span>
           
           
           
@@ -89,7 +91,9 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
           
           
           
-           My info 
+          <span>
+            My info
+          </span>
           
           
           
@@ -156,17 +160,23 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
           
           
           
-           test test, Responsible person, test@test.com 
+          <span>
+            test test, Responsible person, test@test.com
+          </span>
           
           <br />
           
           
-           test test, Administrative contact, test@test.com 
+          <span>
+            test test, Administrative contact, test@test.com
+          </span>
           
           <br />
           
           
-           Fred_2 William_2, Sector contact, fredwilliam_2@agindustries.org.uk 
+          <span>
+            Fred_2 William_2, Sector contact, fredwilliam_2@agindustries.org.uk
+          </span>
           
           
           
@@ -192,7 +202,9 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
           
           
           
-           Regulator 2 
+          <span>
+            Regulator 2
+          </span>
           
           
           

@@ -16,7 +16,6 @@ import { TuMoasComponent } from './tu-moas/tu-moas.component';
 @Component({
   selector: 'cca-sent-subsistence-fees',
   templateUrl: './sent-subsistence-fees.component.html',
-  standalone: true,
   imports: [
     TagComponent,
     PageHeadingComponent,

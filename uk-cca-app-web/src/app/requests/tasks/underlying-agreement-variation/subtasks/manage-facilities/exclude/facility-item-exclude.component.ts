@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DateInputComponent } from '@netz/govuk-components';
-import { MANAGE_FACILITIES_SUBTASK, TasksApiService, underlyingAgreementQuery } from '@requests/common';
+import { TaskItemStatus, TasksApiService, underlyingAgreementQuery } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
@@ -25,7 +25,6 @@ import {
 @Component({
   selector: 'cca-facility-item-exclude',
   templateUrl: './facility-item-exclude.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, DateInputComponent],
   providers: [FacilityItemExcludeFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,32 +42,29 @@ export class FacilityItemExcludeComponent {
   );
 
   onSubmit() {
-    // Step 1: Get payload from store
     const payload = this.requestTaskStore.select(
       requestTaskQuery.selectRequestTaskPayload,
     )() as UnderlyingAgreementVariationSubmitRequestTaskPayload;
 
-    // Step 2: Transform to save action payload
     const savePayload = toUnderlyingAgreementVariationSavePayload(payload);
-
-    // Step 3: Apply business logic transformations
 
     const updatedPayload = excludeFacility(
       savePayload,
       this.facilityId,
-      this.form.value.excludedDate.toISOString().split('T')[0], // Format date to YYYY-MM-DD
+      this.form.value.excludedDate.toISOString().split('T')[0],
     );
 
-    // Update sections completed
     const currentSectionsCompleted = this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)();
     const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
-      draft[MANAGE_FACILITIES_SUBTASK] = 'IN_PROGRESS';
+      draft[this.facilityId] = TaskItemStatus.COMPLETED;
     });
 
-    // Create and send DTO
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
     const reviewProps = extractReviewProps(this.requestTaskStore);
-    const resetedProps = resetFacilityReviewSection(reviewProps, this.facilityId);
+
+    // The third argument (false) is for stating if the current facility is identical to the original.
+    // Since here this does not make any sense, we explicitly set it to false.
+    const resetedProps = resetFacilityReviewSection(reviewProps, this.facilityId, false);
 
     const dto = createRequestTaskActionProcessDTO(requestTaskId, updatedPayload, sectionsCompleted, {
       ...reviewProps,

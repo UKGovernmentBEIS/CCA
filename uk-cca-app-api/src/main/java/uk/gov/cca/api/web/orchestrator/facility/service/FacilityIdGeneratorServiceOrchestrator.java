@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
 import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
 import uk.gov.cca.api.facility.service.FacilityIdentifierService;
-import uk.gov.cca.api.facility.util.FacilityIdGeneratorUtil;
+import uk.gov.cca.api.facility.util.FacilityBusinessIdGeneratorUtil;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
 
 @Service
@@ -18,12 +18,12 @@ public class FacilityIdGeneratorServiceOrchestrator {
     private final TargetUnitAccountQueryService targetUnitAccountQueryService;
 
     @Transactional
-    public FacilityDTO generateFacilityId(Long accountId) {
+    public FacilityDTO generateFacilityBusinessId(Long accountId) {
         Long sectorAssociationId = targetUnitAccountQueryService.getAccountSectorAssociationId(accountId);
         final Long identifier = facilityIdentifierService.incrementAndGet(sectorAssociationId);
         String acronym = sectorAssociationQueryService.getSectorAssociationAcronymById(sectorAssociationId);
-        String facilityId = FacilityIdGeneratorUtil.generate(acronym, identifier);
+        String facilityBusinessId = FacilityBusinessIdGeneratorUtil.generate(acronym, identifier);
 
-        return FacilityDTO.builder().facilityId(facilityId).build();
+        return FacilityDTO.builder().facilityBusinessId(facilityBusinessId).build();
     }
 }

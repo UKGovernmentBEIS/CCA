@@ -18,7 +18,6 @@ import { generateDownloadUrl } from '@shared/utils';
 @Component({
   selector: 'cca-baseline-and-targets-summary',
   templateUrl: './baseline-and-targets-summary.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     SummaryComponent,

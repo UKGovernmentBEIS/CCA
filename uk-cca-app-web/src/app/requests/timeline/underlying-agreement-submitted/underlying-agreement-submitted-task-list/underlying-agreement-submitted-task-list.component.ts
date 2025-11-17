@@ -9,7 +9,6 @@ import { getAllUnderlyingAgreementSections } from '../underlying-agreement-submi
 @Component({
   selector: 'cca-unde',
   template: `<netz-task-list [sections]="sections()" />`,
-  standalone: true,
   imports: [TaskListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -32,7 +32,7 @@ export function transformOperatorType(value: TargetUnitAccountDetailsDTO['operat
   return value ? operatorTypeMap[value] : '';
 }
 
-@Pipe({ name: 'operatorType', standalone: true, pure: true })
+@Pipe({ name: 'operatorType', pure: true })
 export class OperatorTypePipe implements PipeTransform {
   transform = transformOperatorType;
 }

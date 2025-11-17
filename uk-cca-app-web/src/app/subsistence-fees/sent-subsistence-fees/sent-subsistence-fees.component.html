@@ -5,7 +5,7 @@
         {{ subFeesDetails.paymentRequestId }}
 
         <span>
-          <govuk-tag [color]="subFeesDetails?.paymentStatus | statusColor: 'grey'" class="tag-width">
+          <govuk-tag [color]="subFeesDetails?.paymentStatus | statusColor" class="tag-width">
             {{ subFeesDetails?.paymentStatus | status }}
           </govuk-tag>
         </span>

@@ -12,7 +12,6 @@ import { getAllUnderlyingAgreementVariationReviewTimelineSections } from '../und
     <netz-page-heading>Underlying agreement variation</netz-page-heading>
     <netz-task-list [sections]="sections()" />
   `,
-  standalone: true,
   imports: [TaskListComponent, PageHeadingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

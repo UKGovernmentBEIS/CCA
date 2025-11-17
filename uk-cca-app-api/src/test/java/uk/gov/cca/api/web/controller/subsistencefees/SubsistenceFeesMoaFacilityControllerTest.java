@@ -93,7 +93,7 @@ class SubsistenceFeesMoaFacilityControllerTest {
                 .build();
 
         SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO subsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO = SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO.builder()
-                .facilityId("Facility Id")
+                .facilityBusinessId("Facility Id")
                 .siteName("Facility Name")
                 .markingStatusHistoryList(List.of(subsistenceFeesMoaFacilityMarkingStatusHistoryDTO))
                 .build();

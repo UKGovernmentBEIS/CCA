@@ -31,12 +31,15 @@
             <li class="search-results-list_item govuk-!-margin-bottom-3">
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-three-quarters govuk-!-margin-bottom-3">
-                  <a [routerLink]="['workflow-details', workflow.id]" class="govuk-link">{{ workflow.id }}</a>
+                  <a [routerLink]="['workflow-details', workflow.id]" class="govuk-link">
+                    {{ workflow.id }} {{ workflow?.requestType | workflowType }}
+                  </a>
+
                   <div class="govuk-!-margin-bottom-0">Created {{ workflow.creationDate | date }}</div>
                 </div>
 
                 <div class="govuk-grid-column-one-quarter govuk-!-margin-top-2">
-                  <govuk-tag [color]="workflow.requestStatus | statusColor: 'grey'">
+                  <govuk-tag [color]="workflow.requestStatus | statusColor">
                     {{ workflow.requestStatus | status }}
                   </govuk-tag>
                 </div>

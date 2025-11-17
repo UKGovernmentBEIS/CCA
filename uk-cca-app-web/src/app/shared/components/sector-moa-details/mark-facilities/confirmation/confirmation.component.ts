@@ -20,7 +20,6 @@ import { SectorMoaDetailsStore } from '../../sector-moa-details.store';
       </div>
     }
   `,
-  standalone: true,
   imports: [PanelComponent, RouterLink, StatusPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

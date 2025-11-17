@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class FacilitySearchResults {
 
-    private List<FacilityCertificationSearchResultInfoDTO> facilities;
+    private List<FacilitySearchResultExtendedDTO> facilities;
     private Long total;
 
     public static FacilitySearchResults emptyFacilitySearchResults() {

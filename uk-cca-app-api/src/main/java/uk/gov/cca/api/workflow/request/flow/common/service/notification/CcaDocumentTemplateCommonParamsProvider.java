@@ -6,9 +6,11 @@ import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.notification.template.domain.TargetUnitAccountTemplateParams;
+import uk.gov.cca.api.notification.template.domain.TargetUnitDetailsParams;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
+import uk.gov.cca.api.workflow.request.core.domain.TargetUnitAccountDetails;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.service.SectorReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransformationMapper;
@@ -83,6 +85,19 @@ public class CcaDocumentTemplateCommonParamsProvider extends DocumentTemplateCom
                 .build();
     }
 
+    public Map<String, Object> constructTargetUnitDetailsParams(final TargetUnitAccountDetails targetUnitDetails) {
+        TargetUnitDetailsParams targetUnitDetailsParams = TargetUnitDetailsParams.builder()
+                .name(targetUnitDetails.getOperatorName())
+                .companyRegistrationNumber(targetUnitDetails.getCompanyRegistrationNumber())
+                .targetUnitAddress(documentTemplateTransformationMapper.constructAccountAddressDTO(targetUnitDetails.getAddress()))
+                .primaryContact(targetUnitDetails.getResponsiblePerson().getFirstName() + " " + targetUnitDetails.getResponsiblePerson().getLastName())
+                .primaryContactEmail(targetUnitDetails.getResponsiblePerson().getEmail())
+                .location(documentTemplateTransformationMapper.constructAccountAddressDTO(targetUnitDetails.getResponsiblePerson().getAddress()))
+                .build();
+
+        return Map.of("targetUnitDetails", targetUnitDetailsParams);
+    }
+
     public TemplateParams getSectorAndCaAndSignatoryTemplateParams(String signatory, Long sectorAssociationId, TemplateParams documentTemplateParams) {
     	// Sector params
     	final Map<String, String> sectorParams = getSectorTemplateParams(sectorAssociationId, SchemeVersion.CCA_2);
@@ -128,6 +143,14 @@ public class CcaDocumentTemplateCommonParamsProvider extends DocumentTemplateCom
     					: Collections.emptyMap();
     }
     
+    /**
+     * A Utility method that constructs the sector related parameters for the document templates
+     * If a scheme version is specified, then the sector scheme-specific data will be included
+     *
+     * @param sectorAssociationId The sector association Id
+     * @param version The scheme version
+     * @return sectorTemplateParams
+     */
     private Map<String, String> getSectorTemplateParams(Long sectorAssociationId, SchemeVersion version) {
     	final SectorAssociationDTO sectorAssociationDetails = sectorReferenceDetailsService
     			.getSectorAssociationDetails(sectorAssociationId);

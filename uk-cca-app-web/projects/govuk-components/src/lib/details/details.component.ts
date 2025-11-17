@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'govuk-details',
-  standalone: true,
   templateUrl: './details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

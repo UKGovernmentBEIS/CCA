@@ -11,7 +11,6 @@ describe('ConditionalContentDirective', () => {
   let hostComponent: TestComponent;
 
   @Component({
-    standalone: true,
     imports: [ReactiveFormsModule, ConditionalContentDirective, TextInputComponent],
     template: `
       <form [formGroup]="form">

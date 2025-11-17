@@ -1,10 +1,22 @@
-import { TargetUnitAccountPayload } from 'cca-api';
+import { AccountAddressDTO, TargetUnitAccountPayload } from 'cca-api';
+
+const isAddressCompleted = (address: AccountAddressDTO): boolean =>
+  !!address?.city && !!address?.country && !!address?.line1 && !!address?.postcode;
 
 export const isWizardCompleted = (accountPayload: TargetUnitAccountPayload, subSectorsExist: boolean): boolean => {
-  const isOperatorAddressCompleted = !!accountPayload.address;
-  const isResponsiblePersonCompleted = !!accountPayload.responsiblePerson && !!accountPayload.responsiblePerson.address;
+  const isOperatorAddressCompleted = isAddressCompleted(accountPayload.address);
+
+  const isResponsiblePersonCompleted =
+    accountPayload.responsiblePerson?.email &&
+    accountPayload.responsiblePerson?.firstName &&
+    accountPayload.responsiblePerson?.lastName &&
+    isAddressCompleted(accountPayload.responsiblePerson?.address);
+
   const isAdministrativeContactCompleted =
-    !!accountPayload.administrativeContactDetails && !!accountPayload.administrativeContactDetails.address;
+    accountPayload.administrativeContactDetails?.email &&
+    accountPayload.administrativeContactDetails?.firstName &&
+    accountPayload.administrativeContactDetails?.lastName &&
+    isAddressCompleted(accountPayload.administrativeContactDetails?.address);
 
   return (
     isTargetUnitDetailsCompleted(accountPayload, subSectorsExist) &&

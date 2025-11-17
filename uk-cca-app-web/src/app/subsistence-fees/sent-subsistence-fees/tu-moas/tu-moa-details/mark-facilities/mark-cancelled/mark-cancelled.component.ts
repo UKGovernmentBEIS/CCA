@@ -17,7 +17,6 @@ import { TuMoaDetailsStore } from '../../tu-moa-details.store';
 @Component({
   selector: 'cca-mark-cancelled',
   templateUrl: './mark-cancelled.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     WarningTextComponent,

@@ -14,6 +14,7 @@ import uk.gov.cca.api.sectorassociation.repository.SectorAssociationRepository;
 import uk.gov.cca.api.sectorassociation.repository.SectorAssociationSchemeRepository;
 import uk.gov.netz.api.common.exception.BusinessException;
 
+
 import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
 import java.util.Map;
@@ -53,4 +54,5 @@ public class SectorAssociationSchemeService {
 
         return sectorAssociationSchemeMapper.toSectorAssociationSchemeDTO(sectorAssociationScheme);
     }
+
 }

@@ -1,4 +1,8 @@
 <ng-template #checkboxTemplate>
+  @if (divider()) {
+    <div class="govuk-checkboxes__divider">{{ divider() ?? 'or' }}</div>
+  }
+
   <div class="govuk-checkboxes__item">
     <input
       (blur)="onBlur()"
@@ -13,6 +17,7 @@
       class="govuk-checkboxes__input"
       type="checkbox"
     />
+
     <label [for]="identifier" class="govuk-label govuk-checkboxes__label">
       @if (label()) {
         {{ label() }}

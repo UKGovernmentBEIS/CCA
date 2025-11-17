@@ -3,10 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { UKCountryCodes } from '@shared/types';
 import { PhoneNumberUtil } from 'google-libphonenumber';
 
-@Pipe({
-  name: 'phoneNumber',
-  standalone: true,
-})
+@Pipe({ name: 'phoneNumber' })
 export class PhoneNumberPipe implements PipeTransform {
   transform(callingCode: string): string {
     if (callingCode == null) {

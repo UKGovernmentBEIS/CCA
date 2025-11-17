@@ -5,7 +5,7 @@
         {{ sectorMoaDetails?.transactionId }}
 
         <span>
-          <govuk-tag [color]="sectorMoaDetails?.paymentStatus | statusColor: 'grey'" class="tag-width">
+          <govuk-tag [color]="sectorMoaDetails?.paymentStatus | statusColor" class="tag-width">
             {{ sectorMoaDetails?.paymentStatus | status }}
           </govuk-tag>
         </span>

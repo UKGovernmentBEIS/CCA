@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.facility.domain.FacilityAddress;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +23,7 @@ class FacilityAddressMapperTest {
                 .postcode("postcode")
                 .build();
 
-        AccountAddressDTO accountAddressDTO = AccountAddressDTO.builder()
+	    FacilityAddressDTO accountAddressDTO = FacilityAddressDTO.builder()
                 .line1("line1")
                 .line2("line2")
                 .city("city")
@@ -48,7 +49,7 @@ class FacilityAddressMapperTest {
                 .postcode("postcode")
                 .build();
 
-        AccountAddressDTO accountAddressDTO = AccountAddressDTO.builder()
+	    FacilityAddressDTO accountAddressDTO = FacilityAddressDTO.builder()
                 .line1("line1")
                 .line2("line2")
                 .city("city2")

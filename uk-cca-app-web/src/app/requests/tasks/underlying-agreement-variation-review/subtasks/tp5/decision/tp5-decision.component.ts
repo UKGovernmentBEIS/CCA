@@ -32,7 +32,6 @@ import { resetDetermination } from '../../../utils';
 @Component({
   selector: 'cca-baseline-and-targets-summary',
   templateUrl: './tp5-decision.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     SummaryComponent,

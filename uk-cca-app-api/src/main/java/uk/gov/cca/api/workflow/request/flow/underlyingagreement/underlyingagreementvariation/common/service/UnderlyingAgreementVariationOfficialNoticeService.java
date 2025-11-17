@@ -1,12 +1,15 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.notification.template.constants.CcaDocumentTemplateType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.service.CcaDecisionNotificationUsersService;
@@ -36,7 +39,8 @@ public class UnderlyingAgreementVariationOfficialNoticeService {
                 decisionNotification,
                 CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED,
                 CcaDocumentTemplateType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED,
-                "Proposed underlying agreement variation cover letter.pdf");
+                "Proposed underlying agreement variation cover letter.pdf"
+                );
     }
 
     @Transactional
@@ -53,20 +57,7 @@ public class UnderlyingAgreementVariationOfficialNoticeService {
                 "Underlying agreement variation rejection notice.pdf"
         );
 
-        requestPayload.setOfficialNotice(officialNotice);
-    }
-	
-	public void sendOfficialNotice(String requestId) {
-        final Request request = requestService.findRequestById(requestId);
-        final UnderlyingAgreementVariationRequestPayload requestPayload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();
-        final CcaDecisionNotification decisionNotification = requestPayload.getDecisionNotification();
-        final List<FileInfoDTO> attachments =
-                requestPayload.getUnderlyingAgreementDocument() != null ?
-                    List.of(requestPayload.getOfficialNotice(), requestPayload.getUnderlyingAgreementDocument()) :
-                    List.of(requestPayload.getOfficialNotice());
-
-        ccaOfficialNoticeSendService.sendOfficialNotice(attachments, request,
-        		ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification));
+        requestPayload.setOfficialNotices(List.of(officialNotice));
     }
 
     public CompletableFuture<FileInfoDTO> generateActivatedOfficialNotice(final String requestId) {
@@ -78,6 +69,37 @@ public class UnderlyingAgreementVariationOfficialNoticeService {
                 decisionNotification,
                 CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED,
                 CcaDocumentTemplateType.UNDERLYING_AGREEMENT_ACTIVATED,
-                "Activated underlying agreement cover letter.pdf");
+                "Activated underlying agreement cover letter.pdf"
+        );
+    }
+
+    public CompletableFuture<FileInfoDTO> generateTerminationOfficialNotice(final String requestId, SchemeVersion schemeVersion) {
+        final Request request = requestService.findRequestById(requestId);
+        final UnderlyingAgreementVariationRequestPayload requestPayload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();
+        final CcaDecisionNotification decisionNotification = requestPayload.getDecisionNotification();
+        final String actionType = schemeVersion.equals(SchemeVersion.CCA_2)
+                ? CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION_CCA2
+                : CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION_CCA3;
+
+        return ccaFileDocumentGeneratorService.generateAsync(request,
+                decisionNotification,
+                actionType,
+                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION,
+                String.format("%s Underlying agreement variation termination notice.pdf", schemeVersion.getDescription())
+        );
+    }
+
+    public void sendOfficialNotice(String requestId) {
+        final Request request = requestService.findRequestById(requestId);
+        final UnderlyingAgreementVariationRequestPayload requestPayload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();
+        final CcaDecisionNotification decisionNotification = requestPayload.getDecisionNotification();
+
+        final List<FileInfoDTO> attachments = new ArrayList<>(requestPayload.getOfficialNotices());
+        if (!ObjectUtils.isEmpty(requestPayload.getUnderlyingAgreementDocuments())) {
+            attachments.addAll(requestPayload.getUnderlyingAgreementDocuments().values());
+        }
+
+        ccaOfficialNoticeSendService.sendOfficialNotice(attachments, request,
+                ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification));
     }
 }

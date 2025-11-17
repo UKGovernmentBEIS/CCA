@@ -25,7 +25,6 @@ type SearchCriteria = {
 @Component({
   selector: 'cca-documents',
   templateUrl: './documents.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     ButtonDirective,

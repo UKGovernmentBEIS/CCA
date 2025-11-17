@@ -27,7 +27,6 @@ import { toDocumentTemplateSummary } from '../document-template-summary';
       <cca-summary [data]="data()" />
     }
   `,
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent, NotificationBannerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

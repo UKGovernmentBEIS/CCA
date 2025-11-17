@@ -3,8 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
-import { toFacilitySummaryDataWithDecision, underlyingAgreementRequestActionQuery } from '@requests/common';
+import {
+  isCCA3Scheme,
+  toFacilityWizardSummaryDataWithDecision,
+  underlyingAgreementRequestActionQuery,
+} from '@requests/common';
 import { SummaryComponent } from '@shared/components';
+import { SchemeVersion } from '@shared/types';
 
 import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+state/underlying-agreement-variation-reviewed-request-action.selectors';
 
@@ -18,7 +23,6 @@ import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+s
       </div>
     }
   `,
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -32,9 +36,25 @@ export class FacilityComponent {
     underlyingAgreementRequestActionQuery.selectFacility(this.facilityId),
   );
 
+  private readonly participatingSchemeVersions = computed(
+    () => this.facility()?.facilityDetails?.participatingSchemeVersions,
+  );
+
+  private readonly schemeVersion = computed(() =>
+    isCCA3Scheme(this.participatingSchemeVersions()) ? SchemeVersion.CCA_3 : SchemeVersion.CCA_2,
+  );
+
+  private readonly sectorSchemeData = computed(() =>
+    this.requestActionStore.select(
+      underlyingAgreementRequestActionQuery.selectSectorAssociationDetailsSchemeData(this.schemeVersion()),
+    )(),
+  );
+
   protected readonly summaryData = computed(() =>
-    toFacilitySummaryDataWithDecision(
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectFacility(this.facilityId))(),
+    toFacilityWizardSummaryDataWithDecision(
+      this.facility(),
+      this.sectorSchemeData(),
+      this.participatingSchemeVersions(),
       this.requestActionStore.select(
         underlyingAgreementVariationReviewedRequestActionQuery.selectFacilitySubtaskDecision(this.facilityId),
       )(),
@@ -46,6 +66,7 @@ export class FacilityComponent {
       },
       false,
       '../../../file-download',
+      { productsLink: './products' },
     ),
   );
 }

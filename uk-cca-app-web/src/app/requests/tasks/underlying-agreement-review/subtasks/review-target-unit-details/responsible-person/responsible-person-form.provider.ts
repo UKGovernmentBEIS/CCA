@@ -21,25 +21,25 @@ export const UnaTargetUnitResponsiblePersonFormProvider: Provider = {
   useFactory: (fb: FormBuilder, store: RequestTaskStore, destroyRef: DestroyRef) => {
     const payload = store.select(underlyingAgreementQuery.selectPayload)();
 
-    if (!payload.underlyingAgreement?.underlyingAgreementTargetUnitDetails) {
+    const targetUnitDetails = payload.underlyingAgreement.underlyingAgreementTargetUnitDetails;
+    if (!targetUnitDetails) {
       throw new Error('Target unit details data is missing from payload');
     }
 
-    const accountData = payload.accountReferenceData.targetUnitAccountDetails;
-    const targetUnitDetails = payload.underlyingAgreement.underlyingAgreementTargetUnitDetails;
+    const accountReferenceData = payload.accountReferenceData.targetUnitAccountDetails;
 
-    const addressPayload = accountData.address;
-    const readonlyPayload = accountData.responsiblePerson;
-    const updatePayload = targetUnitDetails.responsiblePersonDetails;
+    const operatorAddress = targetUnitDetails.operatorAddress;
+    const readonlyResponsiblePerson = accountReferenceData.responsiblePerson;
+    const updatedResponsiblePerson = targetUnitDetails.responsiblePersonDetails;
 
-    const addressFormGroup = createAccountAddressForm(updatePayload.address);
+    const addressFormGroup = createAccountAddressForm(updatedResponsiblePerson.address);
 
     const formConfig: ResponsiblePersonFormConfig = {
-      email: { value: updatePayload?.email ?? null, disabled: false },
-      firstName: { value: updatePayload?.firstName ?? null, disabled: false },
-      lastName: { value: updatePayload?.lastName ?? null, disabled: false },
-      jobTitle: { value: readonlyPayload?.jobTitle ?? null, disabled: true },
-      phoneNumber: { value: readonlyPayload?.phoneNumber ?? null, disabled: true },
+      email: { value: updatedResponsiblePerson?.email ?? null, disabled: false },
+      firstName: { value: updatedResponsiblePerson?.firstName ?? null, disabled: false },
+      lastName: { value: updatedResponsiblePerson?.lastName ?? null, disabled: false },
+      jobTitle: { value: readonlyResponsiblePerson?.jobTitle ?? null, disabled: true },
+      phoneNumber: { value: readonlyResponsiblePerson?.phoneNumber ?? null, disabled: true },
       address: { value: addressFormGroup, disabled: false },
       sameAddress: { value: [false], disabled: false },
     };
@@ -49,10 +49,11 @@ export const UnaTargetUnitResponsiblePersonFormProvider: Provider = {
     group.controls.sameAddress.valueChanges.pipe(takeUntilDestroyed(destroyRef)).subscribe((isSameAddress) => {
       if (isSameAddress[0]) {
         group.controls.address.setValue({
-          ...addressPayload,
-          line2: addressPayload.line2 ?? null,
-          county: addressPayload.county ?? null,
+          ...operatorAddress,
+          line2: operatorAddress.line2 ?? null,
+          county: operatorAddress.county ?? null,
         });
+
         group.controls.address.disable();
       } else {
         group.controls.address.enable();

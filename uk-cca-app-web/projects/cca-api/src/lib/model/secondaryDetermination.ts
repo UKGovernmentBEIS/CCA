@@ -11,14 +11,14 @@
  */
 
 export interface SecondaryDetermination {
-  tpCarbonFactor: number;
-  energyCarbonUnderTarget: number;
-  carbonUnderTarget: number;
-  co2Emissions: number;
-  priBuyOutCarbon: number;
-  prevBuyOutCo2?: number;
-  prevSurplusUsed?: number;
-  prevSurplusGained?: number;
-  secondaryBuyOutCo2: number;
-  secondaryBuyOutCost: number;
+  tpCarbonFactor: string;
+  energyCarbonUnderTarget: string;
+  carbonUnderTarget: string;
+  co2Emissions: string;
+  priBuyOutCarbon: string;
+  prevBuyOutCo2?: string;
+  prevSurplusUsed?: string;
+  prevSurplusGained?: string;
+  secondaryBuyOutCo2: string;
+  secondaryBuyOutCost: string;
 }

@@ -49,7 +49,7 @@ describe('TuMoaGeneratedComponent', () => {
       [
         ['Users'],
         [
-          'resp1 user, Responsible person, resp1@cca.uk  administr1 user, Administrative contact, administr1@cca.uk  Fred_52 William_52, Sector contact, fredwilliam_52@agindustries.org.uk',
+          'resp1 user, Responsible person, resp1@cca.ukadministr1 user, Administrative contact, administr1@cca.ukFred_52 William_52, Sector contact, fredwilliam_52@agindustries.org.uk',
         ],
       ],
     ]);

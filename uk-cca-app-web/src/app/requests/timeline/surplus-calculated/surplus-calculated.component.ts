@@ -10,7 +10,6 @@ import { toSurplusCalculatedSummaryData } from './surplus-calculated-summary';
 @Component({
   selector: 'cca-surplus-calculated',
   template: `<cca-summary [data]="data" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -14,7 +14,6 @@ import { ConditionalContentDirective } from '../../directives';
 
 @Component({
   selector: 'govuk-radio-option',
-  standalone: true,
   imports: [],
   templateUrl: './radio-option.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

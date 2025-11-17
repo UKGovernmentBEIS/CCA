@@ -9,14 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { SubsistenceFeesRunCompletedRequestActionPayloadChargingYear } from './subsistenceFeesRunCompletedRequestActionPayloadChargingYear';
 import { FileInfoDTO } from './fileInfoDTO';
 
 export interface SubsistenceFeesRunCompletedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
   paymentRequestId: string;
-  chargingYear: SubsistenceFeesRunCompletedRequestActionPayloadChargingYear;
+  chargingYear: number;
   status: string;
   sentInvoices: number;
   failedInvoices?: number;

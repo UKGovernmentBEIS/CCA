@@ -71,12 +71,16 @@
     </div>
 
     <h2 class="govuk-heading-m">Facility address</h2>
-    <div formControlName="sameAddress" govuk-checkboxes>
-      <govuk-checkbox [value]="true" label="The facility address is the same as target unit address" />
-    </div>
+    <p>The facility address must be in England, Scotland, Wales or Northern Ireland</p>
+
+    @if (hasUKAddress()) {
+      <div formControlName="sameAddress" govuk-checkboxes>
+        <govuk-checkbox [value]="true" label="The facility address is the same as target unit address" />
+      </div>
+    }
 
     <div formGroupName="facilityAddress">
-      <cca-account-address-input />
+      <cca-facility-address-input />
     </div>
   </div>
 </cca-wizard-step>

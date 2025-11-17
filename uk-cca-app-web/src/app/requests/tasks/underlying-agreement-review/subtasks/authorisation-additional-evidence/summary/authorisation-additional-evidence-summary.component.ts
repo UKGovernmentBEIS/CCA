@@ -13,7 +13,6 @@ import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-authorisation-additional-evidence-summary',
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
   template: `
     <div>

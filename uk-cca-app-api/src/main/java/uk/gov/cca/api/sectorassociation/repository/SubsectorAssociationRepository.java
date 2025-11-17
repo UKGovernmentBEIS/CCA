@@ -16,5 +16,5 @@ public interface SubsectorAssociationRepository extends JpaRepository<SubsectorA
     Optional<SubsectorAssociation> findByName(String name);
 
 	List<SubsectorAssociation> findAllBySectorAssociationId(Long sectorAssociationId);
-    
+
 }

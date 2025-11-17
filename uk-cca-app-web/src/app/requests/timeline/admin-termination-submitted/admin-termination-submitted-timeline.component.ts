@@ -10,7 +10,6 @@ import { toAdminTerminationReasonSubmittedTimelineSummaryData } from './admin-te
 @Component({
   selector: 'cca-admin-termination-submited-timeline',
   template: `<cca-summary [data]="data" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

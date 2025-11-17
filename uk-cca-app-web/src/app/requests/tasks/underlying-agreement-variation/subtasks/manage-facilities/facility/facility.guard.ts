@@ -5,6 +5,7 @@ import { RequestTaskStore } from '@netz/common/store';
 import {
   FacilityWizardStep,
   isFacilityWizardCompleted,
+  isStatusFinal,
   TaskItemStatus,
   underlyingAgreementQuery,
 } from '@requests/common';
@@ -16,7 +17,7 @@ export const facilityRedirectGuard: CanActivateFn = (route: ActivatedRouteSnapsh
   const sectionsCompleted = store.select(underlyingAgreementQuery.selectSectionsCompleted)();
   const facilityStatus = sectionsCompleted[facilityId];
 
-  if (facilityStatus === TaskItemStatus.COMPLETED) return createUrlTreeFromSnapshot(route, ['summary']);
+  if (isStatusFinal(facilityStatus)) return createUrlTreeFromSnapshot(route, ['summary']);
 
   const statusPending =
     !facilityStatus || facilityStatus === TaskItemStatus.NOT_STARTED || facilityStatus === TaskItemStatus.IN_PROGRESS;

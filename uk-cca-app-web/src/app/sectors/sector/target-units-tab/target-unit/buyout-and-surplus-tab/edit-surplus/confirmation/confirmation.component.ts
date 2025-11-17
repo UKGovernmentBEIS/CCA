@@ -17,7 +17,6 @@ import { PanelComponent } from '@netz/govuk-components';
       </div>
     </div>
   `,
-  standalone: true,
   imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

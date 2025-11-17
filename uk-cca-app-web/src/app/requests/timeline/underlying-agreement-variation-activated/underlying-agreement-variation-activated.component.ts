@@ -11,7 +11,6 @@ import { toUnderlyingAgreementVariationActivatedSummaryData } from './underlying
 @Component({
   selector: 'cca-underlying-agreement-variation-activated',
   template: ` <cca-summary [data]="summaryData()" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -21,8 +20,8 @@ export class UnderlyingAgreementVariationActivatedComponent {
   protected readonly activatedPayload: Signal<UnderlyingAgreementVariationActivatedRequestActionPayload> = computed(
     () => {
       return {
-        officialNotice: this.requestActionStore.select(
-          underlyingAgreementVariationActivatedQuery.selectOfficialNotice,
+        officialNotices: this.requestActionStore.select(
+          underlyingAgreementVariationActivatedQuery.selectOfficialNotices,
         )(),
         usersInfo: this.requestActionStore.select(underlyingAgreementVariationActivatedQuery.selectUsersInfo)(),
         defaultContacts: this.requestActionStore.select(
@@ -31,8 +30,8 @@ export class UnderlyingAgreementVariationActivatedComponent {
         decisionNotification: this.requestActionStore.select(
           underlyingAgreementVariationActivatedQuery.selectDecisionNotification,
         )(),
-        underlyingAgreementDocument: this.requestActionStore.select(
-          underlyingAgreementVariationActivatedQuery.selectUnderlyingAgreementDocument,
+        underlyingAgreementDocuments: this.requestActionStore.select(
+          underlyingAgreementVariationActivatedQuery.selectUnderlyingAgreementDocuments,
         )(),
         underlyingAgreementActivationDetails: this.requestActionStore.select(
           underlyingAgreementVariationActivatedQuery.selectUnderlyingAgreementActivationDetails,

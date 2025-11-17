@@ -14,7 +14,6 @@ import { TransactionDetailsTabComponent } from './transcation-details-tab/transa
 @Component({
   selector: 'cca-transaction-details-container',
   templateUrl: './transaction-details-container.component.html',
-  standalone: true,
   imports: [
     TabLazyDirective,
     TabsComponent,

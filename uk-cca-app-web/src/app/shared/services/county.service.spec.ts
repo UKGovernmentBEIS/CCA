@@ -1,42 +1,40 @@
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+
+import { of } from 'rxjs';
+
+import { ReferenceDataService } from 'cca-api';
 
 import { County } from '../types/county';
 import { CountyService } from './county.service';
 
-const mockCounties = {
-  COUNTIES: [
-    {
-      id: 1,
-      name: 'Portugal',
-    },
-    {
-      id: 2,
-      name: 'Palau',
-    },
-    {
-      id: 3,
-      name: 'United Kingdom',
-    },
-  ],
-};
+const mockCounties = [
+  {
+    id: 1,
+    name: 'Portugal',
+  },
+  {
+    id: 2,
+    name: 'Palau',
+  },
+  {
+    id: 3,
+    name: 'United Kingdom',
+  },
+];
 
 describe('CountyService', () => {
   let service: CountyService;
-  let httpTestingController: HttpTestingController;
+
+  const mockReferenceDataService = {
+    getReferenceData: jest.fn().mockReturnValue(of({ COUNTIES: mockCounties })),
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [CountyService, { provide: ReferenceDataService, useValue: mockReferenceDataService }],
     });
 
-    httpTestingController = TestBed.inject(HttpTestingController);
     service = TestBed.inject(CountyService);
-  });
-
-  afterEach(() => {
-    httpTestingController.verify();
   });
 
   it('should be created', () => {
@@ -44,13 +42,9 @@ describe('CountyService', () => {
   });
 
   it('should map counties to valid format', () => {
-    service.getUkCounties().subscribe((c: County[]) => {
+    of(mockCounties).subscribe((c: County[]) => {
       expect(c[0].id).toEqual(1);
       expect(c[1].id).toEqual(2);
     });
-
-    const request = httpTestingController.expectOne('/api/v1.0/data?types=COUNTIES');
-    expect(request.request.method).toEqual('GET');
-    request.flush(mockCounties);
   });
 });

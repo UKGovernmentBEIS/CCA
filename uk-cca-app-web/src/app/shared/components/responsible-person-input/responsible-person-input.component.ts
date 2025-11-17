@@ -11,7 +11,6 @@ import { TextInputComponent } from '../text-input/text-input.component';
 @Component({
   selector: 'cca-responsible-person-input',
   templateUrl: './responsible-person-input.component.html',
-  standalone: true,
   imports: [
     TextInputComponent,
     ReactiveFormsModule,

@@ -15,7 +15,6 @@ import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-his
 @Component({
   selector: 'cca-buy-out-surplus',
   templateUrl: './buy-out-surplus.component.html',
-  standalone: true,
   imports: [
     RouterLink,
     TabsComponent,

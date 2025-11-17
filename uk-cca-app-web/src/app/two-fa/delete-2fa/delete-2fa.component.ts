@@ -11,7 +11,6 @@ import { UsersSecuritySetupService } from 'cca-api';
 @Component({
   selector: 'cca-delete-2fa',
   template: '',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Delete2faComponent implements OnInit {

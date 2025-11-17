@@ -20,7 +20,8 @@ import java.util.List;
 public interface TargetUnitAccountMapper {
 
     TargetUnitAccountHeaderInfoDTO toTargetUnitAccountHeaderInfoDTO(TargetUnitAccount account);
-    
+
+    @Mapping(target = "accountId", source = "id")
     TargetUnitAccountBusinessInfoDTO toTargetUnitAccountBusinessInfoDTO(TargetUnitAccount account);
 
     @Mapping(target = "id", source = "accountId")

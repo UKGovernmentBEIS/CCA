@@ -22,4 +22,7 @@ public class CcaItemDTO extends ItemDTO {
 	@JsonUnwrapped
     private ItemSectorDTO sector;
 	
+	@JsonUnwrapped
+    private ItemFacilityDTO facility;
+	
 }

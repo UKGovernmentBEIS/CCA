@@ -19,7 +19,6 @@ import { SectorRouteData } from '../../../types';
 @Component({
   selector: 'cca-delete-sector-user',
   templateUrl: './delete-sector-user.component.html',
-  standalone: true,
   imports: [
     WarningTextComponent,
     PanelComponent,

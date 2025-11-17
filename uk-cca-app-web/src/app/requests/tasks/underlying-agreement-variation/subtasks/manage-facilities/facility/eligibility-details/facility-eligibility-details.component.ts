@@ -23,7 +23,11 @@ import {
 import { FileInputComponent, TextInputComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
-import { EligibilityDetailsAndAuthorisation, UnderlyingAgreementVariationSubmitRequestTaskPayload } from 'cca-api';
+import {
+  EligibilityDetailsAndAuthorisation,
+  UnderlyingAgreementVariationApplySavePayload,
+  UnderlyingAgreementVariationSubmitRequestTaskPayload,
+} from 'cca-api';
 
 import { createRequestTaskActionProcessDTO, toUnderlyingAgreementVariationSavePayload } from '../../../../transform';
 import { extractReviewProps } from '../../../../utils';
@@ -35,7 +39,6 @@ import {
 @Component({
   selector: 'cca-facility-eligibility-details',
   templateUrl: './facility-eligibility-details.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -158,22 +161,7 @@ export class FacilityEligibilityDetailsComponent {
     )() as UnderlyingAgreementVariationSubmitRequestTaskPayload;
 
     const actionPayload = toUnderlyingAgreementVariationSavePayload(payload);
-
-    // Update facility eligibility details
-    const updatedPayload = produce(actionPayload, (draft) => {
-      const facility = draft.facilities.find((f) => f.facilityId === this.facilityId);
-      if (facility) {
-        facility.eligibilityDetailsAndAuthorisation = {
-          isConnectedToExistingFacility: this.form.value.isConnectedToExistingFacility,
-          adjacentFacilityId: this.form.value.adjacentFacilityId,
-          agreementType: this.form.value.agreementType,
-          erpAuthorisationExists: this.form.value.erpAuthorisationExists,
-          authorisationNumber: this.form.value.authorisationNumber,
-          regulatorName: this.form.value.regulatorName,
-          permitFile: this.form.value.permitFile?.uuid ?? null,
-        };
-      }
-    });
+    const updatedPayload = updateFacilityEligibilityDetails(actionPayload, this.form, this.facilityId);
 
     const currentSectionsCompleted =
       this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)() || {};
@@ -197,4 +185,25 @@ export class FacilityEligibilityDetailsComponent {
         }
       });
   }
+}
+
+function updateFacilityEligibilityDetails(
+  payload: UnderlyingAgreementVariationApplySavePayload,
+  form: FormGroup<FacilityEligibilityFormModel>,
+  facilityId: string,
+): UnderlyingAgreementVariationApplySavePayload {
+  return produce(payload, (draft) => {
+    const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
+    if (facilityIndex === -1) return;
+
+    draft.facilities[facilityIndex].eligibilityDetailsAndAuthorisation = {
+      isConnectedToExistingFacility: form.value.isConnectedToExistingFacility,
+      adjacentFacilityId: form.value.adjacentFacilityId,
+      agreementType: form.value.agreementType,
+      erpAuthorisationExists: form.value.erpAuthorisationExists,
+      authorisationNumber: form.value.authorisationNumber,
+      regulatorName: form.value.regulatorName,
+      permitFile: form.value.permitFile?.uuid ?? null,
+    };
+  });
 }

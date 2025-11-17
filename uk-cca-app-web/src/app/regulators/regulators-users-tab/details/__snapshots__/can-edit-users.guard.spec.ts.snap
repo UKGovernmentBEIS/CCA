@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`CanEditUsersGuard should correctly populate state if a user has EXECUTE perms 1`] = `true`;
 

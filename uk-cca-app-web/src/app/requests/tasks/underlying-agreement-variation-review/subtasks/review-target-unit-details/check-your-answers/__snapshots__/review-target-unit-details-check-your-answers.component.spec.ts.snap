@@ -1,11 +1,15 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summary sections and rows 1`] = `
 <cca-check-your-answers
-  accountReferenceData={[Function Function]}
+  accountReferenceData={[Function Object]}
   activatedRoute={[Function ActivatedRouteStub]}
+  areIdentical="false"
   attachments={[Function Object]}
+  currentTargetUnitDetails={[Function Object]}
+  decision={[Function Object]}
   downloadUrl={[Function String]}
+  isEditable={[Function Boolean]}
   originalTargetUnitDetails={[Function Object]}
   router={[Function _Router]}
   store={[Function _RequestTaskStore]}
@@ -56,7 +60,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 operator name 
+                <span>
+                  operator name
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -84,7 +90,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 Limited company 
+                <span>
+                  Limited company
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -112,7 +120,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 11111111 
+                <span>
+                  11111111
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -140,6 +150,8 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
+                <span>
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -177,13 +189,21 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 una operator addr line 1 
+                <span>
+                  una operator addr line 1
+                </span>
                 <br />
-                 una operator addr city 
+                <span>
+                  una operator addr city
+                </span>
                 <br />
-                 una operator addr postcode 
+                <span>
+                  una operator addr postcode
+                </span>
                 <br />
-                 una operator addr country 
+                <span>
+                  una operator addr country
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -221,7 +241,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 test 1 
+                <span>
+                  test 1
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -249,7 +271,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 test 2 
+                <span>
+                  test 2
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -277,7 +301,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 test@test.com 
+                <span>
+                  test@test.com
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -305,17 +331,29 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 una resp addr line 1 
+                <span>
+                  una resp addr line 1
+                </span>
                 <br />
-                 una resp addr line 2 
+                <span>
+                  una resp addr line 2
+                </span>
                 <br />
-                 una resp addr line city 
+                <span>
+                  una resp addr line city
+                </span>
                 <br />
-                 una resp addr county 
+                <span>
+                  una resp addr county
+                </span>
                 <br />
-                 una resp addr line postcode 
+                <span>
+                  una resp addr line postcode
+                </span>
                 <br />
-                 una resp addr country 
+                <span>
+                  una resp addr country
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -353,7 +391,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 Accepted 
+                <span>
+                  Accepted
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -381,7 +421,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 Target unit notes 
+                <span>
+                  Target unit notes
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -455,7 +497,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 test 
+                <span>
+                  test
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -483,7 +527,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 Limited company 
+                <span>
+                  Limited company
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -511,7 +557,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 testtest 
+                <span>
+                  testtest
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -539,6 +587,8 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
+                <span>
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -566,7 +616,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 SUBSECTOR_2 
+                <span>
+                  SUBSECTOR_2
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -604,17 +656,29 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 accountrefdata operator address line 1 
+                <span>
+                  accountrefdata operator address line 1
+                </span>
                 <br />
-                 accountrefdata operator address line 2 
+                <span>
+                  accountrefdata operator address line 2
+                </span>
                 <br />
-                 accountrefdata operator address city 
+                <span>
+                  accountrefdata operator address city
+                </span>
                 <br />
-                 accountrefdata operator address county 
+                <span>
+                  accountrefdata operator address county
+                </span>
                 <br />
-                 accountrefdata operator address postcode 
+                <span>
+                  accountrefdata operator address postcode
+                </span>
                 <br />
-                 accountrefdata operator address country 
+                <span>
+                  accountrefdata operator address country
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -652,7 +716,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 resp person firstname 
+                <span>
+                  resp person firstname
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -680,7 +746,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 resp person lastname 
+                <span>
+                  resp person lastname
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -708,7 +776,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 test@test.com 
+                <span>
+                  test@test.com
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -736,17 +806,29 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 accountrefdata resp pers line 1 
+                <span>
+                  accountrefdata resp pers line 1
+                </span>
                 <br />
-                 accountrefdata resp pers line 2 
+                <span>
+                  accountrefdata resp pers line 2
+                </span>
                 <br />
-                 accountrefdata resp pers city 
+                <span>
+                  accountrefdata resp pers city
+                </span>
                 <br />
-                 accountrefdata resp pers county 
+                <span>
+                  accountrefdata resp pers county
+                </span>
                 <br />
-                 accountrefdata resp postcode 
+                <span>
+                  accountrefdata resp postcode
+                </span>
                 <br />
-                 accountrefdata resp pers country 
+                <span>
+                  accountrefdata resp pers country
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -784,7 +866,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 Accepted 
+                <span>
+                  Accepted
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -812,7 +896,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 Target unit notes 
+                <span>
+                  Target unit notes
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -881,16 +967,18 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dd
               class="govuk-summary-list__value"
             >
-              <del
-                class="diffmod"
-              >
-                test
-              </del>
-              <ins
-                class="diffmod"
-              >
-                operator name
-              </ins>
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  test
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  operator name
+                </ins>
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -914,7 +1002,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dd
               class="govuk-summary-list__value"
             >
-               Limited company 
+              <span>
+                Limited company
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -938,16 +1028,18 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dd
               class="govuk-summary-list__value"
             >
-              <del
-                class="diffmod"
-              >
-                testtest
-              </del>
-              <ins
-                class="diffmod"
-              >
-                11111111
-              </ins>
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  testtest
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  11111111
+                </ins>
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -971,6 +1063,7 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dd
               class="govuk-summary-list__value"
             >
+              <span />
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -998,11 +1091,13 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dd
               class="govuk-summary-list__value"
             >
-              <del
-                class="diffdel"
-              >
-                 SUBSECTOR_2 
-              </del>
+              <span>
+                <del
+                  class="diffdel"
+                >
+                  SUBSECTOR_2
+                </del>
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1039,109 +1134,121 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dd
               class="govuk-summary-list__value"
             >
-              <del
-                class="diffmod"
-              >
-                accountrefdata
-              </del>
-              <ins
-                class="diffmod"
-              >
-                una
-              </ins>
-               operator 
-              <del
-                class="diffmod"
-              >
-                address
-              </del>
-              <ins
-                class="diffmod"
-              >
-                addr
-              </ins>
-               line 1 
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 operator 
+                <del
+                  class="diffmod"
+                >
+                  address
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 line 1
+              </span>
               <br />
-              <del
-                class="diffmod"
-              >
-                accountrefdata
-              </del>
-              <ins
-                class="diffmod"
-              >
-                una
-              </ins>
-               operator 
-              <del
-                class="diffmod"
-              >
-                address line 2 
-              </del>
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 operator 
+                <del
+                  class="diffmod"
+                >
+                  address line 2
+                </del>
+              </span>
               <br />
-              <del
-                class="diffmod"
-              >
-                 accountrefdata operator address
-              </del>
-              <ins
-                class="diffmod"
-              >
-                addr
-              </ins>
-               city 
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata operator address
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 city
+              </span>
               <br />
-              <del
-                class="diffmod"
-              >
-                accountrefdata
-              </del>
-              <ins
-                class="diffmod"
-              >
-                una
-              </ins>
-               operator 
-              <del
-                class="diffmod"
-              >
-                address county 
-              </del>
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 operator 
+                <del
+                  class="diffmod"
+                >
+                  address county
+                </del>
+              </span>
               <br />
-              <del
-                class="diffmod"
-              >
-                 accountrefdata operator address
-              </del>
-              <ins
-                class="diffmod"
-              >
-                addr
-              </ins>
-               postcode 
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata operator address
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 postcode
+              </span>
               <br />
-              <del
-                class="diffmod"
-              >
-                accountrefdata
-              </del>
-              <ins
-                class="diffmod"
-              >
-                una
-              </ins>
-               operator 
-              <del
-                class="diffmod"
-              >
-                address
-              </del>
-              <ins
-                class="diffmod"
-              >
-                addr
-              </ins>
-               country 
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 operator 
+                <del
+                  class="diffmod"
+                >
+                  address
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 country
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1174,26 +1281,28 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dd
               class="govuk-summary-list__value"
             >
-              <del
-                class="diffmod"
-              >
-                resp
-              </del>
-              <ins
-                class="diffmod"
-              >
-                test
-              </ins>
-              <del
-                class="diffmod"
-              >
-                person firstname
-              </del>
-              <ins
-                class="diffmod"
-              >
-                1
-              </ins>
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  resp
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  test
+                </ins>
+                <del
+                  class="diffmod"
+                >
+                  person firstname
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  1
+                </ins>
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1217,26 +1326,28 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dd
               class="govuk-summary-list__value"
             >
-              <del
-                class="diffmod"
-              >
-                resp
-              </del>
-              <ins
-                class="diffmod"
-              >
-                test
-              </ins>
-              <del
-                class="diffmod"
-              >
-                person lastname
-              </del>
-              <ins
-                class="diffmod"
-              >
-                2
-              </ins>
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  resp
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  test
+                </ins>
+                <del
+                  class="diffmod"
+                >
+                  person lastname
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  2
+                </ins>
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1260,7 +1371,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dd
               class="govuk-summary-list__value"
             >
-               test@test.com 
+              <span>
+                test@test.com
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1284,138 +1397,150 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dd
               class="govuk-summary-list__value"
             >
-              <del
-                class="diffmod"
-              >
-                accountrefdata
-              </del>
-              <ins
-                class="diffmod"
-              >
-                una
-              </ins>
-               resp 
-              <del
-                class="diffmod"
-              >
-                pers
-              </del>
-              <ins
-                class="diffmod"
-              >
-                addr
-              </ins>
-               line 1 
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 resp 
+                <del
+                  class="diffmod"
+                >
+                  pers
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 line 1
+              </span>
               <br />
-              <del
-                class="diffmod"
-              >
-                accountrefdata
-              </del>
-              <ins
-                class="diffmod"
-              >
-                una
-              </ins>
-               resp 
-              <del
-                class="diffmod"
-              >
-                pers
-              </del>
-              <ins
-                class="diffmod"
-              >
-                addr
-              </ins>
-               line 2 
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 resp 
+                <del
+                  class="diffmod"
+                >
+                  pers
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 line 2
+              </span>
               <br />
-              <del
-                class="diffmod"
-              >
-                accountrefdata
-              </del>
-              <ins
-                class="diffmod"
-              >
-                una
-              </ins>
-               resp 
-              <del
-                class="diffmod"
-              >
-                pers
-              </del>
-              <ins
-                class="diffmod"
-              >
-                addr line
-              </ins>
-               city 
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 resp 
+                <del
+                  class="diffmod"
+                >
+                  pers
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr line
+                </ins>
+                 city
+              </span>
               <br />
-              <del
-                class="diffmod"
-              >
-                accountrefdata
-              </del>
-              <ins
-                class="diffmod"
-              >
-                una
-              </ins>
-               resp 
-              <del
-                class="diffmod"
-              >
-                pers
-              </del>
-              <ins
-                class="diffmod"
-              >
-                addr
-              </ins>
-               county 
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 resp 
+                <del
+                  class="diffmod"
+                >
+                  pers
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 county
+              </span>
               <br />
-              <del
-                class="diffmod"
-              >
-                accountrefdata
-              </del>
-              <ins
-                class="diffmod"
-              >
-                una
-              </ins>
-               resp
-              <ins
-                class="diffins"
-              >
-                 addr line
-              </ins>
-               postcode 
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 resp
+                <ins
+                  class="diffins"
+                >
+                   addr line
+                </ins>
+                 postcode
+              </span>
               <br />
-              <del
-                class="diffmod"
-              >
-                accountrefdata
-              </del>
-              <ins
-                class="diffmod"
-              >
-                una
-              </ins>
-               resp 
-              <del
-                class="diffmod"
-              >
-                pers
-              </del>
-              <ins
-                class="diffmod"
-              >
-                addr
-              </ins>
-               country 
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  accountrefdata
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  una
+                </ins>
+                 resp 
+                <del
+                  class="diffmod"
+                >
+                  pers
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  addr
+                </ins>
+                 country
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1448,7 +1573,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dd
               class="govuk-summary-list__value"
             >
-               Accepted 
+              <span>
+                Accepted
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1472,7 +1599,9 @@ exports[`ReviewTargetUnitDetailsCheckYourAnswersComponent should render the summ
             <dd
               class="govuk-summary-list__value"
             >
-               Target unit notes 
+              <span>
+                Target unit notes
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"

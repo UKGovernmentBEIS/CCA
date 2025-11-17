@@ -51,6 +51,14 @@ describe('ItemNamePipe', () => {
       'Upload target unit assent on variation',
     );
 
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW')).toEqual(
+      'Peer review application for underlying agreement variation',
+    );
+
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW')).toEqual(
+      'Application for underlying agreement variation sent to peer reviewer',
+    );
+
     expect(pipe.transform('PERFORMANCE_DATA_DOWNLOAD_SUBMIT')).toEqual(
       'Download target period reporting (TPR) spreadsheets',
     );
@@ -60,6 +68,12 @@ describe('ItemNamePipe', () => {
     expect(pipe.transform('PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT')).toEqual(
       'Performance account template (PAT) upload',
     );
+
+    expect(pipe.transform('CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION')).toEqual(
+      'Upload target unit assent',
+    );
+
+    expect(pipe.transform('PRE_AUDIT_REVIEW_SUBMIT')).toEqual('Pre-audit review');
 
     expect(pipe.transform(null)).toBeNull();
   });

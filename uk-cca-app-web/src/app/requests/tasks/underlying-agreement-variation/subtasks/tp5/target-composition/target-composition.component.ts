@@ -50,7 +50,6 @@ import {
 @Component({
   selector: 'cca-target-composition',
   templateUrl: './target-composition.component.html',
-  standalone: true,
   imports: [
     FormsModule,
     RadioComponent,

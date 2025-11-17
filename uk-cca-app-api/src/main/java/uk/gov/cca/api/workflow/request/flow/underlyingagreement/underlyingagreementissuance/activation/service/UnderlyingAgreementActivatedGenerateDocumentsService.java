@@ -1,5 +1,12 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.activation.service;
 
+import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -13,6 +20,7 @@ import uk.gov.cca.api.common.utils.ConcurrencyUtils;
 import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDTO;
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementQueryService;
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
+import uk.gov.cca.api.underlyingagreement.utils.UnderlyingAgreementCalculateSchemeVersionsUtil;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.service.UnderlyingAgreementCreateDocumentService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.service.UnderlyingAgreementOfficialNoticeService;
@@ -36,28 +44,41 @@ public class UnderlyingAgreementActivatedGenerateDocumentsService {
 	
 	@Transactional
 	public void generateDocuments(String requestId) {
-		CompletableFuture<FileInfoDTO> underlyingAgreementDocumentFuture = null;
+		Map<SchemeVersion, CompletableFuture<FileInfoDTO>> underlyingAgreementDocumentFutureMap = new EnumMap<>(SchemeVersion.class);
 		CompletableFuture<FileInfoDTO> officialNoticeFuture = null;
 		CompletableFuture<Void> allFutures = null;
 		
 		try {
-			underlyingAgreementDocumentFuture = underlyingAgreementCreateDocumentService.create(requestId, SchemeVersion.CCA_2);
-			officialNoticeFuture = underlyingAgreementOfficialNoticeService.generateActivatedOfficialNotice(requestId);
-			
-			allFutures = CompletableFuture.allOf(underlyingAgreementDocumentFuture, officialNoticeFuture);
-        	allFutures.get();
-			
-			final FileInfoDTO underlyingAgreementDocument = underlyingAgreementDocumentFuture.get();
-			final FileInfoDTO officialNotice = officialNoticeFuture.get();
-			
 			final Request request = requestService.findRequestById(requestId);
 	        final UnderlyingAgreementRequestPayload requestPayload = (UnderlyingAgreementRequestPayload) request.getPayload();
+	        
+	        Set<SchemeVersion> schemeVersions = UnderlyingAgreementCalculateSchemeVersionsUtil
+	        		.calculateSchemeVersionsFromActiveFacilities(requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
+	        
+	        schemeVersions.forEach(version -> underlyingAgreementDocumentFutureMap.put(version, 
+	        		underlyingAgreementCreateDocumentService.create(requestId, version)));
+	        
+			officialNoticeFuture = underlyingAgreementOfficialNoticeService.generateActivatedOfficialNotice(requestId);
+			
+			List<CompletableFuture<?>> allFuturesList = new ArrayList<>(underlyingAgreementDocumentFutureMap.values());
+			allFuturesList.add(officialNoticeFuture);
+			
+			allFutures = CompletableFuture.allOf(allFuturesList.toArray(CompletableFuture[]::new));
+        	allFutures.get();
+
+        	final Map<SchemeVersion, FileInfoDTO> underlyingAgreementDocumentsMap = new EnumMap<>(SchemeVersion.class);
+            for (Map.Entry<SchemeVersion, CompletableFuture<FileInfoDTO>> entry : underlyingAgreementDocumentFutureMap.entrySet()) {
+            	underlyingAgreementDocumentsMap.put(entry.getKey(), entry.getValue().get()); 
+            }
+			final FileInfoDTO officialNotice = officialNoticeFuture.get();			
 	        final UnderlyingAgreementDTO underlyingAgreementDTO = 
 	        		underlyingAgreementQueryService.getUnderlyingAgreementByAccountId(request.getAccountId());
 
-			requestPayload.setUnderlyingAgreementDocument(underlyingAgreementDocument);
+			requestPayload.setUnderlyingAgreementDocuments(underlyingAgreementDocumentsMap);
 			requestPayload.setOfficialNotice(officialNotice);
-			underlyingAgreementService.saveFileDocumentUuid(underlyingAgreementDTO.getId(), underlyingAgreementDocument.getUuid());
+			
+			underlyingAgreementDocumentsMap.entrySet().forEach(doc -> underlyingAgreementService.saveFileDocumentUuid(
+							getDocumentIdForSchemeVersion(underlyingAgreementDTO, doc.getKey()), doc.getValue().getUuid()));
 		} catch (ExecutionException e) {
 			Throwable caused = e.getCause();
 			if(caused.getClass() == BusinessException.class) {
@@ -76,7 +97,18 @@ public class UnderlyingAgreementActivatedGenerateDocumentsService {
 			log.error(e.getMessage());
 			throw new BusinessException(ErrorCode.INTERNAL_SERVER, caused);
 		} finally {
-			ConcurrencyUtils.completeCompletableFutures(underlyingAgreementDocumentFuture, officialNoticeFuture, allFutures);
+			List<CompletableFuture<?>> allFuturesList = new ArrayList<>(underlyingAgreementDocumentFutureMap.values());
+			allFuturesList.add(officialNoticeFuture);
+			allFuturesList.add(allFutures);
+			ConcurrencyUtils.completeCompletableFutures(allFuturesList.toArray(CompletableFuture[]::new));
 		}
+	}
+
+	private Long getDocumentIdForSchemeVersion(final UnderlyingAgreementDTO underlyingAgreementDTO, SchemeVersion schemeVersion) {
+		return underlyingAgreementDTO.getUnderlyingAgreementDocuments().stream()
+				.filter(doc -> schemeVersion.equals(doc.getSchemeVersion()))
+				.findFirst()
+				.orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND))
+				.getId();
 	}
 }

@@ -19,24 +19,27 @@ export const ResponsiblePersonFormProvider: Provider = {
   provide: RESPONSIBLE_PERSON_FORM,
   deps: [FormBuilder, RequestTaskStore, DestroyRef],
   useFactory: (fb: FormBuilder, store: RequestTaskStore, destroyRef: DestroyRef) => {
-    const addressPayload = store.select(underlyingAgreementQuery.selectAccountReferenceDataTargetUnitDetails)().address;
+    const payload = store.select(underlyingAgreementQuery.selectPayload)();
 
-    const responsiblePersonAddress = store.select(
-      underlyingAgreementQuery.selectAccountReferenceDataTargetUnitDetails,
-    )().responsiblePerson;
+    const targetUnitDetails = payload.underlyingAgreement.underlyingAgreementTargetUnitDetails;
+    if (!targetUnitDetails) {
+      throw new Error('Target unit details data is missing from payload');
+    }
 
-    const responsiblePersonDetailsPayload = store.select(
-      underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails,
-    )().responsiblePersonDetails;
+    const accountReferenceData = payload.accountReferenceData.targetUnitAccountDetails;
 
-    const addressFormGroup = createAccountAddressForm(responsiblePersonDetailsPayload.address);
+    const operatorAddress = targetUnitDetails.operatorAddress;
+    const readonlyResponsiblePerson = accountReferenceData.responsiblePerson;
+    const updatedResponsiblePerson = targetUnitDetails.responsiblePersonDetails;
+
+    const addressFormGroup = createAccountAddressForm(updatedResponsiblePerson.address);
 
     const formConfig: ResponsiblePersonFormConfig = {
-      email: { value: responsiblePersonDetailsPayload?.email ?? null, disabled: false },
-      firstName: { value: responsiblePersonDetailsPayload?.firstName ?? null, disabled: false },
-      lastName: { value: responsiblePersonDetailsPayload?.lastName ?? null, disabled: false },
-      jobTitle: { value: responsiblePersonAddress?.jobTitle ?? null, disabled: true },
-      phoneNumber: { value: responsiblePersonAddress?.phoneNumber ?? null, disabled: true },
+      email: { value: updatedResponsiblePerson?.email ?? null, disabled: false },
+      firstName: { value: updatedResponsiblePerson?.firstName ?? null, disabled: false },
+      lastName: { value: updatedResponsiblePerson?.lastName ?? null, disabled: false },
+      jobTitle: { value: readonlyResponsiblePerson?.jobTitle ?? null, disabled: true },
+      phoneNumber: { value: readonlyResponsiblePerson?.phoneNumber ?? null, disabled: true },
       address: { value: addressFormGroup, disabled: false },
       sameAddress: { value: [false], disabled: false },
     };
@@ -46,9 +49,9 @@ export const ResponsiblePersonFormProvider: Provider = {
     group.controls.sameAddress.valueChanges.pipe(takeUntilDestroyed(destroyRef)).subscribe((isSameAddress) => {
       if (isSameAddress[0]) {
         group.controls.address.setValue({
-          ...addressPayload,
-          line2: addressPayload.line2 ?? null,
-          county: addressPayload.county ?? null,
+          ...operatorAddress,
+          line2: operatorAddress.line2 ?? null,
+          county: operatorAddress.county ?? null,
         });
 
         group.controls.address.disable();

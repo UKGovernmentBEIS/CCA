@@ -30,7 +30,6 @@ import {
 @Component({
   selector: 'cca-edit-sector-user-details',
   templateUrl: './edit-sector-user-details.component.html',
-  standalone: true,
   imports: [
     RouterLink,
     PageHeadingComponent,

@@ -10,11 +10,13 @@ import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.notification.template.domain.TargetUnitAccountTemplateParams;
+import uk.gov.cca.api.notification.template.domain.TargetUnitDetailsParams;
 import uk.gov.cca.api.sectorassociation.domain.dto.AddressDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationContactDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationSchemeDTO;
+import uk.gov.cca.api.workflow.request.core.domain.TargetUnitAccountDetails;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.service.SectorReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransformationMapper;
@@ -127,6 +129,42 @@ class CcaDocumentTemplateCommonParamsProviderTest {
                 .constructAccountAddressDTO(accountDetails.getAddress());
         verify(documentTemplateTransformationMapper, times(1))
                 .constructAccountAddressDTO(accountDetails.getResponsiblePerson().getAddress());
+    }
+
+    @Test
+    void constructTargetUnitDetailsParams() {
+        final AccountAddressDTO operatorAddress = AccountAddressDTO.builder().line1("line").build();
+        final AccountAddressDTO resAddress = AccountAddressDTO.builder().line1("resLine").build();
+        final TargetUnitAccountDetails accountDetails = TargetUnitAccountDetails.builder()
+                .operatorName("operatorName")
+                .companyRegistrationNumber("companyRegistrationNumber")
+                .address(operatorAddress)
+                .responsiblePerson(TargetUnitAccountContactDTO.builder()
+                        .firstName("firstName")
+                        .lastName("lastName")
+                        .email("email")
+                        .address(resAddress)
+                        .build())
+                .build();
+
+        final TargetUnitDetailsParams expected = TargetUnitDetailsParams.builder()
+                .name("operatorName")
+                .companyRegistrationNumber("companyRegistrationNumber")
+                .targetUnitAddress("operatorAddress")
+                .primaryContact("firstName lastName")
+                .primaryContactEmail("email")
+                .location("resAddress")
+                .build();
+
+        when(documentTemplateTransformationMapper.constructAccountAddressDTO(operatorAddress)).thenReturn("operatorAddress");
+        when(documentTemplateTransformationMapper.constructAccountAddressDTO(resAddress)).thenReturn("resAddress");
+
+        // Invoke
+        Map<String, Object> result = ccaDocumentTemplateCommonParamsProvider
+                .constructTargetUnitDetailsParams(accountDetails);
+
+        // Verify
+        assertThat(result).containsExactlyEntriesOf(Map.of("targetUnitDetails", expected));
     }
 
     @Test

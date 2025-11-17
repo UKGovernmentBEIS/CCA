@@ -31,7 +31,9 @@
             <li class="search-results-list_item govuk-!-margin-bottom-3">
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-three-quarters govuk-!-margin-bottom-3">
-                  <a [routerLink]="['workflow-details', workflow.id]" class="govuk-link">{{ workflow.id }}</a>
+                  <a [routerLink]="['workflow-details', workflow.id]" class="govuk-link">
+                    {{ workflow.id }} {{ workflow?.requestType | workflowType }}
+                  </a>
 
                   @if (workflow?.requestType === 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING') {
                     <div class="govuk-!-margin-bottom-0">
@@ -56,7 +58,7 @@
                 <div class="govuk-grid-column-one-quarter">
                   <span
                     class="search-results-list_item_status govuk-!-margin-top-2 govuk-tag govuk-tag--{{
-                      workflow.requestStatus | statusColor: 'grey'
+                      workflow.requestStatus | statusColor
                     }}"
                   >
                     <strong>{{ workflow.requestStatus | status }}</strong>

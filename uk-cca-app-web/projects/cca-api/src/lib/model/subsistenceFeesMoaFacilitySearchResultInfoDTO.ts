@@ -12,7 +12,7 @@
 
 export interface SubsistenceFeesMoaFacilitySearchResultInfoDTO {
   moaFacilityId?: number;
-  facilityId?: string;
+  facilityBusinessId?: string;
   facilityName?: string;
   markFacilitiesStatus?: 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
   paymentDate?: string;

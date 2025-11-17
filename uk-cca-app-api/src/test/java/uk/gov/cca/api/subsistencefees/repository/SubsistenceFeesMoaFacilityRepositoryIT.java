@@ -107,7 +107,7 @@ class SubsistenceFeesMoaFacilityRepositoryIT extends AbstractContainerBaseTest {
 
         // set up facilities
         FacilityData facilityData1 = FacilityData.builder()
-                .facilityId("term")
+                .facilityBusinessId("term")
                 .accountId(1L)
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("site1")
@@ -119,7 +119,7 @@ class SubsistenceFeesMoaFacilityRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(facilityData1);
 
         FacilityData facilityData2 = FacilityData.builder()
-                .facilityId("ADS_1-F00015")
+                .facilityBusinessId("ADS_1-F00015")
                 .accountId(1L)
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("site2")
@@ -131,7 +131,7 @@ class SubsistenceFeesMoaFacilityRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(facilityData2);
 
         FacilityData facilityData3 = FacilityData.builder()
-                .facilityId("ADS_1-F00016")
+                .facilityBusinessId("ADS_1-F00016")
                 .accountId(1L)
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("site3")
@@ -144,7 +144,7 @@ class SubsistenceFeesMoaFacilityRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(facilityData3);
 
         FacilityData facilityData4 = FacilityData.builder()
-                .facilityId("ADS_1-F00017")
+                .facilityBusinessId("ADS_1-F00017")
                 .accountId(1L)
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("site4")
@@ -380,7 +380,7 @@ class SubsistenceFeesMoaFacilityRepositoryIT extends AbstractContainerBaseTest {
         return PageRequest.of(
                 criteria.getPaging().getPageNumber(),
                 criteria.getPaging().getPageSize(),
-                Sort.by("fd.facilityId"));
+                Sort.by("fd.facilityBusinessId"));
     }
 
     @AfterEach

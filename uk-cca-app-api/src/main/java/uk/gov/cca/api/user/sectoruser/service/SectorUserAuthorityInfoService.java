@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import uk.gov.cca.api.account.domain.dto.AdditionalNoticeRecipientDTO;
 import uk.gov.cca.api.account.transform.NoticeRecipientMapper;
+import uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType;
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.domain.SectorUserAuthoritiesDTO;
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.domain.SectorUserAuthorityDTO;
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.service.SectorAuthorityQueryService;
@@ -33,6 +34,14 @@ public class SectorUserAuthorityInfoService {
         List<UserInfoDTO> sectorUsersInfo = getUserInfoDTOS(sectorUserAuthorities.getAuthorities());
 
         return getSectorUserAuthoritiesInfoDTO(sectorUserAuthorities, sectorUsersInfo);
+    }
+
+    public List<AdditionalNoticeRecipientDTO> getConsultantSectorUsersNoticeRecipients(Long sectorId) {
+        List<SectorUserAuthorityDTO> sectorUserAuthorities  = sectorAuthorityQueryService
+                .getActiveSectorUserAuthoritiesByContactType(sectorId, ContactType.CONSULTANT);
+        List<UserInfoDTO> sectorUsersInfo = getUserInfoDTOS(sectorUserAuthorities);
+
+        return sectorUsersInfo.stream().map(noticeRecipientMapper::toSectorUSerNoticeRecipientDTO).toList();
     }
 
     public List<AdditionalNoticeRecipientDTO> getCandidateSectorUsersNoticeRecipients(AppUser appUser, Long sectorId) {

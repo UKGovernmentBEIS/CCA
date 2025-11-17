@@ -37,7 +37,6 @@ const DEFAULT_PAGE_SIZE = 30;
 @Component({
   selector: 'cca-sector-moa-details',
   templateUrl: './sector-moa-details.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -160,7 +159,7 @@ export class SectorMoaDetailsComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.pageSize()) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   onSelectChange({ row, checked }: { row: SubsistenceFeesMoaTargetUnitSearchResultInfoDTO; checked: boolean }) {

@@ -11,5 +11,5 @@
  */
 
 export interface FacilityDTO {
-  facilityId?: string;
+  facilityBusinessId?: string;
 }

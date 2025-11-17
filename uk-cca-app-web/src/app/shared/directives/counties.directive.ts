@@ -1,25 +1,20 @@
-import { ChangeDetectorRef, Directive, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, OnInit } from '@angular/core';
 
-import { map } from 'rxjs';
+import { map, of } from 'rxjs';
 
 import { SelectComponent } from '@netz/govuk-components';
-import { CountyService } from '@shared/services';
+import { COUNTIES } from '@shared/services';
 import { County } from '@shared/types';
 
 @Directive({
   selector: 'govuk-select[ccaCounties],[govuk-select][ccaCounties]',
-  standalone: true,
 })
 export class CountiesDirective implements OnInit {
-  constructor(
-    private readonly apiService: CountyService,
-    private readonly selectComponent: SelectComponent,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-  ) {}
+  private readonly selectComponent = inject(SelectComponent);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   ngOnInit() {
-    this.apiService
-      .getUkCounties()
+    of(COUNTIES)
       .pipe(
         map((counties: County[]) =>
           counties

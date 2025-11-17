@@ -17,9 +17,11 @@ import {
 } from '@netz/govuk-components';
 import {
   applyTp6BaselineDataSideEffect,
+  areEntitiesIdentical,
   BaselineAndTargetPeriodsSubtasks,
   BaseLineAndTargetsStep,
   calculatePerformance,
+  filterFieldsWithFalsyValues,
   getMeasurementAndThroughputUnits,
   isTargetPeriodWizardCompleted,
   MeasurementTypeToUnitPipe,
@@ -34,8 +36,10 @@ import { MultipleFileInputComponent, WizardStepComponent } from '@shared/compone
 import { fileUtils } from '@shared/utils';
 import { produce } from 'immer';
 
+import { UnderlyingAgreementVariationReviewSavePayload } from 'cca-api';
+
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../transform';
-import { resetDetermination } from '../../../utils';
+import { deleteDecision, resetDetermination } from '../../../utils';
 import {
   ADD_BASELINE_DATA_FORM,
   AddBaselineDataFormModel,
@@ -45,7 +49,6 @@ import {
 @Component({
   selector: 'cca-add-baseline-data',
   templateUrl: './add-baseline-data.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     FormsModule,
@@ -74,18 +77,18 @@ export class AddBaselineDataComponent {
     underlyingAgreementQuery.selectTargetComposition(false), // TP6
   )();
 
-  protected readonly isTwelveMonthsValue = toSignal(this.form.get('isTwelveMonths').valueChanges, {
-    initialValue: this.form.get('isTwelveMonths').value,
+  protected readonly isTwelveMonthsValue = toSignal(this.form.controls.isTwelveMonths.valueChanges, {
+    initialValue: this.form.controls.isTwelveMonths.value,
   });
 
   protected readonly twelveMonthsSelected = computed(() => typeof this.isTwelveMonthsValue() === 'boolean');
 
-  private readonly energyOrCarbonValue = toSignal(this.form.get('energy').valueChanges, {
-    initialValue: this.form.get('energy').value,
+  private readonly energyOrCarbonValue = toSignal(this.form.controls.energy.valueChanges, {
+    initialValue: this.form.controls.energy.value,
   });
 
-  private readonly throughputValue = toSignal(this.form.get('throughput').valueChanges, {
-    initialValue: this.form.get('throughput').value,
+  private readonly throughputValue = toSignal(this.form.controls.throughput.valueChanges, {
+    initialValue: this.form.controls.throughput.value,
   });
 
   protected readonly baselineDateValue = toSignal(this.form.controls.baselineDate.valueChanges, {
@@ -115,27 +118,27 @@ export class AddBaselineDataComponent {
     this.targetComposition.measurementType,
   );
 
-  protected readonly dateIsStartof2018 = computed(() => {
-    return this.baselineDateValue() && this.baselineDateValue().getTime() === new Date('2018-01-01').getTime();
-  });
+  protected readonly dateIsStartof2018 = computed(
+    () => this.baselineDateValue() && this.baselineDateValue().getTime() === new Date('2018-01-01').getTime(),
+  );
 
   constructor() {
     this.form.controls.isTwelveMonths.valueChanges.pipe(takeUntilDestroyed(), distinct()).subscribe((v) => {
       if (typeof v === 'boolean') {
-        this.form.get('baselineDate').reset();
-        this.form.get('explanation').reset();
-        this.form.get('greenfieldEvidences').reset();
-        this.form.get('energy').reset();
-        this.form.get('usedReportingMechanism').reset();
-        this.form.get('throughput').reset();
-        this.form.get('energyCarbonFactor').reset();
+        this.form.controls.baselineDate.reset();
+        this.form.controls.explanation.reset();
+        this.form.controls.greenfieldEvidences.reset();
+        this.form.controls.energy.reset();
+        this.form.controls.usedReportingMechanism.reset();
+        this.form.controls.throughput.reset();
+        this.form.controls.energyCarbonFactor.reset();
         this.form.updateValueAndValidity();
       }
     });
 
     effect(() => {
       if (this.isTwelveMonthsValue() && this.baselineDateValue() && this.dateIsStartof2018()) {
-        this.form.get('explanation').reset();
+        this.form.controls.explanation.reset();
       }
     });
   }
@@ -145,24 +148,21 @@ export class AddBaselineDataComponent {
       requestTaskQuery.selectRequestTaskPayload,
     )() as UNAVariationReviewRequestTaskPayload;
 
+    const originalPayload = (
+      this.requestTaskStore.select(requestTaskQuery.selectRequestTaskPayload)() as UNAVariationReviewRequestTaskPayload
+    )?.originalUnderlyingAgreementContainer;
+
     const actionPayload = toUnderlyingAgreementVariationReviewSavePayload(payload);
-
-    const updatedPayload = produce(actionPayload, (draft) => {
-      draft.targetPeriod6Details.baselineData = {
-        isTwelveMonths: this.form.value.isTwelveMonths,
-        baselineDate: this.form.value.baselineDate.toISOString().split('T')[0],
-        explanation: this.form.value.explanation,
-        greenfieldEvidences: fileUtils.toUUIDs(this.form.value.greenfieldEvidences) as string[],
-        energy: this.form.value.energy,
-        usedReportingMechanism: this.form.value.usedReportingMechanism,
-        throughput: this.form.value.throughput,
-        energyCarbonFactor: this.form.value.energyCarbonFactor,
-        performance: this.calculatedPerformance(),
-      };
-    });
-
-    // Apply business logic side effects for baseline data changes
+    const updatedPayload = updateBaselineData(actionPayload, this.form, this.calculatedPerformance());
     const finalPayload = applyTp6BaselineDataSideEffect(updatedPayload);
+
+    const originalTP6 = filterFieldsWithFalsyValues(originalPayload?.underlyingAgreement?.targetPeriod6Details);
+    const currentTP6 = filterFieldsWithFalsyValues(finalPayload?.targetPeriod6Details);
+
+    const areIdentical = areEntitiesIdentical(currentTP6, originalTP6);
+
+    const currentDecisions = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewGroupDecisions)();
+    const decisions = areIdentical ? deleteDecision(currentDecisions, 'TARGET_PERIOD6_DETAILS') : currentDecisions;
 
     const currentReviewSectionsCompleted = this.requestTaskStore.select(
       underlyingAgreementReviewQuery.selectReviewSectionsCompleted,
@@ -181,14 +181,43 @@ export class AddBaselineDataComponent {
     const dto = createSaveActionDTO(requestTaskId, finalPayload, {
       determination,
       reviewSectionsCompleted,
+      reviewGroupDecisions: decisions,
+      facilitiesReviewGroupDecisions: this.requestTaskStore.select(
+        underlyingAgreementReviewQuery.selectFacilityReviewGroupDecisions,
+      )(),
     });
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe((payload: UNAVariationReviewRequestTaskPayload) => {
       const wizardCompleted = isTargetPeriodWizardCompleted(payload.underlyingAgreement.targetPeriod6Details);
+      const shouldNavigateToDecision = !areIdentical && wizardCompleted;
 
-      wizardCompleted
-        ? this.router.navigate(['../decision'], { relativeTo: this.activatedRoute })
-        : this.router.navigate(['../', BaseLineAndTargetsStep.ADD_TARGETS], { relativeTo: this.activatedRoute });
+      const targetPath = shouldNavigateToDecision
+        ? '../decision'
+        : wizardCompleted
+          ? '../check-your-answers'
+          : `../${BaseLineAndTargetsStep.ADD_TARGETS}`;
+
+      this.router.navigate([targetPath], { relativeTo: this.activatedRoute });
     });
   }
+}
+
+function updateBaselineData(
+  actionPayload: UnderlyingAgreementVariationReviewSavePayload,
+  form: AddBaselineDataFormModel,
+  calculatedPerformance: number,
+): UnderlyingAgreementVariationReviewSavePayload {
+  return produce(actionPayload, (draft) => {
+    draft.targetPeriod6Details.baselineData = {
+      isTwelveMonths: form.value.isTwelveMonths,
+      baselineDate: form.value.baselineDate.toISOString().split('T')[0],
+      explanation: form.value.explanation,
+      greenfieldEvidences: fileUtils.toUUIDs(form.value.greenfieldEvidences) as string[],
+      energy: String(form.value.energy),
+      usedReportingMechanism: form.value.usedReportingMechanism,
+      throughput: String(form.value.throughput),
+      energyCarbonFactor: String(form.value.energyCarbonFactor),
+      performance: String(calculatedPerformance),
+    };
+  });
 }

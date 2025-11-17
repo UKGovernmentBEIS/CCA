@@ -12,7 +12,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     </div>
     <div class="govuk-hint">Your task and all its data will be deleted permanently.</div>
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementVariationCancelTaskComponent {}

@@ -12,11 +12,11 @@ import {
   UntypedFormGroup,
 } from '@angular/forms';
 
-import { BehaviorSubject, filter, map, Observable } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, of } from 'rxjs';
 
 import { ErrorMessageComponent, FieldsetDirective, FormService, GovukSelectOption } from '@netz/govuk-components';
 import { transformPhoneInput } from '@shared/pipes';
-import { CountryCallingCodeService, CountryService } from '@shared/services';
+import { COUNTRIES, CountryCallingCodeService, UK_COUNTRY_CODES } from '@shared/services';
 import { UKCountryCodes } from '@shared/types';
 
 import { PhoneNumberDTO } from 'cca-api';
@@ -27,7 +27,6 @@ type CountryOption = { text: string; value: string };
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'div[cca-phone-input]',
   templateUrl: './phone-input.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, ErrorMessageComponent, AsyncPipe, FieldsetDirective],
 })
 export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccessor {
@@ -43,7 +42,7 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
     number: new UntypedFormControl(),
   });
 
-  phoneCodes$: Observable<GovukSelectOption<string>[]> = this.countryService.getUkCountries().pipe(
+  phoneCodes$: Observable<GovukSelectOption<string>[]> = of(COUNTRIES).pipe(
     map((countries) => {
       const emptyOption: CountryOption[] = [{ text: '--', value: '' }];
       const ukCountries: CountryOption[] = [];
@@ -57,7 +56,7 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
           value: String(callingCode),
         };
 
-        if (['GB-ENG', 'GB-NIR', 'GB-SCT', 'GB-WLS', 'GB'].includes(country.code)) {
+        if ([...UK_COUNTRY_CODES, 'GB'].includes(country.code)) {
           ukCountries.push(option);
         } else {
           otherCountries.push(option);
@@ -74,7 +73,6 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
 
   constructor(
     @Self() @Optional() private readonly ngControl: NgControl,
-    private readonly countryService: CountryService,
     private readonly formService: FormService,
     private readonly destroy$: DestroyRef,
     @Optional() private readonly container: ControlContainer,

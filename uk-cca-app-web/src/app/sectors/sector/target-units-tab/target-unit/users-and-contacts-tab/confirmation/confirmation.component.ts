@@ -15,7 +15,6 @@ import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
     </div>
     <a class="govuk-link" routerLink="/dashboard"> Go to my dashboard </a>
   </div>`,
-  standalone: true,
   imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

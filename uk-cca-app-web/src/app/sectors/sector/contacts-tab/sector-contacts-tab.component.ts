@@ -39,7 +39,6 @@ import {
 @Component({
   selector: 'cca-sector-contacts-tab',
   templateUrl: './sector-contacts-tab.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     DetailsComponent,

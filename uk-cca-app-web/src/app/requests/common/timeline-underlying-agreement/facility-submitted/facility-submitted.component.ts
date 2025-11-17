@@ -20,7 +20,6 @@ import { underlyingAgreementRequestActionQuery } from '../timeline-underlying-ag
       </div>
     }
   `,
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -56,6 +55,7 @@ export class FacilitySubmittedComponent {
       this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
       false,
       '../../../file-download',
+      { productsLink: './products' },
     ),
   );
 }

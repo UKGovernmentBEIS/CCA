@@ -25,6 +25,5 @@
       }
     }
   },
-  "hour_format": "hour24",
-  "minimap": { "show": "always" }
+  "minimap": { "show": "auto" }
 }

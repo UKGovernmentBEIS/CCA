@@ -9,6 +9,10 @@ import com.fasterxml.jackson.databind.jsontype.NamedType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusRunRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.common.domain.Cca2ExtensionNoticeRunRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.processing.domain.Cca2ExtensionNoticeAccountProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.common.domain.Cca3ExistingFacilitiesMigrationRunRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.common.domain.FacilityCertificationRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.processing.domain.FacilityCertificationAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingRequestMetadata;
@@ -24,6 +28,10 @@ import uk.gov.netz.api.common.config.jackson.JsonSubTypesProvider;
 
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.BUY_OUT_SURPLUS_ACCOUNT_PROCESSING;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.BUY_OUT_SURPLUS_RUN;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA2_EXTENSION_NOTICE_RUN;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.CCA3_EXISTING_FACILITIES_MIGRATION_RUN;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.FACILITY_CERTIFICATION_ACCOUNT_PROCESSING;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.FACILITY_CERTIFICATION_RUN;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType.PERFORMANCE_DATA_GENERATE;
@@ -53,7 +61,11 @@ public class RequestMetadataTypesProvider implements JsonSubTypesProvider {
 				new NamedType(BuyOutSurplusRunRequestMetadata.class, BUY_OUT_SURPLUS_RUN),
 				new NamedType(BuyOutSurplusAccountProcessingRequestMetadata.class, BUY_OUT_SURPLUS_ACCOUNT_PROCESSING),
 				new NamedType(FacilityCertificationRunRequestMetadata.class, FACILITY_CERTIFICATION_RUN),
-				new NamedType(FacilityCertificationAccountProcessingRequestMetadata.class, FACILITY_CERTIFICATION_ACCOUNT_PROCESSING)
+				new NamedType(FacilityCertificationAccountProcessingRequestMetadata.class, FACILITY_CERTIFICATION_ACCOUNT_PROCESSING),
+				new NamedType(Cca3ExistingFacilitiesMigrationRunRequestMetadata.class, CCA3_EXISTING_FACILITIES_MIGRATION_RUN),
+				new NamedType(Cca3ExistingFacilitiesMigrationAccountProcessingRequestMetadata.class, CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING),
+				new NamedType(Cca2ExtensionNoticeRunRequestMetadata.class, CCA2_EXTENSION_NOTICE_RUN),
+				new NamedType(Cca2ExtensionNoticeAccountProcessingRequestMetadata.class, CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING)
 		);
 	}
 

@@ -34,7 +34,6 @@ import { TARGET_COMPOSITION_FORM, TargetCompositionFormProvider } from './target
 @Component({
   selector: 'cca-target-composition',
   templateUrl: './target-composition.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -98,7 +97,7 @@ export class TargetCompositionComponent {
     )() as UnderlyingAgreementSubmitRequestTaskPayload;
 
     const actionPayload = toUnderlyingAgreementSavePayload(payload);
-    const updatedPayload = updateFacilityTargetCopmosition(actionPayload, this.form, this.facilityId);
+    const updatedPayload = updateFacilityTargetComposition(actionPayload, this.form, this.facilityId);
 
     const currentSectionsCompleted = this.store.select(underlyingAgreementQuery.selectSectionsCompleted)();
     const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
@@ -121,7 +120,7 @@ export class TargetCompositionComponent {
   }
 }
 
-function updateFacilityTargetCopmosition(
+function updateFacilityTargetComposition(
   payload: UnderlyingAgreementApplySavePayload,
   form: FacilityTargetCompositionFormModel,
   facilityId: string,

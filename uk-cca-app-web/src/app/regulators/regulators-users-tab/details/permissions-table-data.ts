@@ -4,7 +4,6 @@ export const tableColumns: GovukTableColumn[] = [
   { field: 'task', header: 'Task / Item name', isSortable: false },
   { field: 'type', header: 'Type', isSortable: false },
   { field: 'EXECUTE', header: 'Execute', isSortable: false },
-  { field: 'VIEW_ONLY', header: 'View only', isSortable: false },
   { field: 'NONE', header: 'None', isSortable: false },
 ];
 
@@ -58,5 +57,20 @@ export const tableRows = [
     permission: 'UNDERLYING_AGREEMENT_VARIATION_REVIEW',
     task: 'Review variation to underlying agreement',
     type: 'Variation',
+  },
+  {
+    permission: 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW',
+    task: 'Peer review Application for Underlying agreement variation',
+    type: 'Variation',
+  },
+  {
+    permission: 'MANAGE_FACILITY_AUDIT',
+    task: 'Flag for Audit',
+    type: 'Audit',
+  },
+  {
+    permission: 'FACILITY_AUDIT_SUBMISSION',
+    task: 'Trigger and complete Audit',
+    type: 'Audit',
   },
 ];

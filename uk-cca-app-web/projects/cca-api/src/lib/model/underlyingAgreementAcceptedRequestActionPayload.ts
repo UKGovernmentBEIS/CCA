@@ -34,5 +34,5 @@ export interface UnderlyingAgreementAcceptedRequestActionPayload {
   reviewGroupDecisions?: Record<string, UnderlyingAgreementReviewDecision>;
   facilitiesReviewGroupDecisions?: Record<string, UnderlyingAgreementFacilityReviewDecision>;
   reviewAttachments?: Record<string, string>;
-  underlyingAgreementDocument: FileInfoDTO;
+  underlyingAgreementDocuments: Record<string, FileInfoDTO>;
 }

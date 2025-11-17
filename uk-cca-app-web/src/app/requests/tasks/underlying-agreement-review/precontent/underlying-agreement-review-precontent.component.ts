@@ -10,7 +10,7 @@ import { ConfigService } from '@shared/config';
 @Component({
   selector: 'cca-underlying-agreement-review-precontent',
   template: `
-    @if (determinationSubmitted && isEditable) {
+    @if (determinationSubmitted() && isEditable()) {
       <button
         netzPendingButton
         govukButton
@@ -22,13 +22,12 @@ import { ConfigService } from '@shared/config';
       </button>
     }
 
-    @if (determinationSubmitted && isEditable && notifyEnabled) {
+    @if (determinationSubmitted() && isEditable() && notifyEnabled) {
       <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
         Notify operator of decision
       </button>
     }
   `,
-  standalone: true,
   imports: [ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -40,11 +39,11 @@ export class UnderlyingAgreementReviewPrecontentComponent {
 
   readonly notifyEnabled = !this.config.isFeatureEnabled('unaHideNotifyOperator');
 
-  protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();
+  protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
 
   readonly determinationSubmitted = this.requestTaskStore.select(
     underlyingAgreementReviewQuery.selectDeterminationSubmitted,
-  )();
+  );
 
   onNotifyOperatorOfDecision() {
     this.router.navigate(['underlying-agreement-review', 'notify-operator'], { relativeTo: this.activatedRoute });

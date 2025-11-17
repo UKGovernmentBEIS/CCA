@@ -3,7 +3,7 @@
     <div class="govuk-grid-column-full">
       <netz-page-heading size="xl" [caption]="details?.workflowDetails.id" data-testid="page-heading">
         {{ details?.workflowDetails.requestType | requestTypeToHeading: details?.workflowDetails?.requestMetadata }}
-        <govuk-tag style="float: right" [color]="details?.workflowDetails.requestStatus | statusColor: 'grey'">
+        <govuk-tag style="float: right" [color]="details?.workflowDetails.requestStatus | statusColor">
           {{ details?.workflowDetails.requestStatus | status }}
         </govuk-tag>
       </netz-page-heading>

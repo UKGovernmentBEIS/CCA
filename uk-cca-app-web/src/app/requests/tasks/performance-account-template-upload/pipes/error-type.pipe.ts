@@ -1,9 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'patErrorType',
-  standalone: true,
-})
+@Pipe({ name: 'patErrorType' })
 export class ErrorTypePipe implements PipeTransform {
   transform(errorMessage: string): string {
     if (

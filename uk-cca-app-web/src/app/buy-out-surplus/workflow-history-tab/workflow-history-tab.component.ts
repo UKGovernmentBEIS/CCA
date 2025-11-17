@@ -12,7 +12,6 @@ import { BuyoutSurplusStore, DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '../buy-out-
 @Component({
   selector: 'cca-workflow-history-tab',
   templateUrl: './workflow-history-tab.component.html',
-  standalone: true,
   imports: [
     RouterModule,
     RouterLink,
@@ -58,19 +57,18 @@ export class WorkflowHistoryTabComponent {
   }
 
   onPageChange(page: number) {
-    if (page === this.currentPage()) return;
-    this.router.navigate([], {
-      queryParams: { page },
-      queryParamsHandling: 'merge',
-      relativeTo: this.activatedRoute,
-      fragment: 'workflow-history',
-    });
+    if (page === this.state().currentPage) return;
+    this.handleQueryParamsNavigation({ page });
   }
 
   onPageSizeChange(pageSize: number) {
-    if (pageSize === this.pageSize()) return;
+    if (pageSize === this.state().pageSize) return;
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
+  }
+
+  private handleQueryParamsNavigation(pagination: Partial<{ page: number; pageSize: number }>) {
     this.router.navigate([], {
-      queryParams: { page: 1, pageSize },
+      queryParams: { ...pagination },
       queryParamsHandling: 'merge',
       relativeTo: this.activatedRoute,
       fragment: 'workflow-history',

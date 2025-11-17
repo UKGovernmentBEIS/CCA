@@ -49,7 +49,7 @@ describe('AdminTerminationWithdrawSubmittedTimelineComponent', () => {
       [
         ['Users', 'Name and signature on the official notice', 'Official notice'],
         [
-          'oper3 user, Responsible person, oper3@cca.uk  a-fname lname, Administrative contact, test-admin@test.com  Fred_1 William_1, Sector contact, fredwilliam_1@agindustries.org.uk',
+          'oper3 user, Responsible person, oper3@cca.uka-fname lname, Administrative contact, test-admin@test.comFred_1 William_1, Sector contact, fredwilliam_1@agindustries.org.uk',
           'Regulator England',
           'Withdrawal of intent to terminate agreement.pdf',
         ],

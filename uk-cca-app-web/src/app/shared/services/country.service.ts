@@ -1,28 +1,32 @@
 import { Injectable } from '@angular/core';
 
-import { first, from, map, mergeMap, Observable, shareReplay } from 'rxjs';
+import { catchError, map, tap } from 'rxjs';
 
 import { ReferenceDataService } from 'cca-api';
 
 import { Country } from '../types/country';
 
+export const UK_COUNTRY_CODES = ['GB-ENG', 'GB-NIR', 'GB-SCT', 'GB-WLS'];
+export let COUNTRIES: Country[] = [];
+export let UK_COUNTRIES: Country[] = [];
+
 @Injectable({ providedIn: 'root' })
 export class CountryService {
-  private countries$: Observable<Country[]> = this.referenceDataService.getReferenceData(['COUNTRIES']).pipe(
-    map((response: { COUNTRIES: Country[] }) => response.COUNTRIES as Country[]),
-    shareReplay({ bufferSize: 1, refCount: false }),
-  );
-
-  constructor(private readonly referenceDataService: ReferenceDataService) {}
-
-  getUkCountries(): Observable<Country[]> {
-    return this.countries$;
-  }
-
-  getCountry(code: string): Observable<Country> {
-    return this.countries$.pipe(
-      mergeMap((countries) => from(countries)),
-      first((country) => country.code === code),
-    );
+  constructor(private readonly referenceDataService: ReferenceDataService) {
+    this.referenceDataService
+      .getReferenceData(['COUNTRIES'])
+      .pipe(
+        catchError((err) => {
+          console.error('There was an error fetching the countries.');
+          return err;
+        }),
+        map((response: { COUNTRIES: Country[] }) => response.COUNTRIES as Country[]),
+        tap((countries) => (COUNTRIES = countries)),
+        tap((countries) => {
+          const ukCountries = countries.filter((c) => UK_COUNTRY_CODES.includes(c.code));
+          UK_COUNTRIES = ukCountries;
+        }),
+      )
+      .subscribe();
   }
 }

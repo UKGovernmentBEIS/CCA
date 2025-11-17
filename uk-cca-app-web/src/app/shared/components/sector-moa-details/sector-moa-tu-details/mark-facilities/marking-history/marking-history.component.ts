@@ -11,7 +11,6 @@ import { SubsistenceFeesMoAFacilityViewService } from 'cca-api';
 @Component({
   selector: 'cca-marking-history',
   templateUrl: './marking-history.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, GovukDatePipe, StatusPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

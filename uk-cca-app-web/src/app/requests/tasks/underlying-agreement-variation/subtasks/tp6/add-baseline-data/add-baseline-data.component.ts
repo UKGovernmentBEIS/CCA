@@ -38,7 +38,6 @@ import { ADD_BASELINE_DATA_FORM, addBaselineDataFormProvider } from './add-basel
 @Component({
   selector: 'cca-add-baseline-data',
   templateUrl: './add-baseline-data.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     FormsModule,
@@ -87,8 +86,8 @@ export class AddBaselineDataComponent {
 
   protected readonly calculatedPerformance = computed(() => {
     if (this.targetComposition?.agreementCompositionType !== 'RELATIVE') return null;
-    const energyOrCarbon = this.energyOrCarbonValue() as number;
-    const throughput = this.throughputValue() as number;
+    const energyOrCarbon = this.energyOrCarbonValue();
+    const throughput = this.throughputValue();
     return calculatePerformance(energyOrCarbon, throughput);
   });
 
@@ -127,7 +126,7 @@ export class AddBaselineDataComponent {
         energy: this.form.value.energy,
         throughput: this.form.value.throughput,
         energyCarbonFactor: this.form.value.energyCarbonFactor,
-        performance: this.calculatedPerformance(),
+        performance: String(this.calculatedPerformance()),
         usedReportingMechanism: this.form.value.usedReportingMechanism,
       } as BaselineData;
     });

@@ -11,6 +11,7 @@ import uk.gov.cca.api.account.service.TargetUnitAccountUpdateService;
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.common.domain.SchemeData;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.facility.service.FacilityDataUpdateService;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
@@ -54,7 +55,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UnderlyingAgreementVariationActivatedServiceTest {
 
-
     @InjectMocks
     private UnderlyingAgreementVariationActivatedService service;
 
@@ -82,7 +82,6 @@ class UnderlyingAgreementVariationActivatedServiceTest {
 
     @Test
     void activateUnderlyingAgreementVariation() {
-
         final String requestId = "1";
         final String user = "user";
         final Long accountId = 2L;
@@ -98,9 +97,11 @@ class UnderlyingAgreementVariationActivatedServiceTest {
                         .build())
                 .build();
 
+        final String operatorName = "operatorName";
+
         final FacilityItem facilityItem1 = FacilityItem.builder()
                 .facilityId(facilityId1)
-                .facilityDetails(FacilityDetails.builder().facilityAddress(AccountAddressDTO.builder().postcode(postcode).build()).build())
+                .facilityDetails(FacilityDetails.builder().facilityAddress(FacilityAddressDTO.builder().postcode(postcode).build()).build())
                 .build();
         final Facility facility1 = Facility.builder()
                 .status(FacilityStatus.LIVE)
@@ -108,7 +109,7 @@ class UnderlyingAgreementVariationActivatedServiceTest {
                 .build();
         final FacilityItem facilityItem2 = FacilityItem.builder()
                 .facilityId(facilityId2)
-                .facilityDetails(FacilityDetails.builder().facilityAddress(AccountAddressDTO.builder().postcode(postcode).build()).build())
+                .facilityDetails(FacilityDetails.builder().facilityAddress(FacilityAddressDTO.builder().postcode(postcode).build()).build())
                 .build();
         final Facility facility2 = Facility.builder()
                 .status(FacilityStatus.NEW)
@@ -116,7 +117,7 @@ class UnderlyingAgreementVariationActivatedServiceTest {
                 .build();
         FacilityItem facilityItem3 = FacilityItem.builder()
                 .facilityId(facilityId3)
-                .facilityDetails(FacilityDetails.builder().facilityAddress(AccountAddressDTO.builder().postcode(postcode).build()).build())
+                .facilityDetails(FacilityDetails.builder().facilityAddress(FacilityAddressDTO.builder().postcode(postcode).build()).build())
                 .build();
         final Facility facility3 = Facility.builder()
                 .status(FacilityStatus.EXCLUDED)
@@ -125,7 +126,7 @@ class UnderlyingAgreementVariationActivatedServiceTest {
                 .build();
         final UnderlyingAgreement originalUna = UnderlyingAgreement.builder().facilities(Set.of(facility1)).build();
 
-        final UnderlyingAgreementTargetUnitDetails unaDetails = UnderlyingAgreementTargetUnitDetails.builder().build();
+        final UnderlyingAgreementTargetUnitDetails unaDetails = UnderlyingAgreementTargetUnitDetails.builder().operatorName(operatorName).build();
         final Determination determination = Determination.builder().type(DeterminationType.ACCEPTED).build();
         final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder().sectorUsers(Set.of(user)).build();
         final SchemeVersion workflowSchemeVersion = SchemeVersion.CCA_3;
@@ -185,14 +186,14 @@ class UnderlyingAgreementVariationActivatedServiceTest {
         );
 
         final Set<FacilityBaseInfoDTO> createdFacilities = Set.of(FacilityBaseInfoDTO.builder()
-                .facilityId(facilityItem2.getFacilityId())
+                .facilityBusinessId(facilityItem2.getFacilityId())
                 .build());
 
         final Set<FacilityItem> facilityItems = Set.of(facilityItem2);
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
         when(accountReferenceDetailsService.getAccountReferenceData(accountId)).thenReturn(referenceData);
-        when(underlyingAgreementService.createSearchKeywordsForAccount(unaContainerFinal)).thenReturn(searchKeywordPairs);
+        when(underlyingAgreementService.createSearchKeywordsForAccount(operatorName, unaContainerFinal)).thenReturn(searchKeywordPairs);
         when(facilityDataUpdateService.createFacilitiesData(anyList())).thenReturn(createdFacilities);
 
         // invoke
@@ -203,7 +204,8 @@ class UnderlyingAgreementVariationActivatedServiceTest {
                 eq(unaContainerFinal),
                 eq(request.getAccountId()),
                 argThat(ctx -> ctx.getSchemeVersion().equals(workflowSchemeVersion))
-        );        verify(underlyingAgreementService, times(1)).createSearchKeywordsForAccount(unaContainerFinal);
+        );        
+        verify(underlyingAgreementService, times(1)).createSearchKeywordsForAccount(operatorName, unaContainerFinal);
         verify(accountReferenceDetailsService, times(1)).getAccountReferenceData(request.getAccountId());
         verify(facilityDataUpdateService, times(1)).createFacilitiesData(anyList());
         verify(accountSearchAdditionalKeywordService, times(1)).storeKeywordsForAccount(accountId, searchKeywordPairs);

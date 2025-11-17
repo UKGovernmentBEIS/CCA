@@ -3,7 +3,6 @@ import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, Params, RouterLink }
 
 @Component({
   selector: 'govuk-back-link',
-  standalone: true,
   imports: [RouterLink],
   template: `
     <a

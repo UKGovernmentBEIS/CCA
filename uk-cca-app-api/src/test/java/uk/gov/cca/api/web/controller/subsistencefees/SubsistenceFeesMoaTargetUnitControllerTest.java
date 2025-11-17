@@ -173,7 +173,7 @@ class SubsistenceFeesMoaTargetUnitControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.total").value(results.getTotal()))
                 .andExpect(jsonPath("$.subsistenceFeesMoaFacilities[0].moaFacilityId").value(1L))
-                .andExpect(jsonPath("$.subsistenceFeesMoaFacilities[0].facilityId").value("ADS-001"))
+                .andExpect(jsonPath("$.subsistenceFeesMoaFacilities[0].facilityBusinessId").value("ADS-001"))
                 .andExpect(jsonPath("$.subsistenceFeesMoaFacilities[0].facilityName").value("site_name"))
                 .andExpect(jsonPath("$.subsistenceFeesMoaFacilities[0].hasHistory").value("false"));
 

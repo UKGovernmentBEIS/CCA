@@ -11,5 +11,5 @@
  */
 
 export interface FacilityTargets {
-  improvements: Record<string, number>;
+  improvements: Record<string, string>;
 }

@@ -9,7 +9,6 @@ import UserEvent, { UserEvent as UE } from '@testing-library/user-event';
 import { SectorComponent } from '../sector/sector.component';
 import {
   mockOperatorAuthorities,
-  mockPhoneCodeCoutries,
   mockSectorAuthorities,
   mockSectorDetails,
   mockTargetUnitAccount,
@@ -38,6 +37,7 @@ export async function navigateToTargetUnitUsers({ user, harness, httpTestingCont
 
   const req = httpTestingController.expectOne(`/api/v1.0/operator-authorities/account/${accountId}`);
   req.flush(mockOperatorAuthorities);
+
   expect(document.getElementById('users-and-contacts')).toBeVisible();
 }
 
@@ -50,7 +50,7 @@ export async function navigateToTargetUnit(sectorId: number, targetUnitName: str
   req.flush(mockTargetUnitAccount(sectorId));
   await harness.fixture.whenStable();
   harness.detectChanges();
-  expect(screen.getByTestId('target-unit')).toBeVisible();
+  expect(screen.getByTestId('target-unit-details')).toBeVisible();
 }
 
 export async function navigateToTargetUnits(id: number, { harness, httpTestingController }: Opts) {
@@ -147,17 +147,11 @@ export async function navigateToSectorUserDetails(
   expect(screen.getByTestId('sector-user-organisation-details-list')).toBeVisible();
 }
 
-export async function navigateToEditSectorUserDetails({ harness, httpTestingController, user }: Opts) {
+export async function navigateToEditSectorUserDetails({ harness, user }: Opts) {
   const changeLink = screen.getAllByText('Change')[0];
   await user.click(changeLink);
   await harness.fixture.whenStable();
   harness.detectChanges();
-  const req = httpTestingController.expectOne('/api/v1.0/data?types=COUNTRIES');
-  req.flush(mockPhoneCodeCoutries);
-
-  await harness.fixture.whenStable();
-  harness.detectChanges();
-
   expect(screen.getByText('Change user details')).toBeVisible();
 }
 

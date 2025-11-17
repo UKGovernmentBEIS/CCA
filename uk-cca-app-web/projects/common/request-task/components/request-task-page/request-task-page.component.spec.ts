@@ -17,28 +17,24 @@ let dynamicSectionsFlag = true;
 @Component({
   selector: 'netz-test-content',
   template: `<h1>Test content component</h1>`,
-  standalone: true,
 })
 class TestContentComponent {}
 
 @Component({
   selector: 'netz-test-pre-content',
   template: `<h2>Test pre content</h2>`,
-  standalone: true,
 })
 class TestPreContentComponent {}
 
 @Component({
   selector: 'netz-test-post-content',
   template: `<h2>Test post content</h2>`,
-  standalone: true,
 })
 class TestPostContentComponent {}
 
 @Component({
   selector: 'netz-subtask',
   template: '<h1>SUBTASK COMPONENT</h1>',
-  standalone: true,
 })
 class TestSubtaskComponent {}
 

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`OverallDecisionComponent should match snapshot 1`] = `
 <cca-timeline-review-overall-decision
@@ -32,7 +32,9 @@ exports[`OverallDecisionComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Reject 
+            <span>
+              Reject
+            </span>
           </dd>
         </div>
         <div
@@ -49,7 +51,9 @@ exports[`OverallDecisionComponent should match snapshot 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             cx 
+            <span>
+              cx
+            </span>
           </dd>
         </div>
         <div
@@ -66,7 +70,9 @@ exports[`OverallDecisionComponent should match snapshot 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             dd 
+            <span>
+              dd
+            </span>
           </dd>
         </div>
         <div

@@ -39,16 +39,16 @@ public class UnderlyingAgreementFacilityCertificationTransferService {
     public void processFacilityCertificationsForNewFacilities(Set<FacilityBaseInfoDTO> createdFacilities,
                                                               Set<FacilityItem> facilities) {
 
-        // map the new facilityId with the previous facilityId for change of ownership
+        // Map the new facilityId with the previous facilityId for change of ownership
         Map<String, String> changeOfOwnershipMap = new HashMap<>();
-        List<String> newEntrantFacilityIds = new ArrayList<>();
+        List<String> newEntrantFacilityBusinessIds = new ArrayList<>();
 
         for (FacilityItem facility : facilities) {
             ApplicationReasonType reason = facility.getFacilityDetails().getApplicationReason();
             if (reason == ApplicationReasonType.CHANGE_OF_OWNERSHIP) {
                 changeOfOwnershipMap.put(facility.getFacilityId(), facility.getFacilityDetails().getPreviousFacilityId());
             } else {
-                newEntrantFacilityIds.add(facility.getFacilityId());
+                newEntrantFacilityBusinessIds.add(facility.getFacilityId());
             }
         }
 
@@ -58,7 +58,7 @@ public class UnderlyingAgreementFacilityCertificationTransferService {
         // TODO: Remove this condition on 01/01/2026
         if(!LocalDate.now().isBefore(LocalDate.parse(facilityCertificationNewEntrantsStartDate))) {
             allCertifications.addAll(
-            this.certifyNewEntrantFacilitiesForActiveCertificationPeriod(createdFacilities, newEntrantFacilityIds)
+            this.certifyNewEntrantFacilitiesForActiveCertificationPeriod(createdFacilities, newEntrantFacilityBusinessIds)
             );
         }
 
@@ -70,14 +70,14 @@ public class UnderlyingAgreementFacilityCertificationTransferService {
     private List<FacilityCertificationDTO> copyFacilityCertifications(Set<FacilityBaseInfoDTO> createdFacilities,
                                                                       Map<String, String> changeOfOwnershipMap) {
 
-        // map created facility businessId with the actual id only for those with change of ownership
+        // Map created facility businessId with the actual id only for those with change of ownership
         Map<String, Long> createdFacilitiesWithChangeOfOwnershipMap = createdFacilities.stream()
-                .filter(facility -> changeOfOwnershipMap.containsKey(facility.getFacilityId()))
-                .collect(Collectors.toMap(FacilityBaseInfoDTO::getFacilityId, FacilityBaseInfoDTO::getId));
+                .filter(facility -> changeOfOwnershipMap.containsKey(facility.getFacilityBusinessId()))
+                .collect(Collectors.toMap(FacilityBaseInfoDTO::getFacilityBusinessId, FacilityBaseInfoDTO::getId));
 
-        // collect the previous facility certifications to be copied and group by the 'facilityId'
+        // Collect the previous facility certifications to be copied and group by the 'facilityId'
         Set<String> previousFacilityIds = new HashSet<>(changeOfOwnershipMap.values());
-        Map<String, List<FacilityCertificationDTO>> certificationsByPreviousFacilityId = getCertificationsByFacilityId(previousFacilityIds);
+        Map<String, List<FacilityCertificationDTO>> certificationsByPreviousFacilityId = getCertificationsByFacilityBusinessIds(previousFacilityIds);
 
         List<FacilityCertificationDTO> copiedCertifications = new ArrayList<>();
         changeOfOwnershipMap.forEach((createdFacilityId, previousFacilityId) -> {
@@ -97,20 +97,20 @@ public class UnderlyingAgreementFacilityCertificationTransferService {
     }
 
     private List<FacilityCertificationDTO> certifyNewEntrantFacilitiesForActiveCertificationPeriod(Set<FacilityBaseInfoDTO> createdFacilities,
-                                                                                                   List<String> newEntrantFacilityIds) {
-
+                                                                                                   List<String> newEntrantFacilityBusinessIds) {
         LocalDate currentDate = LocalDate.now();
 	    Optional<CertificationPeriodInfoDTO> optionalCP = certificationPeriodService.getCurrentCertificationPeriodOptional();
+	    
 		if(optionalCP.isEmpty()) {
 			return Collections.emptyList();
 		}
 		Long cpId = optionalCP.get().getId();
 
-        // map created facility businessId with the actual id
+        // Map created facility businessId with the actual id
         Map<String, Long> facilityIds = createdFacilities.stream()
-                .collect(Collectors.toMap(FacilityBaseInfoDTO::getFacilityId, FacilityBaseInfoDTO::getId));
+                .collect(Collectors.toMap(FacilityBaseInfoDTO::getFacilityBusinessId, FacilityBaseInfoDTO::getId));
 
-	    return newEntrantFacilityIds.stream()
+	    return newEntrantFacilityBusinessIds.stream()
 			    .map(f -> FacilityCertificationDTO.builder()
 					    .facilityId(facilityIds.get(f))
 					    .certificationPeriodId(cpId)
@@ -120,10 +120,10 @@ public class UnderlyingAgreementFacilityCertificationTransferService {
 			    .toList();
 	}
 
-    private Map<String, List<FacilityCertificationDTO>> getCertificationsByFacilityId(Set<String> facilityIds) {
-        Map<Long, String> facilityBaseInfoById = facilityDataQueryService.getFacilityBaseInfoList(facilityIds)
+    private Map<String, List<FacilityCertificationDTO>> getCertificationsByFacilityBusinessIds(Set<String> facilityBusinessIds) {
+        Map<Long, String> facilityBaseInfoById = facilityDataQueryService.getFacilityBaseInfoListByFacilityBusinessIds(facilityBusinessIds)
                 .stream()
-                .collect(Collectors.toMap(FacilityBaseInfoDTO::getId, FacilityBaseInfoDTO::getFacilityId));
+                .collect(Collectors.toMap(FacilityBaseInfoDTO::getId, FacilityBaseInfoDTO::getFacilityBusinessId));
 
         return facilityCertificationService.getFacilityCertifications(facilityBaseInfoById.keySet()).stream()
                 .collect(Collectors.groupingBy(FacilityCertificationDTO::getFacilityId, Collectors.toList()))

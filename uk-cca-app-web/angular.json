@@ -45,14 +45,7 @@
               }
             ],
             "styles": ["node_modules/govuk-frontend/dist/govuk/govuk-frontend.min.css", "src/styles.css"],
-            "allowedCommonJsDependencies": [
-              "keycloak-js",
-              "clean-deep",
-              "crypto-js",
-              "base64-js",
-              "js-sha256",
-              "google-libphonenumber"
-            ]
+            "allowedCommonJsDependencies": ["keycloak-js", "js-sha256", "google-libphonenumber"]
           },
           "configurations": {
             "production": {

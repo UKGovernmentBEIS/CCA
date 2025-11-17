@@ -124,6 +124,31 @@ class TargetUnitAccountQueryServiceTest {
     }
 
     @Test
+    void getActiveAccountsByBusinessIds() {
+        final Set<String> businessIds = Set.of("businessId");
+        final TargetUnitAccount account = TargetUnitAccount.builder()
+                .id(1L)
+                .businessId("businessId")
+                .name("name")
+                .build();
+
+        final TargetUnitAccountBusinessInfoDTO expected = TargetUnitAccountBusinessInfoDTO.builder()
+                .accountId(1L)
+                .businessId("businessId")
+                .name("name")
+                .build();
+
+        when(repository.findAllByBusinessIdInAndStatus(businessIds, TargetUnitAccountStatus.LIVE))
+                .thenReturn(List.of(account));
+
+        // Invoke
+        List<TargetUnitAccountBusinessInfoDTO> results = service.getActiveAccountsByBusinessIds(businessIds);
+
+        // Verify
+        assertThat(results).hasSize(1).containsExactly(expected);
+    }
+
+    @Test
     void getAccountsTest() {
         final TargetUnitAccount account1 = buildAccount(1L, "Account_1", "business_id_1", TargetUnitAccountStatus.NEW, 1L);
         final TargetUnitAccount account2 = buildAccount(2L, "Account_2", "business_id_2", TargetUnitAccountStatus.LIVE, 2L);

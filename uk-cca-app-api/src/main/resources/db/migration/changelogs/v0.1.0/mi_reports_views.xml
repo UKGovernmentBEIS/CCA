@@ -17,6 +17,7 @@
             drop view if exists sch_report_ea.request cascade;
             drop view if exists sch_report_ea.request_type cascade;
             drop view if exists sch_report_ea.request_resource cascade;
+            drop view if exists sch_report_ea.request_note cascade;
             drop view if exists sch_report_ea.au_authority_permission cascade;
             drop view if exists sch_report_ea.au_authority cascade;
             drop view if exists sch_report_ea.au_role cascade;
@@ -30,6 +31,7 @@
             drop view if exists sch_report_ea.account_address cascade;
             drop view if exists sch_report_ea.account_target_unit cascade;
             drop view if exists sch_report_ea.account_target_unit_contact cascade;
+            drop view if exists sch_report_ea.account_note cascade;
             drop view if exists sch_report_ea.competent_authority cascade;
             drop view if exists sch_report_ea.facility_data cascade;
             drop view if exists sch_report_ea.facility_address cascade;
@@ -71,6 +73,7 @@
             create or replace view sch_report_ea.au_role_permission as select s.* from au_role_permission s;
            	create or replace view sch_report_ea.request_type as select rt.* from request_type rt;
             create or replace view sch_report_ea.request_resource as select rr.* from request_resource rr where rr.request_id in (select request_id from request_resource where resource_id = 'ENGLAND');
+            create or replace view sch_report_ea.request_note as select rn.* from request_note rn where exists (select null from au_authority aa where aa.user_id = rn.submitter_id and aa.competent_authority = 'ENGLAND');
             create or replace view sch_report_ea.request as select id, type_id, status, creation_date, payload, submission_date, metadata, end_date from request r where exists (select null from request_resource rr where rr.request_id = r.id and rr.resource_id = 'ENGLAND');
             create or replace view sch_report_ea.request_action as select s.* from request_action s where exists (select null from request_resource rr where rr.request_id = s.request_id and rr.resource_id = 'ENGLAND');
             create or replace view sch_report_ea.request_task_type_action_type as select * from request_task_type_action_type;
@@ -83,7 +86,8 @@
 
 			create or replace view sch_report_ea.account_target_unit as select s.* from account_target_unit s where exists (select null from account a where a.id = s.id and a.competent_authority = 'ENGLAND');
 			create or replace view sch_report_ea.account_target_unit_contact as select s.* from account_target_unit_contact s where exists (select null from account a where a.id = s.account_target_unit_id and a.competent_authority = 'ENGLAND');
-			create or replace view sch_report_ea.account_address as select s.* from account_address s where exists (select null from account a inner join account_target_unit atu on a.id = atu.id where atu.address_id = s.id and a.competent_authority = 'ENGLAND');
+            create or replace view sch_report_ea.account_note as select an.* from account_note an where exists (select null from au_authority aa where aa.user_id = an.submitter_id and aa.competent_authority = 'ENGLAND');
+            create or replace view sch_report_ea.account_address as select s.* from account_address s where exists (select null from account a inner join account_target_unit atu on a.id = atu.id where atu.address_id = s.id and a.competent_authority = 'ENGLAND');
 			create or replace view sch_report_ea.competent_authority as select s.* from competent_authority s;
 			create or replace view sch_report_ea.facility_data as select s.* from facility_data s where exists (select null from account a where a.id = s.account_id and a.competent_authority = 'ENGLAND');
 			create or replace view sch_report_ea.facility_address as select s.* from facility_address s where exists (select null from account a inner join facility_data fd on a.id = fd.account_id where fd.address_id = s.id and a.competent_authority = 'ENGLAND');
@@ -93,8 +97,8 @@
 			create or replace view sch_report_ea.sector_association_scheme as select s.* from sector_association_scheme s where exists (select null from sector_association a where a.id = s.sector_association_id and a.competent_authority = 'ENGLAND');
 			create or replace view sch_report_ea.subsector_association as select s.* from subsector_association s where exists (select null from sector_association a where a.id = s.sector_association_id and a.competent_authority = 'ENGLAND');
 			create or replace view sch_report_ea.subsector_association_scheme as select s.* from subsector_association_scheme s where exists (select null from sector_association a inner join subsector_association sa on a.id = sa.sector_association_id where sa.id = s.subsector_association_id and a.competent_authority = 'ENGLAND');
-			create or replace view sch_report_ea.target_set as select s.* from target_set s where exists (select null from sector_association a inner join sector_association_scheme sas on a.id = sas.sector_association_id where sas.target_set_id = s.id and a.competent_authority = 'ENGLAND');
-			create or replace view sch_report_ea.target_commitment as select s.* from target_commitment s where exists (select null from sector_association a inner join sector_association_scheme sas on a.id = sas.sector_association_id inner join target_set ts on sas.target_set_id = ts.id where sas.target_set_id = s.target_set_id and a.competent_authority = 'ENGLAND');
+			create or replace view sch_report_ea.target_set as select s.* from target_set s where exists (select null from sector_association a inner join sector_association_scheme sas on a.id = sas.sector_association_id where sas.target_set_id = s.id and a.competent_authority = 'ENGLAND') or exists (select null from sector_association sa join subsector_association ssa on sa.id = ssa.sector_association_id join subsector_association_scheme sas on ssa.id = sas.subsector_association_id where sa.competent_authority = 'ENGLAND' and s.id = sas.target_set_id);
+			create or replace view sch_report_ea.target_commitment as select s.* from target_commitment s where exists (select null from sector_association a inner join sector_association_scheme sas on a.id = sas.sector_association_id inner join target_set ts on sas.target_set_id = ts.id where sas.target_set_id = s.target_set_id and a.competent_authority = 'ENGLAND') or exists (select null from sector_association sa join subsector_association ssa on sa.id = ssa.sector_association_id join subsector_association_scheme sas on ssa.id = sas.subsector_association_id join target_set ts on sas.target_set_id = ts.id where sa.competent_authority = 'ENGLAND' and s.target_set_id = ts.id);
 			create or replace view sch_report_ea.underlying_agreement as select s.* from underlying_agreement s where exists (select null from account a where a.id = s.account_id and a.competent_authority = 'ENGLAND');
 
         	create or replace view sch_report_ea.tpr_target_period as select tpr.* from tpr_target_period tpr;

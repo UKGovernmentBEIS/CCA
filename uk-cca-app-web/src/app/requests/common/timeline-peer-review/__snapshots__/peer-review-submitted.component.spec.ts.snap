@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AdminTerminationPeerReviewSubmittedComponent should show summary values 1`] = `
 <cca-peer-review-submitted
@@ -31,7 +31,9 @@ exports[`AdminTerminationPeerReviewSubmittedComponent should show summary values
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           I agree with the determination 
+          <span>
+            I agree with the determination
+          </span>
         </dd>
       </div>
       <div
@@ -48,7 +50,9 @@ exports[`AdminTerminationPeerReviewSubmittedComponent should show summary values
           class="pre-line govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           notes 
+          <span>
+            notes
+          </span>
         </dd>
       </div>
       <div
@@ -65,7 +69,9 @@ exports[`AdminTerminationPeerReviewSubmittedComponent should show summary values
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Regulator England 
+          <span>
+            Regulator England
+          </span>
         </dd>
       </div>
       <div

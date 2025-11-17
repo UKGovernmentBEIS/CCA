@@ -43,9 +43,17 @@ export function createSaveActionDTO(
     sectionsCompleted?: Record<string, string>;
     reviewSectionsCompleted: Record<string, string>;
     determination: Determination;
+    reviewGroupDecisions?: Record<string, UnderlyingAgreementReviewDecision>;
+    facilitiesReviewGroupDecisions?: Record<string, UnderlyingAgreementVariationFacilityReviewDecision>;
   },
 ): UnaVariationReviewSaveActionDTO {
-  const { determination, reviewSectionsCompleted, sectionsCompleted } = requestTaskProps;
+  const {
+    determination,
+    reviewSectionsCompleted,
+    sectionsCompleted,
+    reviewGroupDecisions,
+    facilitiesReviewGroupDecisions,
+  } = requestTaskProps;
 
   return {
     requestTaskId,
@@ -56,6 +64,8 @@ export function createSaveActionDTO(
       sectionsCompleted,
       reviewSectionsCompleted,
       determination,
+      reviewGroupDecisions,
+      facilitiesReviewGroupDecisions,
     },
   };
 }

@@ -29,7 +29,6 @@ import {
 @Component({
   selector: 'cca-facility-contact-details',
   templateUrl: './facility-contact-details.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,

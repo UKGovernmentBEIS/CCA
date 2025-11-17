@@ -6,7 +6,7 @@ import { SchemeVersions } from '@shared/types';
 
 import { Facility, FacilityService, FacilityTargetComposition } from 'cca-api';
 
-import { FacilityBaselineDataFormModel } from './types';
+import { FacilityBaselineDataFormModel, FacilityBaselineEnergyConsumptionFormModel } from './types';
 
 export function facilityExistenceValidator(facilityService: FacilityService): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
@@ -37,7 +37,7 @@ export function futureDateValidator(): ValidatorFn {
   };
 }
 
-export function atLeastOneActiveValidator(): ValidatorFn {
+export function atLeastOneActiveFacilityValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     if (!control.value || !Array.isArray(control.value)) {
       return { invalid: 'Your agreement must have at least one new or live facility' };
@@ -62,6 +62,7 @@ function updateControlError(control: AbstractControl, condition: boolean, errorK
 
 export function facilityBaselineDataConditionallyRequiredFieldsValidator(
   agreementCompositionType: FacilityTargetComposition['agreementCompositionType'],
+  isCCA3: boolean,
 ): ValidatorFn {
   return (group: FacilityBaselineDataFormModel): ValidationErrors | null => {
     if (!group || !(group instanceof FormGroup)) return null;
@@ -71,7 +72,28 @@ export function facilityBaselineDataConditionallyRequiredFieldsValidator(
 
     isTwelveMonths ? handleYesSelected(group) : handleNoSelected(group);
 
-    handleSharedValidations(group, agreementCompositionType, isTwelveMonths);
+    handleSharedValidations(group, agreementCompositionType, isTwelveMonths, isCCA3);
+
+    return null;
+  };
+}
+
+export function facilityBaselineEnergyProductsValidator(): ValidatorFn {
+  return (group: FacilityBaselineEnergyConsumptionFormModel): ValidationErrors | null => {
+    const requiresProducts =
+      group.controls.hasVariableEnergy.value === true && group.controls.variableEnergyType.value === 'BY_PRODUCT';
+
+    const products = Array.isArray(group.controls.products.value) ? group.controls.products.value : [];
+    const isEmpty = products.length === 0;
+    const allExcluded =
+      products.length > 0 && products.every((p: any) => (p?.productStatus ?? '').toUpperCase() === 'EXCLUDED');
+
+    updateControlError(
+      group.controls.products,
+      requiresProducts && (isEmpty || allExcluded),
+      'productsRequired',
+      'There must be at least one product',
+    );
 
     return null;
   };
@@ -130,14 +152,13 @@ function handleNoSelected(group: FacilityBaselineDataFormModel): void {
 function handleSharedValidations(
   group: FacilityBaselineDataFormModel,
   agreementCompositionType: FacilityTargetComposition['agreementCompositionType'],
-  isTwelveMonths: boolean,
+  isTwelveMonths: boolean, //will be removed later on,
+  isCCA3: boolean,
 ) {
-  const energyControl = group.controls.energy;
   const usedReportingMechanismControl = group.controls.usedReportingMechanism;
   const energyCarbonFactorControl = group.controls.energyCarbonFactor;
   const baselineDateControl = group.controls.baselineDate;
 
-  const energy = energyControl.value;
   const usedReportingMechanism = usedReportingMechanismControl.value;
   const energyCarbonFactor = energyCarbonFactorControl.value;
   const baselineDate = baselineDateControl.value;
@@ -149,22 +170,20 @@ function handleSharedValidations(
     'Provide a date on or after 01/01/2022.',
   );
 
-  updateControlError(
-    energyControl,
-    !energy,
-    'requiredFacility',
-    isTwelveMonths
-      ? 'Enter the baseline kWh in the baseline period.'
-      : 'Enter the baseline (energy/carbon unit) in the baseline period.',
-  );
+  const usedReportingMechanismCondition = isCCA3
+    ? isCCA3 && typeof usedReportingMechanism !== 'boolean'
+    : agreementCompositionType !== 'NOVEM' && typeof usedReportingMechanism !== 'boolean';
+
+  const usedReportingMechanismMessage = isCCA3
+    ? 'Select yes if the Special Reporting Methodology applies for this facility'
+    : 'Select yes if throughput was adjusted using the CHP special reporting mechanism.';
 
   updateControlError(
     usedReportingMechanismControl,
-    agreementCompositionType !== 'NOVEM' && typeof usedReportingMechanism !== 'boolean',
+    usedReportingMechanismCondition,
     'requiredUsedReportingMechanism',
-    'Select yes if throughput was adjusted using the CHP special reporting mechanism.',
+    usedReportingMechanismMessage,
   );
-
   updateControlError(
     energyCarbonFactorControl,
     !energyCarbonFactor,

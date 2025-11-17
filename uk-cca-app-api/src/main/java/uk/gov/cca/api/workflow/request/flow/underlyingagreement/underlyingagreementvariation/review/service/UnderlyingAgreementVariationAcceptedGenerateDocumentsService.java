@@ -1,5 +1,10 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.service;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -8,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.utils.ConcurrencyUtils;
+import uk.gov.cca.api.underlyingagreement.utils.UnderlyingAgreementCalculateSchemeVersionsUtil;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.service.UnderlyingAgreementVariationCreateDocumentService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.service.UnderlyingAgreementVariationOfficialNoticeService;
@@ -29,25 +36,36 @@ public class UnderlyingAgreementVariationAcceptedGenerateDocumentsService {
 	
 	@Transactional
 	public void generateDocuments(String requestId) {
-		CompletableFuture<FileInfoDTO> underlyingAgreementDocumentFuture = null;
+		Map<SchemeVersion, CompletableFuture<FileInfoDTO>> underlyingAgreementDocumentFutureMap = new EnumMap<>(SchemeVersion.class);
 		CompletableFuture<FileInfoDTO> officialNoticeFuture = null;
 		CompletableFuture<Void> allFutures = null;
 		
 		try {
-			underlyingAgreementDocumentFuture = underlyingAgreementVariationCreateDocumentService.create(requestId);
-			officialNoticeFuture = underlyingAgreementVariationOfficialNoticeService.generateAcceptedOfficialNotice(requestId);
-			
-			allFutures = CompletableFuture.allOf(underlyingAgreementDocumentFuture, officialNoticeFuture);
-        	allFutures.get();
-			
-			final FileInfoDTO underlyingAgreementDocument = underlyingAgreementDocumentFuture.get();
-			final FileInfoDTO officialNotice = officialNoticeFuture.get();
-			
 			final Request request = requestService.findRequestById(requestId);
 	        final UnderlyingAgreementVariationRequestPayload requestPayload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();
+	        
+	        Set<SchemeVersion> schemeVersions = UnderlyingAgreementCalculateSchemeVersionsUtil
+	        		.calculateSchemeVersionsFromActiveFacilities(requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
+	        
+	        schemeVersions.forEach(version -> underlyingAgreementDocumentFutureMap.put(version, 
+	        		underlyingAgreementVariationCreateDocumentService.create(requestId, version)));
+	        
+			officialNoticeFuture = underlyingAgreementVariationOfficialNoticeService.generateAcceptedOfficialNotice(requestId);
+			
+			List<CompletableFuture<?>> allFuturesList = new ArrayList<>(underlyingAgreementDocumentFutureMap.values());
+			allFuturesList.add(officialNoticeFuture);
+			
+			allFutures = CompletableFuture.allOf(allFuturesList.toArray(CompletableFuture[]::new));
+        	allFutures.get();
+			
+        	final Map<SchemeVersion, FileInfoDTO> underlyingAgreementDocumentsMap = new EnumMap<>(SchemeVersion.class);
+            for (Map.Entry<SchemeVersion, CompletableFuture<FileInfoDTO>> entry : underlyingAgreementDocumentFutureMap.entrySet()) {
+            	underlyingAgreementDocumentsMap.put(entry.getKey(), entry.getValue().get()); 
+            }
+			final FileInfoDTO officialNotice = officialNoticeFuture.get();
 
-			requestPayload.setUnderlyingAgreementDocument(underlyingAgreementDocument);
-			requestPayload.setOfficialNotice(officialNotice);
+			requestPayload.setUnderlyingAgreementDocuments(underlyingAgreementDocumentsMap);
+			requestPayload.setOfficialNotices(List.of(officialNotice));
 		} catch (ExecutionException e) {
 			Throwable caused = e.getCause();
 			if(caused.getClass() == BusinessException.class) {
@@ -66,7 +84,10 @@ public class UnderlyingAgreementVariationAcceptedGenerateDocumentsService {
 			log.error(e.getMessage());
 			throw new BusinessException(ErrorCode.INTERNAL_SERVER, caused);
 		} finally {
-			ConcurrencyUtils.completeCompletableFutures(underlyingAgreementDocumentFuture, officialNoticeFuture, allFutures);
+			List<CompletableFuture<?>> allFuturesList = new ArrayList<>(underlyingAgreementDocumentFutureMap.values());
+			allFuturesList.add(officialNoticeFuture);
+			allFuturesList.add(allFutures);
+			ConcurrencyUtils.completeCompletableFutures(allFuturesList.toArray(CompletableFuture[]::new));
 		}
 	}
 }

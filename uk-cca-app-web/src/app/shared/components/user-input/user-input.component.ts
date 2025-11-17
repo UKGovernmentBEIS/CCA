@@ -10,7 +10,6 @@ import { PhoneInputComponent } from '../phone-input/phone-input.component';
 @Component({
   selector: 'cca-user-input',
   templateUrl: './user-input.component.html',
-  standalone: true,
   imports: [TextInputComponent, PhoneInputComponent, CountyAddressInputComponent, ReactiveFormsModule],
   viewProviders: [existingControlContainer],
 })

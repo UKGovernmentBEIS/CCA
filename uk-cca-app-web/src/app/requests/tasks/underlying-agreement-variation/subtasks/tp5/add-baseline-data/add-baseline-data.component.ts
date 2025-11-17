@@ -44,7 +44,6 @@ import {
 @Component({
   selector: 'cca-add-baseline-data',
   templateUrl: './add-baseline-data.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     FormsModule,
@@ -151,7 +150,7 @@ export class AddBaselineDataComponent {
         greenfieldEvidences: fileUtils.toUUIDs(this.form.value.greenfieldEvidences) as string[],
         energy: this.form.value.energy,
         usedReportingMechanism: this.form.value.usedReportingMechanism,
-        performance: this.calculatedPerformance(),
+        performance: String(this.calculatedPerformance()),
         throughput: this.form.value.throughput,
         energyCarbonFactor: this.form.value.energyCarbonFactor,
       };

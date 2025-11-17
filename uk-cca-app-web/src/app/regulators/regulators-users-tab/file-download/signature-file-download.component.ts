@@ -13,7 +13,6 @@ import { FileToken, RegulatorUsersService, UsersService } from 'cca-api';
     <p>You should see your downloads in the downloads folder.</p>
     <a class="govuk-link" [href]="url$ | async" download #anchor>Click to restart download if it fails</a>
   `,
-  standalone: true,
   imports: [AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

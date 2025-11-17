@@ -8,14 +8,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.account.service.TargetUnitAccountService;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.service.SubsectorAssociationService;
 import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDetailsDTO;
+import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDocumentDetailsDTO;
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementQueryService;
 import uk.gov.cca.api.web.orchestrator.account.dto.TargetUnitAccountDetailsResponseDTO;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
@@ -128,8 +131,10 @@ class TargetUnitAccountQueryServiceOrchestratorTest {
                 .status(TargetUnitAccountStatus.LIVE)
                 .build();
         final UnderlyingAgreementDetailsDTO underlyingAgreementDetails = UnderlyingAgreementDetailsDTO.builder()
-                .activationDate(LocalDate.of(2023, 11, 23))
-                .fileDocument(FileInfoDTO.builder().uuid(UUID).name(unaFilename).build())
+        		.underlyingAgreementDocumentMap(Map.of(SchemeVersion.CCA_2, UnderlyingAgreementDocumentDetailsDTO.builder()
+        				.activationDate(LocalDate.of(2023, 11, 23))
+        				.fileDocument(FileInfoDTO.builder().uuid(UUID).name(unaFilename).build())
+        				.build()))
                 .build();
 
         final TargetUnitAccountDetailsResponseDTO expected = TargetUnitAccountDetailsResponseDTO.builder()
@@ -142,7 +147,7 @@ class TargetUnitAccountQueryServiceOrchestratorTest {
                 .thenReturn(targetUnitAccountDetails);
         
         when(underlyingAgreementQueryService.getUnderlyingAgreementDetailsByAccountId(accountId))
-        .thenReturn(underlyingAgreementDetails);
+        		.thenReturn(underlyingAgreementDetails);
 
         // Invoke
         TargetUnitAccountDetailsResponseDTO actual = serviceOrchestrator.getTargetUnitAccountDetailsById(accountId);

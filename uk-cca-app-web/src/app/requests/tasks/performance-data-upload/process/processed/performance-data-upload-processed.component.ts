@@ -19,7 +19,6 @@ import { toSubmissionResultsSummaryData } from './submission-results-summary-dat
 @Component({
   selector: 'cca-performance-data-upload-processed',
   templateUrl: './performance-data-upload-processed.component.html',
-  standalone: true,
   imports: [
     NotificationBannerComponent,
     PendingButtonDirective,

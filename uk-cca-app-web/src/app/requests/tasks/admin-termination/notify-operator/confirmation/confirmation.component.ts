@@ -9,7 +9,6 @@ import { AdminTerminationQuery } from '../../+state/admin-termination.selectors'
 @Component({
   selector: 'cca-confirmation',
   templateUrl: './confirmation.component.html',
-  standalone: true,
   imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

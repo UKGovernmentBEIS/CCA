@@ -28,7 +28,6 @@ import { AuthService } from '@shared/services';
       <a class="govuk-link" href="https://www.gov.uk/">return to GOV.UK</a>
     </p>
   `,
-  standalone: true,
   imports: [PageHeadingComponent, AsyncPipe, SecondsToMinutesPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

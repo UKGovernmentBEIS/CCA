@@ -14,7 +14,6 @@ import { DownloadableFile } from '@shared/utils';
       }
     }
   `,
-  standalone: true,
   imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

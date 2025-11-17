@@ -15,9 +15,9 @@ export interface BaselineData {
   baselineDate: string;
   explanation?: string;
   greenfieldEvidences?: string[];
-  energy: number;
+  energy: string;
   usedReportingMechanism?: boolean;
-  throughput?: number;
-  performance?: number;
-  energyCarbonFactor: number;
+  throughput?: string;
+  performance?: string;
+  energyCarbonFactor: string;
 }

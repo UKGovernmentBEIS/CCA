@@ -13,35 +13,6 @@
     hint="For limited companies, limited partnerships or limited liability partnerships this should be the name which currently appears on Companies House"
   ></div>
 
-  <div
-    formControlName="isCompanyRegistrationNumber"
-    govuk-radio
-    legend="Does your company have a registration number?"
-    legendSize="medium"
-    hint="The company registration number or equivalent, for example the company number shows on the certificate of incorporations."
-  >
-    <govuk-radio-option [value]="true" label="Yes">
-      <ng-container govukConditionalContent>
-        <div
-          widthClass="govuk-input--width-10"
-          formControlName="companyRegistrationNumber"
-          govuk-text-input
-          label="Company number"
-        ></div>
-      </ng-container>
-    </govuk-radio-option>
-
-    <govuk-radio-option [value]="false" label="No">
-      <ng-container govukConditionalContent>
-        <div
-          formControlName="registrationNumberMissingReason"
-          govuk-text-input
-          label="Tell us why you do not have a registration number, for example your installation is a hospital or military site."
-        ></div>
-      </ng-container>
-    </govuk-radio-option>
-  </div>
-
   <p class="govuk-body">Standard Industrial Classification (SIC) codes (optional)</p>
   <p class="govuk-hint">
     You can add, edit or remove SIC codes. <br />You can find a
@@ -57,6 +28,7 @@
         <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
           <div [formControlName]="i" govuk-text-input class="govuk-!-width-full"></div>
         </div>
+
         <div class="govuk-grid-column-one-third">
           @if (sicCodeFormArray.length > 1) {
             <a

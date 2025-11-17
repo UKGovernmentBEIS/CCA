@@ -29,6 +29,7 @@ export const DEFAULT_TABLE_COLUMNS: GovukTableColumn<CcaItemDTO>[] = [
   { field: 'daysRemaining', header: 'Days remaining', isSortable: false },
   { field: 'businessId', header: 'Target unit ID', isSortable: false },
   { field: 'accountName', header: 'Target unit', isSortable: false },
+  { field: 'facilityBusinessId', header: 'Facility', isSortable: false },
   { field: 'sectorAcronym', header: 'Sector ID', isSortable: false },
   { field: 'sectorName', header: 'Sector', isSortable: false },
 ];

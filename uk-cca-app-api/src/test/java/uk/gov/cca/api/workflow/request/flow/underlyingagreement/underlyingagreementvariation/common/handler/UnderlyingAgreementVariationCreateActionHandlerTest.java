@@ -59,6 +59,7 @@ class UnderlyingAgreementVariationCreateActionHandlerTest {
 		final AppUser appUser = AppUser.builder().userId(userId).roleType(SECTOR_USER).build();
 		final UnderlyingAgreementContainer originalContainer = UnderlyingAgreementContainer.builder().build();
 		final int version = 1;
+		final Map<SchemeVersion, Integer> consolidationNumberMap = Map.of(SchemeVersion.CCA_3, version);
 		final SchemeVersion workflowSchemeVersion = SchemeVersion.CCA_3;
                 
         final RequestParams requestParams = RequestParams.builder()
@@ -70,7 +71,7 @@ class UnderlyingAgreementVariationCreateActionHandlerTest {
                 .requestPayload(UnderlyingAgreementVariationRequestPayload.builder()
                         .payloadType(CcaRequestPayloadType.UNDERLYING_AGREEMENT_VARIATION_REQUEST_PAYLOAD)
 						.workflowSchemeVersion(workflowSchemeVersion)
-						.underlyingAgreementVersion(version)
+						.underlyingAgreementVersionMap(consolidationNumberMap)
                         .originalUnderlyingAgreementContainer(originalContainer)
                         .sectorUserAssignee(userId)
                         .build())
@@ -81,8 +82,8 @@ class UnderlyingAgreementVariationCreateActionHandlerTest {
                 .build();
 
 		when(workflowSchemeVersionConfig.getUnaVariation()).thenReturn(workflowSchemeVersion);
-		when(underlyingAgreementQueryService.getConsolidationNumber(accountId))
-				.thenReturn(version);
+		when(underlyingAgreementQueryService.getConsolidationNumberMap(accountId))
+				.thenReturn(consolidationNumberMap);
 		when(underlyingAgreementQueryService.getUnderlyingAgreementContainerByAccountId(accountId))
 				.thenReturn(originalContainer);
 		when(requestCreateAccountAndSectorResourcesService.createRequestResources(accountId)).thenReturn(Map.of(
@@ -98,10 +99,8 @@ class UnderlyingAgreementVariationCreateActionHandlerTest {
 		// Verify
         assertThat(result).isEqualTo("1");
 		verify(workflowSchemeVersionConfig, times(1)).getUnaVariation();
-		verify(underlyingAgreementQueryService, times(1))
-				.getConsolidationNumber(accountId);
-		verify(underlyingAgreementQueryService, times(1))
-				.getUnderlyingAgreementContainerByAccountId(accountId);
+		verify(underlyingAgreementQueryService, times(1)).getConsolidationNumberMap(accountId);
+		verify(underlyingAgreementQueryService, times(1)).getUnderlyingAgreementContainerByAccountId(accountId);
 		verify(requestCreateAccountAndSectorResourcesService, times(1)).createRequestResources(accountId);
         verify(startProcessRequestService, times(1)).startProcess(requestParams);
 	}

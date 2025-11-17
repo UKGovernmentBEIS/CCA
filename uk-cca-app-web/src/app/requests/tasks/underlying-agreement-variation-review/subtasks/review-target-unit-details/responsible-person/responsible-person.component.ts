@@ -5,10 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
+  areEntitiesIdentical,
+  filterFieldsWithFalsyValues,
   RESPONSIBLE_PERSON_FORM,
   ResponsiblePersonFormProvider,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   TasksApiService,
+  transformAccountReferenceData,
   UNAVariationReviewRequestTaskPayload,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
@@ -16,8 +19,10 @@ import {
 import { ResponsiblePersonFormModel, ResponsiblePersonInputComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
+import { UnderlyingAgreementVariationReviewSavePayload } from 'cca-api';
+
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../transform';
-import { applySaveActionSideEffects } from '../../../utils';
+import { applySaveActionSideEffects, deleteDecision } from '../../../utils';
 
 @Component({
   selector: 'cca-responsible-person',
@@ -35,7 +40,6 @@ import { applySaveActionSideEffects } from '../../../utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [
     WizardStepComponent,
     ResponsiblePersonInputComponent,
@@ -60,26 +64,24 @@ export class ResponsiblePersonComponent {
       requestTaskQuery.selectRequestTaskPayload,
     )() as UNAVariationReviewRequestTaskPayload;
 
-    const actionPayload = toUnderlyingAgreementVariationReviewSavePayload(payload);
-    const formValue = this.form.getRawValue();
+    const originalAccountReferenceData = (
+      this.store.select(requestTaskQuery.selectRequestTaskPayload)() as UNAVariationReviewRequestTaskPayload
+    )?.accountReferenceData;
 
-    const updatedPayload = produce(actionPayload, (draft) => {
-      draft.underlyingAgreementTargetUnitDetails.responsiblePersonDetails = {
-        firstName: formValue.firstName,
-        lastName: formValue.lastName,
-        email: formValue.email,
-        address: formValue.sameAddress?.[0]
-          ? draft.underlyingAgreementTargetUnitDetails.operatorAddress // Use operator address if same
-          : {
-              line1: formValue.address.line1,
-              line2: formValue.address.line2,
-              city: formValue.address.city,
-              county: formValue.address.county,
-              postcode: formValue.address.postcode,
-              country: formValue.address.country,
-            },
-      };
-    });
+    const actionPayload = toUnderlyingAgreementVariationReviewSavePayload(payload);
+
+    const updatedPayload = update(actionPayload, this.form);
+
+    const originalTUDetails = transformAccountReferenceData(originalAccountReferenceData);
+    const currentTUDetails = updatedPayload.underlyingAgreementTargetUnitDetails;
+
+    const areIdentical = areEntitiesIdentical(
+      filterFieldsWithFalsyValues(currentTUDetails),
+      filterFieldsWithFalsyValues(originalTUDetails),
+    );
+
+    const currentDecisions = this.store.select(underlyingAgreementReviewQuery.selectReviewGroupDecisions)();
+    const decisions = areIdentical ? deleteDecision(currentDecisions, 'TARGET_UNIT_DETAILS') : currentDecisions;
 
     const { determination, reviewSectionsCompleted, sectionsCompleted } = applySaveActionSideEffects(
       this.store.select(underlyingAgreementReviewQuery.selectDetermination)(),
@@ -92,10 +94,38 @@ export class ResponsiblePersonComponent {
       sectionsCompleted,
       reviewSectionsCompleted,
       determination,
+      reviewGroupDecisions: decisions,
+      facilitiesReviewGroupDecisions: this.store.select(
+        underlyingAgreementReviewQuery.selectFacilityReviewGroupDecisions,
+      )(),
     });
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['../decision'], { relativeTo: this.activatedRoute });
+      const path = areIdentical ? '../check-your-answers' : '../decision';
+      this.router.navigate([path], { relativeTo: this.activatedRoute });
     });
   }
+}
+
+function update(
+  payload: UnderlyingAgreementVariationReviewSavePayload,
+  form: FormGroup<ResponsiblePersonFormModel>,
+): UnderlyingAgreementVariationReviewSavePayload {
+  return produce(payload, (draft) => {
+    draft.underlyingAgreementTargetUnitDetails.responsiblePersonDetails = {
+      firstName: form.getRawValue().firstName,
+      lastName: form.getRawValue().lastName,
+      email: form.getRawValue().email,
+      address: form.getRawValue().sameAddress?.[0]
+        ? draft.underlyingAgreementTargetUnitDetails.operatorAddress // Use operator address if same
+        : {
+            line1: form.getRawValue().address.line1,
+            line2: form.getRawValue().address.line2,
+            city: form.getRawValue().address.city,
+            county: form.getRawValue().address.county,
+            postcode: form.getRawValue().address.postcode,
+            country: form.getRawValue().address.country,
+          },
+    };
+  });
 }

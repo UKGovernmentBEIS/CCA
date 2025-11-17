@@ -7,6 +7,7 @@ import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import {
+  areEntitiesIdentical,
   BaselineAndTargetPeriodsSubtasks,
   TaskItemStatus,
   TasksApiService,
@@ -27,7 +28,6 @@ import { extractReviewProps, resetReviewSection } from '../../../utils';
 @Component({
   selector: 'cca-tp6-check-your-answers',
   templateUrl: './tp6-check-your-answers.component.html',
-  standalone: true,
   imports: [
     ButtonDirective,
     PageHeadingComponent,
@@ -80,18 +80,36 @@ export class Tp6CheckYourAnswersComponent {
       requestTaskQuery.selectRequestTaskPayload,
     )() as UnderlyingAgreementVariationSubmitRequestTaskPayload;
 
+    const originalPayload = (
+      this.requestTaskStore.select(
+        requestTaskQuery.selectRequestTaskPayload,
+      )() as UnderlyingAgreementVariationSubmitRequestTaskPayload
+    )?.originalUnderlyingAgreementContainer;
+
     const actionPayload = toUnderlyingAgreementVariationSavePayload(payload);
+
+    const currentTP6 = actionPayload.targetPeriod6Details;
+    const originalTP6 = originalPayload?.underlyingAgreement?.targetPeriod6Details;
+    const areIdentical = areEntitiesIdentical(currentTP6, originalTP6);
+
     const currentSectionsCompleted =
       this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)() || {};
 
     const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
-      draft[BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS] = TaskItemStatus.COMPLETED;
+      draft[BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS] = areIdentical
+        ? TaskItemStatus.UNCHANGED
+        : TaskItemStatus.COMPLETED;
     });
 
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
 
     const reviewProps = extractReviewProps(this.requestTaskStore);
-    const resetedProps = resetReviewSection(reviewProps, BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS);
+    const resetedProps = resetReviewSection(
+      reviewProps,
+      BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS,
+      areIdentical,
+    );
+
     const dto = createRequestTaskActionProcessDTO(requestTaskId, actionPayload, sectionsCompleted, {
       ...reviewProps,
       ...resetedProps,

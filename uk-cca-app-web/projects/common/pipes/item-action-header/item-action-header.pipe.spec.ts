@@ -191,6 +191,30 @@ describe('ItemActionHeaderPipe', () => {
         type: 'TP6_SURPLUS_ACCOUNT_PROCESSING_SUBMITTED',
       }),
     ).toEqual('Surplus calculated');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_SUBMITTED',
+      }),
+    ).toEqual('CCA3 migration completed by System user');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_CANCELLED',
+      }),
+    ).toEqual('CCA3 agreement cancelled by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED',
+      }),
+    ).toEqual('CCA3 agreement activated by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED',
+      }),
+    ).toEqual('CCA2 agreement extended by System user');
   });
 
   it('should display the approved application title', () => {

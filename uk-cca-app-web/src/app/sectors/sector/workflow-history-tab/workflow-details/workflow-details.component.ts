@@ -20,7 +20,6 @@ type WorkflowDetailsViewModel = {
 @Component({
   selector: 'cca-workflow-details',
   templateUrl: './workflow-details.component.html',
-  standalone: true,
   imports: [
     StatusPipe,
     TagComponent,

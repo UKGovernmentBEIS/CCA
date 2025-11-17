@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'adminTerminationReason',
-  standalone: true,
 })
 export class PeerReviewDecisionPipe implements PipeTransform {
   transform(decisionType: 'AGREE' | 'DISAGREE') {

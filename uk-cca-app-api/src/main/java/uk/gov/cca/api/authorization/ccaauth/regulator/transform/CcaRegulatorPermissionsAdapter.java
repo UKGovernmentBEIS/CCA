@@ -13,6 +13,8 @@ import java.util.Map;
 
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_ADMIN_TERMINATION_PEER_REVIEW;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_ADMIN_TERMINATION_SUBMISSION;
+import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_FACILITY_AUDIT_EDIT;
+import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_FACILITY_AUDIT_SUBMISSION;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_OPERATOR_USERS_EDIT;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_SECTOR_ASSOCIATION_EDIT;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_SECTOR_USERS_EDIT;
@@ -22,6 +24,8 @@ import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PER
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.ADMIN_TERMINATION_PEER_REVIEW;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.ADMIN_TERMINATION_SUBMISSION;
+import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.FACILITY_AUDIT_SUBMISSION;
+import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.MANAGE_FACILITY_AUDIT;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.MANAGE_OPERATOR_USERS;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.MANAGE_SECTOR_ASSOCIATIONS;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.MANAGE_SECTOR_USERS;
@@ -81,6 +85,14 @@ public class CcaRegulatorPermissionsAdapter extends AbstarctRegulatorPermissions
                 .put(new RegulatorPermissionGroupLevel(MANAGE_OPERATOR_USERS, RegulatorPermissionLevel.EXECUTE),
                         List.of(PERM_OPERATOR_USERS_EDIT));
 
+		//MANAGE_FACILITY_AUDIT
+	    permissionGroupLevelsConfig
+			    .put(new RegulatorPermissionGroupLevel(MANAGE_FACILITY_AUDIT, RegulatorPermissionLevel.NONE),
+					    Collections.emptyList());
+	    permissionGroupLevelsConfig
+			    .put(new RegulatorPermissionGroupLevel(MANAGE_FACILITY_AUDIT, RegulatorPermissionLevel.EXECUTE),
+					    List.of(PERM_FACILITY_AUDIT_EDIT));
+
         //ADMIN_TERMINATION_SUBMISSION
         permissionGroupLevelsConfig
                 .put(new RegulatorPermissionGroupLevel(ADMIN_TERMINATION_SUBMISSION, RegulatorPermissionLevel.NONE),
@@ -128,6 +140,14 @@ public class CcaRegulatorPermissionsAdapter extends AbstarctRegulatorPermissions
         permissionGroupLevelsConfig
                 .put(new RegulatorPermissionGroupLevel(UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW, RegulatorPermissionLevel.EXECUTE),
                         List.of(PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW));
+
+        //FACILITY_AUDIT_SUBMISSION
+        permissionGroupLevelsConfig
+                .put(new RegulatorPermissionGroupLevel(FACILITY_AUDIT_SUBMISSION, RegulatorPermissionLevel.NONE),
+                        Collections.emptyList());
+        permissionGroupLevelsConfig
+                .put(new RegulatorPermissionGroupLevel(FACILITY_AUDIT_SUBMISSION, RegulatorPermissionLevel.EXECUTE),
+                        List.of(PERM_FACILITY_AUDIT_SUBMISSION));
     }
 
     @Override

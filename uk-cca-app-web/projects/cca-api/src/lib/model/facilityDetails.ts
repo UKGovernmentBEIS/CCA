@@ -9,7 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AccountAddressDTO } from './accountAddressDTO';
+import { FacilityAddressDTO } from './facilityAddressDTO';
 
 export interface FacilityDetails {
   name: string;
@@ -18,5 +18,5 @@ export interface FacilityDetails {
   applicationReason: 'NEW_AGREEMENT' | 'CHANGE_OF_OWNERSHIP';
   previousFacilityId?: string;
   participatingSchemeVersions: ('CCA_2' | 'CCA_3')[];
-  facilityAddress: AccountAddressDTO;
+  facilityAddress: FacilityAddressDTO;
 }

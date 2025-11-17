@@ -14,7 +14,6 @@ import { RouteBacklink } from './backlink.interface';
   template: ` @if (backlink$ | async; as backlink) {
     <govuk-back-link [link]="backlink.link" [route]="backlink.route" [inverse]="inverse()" />
   }`,
-  standalone: true,
   imports: [GovukBackLinkComponent, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

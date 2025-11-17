@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { PendingRequestService } from '@netz/common/services';
 
-@Directive({ selector: 'button[netzPendingButton]', standalone: true })
+@Directive({ selector: 'button[netzPendingButton]' })
 export class PendingButtonDirective implements OnInit {
   constructor(
     @Optional() private readonly pendingRequest: PendingRequestService,

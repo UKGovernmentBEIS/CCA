@@ -12,7 +12,6 @@ import { PanelComponent } from '@netz/govuk-components';
       <p>The new user will be able to log in once they confirm their account</p>
     </div>
   </div>`,
-  standalone: true,
   imports: [PanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

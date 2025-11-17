@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { ItemDTO } from 'cca-api';
 
-@Pipe({ name: 'itemLink', pure: true, standalone: true })
+@Pipe({ name: 'itemLink', pure: true })
 export class ItemLinkPipe implements PipeTransform {
   transform(value: ItemDTO, path: string = '/'): any[] {
     return this.transformWorkflowUrl(value, path);
@@ -20,6 +20,10 @@ export class ItemLinkPipe implements PipeTransform {
       case 'ADMIN_TERMINATION_WAIT_FOR_PEER_REVIEW':
       case 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW':
       case 'UNDERLYING_AGREEMENT_WAIT_FOR_PEER_REVIEW':
+      case 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW':
+      case 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW':
+      case 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING':
+      case 'FACILITY_AUDIT':
         return [routerLooks + 'tasks', value.taskId];
 
       default:

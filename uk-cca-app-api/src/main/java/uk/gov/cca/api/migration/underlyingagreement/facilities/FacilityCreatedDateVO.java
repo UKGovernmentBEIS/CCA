@@ -16,6 +16,6 @@ public class FacilityCreatedDateVO {
     //Account
     private String targetUnitId;
     
-    private String facilityId;
+    private String facilityBusinessId;
     private LocalDateTime createdDate;
 }

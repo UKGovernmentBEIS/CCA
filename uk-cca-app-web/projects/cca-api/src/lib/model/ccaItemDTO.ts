@@ -27,5 +27,8 @@ export interface CcaItemDTO {
   sectorId?: number;
   sectorAcronym?: string;
   sectorName?: string;
+  facilityId?: number;
+  facilityBusinessId?: string;
+  siteName?: string;
   isNew?: boolean;
 }

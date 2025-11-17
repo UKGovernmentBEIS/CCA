@@ -19,7 +19,6 @@ import { SectorAssociationInfoDTO, SectorAssociationInfoViewService } from 'cca-
         }
       </ng-template>
     </govuk-table>`,
-  standalone: true,
   imports: [PageHeadingComponent, TableComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

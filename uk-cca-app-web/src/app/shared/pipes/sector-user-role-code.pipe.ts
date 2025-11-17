@@ -7,10 +7,7 @@ export enum SectorUserRoleCode {
   sector_user_basic_user = 'Basic user',
 }
 
-@Pipe({
-  name: 'sectorUserRoleCode',
-  standalone: true,
-})
+@Pipe({ name: 'sectorUserRoleCode' })
 export class SectorUserRoleCodePipe implements PipeTransform {
   transform(value: SectorInvitedUserInfoDTO['roleCode']): string {
     const type = SectorUserRoleCode[value];

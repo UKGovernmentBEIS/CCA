@@ -16,7 +16,6 @@ import { CookiesService } from './cookies.service';
       (cookiesAcceptedEmitter)="acceptCookies($event)"
     />
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CookiesPopUpComponent, AsyncPipe],
 })

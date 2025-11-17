@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`createProposedUnderlyingAgreementVariationPayload should create the correct payload when all decisions are accepted: all-decisions-accepted 1`] = `
 {
@@ -52,6 +52,9 @@ exports[`createProposedUnderlyingAgreementVariationPayload should create the cor
         },
         "isCoveredByUkets": false,
         "name": "Facility 1",
+        "participatingSchemeVersions": [
+          "CCA_3",
+        ],
       },
       "facilityExtent": {
         "activitiesDescriptionFile": "activitiesDescriptionFile",
@@ -108,6 +111,9 @@ exports[`createProposedUnderlyingAgreementVariationPayload should create the cor
         },
         "isCoveredByUkets": false,
         "name": "Facility 2",
+        "participatingSchemeVersions": [
+          "CCA_3",
+        ],
       },
       "facilityExtent": {
         "activitiesDescriptionFile": "activitiesDescriptionFile",
@@ -164,6 +170,9 @@ exports[`createProposedUnderlyingAgreementVariationPayload should create the cor
         },
         "isCoveredByUkets": false,
         "name": "Facility 3",
+        "participatingSchemeVersions": [
+          "CCA_3",
+        ],
       },
       "facilityExtent": {
         "activitiesDescriptionFile": "activitiesDescriptionFile",
@@ -220,6 +229,9 @@ exports[`createProposedUnderlyingAgreementVariationPayload should create the cor
         },
         "isCoveredByUkets": false,
         "name": "Facility 4",
+        "participatingSchemeVersions": [
+          "CCA_3",
+        ],
       },
       "facilityExtent": {
         "activitiesDescriptionFile": "activitiesDescriptionFile",
@@ -355,6 +367,9 @@ exports[`createProposedUnderlyingAgreementVariationPayload should create the cor
         },
         "isCoveredByUkets": false,
         "name": "Original Facility 1",
+        "participatingSchemeVersions": [
+          "CCA_3",
+        ],
       },
       "facilityExtent": {
         "activitiesDescriptionFile": "activitiesDescriptionFile",
@@ -411,6 +426,9 @@ exports[`createProposedUnderlyingAgreementVariationPayload should create the cor
         },
         "isCoveredByUkets": false,
         "name": "Original Facility 3",
+        "participatingSchemeVersions": [
+          "CCA_3",
+        ],
       },
       "facilityExtent": {
         "activitiesDescriptionFile": "activitiesDescriptionFile",
@@ -549,6 +567,9 @@ exports[`createProposedUnderlyingAgreementVariationPayload should handle mixed d
         },
         "isCoveredByUkets": false,
         "name": "Facility 1",
+        "participatingSchemeVersions": [
+          "CCA_3",
+        ],
       },
       "facilityExtent": {
         "activitiesDescriptionFile": "activitiesDescriptionFile",
@@ -605,6 +626,9 @@ exports[`createProposedUnderlyingAgreementVariationPayload should handle mixed d
         },
         "isCoveredByUkets": false,
         "name": "Facility 3",
+        "participatingSchemeVersions": [
+          "CCA_3",
+        ],
       },
       "facilityExtent": {
         "activitiesDescriptionFile": "activitiesDescriptionFile",
@@ -738,6 +762,9 @@ exports[`createProposedUnderlyingAgreementVariationPayload should transform targ
         },
         "isCoveredByUkets": false,
         "name": "Facility 1",
+        "participatingSchemeVersions": [
+          "CCA_3",
+        ],
       },
       "facilityExtent": {
         "activitiesDescriptionFile": "activitiesDescriptionFile",
@@ -794,6 +821,9 @@ exports[`createProposedUnderlyingAgreementVariationPayload should transform targ
         },
         "isCoveredByUkets": false,
         "name": "Facility 3",
+        "participatingSchemeVersions": [
+          "CCA_3",
+        ],
       },
       "facilityExtent": {
         "activitiesDescriptionFile": "activitiesDescriptionFile",

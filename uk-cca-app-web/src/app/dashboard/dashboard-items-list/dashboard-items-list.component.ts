@@ -11,7 +11,6 @@ import { ItemTypePipe } from '../item-type.pipe';
 @Component({
   selector: 'cca-dashboard-items-list',
   templateUrl: './dashboard-items-list.component.html',
-  standalone: true,
   imports: [
     TableComponent,
     RouterModule,

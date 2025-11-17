@@ -8,10 +8,7 @@ export enum PerformanceOutcomeEnum {
   OUTSTANDING = 'Outstanding',
 }
 
-@Pipe({
-  name: 'performanceOutcome',
-  standalone: true,
-})
+@Pipe({ name: 'performanceOutcome' })
 export class PerformanceOutcomePipe implements PipeTransform {
   transform(value: string | null): string {
     const text = PerformanceOutcomeEnum[value];

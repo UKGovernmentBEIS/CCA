@@ -4,7 +4,7 @@ import { TargetComposition } from 'cca-api';
 
 import { transformMeasurementTypeToUnit } from '../pipes';
 
-export function calculatePerformance(energyOrCarbon: number, throughput: number) {
+export function calculatePerformance(energyOrCarbon: string, throughput: string) {
   const energyOrCarbonBig = new BigNumber(energyOrCarbon);
   const throughputBig = new BigNumber(throughput);
 
@@ -14,7 +14,7 @@ export function calculatePerformance(energyOrCarbon: number, throughput: number)
 }
 
 // For relative target types the baseline is the energy/throughput
-export function calculateRelativeTarget(energy: number, throughput: number, improvement: number) {
+export function calculateRelativeTarget(energy: string, throughput: string, improvement: string) {
   const energyBig = new BigNumber(energy);
   const throughputBig = new BigNumber(throughput);
   const improvementBig = new BigNumber(improvement);
@@ -29,7 +29,7 @@ export function calculateRelativeTarget(energy: number, throughput: number, impr
   return !Number.isNaN(baseline) ? baseline : 0;
 }
 
-export function calculateAbsoluteTarget(energyOrCarbon: number, improvement: number, tp5: boolean) {
+export function calculateAbsoluteTarget(energyOrCarbon: string, improvement: string, tp5: boolean) {
   const energyOrCarbonBig = new BigNumber(energyOrCarbon);
   const improvementBig = new BigNumber(improvement);
 

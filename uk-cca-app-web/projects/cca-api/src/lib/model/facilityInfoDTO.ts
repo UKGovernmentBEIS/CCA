@@ -9,15 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { FacilityAddressDTO } from './facilityAddressDTO';
 import { FacilityCertificationDetailsDTO } from './facilityCertificationDetailsDTO';
-import { AccountAddressDTO } from './accountAddressDTO';
 
 export interface FacilityInfoDTO {
-  facilityId?: string;
+  facilityId?: number;
+  facilityBusinessId?: string;
   status?: 'LIVE' | 'INACTIVE';
   chargeStartDate?: string;
   siteName?: string;
   schemeExitDate?: string;
-  address?: AccountAddressDTO;
+  address?: FacilityAddressDTO;
   facilityCertificationDetails?: FacilityCertificationDetailsDTO[];
 }

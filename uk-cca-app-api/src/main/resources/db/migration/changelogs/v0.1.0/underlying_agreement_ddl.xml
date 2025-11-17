@@ -113,5 +113,113 @@
             ))
         </sql>
     </changeSet>
+    
+    <changeSet id="0_1_0_CREATE_UNDERLYING_AGREEMENT_DOCUMENT_SEQUENCE" author="apostolouk@unisystems.gr">
+        <createSequence sequenceName="underlying_agreement_document_seq" minValue="0" maxValue="999999999999999999"
+                        incrementBy="1" startValue="1" cycle="false"/>
+        <rollback>
+            <sql>
+                DROP SEQUENCE IF EXISTS underlying_agreement_document_seq;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_CREATE_UNDERLYING_AGREEMENT_DOCUMENT_TABLE" author="apostolouk@unisystems.gr">
+        <comment>Create underlying agreement document table</comment>
+        <createTable tableName="underlying_agreement_document" remarks="Stores underlying agreement documents">
+            <column name="id" type="bigint" remarks="Primary key">
+                <constraints primaryKey="true" primaryKeyName="underlying_agreement_document_pk" nullable="false"/>
+            </column>
+            <column name="underlying_agreement_id" type="bigint" remarks="The underlying agreement's id">
+                <constraints foreignKeyName="underlying_agreement_document_underlying_agreement_fk" references="underlying_agreement(id)" nullable="false"/>
+            </column>
+            <column name="file_document_uuid" type="varchar(255)" remarks="The underlying agreement's file document uuid"/>
+            <column name="consolidation_number" type="int" defaultValueNumeric="1" remarks="The underlying agreement document version">
+                <constraints nullable="false" />
+            </column>
+            <column name="activation_date" type="timestamp" remarks="The date the underlying agreement was activated"/>
+            <column name="scheme_version" type="varchar(8)" remarks="The document's CCA scheme version">
+            	<constraints nullable="false" />
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="underlying_agreement_document" columnNames="underlying_agreement_id,scheme_version"
+                             constraintName="underlying_agreement_document_uc"/>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS underlying_agreement_document CASCADE;
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_POPULATE_UNDERLYING_AGREEMENT_DOCUMENT_FROM_UNDERLYING_AGREEMENT" author="apostolouk@unisystems.gr">
+        	<sql>
+				insert into underlying_agreement_document (id, underlying_agreement_id, file_document_uuid, consolidation_number, activation_date, scheme_version)
+				select nextval('underlying_agreement_document_seq'), ua.id, ua.file_document_uuid, ua.consolidation_number, ua.activation_date, 'CCA_2'
+				from underlying_agreement ua;
+            </sql>
+    </changeSet>
+    
+    <changeSet id="0_1_0_DROP_DOCUMENT_COLUMNS_FROM_UNDERLYING_AGREEMENT" author="apostolouk@unisystems.gr">
+        	<dropColumn tableName="underlying_agreement" columnName="file_document_uuid"/>
+        	<dropColumn tableName="underlying_agreement" columnName="consolidation_number"/>
+        	<dropColumn tableName="underlying_agreement" columnName="activation_date"/>
+    </changeSet>
+
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_DOCUMENT_ADD_termination_letter_created_date_COLUMN" author="P70383">
+        <addColumn tableName="underlying_agreement_document">
+            <column name="termination_letter_created_date" type="timestamp" remarks="The date the termination letter is sent" />
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="underlying_agreement_document" columnName="termination_letter_created_date"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_DOCUMENT_ADD_NOT_NULL_CONSTRAINT_IN_activation_date_COLUMN" author="P70383">
+        <addNotNullConstraint tableName="underlying_agreement_document" columnName="activation_date"/>
+        <rollback>
+            <dropNotNullConstraint tableName="underlying_agreement_document" columnName="activation_date"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_UPDATE_facilityAddress" author="vourdoukasd">
+        <sql>
+            UPDATE underlying_agreement
+            SET data = jsonb_set(data, '{underlyingAgreement,facilities}', (
+                SELECT jsonb_agg(
+                    CASE WHEN facility -> 'facilityDetails' -> 'facilityAddress' ->> 'country' NOT IN ('GB-ENG', 'GB-NIR', 'GB-SCT', 'GB-WLS')
+                        THEN jsonb_set(facility, '{facilityDetails,facilityAddress,country}', '"GB-ENG"')
+                        ELSE facility
+                    END)
+                FROM jsonb_array_elements(data -> 'underlyingAgreement' -> 'facilities') AS facility))
+            WHERE data -> 'underlyingAgreement' -> 'facilities' IS NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_DOCUMENT_RENAME_TERMINATION_LETTER_CREATED_DATE_COLUMN" author="P70311">
+        <renameColumn tableName="underlying_agreement_document" oldColumnName="termination_letter_created_date" newColumnName="terminated_date"/>
+        <rollback>
+            <sql>
+                ALTER TABLE underlying_agreement_document RENAME COLUMN terminated_date TO termination_letter_created_date;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UNDERLYING_AGREEMENT_DOCUMENT_UPDATE_DATA_IN_TERMINATED_DATE_COLUMN" author="P70311">
+        <sql>
+            UPDATE underlying_agreement_document unadoc
+            SET terminated_date = atu.terminated_date
+            FROM account_target_unit atu
+            INNER JOIN underlying_agreement una
+            ON atu.id = una.account_id
+            WHERE atu.terminated_date IS NOT NULL AND una.id = unadoc.underlying_agreement_id;
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE underlying_agreement_document
+                SET terminated_date = null
+                WHERE terminated_date is not null;
+            </sql>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod5Details;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType;
@@ -74,13 +75,14 @@ class UnderlyingAgreementActivationMapperTest {
                 .name("una.pdf")
                 .uuid(uuid.toString())
                 .build();
+        Map<SchemeVersion, FileInfoDTO> documentMap = Map.of(SchemeVersion.CCA_2, document);
         
         UnderlyingAgreementRequestPayload requestPayload = UnderlyingAgreementRequestPayload.builder()
             .payloadType(CcaRequestPayloadType.UNDERLYING_AGREEMENT_REQUEST_PAYLOAD)
             .underlyingAgreement(una)
             .businessId("ASD123")
             .underlyingAgreementAttachments(attachments)
-            .underlyingAgreementDocument(document)
+            .underlyingAgreementDocuments(documentMap)
             .sectionsCompleted(sectionsCompleted)
             .underlyingAgreementActivationDetails(details)
             .underlyingAgreementActivationAttachments(activationAttachments)
@@ -97,7 +99,7 @@ class UnderlyingAgreementActivationMapperTest {
         assertThat(actionPayload.getDefaultContacts()).isEqualTo(defaultContacts);
         assertThat(actionPayload.getUnderlyingAgreementAttachments()).containsExactlyInAnyOrderEntriesOf(attachments);
         assertThat(actionPayload.getUnderlyingAgreementActivationAttachments()).containsExactlyInAnyOrderEntriesOf(activationAttachments);
-        assertThat(actionPayload.getUnderlyingAgreementDocument()).isEqualTo(document);
+        assertThat(actionPayload.getUnderlyingAgreementDocuments()).isEqualTo(documentMap);
         assertThat(actionPayload.getReviewSectionsCompleted()).isEmpty();
         assertThat(actionPayload.getReviewGroupDecisions()).isEmpty();
         assertThat(actionPayload.getReviewAttachments()).isEmpty();

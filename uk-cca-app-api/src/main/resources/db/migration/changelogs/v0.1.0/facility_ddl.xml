@@ -255,4 +255,37 @@
             <dropColumn tableName="facility_data" columnName="participating_scheme_versions"/>
         </rollback>
     </changeSet>
+    
+    <changeSet id="0_1_0_FACILITY_DATA_CHANGE_FACILITY_ID_TO_FACILITY_BUSINESS_ID" author="apostolouk@unisystems.gr">
+        <renameColumn tableName="facility_data" oldColumnName="facility_id" newColumnName="business_id"/>
+        <rollback>
+            <renameColumn tableName="facility_data" oldColumnName="business_id" newColumnName="facility_id"/>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_RENAME_FACILITY_ID_UNIQUE_INDEX_AND_DROP_REDUNDANT_INDEX" author="apostolouk@unisystems.gr">
+    	<sql>			
+			alter TABLE facility_data RENAME CONSTRAINT facility_data_facility_id_key TO facility_data_facility_business_id_key;
+			
+			DROP INDEX IF EXISTS idx_facility_data_facility_id CASCADE;
+     	</sql>
+        <rollback>
+            <sql>			
+				alter TABLE facility_data RENAME CONSTRAINT facility_data_facility_business_id_key TO facility_data_facility_id_key;
+     		</sql>
+     		<createIndex indexName="idx_facility_data_facility_id" tableName="facility_data" unique="true">
+            	<column name="business_id" />
+        	</createIndex>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_FACILITY_ADDRESS_COUNTRY_WHEN_NOT_IN_THE_UK" author="vourdoukasd">
+        <update tableName="facility_address">
+            <column name="country" value="GB-ENG"/>
+            <where>
+                country not in ('GB-ENG', 'GB-NIR', 'GB-SCT', 'GB-WLS')
+            </where>
+        </update>
+    </changeSet>
+    
 </databaseChangeLog>

@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestType;
 import uk.gov.netz.api.workflow.request.core.service.RequestQueryService;
@@ -20,12 +19,12 @@ public class CcaRequestCreateValidatorService {
 
 	private final RequestQueryService requestQueryService;
 	
-	public RequestCreateValidationResult validate(final Long sectorId, Set<String> mutuallyExclusiveRequestsTypes) {
+	public RequestCreateValidationResult validate(final Long resourceId, final String resourceType, Set<String> mutuallyExclusiveRequestsTypes) {
 		final RequestCreateValidationResult validationResult = RequestCreateValidationResult.builder().valid(true)
 				.build();
 		
 		final RequestCreateRequestTypeValidationResult validationConflictingRequestsTypesResult = validateConflictingRequestTypes(
-				sectorId, mutuallyExclusiveRequestsTypes);
+				resourceId, resourceType, mutuallyExclusiveRequestsTypes);
 		if (!validationConflictingRequestsTypesResult.isValid()) {
 			validationResult.setValid(false);
 			validationResult.setReportedRequestTypes(validationConflictingRequestsTypesResult.getReportedRequestTypes());
@@ -34,13 +33,13 @@ public class CcaRequestCreateValidatorService {
 		return validationResult;
 	}
 	
-	public RequestCreateRequestTypeValidationResult validateConflictingRequestTypes(final Long sectorId,
-            Set<String> mutuallyExclusiveRequestsTypes) {
+	public RequestCreateRequestTypeValidationResult validateConflictingRequestTypes(final Long resourceId,
+            String resourceType, Set<String> mutuallyExclusiveRequestsTypes) {
 		final RequestCreateRequestTypeValidationResult validationResult = RequestCreateRequestTypeValidationResult.builder().valid(true)
 				.build();
 		
 		if (!mutuallyExclusiveRequestsTypes.isEmpty()) {
-			final List<Request> inProgressRequests = requestQueryService.findInProgressRequestsByResource(sectorId, CcaResourceType.SECTOR_ASSOCIATION);
+			final List<Request> inProgressRequests = requestQueryService.findInProgressRequestsByResource(resourceId, resourceType);
 			final Set<String> conflictingRequests = inProgressRequests.stream().map(Request::getType).map(RequestType::getCode)
 					.filter(mutuallyExclusiveRequestsTypes::contains).collect(Collectors.toSet());
 		

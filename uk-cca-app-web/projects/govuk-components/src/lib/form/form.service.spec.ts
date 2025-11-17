@@ -9,7 +9,6 @@ describe('FormService', () => {
   let service: FormService;
 
   @Component({
-    standalone: true,
     imports: [ReactiveFormsModule, TextInputComponent, FormsModule],
     template: `
       <div [formGroup]="formGroup">

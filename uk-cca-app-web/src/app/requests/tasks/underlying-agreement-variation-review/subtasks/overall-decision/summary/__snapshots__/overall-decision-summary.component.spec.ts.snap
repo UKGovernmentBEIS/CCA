@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SummaryComponentUnaDetermination should match overall decision summary 1`] = `
 <div
@@ -41,7 +41,9 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
             
             
             
-             Reject 
+            <span>
+              Reject
+            </span>
             
             
             
@@ -78,7 +80,9 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
             
             
             
-             asdasdasdasdasd 
+            <span>
+              asdasdasdasdasd
+            </span>
             
             
             
@@ -115,7 +119,9 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
             
             
             
-             adqwdasd 
+            <span>
+              adqwdasd
+            </span>
             
             
             
@@ -235,7 +241,9 @@ exports[`SummaryComponentVariationDetermination should match overall decision su
             
             
             
-             Reject 
+            <span>
+              Reject
+            </span>
             
             
             
@@ -272,7 +280,9 @@ exports[`SummaryComponentVariationDetermination should match overall decision su
             
             
             
-             asdasdasdasdasd 
+            <span>
+              asdasdasdasdasd
+            </span>
             
             
             
@@ -309,7 +319,9 @@ exports[`SummaryComponentVariationDetermination should match overall decision su
             
             
             
-             adqwdasd 
+            <span>
+              adqwdasd
+            </span>
             
             
             

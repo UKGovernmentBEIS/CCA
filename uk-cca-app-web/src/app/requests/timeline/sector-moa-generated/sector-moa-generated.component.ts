@@ -10,7 +10,6 @@ import { toSectorMoaGeneratedSummaryData } from './sector-moa-generated-summary'
 @Component({
   selector: 'cca-sector-moa-generated',
   template: `<cca-summary [data]="data" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

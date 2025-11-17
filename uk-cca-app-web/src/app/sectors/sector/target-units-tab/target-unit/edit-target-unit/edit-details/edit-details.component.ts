@@ -18,7 +18,6 @@ import { EDIT_TARGET_UNIT_DETAILS_FORM, EditDetailsFormProvider } from './edit-d
 @Component({
   selector: 'cca-edit-details',
   templateUrl: './edit-details.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, TargetUnitDetailsInputComponent],
   providers: [EditDetailsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,

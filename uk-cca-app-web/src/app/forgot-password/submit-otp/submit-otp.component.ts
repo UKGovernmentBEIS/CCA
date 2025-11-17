@@ -17,7 +17,6 @@ import { ResetPasswordStore } from '../+store/reset-password.store';
 @Component({
   selector: 'cca-submit-otp',
   templateUrl: './submit-otp.component.html',
-  standalone: true,
   imports: [
     ErrorSummaryComponent,
     ReactiveFormsModule,

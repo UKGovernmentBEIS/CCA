@@ -6,18 +6,16 @@ export const noticeRecipientsTypeMap: Record<DefaultNoticeRecipient['recipientTy
   RESPONSIBLE_PERSON: 'Responsible person',
   ADMINISTRATIVE_CONTACT: 'Administrative contact',
   SECTOR_CONTACT: 'Sector contact',
-  OPERATOR: 'Operator',
   SECTOR_USER: 'Sector user',
+  SECTOR_CONSULTANT: 'Sector consultant',
+  OPERATOR: 'Operator',
 };
 
 export function transformNoticeRecipientsType(type: DefaultNoticeRecipient['recipientType'] | string): string {
   return type ? noticeRecipientsTypeMap[type] : '';
 }
 
-@Pipe({
-  name: 'noticeRecipientsType',
-  standalone: true,
-})
+@Pipe({ name: 'noticeRecipientsType' })
 export class NoticeRecipientsTypePipe implements PipeTransform {
   transform = transformNoticeRecipientsType;
 }

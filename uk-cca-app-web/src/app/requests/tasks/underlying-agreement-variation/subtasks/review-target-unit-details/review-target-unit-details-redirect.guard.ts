@@ -3,8 +3,10 @@ import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot, UrlTr
 
 import { RequestTaskStore } from '@netz/common/store';
 import {
+  isStatusFinal,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   ReviewTargetUnitDetailsWizardStep,
+  TaskItemStatus,
   underlyingAgreementQuery,
 } from '@requests/common';
 
@@ -18,9 +20,11 @@ export const reviewTargetUnitDetailsRedirectGuard: CanActivateFn = (
   const sectionStatus = sectionsCompleted[REVIEW_TARGET_UNIT_DETAILS_SUBTASK];
 
   // Determine where to redirect based on section status
-  if (sectionStatus === 'COMPLETED') {
+  if (isStatusFinal(sectionStatus)) {
     return createUrlTreeFromSnapshot(route, ['summary']);
-  } else if (sectionStatus === 'IN_PROGRESS') {
+  }
+
+  if (sectionStatus === TaskItemStatus.IN_PROGRESS) {
     return createUrlTreeFromSnapshot(route, ['check-your-answers']);
   }
 

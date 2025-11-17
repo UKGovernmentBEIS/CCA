@@ -35,9 +35,14 @@ export enum ItemActionEnum {
   UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW_REQUESTED = 'Peer review requested',
   UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEWER_ACCEPTED = 'Peer review agreement',
   UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEWER_REJECTED = 'Peer review disagreement',
+  UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW_REQUESTED = 'Peer review requested',
+  UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEWER_ACCEPTED = 'Peer review agreement',
+  UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEWER_REJECTED = 'Peer review disagreement',
+  CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_CANCELLED = 'CCA3 agreement cancelled',
+  CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED = 'CCA3 agreement activated',
 }
 
-@Pipe({ name: 'itemActionType', standalone: true, pure: true })
+@Pipe({ name: 'itemActionType', pure: true })
 export class ItemActionTypePipe implements PipeTransform {
   transform(type: RequestActionInfoDTO['type']): string {
     return ItemActionEnum[type] || 'Approved Application';

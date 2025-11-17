@@ -14,7 +14,6 @@ describe('CheckboxComponent', () => {
   let element: HTMLElement;
 
   @Component({
-    standalone: true,
     imports: [
       CheckboxesComponent,
       ReactiveFormsModule,

@@ -13,9 +13,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
+import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
 import uk.gov.cca.api.workflow.request.application.item.domain.ItemTargetUnitAccountDTO;
 import uk.gov.cca.api.workflow.request.application.item.domain.CcaItemDTO;
+import uk.gov.cca.api.workflow.request.application.item.domain.ItemFacilityDTO;
 import uk.gov.cca.api.workflow.request.application.item.domain.ItemSectorDTO;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.workflow.request.application.item.domain.Item;
@@ -79,13 +81,36 @@ class CcaItemMapperTest {
 
         assertEquals(expectedItem, actualItem);
     }
+    
+    @Test
+    void facilityToItemFacilityDTO() {
+        Long id = 1L;
+        String name = "name";
+        String businessId = "ADS-F0000";
+        FacilityBaseInfoDTO facilityDTO = FacilityBaseInfoDTO.builder()
+            .id(id)
+            .facilityBusinessId(businessId)
+            .siteName(name)
+            .build();
+
+        ItemFacilityDTO expectedItem = ItemFacilityDTO.builder()
+            .facilityId(id)
+            .facilityBusinessId(businessId)
+            .siteName(name)
+            .build();
+
+        ItemFacilityDTO actualItem = mapper.facilityToItemFacilityDTO(facilityDTO);
+
+        assertEquals(expectedItem, actualItem);
+    }
 
     @Test
-    void itemToItemOrganisationDTO() {
+    void itemToCcaItemDTO() {
         LocalDateTime itemCreationDate = LocalDateTime.now();
         String requestId = "REQ-1";
         Long accountId = 1L;
         Long sectorId = 2L;
+        Long facilityId = 3L;
         Long requestTaskId = 15L;
         String taskAssigneeId = "userId";
         String businessId = "TU01";
@@ -116,6 +141,11 @@ class CcaItemMapperTest {
         		.sectorAcronym("ADS")
         		.sectorName("name")
         		.build();
+        
+        ItemFacilityDTO facility = ItemFacilityDTO.builder()
+        		.facilityId(facilityId)
+        		.facilityBusinessId(businessId)
+        		.build();
 
         CcaItemDTO expectedItem = CcaItemDTO.builder()
             .creationDate(itemCreationDate)
@@ -125,11 +155,12 @@ class CcaItemMapperTest {
             .isNew(false)
             .account(account)
             .sector(sector)
+            .facility(facility)
             .requestType("APPLY_FOR_AN_UNDERLYING_AGREEMENT")
             .taskType("UNDERLYING_AGREEMENT")
             .build();
 
-        CcaItemDTO actualItem = mapper.itemToCcaItemDTO(item, taskAssignee, taskAssigneeType, account, sector);
+        CcaItemDTO actualItem = mapper.itemToCcaItemDTO(item, taskAssignee, taskAssigneeType, account, sector, facility);
 
         assertEquals(expectedItem, actualItem);
     }

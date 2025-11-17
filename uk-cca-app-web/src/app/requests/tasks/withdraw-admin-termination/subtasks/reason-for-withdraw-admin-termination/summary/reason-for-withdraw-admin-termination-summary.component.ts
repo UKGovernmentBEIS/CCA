@@ -19,7 +19,6 @@ import { toWithdrawAdminTerminationReasonSummaryData } from '../../../withdraw-a
 
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [SummaryComponent, PageHeadingComponent, ReturnToTaskOrActionPageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

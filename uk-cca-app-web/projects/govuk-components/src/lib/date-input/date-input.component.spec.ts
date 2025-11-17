@@ -7,7 +7,6 @@ import { DateInputComponent } from './date-input.component';
 
 describe('DateInputComponent', () => {
   @Component({
-    standalone: true,
     imports: [DateInputComponent, ReactiveFormsModule],
     template: '<div govuk-date-input [formControl]="control" [min]="min" [max]="max"></div>',
   })
@@ -18,7 +17,6 @@ describe('DateInputComponent', () => {
   }
 
   @Component({
-    standalone: true,
     imports: [DateInputComponent, ReactiveFormsModule],
     template: '<div govuk-date-input [formControl]="control"></div>',
   })

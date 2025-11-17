@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -16,7 +18,11 @@ describe('TargetUnitAccountSubmittedTimelineComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TargetUnitAccountSubmittedTimelineComponent],
-      providers: [{ provide: ActivatedRoute, useValue: new ActivatedRouteStub() }],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
+      ],
     }).compileComponents();
 
     actionStore = TestBed.inject(RequestActionStore);
@@ -60,14 +66,14 @@ describe('TargetUnitAccountSubmittedTimelineComponent', () => {
         ],
         ['iojasdoiajsdoijas', 'Limited company', 'Yes', '123456789', '', ''],
       ],
-      [['Address'], ['kjhn  kjhn  87678  AL']],
+      [['Address'], ['kjhnkjhn87678AL']],
       [
         ['First name', 'Last name', 'Job title', 'Address', 'Phone number', 'Email address'],
-        ['asdasdsa', 'lname', 'job', 'kjhn  kjhn  87678  AL', 'UK (44) 1234567890', 'test-test@cca.uk'],
+        ['asdasdsa', 'lname', 'job', 'kjhnkjhn87678AL', 'UK (44) 1234567890', 'test-test@cca.uk'],
       ],
       [
         ['First name', 'Last name', 'Job title', 'Email address', 'Phone number', 'Address'],
-        ['asd', 'England', 'job1', 'test-admin@test.com', 'UK (44) 1234567890', 'kjhn  kjhn  87678  AL'],
+        ['asd', 'England', 'job1', 'test-admin@test.com', 'UK (44) 1234567890', 'kjhnkjhn87678AL'],
       ],
     ]);
   });

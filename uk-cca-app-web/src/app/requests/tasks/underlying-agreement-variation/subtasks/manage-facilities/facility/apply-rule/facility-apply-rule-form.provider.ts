@@ -65,20 +65,17 @@ export const FacilityApplyRuleFormProvider: Provider = {
       evidenceFile: buildFileFormControl,
     });
 
-    group
-      .get('energyConsumed')
-      .valueChanges.pipe(takeUntilDestroyed())
-      .subscribe((energyConsumed) => {
-        if (energyConsumed < 70) {
-          group.get('energyConsumedProvision').enable();
-          group.get('startDate').enable();
-        } else {
-          group.get('energyConsumedProvision').disable();
-          group.get('startDate').disable();
-          group.get('energyConsumedProvision').reset();
-          group.get('startDate').reset();
-        }
-      });
+    group.controls.energyConsumed.valueChanges.pipe(takeUntilDestroyed()).subscribe((energyConsumed) => {
+      if (Number(energyConsumed) < 70) {
+        group.controls.energyConsumedProvision.enable();
+        group.controls.startDate.enable();
+      } else {
+        group.controls.energyConsumedProvision.disable();
+        group.controls.startDate.disable();
+        group.controls.energyConsumedProvision.reset();
+        group.controls.startDate.reset();
+      }
+    });
 
     return group;
   },

@@ -167,7 +167,7 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
 
         // set up facilities
         FacilityData facilityData1 = FacilityData.builder()
-                .facilityId("ADS_1-F00014")
+                .facilityBusinessId("ADS_1-F00014")
                 .accountId(account1.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("site1")
@@ -179,7 +179,7 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
         entityManager.persist(facilityData1);
 
         FacilityData facilityData2 = FacilityData.builder()
-                .facilityId("ADS_1-F00015")
+                .facilityBusinessId("ADS_1-F00015")
                 .accountId(account1.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil2")
@@ -191,7 +191,7 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
         entityManager.persist(facilityData2);
 
         FacilityData facilityData3 = FacilityData.builder()
-                .facilityId("ADS_1-F00016")
+                .facilityBusinessId("ADS_1-F00016")
                 .accountId(account2.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("terminal3")
@@ -204,7 +204,7 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
         entityManager.persist(facilityData3);
 
         FacilityData facilityData4 = FacilityData.builder()
-                .facilityId("ADS_1-F00017")
+                .facilityBusinessId("ADS_1-F00017")
                 .accountId(account2.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("terminal3")
@@ -217,7 +217,7 @@ class SubsistenceFeesMoaTargetUnitRepositoryIT extends AbstractContainerBaseTest
         entityManager.persist(facilityData4);
 
         FacilityData facilityData5 = FacilityData.builder()
-                .facilityId("ADS_1-F00018")
+                .facilityBusinessId("ADS_1-F00018")
                 .accountId(account3.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil5")

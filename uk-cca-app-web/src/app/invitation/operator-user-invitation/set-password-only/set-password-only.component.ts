@@ -30,7 +30,6 @@ import { OperatorUserInvitationStore } from '../store';
       </form>
     </div>
   `,
-  standalone: true,
   imports: [
     PageHeadingComponent,
     PasswordComponent,

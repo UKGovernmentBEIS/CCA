@@ -19,7 +19,7 @@ import { BehaviorSubject, combineLatest, startWith, Subject, takeUntil, tap } fr
 
 import { ErrorMessageComponent } from '../../error-message';
 
-@Directive({ selector: '[govukFormError]', standalone: true })
+@Directive({ selector: '[govukFormError]' })
 export class FormErrorDirective implements OnDestroy, OnInit, DoCheck {
   private readonly formControl = inject(NgControl, { self: true });
   private readonly elementRef = inject(ElementRef);

@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ReviewManageFacilitiesComponent should show summary values: manage-facilities 1`] = `
+<cca-review-manage-facilities
+  manageFacilities={[Function Function]}
+  requestActionStore={[Function _RequestActionStore]}
+>
+  <div>
+    <netz-page-heading>
+      <h1
+        class="govuk-heading-l"
+      >
+        Manage facilities list
+      </h1>
+    </netz-page-heading>
+    <h2
+      class="govuk-heading-m"
+    >
+      Facilities
+    </h2>
+    <cca-facility-item-list>
+      <govuk-table>
+        <table
+          class="govuk-table"
+        >
+          <thead
+            class="govuk-table__head"
+          >
+            <tr
+              class="govuk-table__row"
+            >
+              <th
+                aria-sort="none"
+                class="govuk-table__header"
+                scope="col"
+              >
+                <button
+                  type="button"
+                >
+                  Name
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="govuk-table__header"
+                scope="col"
+              >
+                <button
+                  type="button"
+                >
+                  Facility ID
+                </button>
+              </th>
+              <th
+                aria-sort="none"
+                class="govuk-table__header"
+                scope="col"
+              >
+                <button
+                  type="button"
+                >
+                  Status
+                </button>
+              </th>
+              <th
+                class="govuk-table__header"
+                scope="col"
+              >
+                 Actions 
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class="govuk-table__body"
+          >
+            <tr
+              class="govuk-table__row"
+            >
+              <td
+                class="govuk-table__cell"
+              >
+                <a
+                  class="govuk-link"
+                  href="/"
+                >
+                   Facility 1-2
+                </a>
+              </td>
+              <td
+                class="govuk-table__cell"
+              >
+                 ADS_2-F00029 
+              </td>
+              <td
+                class="govuk-table__cell"
+              >
+                 New 
+              </td>
+              <td
+                class="govuk-table__cell"
+              >
+              </td>
+            </tr>
+            <tr
+              class="govuk-table__row"
+            >
+              <td
+                class="govuk-table__cell"
+              >
+                <a
+                  class="govuk-link"
+                  href="/"
+                >
+                   Facility 2-2
+                </a>
+              </td>
+              <td
+                class="govuk-table__cell"
+              >
+                 ADS_2-F00028 
+              </td>
+              <td
+                class="govuk-table__cell"
+              >
+                 Live 
+              </td>
+              <td
+                class="govuk-table__cell"
+              >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </govuk-table>
+    </cca-facility-item-list>
+  </div>
+</cca-review-manage-facilities>
+`;

@@ -21,6 +21,7 @@ import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 
 @ExtendWith(MockitoExtension.class)
 class SectorAssociationRequestCreateRuleHandlerTest {
+	
     @InjectMocks
     private SectorAssociationRequestCreateRuleHandler sectorAssociationRequestCreateRuleHandler;
 

@@ -26,7 +26,7 @@ export function getAllUnderlyingAgreementReviewTimelineSections(
       title: 'Facilities',
       tasks: [
         {
-          status: calcManageFacilitiesStatus(payload.reviewSectionsCompleted),
+          status: calcManageFacilitiesStatus(payload.reviewSectionsCompleted, payload.underlyingAgreement?.facilities),
           link: 'review-manage-facilities',
           linkText: 'Manage facilities list',
         },

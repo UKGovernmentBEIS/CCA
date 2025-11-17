@@ -39,7 +39,6 @@ export const ACTIVE_TARGET_UNIT_ROUTES: Routes = [
       {
         path: 'process-actions',
         title: 'Start a new task',
-
         canDeactivate: [PendingRequestGuard],
         loadComponent: () => import('@shared/components').then((c) => c.StartNewTaskComponent),
       },
@@ -47,10 +46,13 @@ export const ACTIVE_TARGET_UNIT_ROUTES: Routes = [
         path: ':unaId/file-download/:fileType/:uuid',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },
+      {
+        path: 'facilities',
+        children: FACILITIES_LIST_ROUTES,
+      },
       ...EDIT_TARGET_UNIT_ROUTES,
       ...WORKFLOW_DETAILS_ROUTES,
       ...USERS_AND_CONTACTS_ROUTES,
-      ...FACILITIES_LIST_ROUTES,
       ...REPORTS_TAB_ROUTES,
       ...BUYOUT_AND_SURPLUS_ROUTES,
     ],

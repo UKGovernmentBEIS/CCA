@@ -14,6 +14,12 @@ export interface AdditionalNoticeRecipientDTO {
   firstName?: string;
   lastName?: string;
   email?: string;
-  type?: 'RESPONSIBLE_PERSON' | 'ADMINISTRATIVE_CONTACT' | 'SECTOR_CONTACT' | 'SECTOR_USER' | 'OPERATOR';
+  type?:
+    | 'RESPONSIBLE_PERSON'
+    | 'ADMINISTRATIVE_CONTACT'
+    | 'SECTOR_CONTACT'
+    | 'SECTOR_USER'
+    | 'SECTOR_CONSULTANT'
+    | 'OPERATOR';
   userId?: string;
 }

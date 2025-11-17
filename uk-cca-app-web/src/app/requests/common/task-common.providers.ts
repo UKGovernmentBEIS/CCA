@@ -31,4 +31,8 @@ export const taskStatusTagMap: TaskStatusTagMap = {
     text: 'Rejected',
     color: 'red',
   },
+  [TaskItemStatus.UNCHANGED]: {
+    text: 'Unchanged',
+    color: null,
+  },
 };

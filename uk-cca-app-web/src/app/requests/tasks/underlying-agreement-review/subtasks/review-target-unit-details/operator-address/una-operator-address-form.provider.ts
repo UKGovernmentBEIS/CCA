@@ -13,13 +13,8 @@ export const UnaOperatorAddressFormProvider: Provider = {
   provide: UNA_OPERATOR_ADDRESS_FORM,
   deps: [RequestTaskStore],
   useFactory: (store: RequestTaskStore) => {
-    const payload = store.select(underlyingAgreementQuery.selectPayload)();
-
-    if (!payload.underlyingAgreement?.underlyingAgreementTargetUnitDetails?.operatorAddress) {
-      throw new Error('Operator address data is missing from payload');
-    }
-
-    const addressPayload = payload.underlyingAgreement.underlyingAgreementTargetUnitDetails.operatorAddress;
+    const addressPayload = store.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)()
+      ?.operatorAddress;
     return createAccountAddressForm(addressPayload);
   },
 };

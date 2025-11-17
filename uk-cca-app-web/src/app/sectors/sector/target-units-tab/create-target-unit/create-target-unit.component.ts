@@ -15,7 +15,6 @@ import { TARGET_UNIT_CREATION_FORM, TargetUnitCreationFormProvider } from './cre
 @Component({
   selector: 'cca-create-target-unit',
   templateUrl: './create-target-unit.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, RouterLink, WizardStepComponent, TargetUnitDetailsInputComponent],
   providers: [TargetUnitCreationFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,9 +33,6 @@ export class CreateTargetUnitComponent {
   onSubmitTargetUnit() {
     this.createTargetUnitStore.updateState({
       ...this.form.value,
-      isCompanyRegistrationNumber: this.form.value.isCompanyRegistrationNumber,
-      companyRegistrationNumber: this.form.value.companyRegistrationNumber,
-      registrationNumberMissingReason: this.form.value.registrationNumberMissingReason,
       sicCodes: this.form.value.sicCodes.filter((val) => !!val),
       competentAuthority: this.activeSector.sectorAssociationDetails.competentAuthority,
       subsectorAssociationName: this.subSectors.find(

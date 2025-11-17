@@ -21,7 +21,6 @@ import { NestedMessageValidationErrors } from './nested-message-validation-error
 
 @Component({
   selector: 'govuk-error-summary',
-  standalone: true,
   imports: [RouterLink, KeyValuePipe, AsyncPipe, NgTemplateOutlet],
   templateUrl: './error-summary.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

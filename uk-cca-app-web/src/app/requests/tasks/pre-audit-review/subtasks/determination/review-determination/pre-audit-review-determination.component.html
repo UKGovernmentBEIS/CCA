@@ -1,0 +1,41 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    heading="Pre-audit review determination"
+    data-testid="audit-determination-form"
+  >
+    <div
+      formControlName="reviewCompletionDate"
+      govuk-date-input
+      label="Review completion date"
+      size="normal"
+      [max]="today"
+      hint="For example 25 7 2024"
+      class="govuk-!-margin-bottom-9 govuk-!-margin-top-9"
+    ></div>
+
+    <p class="govuk-label govuk-label--m">Is a more detailed audit of this facility needed?</p>
+    <div
+      class="govuk-!-margin-bottom-9"
+      formControlName="furtherAuditNeeded"
+      govuk-radio
+      [isInline]="true"
+      hint="Further audit indicates that additional investigation is required. This may involve scheduling an interview or an on-site visit."
+    >
+      <govuk-radio-option [value]="true" [label]="'Yes'" />
+      <govuk-radio-option [value]="false" [label]="'No'" />
+    </div>
+
+    <div
+      govuk-textarea
+      label="Review comments (optional)"
+      labelSize="medium"
+      hint="Summarise your review of the information provided by the operator and your reasons for whether a more detailed audit with the operator is needed"
+      formControlName="reviewComments"
+    ></div>
+  </cca-wizard-step>
+
+  <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+  <netz-return-to-task-or-action-page />
+</div>

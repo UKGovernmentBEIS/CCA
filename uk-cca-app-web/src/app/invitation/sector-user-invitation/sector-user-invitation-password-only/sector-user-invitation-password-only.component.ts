@@ -30,7 +30,6 @@ import { SectorUserInvitationStore } from '../sector-user-invitation.store';
       </form>
     </div>
   `,
-  standalone: true,
   imports: [
     PageHeadingComponent,
     PasswordComponent,

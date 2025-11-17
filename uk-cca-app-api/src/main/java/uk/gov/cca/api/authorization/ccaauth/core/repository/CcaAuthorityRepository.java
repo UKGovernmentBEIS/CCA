@@ -1,5 +1,6 @@
 package uk.gov.cca.api.authorization.ccaauth.core.repository;
 
+import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaAuthority.NAMED_QUERY_FIND_ACTIVE_AUTHORITIES_WITH_DETAILS_BY_SECTOR_ASSOCIATION_ID_AND_CONTACT_TYPE;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaAuthority.NAMED_QUERY_FIND_AUTHORITIES_BY_USER_ID;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaAuthority.NAMED_QUERY_FIND_AUTHORITIES_WITH_DETAILS_BY_SECTOR_ASSOCIATION_ID;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaAuthority.NAMED_QUERY_FIND_AUTHORITIES_WITH_DETAILS_BY_ACCOUNT_ID;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.cca.api.authorization.ccaauth.core.domain.CcaAuthority;
+import uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType;
 import uk.gov.cca.api.authorization.ccaauth.operator.domain.OperatorAuthorityDTO;
 import uk.gov.cca.api.authorization.ccaauth.sectoruser.domain.SectorUserAuthorityDTO;
 import uk.gov.netz.api.authorization.core.domain.Authority;
@@ -32,6 +34,10 @@ public interface CcaAuthorityRepository extends JpaRepository<CcaAuthority, Long
     @Transactional(readOnly = true)
     @Query(name = NAMED_QUERY_FIND_AUTHORITIES_WITH_DETAILS_BY_SECTOR_ASSOCIATION_ID)
     List<SectorUserAuthorityDTO> findAuthoritiesWithDetailsBySectorAssociationId(Long sectorAssociationId);
+
+    @Transactional(readOnly = true)
+    @Query(name = NAMED_QUERY_FIND_ACTIVE_AUTHORITIES_WITH_DETAILS_BY_SECTOR_ASSOCIATION_ID_AND_CONTACT_TYPE)
+    List<SectorUserAuthorityDTO> findActiveAuthoritiesWithDetailsBySectorAssociationIdAndContactType(Long sectorAssociationId, ContactType contactType);
 
     @Transactional(readOnly = true)
     @Query(name =  NAMED_QUERY_FIND_SECTOR_USER_AUTHORITY_ROLE_LIST_BY_SECTOR_ASSOCIATION_ID)

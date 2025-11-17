@@ -15,7 +15,6 @@ import { underlyingAgreementPeerReviewQuery } from '../underlying-agreement-peer
       <cca-facility-item-list [facilityItems]="manageFacilities()" />
     </div>
   `,
-  standalone: true,
   imports: [PageHeadingComponent, FacilityItemListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

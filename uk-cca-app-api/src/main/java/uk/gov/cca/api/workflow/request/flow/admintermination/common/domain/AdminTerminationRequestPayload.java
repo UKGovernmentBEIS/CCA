@@ -6,13 +6,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionReasonDetails;
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationReasonDetails;
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.AdminTerminationWithdrawReasonDetails;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
-import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementVersion;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 
 import java.time.LocalDateTime;
@@ -25,9 +24,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class AdminTerminationRequestPayload extends CcaRequestPayload implements UnderlyingAgreementVersion {
+public class AdminTerminationRequestPayload extends CcaRequestPayload {
 
-    private int underlyingAgreementVersion;
+    private Map<SchemeVersion, Integer> underlyingAgreementVersionMap;
 
     private AdminTerminationReasonDetails adminTerminationReasonDetails;
 

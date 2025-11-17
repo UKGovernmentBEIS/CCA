@@ -24,7 +24,10 @@ public class UnderlyingAgreementVariationCreateValidator extends RequestCreateAc
 
     @Override
     public Set<String> getMutuallyExclusiveRequests() {
-        return Set.of(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION); 
+        return Set.of(
+                CcaRequestType.UNDERLYING_AGREEMENT_VARIATION,
+                CcaRequestType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING
+        );
     }
 
 	@Override

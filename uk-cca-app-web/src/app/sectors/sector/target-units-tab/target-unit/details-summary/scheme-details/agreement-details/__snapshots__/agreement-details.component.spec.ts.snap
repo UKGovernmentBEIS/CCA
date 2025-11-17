@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`AgreementDetailsComponent should display correct view 1`] = `
+<cca-agreement-details
+  agreement={[Function Function]}
+  files={[Function Function]}
+  isTerminated={[Function Function]}
+  mainColumnClass={[Function Function]}
+  title={[Function Function]}
+>
+  <div
+    class="govuk-grid-row"
+  >
+    <div
+      class="govuk-grid-column-two-thirds"
+    >
+      <h2>
+        CCA3 underlying agreement
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        data-testid="cca3-underlying agreement"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Status
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            Active
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          />
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Downloadable version
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <cca-summary-download-files>
+              <a
+                class="govuk-link"
+                href="/"
+                target="_blank"
+              >
+                ADS_1-T00002 CCA3 Underlying Agreement v1.pdf
+              </a>
+            </cca-summary-download-files>
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          />
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Activation date
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+            </span>
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          />
+        </div>
+      </dl>
+    </div>
+  </div>
+</cca-agreement-details>
+`;

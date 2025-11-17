@@ -15,7 +15,6 @@ import { ConfirmationSharedComponent } from '@shared/components';
       <p>The regulator will review your application and contact you.</p>
     </ng-template>
   `,
-  standalone: true,
   imports: [ConfirmationSharedComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

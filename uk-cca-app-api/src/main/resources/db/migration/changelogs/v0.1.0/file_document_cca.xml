@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        logicalFilePath="v0.1.0/file_document_cca.xml"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
+        
+    <changeSet id="0_1_0_rename_underlying_agreement_proposed_file_documents" author="apostolouk@unisystems.gr">
+        <sql>
+            update file_document
+            set file_name = REPLACE(file_name, 'Underlying Agreement', 'CCA2 Underlying Agreement')
+            where file_name like '%[proposed]%';
+        </sql>
+        <rollback>
+        	update file_document
+            set file_name = REPLACE(file_name, 'CCA2 Underlying Agreement', 'Underlying Agreement')
+            where file_name like '%[proposed]%';
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_rename_underlying_agreement_activated_file_documents" author="apostolouk@unisystems.gr">
+        <sql>
+            update file_document
+            set file_name = REPLACE(file_name, 'Underlying Agreement', 'CCA2 Underlying Agreement')
+            where file_name like '%Underlying Agreement v%' and file_name not like '%[proposed]%';
+        </sql>
+        <rollback>
+        	update file_document
+            set file_name = REPLACE(file_name, 'CCA2 Underlying Agreement', 'Underlying Agreement')
+            where file_name like '%Underlying Agreement v%' and file_name not like '%[proposed]%';
+        </rollback>
+    </changeSet>
+        
+</databaseChangeLog>

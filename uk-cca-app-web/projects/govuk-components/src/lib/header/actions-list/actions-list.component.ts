@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 
 @Component({
   selector: 'govuk-header-actions-list',
-  standalone: true,
   template: `
     <div class="header-actions">
       <ng-content />

@@ -31,7 +31,6 @@ import { InvitedRegulatorUserStore } from './invited-regulator-user.store';
       </div>
     </div>
   `,
-  standalone: true,
   imports: [
     PageHeadingComponent,
     PasswordComponent,

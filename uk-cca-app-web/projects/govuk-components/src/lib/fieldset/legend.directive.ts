@@ -3,7 +3,7 @@ import { AfterContentInit, Directive, ElementRef, HostBinding, input, inject } f
 import { FieldsetDirective } from './fieldset.directive';
 import { LegendSizeType } from './legend-size.type';
 
-@Directive({ selector: 'legend[govukLegend],ng-template[govukLegend]', standalone: true })
+@Directive({ selector: 'legend[govukLegend],ng-template[govukLegend]' })
 export class LegendDirective implements AfterContentInit {
   private readonly fieldset = inject(FieldsetDirective);
   private readonly elementRef = inject(ElementRef);

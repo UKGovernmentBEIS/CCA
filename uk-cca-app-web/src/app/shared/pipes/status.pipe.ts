@@ -1,9 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'status',
-  standalone: true,
-})
+@Pipe({ name: 'status' })
 export class StatusPipe implements PipeTransform {
   transform(status?: string): string {
     if (!status) {
@@ -94,6 +91,9 @@ export class StatusPipe implements PipeTransform {
 
       case 'not_yet_defined':
         return 'Not yet defined';
+
+      case 'unchanged':
+        return 'Unchanged';
 
       default:
         throw new Error(`invalid status. Received: ${status}`);

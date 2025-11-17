@@ -20,7 +20,6 @@ import { generateDownloadUrl } from '@shared/utils';
     <cca-multiple-file-input formControlName="files" [baseDownloadUrl]="downloadUrl" label="Upload evidence (optional)">
     </cca-multiple-file-input>
   `,
-  standalone: true,
   imports: [
     RadioComponent,
     TextareaComponent,

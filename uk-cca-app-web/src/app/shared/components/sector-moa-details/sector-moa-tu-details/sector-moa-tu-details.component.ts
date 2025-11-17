@@ -40,7 +40,6 @@ const DEFAULT_PAGE_SIZE = 30;
 @Component({
   selector: 'cca-sector-moa-tu-details',
   templateUrl: './sector-moa-tu-details.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     PageHeadingComponent,
@@ -95,7 +94,7 @@ export class SectorMoaTuDetailsComponent {
   ];
 
   protected readonly tableColumns: CcaTableColumn[] = [
-    { field: 'facilityId', header: 'Facility ID', primary: true },
+    { field: 'facilityBusinessId', header: 'Facility ID', primary: true },
     { field: 'facilityName', header: 'Site name' },
     { field: 'markFacilitiesStatus', header: 'Marking of facilities' },
     { field: 'paymentDate', header: 'Payment date' },
@@ -156,7 +155,7 @@ export class SectorMoaTuDetailsComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.pageSize()) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   onSelectChange({ row, checked }: { row: SubsistenceFeesMoaFacilitySearchResultInfoDTO; checked: boolean }) {

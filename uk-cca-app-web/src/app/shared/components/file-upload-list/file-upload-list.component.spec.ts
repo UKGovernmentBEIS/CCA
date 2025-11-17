@@ -17,7 +17,6 @@ describe('FileUploadListComponent', () => {
   const activatedRoute = new ActivatedRouteStub();
 
   @Component({
-    standalone: true,
     template: `
       <cca-file-upload-list
         [listTitle]="listTitle"

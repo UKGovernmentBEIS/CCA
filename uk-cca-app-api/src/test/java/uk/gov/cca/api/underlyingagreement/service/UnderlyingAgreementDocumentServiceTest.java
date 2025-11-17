@@ -17,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDTO;
+import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementDocument;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.files.documents.service.FileDocumentTokenService;
@@ -26,6 +26,7 @@ import uk.gov.netz.api.token.FileToken;
 
 @ExtendWith(MockitoExtension.class)
 class UnderlyingAgreementDocumentServiceTest {
+	
     @InjectMocks
     private UnderlyingAgreementDocumentService underlyingAgreementDocumentService;
 
@@ -41,19 +42,19 @@ class UnderlyingAgreementDocumentServiceTest {
         final Long unaId = 1L;
         final UUID fileDocumentUuid = UUID.randomUUID();
 
-        final UnderlyingAgreementDTO underlyingAgreementDTO = UnderlyingAgreementDTO.builder()
+        final UnderlyingAgreementDocument underlyingAgreementDocument = UnderlyingAgreementDocument.builder()
             .fileDocumentUuid(fileDocumentUuid.toString())
             .build();
 
         final FileToken fileToken = FileToken.builder().token("token").build();
         
-        when(underlyingAgreementQueryService.getUnderlyingAgreementByIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString())).thenReturn(underlyingAgreementDTO);
+        when(underlyingAgreementQueryService.getUnderlyingAgreementDocumentByUnderlyingAgreementIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString())).thenReturn(underlyingAgreementDocument);
         when(fileDocumentTokenService.generateGetFileDocumentToken(fileDocumentUuid.toString())).thenReturn(fileToken);
 
         final FileToken result = underlyingAgreementDocumentService.generateGetFileDocumentToken(unaId, fileDocumentUuid);
 
         assertEquals(result, fileToken);
-        verify(underlyingAgreementQueryService, times(1)).getUnderlyingAgreementByIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString());
+        verify(underlyingAgreementQueryService, times(1)).getUnderlyingAgreementDocumentByUnderlyingAgreementIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString());
         verify(fileDocumentTokenService, times(1)).generateGetFileDocumentToken(fileDocumentUuid.toString());
     }
 
@@ -63,14 +64,14 @@ class UnderlyingAgreementDocumentServiceTest {
         final Long unaId = 1L;
         final UUID fileDocumentUuid = UUID.randomUUID();
 
-        when(underlyingAgreementQueryService.getUnderlyingAgreementByIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString()))
+        when(underlyingAgreementQueryService.getUnderlyingAgreementDocumentByUnderlyingAgreementIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString()))
             .thenThrow(new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
         
         BusinessException businessException = assertThrows(BusinessException.class,
                 () -> underlyingAgreementDocumentService.generateGetFileDocumentToken(unaId, fileDocumentUuid));
 
         assertThat(businessException.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
-        verify(underlyingAgreementQueryService, times(1)).getUnderlyingAgreementByIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString());
+        verify(underlyingAgreementQueryService, times(1)).getUnderlyingAgreementDocumentByUnderlyingAgreementIdAndFileDocumentUuid(unaId, fileDocumentUuid.toString());
         verifyNoInteractions(fileDocumentTokenService);
     }
 

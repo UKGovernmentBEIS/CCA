@@ -11,7 +11,6 @@ import { PanelComponent } from '@netz/govuk-components';
       Return to: {{ targetUnitBusinessId }}
     </a>
   `,
-  standalone: true,
   imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

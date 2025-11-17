@@ -17,7 +17,6 @@ import { RequestsService } from 'cca-api';
       <button govukButton netzPendingButton (click)="onCreateNewPaymentRequest()">Send payment requests</button>
     </div>
   `,
-  standalone: true,
   imports: [PageHeadingComponent, ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

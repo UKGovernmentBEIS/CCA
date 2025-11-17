@@ -10,8 +10,6 @@ import { CountryService } from '@shared/services';
 
 import { UpdateTargetUnitAccountService } from 'cca-api';
 
-import { CountryServiceStub } from 'src/testing/country.service.stub';
-
 import { mockTargetUnitAccountDetails } from '../../../../../specs/fixtures/mock';
 import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
 import { EditResponsiblePersonComponent } from './edit-responsible-person.component';
@@ -22,6 +20,8 @@ describe('EditResponsiblePersonComponent', () => {
   let page: Page;
   let activatedRoute: ActivatedRouteStub;
   let store: ActiveTargetUnitStore;
+
+  const countryService = mockClass(CountryService);
 
   const updateTargetUnitAccountService = mockClass(UpdateTargetUnitAccountService);
   updateTargetUnitAccountService.updateTargetUnitAccountResponsiblePerson.mockReturnValue(of({}));
@@ -54,7 +54,7 @@ describe('EditResponsiblePersonComponent', () => {
         provideHttpClientTesting(),
         ActiveTargetUnitStore,
         { provide: UpdateTargetUnitAccountService, useValue: updateTargetUnitAccountService },
-        { provide: CountryService, useClass: CountryServiceStub },
+        { provide: CountryService, useValue: countryService },
         { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     }).compileComponents();

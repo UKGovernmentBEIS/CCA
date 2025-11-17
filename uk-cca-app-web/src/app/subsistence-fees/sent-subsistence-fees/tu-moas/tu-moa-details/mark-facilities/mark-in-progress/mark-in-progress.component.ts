@@ -17,7 +17,6 @@ import { TuMoaDetailsStore } from '../../tu-moa-details.store';
 @Component({
   selector: 'cca-mark-in-progress',
   templateUrl: './mark-in-progress.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     WarningTextComponent,

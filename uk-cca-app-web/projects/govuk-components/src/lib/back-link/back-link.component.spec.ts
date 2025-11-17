@@ -7,7 +7,6 @@ import { BackLinkComponent } from './back-link.component';
 
 describe('BackLinkComponent', () => {
   @Component({
-    standalone: true,
     imports: [BackLinkComponent],
     template: '<govuk-back-link [link]="link" [route]="route"  [inverse]="inverse"></govuk-back-link>',
   })

@@ -40,10 +40,11 @@ public class FacilityBaselineData {
     @Builder.Default
     private Set<UUID> greenfieldEvidences = new HashSet<>();
 
-    @NotNull
+    // This field remains in the model to support the timeline events of UNAs submitted before the split-by-product functionality was implemented
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal energy;
 
+    @NotNull
     private Boolean usedReportingMechanism;
 
     @NotNull

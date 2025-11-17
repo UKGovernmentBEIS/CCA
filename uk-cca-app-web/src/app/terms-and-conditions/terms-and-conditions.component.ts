@@ -21,7 +21,6 @@ import { TermsAndConditionsService } from 'cca-api';
 @Component({
   selector: 'cca-terms-and-conditions',
   templateUrl: './terms-and-conditions.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     ReactiveFormsModule,

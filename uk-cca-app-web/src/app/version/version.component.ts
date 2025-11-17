@@ -13,7 +13,6 @@ import { VERSION } from '../../environments/version';
       Commit hash: <span class="govuk-!-font-weight-bold">{{ version.hash }}</span>
     </p>
   `,
-  standalone: true,
   imports: [PageHeadingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

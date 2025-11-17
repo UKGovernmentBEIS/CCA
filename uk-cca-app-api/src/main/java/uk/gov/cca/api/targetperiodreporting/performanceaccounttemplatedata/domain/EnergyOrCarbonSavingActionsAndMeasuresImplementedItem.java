@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class EnergyOrCarbonSavingActionsAndMeasuresImplementedItem {
+	
+	// The facility business id
     private String facilityId;
     
     @NotNull

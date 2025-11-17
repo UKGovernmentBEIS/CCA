@@ -48,6 +48,6 @@ describe('CreateTargetUnitSummaryComponent', () => {
 
   it('should contain 18 change links', () => {
     const changeLinks = document.querySelectorAll('a[href="/?change=true"]');
-    expect(changeLinks).toHaveLength(18);
+    expect(changeLinks).toHaveLength(17);
   });
 });

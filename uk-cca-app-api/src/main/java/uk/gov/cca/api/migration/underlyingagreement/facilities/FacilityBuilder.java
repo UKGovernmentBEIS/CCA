@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.cca.api.migration.MigrationEndpoint;
 import uk.gov.cca.api.migration.MigrationUtil;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.AgreementType;
@@ -54,7 +55,7 @@ public class FacilityBuilder {
                 .uketsId(facilityItemVO.getUketsId())
                 .applicationReason(applicationReason)
                 .previousFacilityId(ApplicationReasonType.CHANGE_OF_OWNERSHIP.equals(applicationReason) ? MigrationUtil.convertLegacyToCcaBusinessId(facilityItemVO.getPreviousFacilityId()) : null)
-                .facilityAddress(AccountAddressDTO.builder()
+                .facilityAddress(FacilityAddressDTO.builder()
                         .line1(facilityItemVO.getFacilityAddress().getLine1())
                         .line2(facilityItemVO.getFacilityAddress().getLine2())
                         .city(facilityItemVO.getFacilityAddress().getCity())
@@ -109,7 +110,7 @@ public class FacilityBuilder {
                 .build();
         
         return FacilityItem.builder()
-                .facilityId(MigrationUtil.convertLegacyToCcaBusinessId(facilityItemVO.getFacilityId()))
+                .facilityId(MigrationUtil.convertLegacyToCcaBusinessId(facilityItemVO.getFacilityBusinessId()))
                 .facilityDetails(facilityDetails)
                 .facilityContact(facilityContact)
                 .eligibilityDetailsAndAuthorisation(eligibilityDetailsAndAuthorisation)

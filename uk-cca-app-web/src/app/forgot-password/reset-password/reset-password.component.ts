@@ -30,7 +30,6 @@ import { ResetPasswordStore } from '../+store/reset-password.store';
       </div>
     </div>
   `,
-  standalone: true,
   imports: [ErrorSummaryComponent, PasswordComponent, ButtonDirective, ReactiveFormsModule],
   providers: [passwordFormFactory],
   changeDetection: ChangeDetectionStrategy.OnPush,

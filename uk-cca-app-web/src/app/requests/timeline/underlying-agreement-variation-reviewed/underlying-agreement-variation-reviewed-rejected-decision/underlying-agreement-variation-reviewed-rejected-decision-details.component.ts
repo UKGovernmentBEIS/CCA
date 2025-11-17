@@ -11,7 +11,6 @@ import { toRejectedDecisionDetailsSummaryData } from '../underlying-agreement-va
 @Component({
   selector: 'cca-underlying-agreement-variation-reviewed-rejected-decision',
   template: ` <cca-summary [data]="summaryData()" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

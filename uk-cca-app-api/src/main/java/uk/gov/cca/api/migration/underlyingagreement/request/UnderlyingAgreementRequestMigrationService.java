@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.migration.MigrationConstants;
 import uk.gov.cca.api.migration.MigrationEndpoint;
+import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementDocument;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementEntity;
 import uk.gov.cca.api.underlyingagreement.repository.UnderlyingAgreementRepository;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
@@ -59,7 +61,8 @@ public class UnderlyingAgreementRequestMigrationService {
         Request request = requestCreateService.createRequest(requestParams, CcaRequestStatuses.MIGRATED);
         request.setEndDate(creationDate);
 
-        FileInfoDTO underlyingAgreementDocument = fileDocumentService.getFileInfoDTO(entity.getFileDocumentUuid());
+        UnderlyingAgreementDocument underlyingAgreementDocument = entity.getDocumentForSchemeVersion(SchemeVersion.CCA_2);
+        FileInfoDTO fileInfoDto = fileDocumentService.getFileInfoDTO(underlyingAgreementDocument.getFileDocumentUuid());
         AccountReferenceData accountReferenceData = accountReferenceDetailsService.getAccountReferenceData(entity.getAccountId());
 
         UnderlyingAgreementPayload underlyingAgreementPayload = UnderlyingAgreementPayload.builder()
@@ -71,12 +74,12 @@ public class UnderlyingAgreementRequestMigrationService {
 
         // createTimelineEvent
         final UnderlyingAgreementMigratedRequestActionPayload actionPayload = UnderlyingAgreementMigratedRequestActionPayload.builder()
-                .underlyingAgreementDocument(underlyingAgreementDocument)
+                .underlyingAgreementDocument(fileInfoDto)
                 .accountReferenceData(accountReferenceData)
                 .underlyingAgreement(underlyingAgreementPayload)
                 .underlyingAgreementAttachments(entity.getUnderlyingAgreementContainer().getUnderlyingAgreementAttachments())
                 .businessId(accountReferenceDetailsService.getTargetUnitAccountDetails(entity.getAccountId()).getBusinessId())
-                .activationDate(entity.getActivationDate())
+                .activationDate(underlyingAgreementDocument.getActivationDate())
                 .payloadType(CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_MIGRATED_PAYLOAD)
                 .build();
         

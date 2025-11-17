@@ -10,7 +10,6 @@ import { toBuyoutFeeCalculatedSummaryData } from './buy-out-fee-calculated-summa
 @Component({
   selector: 'cca-buy-out-fee-calculated',
   template: `<cca-summary [data]="data" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

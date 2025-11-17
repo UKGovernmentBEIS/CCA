@@ -17,7 +17,6 @@ import { SectorMoaDetailsStore } from '../../sector-moa-details.store';
 @Component({
   selector: 'cca-mark-paid',
   templateUrl: './mark-paid.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     WarningTextComponent,

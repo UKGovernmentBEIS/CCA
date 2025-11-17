@@ -1,0 +1,65 @@
+<!-- BOTH ACTIVE/TERMINATED -->
+@if (agreementsState().bothActive || agreementsState().bothTerminated) {
+  @if (cca3Details()) {
+    <cca-agreement-details
+      [title]="'CCA3 underlying agreement'"
+      [agreement]="cca3Details()"
+      [files]="cca3FileDocument()"
+      [mainColumnClass]="mainColumnClass()"
+    />
+  }
+
+  @if (cca2Details()) {
+    <cca-agreement-details
+      [title]="'CCA2 underlying agreement'"
+      [agreement]="cca2Details()"
+      [files]="cca2FileDocument()"
+      [mainColumnClass]="mainColumnClass()"
+    />
+  }
+}
+
+<!-- ONE ACTIVE / ONE TERMINATED -->
+@if (agreementsState().cca2Active && !agreementsState().cca3Active) {
+  @if (cca2Details()) {
+    <cca-agreement-details
+      [title]="'CCA2 underlying agreement'"
+      [agreement]="cca2Details()"
+      [files]="cca2FileDocument()"
+      [mainColumnClass]="mainColumnClass()"
+    />
+  }
+
+  @if (cca3Details()) {
+    <govuk-details summary="Terminated agreement">
+      <cca-agreement-details
+        [title]="'CCA3 underlying agreement'"
+        [agreement]="cca3Details()"
+        [files]="cca3FileDocument()"
+        [mainColumnClass]="mainColumnClass()"
+      />
+    </govuk-details>
+  }
+}
+
+@if (!agreementsState().cca2Active && agreementsState().cca3Active) {
+  @if (cca3Details()) {
+    <cca-agreement-details
+      [title]="'CCA3 underlying agreement'"
+      [agreement]="cca3Details()"
+      [files]="cca3FileDocument()"
+      [mainColumnClass]="mainColumnClass()"
+    />
+  }
+
+  @if (cca2Details()) {
+    <govuk-details summary="Terminated agreement">
+      <cca-agreement-details
+        [title]="'CCA2 underlying agreement'"
+        [agreement]="cca2Details()"
+        [files]="cca2FileDocument()"
+        [mainColumnClass]="mainColumnClass()"
+      />
+    </govuk-details>
+  }
+}

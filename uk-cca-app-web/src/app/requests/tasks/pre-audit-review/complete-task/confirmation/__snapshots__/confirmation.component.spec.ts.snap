@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`PreAuditReviewConfirmationComponent should display the correct header and caption 1`] = `
+<cca-pre-audit-review-confirmation
+  furtherAuditNeeded={[Function Function]}
+  outcome={[Function Function]}
+  preAuditReviewDetails={[Function Function]}
+  requestTaskStore={[Function _RequestTaskStore]}
+>
+  <govuk-panel
+    title="Pre-audit review complete"
+  >
+    <div
+      class="govuk-panel govuk-panel--confirmation"
+    >
+      <h1
+        class="govuk-panel__title"
+      >
+        Pre-audit review complete
+      </h1>
+      <div
+        class="govuk-panel__body"
+      >
+         Outcome 
+        <br />
+        <span
+          style="font-weight: bold;"
+        >
+          No further audit needed
+        </span>
+      </div>
+    </div>
+  </govuk-panel><a
+    class="govuk-link"
+    href="/dashboard"
+  >
+     Return to: Dashboard 
+  </a>
+</cca-pre-audit-review-confirmation>
+`;

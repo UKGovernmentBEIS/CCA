@@ -23,7 +23,6 @@ import {
 @Component({
   selector: 'cca-edit-facility-details',
   templateUrl: './edit-facility-details.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     RouterLink,
@@ -56,6 +55,6 @@ export default class EditFacilityDetailsComponent {
           throw new Error(err);
         }),
       )
-      .subscribe(() => this.router.navigate(['..', 'details'], { relativeTo: this.activatedRoute, replaceUrl: true }));
+      .subscribe(() => this.router.navigate(['..'], { relativeTo: this.activatedRoute, replaceUrl: true }));
   }
 }

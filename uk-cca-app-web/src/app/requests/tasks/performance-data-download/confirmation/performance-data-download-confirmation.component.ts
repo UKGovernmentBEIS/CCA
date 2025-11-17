@@ -9,7 +9,6 @@ import { performanceDataDownloadQuery } from '../+state/performance-data-downloa
 @Component({
   selector: 'cca-performance-data-download-confirmation',
   templateUrl: './performance-data-download-confirmation.component.html',
-  standalone: true,
   imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

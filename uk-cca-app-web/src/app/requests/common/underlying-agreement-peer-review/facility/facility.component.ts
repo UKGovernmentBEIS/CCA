@@ -22,7 +22,6 @@ import { underlyingAgreementPeerReviewQuery } from '../underlying-agreement-peer
       <a routerLink="../../../" class="govuk-link">Return to: Peer review application for underlying agreement</a>
     }
   `,
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -62,6 +61,7 @@ export class FacilityComponent {
       },
       false,
       '../../../file-download',
+      { productsLink: './products' },
     ),
   );
 }

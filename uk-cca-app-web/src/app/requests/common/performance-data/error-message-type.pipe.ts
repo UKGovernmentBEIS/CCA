@@ -8,10 +8,7 @@ export enum ErrorMessageTypeEnum {
   NO_ELIGIBLE_ACCOUNTS_FOR_TPR_REPORTING = 'No eligible accounts found in this sector for the selected target period.',
 }
 
-@Pipe({
-  name: 'errorMessageType',
-  standalone: true,
-})
+@Pipe({ name: 'errorMessageType' })
 export class ErrorMessageTypePipe implements PipeTransform {
   transform(value: PerformanceDataDownloadSubmitRequestTaskPayload['errorMessage']): string {
     const text = ErrorMessageTypeEnum[value];

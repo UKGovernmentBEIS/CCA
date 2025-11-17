@@ -9,6 +9,7 @@ import {
   baselineChangesTypesOption,
   facilityChangesTypes,
   otherChangesTypes,
+  OVERALL_DECISION_SUBTASK,
   targetCurrencyChangesTypes,
   TaskItemStatus,
   TasksApiService,
@@ -33,7 +34,6 @@ import {
 @Component({
   selector: 'cca-variation-details',
   templateUrl: './variation-details.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -90,6 +90,7 @@ export class VariationDetailsComponent {
 
     const reviewSectionsCompleted = produce(currentReviewSectionsCompleted, (draft) => {
       draft[VARIATION_DETAILS_SUBTASK] = TaskItemStatus.UNDECIDED;
+      draft[OVERALL_DECISION_SUBTASK] = TaskItemStatus.UNDECIDED;
     });
 
     const dto = createSaveActionDTO(requestTaskId, updatedPayload, {

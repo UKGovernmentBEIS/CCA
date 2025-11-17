@@ -84,38 +84,38 @@ export class UpdateFacilityDataService {
 
   /**
    * Updates Facility Certification Status
-   * @param facilityId The facility business id
+   * @param facilityId The facility id
    * @param facilityCertificationStatusUpdateDTO
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
   public updateFacilityCertificationStatus(
-    facilityId: string,
+    facilityId: number,
     facilityCertificationStatusUpdateDTO: FacilityCertificationStatusUpdateDTO,
   ): Observable<any>;
   public updateFacilityCertificationStatus(
-    facilityId: string,
+    facilityId: number,
     facilityCertificationStatusUpdateDTO: FacilityCertificationStatusUpdateDTO,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<any>>;
   public updateFacilityCertificationStatus(
-    facilityId: string,
+    facilityId: number,
     facilityCertificationStatusUpdateDTO: FacilityCertificationStatusUpdateDTO,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<any>>;
   public updateFacilityCertificationStatus(
-    facilityId: string,
+    facilityId: number,
     facilityCertificationStatusUpdateDTO: FacilityCertificationStatusUpdateDTO,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any>;
   public updateFacilityCertificationStatus(
-    facilityId: string,
+    facilityId: number,
     facilityCertificationStatusUpdateDTO: FacilityCertificationStatusUpdateDTO,
     observe: any = 'body',
     reportProgress = false,
@@ -183,32 +183,32 @@ export class UpdateFacilityDataService {
    * @param reportProgress flag to report request and response progress.
    */
   public updateFacilitySchemeExitDate(
-    facilityId: string,
+    facilityId: number,
     updateFacilitySchemeExitDateDTO: UpdateFacilitySchemeExitDateDTO,
   ): Observable<any>;
   public updateFacilitySchemeExitDate(
-    facilityId: string,
+    facilityId: number,
     updateFacilitySchemeExitDateDTO: UpdateFacilitySchemeExitDateDTO,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<any>>;
   public updateFacilitySchemeExitDate(
-    facilityId: string,
+    facilityId: number,
     updateFacilitySchemeExitDateDTO: UpdateFacilitySchemeExitDateDTO,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<any>>;
   public updateFacilitySchemeExitDate(
-    facilityId: string,
+    facilityId: number,
     updateFacilitySchemeExitDateDTO: UpdateFacilitySchemeExitDateDTO,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any>;
   public updateFacilitySchemeExitDate(
-    facilityId: string,
+    facilityId: number,
     updateFacilitySchemeExitDateDTO: UpdateFacilitySchemeExitDateDTO,
     observe: any = 'body',
     reportProgress = false,

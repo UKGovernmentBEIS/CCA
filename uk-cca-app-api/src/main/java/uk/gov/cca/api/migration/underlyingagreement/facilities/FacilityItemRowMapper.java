@@ -30,7 +30,7 @@ public class FacilityItemRowMapper implements RowMapper<FacilityItemVO> {
         
         return FacilityItemVO.builder()
                 .businessId(rs.getString("tu_id"))
-                .facilityId(rs.getString("facility_id"))
+                .facilityBusinessId(rs.getString("facility_id"))
                 .createdDate(rs.getTimestamp("facility_entry_date") != null
                         ? rs.getTimestamp("facility_entry_date").toLocalDateTime()
                         : null)

@@ -14,10 +14,7 @@ export function transformMeasurementType(value: keyof typeof MeasurementTypeEnum
   return text;
 }
 
-@Pipe({
-  name: 'measurementTypeToOptionText',
-  standalone: true,
-})
+@Pipe({ name: 'measurementTypeToOptionText' })
 export class MeasurementTypeToOptionTextPipe implements PipeTransform {
   transform = transformMeasurementType;
 }

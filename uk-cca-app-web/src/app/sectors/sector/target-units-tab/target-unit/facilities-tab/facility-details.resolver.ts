@@ -1,15 +1,13 @@
 import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 import { Observable } from 'rxjs';
 
-import { CurrentFacilityId } from '@requests/common';
-
 import { FacilityInfoDTO, FacilityInfoViewService } from 'cca-api';
 
-export const FacilityDetailsResolver = (): Observable<FacilityInfoDTO> => {
-  const currentFacility = inject(CurrentFacilityId);
-  if (!currentFacility) throw new Error('no currentFacilityId');
+export const FacilityDetailsResolver = (route: ActivatedRouteSnapshot): Observable<FacilityInfoDTO> => {
+  const facilityId = +route.paramMap.get('facilityId');
 
   const facilityInfoViewService = inject(FacilityInfoViewService);
-  return facilityInfoViewService.getFacilityDetailsById(currentFacility());
+  return facilityInfoViewService.getFacilityDetailsById(facilityId);
 };

@@ -4,7 +4,6 @@ import { BreadcrumbService } from '@netz/common/navigation';
 
 @Component({
   selector: 'netz-base-success',
-  standalone: true,
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

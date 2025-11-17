@@ -1,11 +1,15 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.activation.service;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
+import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.underlyingagreement.utils.UnderlyingAgreementCalculateSchemeVersionsUtil;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.notification.DocumentTemplateUnderlyingAgreementParamsProvider;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestPayload;
@@ -25,12 +29,21 @@ public class UnderlyingAgreementActivatedDocumentTemplateWorkflowParamsProvider 
 
     @Override
     public Map<String, Object> constructParams(UnderlyingAgreementRequestPayload payload) {
-        final int version = 1;
 
         UnderlyingAgreementTargetUnitDetails targetUnitDetails = payload.getUnderlyingAgreementProposed()
                 .getUnderlyingAgreementTargetUnitDetails();
+        
+        Set<String> schemeVersions = UnderlyingAgreementCalculateSchemeVersionsUtil
+        		.calculateSchemeVersionsFromActiveFacilities(payload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities())
+        		.stream()
+        		.map(SchemeVersion::getDescription)
+        		.collect(Collectors.toSet());
 
-        return documentTemplateUnderlyingAgreementParamsProvider
-                .constructTargetUnitDetailsTemplateParams(targetUnitDetails, version);
+        Map<String, Object> params = documentTemplateUnderlyingAgreementParamsProvider
+                .constructTargetUnitDetailsTemplateParams(targetUnitDetails);
+        
+        params.put("versionMap", schemeVersions.stream().collect(Collectors.toMap(v -> v, v -> "v1")));
+        
+        return params;
     }
 }

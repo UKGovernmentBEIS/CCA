@@ -1,0 +1,21 @@
+@if (facility(); as facility) {
+  <div>
+    <netz-page-heading>{{ facility.facilityDetails.name }} ({{ facility.facilityId }})</netz-page-heading>
+
+    <ng-template #contentTpl let-showOriginal="showOriginal">
+      <cca-summary [data]="showOriginal ? summaryDataOriginal() : summaryDataCurrent()" />
+    </ng-template>
+
+    <cca-highlight-diff>
+      <ng-container slot="previous" *ngTemplateOutlet="contentTpl; context: { showOriginal: true }" />
+      <ng-container slot="current" *ngTemplateOutlet="contentTpl; context: { showOriginal: false }" />
+    </cca-highlight-diff>
+
+    <cca-wizard-step [formGroup]="form" (formSubmit)="submit()">
+      <cca-decision-with-date />
+    </cca-wizard-step>
+  </div>
+}
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" [routerLink]="['../../']"> Return to: Manage facilities </a>

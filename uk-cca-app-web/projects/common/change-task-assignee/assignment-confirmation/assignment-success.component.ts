@@ -7,7 +7,6 @@ import { PanelComponent } from '@netz/govuk-components';
 
 @Component({
   selector: 'netz-assignment-success',
-  standalone: true,
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">

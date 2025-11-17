@@ -1,0 +1,24 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    caption="Change"
+    heading="Facility audit"
+    submitText="Save and continue"
+    data-testid="audit-form"
+  >
+    <p class="govuk-!-padding-bottom-4">
+      If a facility is marked for audit it will be shown in the relevant report.<br />
+      To start the audit task, select 'Start an audit task' on the facility details page.
+    </p>
+
+    <h2 class="govuk-heading-m">Should this facility be audited?</h2>
+    <div formControlName="auditRequired" govuk-radio>
+      <govuk-radio-option [value]="true" [label]="'Yes, an audit is needed'" />
+      <govuk-radio-option [value]="false" [label]="'No, an audit is not needed'" />
+    </div>
+  </cca-wizard-step>
+
+  <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+  <a class="govuk-link" routerLink=".." fragment="audit">Return to: {{ facilityInfoDTO?.facilityBusinessId }}</a>
+</div>

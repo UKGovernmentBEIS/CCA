@@ -79,6 +79,16 @@ const selectDeterminationSubmitted = createDescendingSelector(underlyingAgreemen
   [TaskItemStatus.ACCEPTED, TaskItemStatus.REJECTED].includes(overallDecisionStatus(payload)),
 );
 
+const selectReviewGroupDecisions = createDescendingSelector(
+  underlyingAgreementQuery.selectPayload,
+  (payload: UNAVariationReviewRequestTaskPayload) => payload.reviewGroupDecisions || {},
+);
+
+const selectFacilityReviewGroupDecisions = createDescendingSelector(
+  underlyingAgreementQuery.selectPayload,
+  (payload: UNAVariationReviewRequestTaskPayload) => payload.facilitiesReviewGroupDecisions || {},
+);
+
 export const underlyingAgreementReviewQuery = {
   selectSectorAssociationId,
   selectReviewAttachments,
@@ -90,4 +100,6 @@ export const underlyingAgreementReviewQuery = {
   selectDetermination,
   selectDeterminationSubmitted,
   selectFacilitiesItems,
+  selectReviewGroupDecisions,
+  selectFacilityReviewGroupDecisions,
 };

@@ -13,7 +13,6 @@ describe('SkipLinkFocusDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
-    standalone: true,
     template: '<govuk-skip-link></govuk-skip-link><router-outlet ccaSkipLinkFocus></router-outlet>',
     imports: [SkipLinkComponent, SkipLinkFocusDirective, RouterOutlet],
   })

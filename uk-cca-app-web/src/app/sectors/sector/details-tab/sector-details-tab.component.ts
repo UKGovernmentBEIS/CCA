@@ -15,7 +15,6 @@ import { SectorEnergyEprFactorPipe } from '../pipes/sector-energy-epr-factor.pip
 @Component({
   selector: 'cca-sector-details-tab',
   templateUrl: './sector-details-tab.component.html',
-  standalone: true,
   imports: [
     SummaryListComponent,
     SummaryListRowDirective,

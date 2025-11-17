@@ -21,7 +21,6 @@ import { toChangeStatusSummaryData } from './change-status-summary-data';
 @Component({
   selector: 'cca-change-status',
   templateUrl: './change-status.component.html',
-  standalone: true,
   imports: [
     SummaryComponent,
     WizardStepComponent,

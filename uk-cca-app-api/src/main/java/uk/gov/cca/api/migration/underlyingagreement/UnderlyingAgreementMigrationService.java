@@ -14,11 +14,13 @@ import uk.gov.cca.api.account.repository.TargetUnitAccountRepository;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataCreationDTO;
 import uk.gov.cca.api.facility.service.FacilityDataUpdateService;
 import uk.gov.cca.api.migration.MigrationEndpoint;
 import uk.gov.cca.api.migration.underlyingagreement.legacyattachment.LegacyFileAttachment;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
+import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementDocument;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementEntity;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
@@ -69,6 +71,8 @@ public class UnderlyingAgreementMigrationService {
                 .build();
 
         final Long persistentAccountId = migrationContainer.getPersistentAccountId();
+        final TargetUnitAccount targetUnitAccount = targetUnitAccountRepository.findById(persistentAccountId)
+                .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
         final FileInfoDTO underlyingAgreementDocument = migrationContainer.getFileDocument();
 
         try {
@@ -100,9 +104,9 @@ public class UnderlyingAgreementMigrationService {
 
             saveUnderlyingAgreement(migrationContainer, persistentAccountId);
 
-            updateAccountStatus(persistentAccountId);
+            updateAccountStatus(targetUnitAccount);
 
-            saveFacilityKeywords(persistentAccountId, unaContainer);
+            saveFacilityKeywords(targetUnitAccount, unaContainer);
 
         } catch (BusinessException e) {
             Arrays.asList(e.getData()).forEach(violation -> {
@@ -158,10 +162,16 @@ public class UnderlyingAgreementMigrationService {
     }
 
     private UnderlyingAgreementEntity createUnderlyingAgreement(UnderlyingAgreementMigrationContainer unaMigrationContainer, final Long pesistentAccountId) {
-        UnderlyingAgreementEntity entity = UnderlyingAgreementEntity.createUnderlyingAgreementEntity(unaMigrationContainer.getUnderlyingAgreementContainer(), pesistentAccountId);
-        entity.setConsolidationNumber(unaMigrationContainer.getConsolidationNumber());
-        entity.setActivationDate(unaMigrationContainer.getActivationDate());
-        entity.setFileDocumentUuid(unaMigrationContainer.getFileDocument().getUuid());
+        UnderlyingAgreementDocument unaDocument = UnderlyingAgreementDocument.createUnderlyingAgreementDocument(SchemeVersion.CCA_2);
+        unaDocument.setConsolidationNumber(unaMigrationContainer.getConsolidationNumber());
+        unaDocument.setActivationDate(unaMigrationContainer.getActivationDate());
+        unaDocument.setFileDocumentUuid(unaMigrationContainer.getFileDocument().getUuid());
+        
+        UnderlyingAgreementEntity entity = UnderlyingAgreementEntity.builder()
+        		.accountId(pesistentAccountId)
+        		.underlyingAgreementContainer(unaMigrationContainer.getUnderlyingAgreementContainer())
+        		.build();
+        entity.addUnderlyingAgreementDocument(unaDocument);
         return entity;
     }
 
@@ -214,15 +224,15 @@ public class UnderlyingAgreementMigrationService {
     private List<FacilityDataCreationDTO> buildFacilitiesData(Long accountId, Set<FacilityItem> facilities, Map<String, LocalDateTime> facilitiesCreatedDate) {
         return facilities.stream()
                 .map(facility -> {
-                    String facilityId = facility.getFacilityId();
+                    String facilityBusinessId = facility.getFacilityId();
                     String siteName = facility.getFacilityDetails().getName();
-                    AccountAddressDTO address = facility.getFacilityDetails().getFacilityAddress();
+	                FacilityAddressDTO address = facility.getFacilityDetails().getFacilityAddress();
                     return FacilityDataCreationDTO.builder()
                             .accountId(accountId)
-                            .facilityId(facilityId)
+                            .facilityBusinessId(facilityBusinessId)
                             .siteName(siteName)
                             .address(address)
-                            .createdDate(facilitiesCreatedDate.get(facilityId))
+                            .createdDate(facilitiesCreatedDate.get(facilityBusinessId))
                             .build();
                 })
                 .toList();
@@ -259,18 +269,17 @@ public class UnderlyingAgreementMigrationService {
         });
     }
 
-    private void updateAccountStatus(Long accountId) {
-        final TargetUnitAccount targetUnitAccount = targetUnitAccountRepository.findById(accountId)
-                .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
+    private void updateAccountStatus(TargetUnitAccount targetUnitAccount) {
         targetUnitAccount.setStatus(TargetUnitAccountStatus.LIVE);
     }
 
-    private void saveFacilityKeywords(Long accountId, UnderlyingAgreementContainer unaContainer) {
+    private void saveFacilityKeywords(TargetUnitAccount targetUnitAccount, UnderlyingAgreementContainer unaContainer) {
         // Create search keywords
-        final Map<String, String> searchKeywordsForAccount = underlyingAgreementService.createSearchKeywordsForAccount(unaContainer);
+        final Map<String, String> searchKeywordsForAccount = underlyingAgreementService
+                .createSearchKeywordsForAccount(targetUnitAccount.getName(), unaContainer);
 
         // Store facility IDs and postcodes as search keywords
-        accountSearchAdditionalKeywordService.storeKeywordsForAccount(accountId, searchKeywordsForAccount);
+        accountSearchAdditionalKeywordService.storeKeywordsForAccount(targetUnitAccount.getId(), searchKeywordsForAccount);
     }
 
     private String getData(UnderlyingAgreementViolation violation) {

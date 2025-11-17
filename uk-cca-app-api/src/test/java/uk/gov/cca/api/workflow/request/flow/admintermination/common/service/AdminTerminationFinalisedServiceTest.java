@@ -9,6 +9,7 @@ import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.service.TargetUnitAccountUpdateService;
 import uk.gov.cca.api.facility.service.FacilityDataUpdateService;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
@@ -58,6 +59,9 @@ class AdminTerminationFinalisedServiceTest {
 
     @Mock
     private WorkflowService workflowService;
+
+    @Mock
+    private UnderlyingAgreementService underlyingAgreementService;
     
     private static final String TERMINATE_REASON = "Workflow terminated by the system because the final decision is \"Terminate agreement\"";
 
@@ -120,7 +124,22 @@ class AdminTerminationFinalisedServiceTest {
                 .build();
         addResourcesToRequest(accountId, anotherRequest);
 
-        when(requestQueryService.findInProgressRequestsByAccount(accountId)).thenReturn(List.of(request, anotherRequest));
+        // Facility Audit request
+        Request facilityAuditRequest = Request.builder()
+                .id("facilityAuditRequestId")
+                .processInstanceId("facilityAuditProcessInstanceId")
+                .payload(AdminTerminationRequestPayload.builder()
+                        .regulatorAssignee(regulator)
+                        .adminTerminationFinalDecisionReasonDetails(reasonDetails)
+                        .adminTerminationFinalDecisionAttachments(attachments)
+                        .decisionNotification(ccaDecisionNotification)
+                        .build())
+                .type(RequestType.builder().code(CcaRequestType.FACILITY_AUDIT).build())
+                .status(RequestStatuses.IN_PROGRESS)
+                .build();
+        addResourcesToRequest(accountId, facilityAuditRequest);
+
+        when(requestQueryService.findInProgressRequestsByAccount(accountId)).thenReturn(List.of(request, anotherRequest, facilityAuditRequest));
 
         // Invoke the method under test
         finalisedService.terminateAccountAndOpenWorkflows(requestId);
@@ -128,6 +147,7 @@ class AdminTerminationFinalisedServiceTest {
         // Verify the interactions
         verify(requestService, times(1)).findRequestById(requestId);
         verify(targetUnitAccountUpdateService, times(1)).handleTargetUnitAccountTerminated(eq(accountId), any(LocalDateTime.class));
+        verify(underlyingAgreementService, times(1)).terminateActiveUnaDocuments(eq(accountId), any(LocalDateTime.class));
         verify(workflowService, times(1)).deleteProcessInstance("anotherProcessInstanceId", TERMINATE_REASON);
         verify(requestService, times(1)).addActionToRequest(eq(anotherRequest), any(), eq(CcaRequestActionType.REQUEST_TERMINATED), eq(regulator));
 
@@ -136,7 +156,7 @@ class AdminTerminationFinalisedServiceTest {
         verify(workflowService, never()).deleteProcessInstance(processInstanceId, TERMINATE_REASON);
 
         verify(facilityDataUpdateService, times(1)).terminateFacilities(eq(accountId), any(LocalDateTime.class));
-        verifyNoMoreInteractions(requestService, targetUnitAccountUpdateService, requestQueryService, workflowService);
+        verifyNoMoreInteractions(requestService, targetUnitAccountUpdateService, underlyingAgreementService, requestQueryService, workflowService);
 
     }
     

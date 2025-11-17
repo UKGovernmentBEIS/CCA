@@ -1,0 +1,132 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`AuditComponent should display correct view 1`] = `
+<cca-audit
+  activatedRoute={[Function ActivatedRouteStub]}
+  facilityAuditStore={[Function FacilityAuditStore]}
+  facilityInfoDTO={[Function Object]}
+  form={[Function FormGroup]}
+  router={[Function _Router]}
+>
+  <div
+    class="govuk-!-width-two-thirds"
+  >
+    <cca-wizard-step
+      caption="Change"
+      class="ng-untouched ng-pristine ng-valid"
+      data-testid="audit-form"
+      heading="Facility audit"
+      submittext="Save and continue"
+    >
+      <form
+        class="ng-untouched ng-pristine ng-valid"
+        novalidate=""
+      >
+        <netz-page-heading>
+          <span
+            class="govuk-caption-l"
+          >
+            Change
+          </span>
+          <h1
+            class="govuk-heading-l"
+          >
+            Facility audit
+          </h1>
+        </netz-page-heading>
+        <p
+          class="govuk-!-padding-bottom-4"
+        >
+           If a facility is marked for audit it will be shown in the relevant report.
+          <br />
+           To start the audit task, select 'Start an audit task' on the facility details page. 
+        </p>
+        <h2
+          class="govuk-heading-m"
+        >
+          Should this facility be audited?
+        </h2>
+        <div
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="auditRequired"
+          govuk-radio=""
+        >
+          <div
+            class="govuk-form-group"
+          >
+            <fieldset
+              class="govuk-fieldset"
+              govukfieldset=""
+              id="auditRequired"
+            >
+              <legend
+                class="govuk-fieldset__legend"
+                govuklegend=""
+                id="l.auditRequired"
+              >
+              </legend>
+              <div
+                class="govuk-radios"
+              >
+                <div
+                  class="govuk-radios__item"
+                >
+                  <input
+                    class="govuk-radios__input"
+                    id="auditRequired-option0"
+                    name="auditRequired"
+                    type="radio"
+                    value="true"
+                  />
+                  <label
+                    class="govuk-label govuk-radios__label"
+                    for="auditRequired-option0"
+                  >
+                     Yes, an audit is needed 
+                  </label>
+                </div>
+                <div
+                  class="govuk-radios__item"
+                >
+                  <input
+                    class="govuk-radios__input"
+                    id="auditRequired-option1"
+                    name="auditRequired"
+                    type="radio"
+                    value="false"
+                  />
+                  <label
+                    class="govuk-label govuk-radios__label"
+                    for="auditRequired-option1"
+                  >
+                     No, an audit is not needed 
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <button
+          class="govuk-button"
+          govukbutton=""
+          netzpendingbutton=""
+          type="submit"
+        >
+          Save and continue
+        </button>
+      </form>
+    </cca-wizard-step>
+    <hr
+      class="govuk-footer__section-break govuk-!-margin-bottom-3"
+    />
+    <a
+      class="govuk-link"
+      fragment="audit"
+      href="/#audit"
+      routerlink=".."
+    >
+      Return to: TEST-123
+    </a>
+  </div>
+</cca-audit>
+`;

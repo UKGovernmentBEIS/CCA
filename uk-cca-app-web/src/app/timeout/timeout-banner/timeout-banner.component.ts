@@ -21,7 +21,6 @@ import { TimeoutBannerService } from './timeout-banner.service';
   selector: 'cca-timeout-banner',
   templateUrl: './timeout-banner.component.html',
   styleUrl: './timeout-banner.component.css',
-  standalone: true,
   imports: [PageHeadingComponent, AsyncPipe, SecondsToMinutesPipe, ButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

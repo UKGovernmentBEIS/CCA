@@ -26,7 +26,6 @@ import { extractReviewProps } from '../../../utils';
 @Component({
   selector: 'cca-provide-evidence',
   templateUrl: './provide-evidence.component.html',
-  standalone: true,
   imports: [MultipleFileInputComponent, ReactiveFormsModule, WizardStepComponent, ReturnToTaskOrActionPageComponent],
   providers: [ProvideEvidenceFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,

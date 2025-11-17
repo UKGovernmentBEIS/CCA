@@ -16,7 +16,6 @@ import { NotificationBannerComponent } from '@netz/govuk-components';
     </govuk-notification-banner>
     <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true">Return to: Dashboard</a>
   `,
-  standalone: true,
   imports: [NotificationBannerComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

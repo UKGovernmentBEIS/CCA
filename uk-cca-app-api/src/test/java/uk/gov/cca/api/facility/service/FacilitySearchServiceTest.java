@@ -41,14 +41,14 @@ class FacilitySearchServiceTest {
     @Test
     void searchFacilities() {
         final Long accountId = 1L;
-        final String facilityId = "SA-F00001";
+        final String facilityBusinessId = "SA-F00001";
         final String siteName = "site1";
         final String term = "SA-";
         final int pageNum = 0;
         final int pageSize = 30;
 
         final FacilitySearchResultInfoDTO facilitySearchResultInfoDTO =
-                new FacilitySearchResultInfoDTO(1L, facilityId, siteName, null, FacilityDataStatus.LIVE);
+                new FacilitySearchResultInfoDTO(1L, facilityBusinessId, siteName, null, FacilityDataStatus.LIVE);
 
         final FacilitySearchCriteria facilitySearchCriteria = FacilitySearchCriteria.builder()
                 .term(term)
@@ -56,7 +56,8 @@ class FacilitySearchServiceTest {
                 .build();
 
         final FacilityData facilityData = FacilityData.builder()
-                .facilityId(facilityId)
+        		.id(1L)
+                .facilityBusinessId(facilityBusinessId)
                 .siteName(siteName)
                 .build();
 
@@ -88,6 +89,6 @@ class FacilitySearchServiceTest {
         return PageRequest.of(
                 facilitySearchCriteria.getPaging().getPageNumber(),
                 facilitySearchCriteria.getPaging().getPageSize(),
-                Sort.by("facilityId"));
+                Sort.by("facilityBusinessId"));
     }
 }

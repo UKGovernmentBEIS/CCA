@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import uk.gov.cca.api.account.domain.dto.CompanyProfileInfo;
 import uk.gov.cca.api.account.domain.dto.CompanyProfileDTO;
-import uk.gov.cca.api.account.transform.CompanyInformationMapper;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.netz.api.companieshouse.CompanyInformationService;
 import uk.gov.netz.api.companieshouse.SicCode;
@@ -40,9 +39,6 @@ class CompanyInformationControllerTest {
 
     @Mock
     private CompanyInformationService companyInformationService;
-    
-    @Mock
-    private CompanyInformationMapper companyInformationMapper;
 
     private MockMvc mockMvc;
 
@@ -88,4 +84,35 @@ class CompanyInformationControllerTest {
 
         verify(companyInformationService, times(1)).getCompanyProfile(registrationNumber, CompanyProfileInfo.class);
     }
+
+	@Test
+	void getCompanyProfileByRegistrationNumber_sic_codes_null() throws Exception {
+		String registrationNumber = "12345678";
+		CompanyProfileInfo company = CompanyProfileInfo.builder()
+				.name("name")
+				.registrationNumber(registrationNumber)
+				.build();
+		CompanyProfileDTO expectedResponseDTO = CompanyProfileDTO.builder()
+				.name("name")
+				.sicCodes(List.of())
+				.registrationNumber(registrationNumber)
+				.build();
+
+		when(companyInformationService.getCompanyProfile(registrationNumber, CompanyProfileInfo.class))
+				.thenReturn(company);
+
+		MvcResult result = mockMvc
+				.perform(MockMvcRequestBuilders.get(COMPANY_INFORMATION_CONTROLLER_PATH + "/" + registrationNumber))
+				.andReturn();
+
+		MockHttpServletResponse response = result.getResponse();
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+
+		CompanyProfileDTO actualResponseDTO =
+				mapper.readValue(result.getResponse().getContentAsString(), CompanyProfileDTO.class);
+
+		assertEquals(expectedResponseDTO, actualResponseDTO);
+
+		verify(companyInformationService, times(1)).getCompanyProfile(registrationNumber, CompanyProfileInfo.class);
+	}
 }

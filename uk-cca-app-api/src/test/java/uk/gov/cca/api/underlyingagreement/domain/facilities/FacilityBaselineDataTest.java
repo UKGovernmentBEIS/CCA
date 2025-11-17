@@ -31,6 +31,7 @@ class FacilityBaselineDataTest {
                 .isTwelveMonths(Boolean.TRUE)
                 .baselineDate(LocalDate.of(2022, 1, 1))
                 .energy(BigDecimal.valueOf(10.999))
+                .usedReportingMechanism(true)
                 .energyCarbonFactor(BigDecimal.TEN)
                 .build();
         final Set<ConstraintViolation<FacilityBaselineData>> violations = validator.validate(data);
@@ -45,6 +46,7 @@ class FacilityBaselineDataTest {
                 .baselineDate(LocalDate.of(2021, 1, 1))
                 .explanation("My explanation")
                 .energy(BigDecimal.TEN)
+                .usedReportingMechanism(false)
                 .energyCarbonFactor(BigDecimal.TEN)
                 .build();
         final Set<ConstraintViolation<FacilityBaselineData>> violations = validator.validate(data);

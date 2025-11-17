@@ -7,7 +7,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'netz-breadcrumbs',
-  standalone: true,
   template: `
     @if (showBreadcrumb()) {
       <nav

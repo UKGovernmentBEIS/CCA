@@ -37,7 +37,6 @@ describe('CountyAddressInputComponent', () => {
   let hostComponent: TestComponent;
 
   @Component({
-    standalone: true,
     template: `
       <form [formGroup]="form">
         <fieldset govukFieldset>

@@ -12,7 +12,6 @@ import { PanelComponent } from '@netz/govuk-components';
       <a routerLink="/dashboard" class="govuk-link">Return to: Dashboard</a>
     </div>
   </div> `,
-  standalone: true,
   imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

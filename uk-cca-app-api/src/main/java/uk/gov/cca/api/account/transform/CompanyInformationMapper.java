@@ -20,6 +20,9 @@ public interface CompanyInformationMapper {
 	
 	@Named("sicCodes")
     default List<String> mapSicCodes(List<SicCode> sicCodes) {
+		if (sicCodes == null) {
+			return List.of();
+		}
         return sicCodes.stream().map(SicCode::getCode).toList();
     }
 }

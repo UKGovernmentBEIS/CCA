@@ -17,7 +17,6 @@ import { toReceivedAmountSummaryData } from './received-amount-summary';
     <cca-summary [data]="data" />
     <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
   `,
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent, ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

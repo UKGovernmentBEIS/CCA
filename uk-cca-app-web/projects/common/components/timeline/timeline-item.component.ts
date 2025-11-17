@@ -8,7 +8,6 @@ import { RequestActionInfoDTO } from 'cca-api';
 
 @Component({
   selector: 'netz-timeline-item',
-  standalone: true,
   template: `
     <h3 class="govuk-heading-s govuk-!-margin-bottom-1">{{ action | itemActionHeader }}</h3>
     <p class="govuk-!-margin-bottom-1">{{ action.creationDate | govukDate: 'datetime' }}</p>

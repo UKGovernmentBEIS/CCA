@@ -11,7 +11,6 @@ import { SendForPeerReviewComponent } from '@requests/common';
       returnToText="Return to: Review application for underlying agreement"
     />
   `,
-  standalone: true,
   imports: [SendForPeerReviewComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

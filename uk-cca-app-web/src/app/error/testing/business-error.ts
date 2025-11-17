@@ -12,7 +12,6 @@ export const expectBusinessErrorToBe = async (error: BusinessError) => {
 };
 
 @Component({
-  standalone: true,
   selector: 'cca-business-error',
   template: '',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -17,7 +17,6 @@ import { ActiveSectorUserStore } from '../active-sector-user.store';
 @Component({
   selector: 'cca-sector-user-details',
   templateUrl: './sector-user-details.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     SummaryListComponent,

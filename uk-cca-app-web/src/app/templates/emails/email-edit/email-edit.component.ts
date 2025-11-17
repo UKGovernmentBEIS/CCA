@@ -18,7 +18,6 @@ import { toEmailTemplateSummary } from '../email-template-summary';
 @Component({
   selector: 'cca-email-edit',
   templateUrl: './email-edit.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     PageHeadingComponent,

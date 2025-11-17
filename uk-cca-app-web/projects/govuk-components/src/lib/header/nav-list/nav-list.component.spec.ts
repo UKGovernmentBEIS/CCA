@@ -7,7 +7,6 @@ import { HeaderNavListComponent } from './nav-list.component';
 
 describe('HeaderNavListComponent', () => {
   @Component({
-    standalone: true,
     imports: [HeaderNavListComponent],
     template: `
       <govuk-header-nav-list

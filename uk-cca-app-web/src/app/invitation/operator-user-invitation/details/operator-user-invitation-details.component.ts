@@ -20,7 +20,6 @@ import { OperatorUserInvitationStore } from '../store';
 @Component({
   selector: 'cca-operator-user-invitation',
   templateUrl: './operator-user-invitation-details.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     ErrorSummaryComponent,

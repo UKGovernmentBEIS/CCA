@@ -18,7 +18,6 @@ import diff from 'html-diff-ts';
   selector: 'cca-highlight-diff',
   templateUrl: './highlight-diff.component.html',
   styleUrl: './highlight-diff.component.css',
-  standalone: true,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

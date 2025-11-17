@@ -13,11 +13,11 @@ import { OtherFuel } from './otherFuel';
 
 export interface ActualTargetPeriodPerformance {
   actualTuIdentifier: string;
-  actualThroughput: number;
-  energyData?: Record<string, number>;
+  actualThroughput: string;
+  energyData?: Record<string, string>;
   carbonFactors?: OtherFuel[];
-  tpEnergy: number;
-  tpChpDeliveredElectricity: number;
-  reportingThroughput: number;
-  adjustedThroughput?: number;
+  tpEnergy: string;
+  tpChpDeliveredElectricity: string;
+  reportingThroughput: string;
+  adjustedThroughput?: string;
 }

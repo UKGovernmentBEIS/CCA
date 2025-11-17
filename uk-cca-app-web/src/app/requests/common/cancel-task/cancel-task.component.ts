@@ -14,7 +14,6 @@ import { UnderlyingAgreementVariationCancelTaskComponent } from './underlying-ag
 @Component({
   selector: 'cca-cancel-task',
   templateUrl: './cancel-task.component.html',
-  standalone: true,
   imports: [
     UnderlyingAgreementCancelTaskComponent,
     CancelComponent,

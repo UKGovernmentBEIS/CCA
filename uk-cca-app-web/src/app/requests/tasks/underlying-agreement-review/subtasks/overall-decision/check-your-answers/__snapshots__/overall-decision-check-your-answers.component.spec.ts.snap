@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`CheckYourAnswersComponent should match snapshot for OverallDecisionCheckYourAnswersComponent 1`] = `
 <div
@@ -41,7 +41,9 @@ exports[`CheckYourAnswersComponent should match snapshot for OverallDecisionChec
             
             
             
-             Reject 
+            <span>
+              Reject
+            </span>
             
             
             
@@ -78,7 +80,9 @@ exports[`CheckYourAnswersComponent should match snapshot for OverallDecisionChec
             
             
             
-             asdasdasdasdasd 
+            <span>
+              asdasdasdasdasd
+            </span>
             
             
             
@@ -115,7 +119,9 @@ exports[`CheckYourAnswersComponent should match snapshot for OverallDecisionChec
             
             
             
-             adqwdasd 
+            <span>
+              adqwdasd
+            </span>
             
             
             

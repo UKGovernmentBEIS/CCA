@@ -18,6 +18,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
+      participatingSchemeVersions: ['CCA_2'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -74,6 +75,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
+      participatingSchemeVersions: ['CCA_2'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -149,7 +151,33 @@ export const mockUnderlyingAgreementVariationReview: UnderlyingAgreementVariatio
   },
   facilities,
   targetPeriod5Details: {
-    exist: false,
+    exist: true,
+    details: {
+      targetComposition: {
+        calculatorFile: '1b2ae8fe-4322-4b8c-9b2c-03d77b5a8fbb',
+        measurementType: 'ENERGY_KWH',
+        agreementCompositionType: 'RELATIVE',
+        isTargetUnitThroughputMeasured: true,
+        throughputUnit: 'GJ',
+        conversionFactor: 1,
+        conversionEvidences: ['1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb'],
+      },
+      baselineData: {
+        isTwelveMonths: false,
+        baselineDate: '2020-12-12T00:00:00.000Z',
+        explanation: 'test',
+        greenfieldEvidences: ['f8dff40f-3fb7-4368-8723-244661fb686f'],
+        energy: 100,
+        usedReportingMechanism: true,
+        throughput: 10,
+        energyCarbonFactor: 1,
+        performance: 10,
+      },
+      targets: {
+        improvement: 0.1,
+        target: 9,
+      },
+    },
   },
   targetPeriod6Details: {
     targetComposition: {
@@ -240,7 +268,7 @@ export const mockUNAVariationReviewRequestTaskPayload: UNAVariationReviewRequest
     sectorAssociationDetails: {
       subsectorAssociationName: 'SUBSECTOR_2',
       schemeDataMap: {
-        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH' },
+        ['CCA_2']: { sectorMeasurementType: 'ENERGY_KWH', sectorThroughputUnit: 'kWh' },
       },
     },
   },

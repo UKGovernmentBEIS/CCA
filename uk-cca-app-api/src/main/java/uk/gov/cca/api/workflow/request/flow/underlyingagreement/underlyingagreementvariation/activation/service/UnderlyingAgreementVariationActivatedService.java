@@ -3,9 +3,10 @@ package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagree
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
-import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
+
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountUpdateDTO;
 import uk.gov.cca.api.account.service.TargetUnitAccountUpdateService;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataCreationDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataUpdateDTO;
@@ -19,6 +20,7 @@ import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.UnderlyingAgreementFacilityCertificationTransferService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.transform.UnderlyingAgreementAccountReferenceDataMapper;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationFacilityReviewDecision;
@@ -77,7 +79,7 @@ public class UnderlyingAgreementVariationActivatedService {
         saveFacilityData(accountId, requestPayload.getFacilitiesReviewGroupDecisions(), proposedUnderlyingAgreement.getFacilities());
 
         // Save search keywords
-        saveKeywords(accountId, unaContainerFinal);
+        saveKeywords(accountId, requestPayload.getUnderlyingAgreement().getUnderlyingAgreementTargetUnitDetails(), unaContainerFinal);
 
         final TargetUnitAccountUpdateDTO targetUnitAccountUpdateDTO = ACCOUNT_MAPPER
                 .toTargetUnitAccountUpdateDTO(requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails());
@@ -96,9 +98,11 @@ public class UnderlyingAgreementVariationActivatedService {
         updateFacilityDataForExistingFacilities(facilities);
     }
 
-    private void saveKeywords(final Long accountId, final UnderlyingAgreementContainer unaContainer) {
+    private void saveKeywords(final Long accountId, final UnderlyingAgreementTargetUnitDetails underlyingAgreementTargetUnitDetails,
+                              final UnderlyingAgreementContainer unaContainer) {
         // Create search keywords
-        final Map<String, String> searchKeywordsForAccount = underlyingAgreementService.createSearchKeywordsForAccount(unaContainer);
+        final Map<String, String> searchKeywordsForAccount = underlyingAgreementService
+                .createSearchKeywordsForAccount(underlyingAgreementTargetUnitDetails.getOperatorName(), unaContainer);
 
         // Save new search keywords
         accountSearchAdditionalKeywordService.storeKeywordsForAccount(accountId, searchKeywordsForAccount);
@@ -138,22 +142,22 @@ public class UnderlyingAgreementVariationActivatedService {
      * Build FacilityData for the new facilities
      *
      * @param accountId                    account id
-     * @param chargeStartDatePerFacilityId map of NEW facilities with/without changeStartDate
+     * @param chargeStartDatePerFacilityItem map of NEW facilities with/without changeStartDate
      * @return List of FacilityDataCreationDTO
      */
-    private List<FacilityDataCreationDTO> buildFacilitiesData(Long accountId, Map<FacilityItem, LocalDate> chargeStartDatePerFacilityId) {
+    private List<FacilityDataCreationDTO> buildFacilitiesData(Long accountId, Map<FacilityItem, LocalDate> chargeStartDatePerFacilityItem) {
         LocalDateTime createdDate = LocalDateTime.now();
-        return chargeStartDatePerFacilityId.entrySet().stream()
+        return chargeStartDatePerFacilityItem.entrySet().stream()
                 .map(entry -> {
                     FacilityItem facility = entry.getKey();
                     LocalDate chargeStartDate = entry.getValue();
-                    String facilityId = facility.getFacilityId();
+                    String facilityBusinessId = facility.getFacilityId();
                     String siteName = facility.getFacilityDetails().getName();
-                    AccountAddressDTO facilityAddress = facility.getFacilityDetails().getFacilityAddress();
+	                FacilityAddressDTO facilityAddress = facility.getFacilityDetails().getFacilityAddress();
 
                     return FacilityDataCreationDTO.builder()
                             .accountId(accountId)
-                            .facilityId(facilityId)
+                            .facilityBusinessId(facilityBusinessId)
                             .siteName(siteName)
                             .createdDate(createdDate)
                             .chargeStartDate(chargeStartDate)
@@ -172,7 +176,7 @@ public class UnderlyingAgreementVariationActivatedService {
      */
     private FacilityDataUpdateDTO buildFacilitiesData(Facility facility) {
         return FacilityDataUpdateDTO.builder()
-                .facilityId(facility.getFacilityItem().getFacilityId())
+                .facilityBusinessId(facility.getFacilityItem().getFacilityId())
                 .siteName(facility.getFacilityItem().getFacilityDetails().getName())
                 .facilityAddress(facility.getFacilityItem().getFacilityDetails().getFacilityAddress())
                 .closedDate(facility.getExcludedDate())

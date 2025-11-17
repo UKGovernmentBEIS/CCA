@@ -22,7 +22,6 @@ import {
 @Component({
   selector: 'cca-edit-sector-association-contact-details',
   templateUrl: './edit-sector-association-contact-details.component.html',
-  standalone: true,
   imports: [
     RouterLink,
     PageHeadingComponent,

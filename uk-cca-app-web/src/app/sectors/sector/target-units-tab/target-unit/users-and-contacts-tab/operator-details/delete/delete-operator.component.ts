@@ -16,7 +16,6 @@ import { ActiveOperatorStore } from '../active-operator.store';
 @Component({
   selector: 'cca-delete-operator',
   templateUrl: './delete-operator.component.html',
-  standalone: true,
   imports: [
     WarningTextComponent,
     PanelComponent,

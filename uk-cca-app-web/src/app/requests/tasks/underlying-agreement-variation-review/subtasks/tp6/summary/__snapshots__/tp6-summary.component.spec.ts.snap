@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMeasurementType and no Measuremenet 1`] = `
 <div
@@ -90,7 +90,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 Energy (kWh) 
+                <span>
+                  Energy (kWh)
+                </span>
                 
                 
                 
@@ -127,7 +129,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 Energy (kWh) 
+                <span>
+                  Energy (kWh)
+                </span>
                 
                 
                 
@@ -164,7 +168,76 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 Relative 
+                <span>
+                  Relative
+                </span>
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                The umbrella agreement throughput has a unit of
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                <span>
+                  kWh
+                </span>
+                
+                
+                
+                
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Is the target unit’s throughput measured in units that differ from those of the umbrella agreement?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                <span>
+                  Yes
+                </span>
                 
                 
                 
@@ -201,11 +274,100 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 GJ 
+                <span>
+                  GJ
+                </span>
                 
                 
                 
                 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Conversion factor
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                <span>
+                  1
+                </span>
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Upload evidence
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <span>
+                  No files provided
+                </span>
+                
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
               </dd>
               
               
@@ -242,7 +404,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 No 
+                <span>
+                  No
+                </span>
                 
                 
                 
@@ -279,7 +443,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 12 Dec 2020 
+                <span>
+                  12 Dec 2020
+                </span>
                 
                 
                 
@@ -316,7 +482,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 test 
+                <span>
+                  test
+                </span>
                 
                 
                 
@@ -390,7 +558,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 100 
+                <span>
+                  100
+                </span>
                 
                 
                 
@@ -418,7 +588,7 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
+                Must the Special Reporting Methodology be applied for this facility?
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -427,7 +597,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 Yes 
+                <span>
+                  Yes
+                </span>
                 
                 
                 
@@ -464,7 +636,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 10 
+                <span>
+                  10
+                </span>
                 
                 
                 
@@ -501,7 +675,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 10 
+                <span>
+                  10
+                </span>
                 
                 
                 
@@ -538,7 +714,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 1 
+                <span>
+                  1
+                </span>
                 
                 
                 
@@ -590,7 +768,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 0.1 
+                <span>
+                  0.1
+                </span>
                 
                 
                 
@@ -627,7 +807,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 9 
+                <span>
+                  9
+                </span>
                 
                 
                 
@@ -679,7 +861,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 Accepted 
+                <span>
+                  Accepted
+                </span>
                 
                 
                 
@@ -716,7 +900,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 Tp6 notes 
+                <span>
+                  Tp6 notes
+                </span>
                 
                 
                 
@@ -850,7 +1036,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 Energy (kWh) 
+                <span>
+                  Energy (kWh)
+                </span>
                 
                 
                 
@@ -887,7 +1075,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 Energy (kWh) 
+                <span>
+                  Energy (kWh)
+                </span>
                 
                 
                 
@@ -924,7 +1114,76 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 Relative 
+                <span>
+                  Relative
+                </span>
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                The umbrella agreement throughput has a unit of
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                <span>
+                  kWh
+                </span>
+                
+                
+                
+                
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Is the target unit’s throughput measured in units that differ from those of the umbrella agreement?
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                <span>
+                  Yes
+                </span>
                 
                 
                 
@@ -961,11 +1220,100 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 GJ 
+                <span>
+                  GJ
+                </span>
                 
                 
                 
                 
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Conversion factor
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                
+                
+                
+                <span>
+                  1
+                </span>
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
+              </dd>
+              
+              
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Upload evidence
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <span>
+                  No files provided
+                </span>
+                
+                
+                
+                
+                
+              </dd>
+              <dd
+                class="govuk-summary-list__actions"
+                govuksummarylistrowactions=""
+              >
+                <a
+                  class="govuk-link"
+                  href="/target-composition?change=true"
+                >
+                  Change
+                </a>
               </dd>
               
               
@@ -1002,7 +1350,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 No 
+                <span>
+                  No
+                </span>
                 
                 
                 
@@ -1039,7 +1389,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 12 Dec 2020 
+                <span>
+                  12 Dec 2020
+                </span>
                 
                 
                 
@@ -1076,7 +1428,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 test 
+                <span>
+                  test
+                </span>
                 
                 
                 
@@ -1150,7 +1504,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 100 
+                <span>
+                  100
+                </span>
                 
                 
                 
@@ -1178,7 +1534,7 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
+                Must the Special Reporting Methodology be applied for this facility?
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -1187,7 +1543,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 Yes 
+                <span>
+                  Yes
+                </span>
                 
                 
                 
@@ -1224,7 +1582,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 10 
+                <span>
+                  10
+                </span>
                 
                 
                 
@@ -1261,7 +1621,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 10 
+                <span>
+                  10
+                </span>
                 
                 
                 
@@ -1298,7 +1660,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 1 
+                <span>
+                  1
+                </span>
                 
                 
                 
@@ -1350,7 +1714,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 0.1 
+                <span>
+                  0.1
+                </span>
                 
                 
                 
@@ -1387,7 +1753,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 9 
+                <span>
+                  9
+                </span>
                 
                 
                 
@@ -1439,7 +1807,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 Accepted 
+                <span>
+                  Accepted
+                </span>
                 
                 
                 
@@ -1476,7 +1846,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 
                 
                 
-                 Tp6 notes 
+                <span>
+                  Tp6 notes
+                </span>
                 
                 
                 
@@ -1590,7 +1962,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               Energy (kWh) 
+              <span>
+                Energy (kWh)
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1614,7 +1988,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               Energy (kWh) 
+              <span>
+                Energy (kWh)
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1638,7 +2014,51 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               Relative 
+              <span>
+                Relative
+              </span>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/target-composition?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              The umbrella agreement throughput has a unit of
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <span>
+                kWh
+              </span>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Is the target unit’s throughput measured in units that differ from those of the umbrella agreement?
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <span>
+                Yes
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1662,7 +2082,71 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               GJ 
+              <span>
+                GJ
+              </span>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/target-composition?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Conversion factor
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <span>
+                1
+              </span>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/target-composition?change=true"
+              >
+                Change
+              </a>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+          >
+            <dt
+              class="govuk-summary-list__key"
+            >
+              Upload evidence
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+            >
+              <span>
+                No files provided
+              </span>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+            >
+              <a
+                class="govuk-link"
+                href="/target-composition?change=true"
+              >
+                Change
+              </a>
             </dd>
           </div>
         </dl>
@@ -1685,7 +2169,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               No 
+              <span>
+                No
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1709,7 +2195,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               12 Dec 2020 
+              <span>
+                12 Dec 2020
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1733,7 +2221,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="pre-line govuk-summary-list__value"
             >
-               test 
+              <span>
+                test
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1783,7 +2273,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               100 
+              <span>
+                100
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1802,12 +2294,14 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dt
               class="govuk-summary-list__key"
             >
-              Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
+              Must the Special Reporting Methodology be applied for this facility?
             </dt>
             <dd
               class="govuk-summary-list__value"
             >
-               Yes 
+              <span>
+                Yes
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1831,7 +2325,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               10 
+              <span>
+                10
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1855,7 +2351,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               10 
+              <span>
+                10
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1879,7 +2377,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               1 
+              <span>
+                1
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1912,7 +2412,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               0.1 
+              <span>
+                0.1
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1936,7 +2438,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               9 
+              <span>
+                9
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1969,7 +2473,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               Accepted 
+              <span>
+                Accepted
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -1993,7 +2499,9 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dd
               class="govuk-summary-list__value"
             >
-               Tp6 notes 
+              <span>
+                Tp6 notes
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"

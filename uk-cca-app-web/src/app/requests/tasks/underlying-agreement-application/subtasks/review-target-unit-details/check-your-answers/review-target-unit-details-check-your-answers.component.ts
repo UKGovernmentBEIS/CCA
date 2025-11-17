@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
@@ -24,15 +25,15 @@ import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } f
   template: `
     <div>
       <netz-page-heading caption="Change">Check your answers</netz-page-heading>
-      <cca-summary [data]="summaryData" />
+      <cca-summary [data]="summaryData()" />
       <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
     </div>
 
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [
+    ReactiveFormsModule,
     PageHeadingComponent,
     SummaryComponent,
     ButtonDirective,
@@ -47,9 +48,11 @@ export class ReviewTargetUnitDetailsCheckYourAnswersComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  protected readonly summaryData = toReviewTargetUnitDetailsSummaryData(
-    this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+  protected readonly summaryData = computed(() =>
+    toReviewTargetUnitDetailsSummaryData(
+      this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
+      this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    ),
   );
 
   onSubmit() {

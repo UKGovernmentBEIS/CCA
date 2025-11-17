@@ -14,8 +14,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class FacilityCertificationVO {
-    private Long id;
-    private String facilityId;
+    private Long facilityId;
+    private String facilityBusinessId;
     private Long certificationPeriodId;
     private FacilityCertificationStatus certificationStatus;
     private LocalDate startDate;

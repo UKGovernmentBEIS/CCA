@@ -1,17 +1,19 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
+import { mockClass } from '@netz/common/testing';
 import { CountryService } from '@shared/services';
-
-import { CountryServiceStub } from 'src/testing/country.service.stub';
 
 import { PhoneNumberPipe } from './phone-number.pipe';
 
 describe('PhoneNumberPipe', () => {
   let pipe: PhoneNumberPipe;
+
   const changeDetectorSpy = {
     markForCheck: jest.fn(),
   };
+
+  const countryService = mockClass(CountryService);
 
   function transformCode(callingCode: string): string {
     pipe.transform(callingCode);
@@ -25,7 +27,7 @@ describe('PhoneNumberPipe', () => {
     TestBed.configureTestingModule({
       declarations: [PhoneNumberPipe],
       providers: [
-        { provide: CountryService, useClass: CountryServiceStub },
+        { provide: CountryService, useValue: countryService },
         { provide: ChangeDetectorRef, useValue: changeDetectorSpy },
       ],
     });

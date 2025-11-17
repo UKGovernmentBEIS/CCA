@@ -136,6 +136,12 @@ const selectFacilityBaselineData = (facilityIndex: number) =>
     (una) => una.facilities[facilityIndex]?.cca3BaselineAndTargets?.baselineData,
   );
 
+const selectFacilityBaselineEnergyConsumption = (facilityIndex: number) =>
+  createDescendingSelector(
+    selectUnderlyingAgreement,
+    (una) => una.facilities[facilityIndex]?.cca3BaselineAndTargets?.facilityBaselineEnergyConsumption,
+  );
+
 const selectFacilityTargets = (facilityIndex: number) =>
   createDescendingSelector(
     selectUnderlyingAgreement,
@@ -164,5 +170,6 @@ export const underlyingAgreementQuery = {
   selectTargetComposition,
   selectFacilityTargetComposition,
   selectFacilityBaselineData,
+  selectFacilityBaselineEnergyConsumption,
   selectFacilityTargets,
 };

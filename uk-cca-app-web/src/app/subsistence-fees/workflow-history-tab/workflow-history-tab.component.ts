@@ -17,7 +17,6 @@ const DEFAULT_PAGE_SIZE = 10;
 @Component({
   selector: 'cca-workflow-history-tab',
   templateUrl: './workflow-history-tab.component.html',
-  standalone: true,
   imports: [
     RouterModule,
     RouterLink,
@@ -69,7 +68,7 @@ export class WorkflowHistoryTabComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.state().pageSize) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   private handleQueryParamsNavigation(pagination: Partial<{ page: number; pageSize: number }>) {

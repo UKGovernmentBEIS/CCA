@@ -71,4 +71,20 @@ public class CcaBpmnProcessConstants {
     public final String FACILITY_CERTIFICATION_PERIOD = "facilityCertificationPeriod";
     public final String FACILITY_CERTIFICATION_ACCOUNT_STATE = "facilityCertificationAccountState";
     public final String FACILITY_CERTIFICATION_RUN_REQUEST_BUSINESS_KEY = "facilityCertificationRunRequestBusinessKey";
+
+    // Facility Audit
+    public static final String FACILITY_AUDIT_OUTCOME = "facilityAuditOutcome";
+    public static final String IS_FURTHER_AUDIT_NEEDED = "isFurtherAuditNeeded";
+    public static final String IS_CORRECTIVE_ACTIONS_NEEDED = "isCorrectiveActionsNeeded";
+    public static final String TIMER_RECALCULATED = "timerRecalculated";
+    public static final String FACILITY_AUDIT_EXPIRATION_DATE = CcaRequestExpirationKey.FACILITY_AUDIT + EXPIRATION_DATE;
+
+    // CCA3 Existing Facilities Migration
+    public final String CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_STATE = "cca3ExistingFacilitiesMigrationAccountState";
+    public final String CCA3_EXISTING_FACILITIES_MIGRATION_RUN_REQUEST_BUSINESS_KEY = "cca3ExistingFacilitiesMigrationRunRequestBusinessKey";
+    public final String CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_AGREEMENT_OUTCOME = "cca3ExistingFacilitiesMigrationAccountProcessingAgreementOutcome";
+
+    // CCA2 Extension Notice
+    public final String CCA2_EXTENSION_NOTICE_ACCOUNT_STATE = "cca2ExtensionNoticeAccountState";
+    public final String CCA2_EXTENSION_NOTICE_RUN_REQUEST_BUSINESS_KEY = "cca2ExtensionNoticeRunRequestBusinessKey";
 }

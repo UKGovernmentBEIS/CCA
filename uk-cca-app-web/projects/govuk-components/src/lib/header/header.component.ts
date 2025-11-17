@@ -4,7 +4,6 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'govuk-header',
   templateUrl: './header.component.html',
-  standalone: true,
   imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

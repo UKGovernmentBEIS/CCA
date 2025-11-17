@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 @Component({
   selector: 'cca-utility-panel',
   template: `
-    <div class="utility-panel-container">
-      <div class="govuk-grid-row govuk-!-margin-bottom-4 govuk-!-margin-top-0 utility-panel-header">
+    <div class="utility-panel-container" [class.background]="isFullBackground()">
+      <div class="govuk-grid-row govuk-!-margin-bottom-4 govuk-!-margin-top-0 utility-panel-header background">
         {{ heading() }}
       </div>
       <ng-content />
@@ -17,14 +17,17 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     }
 
     .utility-panel-header {
-      background: var(--govuk-light-grey);
       padding: var(--govuk-spacing-4);
       font-weight: bold;
     }
+
+    .background {
+      background: var(--govuk-light-grey);
+    }
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UtilityPanelComponent {
   readonly heading = input<string>();
+  readonly isFullBackground = input(false);
 }

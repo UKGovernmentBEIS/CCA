@@ -3,6 +3,7 @@ package uk.gov.cca.api.account.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
+import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
@@ -33,10 +34,22 @@ public class TargetUnitAccountQueryService implements TargetUnitAuthorityInfoPro
             .collect(Collectors.toList());
     }
 
+    public List<TargetUnitAccountBusinessInfoDTO> getActiveAccounts() {
+        return repository.findAllByStatus(TargetUnitAccountStatus.LIVE).stream()
+                .map(targetUnitAccountMapper::toTargetUnitAccountBusinessInfoDTO)
+                .toList();
+    }
+
     public Set<Long> getSectorAssociationIdsByAccountIds(List<Long> accountIds) {
         return getAccountsByIds(accountIds).stream()
                 .map(TargetUnitAccountDTO::getSectorAssociationId)
                 .collect(Collectors.toSet());
+    }
+
+    public List<TargetUnitAccountBusinessInfoDTO> getActiveAccountsByBusinessIds(Set<String> businessIds) {
+        return repository.findAllByBusinessIdInAndStatus(businessIds, TargetUnitAccountStatus.LIVE).stream()
+                .map(targetUnitAccountMapper::toTargetUnitAccountBusinessInfoDTO)
+                .toList();
     }
 
     public List<TargetUnitAccount> getAccounts(List<Long> accountIds) {

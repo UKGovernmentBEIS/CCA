@@ -26,7 +26,6 @@ import { SiteContactsComponent } from './site-contacts-tab/site-contacts.compone
       </ng-template>
     </govuk-tabs>
   `,
-  standalone: true,
   imports: [
     PageHeadingComponent,
     TabsComponent,

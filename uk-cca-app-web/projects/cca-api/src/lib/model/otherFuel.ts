@@ -12,6 +12,6 @@
 
 export interface OtherFuel {
   name?: string;
-  conversionFactor: number;
-  consumption: number;
+  conversionFactor: string;
+  consumption: string;
 }

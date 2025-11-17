@@ -39,7 +39,19 @@ describe('Summary Component', () => {
     summaryData.forEach((section) => {
       section.data.forEach((item) => {
         if (item.preline) {
-          expect(screen.getByText(item.value[0]).classList.contains('pre-line')).toBeTruthy();
+          expect(
+            screen.getByText(item.value[0]).closest('[govuksummarylistrowvalue]').classList.contains('pre-line'),
+          ).toBeTruthy();
+        }
+      });
+    });
+  });
+
+  it('should display diff styles', async () => {
+    summaryData.forEach((section) => {
+      section.data.forEach((item) => {
+        if (item.fieldDiff) {
+          expect(screen.getByText(item.value[0]).classList.contains('field-diff')).toBeTruthy();
         }
       });
     });

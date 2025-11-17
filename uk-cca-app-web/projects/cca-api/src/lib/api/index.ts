@@ -17,6 +17,7 @@ export * from './companiesInformation.service';
 export * from './documentTemplateFiles.service';
 export * from './documentTemplates.service';
 export * from './facility.service';
+export * from './facilityAuditController.service';
 export * from './facilityInfoView.service';
 export * from './fileAttachments.service';
 export * from './fileDocumentTemplates.service';

@@ -19,7 +19,7 @@ public class SectorAssociationRepositoryImpl implements SectorAssociationCustomR
     @Override
     public Optional<SectorAssociation> findByIdForUpdate(Long id) {
         return ((Query<SectorAssociation>)entityManager.createQuery("select sa from SectorAssociation sa where sa.id = :id"))
-                .setLockMode("ac", LockMode.PESSIMISTIC_WRITE)
+                .setLockMode("sa", LockMode.PESSIMISTIC_WRITE)
                 .setTimeout(5000)
                 .setParameter("id", id)
                 .uniqueResultOptional();

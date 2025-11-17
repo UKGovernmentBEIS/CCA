@@ -15,7 +15,6 @@ import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+s
       <cca-summary [data]="summaryData()" />
     </div>
   `,
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

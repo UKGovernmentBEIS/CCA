@@ -11,6 +11,7 @@ import uk.gov.cca.api.facility.domain.dto.FacilityDataDetailsDTO;
 import uk.gov.cca.api.facility.repository.FacilityDataRepository;
 import uk.gov.cca.api.facility.transform.FacilityDetailsMapper;
 import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,45 +23,58 @@ import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
 @RequiredArgsConstructor
 public class FacilityDataQueryService implements FacilityAuthorityInfoProvider {
 
-    private final FacilityDataRepository facilityDataRepository;
+    private final FacilityDataRepository facilityDataRepository; 
 
     private static final FacilityDetailsMapper FACILITY_DETAILS_MAPPER = Mappers.getMapper(FacilityDetailsMapper.class);
 
-    public FacilityDataDetailsDTO getFacilityData(String facilityId) {
-        return facilityDataRepository.findByFacilityId(facilityId)
+    public FacilityDataDetailsDTO getFacilityData(Long facilityId) {
+        return facilityDataRepository.findById(facilityId)
                 .map(FACILITY_DETAILS_MAPPER::toFacilityDetailsResult)
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
     }
 
-    public FacilityData getFacilityDataById(String facilityId) {
-        return facilityDataRepository.findByFacilityId(facilityId)
+    public FacilityData getFacilityDataById(Long facilityId) {
+        return facilityDataRepository.findById(facilityId)
+                .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
+    }
+    
+    public String getFacilityBusinessIdById(Long facilityId) {
+        return facilityDataRepository.findById(facilityId)
+        		.map(FacilityData::getFacilityBusinessId)
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
     }
 
-    public FacilityBaseInfoDTO getFacilityBaseInfo(Long id) {
-        return facilityDataRepository.findById(id)
+    public FacilityBaseInfoDTO getFacilityBaseInfo(Long facilityId) {
+        return facilityDataRepository.findById(facilityId)
                 .map(FACILITY_DETAILS_MAPPER::toFacilityBaseInfo)
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
     }
-
-    public List<FacilityBaseInfoDTO> getFacilityBaseInfoList(Set<String> facilityIds) {
-        return facilityDataRepository.findAllByFacilityIdIn(facilityIds)
+    
+    public List<FacilityBaseInfoDTO> getFacilityBaseInfoByIds(List<Long> facilityIds) {
+    	return facilityDataRepository.findAllByIdIn(facilityIds)
                 .stream()
                 .map(FACILITY_DETAILS_MAPPER::toFacilityBaseInfo)
                 .toList();
     }
 
-    public boolean isExistingFacilityId(String facilityId) {
-        return facilityDataRepository.existsByFacilityId(facilityId);
+    public List<FacilityBaseInfoDTO> getFacilityBaseInfoListByFacilityBusinessIds(Set<String> facilityBusinessIds) {
+        return facilityDataRepository.findAllByFacilityBusinessIdIn(facilityBusinessIds)
+                .stream()
+                .map(FACILITY_DETAILS_MAPPER::toFacilityBaseInfo)
+                .toList();
     }
 
-    public boolean isActiveFacility(String facilityId) {
-        return facilityDataRepository.existsByFacilityIdAndClosedDateIsNull(facilityId);
+    public boolean isExistingFacilityBusinessId(String facilityBusinessId) {
+        return facilityDataRepository.existsByFacilityBusinessId(facilityBusinessId);
     }
 
-    public Set<SchemeVersion> getActiveFacilityParticipatingSchemeVersions(String facilityId) {
+    public boolean isActiveFacility(String facilityBusinessId) {
+        return facilityDataRepository.existsByFacilityBusinessIdAndClosedDateIsNull(facilityBusinessId);
+    }
 
-        return facilityDataRepository.findByFacilityIdAndClosedDateIsNull(facilityId)
+    public Set<SchemeVersion> getActiveFacilityParticipatingSchemeVersions(String facilityBusinessId) {
+
+        return facilityDataRepository.findByFacilityBusinessIdAndClosedDateIsNull(facilityBusinessId)
 		        .map(FacilityData::getParticipatingSchemeVersions)
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
     }
@@ -72,21 +86,26 @@ public class FacilityDataQueryService implements FacilityAuthorityInfoProvider {
     public List<Long> getAllActiveFacilityIdsByAccount(Long accountId) {
         return facilityDataRepository.findFacilityIdsByAccountIdAndClosedDateIsNull(accountId);
     }
-
+    
     @Override
-    public Long getAccountIdByFacilityId(String facilityId) {
-        return facilityDataRepository.findByFacilityId(facilityId).map(FacilityData::getAccountId)
+    public Long getAccountIdByFacilityId(Long facilityId) {
+        return facilityDataRepository.findById(facilityId).map(FacilityData::getAccountId)
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
     }
     
-    public Long getIdByFacilityId(String facilityId) {
-        return facilityDataRepository.findIdByFacilityId(facilityId)
+    public Long getIdByFacilityBusinessId(String facilityBusinessId) {
+        return facilityDataRepository.findIdByFacilityBusinessId(facilityBusinessId)
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
     }
 
-    public Set<SchemeVersion> getParticipatingFacilitySchemeVersions(String facilityId) {
-        return facilityDataRepository.findByFacilityId(facilityId)
+    public Set<SchemeVersion> getParticipatingFacilitySchemeVersions(String facilityBusinessId) {
+        return facilityDataRepository.findByFacilityBusinessId(facilityBusinessId)
                 .map(FacilityData::getParticipatingSchemeVersions)
                 .orElse(Collections.emptySet());
     }
+
+	public FacilityData exclusiveLockFacility(Long facilityId) {
+		return facilityDataRepository.findByIdForUpdate(facilityId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));	
+	}
 }

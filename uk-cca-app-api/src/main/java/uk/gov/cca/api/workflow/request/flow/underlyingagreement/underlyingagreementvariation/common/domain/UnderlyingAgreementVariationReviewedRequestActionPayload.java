@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.ObjectUtils;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
@@ -45,8 +46,8 @@ public class UnderlyingAgreementVariationReviewedRequestActionPayload extends Un
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, RequestActionUserInfo> usersInfo = new HashMap<>();
 
-    @NotNull
-    private FileInfoDTO officialNotice;
+    @NotEmpty
+    private List<FileInfoDTO> officialNotices;
 
     @Valid
     @NotNull
@@ -66,10 +67,13 @@ public class UnderlyingAgreementVariationReviewedRequestActionPayload extends Un
 
     @Override
     public Map<UUID, String> getFileDocuments() {
-        return Stream.of(
-                super.getFileDocuments(),
-                Map.of(UUID.fromString(officialNotice.getUuid()), officialNotice.getName())
-        ).flatMap(m -> m.entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        Map<UUID, String> notices = ObjectUtils.isEmpty(this.officialNotices)
+                ? Map.of()
+                : this.officialNotices.stream()
+                    .collect(Collectors.toMap(f -> UUID.fromString(f.getUuid()), FileInfoDTO::getName));
+
+        return Stream.of(super.getFileDocuments(), notices)
+                .flatMap(m -> m.entrySet().stream()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override

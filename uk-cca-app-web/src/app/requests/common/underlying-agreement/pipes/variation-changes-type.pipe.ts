@@ -23,10 +23,7 @@ export enum VariationChangesEnum {
   ANY_CHANGES_NOT_COVERED = 'Any changes not covered by the above',
 }
 
-@Pipe({
-  name: 'variationChanges',
-  standalone: true,
-})
+@Pipe({ name: 'variationChanges' })
 export class VariationChangesTypePipe implements PipeTransform {
   transform(value: string): string {
     const text = VariationChangesEnum[value];

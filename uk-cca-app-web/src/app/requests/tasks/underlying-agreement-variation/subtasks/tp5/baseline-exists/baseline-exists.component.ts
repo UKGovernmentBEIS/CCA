@@ -30,7 +30,6 @@ import {
 @Component({
   selector: 'cca-baseline-exists',
   templateUrl: './baseline-exists.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,

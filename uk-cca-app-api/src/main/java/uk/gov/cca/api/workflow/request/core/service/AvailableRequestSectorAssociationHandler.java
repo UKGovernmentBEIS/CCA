@@ -31,7 +31,7 @@ public class AvailableRequestSectorAssociationHandler implements AvailableReques
 		return actions.stream()
 	            .collect(Collectors.toMap(
 	                    requestType -> requestType,
-	                    requestType -> getAccountValidationResult(requestType, sectorAssociationId)))
+	                    requestType -> getSectorValidationResult(requestType, sectorAssociationId)))
 	            .entrySet().stream()
 	            .filter(a -> a.getValue().isAvailable())
 	            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -45,7 +45,7 @@ public class AvailableRequestSectorAssociationHandler implements AvailableReques
 	            .collect(Collectors.toSet());
 	}
 	
-	private RequestCreateValidationResult getAccountValidationResult(String type, long sectorAssociationId) {
+	private RequestCreateValidationResult getSectorValidationResult(String type, long sectorAssociationId) {
 	    return requestCreateBySectorAssociationValidators.stream()
 	            .filter(validator -> validator.getRequestType().equals(type))
 	            .findFirst()

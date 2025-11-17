@@ -1,0 +1,89 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    caption="Requested documents"
+    heading="Upload documents"
+    data-testid="requested-documents-form"
+  >
+    <div
+      formControlName="auditMaterialReceivedDate"
+      govuk-date-input
+      label="When did you receive the information requested from the operator?"
+      size="normal"
+      [max]="today"
+      hint="For example 25 7 2024"
+    ></div>
+
+    <cca-file-input
+      [downloadUrl]="getDownloadUrl"
+      formControlName="processFlowMapsFile"
+      label="Process flow maps"
+      labelSize="small"
+      [showFilesizeHint]="false"
+    />
+
+    <cca-file-input
+      [downloadUrl]="getDownloadUrl"
+      formControlName="manufacturingProcessFile"
+      label="Manufacturing process description"
+      labelSize="small"
+      [showFilesizeHint]="false"
+    />
+
+    <cca-file-input
+      [downloadUrl]="getDownloadUrl"
+      formControlName="annotatedSitePlansFile"
+      label="Annotated site plan"
+      labelSize="small"
+      [showFilesizeHint]="false"
+    />
+
+    <cca-file-input
+      [downloadUrl]="getDownloadUrl"
+      formControlName="eligibleProcessFile"
+      label="Eligible process description"
+      labelSize="small"
+      [showFilesizeHint]="false"
+    />
+
+    <cca-file-input
+      [downloadUrl]="getDownloadUrl"
+      formControlName="directlyAssociatedActivitiesFile"
+      label="Directly associated activities"
+      labelSize="small"
+      [showFilesizeHint]="false"
+    />
+
+    <cca-file-input
+      [downloadUrl]="getDownloadUrl"
+      formControlName="seventyPerCentRuleEvidenceFile"
+      label="The 70% rule evidence"
+      labelSize="small"
+      [showFilesizeHint]="false"
+    />
+
+    <cca-multiple-file-input
+      [baseDownloadUrl]="downloadUrl"
+      formControlName="baseYearTargetPeriodEvidenceFiles"
+      label="Base year/target period evidence"
+    />
+
+    <cca-multiple-file-input
+      [baseDownloadUrl]="downloadUrl"
+      formControlName="additionalDocuments"
+      label="Additional documents"
+      hint="Upload any additional documents that do not fit the previous categories, like correspondence with the operator requesting information or the audit checklist documenting your initial review of the information. Do not upload documents that already exist in the service, like TPR or PAT spreadsheets."
+    />
+
+    <div
+      govuk-textarea
+      label="Additional information (optional)"
+      labelSize="medium"
+      formControlName="additionalInformation"
+    ></div>
+  </cca-wizard-step>
+
+  <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+  <netz-return-to-task-or-action-page />
+</div>

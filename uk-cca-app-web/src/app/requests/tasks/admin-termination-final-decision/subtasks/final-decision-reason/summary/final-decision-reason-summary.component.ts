@@ -23,7 +23,6 @@ import { toFinalDecisionReasonSummaryData } from '../../../final-decision-reason
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [SummaryComponent, PageHeadingComponent, FinalDecisionTypePipe, ReturnToTaskOrActionPageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

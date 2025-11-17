@@ -18,6 +18,8 @@ describe('RequestTypeToHeadingPipe', () => {
     expect(pipe.transform('UNDERLYING_AGREEMENT')).toEqual('Underlying agreement');
     expect(pipe.transform('ADMIN_TERMINATION')).toEqual('Admin termination');
     expect(pipe.transform('BUY_OUT_SURPLUS_ACCOUNT_PROCESSING')).toEqual('Buy-out and surplus');
+    expect(pipe.transform('CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING')).toEqual('Migration');
+    expect(pipe.transform('CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING')).toEqual('Extension');
   });
 
   it('should transform PERFORMANCE_DATA_SPREADSHEET_PROCESSING with metadata', () => {

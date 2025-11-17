@@ -7,6 +7,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
+import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransformationMapper;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.notification.DocumentTemplateUnderlyingAgreementParamsProvider;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
@@ -29,6 +31,9 @@ class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider
 
     @Mock
     private DocumentTemplateUnderlyingAgreementParamsProvider documentTemplateUnderlyingAgreementParamsProvider;
+    
+    @Mock
+    private DocumentTemplateTransformationMapper documentTemplateTransformationMapper;
 
     @Test
     void getContextActionType() {
@@ -43,6 +48,7 @@ class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider
                 .additionalInformation("additionalInformation")
                 .build();
         final int version = 1;
+        final Map<SchemeVersion, Integer> consolidationNumberMap = Map.of(SchemeVersion.CCA_2, version);
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = UnderlyingAgreementTargetUnitDetails.builder().build();
         final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
                 .determination(determination)
@@ -52,10 +58,10 @@ class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider
                 .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                         .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                         .build())
-                .underlyingAgreementVersion(version)
+                .underlyingAgreementVersionMap(consolidationNumberMap)
                 .build();
 
-        when(documentTemplateUnderlyingAgreementParamsProvider.constructTargetUnitDetailsTemplateParams(targetUnitDetails, version))
+        when(documentTemplateUnderlyingAgreementParamsProvider.constructTargetUnitDetailsTemplateParams(targetUnitDetails))
                 .thenReturn(new HashMap<>(Map.of("targetUnitDetails", "test1")));
 
         // Invoke
@@ -64,9 +70,10 @@ class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider
         // Verify
         assertThat(actual).containsExactlyInAnyOrderEntriesOf(Map.of(
                 "targetUnitDetails", "test1",
-                "reason", "reason"
+                "reason", "reason",
+                "versionMap", Map.of()
         ));
         verify(documentTemplateUnderlyingAgreementParamsProvider, times(1))
-                .constructTargetUnitDetailsTemplateParams(targetUnitDetails, version);
+                .constructTargetUnitDetailsTemplateParams(targetUnitDetails);
     }
 }

@@ -10,7 +10,6 @@ import { toTransactionDetailsSummaryData } from './transaction-details-summary-d
 @Component({
   selector: 'cca-transaction-details-tab',
   template: `<cca-summary [data]="summaryData" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

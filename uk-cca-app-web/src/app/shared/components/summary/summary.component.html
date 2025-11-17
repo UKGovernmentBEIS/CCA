@@ -28,7 +28,7 @@
                 @if (row.link) {
                   <a class="govuk-link" [routerLink]="row.link">{{ value }}</a>
                 } @else {
-                  {{ value }}
+                  <span [class.field-diff]="row.fieldDiff">{{ value }}</span>
                 }
 
                 @if (!last) {

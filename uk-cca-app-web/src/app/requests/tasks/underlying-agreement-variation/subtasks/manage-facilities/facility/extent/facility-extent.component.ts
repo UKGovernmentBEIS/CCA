@@ -15,7 +15,11 @@ import {
 import { FileInputComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
-import { FacilityExtent, UnderlyingAgreementVariationSubmitRequestTaskPayload } from 'cca-api';
+import {
+  FacilityExtent,
+  UnderlyingAgreementVariationApplySavePayload,
+  UnderlyingAgreementVariationSubmitRequestTaskPayload,
+} from 'cca-api';
 
 import { createRequestTaskActionProcessDTO, toUnderlyingAgreementVariationSavePayload } from '../../../../transform';
 import { extractReviewProps } from '../../../../utils';
@@ -28,7 +32,6 @@ import {
 @Component({
   selector: 'cca-facility-extent',
   templateUrl: './facility-extent.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -83,21 +86,7 @@ export class FacilityExtentComponent {
     )() as UnderlyingAgreementVariationSubmitRequestTaskPayload;
 
     const actionPayload = toUnderlyingAgreementVariationSavePayload(payload);
-
-    // Update facility extent
-    const updatedPayload = produce(actionPayload, (draft) => {
-      const facility = draft.facilities.find((f) => f.facilityId === this.facilityId);
-      if (facility) {
-        facility.facilityExtent = {
-          areActivitiesClaimed: this.form.value.areActivitiesClaimed,
-          manufacturingProcessFile: this.form.value.manufacturingProcessFile?.uuid ?? null,
-          processFlowFile: this.form.value.processFlowFile?.uuid ?? null,
-          annotatedSitePlansFile: this.form.value.annotatedSitePlansFile?.uuid ?? null,
-          eligibleProcessFile: this.form.value.eligibleProcessFile?.uuid ?? null,
-          activitiesDescriptionFile: this.form.value?.activitiesDescriptionFile?.uuid ?? null,
-        };
-      }
-    });
+    const updatedPayload = updateFacilityExtent(actionPayload, this.form, this.facilityId);
 
     const currentSectionsCompleted =
       this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)() || {};
@@ -121,4 +110,24 @@ export class FacilityExtentComponent {
         }
       });
   }
+}
+
+function updateFacilityExtent(
+  payload: UnderlyingAgreementVariationApplySavePayload,
+  form: FormGroup<FacilityExtentFormModel>,
+  facilityId: string,
+): UnderlyingAgreementVariationApplySavePayload {
+  return produce(payload, (draft) => {
+    const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
+    if (facilityIndex === -1) return;
+
+    draft.facilities[facilityIndex].facilityExtent = {
+      areActivitiesClaimed: form.value.areActivitiesClaimed,
+      manufacturingProcessFile: form.value.manufacturingProcessFile?.uuid ?? null,
+      processFlowFile: form.value.processFlowFile?.uuid ?? null,
+      annotatedSitePlansFile: form.value.annotatedSitePlansFile?.uuid ?? null,
+      eligibleProcessFile: form.value.eligibleProcessFile?.uuid ?? null,
+      activitiesDescriptionFile: form.value?.activitiesDescriptionFile?.uuid ?? null,
+    };
+  });
 }

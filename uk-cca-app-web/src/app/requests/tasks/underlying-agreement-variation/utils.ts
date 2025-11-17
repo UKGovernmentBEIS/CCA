@@ -20,19 +20,23 @@ export type FacilityReviewProps = {
   facilitiesReviewGroupDecisions: Record<string, UnderlyingAgreementVariationFacilityReviewDecision>;
 };
 
-export function resetReviewSection(reviewProps: ReviewProps, subtask: string): ReviewProps {
+export function resetReviewSection(reviewProps: ReviewProps, subtask: string, areIdentical: boolean): ReviewProps {
   return produce(reviewProps, (draft) => {
     const sectionKey = SUBTASK_TO_DECISION_MAP[subtask];
     if (!sectionKey) throw new Error(`Submit Variation Action - Invalid subtask decision key: ${subtask}`);
 
-    draft.reviewSectionsCompleted[subtask] = TaskItemStatus.UNDECIDED;
+    draft.reviewSectionsCompleted[subtask] = areIdentical ? TaskItemStatus.UNCHANGED : TaskItemStatus.UNDECIDED;
     delete draft.reviewGroupDecisions[sectionKey];
   });
 }
 
-export function resetFacilityReviewSection(reviewProps: FacilityReviewProps, facilityId: string): FacilityReviewProps {
+export function resetFacilityReviewSection(
+  reviewProps: FacilityReviewProps,
+  facilityId: string,
+  areIdentical: boolean,
+): FacilityReviewProps {
   return produce(reviewProps, (draft) => {
-    draft.reviewSectionsCompleted[facilityId] = TaskItemStatus.UNDECIDED;
+    draft.reviewSectionsCompleted[facilityId] = areIdentical ? TaskItemStatus.UNCHANGED : TaskItemStatus.UNDECIDED;
     delete draft.facilitiesReviewGroupDecisions[facilityId];
   });
 }

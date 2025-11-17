@@ -106,5 +106,18 @@
             </sql>
         </rollback>
     </changeSet>
+    
+    <changeSet id="0_1_0_UPDATE_TPR_CERTIFICATION_PERIOD_CP7_END_DATE" author="vourdoukasd">
+        <update tableName="tpr_certification_period">
+            <column name="end_date" value="2027-06-30"/>
+            <where>business_id = 'CP7'</where>
+        </update>
+        <rollback>
+            <update tableName="tpr_certification_period">
+                <column name="end_date" value="2027-03-31"/>
+                <where>business_id = 'CP7'</where>
+            </update>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>

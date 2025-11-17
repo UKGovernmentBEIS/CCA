@@ -16,7 +16,6 @@ import { underlyingAgreementReviewedRequestActionQuery } from '../../+state/unde
       <cca-summary [data]="summaryData()" />
     </div>
   `,
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -33,6 +32,7 @@ export class TargetPeriod5Component {
       submit: this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
       review: this.requestActionStore.select(underlyingAgreementReviewedRequestActionQuery.selectReviewAttachments)(),
     },
+    areIdentical: null,
   };
 
   protected readonly summaryData = computed(() =>

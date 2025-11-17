@@ -11,6 +11,8 @@ import {
   DecisionComponent,
   DecisionFormModel,
   decisionFormProvider,
+  OVERALL_DECISION_SUBTASK,
+  TaskItemStatus,
   TasksApiService,
   toBaselineAndTargetsSummaryData,
   underlyingAgreementQuery,
@@ -28,7 +30,6 @@ import { resetDetermination } from '../../../utils';
 @Component({
   selector: 'cca-baseline-and-targets-summary',
   templateUrl: './tp6-decision.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     SummaryComponent,
@@ -123,7 +124,8 @@ export class TP6DecisionComponent {
     const determination = resetDetermination(currDetermination);
 
     const reviewSectionsCompleted = produce(currentReviewSectionsCompleted, (draft) => {
-      draft[BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS] = 'UNDECIDED';
+      draft[BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS] = TaskItemStatus.UNDECIDED;
+      draft[OVERALL_DECISION_SUBTASK] = TaskItemStatus.UNDECIDED;
     });
 
     // Create the payload using the helper function

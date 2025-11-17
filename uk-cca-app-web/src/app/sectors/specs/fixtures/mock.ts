@@ -349,10 +349,21 @@ export const mockTargetUnitAccountDetails: TargetUnitAccountDetailsDTO = {
 
 export const mockUnderlyingAgreementDetails: UnderlyingAgreementDetailsDTO = {
   id: 1,
-  activationDate: '2024-09-30',
-  fileDocument: {
-    name: 'ADS_1-T00002 Underlying Agreement v1.pdf',
-    uuid: '3a4ac334-73d0-492d-9639-a7e2f4bdd647',
+  underlyingAgreementDocumentMap: {
+    ['CCA_2']: {
+      activationDate: '2024-09-30',
+      fileDocument: {
+        name: 'ADS_1-T00002 CCA2 Underlying Agreement v1.pdf',
+        uuid: '3a4ac334-73d0-492d-9639-a7e2f4bdd647',
+      },
+    },
+    ['CCA_3']: {
+      activationDate: '2025-09-30',
+      fileDocument: {
+        name: 'ADS_1-T00002 CCA3 Underlying Agreement v1.pdf',
+        uuid: '3a4ac334-73d0-492d-9639-a7e2f4bdd648',
+      },
+    },
   },
 };
 
@@ -363,7 +374,7 @@ export const mockTargetUnitAccount = (sectorAssociationId) => ({
     status: 'NEW',
     name: 'operator name',
     operatorType: 'SOLE_TRADER',
-    companyRegistrationNumber: 's',
+    companyRegistrationNumber: '2636942',
     sicCodes: ['sicCode'],
     sectorAssociationId,
     financialIndependenceStatus: 'NON_FINANCIALLY_INDEPENDENT',

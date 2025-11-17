@@ -69,7 +69,6 @@ class UnderlyingAgreementVariationRejectedAddRequestActionServiceTest {
                 UnderlyingAgreementVariationRejectedRequestActionPayload.builder()
                         .payloadType(UNDERLYING_AGREEMENT_VARIATION_REJECTED_PAYLOAD)
                         .decisionNotification(ccaDecisionNotification)
-                        .officialNotice(requestPayload.getOfficialNotice())
                         .defaultContacts(defaultContacts)
                         .usersInfo(usersInfo)
                         .reviewAttachments(requestPayload.getUnderlyingAgreementAttachments())

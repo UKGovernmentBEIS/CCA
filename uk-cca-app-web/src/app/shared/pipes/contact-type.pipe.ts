@@ -8,10 +8,7 @@ export enum ContactTypeEnum {
   OPERATOR = 'Operator',
 }
 
-@Pipe({
-  name: 'contactType',
-  standalone: true,
-})
+@Pipe({ name: 'contactType' })
 export class ContactTypePipe implements PipeTransform {
   transform(value: SectorUserAuthorityDetailsDTO['contactType']): string {
     const text = ContactTypeEnum[value];

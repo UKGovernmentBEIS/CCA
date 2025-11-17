@@ -1,8 +1,8 @@
 import { boolToString } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { transformOperatorType } from '@shared/pipes';
+import { transformAddress, transformOperatorType } from '@shared/pipes';
 
-import { AccountAddressDTO, TargetUnitAccountPayload } from 'cca-api';
+import { TargetUnitAccountPayload } from 'cca-api';
 
 import { transformPhoneNumber } from '../../phone';
 
@@ -23,13 +23,13 @@ export function toTargetUnitCreateSubmittedSummaryData(payload: TargetUnitAccoun
     .addRow('Subsector', payload?.subsectorAssociationName)
 
     .addSection('Operator address', '../operator-address', { testid: 'operator-address-list' })
-    .addTextAreaRow('Address', getAddressAsArray(payload?.address))
+    .addTextAreaRow('Address', transformAddress(payload?.address))
 
     .addSection('Responsible person', '../responsible-person', { testid: 'responsible-person-list' })
     .addRow('First name', payload?.responsiblePerson?.firstName)
     .addRow('Last name', payload?.responsiblePerson?.lastName)
     .addRow('Job title', payload?.responsiblePerson?.jobTitle)
-    .addTextAreaRow('Address', getAddressAsArray(payload?.responsiblePerson?.address))
+    .addTextAreaRow('Address', transformAddress(payload?.responsiblePerson?.address))
     .addRow('Phone number', transformPhoneNumber(payload?.responsiblePerson?.phoneNumber))
     .addRow('Email address', payload?.responsiblePerson?.email)
 
@@ -41,13 +41,7 @@ export function toTargetUnitCreateSubmittedSummaryData(payload: TargetUnitAccoun
     .addRow('Job title', payload?.administrativeContactDetails?.jobTitle)
     .addRow('Email address', payload?.administrativeContactDetails?.email)
     .addRow('Phone number', transformPhoneNumber(payload?.administrativeContactDetails?.phoneNumber))
-    .addTextAreaRow('Address', getAddressAsArray(payload?.administrativeContactDetails?.address));
+    .addTextAreaRow('Address', transformAddress(payload?.administrativeContactDetails?.address));
 
   return factory.create();
-}
-
-function getAddressAsArray(address: AccountAddressDTO): string[] {
-  return [address?.line1, address?.line2, address?.city, address?.county, address?.postcode, address?.country].filter(
-    Boolean,
-  );
 }

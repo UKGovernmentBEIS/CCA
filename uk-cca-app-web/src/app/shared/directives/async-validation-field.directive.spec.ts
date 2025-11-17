@@ -12,7 +12,6 @@ describe('AsyncValidationFieldDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
-    standalone: true,
     template: '<div govuk-text-input ccaAsyncValidationField [formControl]="name" label="Name"></div>',
     imports: [ReactiveFormsModule, AsyncValidationFieldDirective, TextInputComponent],
   })

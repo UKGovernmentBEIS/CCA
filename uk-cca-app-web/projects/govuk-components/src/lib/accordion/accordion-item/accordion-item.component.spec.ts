@@ -21,7 +21,6 @@ describe('AccordionItemComponent', () => {
     f.nativeElement.querySelectorAll('.govuk-accordion__section-toggle-text');
 
   @Component({
-    standalone: true,
     imports: [AccordionComponent, AccordionItemComponent, AccordionItemSummaryDirective],
     template: `
       <govuk-accordion id="test-accordion" [openIndexes]="openIndexes">

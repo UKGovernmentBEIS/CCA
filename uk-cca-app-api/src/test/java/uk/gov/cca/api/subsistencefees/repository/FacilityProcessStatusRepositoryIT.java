@@ -156,7 +156,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
 
         // set up facilities
         final FacilityData eligibleAccountFacility = FacilityData.builder()
-                .facilityId("ADS_1-F00014") // already charged
+                .facilityBusinessId("ADS_1-F00014") // already charged
                 .accountId(nonEligibleIndependentAccount.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("site1")
@@ -168,7 +168,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(eligibleAccountFacility);
 
         final FacilityData eligibleSectorFacility1 = FacilityData.builder()
-                .facilityId("ADS_1-F00015")
+                .facilityBusinessId("ADS_1-F00015")
                 .accountId(eligibleNonIndependentAccount.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil2")
@@ -180,7 +180,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(eligibleSectorFacility1);
 
         final FacilityData eligibleSectorFacility2 = FacilityData.builder()
-                .facilityId("ADS_1-F00025")
+                .facilityBusinessId("ADS_1-F00025")
                 .accountId(eligibleNonIndependentAccount.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil25")
@@ -192,7 +192,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(eligibleSectorFacility2);
 
         final FacilityData eligibleSectorFacility3 = FacilityData.builder()
-                .facilityId("ADS_1-F00035")
+                .facilityBusinessId("ADS_1-F00035")
                 .accountId(eligibleNonIndependentAccount.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil35")
@@ -204,7 +204,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(eligibleSectorFacility3);
 
         final FacilityData nonEligibleSectorFacility1 = FacilityData.builder()
-                .facilityId("ADS_1-F00045")
+                .facilityBusinessId("ADS_1-F00045")
                 .accountId(eligibleNonIndependentAccount.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil45")
@@ -216,7 +216,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(nonEligibleSectorFacility1);
 
         final FacilityData nonEligibleSectorFacility2 = FacilityData.builder()
-                .facilityId("ADS_1-F00055")
+                .facilityBusinessId("ADS_1-F00055")
                 .accountId(eligibleNonIndependentAccount.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil55")
@@ -228,7 +228,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(nonEligibleSectorFacility2);
 
         final FacilityData nonEligibleAccountFacility1 = FacilityData.builder()
-                .facilityId("ADS_1-F00016")
+                .facilityBusinessId("ADS_1-F00016")
                 .accountId(nonEligibleIndependentAccount.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("terminal3")
@@ -241,7 +241,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(nonEligibleAccountFacility1);
 
         final FacilityData nonEligibleAccountFacility2 = FacilityData.builder()
-                .facilityId("ADS_1-F00017")
+                .facilityBusinessId("ADS_1-F00017")
                 .accountId(nonEligibleIndependentAccount.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("terminal3")
@@ -254,7 +254,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(nonEligibleAccountFacility2);
 
         final FacilityData eligibleAccountFacilityForEligbleAccount1 = FacilityData.builder()
-                .facilityId("ADS_1-F00018")
+                .facilityBusinessId("ADS_1-F00018")
                 .accountId(eligibleIndependentAccount.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil5")
@@ -266,7 +266,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(eligibleAccountFacilityForEligbleAccount1);
 
         final FacilityData eligibleAccountFacilityForEligibleAccount2 = FacilityData.builder()
-                .facilityId("ADS_1-F00028")
+                .facilityBusinessId("ADS_1-F00028")
                 .accountId(eligibleIndependentAccount.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil28")
@@ -278,7 +278,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(eligibleAccountFacilityForEligibleAccount2);
 
         final FacilityData nonEligibleAccountFacilityForEligibleAccount1 = FacilityData.builder()
-                .facilityId("ADS_1-F00038")
+                .facilityBusinessId("ADS_1-F00038")
                 .accountId(eligibleIndependentAccount.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil38")
@@ -290,7 +290,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
         entityManager.persist(nonEligibleAccountFacilityForEligibleAccount1);
 
         final FacilityData nonEligibleAccountFacilityForEligibleAccount2 = FacilityData.builder()
-                .facilityId("ADS_1-F00048")
+                .facilityBusinessId("ADS_1-F00048")
                 .accountId(eligibleIndependentAccount.getId())
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .siteName("facil48")
@@ -364,7 +364,7 @@ class FacilityProcessStatusRepositoryIT extends AbstractContainerBaseTest {
                 repository.findAccountFacilitiesForSubsistenceFeesRun(accountId, chargingYear, firstDateOfChargingYear, endDateOfChargingYear);
 
         assertThat(facilities).hasSize(2);
-        assertThat(facilities.getFirst().getFacilityId()).isEqualTo("ADS_1-F00018");
+        assertThat(facilities.getFirst().getFacilityBusinessId()).isEqualTo("ADS_1-F00018");
     }
 
     @Test

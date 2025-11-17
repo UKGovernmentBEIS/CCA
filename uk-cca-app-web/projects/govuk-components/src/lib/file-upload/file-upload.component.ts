@@ -11,7 +11,6 @@ import { FormService } from '../form';
 */
 @Component({
   selector: 'div[govukFileUpload],govuk-file-upload',
-  standalone: true,
   imports: [ErrorMessageComponent],
   templateUrl: './file-upload.component.html',
 })

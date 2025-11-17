@@ -37,7 +37,6 @@ import { TARGET_COMPOSITION_FORM, TargetCompositionFormProvider } from './target
 @Component({
   selector: 'cca-target-composition',
   templateUrl: './target-composition.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,

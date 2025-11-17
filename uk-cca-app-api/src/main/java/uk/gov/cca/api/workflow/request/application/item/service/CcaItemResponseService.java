@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
+import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
+import uk.gov.cca.api.workflow.request.application.item.domain.ItemFacilityDTO;
 import uk.gov.cca.api.workflow.request.application.item.domain.ItemSectorDTO;
 import uk.gov.cca.api.workflow.request.application.item.domain.ItemTargetUnitAccountDTO;
 import uk.gov.cca.api.workflow.request.application.item.transform.CcaItemMapper;
@@ -37,6 +39,7 @@ public class CcaItemResponseService implements ItemResponseService {
 
 	private final TargetUnitAccountQueryService targetUnitAccountQueryService;
 	private final SectorAssociationQueryService sectorAssociationQueryService;
+	private final FacilityDataQueryService facilityDataQueryService;
     private final UserAuthService userAuthService;
     private final UserRoleTypeService userRoleTypeService;
     private static final CcaItemMapper ccaItemMapper = Mappers.getMapper(CcaItemMapper.class);
@@ -51,6 +54,8 @@ public class CcaItemResponseService implements ItemResponseService {
         Map<String, ItemTargetUnitAccountDTO> accounts = getAccounts(itemRequestResources);
         // Get sector information
         Map<String, ItemSectorDTO> sectors = getSectors(itemRequestResources);
+        // Get facility information
+        Map<String, ItemFacilityDTO> facilities = getFacilities(itemRequestResources);
 
         List<ItemDTO> itemDTOs = itemPage.getItems().stream().map(item -> {
             String taskAssigneeId = item.getTaskAssigneeId();
@@ -58,11 +63,14 @@ public class CcaItemResponseService implements ItemResponseService {
             String taskAssigneeType = taskAssigneeId != null ? userRoleTypeService.getUserRoleTypeByUserId(taskAssigneeId).getRoleType() : null;
             ItemTargetUnitAccountDTO account = accounts.get(itemRequestResources.get(item.getRequestId()).get(ResourceType.ACCOUNT));
             ItemSectorDTO sector = sectors.get(itemRequestResources.get(item.getRequestId()).get(CcaResourceType.SECTOR_ASSOCIATION));
+            ItemFacilityDTO facility = facilities.get(itemRequestResources.get(item.getRequestId()).get(CcaResourceType.FACILITY));
+            
             return ccaItemMapper.itemToCcaItemDTO(item,
                 taskAssigneeInfo,
                 taskAssigneeType,
                 account,
-                sector);
+                sector,
+                facility);
         }).collect(Collectors.toList());
 
         return ItemDTOResponse.builder()
@@ -101,6 +109,22 @@ public class CcaItemResponseService implements ItemResponseService {
 	        return sectorAssociationQueryService.getSectorsByIds(sectorIds).stream()
 	            .map(ccaItemMapper::sectorToItemSectorDTO)
 	            .collect(Collectors.toMap(item -> item.getSectorId().toString(), itemDTO -> itemDTO));
+	}
+	
+	private Map<String, ItemFacilityDTO> getFacilities(Map<String, Map<String, String>> itemRequestResources) {
+		List<Long> facilityIds = itemRequestResources.values()
+	            .stream()
+	            .map(resource -> resource.get(CcaResourceType.FACILITY))
+	            .filter(Objects::nonNull)
+	            .map(Long::parseLong)
+	            .toList();
+
+	        if (CollectionUtils.isEmpty(facilityIds))
+	            return Collections.emptyMap();
+
+	        return facilityDataQueryService.getFacilityBaseInfoByIds(facilityIds).stream()
+	            .map(ccaItemMapper::facilityToItemFacilityDTO)
+	            .collect(Collectors.toMap(itemDTO -> itemDTO.getFacilityId().toString(), itemDTO -> itemDTO));
 	}
 
     private Map<String, UserInfoDTO> getUserInfoForItemAssignees(AppUser appUser, ItemPage itemPage) {

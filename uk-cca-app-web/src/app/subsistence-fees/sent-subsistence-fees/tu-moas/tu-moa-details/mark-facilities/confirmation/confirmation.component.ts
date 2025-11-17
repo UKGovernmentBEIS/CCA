@@ -20,7 +20,6 @@ import { TuMoaDetailsStore } from '../../tu-moa-details.store';
       </div>
     }
   `,
-  standalone: true,
   imports: [PanelComponent, RouterLink, StatusPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

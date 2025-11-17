@@ -32,7 +32,6 @@ import { AdminTerminationTaskService } from '../services/admin-termination-task.
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [
     NotifyOperatorOfDecisionComponent,
     ReactiveFormsModule,

@@ -5,13 +5,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
+  areEntitiesIdentical,
+  filterFieldsWithFalsyValues,
+  isTargetUnitDetailsWizardCompleted,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
+  ReviewTargetUnitDetailsWizardStep,
   TasksApiService,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
 import { AccountAddressFormModel, AccountAddressInputComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
+
+import { UnderlyingAgreementApplySavePayload, UnderlyingAgreementReviewRequestTaskPayload } from 'cca-api';
 
 import { createSaveActionDTO, toUnderlyingAgreementSaveReviewPayload } from '../../../transform';
 import { applySaveActionSideEffects } from '../../../utils';
@@ -33,7 +39,6 @@ import { UNA_OPERATOR_ADDRESS_FORM, UnaOperatorAddressFormProvider } from './una
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [ReactiveFormsModule, WizardStepComponent, AccountAddressInputComponent, ReturnToTaskOrActionPageComponent],
   providers: [UnaOperatorAddressFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,10 +56,7 @@ export class OperatorAddressComponent {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
 
     const actionPayload = toUnderlyingAgreementSaveReviewPayload(payload);
-
-    const updatedPayload = produce(actionPayload, (draft) => {
-      draft.underlyingAgreementTargetUnitDetails.operatorAddress = this.form.getRawValue();
-    });
+    const updatedPayload = updateOperatorAddress(actionPayload, this.form);
 
     const { determination, reviewSectionsCompleted, sectionsCompleted } = applySaveActionSideEffects(
       this.store.select(underlyingAgreementReviewQuery.selectDetermination)(),
@@ -69,8 +71,30 @@ export class OperatorAddressComponent {
       sectionsCompleted,
     });
 
-    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['../decision'], { relativeTo: this.activatedRoute });
-    });
+    this.tasksApiService
+      .saveRequestTaskAction(dto)
+      .subscribe((payload: UnderlyingAgreementReviewRequestTaskPayload) => {
+        const tuDetails = payload.underlyingAgreement.underlyingAgreementTargetUnitDetails;
+        const completed = isTargetUnitDetailsWizardCompleted(tuDetails);
+
+        const isSameAddress = areEntitiesIdentical(
+          filterFieldsWithFalsyValues(tuDetails.operatorAddress),
+          filterFieldsWithFalsyValues(tuDetails.responsiblePersonDetails.address),
+        );
+
+        const path =
+          completed && isSameAddress ? '../decision' : `../${ReviewTargetUnitDetailsWizardStep.RESPONSIBLE_PERSON}`;
+
+        this.router.navigate([path], { relativeTo: this.activatedRoute });
+      });
   }
+}
+
+function updateOperatorAddress(
+  payload: UnderlyingAgreementApplySavePayload,
+  form: FormGroup<AccountAddressFormModel>,
+): UnderlyingAgreementApplySavePayload {
+  return produce(payload, (draft) => {
+    draft.underlyingAgreementTargetUnitDetails.operatorAddress = form.getRawValue();
+  });
 }

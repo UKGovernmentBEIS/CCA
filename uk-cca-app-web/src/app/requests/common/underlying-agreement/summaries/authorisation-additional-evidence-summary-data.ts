@@ -72,5 +72,7 @@ export function toAuthorisationAdditionalEvidenceSummaryDataWithDecision(
     prefix,
   );
 
+  if (!decision?.type) return factory.create();
+
   return addDecisionSummaryData(factory, decision, reviewAttachments, isEditable, downloadUrl).create();
 }

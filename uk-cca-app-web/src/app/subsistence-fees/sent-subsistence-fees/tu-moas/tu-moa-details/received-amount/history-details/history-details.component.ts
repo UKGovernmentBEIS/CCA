@@ -26,7 +26,6 @@ import { toHistoryDetailsSummary } from './history-details-summary';
 
     <cca-summary [data]="data" />
   `,
-  standalone: true,
   imports: [PageHeadingComponent, GovukDatePipe, DecimalPipe, SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

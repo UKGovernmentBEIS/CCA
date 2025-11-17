@@ -52,7 +52,6 @@ type ViewModel = {
   selector: 'netz-request-task-page',
   templateUrl: './request-task-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   encapsulation: ViewEncapsulation.None,
   imports: [
     PageHeadingComponent,

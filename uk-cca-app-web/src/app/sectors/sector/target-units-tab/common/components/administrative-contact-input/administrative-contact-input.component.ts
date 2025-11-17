@@ -9,7 +9,6 @@ import { existingControlContainer } from '@shared/providers';
 @Component({
   selector: 'cca-administrative-contact-input',
   templateUrl: './administrative-contact-input.component.html',
-  standalone: true,
   imports: [
     TextInputComponent,
     ReactiveFormsModule,

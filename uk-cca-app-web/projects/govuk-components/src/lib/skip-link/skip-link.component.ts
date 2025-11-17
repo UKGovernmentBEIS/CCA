@@ -7,7 +7,6 @@ import { filter, map, tap } from 'rxjs';
 
 @Component({
   selector: 'govuk-skip-link',
-  standalone: true,
   imports: [RouterLink, AsyncPipe],
   template: `
     <div>

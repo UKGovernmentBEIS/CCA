@@ -36,7 +36,7 @@ import { StatusTagColorPipe, StatusTagTextPipe } from '@netz/common/pipes';
                 <div class="govuk-task-list__status govuk-task-list__status--cannot-start-yet">Cannot start yet</div>
               } @else {
                 <div class="govuk-task-list__status">
-                  @if (task.status === 'COMPLETED') {
+                  @if (task.status === 'COMPLETED' || task.status === 'UNCHANGED') {
                     {{ task.status | statusTagText }}
                   } @else {
                     <strong class="govuk-tag" [class]="'govuk-tag--' + (task.status | statusTagColor)">
@@ -51,7 +51,6 @@ import { StatusTagColorPipe, StatusTagTextPipe } from '@netz/common/pipes';
       }
     </ul>
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, StatusTagColorPipe, StatusTagTextPipe],
 })

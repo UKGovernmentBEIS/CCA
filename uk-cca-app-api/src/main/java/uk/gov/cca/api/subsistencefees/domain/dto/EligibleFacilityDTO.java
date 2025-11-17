@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class EligibleFacilityDTO {
     private Long id;
-    private String facilityId;
+    private String facilityBusinessId;
     private String siteName;
     private String targetUnitBusinessId;
     private String operatorName;

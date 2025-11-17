@@ -11,7 +11,7 @@
  */
 
 export interface SurplusCalculatedDetails {
-  surplusGained: number;
-  previousPaidFees: number;
-  overPaymentFee: number;
+  surplusGained: string;
+  previousPaidFees: string;
+  overPaymentFee: string;
 }

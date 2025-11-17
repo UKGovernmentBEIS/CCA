@@ -13,7 +13,6 @@ import { toSectorSchemeSummaryData } from './scheme-summary-data';
 @Component({
   selector: 'cca-sector-scheme-tab',
   templateUrl: './sector-scheme-tab.component.html',
-  standalone: true,
   imports: [SummaryComponent, TableComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -21,7 +21,6 @@ import { DecisionWithDateComponent } from './decision-with-date.component';
       <cca-decision-with-date />
     </form>
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, DecisionWithDateComponent],
   providers: [facilityDecisionFormProvider()],

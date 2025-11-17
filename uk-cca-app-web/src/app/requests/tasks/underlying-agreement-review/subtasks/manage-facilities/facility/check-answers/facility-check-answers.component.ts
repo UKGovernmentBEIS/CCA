@@ -34,7 +34,6 @@ import { createSaveFacilityDecisionActionDTO } from '../../../../transform';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <a class="govuk-link" routerLink="../..">Return to: Manage facilities</a>
   `,
-  standalone: true,
   imports: [SummaryComponent, PageHeadingComponent, ButtonDirective, PendingButtonDirective, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

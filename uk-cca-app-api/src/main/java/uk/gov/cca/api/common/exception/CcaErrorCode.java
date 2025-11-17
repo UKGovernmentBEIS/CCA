@@ -70,7 +70,15 @@ public enum CcaErrorCode implements NetzErrorCode {
     FACILITY_CERTIFICATION_START_DATE_OUTSIDE_PERIOD("CRT1004", HttpStatus.BAD_REQUEST, "Invalid provided certified start date"),
     CERT_STATUS_UPDATE_BEFORE_CERT_PERIOD_START_ERROR("CRT1005", HttpStatus.BAD_REQUEST, "Cannot update the certification status before certification period starting date"),
     /** Code for Peer Review errors */
-    PEER_REVIEW_ATTACHMENT_NOT_FOUND("PRV1001", HttpStatus.BAD_REQUEST, "Peer review attachment not found")
+    PEER_REVIEW_ATTACHMENT_NOT_FOUND("PRV1001", HttpStatus.BAD_REQUEST, "Peer review attachment not found"),
+    /** Codes for CCA3 Existing Facilities Migration errors. */
+    CCA3_EXISTING_FACILITIES_MIGRATION_RUN_EXIST("CCA3EFM1001", HttpStatus.BAD_REQUEST, "CCA3 Existing Facilities Migration run already in progress"),
+    CCA3_EXISTING_FACILITIES_MIGRATION_RUN_CSV_FAILED("CCA3EFM1002", HttpStatus.BAD_REQUEST, "CCA3 Existing Facilities Migration run csv parsing failed"),
+    INVALID_CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION("CCA3EFM1003", HttpStatus.BAD_REQUEST, "Invalid Activation"),
+    /** Facility Audit */
+    INVALID_FACILITY_AUDIT("AUDT1001", HttpStatus.BAD_REQUEST, "Invalid Facility Audit"),
+    /** Codes for Cca2 extension notice errors. */
+    CCA2_EXTENSION_NOTICE_RUN_EXIST("CCA2EXT1001", HttpStatus.BAD_REQUEST, "Cca2 extension notice run already in progress"),
     ;
 
 

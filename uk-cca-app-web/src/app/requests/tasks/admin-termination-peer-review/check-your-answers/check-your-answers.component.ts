@@ -26,7 +26,6 @@ import { peerReviewDecisionToSummaryData } from './peer-review-decision-to-summa
       </p>
     </div>
   </div>`,
-  standalone: true,
   imports: [SummaryComponent, ButtonDirective, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

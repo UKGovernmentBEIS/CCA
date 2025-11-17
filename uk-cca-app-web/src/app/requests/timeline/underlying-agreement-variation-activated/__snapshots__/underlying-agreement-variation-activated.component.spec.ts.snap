@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`UnderlyingAgreementVariationActivatedComponent should match snapshot 1`] = `
 <cca-underlying-agreement-variation-activated
@@ -49,7 +49,9 @@ exports[`UnderlyingAgreementVariationActivatedComponent should match snapshot 1`
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           comments 
+          <span>
+            comments
+          </span>
         </dd>
       </div>
     </dl>
@@ -76,11 +78,17 @@ exports[`UnderlyingAgreementVariationActivatedComponent should match snapshot 1`
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Res name, Responsible person, res@test.com 
+          <span>
+            Res name, Responsible person, res@test.com
+          </span>
           <br />
-           Fred_2 William_2, Sector contact, fredwilliam_2@agindustries.org.uk 
+          <span>
+            Fred_2 William_2, Sector contact, fredwilliam_2@agindustries.org.uk
+          </span>
           <br />
-           Admin name, Administrative contact, admin@test.com 
+          <span>
+            Admin name, Administrative contact, admin@test.com
+          </span>
         </dd>
       </div>
       <div
@@ -97,7 +105,9 @@ exports[`UnderlyingAgreementVariationActivatedComponent should match snapshot 1`
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Regulator name 
+          <span>
+            Regulator name
+          </span>
         </dd>
       </div>
       <div

@@ -85,7 +85,6 @@ describe('UsersTableDirective', () => {
     );
 
   @Component({
-    standalone: true,
     template: `
       <form [formGroup]="usersForm" id="users-form">
         <govuk-table

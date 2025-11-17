@@ -68,15 +68,18 @@ function addSummaryDataToFactory(
       extractSignatoryUserFromUsersInfo(payload.usersInfo, payload.decisionNotification.signatory),
     );
 
-  if ('underlyingAgreementDocument' in payload) {
+  if ('underlyingAgreementDocuments' in payload) {
     factory.addFileListRow(
       'Official notice',
-      fileUtils.toDownloadableDocument([payload.underlyingAgreementDocument, payload.officialNotice], 'file-download'),
+      fileUtils.toDownloadableDocument(
+        [...Object.values(payload.underlyingAgreementDocuments), ...payload.officialNotices],
+        'file-download',
+      ),
     );
   } else {
     factory.addFileListRow(
       'Official notice',
-      fileUtils.toDownloadableDocument([payload.officialNotice], 'file-download'),
+      fileUtils.toDownloadableDocument(payload.officialNotices, 'file-download'),
     );
   }
 

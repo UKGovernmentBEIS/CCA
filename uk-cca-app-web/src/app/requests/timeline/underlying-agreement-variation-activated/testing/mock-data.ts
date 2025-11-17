@@ -28,19 +28,23 @@ const mockVariationActivatedPayload: UnderlyingAgreementVariationActivatedReques
   decisionNotification: {
     signatory: '852901e2-65a1-4e6f-b43b-9c53c1a2ef73',
   },
-  officialNotice: {
-    name: 'Underlying Agreement v3.pdf',
-    uuid: 'ad2d77a4-9882-4bcd-bfc1-5f7818a527aa',
-  },
+  officialNotices: [
+    {
+      name: 'Underlying Agreement v3.pdf',
+      uuid: 'ad2d77a4-9882-4bcd-bfc1-5f7818a527aa',
+    },
+  ],
   payloadType: 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_PAYLOAD',
   underlyingAgreementActivationDetails: {
     comments: 'comments',
     evidenceFiles: [],
   },
   underlyingAgreementActivationAttachments: {},
-  underlyingAgreementDocument: {
-    name: 'Activated underlying agreement cover letter.pdf',
-    uuid: 'abcd-1234',
+  underlyingAgreementDocuments: {
+    CCA_2: {
+      name: 'Activated underlying agreement cover letter.pdf',
+      uuid: 'abcd-1234',
+    },
   },
 };
 

@@ -41,28 +41,28 @@ public class FacilityController {
     private final FacilityDataQueryService facilityDataQueryService;
 
     @GetMapping(path = "/generate/{accountId}")
-    @Operation(summary = "Get the next facility id per sector association id")
+    @Operation(summary = "Get the next facility business id per sector association id")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = FacilityDTO.class))})
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#accountId")
-    public ResponseEntity<FacilityDTO> generateFacilityId(
+    public ResponseEntity<FacilityDTO> generateFacilityBusinessId(
             @Parameter(hidden = true) AppUser appUser,
             @PathVariable("accountId") @Parameter(description = "The account id") Long accountId) {
-        return new ResponseEntity<>(facilityIdGeneratorServiceOrchestrator.generateFacilityId(accountId), HttpStatus.OK);
+        return new ResponseEntity<>(facilityIdGeneratorServiceOrchestrator.generateFacilityBusinessId(accountId), HttpStatus.OK);
     }
 
-    @GetMapping("/facilityId")
-    @Operation(summary = "Checks if facility ID exists and returns scheme versions")
+    @GetMapping("/facilityBusinessId")
+    @Operation(summary = "Checks if facility business ID exists and returns scheme versions")
     @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = SchemeVersion.class))))
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @AuthorizedRole(roleType = {REGULATOR, SECTOR_USER})
     public ResponseEntity<Set<SchemeVersion>> getActiveFacilityParticipatingSchemeVersions(
-            @RequestParam("facilityId") @Parameter(name = "facilityId", description = "The facility ID to check") String facilityId) {
-        Set<SchemeVersion> schemeVersions = facilityDataQueryService.getActiveFacilityParticipatingSchemeVersions(facilityId);
+            @RequestParam("facilityBusinessId") @Parameter(name = "facilityBusinessId", description = "The facility business ID to check") String facilityBusinessId) {
+        Set<SchemeVersion> schemeVersions = facilityDataQueryService.getActiveFacilityParticipatingSchemeVersions(facilityBusinessId);
         return new ResponseEntity<>(schemeVersions, HttpStatus.OK);
     }
 }

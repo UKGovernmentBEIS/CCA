@@ -44,7 +44,6 @@ type SubsistenceFeesState = {
 @Component({
   selector: 'cca-subsistence-fees-tab',
   templateUrl: './subsistence-fees-tab.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -157,7 +156,7 @@ export class SubsistenceFeesTabComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.pageSize()) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   private fetchSectorSubsistenceFeesMoas(searchCriteria: SubsistenceFeesMoaSearchCriteria) {

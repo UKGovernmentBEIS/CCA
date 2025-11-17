@@ -15,7 +15,6 @@ import { getAllUnderlyingAgreementReviewTimelineSections } from '../underlying-a
     <netz-page-heading> Underlying agreement application</netz-page-heading>
     <netz-task-list [sections]="sections()" />
   `,
-  standalone: true,
   imports: [TaskListComponent, PageHeadingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

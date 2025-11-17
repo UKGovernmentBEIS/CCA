@@ -1,0 +1,47 @@
+<div class="govuk-grid-column-one-third govuk-!-padding-top-1">
+  <cca-utility-panel heading="Companies House details" [isFullBackground]="true">
+    @if (companiesHouseState().details) {
+      <dl govuk-summary-list [attr.data-testid]="'companies-house-target-unit-details'">
+        <div govukSummaryListRow>
+          <dd govukSummaryListRowValue>
+            <span [class]="getDiffClass(fieldDiffs()?.name)">{{ companiesHouseState().details?.name }}</span>
+          </dd>
+        </div>
+
+        <div govukSummaryListRow>
+          <dd govukSummaryListRowValue>
+            <span [class]="getDiffClass(fieldDiffs()?.operatorType)">{{
+              companiesHouseState().details?.operatorType
+            }}</span>
+          </dd>
+        </div>
+
+        <div govukSummaryListRow>
+          <dd govukSummaryListRowValue>
+            <span [class]="getDiffClass(fieldDiffs()?.companyRegistrationNumber)">{{
+              companiesHouseState().details?.registrationNumber
+            }}</span>
+          </dd>
+        </div>
+      </dl>
+    } @else if (companiesHouseState().error === 404) {
+      <p>The company number was not found at the Companies House</p>
+    } @else {
+      <p>The Companies House is currently unavailable</p>
+    }
+  </cca-utility-panel>
+</div>
+
+@if (companiesHouseState().details) {
+  <div class="govuk-grid-column-one-third govuk-!-padding-top-7">
+    <cca-utility-panel heading="Companies House details" [isFullBackground]="true">
+      <dl govuk-summary-list [attr.data-testid]="'companies-house-operator-address'">
+        <div govukSummaryListRow>
+          <dd govukSummaryListRowValue class="pre-line" [class]="getDiffClass(fieldDiffs()?.address)">
+            {{ companiesHouseState().address }}
+          </dd>
+        </div>
+      </dl>
+    </cca-utility-panel>
+  </div>
+}

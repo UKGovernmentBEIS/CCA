@@ -132,4 +132,5 @@ class SectorAssociationSchemeServiceTest {
                 .umaDate(LocalDate.now())
                 .build();
     }
+
 }

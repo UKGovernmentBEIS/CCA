@@ -3,7 +3,6 @@ import { Directive, ElementRef, HostBinding, HostListener, inject } from '@angul
 @Directive({
   selector:
     'a[govukButton], a[govukSecondaryButton], a[govukWarnButton], a[govukInverseButton], button[govukButton], button[govukWarnButton], button[govukSecondaryButton], button[govukInverseButton]',
-  standalone: true,
 })
 export class ButtonDirective {
   private readonly elementRef = inject(ElementRef);

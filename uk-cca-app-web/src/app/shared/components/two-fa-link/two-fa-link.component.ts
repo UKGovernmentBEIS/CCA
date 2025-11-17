@@ -21,7 +21,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
       >
     </div>
   `,
-  standalone: true,
   imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

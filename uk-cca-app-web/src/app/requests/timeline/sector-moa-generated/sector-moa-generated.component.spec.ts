@@ -49,7 +49,7 @@ describe('SectorMoaGeneratedComponent', () => {
       [
         ['Users'],
         [
-          'Fred_1 William_1, Sector contact, fredwilliam_1@agindustries.org.uk  Fred_2 William_2, Sector contact, fredwilliam_2@agindustries.org.uk',
+          'Fred_1 William_1, Sector contact, fredwilliam_1@agindustries.org.ukFred_2 William_2, Sector contact, fredwilliam_2@agindustries.org.uk',
         ],
       ],
     ]);

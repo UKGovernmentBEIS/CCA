@@ -116,12 +116,12 @@ class SubsistenceFeesRunUpdateServiceTest {
         final MoaType moaType = MoaType.SECTOR_MOA;
         final BigDecimal facilityFee = BigDecimal.valueOf(185.00);
         final List<EligibleFacilityDTO> facilities = List.of(EligibleFacilityDTO.builder()
-                        .facilityId("facilityId1")
+                        .facilityBusinessId("facilityId1")
                         .targetUnitBusinessId("businessId")
                         .accountId(1L)
                         .build(),
                 EligibleFacilityDTO.builder()
-                        .facilityId("facilityId2")
+                        .facilityBusinessId("facilityId2")
                         .targetUnitBusinessId("businessId")
                         .accountId(1L)
                         .build());

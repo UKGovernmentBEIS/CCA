@@ -10,11 +10,10 @@ describe('SkipLinkComponent', () => {
   let fixture: ComponentFixture<HostComponent>;
   let router: Router;
 
-  @Component({ standalone: true, template: '' })
+  @Component({ template: '' })
   class RoutedComponent {}
 
   @Component({
-    standalone: true,
     imports: [SkipLinkComponent, RouterOutlet],
     template: `
       <govuk-skip-link />

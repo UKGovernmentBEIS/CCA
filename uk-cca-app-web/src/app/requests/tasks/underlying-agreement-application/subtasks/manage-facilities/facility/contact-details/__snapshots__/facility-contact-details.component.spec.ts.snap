@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FacilityContactDetailsComponent should show form values 1`] = `
 <cca-facility-contact-details
@@ -329,6 +329,11 @@ exports[`FacilityContactDetailsComponent should show form values 1`] = `
               id="address.country"
               name="address.country"
             >
+              <option
+                value="0: "
+              >
+                 -- 
+              </option>
             </select>
           </div>
         </cca-account-address-input>
@@ -382,6 +387,11 @@ exports[`FacilityContactDetailsComponent should show form values 1`] = `
                   id="phoneNumber.countryCode"
                   name="phoneNumber.countryCode"
                 >
+                  <option
+                    value=""
+                  >
+                    --
+                  </option>
                 </select>
               </div>
             </div>

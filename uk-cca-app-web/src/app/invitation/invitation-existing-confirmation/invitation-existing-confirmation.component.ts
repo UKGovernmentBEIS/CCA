@@ -20,7 +20,6 @@ import { SectorUserInvitationStore } from '../sector-user-invitation/sector-user
       </div>
     </div>
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PanelComponent, RouterLink, SectorUserRoleCodePipe],
 })

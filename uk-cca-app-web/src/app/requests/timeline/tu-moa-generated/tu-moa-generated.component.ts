@@ -10,7 +10,6 @@ import { toTargetUnitMoaGeneratedSummaryData } from './tu-moa-generated-summary'
 @Component({
   selector: 'cca-tu-moa-generated',
   template: `<cca-summary [data]="data" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

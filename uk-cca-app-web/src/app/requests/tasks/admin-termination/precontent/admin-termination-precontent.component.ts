@@ -40,7 +40,6 @@ import { REASON_FOR_ADMIN_TERMINATION_SUBTASK } from '../admin-termination.types
       </button>
     }
   `,
-  standalone: true,
   imports: [NotificationBannerComponent, ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

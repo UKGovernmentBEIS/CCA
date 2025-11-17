@@ -5,17 +5,18 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PageHeadingComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
+  isCCA3Scheme,
   toFacilitySummaryDataWithStatus,
   underlyingAgreementQuery,
   underlyingAgreementVariationQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
+import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
   selector: 'cca-facility-summary',
   templateUrl: './facility-summary.component.html',
-  standalone: true,
   imports: [SummaryComponent, PageHeadingComponent, HighlightDiffComponent, NgTemplateOutlet, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -31,11 +32,27 @@ export default class FacilitySummaryComponent {
     this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId))(),
   );
 
+  protected readonly originalFacility = computed(() =>
+    this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalFacility(this.facilityId))(),
+  );
+
+  private readonly schemeVersion = computed(() =>
+    isCCA3Scheme(this.facility()?.facilityDetails?.participatingSchemeVersions)
+      ? SchemeVersion.CCA_3
+      : SchemeVersion.CCA_2,
+  );
+
+  private readonly sectorSchemeData = computed(() =>
+    this.requestTaskStore.select(
+      underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(this.schemeVersion()),
+    )(),
+  );
+
   protected readonly summaryDataOriginal = computed(() =>
     toFacilitySummaryDataWithStatus(
-      this.facility().status === 'NEW'
-        ? this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId))()
-        : this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalFacility(this.facilityId))(),
+      this.facility().status === 'NEW' ? this.facility() : this.originalFacility(),
+      this.sectorSchemeData(),
+      this.facility()?.facilityDetails?.participatingSchemeVersions,
       this.facility().status === 'NEW'
         ? this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)()
         : this.requestTaskStore.select(
@@ -49,7 +66,9 @@ export default class FacilitySummaryComponent {
 
   protected readonly summaryDataCurrent = computed(() =>
     toFacilitySummaryDataWithStatus(
-      this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId))(),
+      this.facility(),
+      this.sectorSchemeData(),
+      this.facility()?.facilityDetails?.participatingSchemeVersions,
       this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)(),
       this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
       this.downloadUrl,

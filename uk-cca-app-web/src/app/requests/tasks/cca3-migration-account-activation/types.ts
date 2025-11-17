@@ -1,0 +1,10 @@
+import {
+  Cca3ExistingFacilitiesMigrationAccountProcessingActivationRequestTaskPayload,
+  Cca3ExistingFacilitiesMigrationAccountProcessingActivationSaveRequestTaskActionPayload,
+} from 'cca-api';
+
+export type CCA3MigrationRequestTaskPayload =
+  Cca3ExistingFacilitiesMigrationAccountProcessingActivationRequestTaskPayload;
+
+export type CCA3MigrationSaveRequestTaskActionPayload =
+  Cca3ExistingFacilitiesMigrationAccountProcessingActivationSaveRequestTaskActionPayload;

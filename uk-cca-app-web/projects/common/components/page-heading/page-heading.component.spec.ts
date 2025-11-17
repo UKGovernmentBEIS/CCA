@@ -12,7 +12,6 @@ describe('PageHeadingComponent', () => {
 
   @Component({
     template: '<netz-page-heading [caption]="caption" [size]="size">Test heading</netz-page-heading>',
-    standalone: true,
     imports: [PageHeadingComponent],
   })
   class TestComponent {

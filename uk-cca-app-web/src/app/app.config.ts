@@ -1,5 +1,5 @@
 import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
-import { APP_INITIALIZER, ApplicationConfig, ErrorHandler, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { provideRouter, withInMemoryScrolling, withRouterConfig } from '@angular/router';
 
@@ -25,12 +25,15 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([HttpErrorInterceptor, PendingRequestInterceptor]),
       withInterceptorsFromDi(), // needed because KeycloakInterceptor is a Class Guard Injected in KeycloakAngularModule
     ),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: init,
-      multi: true,
-      deps: [AuthService, ConfigService, KeycloakService, LatestTermsService],
-    },
+    provideAppInitializer(() => {
+      const initializerFn = init(
+        inject(AuthService),
+        inject(ConfigService),
+        inject(KeycloakService),
+        inject(LatestTermsService),
+      );
+      return initializerFn();
+    }),
     importProvidersFrom(
       ApiModule.forRoot(() => new Configuration({ basePath: environment.apiOptions.baseUrl })),
       KeycloakAngularModule,

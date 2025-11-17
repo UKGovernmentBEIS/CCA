@@ -2,8 +2,11 @@ import {
   DECISION_TO_SUBTASK_MAP,
   OVERALL_DECISION_SUBTASK,
   staticVariationGroupDecisions,
+  staticVariationSections,
+  staticVariationSectionsWithoutBaselineAndTargets,
+  SUBTASK_TO_DECISION_MAP,
   TaskItemStatus,
-  transform,
+  transformAccountReferenceData,
   UNAVariationReviewRequestTaskPayload,
   VARIATION_DETAILS_SUBTASK,
 } from '@requests/common';
@@ -13,6 +16,7 @@ import {
   Determination,
   Facility,
   UnderlyingAgreementContainer,
+  UnderlyingAgreementReviewDecision,
   UnderlyingAgreementVariationFacilityReviewDecision,
   UnderlyingAgreementVariationPayload,
 } from 'cca-api';
@@ -20,11 +24,16 @@ import {
 type DecisionType = UnderlyingAgreementVariationFacilityReviewDecision['type'];
 type FacilityWithDecision = Facility & { decisionType: 'ACCEPTED' | 'REJECTED' };
 
+const requiredDecisions = (payload: UNAVariationReviewRequestTaskPayload) =>
+  payload.underlyingAgreement.targetPeriod5Details
+    ? staticVariationGroupDecisions
+    : staticVariationSectionsWithoutBaselineAndTargets.map((subtask) => SUBTASK_TO_DECISION_MAP[subtask]);
+
 const acceptedSectionExists = (payload: UNAVariationReviewRequestTaskPayload) =>
-  staticVariationGroupDecisions.some((d) => payload.reviewGroupDecisions[d]?.type === 'ACCEPTED');
+  requiredDecisions(payload).some((d) => payload.reviewGroupDecisions[d]?.type === 'ACCEPTED');
 
 const rejectedSectionExists = (payload: UNAVariationReviewRequestTaskPayload) =>
-  staticVariationGroupDecisions.some((d) => payload.reviewGroupDecisions[d]?.type === 'REJECTED');
+  requiredDecisions(payload).some((d) => payload.reviewGroupDecisions[d]?.type === 'REJECTED');
 
 const acceptedFacilityDecisionExists = (payload: UNAVariationReviewRequestTaskPayload) =>
   Object.keys(payload.facilitiesReviewGroupDecisions).some(
@@ -36,7 +45,7 @@ const rejectedFacilityDecisionExists = (payload: UNAVariationReviewRequestTaskPa
     (k) => payload.facilitiesReviewGroupDecisions[k]?.type === 'REJECTED',
   );
 
-const rejectedAndNew = (f: FacilityWithDecision) => !(f.decisionType === 'REJECTED' && f.status === 'NEW');
+const notRejectedAndNew = (f: FacilityWithDecision) => !(f.decisionType === 'REJECTED' && f.status === 'NEW');
 
 const rejectedToOriginal =
   (originalUnderlyingAgreementContainer: UnderlyingAgreementContainer) => (facility: FacilityWithDecision) =>
@@ -52,21 +61,29 @@ const toFacility = (f: FacilityWithDecision) =>
   });
 
 export const reviewSectionsCompleted = (payload: UNAVariationReviewRequestTaskPayload) => {
-  if (!payload.reviewSectionsCompleted[VARIATION_DETAILS_SUBTASK]) return false;
+  if (
+    !payload.reviewSectionsCompleted[VARIATION_DETAILS_SUBTASK] ||
+    Object.entries(payload.reviewSectionsCompleted).some(
+      ([key, status]) => key !== OVERALL_DECISION_SUBTASK && status === TaskItemStatus.UNDECIDED,
+    )
+  )
+    return false;
 
-  const hasUndecidedSection = Object.keys(payload.reviewSectionsCompleted)
-    .filter((k) => k !== OVERALL_DECISION_SUBTASK)
-    .some((k) => payload.reviewSectionsCompleted[k] === TaskItemStatus.UNDECIDED);
+  // We need to filter out any decisions that are not required for the current agreement (unchanged status)
+  const finalRequiredDecisions = requiredDecisions(payload).filter(
+    (decision) => payload.reviewGroupDecisions[decision],
+  );
 
-  if (hasUndecidedSection) return false;
+  // We don't need to filter any facilities, because the overall status is already checked for the manage facility
+  const requiredFacilityDecisions = payload.underlyingAgreement.facilities.map((f) => f.facilityId);
 
-  const groupDecisionsCompleted = staticVariationGroupDecisions.every((s) => payload.reviewGroupDecisions[s]);
-  if (!groupDecisionsCompleted) return false;
-
-  return payload.underlyingAgreement.facilities.every((f) => payload.facilitiesReviewGroupDecisions[f.facilityId]);
+  return (
+    finalRequiredDecisions.every((decision) => payload.reviewGroupDecisions[decision]) &&
+    payload.underlyingAgreement.facilities.every((f) => requiredFacilityDecisions.includes(f.facilityId))
+  );
 };
 
-export const activeFacilityExists = (payload: UNAVariationReviewRequestTaskPayload) => {
+export const validFacilityExists = (payload: UNAVariationReviewRequestTaskPayload) => {
   const activeExcluded = Object.keys(payload.facilitiesReviewGroupDecisions).some(
     (k) =>
       payload.facilitiesReviewGroupDecisions[k]?.facilityStatus === 'EXCLUDED' &&
@@ -83,14 +100,19 @@ export const activeFacilityExists = (payload: UNAVariationReviewRequestTaskPaylo
       payload.facilitiesReviewGroupDecisions[k]?.type === 'ACCEPTED',
   );
 
-  return activeExcluded || activeLive || activeNew;
+  const unchanged = payload.underlyingAgreement.facilities.some(
+    (k) => payload.reviewSectionsCompleted[k.facilityId] === TaskItemStatus.UNCHANGED,
+  );
+
+  return activeExcluded || activeLive || activeNew || unchanged;
 };
 
-export const canAcceptVariationPayload = (payload: UNAVariationReviewRequestTaskPayload) =>
-  (acceptedSectionExists(payload) || acceptedFacilityDecisionExists(payload)) && activeFacilityExists(payload);
+export const canAcceptVariationPayload = (payload: UNAVariationReviewRequestTaskPayload) => {
+  return (acceptedSectionExists(payload) || acceptedFacilityDecisionExists(payload)) && validFacilityExists(payload);
+};
 
 export const canRejectVariationPayload = (payload: UNAVariationReviewRequestTaskPayload) =>
-  rejectedSectionExists(payload) || rejectedFacilityDecisionExists(payload) || !activeFacilityExists(payload);
+  rejectedSectionExists(payload) || rejectedFacilityDecisionExists(payload) || !validFacilityExists(payload);
 
 export const payloadAvailableDecisions = (payload: UNAVariationReviewRequestTaskPayload): DecisionType[] => {
   const actions: DecisionType[] = [];
@@ -116,7 +138,12 @@ export const createProposedUnderlyingAgreementVariationPayload = (
     facilitiesReviewGroupDecisions,
     underlyingAgreement,
     accountReferenceData,
+    reviewSectionsCompleted,
   } = payload;
+
+  const unchangedFacilities: Facility[] = underlyingAgreement.facilities.filter(
+    (f) => reviewSectionsCompleted[f.facilityId] === TaskItemStatus.UNCHANGED,
+  );
 
   const proposed: UnderlyingAgreementVariationPayload = {
     underlyingAgreementVariationDetails: underlyingAgreement.underlyingAgreementVariationDetails,
@@ -127,8 +154,8 @@ export const createProposedUnderlyingAgreementVariationPayload = (
     authorisationAndAdditionalEvidence: underlyingAgreement.authorisationAndAdditionalEvidence,
   };
 
-  if (reviewGroupDecisions['TARGET_UNIT_DETAILS'].type === TaskItemStatus.REJECTED) {
-    proposed.underlyingAgreementTargetUnitDetails = transform(accountReferenceData);
+  if (reviewGroupDecisions['TARGET_UNIT_DETAILS']?.type === TaskItemStatus.REJECTED) {
+    proposed.underlyingAgreementTargetUnitDetails = transformAccountReferenceData(accountReferenceData);
   }
 
   Object.entries(reviewGroupDecisions)
@@ -144,11 +171,35 @@ export const createProposedUnderlyingAgreementVariationPayload = (
       decisionType: facilitiesReviewGroupDecisions[k].type,
       ...underlyingAgreement.facilities.find((f) => f.facilityId === k),
     }))
-    .filter(rejectedAndNew)
+    .filter(notRejectedAndNew)
     .map(rejectedToOriginal(originalUnderlyingAgreementContainer));
+
+  proposed.facilities = [...proposed.facilities, ...unchangedFacilities];
 
   return proposed;
 };
+
+export function deleteDecision(
+  reviewGroupDecisions: Record<string, UnderlyingAgreementReviewDecision>,
+  subtask: string,
+): Record<string, UnderlyingAgreementReviewDecision> {
+  return produce(reviewGroupDecisions, (draft) => {
+    if (draft[subtask]?.type) {
+      delete draft[subtask];
+    }
+  });
+}
+
+export function deleteFacilityDecision(
+  reviewGroupDecisions: Record<string, UnderlyingAgreementVariationFacilityReviewDecision>,
+  facilityId: string,
+): Record<string, UnderlyingAgreementVariationFacilityReviewDecision> {
+  return produce(reviewGroupDecisions, (draft) => {
+    if (draft[facilityId]?.type) {
+      delete draft[facilityId];
+    }
+  });
+}
 
 export function resetDetermination(determination: Determination): Determination {
   return produce(determination, (draft) => {
@@ -182,4 +233,34 @@ export function applySaveActionSideEffects(
       draft[subtask] = TaskItemStatus.IN_PROGRESS;
     }),
   };
+}
+
+export function calcManageFacilitiesStatus(reviewSectionsCompleted: Record<string, string>): TaskItemStatus {
+  const facilitySections = Object.keys(reviewSectionsCompleted).filter(
+    (s) => ![...staticVariationSections, OVERALL_DECISION_SUBTASK].includes(s),
+  );
+
+  if (facilitySections.length === 0) return TaskItemStatus.UNDECIDED;
+
+  const allFacilitiesAccepted = facilitySections.every((s) => reviewSectionsCompleted?.[s] === TaskItemStatus.ACCEPTED);
+  if (allFacilitiesAccepted) return TaskItemStatus.ACCEPTED;
+
+  const allFacilitiesRejected = facilitySections.every((s) => reviewSectionsCompleted?.[s] === TaskItemStatus.REJECTED);
+  if (allFacilitiesRejected) return TaskItemStatus.REJECTED;
+
+  const undecidedFacilityExists = facilitySections.some(
+    (s) => reviewSectionsCompleted?.[s] === TaskItemStatus.UNDECIDED,
+  );
+
+  if (undecidedFacilityExists) return TaskItemStatus.UNDECIDED;
+
+  const allFacilitiesUnchanged = facilitySections.every(
+    (s) => reviewSectionsCompleted?.[s] === TaskItemStatus.UNCHANGED,
+  );
+
+  if (allFacilitiesUnchanged) return TaskItemStatus.UNCHANGED;
+
+  return facilitySections.some((s) => reviewSectionsCompleted?.[s] === TaskItemStatus.ACCEPTED)
+    ? TaskItemStatus.ACCEPTED
+    : TaskItemStatus.REJECTED;
 }

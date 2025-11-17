@@ -22,9 +22,9 @@ public interface FacilityCertificationRepository extends JpaRepository<FacilityC
 
     @Query("SELECT fc FROM FacilityCertification fc " +
             "JOIN FacilityData fd on fc.facilityId = fd.id " +
-            "WHERE fd.facilityId=:facilityBusinessId " +
+            "WHERE fd.id=:facilityId " +
             "  AND fc.certificationPeriodId=:certificationPeriodId")
-    Optional<FacilityCertification> findByFacilityIdAndCertificationPeriodId(String facilityBusinessId, Long certificationPeriodId);
+    Optional<FacilityCertification> findByFacilityIdAndCertificationPeriodId(Long facilityId, Long certificationPeriodId);
     
     boolean existsFacilityCertificationByFacilityIdAndCertificationPeriodId(Long facilityId, Long certificationPeriodId);
 }

@@ -95,6 +95,18 @@ const selectVariationDetails: StateSelector<RequestActionState, UnderlyingAgreem
       (underlyingAgreement as UnderlyingAgreementVariationPayload).underlyingAgreementVariationDetails,
   );
 
+const selectFacilityTargetComposition = (facilityIndex: number) =>
+  createDescendingSelector(
+    selectUnderlyingAgreement,
+    (una) => una?.facilities?.[facilityIndex]?.cca3BaselineAndTargets?.targetComposition,
+  );
+
+const selectFacilityBaselineEnergyConsumption = (facilityIndex: number) =>
+  createDescendingSelector(
+    selectUnderlyingAgreement,
+    (una) => una?.facilities?.[facilityIndex]?.cca3BaselineAndTargets?.facilityBaselineEnergyConsumption,
+  );
+
 export const underlyingAgreementRequestActionQuery = {
   selectPayload,
   selectAccountReferenceData,
@@ -109,4 +121,6 @@ export const underlyingAgreementRequestActionQuery = {
   selectTargetPeriod6Details,
   selectAuthorisationAndAdditionalEvidence,
   selectVariationDetails,
+  selectFacilityTargetComposition,
+  selectFacilityBaselineEnergyConsumption,
 };

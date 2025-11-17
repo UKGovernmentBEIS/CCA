@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uk.gov.netz.api.referencedata.service.Country;
+import uk.gov.netz.api.referencedata.service.UKCountry;
 
 @Getter
 @Setter
@@ -51,6 +52,6 @@ public class FacilityAddress {
 
     @NotBlank
     @Size(max = 255)
-    @Country
+    @UKCountry
     private String country;
 }

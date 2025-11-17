@@ -27,7 +27,6 @@ import { FACILITY_TARGETS_FORM, FacilityTargetsFormModel, FacilityTargetsFormPro
 @Component({
   selector: 'cca-targets',
   templateUrl: './targets.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, WizardStepComponent, TextInputComponent, RouterLink],
   providers: [FacilityTargetsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -93,9 +92,9 @@ function updateFacilityTargets(
     if (facilityIndex === -1) return;
 
     const improvements: FacilityTargets['improvements'] = {
-      [Improvement.TP7]: form.value.tp7,
-      [Improvement.TP8]: form.value.tp8,
-      [Improvement.TP9]: form.value.tp9,
+      [Improvement.TP7]: String(form.value.tp7),
+      [Improvement.TP8]: String(form.value.tp8),
+      [Improvement.TP9]: String(form.value.tp9),
     };
 
     draft.facilities[facilityIndex].cca3BaselineAndTargets.facilityTargets = {

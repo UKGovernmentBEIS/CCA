@@ -15,7 +15,6 @@ import { DashboardItemsListComponent } from './dashboard-items-list.component';
   template: `
     <cca-dashboard-items-list [items]="items" [tableColumns]="tableColumns" [unassignedLabel]="'Unassigned'" />
   `,
-  standalone: true,
   imports: [DashboardItemsListComponent],
 })
 class TestParentComponent {

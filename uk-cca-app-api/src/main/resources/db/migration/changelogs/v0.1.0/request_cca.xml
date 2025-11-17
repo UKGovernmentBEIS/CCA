@@ -2075,4 +2075,400 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_CCA3_ADJUSTMENTS_FOR_usedReportingMechanism_IN_UNA_REVIEW_AND_SUBMITTED_REQUEST_ACTION"  author="P70383">
+        <sql>
+            UPDATE request_task
+            SET payload = jsonb_set(payload, '{underlyingAgreement,facilities}', (
+                SELECT jsonb_agg(
+                               CASE WHEN element -> 'cca3BaselineAndTargets' is null then element
+                                    else jsonb_set(element, '{cca3BaselineAndTargets}',
+                                                   case WHEN element -> 'cca3BaselineAndTargets' -> 'baselineData' ->> 'usedReportingMechanism' is null THEN jsonb_set(element -> 'cca3BaselineAndTargets', '{baselineData, usedReportingMechanism}', 'false')
+                                                       else element -> 'cca3BaselineAndTargets'
+                                                       END)
+                                   END)
+                FROM jsonb_array_elements(payload -> 'underlyingAgreement'->'facilities') element
+            ))
+            where type_id = (select id from request_task_type where code = 'UNDERLYING_AGREEMENT_APPLICATION_REVIEW');
+
+            UPDATE request_task_history
+            SET payload = jsonb_set(payload, '{underlyingAgreement,facilities}', (
+                SELECT jsonb_agg(
+                               CASE WHEN element -> 'cca3BaselineAndTargets' is null then element
+                                    else jsonb_set(element, '{cca3BaselineAndTargets}',
+                                                   case WHEN element -> 'cca3BaselineAndTargets' -> 'baselineData' ->> 'usedReportingMechanism' is null THEN jsonb_set(element -> 'cca3BaselineAndTargets', '{baselineData, usedReportingMechanism}', 'false')
+                                                       else element -> 'cca3BaselineAndTargets'
+                                                       END)
+                                   END)
+                FROM jsonb_array_elements(payload -> 'underlyingAgreement'->'facilities') element
+            ))
+            where type = 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT';
+
+            UPDATE request_action
+            SET payload = jsonb_set(payload, '{underlyingAgreement,facilities}', (
+                SELECT jsonb_agg(
+                               CASE WHEN element -> 'cca3BaselineAndTargets' is null then element
+                                    else jsonb_set(element, '{cca3BaselineAndTargets}',
+                                                   case WHEN element -> 'cca3BaselineAndTargets' -> 'baselineData' ->> 'usedReportingMechanism' is null THEN jsonb_set(element -> 'cca3BaselineAndTargets', '{baselineData, usedReportingMechanism}', 'false')
+                                                       else element -> 'cca3BaselineAndTargets'
+                                                       END)
+                                   END)
+                FROM jsonb_array_elements(payload -> 'underlyingAgreement'->'facilities') element
+            ))
+            where type = 'UNDERLYING_AGREEMENT_APPLICATION_SUBMITTED';
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_CCA3_EXISTING_FACILITIES_MIGRATION_RUN" author="P70383">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'CCA3_EXISTING_FACILITIES_MIGRATION_RUN', 'Generate a new CCA3 existing facilities migration run', 'PROCESS_CCA3_EXISTING_FACILITIES_MIGRATION_RUN', 'SYSTEM', false, false, false, false, 'CA');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'CCA3_EXISTING_FACILITIES_MIGRATION_RUN';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING" author="P70383">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING', 'Generate a new CCA3 existing facilities migration account processing', 'PROCESS_CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING', 'UNA', false, true, false, false, 'ACCOUNT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type
+                (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_TASK_TYPE" author="P70383">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES
+                (nextval('request_task_action_type_seq'), 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_SAVE_APPLICATION', false),
+                (nextval('request_task_action_type_seq'), 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_UPLOAD_ATTACHMENT', false),
+                (nextval('request_task_action_type_seq'), 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION', false),
+                (nextval('request_task_action_type_seq'), 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_CANCEL_APPLICATION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION'
+              AND rtat.code in ('CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_SAVE_APPLICATION',
+                                'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_UPLOAD_ATTACHMENT',
+                                'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION',
+                                'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_CANCEL_APPLICATION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code in ('CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_SAVE_APPLICATION',
+                'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_UPLOAD_ATTACHMENT',
+                'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION',
+                'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_CANCEL_APPLICATION'));
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_SAVE_APPLICATION',
+                'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_UPLOAD_ATTACHMENT',
+                'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION',
+                'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_CANCEL_APPLICATION');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_FACILITY_AUDIT_REQUEST_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'FACILITY_AUDIT', 'Facility audit', 'PROCESS_FACILITY_AUDIT', 'FACILITY', false, true, false, true, 'FACILITY');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'FACILITY_AUDIT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_PRE_AUDIT_REVIEW_SUBMIT_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'PRE_AUDIT_REVIEW_SUBMIT', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'FACILITY_AUDIT'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'PRE_AUDIT_REVIEW_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_underlying_agreement_document_in_request_and_request_action_payload"  author="apostolouk@unisystems.gr">
+        <sql>
+        	update request
+			set 
+			payload = (payload || jsonb_build_object('underlyingAgreementDocuments', jsonb_build_object('CCA_2', payload -> 'underlyingAgreementDocument'))) - 'underlyingAgreementDocument'
+			where payload ->> 'payloadType' in ('UNDERLYING_AGREEMENT_REQUEST_PAYLOAD', 'UNDERLYING_AGREEMENT_VARIATION_REQUEST_PAYLOAD') 
+			and payload ?? 'underlyingAgreementDocument';
+
+            update request_action
+			set 
+			payload = (payload || jsonb_build_object('underlyingAgreementDocuments', jsonb_build_object('CCA_2', payload -> 'underlyingAgreementDocument'))) - 'underlyingAgreementDocument'
+			where type in ('UNDERLYING_AGREEMENT_APPLICATION_ACCEPTED', 'UNDERLYING_AGREEMENT_APPLICATION_ACTIVATED', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACCEPTED', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACTIVATED') 
+			and payload ?? 'underlyingAgreementDocument';
+        </sql>
+    </changeSet>
+    
+    <changeSet id="0_1_0_rename_underlying_agreement_proposed_document_in_request_action_payload_for_una_accepted"  author="apostolouk@unisystems.gr">
+        <sql>
+            UPDATE request_action
+			SET payload = jsonb_set(payload, '{underlyingAgreementDocuments,CCA_2,name}',
+						to_jsonb(replace(
+      							payload->'underlyingAgreementDocuments'->'CCA_2'->>'name',
+      									'Underlying Agreement',
+      									'CCA2 Underlying Agreement'
+    							)
+  							)
+			)
+			WHERE type = 'UNDERLYING_AGREEMENT_APPLICATION_ACCEPTED' 
+			and payload ?? 'underlyingAgreementDocuments'
+			and payload->'underlyingAgreementDocuments'->'CCA_2'->>'name' LIKE '%[proposed]%';
+        </sql>
+    </changeSet>
+    
+    <changeSet id="0_1_0_rename_underlying_agreement_document_in_request_action_payload_una_activated"  author="apostolouk@unisystems.gr">
+        <sql>
+            UPDATE request_action
+			SET payload = jsonb_set(payload, '{underlyingAgreementDocuments,CCA_2,name}',
+						to_jsonb(replace(
+      							payload->'underlyingAgreementDocuments'->'CCA_2'->>'name',
+      									'Underlying Agreement',
+      									'CCA2 Underlying Agreement'
+    							)
+  							)
+			)
+			WHERE type = 'UNDERLYING_AGREEMENT_APPLICATION_ACTIVATED' 
+			and payload ?? 'underlyingAgreementDocuments'
+			and payload->'underlyingAgreementDocuments'->'CCA_2'->>'name' LIKE '%Underlying Agreement%';
+        </sql>
+    </changeSet>
+    
+    <changeSet id="0_1_0_rename_underlying_agreement_document_in_request_action_payload_una_migrated"  author="apostolouk@unisystems.gr">
+        <sql>
+            UPDATE request_action
+			SET payload = jsonb_set(payload, '{underlyingAgreementDocument,name}',
+						to_jsonb(replace(
+      							payload->'underlyingAgreementDocument'->>'name',
+      									'Underlying Agreement',
+      									'CCA2 Underlying Agreement'
+    							)
+  							)
+			)
+			WHERE type = 'UNDERLYING_AGREEMENT_APPLICATION_MIGRATED' 
+			and payload ?? 'underlyingAgreementDocument'
+			and payload->'underlyingAgreementDocument'->>'name' LIKE '%Underlying Agreement%';
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_PRE_AUDIT_REVIEW_SUBMIT_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'FACILITY_AUDIT_PRE_AUDIT_REVIEW_SAVE_APPLICATION', false),
+                   (nextval('request_task_action_type_seq'), 'FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMIT_APPLICATION', false),
+                   (nextval('request_task_action_type_seq'), 'FACILITY_AUDIT_CANCEL_APPLICATION', false),
+                   (nextval('request_task_action_type_seq'), 'FACILITY_AUDIT_UPLOAD_ATTACHMENT', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt
+                     CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'PRE_AUDIT_REVIEW_SUBMIT'
+              AND rtat.code IN
+                  ('FACILITY_AUDIT_PRE_AUDIT_REVIEW_SAVE_APPLICATION', 'FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMIT_APPLICATION',
+                   'FACILITY_AUDIT_CANCEL_APPLICATION', 'FACILITY_AUDIT_UPLOAD_ATTACHMENT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code IN ('FACILITY_AUDIT_PRE_AUDIT_REVIEW_SAVE_APPLICATION',
+                'FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMIT_APPLICATION', 'FACILITY_AUDIT_CANCEL_APPLICATION', 'FACILITY_AUDIT_UPLOAD_ATTACHMENT')
+                );
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('FACILITY_AUDIT_PRE_AUDIT_REVIEW_SAVE_APPLICATION',
+                'FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMIT_APPLICATION', 'FACILITY_AUDIT_CANCEL_APPLICATION', 'FACILITY_AUDIT_UPLOAD_ATTACHMENT');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'FACILITY_AUDIT'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SAVE_APPLICATION', false),
+                   (nextval('request_task_action_type_seq'), 'FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT_APPLICATION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt
+                     CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT'
+              AND rtat.code IN
+                  ('FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SAVE_APPLICATION', 'FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT_APPLICATION',
+                   'FACILITY_AUDIT_CANCEL_APPLICATION', 'FACILITY_AUDIT_UPLOAD_ATTACHMENT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code IN ('FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SAVE_APPLICATION', 'FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT_APPLICATION',
+                'FACILITY_AUDIT_CANCEL_APPLICATION', 'FACILITY_AUDIT_UPLOAD_ATTACHMENT')
+                AND request_task_type_id in (SELECT id from request_task_type where code = 'AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT'));
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SAVE_APPLICATION',
+                'FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT_APPLICATION');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_CCA2_EXTENSION_NOTICE_RUN" author="P70383">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'CCA2_EXTENSION_NOTICE_RUN', 'Generate a new cca2 extension notice run', 'PROCESS_CCA2_EXTENSION_NOTICE_RUN', 'SYSTEM', false, false, false, false, 'CA');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'CCA2_EXTENSION_NOTICE_RUN';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING" author="P70383">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING', 'Generate a new CCA2 extension notice account processing', 'PROCESS_CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING', 'UNA', false, true, false, false, 'ACCOUNT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_AUDIT_TRACK_CORRECTIVE_ACTIONS_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'AUDIT_TRACK_CORRECTIVE_ACTIONS', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'FACILITY_AUDIT'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'AUDIT_TRACK_CORRECTIVE_ACTIONS';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_AUDIT_TRACK_CORRECTIVE_ACTIONS_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SAVE_RESPONSE', false),
+                   (nextval('request_task_action_type_seq'), 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMIT_RESPONSE', false),
+                   (nextval('request_task_action_type_seq'), 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_COMPLETE_APPLICATION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt
+                     CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'AUDIT_TRACK_CORRECTIVE_ACTIONS'
+              AND rtat.code IN
+                  ('FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SAVE_RESPONSE', 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMIT_RESPONSE', 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_COMPLETE_APPLICATION',
+                   'FACILITY_AUDIT_CANCEL_APPLICATION', 'FACILITY_AUDIT_UPLOAD_ATTACHMENT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code IN ('FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SAVE_RESPONSE', 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMIT_RESPONSE', 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_COMPLETE_APPLICATION',
+                'FACILITY_AUDIT_CANCEL_APPLICATION', 'FACILITY_AUDIT_UPLOAD_ATTACHMENT')
+                AND request_task_type_id in (SELECT id from request_task_type where code = 'AUDIT_TRACK_CORRECTIVE_ACTIONS'));
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SAVE_RESPONSE', 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMIT_RESPONSE',
+                'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_COMPLETE_APPLICATION');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_RENAME_officialNotice_FOR_VARIATION_REQUEST_ACTIONS" author="P70383">
+        <comment>Convert officialNotice value to array</comment>
+        <sql>
+            update request_action
+            set payload = jsonb_set(payload, '{officialNotice}', jsonb_build_array(payload -> 'officialNotice'), false)
+            where type in ('UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACCEPTED', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACTIVATED')
+              and (payload)::jsonb ?? 'officialNotice';
+        </sql>
+        <comment>Rename officialNotice to officialNotices</comment>
+        <sql>
+            UPDATE request_action
+            SET payload = jsonb_set(payload #- '{officialNotice}', '{officialNotices}', payload#>'{officialNotice}')
+            where type in ('UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACCEPTED', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACTIVATED')
+              and (payload)::jsonb ?? 'officialNotice';
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_REQUEST_TASK_TYPE_EXPIRATION_KEY_OF_AUDIT_TRACK_CORRECTIVE_ACTIONS" author="P70311">
+        <update tableName="request_task_type">
+            <column name="expiration_key" value="facilityAudit" />
+            <where>code = 'AUDIT_TRACK_CORRECTIVE_ACTIONS'</where>
+        </update>
+        <rollback>
+            <update tableName="request_task_type">
+                <column name="expiration_key" value="" />
+                <where>code = 'AUDIT_TRACK_CORRECTIVE_ACTIONS'</where>
+            </update>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

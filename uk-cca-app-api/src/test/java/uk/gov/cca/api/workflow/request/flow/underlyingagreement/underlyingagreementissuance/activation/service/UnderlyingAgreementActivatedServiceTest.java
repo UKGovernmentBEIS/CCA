@@ -11,10 +11,12 @@ import uk.gov.cca.api.account.service.TargetUnitAccountUpdateService;
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.common.domain.SchemeData;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.facility.service.FacilityDataUpdateService;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
+import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementDocument;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementEntity;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.ApplicationReasonType;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
@@ -100,10 +102,11 @@ class UnderlyingAgreementActivatedServiceTest {
                 				.build()))
                         .build())
                 .build();
+        final String operatorName = "operatorName";
         final FacilityItem facilityItem1 = FacilityItem.builder()
                 .facilityId(facilityId)
                 .facilityDetails(FacilityDetails.builder()
-                        .facilityAddress(AccountAddressDTO.builder().postcode(postcode).build())
+                        .facilityAddress(FacilityAddressDTO.builder().postcode(postcode).build())
                         .previousFacilityId("Prv1")
                         .applicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP)
                         .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3))
@@ -116,7 +119,7 @@ class UnderlyingAgreementActivatedServiceTest {
         FacilityItem facilityItem2 = FacilityItem.builder()
                 .facilityId(facilityId2)
                 .facilityDetails(FacilityDetails.builder().
-                        facilityAddress(AccountAddressDTO.builder().postcode(postcode2).build())
+                        facilityAddress(FacilityAddressDTO.builder().postcode(postcode2).build())
                         .previousFacilityId("Prv2")
                         .applicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP)
                         .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3))
@@ -128,7 +131,7 @@ class UnderlyingAgreementActivatedServiceTest {
                 .build();
         final UnderlyingAgreement una = UnderlyingAgreement.builder().facilities(Set.of(facility, facility2)).build();
         final UnderlyingAgreement unaProposed = UnderlyingAgreement.builder().facilities(Set.of(facility, facility2)).build();
-        final UnderlyingAgreementTargetUnitDetails unaDetails = UnderlyingAgreementTargetUnitDetails.builder().build();
+        final UnderlyingAgreementTargetUnitDetails unaDetails = UnderlyingAgreementTargetUnitDetails.builder().operatorName(operatorName).build();
         final Determination determination = Determination.builder().type(DeterminationType.ACCEPTED).build();
         final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder().sectorUsers(Set.of(user)).build();
         final Map<String, UnderlyingAgreementFacilityReviewDecision> facilitiesReviewGroupDecisions = new HashMap<>(
@@ -182,27 +185,28 @@ class UnderlyingAgreementActivatedServiceTest {
 
         final Set<FacilityBaseInfoDTO> createdFacilities = Set.of(
                 FacilityBaseInfoDTO.builder()
-                        .facilityId(facilityItem1.getFacilityId())
+                        .facilityBusinessId(facilityItem1.getFacilityId())
                         .build(),
                 FacilityBaseInfoDTO.builder()
-                        .facilityId(facilityItem2.getFacilityId())
+                        .facilityBusinessId(facilityItem2.getFacilityId())
                         .build());
 
         final Set<FacilityItem> facilityItems = Set.of(facilityItem1, facilityItem2);
-
+        UnderlyingAgreementDocument doc = UnderlyingAgreementDocument.createUnderlyingAgreementDocument(SchemeVersion.CCA_2);
+        UnderlyingAgreementEntity unaEntity = UnderlyingAgreementEntity.builder()
+        		.underlyingAgreementContainer(unaContainer)
+        		.accountId(accountId)
+        		.build();
+        unaEntity.addUnderlyingAgreementDocument(doc);
+        
         when(requestService.findRequestById(requestId)).thenReturn(request);
         when(accountReferenceDetailsService.getAccountReferenceData(accountId)).thenReturn(referenceData);
-        when(underlyingAgreementService.createSearchKeywordsForAccount(unaContainer)).thenReturn(searchKeywordPairs);
+        when(underlyingAgreementService.createSearchKeywordsForAccount(operatorName, unaContainer)).thenReturn(searchKeywordPairs);
         when(underlyingAgreementService.submitUnderlyingAgreement(
                 eq(unaContainer),
                 eq(accountId),
                 argThat(ctx -> ctx.getSchemeVersion().equals(workflowSchemeVersion))
-        )).thenReturn(
-                UnderlyingAgreementEntity.builder()
-                        .underlyingAgreementContainer(unaContainer)
-                        .accountId(accountId)
-                        .build()
-        ).thenReturn(UnderlyingAgreementEntity.builder().underlyingAgreementContainer(unaContainer).accountId(accountId).build());
+                )).thenReturn(unaEntity);
         when(facilityDataUpdateService.createFacilitiesData(anyList())).thenReturn(createdFacilities);
 
         // invoke
@@ -211,7 +215,7 @@ class UnderlyingAgreementActivatedServiceTest {
         verify(requestService, times(1)).findRequestById(requestId);
         verify(underlyingAgreementService, times(1))
                 .submitUnderlyingAgreement(eq(unaContainer), eq(request.getAccountId()), argThat(ctx -> ctx.getSchemeVersion().equals(workflowSchemeVersion)));
-        verify(underlyingAgreementService, times(1)).createSearchKeywordsForAccount(unaContainer);
+        verify(underlyingAgreementService, times(1)).createSearchKeywordsForAccount(operatorName, unaContainer);
         verify(accountReferenceDetailsService, times(1)).getAccountReferenceData(request.getAccountId());
         verify(facilityDataUpdateService, times(1)).createFacilitiesData(anyList());
 

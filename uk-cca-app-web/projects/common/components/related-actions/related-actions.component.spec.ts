@@ -28,7 +28,6 @@ describe('RelatedActionsComponent', () => {
         [taskId]="taskId"
       ></netz-related-actions>
     `,
-    standalone: true,
     imports: [RelatedActionsComponent],
   })
   class TestComponent {

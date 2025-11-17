@@ -25,7 +25,6 @@ describe('MultipleFileInputComponent', () => {
   const activatedRoute = new ActivatedRouteStub();
 
   @Component({
-    standalone: true,
     template: `
       <form [formGroup]="form">
         <cca-multiple-file-input formControlName="file" [baseDownloadUrl]="getDownloadUrl()"></cca-multiple-file-input>

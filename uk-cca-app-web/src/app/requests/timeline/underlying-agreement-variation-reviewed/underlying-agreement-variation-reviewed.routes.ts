@@ -22,13 +22,33 @@ export const UNDERLYING_AGREEMENT_VARIATION_REVIEWED_TIMELINE_ROUTES = [
       ),
   },
   {
+    path: 'review-manage-facilities',
+    title: 'Manage facilities list',
+    data: { backlink: '../../', breadcrumb: false },
+    loadComponent: () =>
+      import('./subtasks/review-manage-facilities/review-manage-facilities.component').then(
+        (c) => c.ReviewManageFacilitiesComponent,
+      ),
+  },
+  {
     path: 'facility',
     children: [
       {
         path: ':facilityId',
-        title: 'Facility',
-        data: { backlink: '../../', breadcrumb: false },
-        loadComponent: () => import('./subtasks/facility/facility.component').then((c) => c.FacilityComponent),
+        children: [
+          {
+            path: '',
+            title: 'Facility',
+            data: { backlink: '../../review-manage-facilities', breadcrumb: false },
+            loadComponent: () => import('./subtasks/facility/facility.component').then((c) => c.FacilityComponent),
+          },
+          {
+            path: 'products',
+            title: 'View Products',
+            data: { breadcrumb: false, backlink: '../' },
+            loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsTimelineComponent),
+          },
+        ],
       },
     ],
   },

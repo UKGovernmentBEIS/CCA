@@ -9,9 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { FacilityCertificationSearchResultInfoDTO } from './facilityCertificationSearchResultInfoDTO';
+import { FacilitySearchResultExtendedDTO } from './facilitySearchResultExtendedDTO';
 
 export interface FacilitySearchResults {
-  facilities?: FacilityCertificationSearchResultInfoDTO[];
+  facilities?: FacilitySearchResultExtendedDTO[];
   total?: number;
 }

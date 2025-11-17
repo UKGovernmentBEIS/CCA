@@ -367,7 +367,7 @@ class SubsistenceFeesMoaFacilityMarkingStatusServiceTest {
 
         FacilityBaseInfoDTO facilityBaseInfo = FacilityBaseInfoDTO.builder()
                 .siteName("Facility name")
-                .facilityId("Facility Id")
+                .facilityBusinessId("Facility Id")
                 .build();
 
         SubsistenceFeesMoaFacilityMarkingStatusHistory facilityMarkingStatusHistory = SubsistenceFeesMoaFacilityMarkingStatusHistory.builder()
@@ -388,7 +388,7 @@ class SubsistenceFeesMoaFacilityMarkingStatusServiceTest {
                 .build();
 
         SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO expectedResult = SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO.builder()
-                .facilityId("Facility Id")
+                .facilityBusinessId("Facility Id")
                 .markingStatusHistoryList(List.of(subsistenceFeesMoaFacilityMarkingStatusHistoryDTO))
                 .siteName("Facility name")
                 .build();

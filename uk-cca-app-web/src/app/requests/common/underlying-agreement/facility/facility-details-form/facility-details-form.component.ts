@@ -3,6 +3,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
+import { debounceTime, map } from 'rxjs';
+
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   CheckboxComponent,
@@ -12,9 +14,10 @@ import {
   RadioOptionComponent,
   TextInputComponent,
 } from '@netz/govuk-components';
-import { AccountAddressInputComponent, WizardStepComponent } from '@shared/components';
+import { FacilityAddressInputComponent, WizardStepComponent } from '@shared/components';
 import { ConfigService } from '@shared/config';
 import { existingControlContainer } from '@shared/providers';
+import { UK_COUNTRY_CODES } from '@shared/services';
 
 import { hasBothCCASchemes, isCCA2Scheme, isCCA3Scheme, isCreationDateAfterCutOffDate } from '../../../utils';
 import { underlyingAgreementQuery } from '../../+state';
@@ -24,13 +27,12 @@ import { FACILITY_DETAILS_FORM, FacilityDetailsFormModel } from './facility-deta
 @Component({
   selector: 'cca-facility-details-form',
   templateUrl: './facility-details-form.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     RadioComponent,
     RadioOptionComponent,
     ConditionalContentDirective,
-    AccountAddressInputComponent,
+    FacilityAddressInputComponent,
     ApplicationReasonTypePipe,
     TextInputComponent,
     CheckboxesComponent,
@@ -48,20 +50,19 @@ export class FacilityDetailsFormComponent {
 
   protected readonly submitChange = output<FormGroup<FacilityDetailsFormModel>>();
 
-  protected readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
+  protected readonly form = inject<FormGroup<FacilityDetailsFormModel>>(FACILITY_DETAILS_FORM);
+
+  private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
   protected readonly facility = this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId));
   protected readonly returnPath = this.facilityId ? '../../' : '../';
 
-  protected readonly form = inject<FormGroup<FacilityDetailsFormModel>>(FACILITY_DETAILS_FORM);
-
-  private readonly isAfterCutOffDate = isCreationDateAfterCutOffDate(
-    this.requestTaskStore.select(requestTaskQuery.selectRequestInfo)()?.creationDate,
-    this.configService.getUnderlyingAgreementSchemeParticipationFlagCutOffDate(),
+  private readonly tuDetails = this.requestTaskStore.select(
+    underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails,
   );
 
-  private readonly applicationReasonValue = toSignal(this.form.controls.applicationReason.valueChanges, {
-    initialValue: this.form.value.applicationReason,
-  });
+  protected readonly hasUKAddress = computed(() =>
+    UK_COUNTRY_CODES.includes(this.tuDetails()?.operatorAddress?.country),
+  );
 
   private readonly participatingSchemeVersionsValue = toSignal(
     this.form.controls.participatingSchemeVersions.valueChanges,
@@ -70,22 +71,52 @@ export class FacilityDetailsFormComponent {
     },
   );
 
-  private readonly schemeParticipationChoiceStatus = toSignal(
-    this.form.controls.schemeParticipationChoice.statusChanges,
+  private readonly isAfterCutOffDate = computed(() =>
+    isCreationDateAfterCutOffDate(
+      this.requestTaskStore.select(requestTaskQuery.selectRequestInfo)()?.creationDate,
+      this.configService.getUnderlyingAgreementSchemeParticipationFlagCutOffDate(),
+    ),
+  );
+
+  private readonly applicationReasonValue = toSignal(this.form.controls.applicationReason.valueChanges, {
+    initialValue: this.form.value.applicationReason,
+  });
+
+  private readonly schemeParticipationChoiceEnabled = toSignal(
+    this.form.controls.schemeParticipationChoice.statusChanges.pipe(
+      map((status) => status !== 'DISABLED'),
+      // Small delay to ensure the form control status is fully updated
+      debounceTime(0),
+    ),
     {
-      initialValue: this.form.controls.schemeParticipationChoice.status,
+      initialValue: this.form.controls.schemeParticipationChoice.status !== 'DISABLED',
     },
   );
 
-  protected readonly showSchemeParticipationChoice = computed(
-    () =>
-      !this.isAfterCutOffDate &&
-      this.applicationReasonValue() === 'CHANGE_OF_OWNERSHIP' &&
-      this.schemeParticipationChoiceStatus() !== 'DISABLED',
-  );
+  protected readonly showPreviousFacilityIdCtrl = computed(() => {
+    const facility = this.facility();
+    const applicationReason = this.applicationReasonValue();
+
+    const facilityStatus = facility?.status || 'NEW';
+
+    return (
+      (facilityStatus === 'NEW' && applicationReason === 'CHANGE_OF_OWNERSHIP') ||
+      (facilityStatus === 'LIVE' &&
+        facility?.facilityDetails?.applicationReason === 'CHANGE_OF_OWNERSHIP' &&
+        facility?.facilityDetails?.previousFacilityId)
+    );
+  });
+
+  protected readonly showSchemeParticipationChoice = computed(() => {
+    const isAfterCutOff = this.isAfterCutOffDate();
+    const showChangeOfOwnership = this.showChangeOfOwnershipCtrls();
+    const schemeChoiceEnabled = this.schemeParticipationChoiceEnabled();
+
+    return !isAfterCutOff && showChangeOfOwnership && schemeChoiceEnabled;
+  });
 
   protected readonly showChangeOfOwnershipCtrls = computed(
-    () => this.applicationReasonValue() === 'CHANGE_OF_OWNERSHIP',
+    () => this.applicationReasonValue() === 'CHANGE_OF_OWNERSHIP' || this.facility()?.status === 'LIVE',
   );
 
   protected readonly schemeParticipation = computed(() => {

@@ -29,7 +29,6 @@ import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } f
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -53,11 +52,9 @@ export class ResponsiblePersonComponent {
     )() as UnderlyingAgreementSubmitRequestTaskPayload;
 
     const actionPayload = toUnderlyingAgreementSavePayload(payload);
-
-    const updatedPayload = update(actionPayload, this.form);
+    const updatedPayload = updateResponsiblePerson(actionPayload, this.form);
 
     const currentSectionsCompleted = this.store.select(underlyingAgreementQuery.selectSectionsCompleted)();
-
     const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
       draft[REVIEW_TARGET_UNIT_DETAILS_SUBTASK] = TaskItemStatus.IN_PROGRESS;
     });
@@ -71,7 +68,7 @@ export class ResponsiblePersonComponent {
   }
 }
 
-function update(
+function updateResponsiblePerson(
   payload: UnderlyingAgreementApplySavePayload,
   form: FormGroup<ResponsiblePersonFormModel>,
 ): UnderlyingAgreementApplySavePayload {

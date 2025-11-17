@@ -12,7 +12,6 @@ import { CaExternalContactsService, NoticeRecipientsService, RegulatorAuthoritie
 @Component({
   selector: 'cca-notify-operator-of-decision',
   templateUrl: './notify-operator-of-decision.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, CheckboxComponent, CheckboxesComponent, SelectComponent, NoticeRecipientsTypePipe],
   viewProviders: [existingControlContainer],
 })

@@ -19,7 +19,6 @@ type TransactionsCriteriaParams = Omit<TransactionsCriteria, 'pageNumber'> & { p
 @Component({
   selector: 'cca-transaction-report-filters',
   templateUrl: './transactions-filters.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, TextInputComponent, SelectComponent, ButtonDirective, UtilityPanelComponent],
   providers: [TransactionReportFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -4,9 +4,25 @@ import {
   Facility,
   TargetComposition,
   TargetPeriod6Details,
+  UnderlyingAgreementTargetUnitDetails,
 } from 'cca-api';
 
 import { hasBothCCASchemes, isCCA2Scheme } from '../utils';
+
+export const isTargetUnitDetailsWizardCompleted = (tuDetails: UnderlyingAgreementTargetUnitDetails) => {
+  const registrationNumberCompleted =
+    !!tuDetails?.companyRegistrationNumber || !tuDetails?.registrationNumberMissingReason;
+
+  const detailsCompleted = !!tuDetails?.operatorName && !!tuDetails?.operatorType;
+  const operatorAddressCompleted = !!tuDetails?.operatorAddress;
+  const responsiblePersonCompleted =
+    tuDetails?.responsiblePersonDetails.email &&
+    tuDetails?.responsiblePersonDetails.firstName &&
+    tuDetails?.responsiblePersonDetails.lastName &&
+    !!tuDetails?.responsiblePersonDetails.address;
+
+  return registrationNumberCompleted && detailsCompleted && operatorAddressCompleted && responsiblePersonCompleted;
+};
 
 export const isAdditionalEvidenceWizardCompleted = (
   authorisationAndAdditionalEvidence: AuthorisationAndAdditionalEvidence,
@@ -58,12 +74,17 @@ export const isBaselineDataStepComplete = (
   return true;
 };
 
+//TODO populate with business logic || validations
+export const isBaselineEnergyStepComplete = (): boolean => {
+  return true;
+};
+
 export const isTargetsStepComplete = (
-  improvement: number,
+  improvement: string,
   agreementCompositionType: TargetComposition['agreementCompositionType'],
 ): boolean => {
   if (!agreementCompositionType) return false;
-  return typeof improvement === 'number' || typeof improvement === 'string';
+  return typeof improvement === 'string';
 };
 
 function explanationValid(baselineData: BaselineData): boolean {
@@ -110,6 +131,7 @@ export const isCCA3FacilityWizardCompleted = (facility: Facility) => {
     isCCA2FacilityWizardCompleted(facility) &&
     !!facility?.cca3BaselineAndTargets?.targetComposition &&
     !!facility?.cca3BaselineAndTargets?.baselineData &&
+    !!facility?.cca3BaselineAndTargets?.facilityBaselineEnergyConsumption &&
     !!facility?.cca3BaselineAndTargets?.facilityTargets
   );
 };

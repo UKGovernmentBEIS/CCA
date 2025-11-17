@@ -125,7 +125,7 @@ public class SectorUserInvitationMigration extends MigrationBaseService {
             }
         } catch (Exception ex) {
             failedEntries.add(
-                    SectorUserInvitationHelper.constructErrorMessage(rowId, String.format("Error during user invitation - %s", ex.getMessage())));
+		            SectorUserInvitationHelper.constructErrorMessage(rowId, String.format("Error during user invitation - %s", ex.getMessage())));
             failedCounter.incrementAndGet();
         }
     }

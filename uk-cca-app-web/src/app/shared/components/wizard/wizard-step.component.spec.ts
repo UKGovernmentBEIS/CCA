@@ -17,7 +17,6 @@ describe('WizardStepComponent', () => {
   let element: HTMLElement;
 
   @Component({
-    standalone: true,
     template: `
       <cca-wizard-step
         [formGroup]="formGroup"

@@ -19,7 +19,6 @@ import { generateDownloadUrl } from '@shared/utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <a class="govuk-link" [routerLink]="['../../']"> Return to: Manage facilities </a>
   `,
-  standalone: true,
   imports: [SummaryComponent, PageHeadingComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

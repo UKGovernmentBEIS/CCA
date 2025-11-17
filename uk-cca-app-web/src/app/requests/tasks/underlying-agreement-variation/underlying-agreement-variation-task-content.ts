@@ -2,13 +2,14 @@ import { inject } from '@angular/core';
 
 import { TaskSection } from '@netz/common/model';
 import { RequestTaskPageContentFactory } from '@netz/common/request-task';
-import { RequestTaskStore } from '@netz/common/store';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
   BaselineAndTargetPeriodsSubtasks,
-  MANAGE_FACILITIES_SUBTASK,
+  isStatusFinal,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   staticVariationSections,
+  staticVariationSectionsWithoutBaselineAndTargets,
   TaskItemStatus,
   UNAVariationRequestTaskPayload,
   VARIATION_DETAILS_SUBTASK,
@@ -17,16 +18,16 @@ import {
 const routePrefix = 'underlying-agreement-variation';
 
 export const underlyingAgreementVariationTaskContent: RequestTaskPageContentFactory = () => {
-  const store = inject(RequestTaskStore);
+  const payload = inject(RequestTaskStore).select(requestTaskQuery.selectRequestTaskPayload)();
 
   return {
     header: 'Apply to vary the underlying agreement',
-    sections: getAllUnderlyingAgreementVariationSections(store.state?.requestTaskItem?.requestTask?.payload),
+    sections: getAllUnderlyingAgreementVariationSections(payload),
   };
 };
 
 export function getAllUnderlyingAgreementVariationSections(payload: UNAVariationRequestTaskPayload): TaskSection[] {
-  return [
+  const sections: TaskSection[] = [
     {
       title: 'Variation details',
       tasks: [
@@ -41,7 +42,7 @@ export function getAllUnderlyingAgreementVariationSections(payload: UNAVariation
       title: 'Target unit',
       tasks: [
         {
-          status: payload?.sectionsCompleted[REVIEW_TARGET_UNIT_DETAILS_SUBTASK] ?? TaskItemStatus.COMPLETED,
+          status: payload?.sectionsCompleted[REVIEW_TARGET_UNIT_DETAILS_SUBTASK] ?? TaskItemStatus.UNCHANGED,
           link: `${routePrefix}/review-target-unit-details`,
           linkText: 'Target unit details',
         },
@@ -51,13 +52,16 @@ export function getAllUnderlyingAgreementVariationSections(payload: UNAVariation
       title: 'Facilities',
       tasks: [
         {
-          status: manageFacilitiesStatus(payload?.sectionsCompleted),
+          status: manageFacilitiesStatus(payload),
           link: `${routePrefix}/manage-facilities`,
           linkText: 'Manage facilities',
         },
       ],
     },
-    {
+  ];
+
+  if (payload?.underlyingAgreement?.targetPeriod5Details && payload?.underlyingAgreement?.targetPeriod6Details) {
+    sections.push({
       title: 'Baseline and Targets',
       tasks: [
         {
@@ -75,7 +79,10 @@ export function getAllUnderlyingAgreementVariationSections(payload: UNAVariation
           linkText: 'TP6 (2024)',
         },
       ],
-    },
+    });
+  }
+
+  sections.push(
     {
       title: 'Authorisation details',
       tasks: [
@@ -96,26 +103,44 @@ export function getAllUnderlyingAgreementVariationSections(payload: UNAVariation
         },
       ],
     },
-  ].filter((item) => item.tasks.length > 0);
+  );
+
+  return sections;
 }
 
 function allSectionsCompleted(payload: UNAVariationRequestTaskPayload): boolean {
-  return staticVariationSections.every((section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.COMPLETED);
+  if (!!payload?.underlyingAgreement?.targetPeriod5Details && !!payload?.underlyingAgreement?.targetPeriod6Details) {
+    return staticVariationSections.every((section) => isStatusFinal(payload?.sectionsCompleted?.[section]));
+  }
+
+  return staticVariationSectionsWithoutBaselineAndTargets.every((section) =>
+    isStatusFinal(payload?.sectionsCompleted?.[section]),
+  );
 }
 
-function manageFacilitiesStatus(sectionsCompleted: Record<string, string>): TaskItemStatus {
-  // TODO: Remove MANAGE_FACILITIES_SUBTASK section when the CCA3 specification is finalized and it's removed from the database sections.
-  const facilitySections = Object.keys(sectionsCompleted).filter(
-    (section) => ![MANAGE_FACILITIES_SUBTASK, ...staticVariationSections].includes(section),
+function manageFacilitiesStatus(payload: UNAVariationRequestTaskPayload): TaskItemStatus {
+  const facilitySections = Object.keys(payload?.sectionsCompleted).filter(
+    (section) => !staticVariationSections.includes(section),
   );
 
   if (facilitySections.length === 0) throw new Error('No facility found.');
 
-  return facilitySections.every((section) => sectionsCompleted?.[section] === TaskItemStatus.COMPLETED)
-    ? TaskItemStatus.COMPLETED
+  const validFacilities = payload?.underlyingAgreement?.facilities?.filter((f) => f.status !== 'EXCLUDED');
+  if (validFacilities.length === 0) return TaskItemStatus.IN_PROGRESS;
+
+  if (facilitySections.some((section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.COMPLETED)) {
+    return TaskItemStatus.COMPLETED;
+  }
+
+  return facilitySections.every((section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.UNCHANGED)
+    ? TaskItemStatus.UNCHANGED
     : TaskItemStatus.IN_PROGRESS;
 }
 
-function canSubmit(payload: UNAVariationRequestTaskPayload) {
-  return allSectionsCompleted(payload) && payload?.underlyingAgreement?.facilities?.length > 0;
+function canSubmit(payload: UNAVariationRequestTaskPayload): boolean {
+  return (
+    allSectionsCompleted(payload) &&
+    (manageFacilitiesStatus(payload) === TaskItemStatus.COMPLETED ||
+      manageFacilitiesStatus(payload) === TaskItemStatus.UNCHANGED)
+  );
 }

@@ -16,10 +16,7 @@ export function transformAdminTerminationReason(reason: AdminTerminationReasonDe
   return reason ? adminTerminationReasonDetailsMap[reason] : '';
 }
 
-@Pipe({
-  name: 'adminTerminationReason',
-  standalone: true,
-})
+@Pipe({ name: 'adminTerminationReason' })
 export class AdminTerminationReasonPipe implements PipeTransform {
   transform = transformAdminTerminationReason;
 }

@@ -26,7 +26,6 @@ describe('FileInputComponent', () => {
   const activatedRoute = new ActivatedRouteStub();
 
   @Component({
-    standalone: true,
     template: `
       <form [formGroup]="form">
         <cca-file-input formControlName="file" [downloadUrl]="getDownloadUrl" />

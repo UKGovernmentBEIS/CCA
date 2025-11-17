@@ -5,6 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.notification.template.constants.CcaDocumentTemplateType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
@@ -68,7 +70,7 @@ class UnderlyingAgreementVariationOfficialNoticeServiceTest {
                 "Proposed underlying agreement variation cover letter.pdf"))
                 .thenReturn(CompletableFuture.completedFuture(FileInfoDTO.builder().build()));
 
-        requestPayload.setOfficialNotice(FileInfoDTO.builder().build());
+        requestPayload.setOfficialNotices(List.of(FileInfoDTO.builder().build()));
 
         // Invoke
         service.generateAcceptedOfficialNotice(request.getId());
@@ -110,7 +112,8 @@ class UnderlyingAgreementVariationOfficialNoticeServiceTest {
                 "Underlying agreement variation rejection notice.pdf"))
                 .thenReturn(FileInfoDTO.builder().build());
 
-        requestPayload.setOfficialNotice(FileInfoDTO.builder().build());
+        requestPayload.setOfficialNotices(List.of(FileInfoDTO.builder().build()));
+
         // Invoke
         service.generateAndSaveRejectedOfficialNotice(request.getId());
 
@@ -123,47 +126,6 @@ class UnderlyingAgreementVariationOfficialNoticeServiceTest {
                         CcaDocumentTemplateType.UNDERLYING_AGREEMENT_VARIATION_REJECTED,
                         "Underlying agreement variation rejection notice.pdf"
                 );
-    }
-
-    @Test
-    void sendOfficialNotice() {
-
-        final String requestId = "1";
-        final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
-                .sectorUsers(Set.of("sector1", "sector2"))
-                .build();
-        final FileInfoDTO officialNotice = FileInfoDTO.builder()
-                .name("officialNotice")
-                .uuid("uuid")
-                .build();
-        final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
-                .determination(Determination.builder()
-                        .reason("Reason")
-                        .additionalInformation("EXPLANATION")
-                        .build())
-                .decisionNotification(decisionNotification)
-                .officialNotice(officialNotice)
-                .build();
-        final Request request = Request.builder()
-                .id(requestId)
-                .payload(requestPayload)
-                .build();
-
-
-        when(requestService.findRequestById(requestId)).thenReturn(request);
-
-        when(ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification))
-                .thenReturn(Collections.singletonList("Email@email.com"));
-
-
-        requestPayload.setOfficialNotice(officialNotice);
-
-        // Invoke
-        service.sendOfficialNotice(request.getId());
-
-        verify(ccaOfficialNoticeSendService, times(1))
-                .sendOfficialNotice(List.of(officialNotice), request,
-                        ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification));
     }
 
     @Test
@@ -192,7 +154,7 @@ class UnderlyingAgreementVariationOfficialNoticeServiceTest {
                 "Activated underlying agreement cover letter.pdf"))
                 .thenReturn(CompletableFuture.completedFuture(FileInfoDTO.builder().build()));
 
-        requestPayload.setOfficialNotice(FileInfoDTO.builder().build());
+        requestPayload.setOfficialNotices(List.of(FileInfoDTO.builder().build()));
 
         // Invoke
         service.generateActivatedOfficialNotice(request.getId());
@@ -205,5 +167,112 @@ class UnderlyingAgreementVariationOfficialNoticeServiceTest {
                         CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED,
                         CcaDocumentTemplateType.UNDERLYING_AGREEMENT_ACTIVATED,
                         "Activated underlying agreement cover letter.pdf");
+    }
+
+    @Test
+    void generateTerminationOfficialNotice_CCA2() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_2;
+        final String requestId = "1";
+        final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
+                .sectorUsers(Set.of("sector1", "sector2"))
+                .build();
+        final Request request = Request.builder()
+                .id(requestId)
+                .payload(UnderlyingAgreementVariationRequestPayload.builder()
+                        .determination(Determination.builder()
+                                .reason("Reason")
+                                .additionalInformation("EXPLANATION")
+                                .build())
+                        .decisionNotification(decisionNotification)
+                        .build())
+                .build();
+
+        when(requestService.findRequestById(requestId)).thenReturn(request);
+
+        // Invoke
+        service.generateTerminationOfficialNotice(request.getId(), schemeVersion);
+
+        // Verify
+        verify(ccaOfficialNoticeGeneratorService, times(1))
+                .generateAsync(
+                        request,
+                        decisionNotification,
+                        CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION_CCA2,
+                        CcaDocumentTemplateType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION,
+                        "CCA2 Underlying agreement variation termination notice.pdf");
+    }
+
+    @Test
+    void generateTerminationOfficialNotice_CCA3() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
+        final String requestId = "1";
+        final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
+                .sectorUsers(Set.of("sector1", "sector2"))
+                .build();
+        final Request request = Request.builder()
+                .id(requestId)
+                .payload(UnderlyingAgreementVariationRequestPayload.builder()
+                        .determination(Determination.builder()
+                                .reason("Reason")
+                                .additionalInformation("EXPLANATION")
+                                .build())
+                        .decisionNotification(decisionNotification)
+                        .build())
+                .build();
+
+        when(requestService.findRequestById(requestId)).thenReturn(request);
+
+        // Invoke
+        service.generateTerminationOfficialNotice(request.getId(), schemeVersion);
+
+        // Verify
+        verify(ccaOfficialNoticeGeneratorService, times(1))
+                .generateAsync(
+                        request,
+                        decisionNotification,
+                        CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION_CCA3,
+                        CcaDocumentTemplateType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION,
+                        "CCA3 Underlying agreement variation termination notice.pdf");
+    }
+
+    @Test
+    void sendOfficialNotice() {
+
+        final String requestId = "1";
+        final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
+                .sectorUsers(Set.of("sector1", "sector2"))
+                .build();
+        final FileInfoDTO officialNotice = FileInfoDTO.builder()
+                .name("officialNotice")
+                .uuid("uuid")
+                .build();
+        final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
+                .determination(Determination.builder()
+                        .reason("Reason")
+                        .additionalInformation("EXPLANATION")
+                        .build())
+                .decisionNotification(decisionNotification)
+                .officialNotices(List.of(officialNotice))
+                .build();
+        final Request request = Request.builder()
+                .id(requestId)
+                .payload(requestPayload)
+                .build();
+
+
+        when(requestService.findRequestById(requestId)).thenReturn(request);
+
+        when(ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification))
+                .thenReturn(Collections.singletonList("Email@email.com"));
+
+
+        requestPayload.setOfficialNotices(List.of(officialNotice));
+
+        // Invoke
+        service.sendOfficialNotice(request.getId());
+
+        verify(ccaOfficialNoticeSendService, times(1))
+                .sendOfficialNotice(List.of(officialNotice), request,
+                        ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification));
     }
 }

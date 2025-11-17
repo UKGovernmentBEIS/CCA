@@ -1,4 +1,4 @@
-import { DestroyRef, InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -27,13 +27,8 @@ export const FACILITY_CONTACT_DETAILS_FORM = new InjectionToken<TargetUnitAccoun
 
 export const FacilityContactDetailsFormProvider: Provider = {
   provide: FACILITY_CONTACT_DETAILS_FORM,
-  deps: [FormBuilder, ActivatedRoute, RequestTaskStore, DestroyRef],
-  useFactory: (
-    fb: FormBuilder,
-    activatedRoute: ActivatedRoute,
-    requestTaskStore: RequestTaskStore,
-    destroyRef: DestroyRef,
-  ) => {
+  deps: [FormBuilder, ActivatedRoute, RequestTaskStore],
+  useFactory: (fb: FormBuilder, activatedRoute: ActivatedRoute, requestTaskStore: RequestTaskStore) => {
     const facilityId = activatedRoute.snapshot.params.facilityId;
 
     const facilityContact = requestTaskStore.select(underlyingAgreementQuery.selectFacility(facilityId))()
@@ -61,7 +56,7 @@ export const FacilityContactDetailsFormProvider: Provider = {
       phoneNumber: fb.control(facilityContact?.phoneNumber ?? null, phoneInputValidators),
     });
 
-    group.controls.sameContact.valueChanges.pipe(takeUntilDestroyed(destroyRef)).subscribe((isSameContact) => {
+    group.controls.sameContact.valueChanges.pipe(takeUntilDestroyed()).subscribe((isSameContact) => {
       if (isSameContact[0]) {
         group.controls.firstName.setValue(administrative.firstName);
         group.controls.lastName.setValue(administrative.lastName);
@@ -81,7 +76,7 @@ export const FacilityContactDetailsFormProvider: Provider = {
       }
     });
 
-    group.controls.sameAddress.valueChanges.pipe(takeUntilDestroyed(destroyRef)).subscribe((isSameAddress) => {
+    group.controls.sameAddress.valueChanges.pipe(takeUntilDestroyed()).subscribe((isSameAddress) => {
       if (isSameAddress[0]) {
         group.controls.address.setValue({
           ...facilityAddress,

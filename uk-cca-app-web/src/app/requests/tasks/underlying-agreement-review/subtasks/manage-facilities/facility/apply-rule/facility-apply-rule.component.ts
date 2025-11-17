@@ -32,7 +32,6 @@ import {
 @Component({
   selector: 'cca-facility-apply-rule',
   templateUrl: './facility-apply-rule.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -74,17 +73,17 @@ export class FacilityApplyRuleComponent {
   );
 
   protected readonly isLessThan70 = computed(() => {
-    return this.energyConsumedValue() && this.energyConsumedValue() < 70;
+    return this.energyConsumedValue() && Number(this.energyConsumedValue()) < 70;
   });
 
   protected readonly energyConsumedEligible: Signal<number | null> = computed(() => {
     const energyConsumed = this.energyConsumedValue();
     const energyConsumedProvision = this.energyConsumedProvisionValue();
 
-    if (energyConsumed >= 70) return 100;
-    if (energyConsumed === 0) return 0;
+    if (Number(energyConsumed) >= 70) return 100;
+    if (Number(energyConsumed) === 0) return 0;
 
-    if (energyConsumedProvision && energyConsumed > 0)
+    if (energyConsumedProvision && Number(energyConsumed) > 0)
       return calculateEnergyConsumedEligible(energyConsumed, energyConsumedProvision);
 
     return null;
@@ -152,7 +151,7 @@ function update(
       energyConsumed: form.value.energyConsumed,
       energyConsumedProvision: form.value.energyConsumedProvision,
       startDate: form.value.startDate,
-      energyConsumedEligible,
+      energyConsumedEligible: String(energyConsumedEligible),
       evidenceFile: form.value.evidenceFile?.uuid ?? null,
     };
   });

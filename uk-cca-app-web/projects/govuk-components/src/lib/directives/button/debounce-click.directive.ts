@@ -4,7 +4,6 @@ import { debounceTime, Subject, Subscription } from 'rxjs';
 
 @Directive({
   selector: 'button[govukDebounceClick]',
-  standalone: true,
 })
 export class DebounceClickDirective implements OnInit, OnDestroy {
   readonly debounceTime = input(500);

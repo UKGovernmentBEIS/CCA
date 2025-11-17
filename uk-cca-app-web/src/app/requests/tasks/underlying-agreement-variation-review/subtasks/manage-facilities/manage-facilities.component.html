@@ -1,0 +1,98 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <netz-page-heading>Manage facilities</netz-page-heading>
+  </div>
+</div>
+
+@if (manageFacilities()?.length) {
+  @if (manageFacilities()?.length >= filtersAndPaginationLimit) {
+    <div class="govuk-!-margin-top-3 govuk-!-margin-bottom-3">
+      <cca-utility-panel heading="Filters">
+        <form [formGroup]="searchForm" (ngSubmit)="onApplyFilters()">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+              <div
+                widthClass="govuk-!-width-full"
+                formControlName="term"
+                govuk-text-input
+                label="Facility name or facility ID"
+              ></div>
+            </div>
+
+            <div class="govuk-grid-column-one-half">
+              <div
+                widthClass="govuk-!-width-full"
+                govuk-select
+                label="Workflow status"
+                [options]="workflowStatusOptions"
+                formControlName="workflowStatus"
+              ></div>
+            </div>
+          </div>
+
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <button class="govuk-!-margin-right-3" netzPendingButton govukButton type="submit">Apply</button>
+              <button netzPendingButton govukSecondaryButton type="button" (click)="onClearFilters()">Clear</button>
+            </div>
+          </div>
+        </form>
+      </cca-utility-panel>
+    </div>
+  }
+
+  @if (filteredItems()?.length) {
+    <div class="x-scroll">
+      <div class="max-content-width">
+        <div class="overflow-auto overflow-auto-table">
+          <govuk-table [columns]="tableColumns" [data]="paginatedItems()" (sort)="sorting.set($event)">
+            <ng-template let-column="column" let-row="row">
+              @switch (column.field) {
+                @case ('name') {
+                  <a class="govuk-link" [routerLink]="[row.facilityId]">
+                    {{ row[column.field] }}
+                  </a>
+                }
+
+                @case ('status') {
+                  {{ row[column.field] | status }}
+                }
+
+                @case ('workflowStatus') {
+                  @if (row[column.field] === 'UNCHANGED') {
+                    {{ row[column.field] | statusTagText }}
+                  } @else {
+                    <strong class="govuk-tag" [class]="'govuk-tag--' + (row[column.field] | statusTagColor)">
+                      {{ row[column.field] | statusTagText }}
+                    </strong>
+                  }
+                }
+
+                @default {
+                  {{ row[column.field] }}
+                }
+              }
+            </ng-template>
+          </govuk-table>
+
+          @if (manageFacilities()?.length >= filtersAndPaginationLimit) {
+            <cca-pagination
+              [count]="filteredItems()?.length"
+              [currentPage]="currentPage()"
+              [pageSize]="pageSize()"
+              (pageChange)="onPageChange($event)"
+              (pageSizeChange)="onPageSizeChange($event)"
+            />
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    <p>No results match the filter criteria.</p>
+  }
+} @else {
+  <div class="govuk-!-margin-top-9">
+    <p>No facilities have been added yet.</p>
+    <p>More information will be available when one or more facilities have been added.</p>
+  </div>
+}

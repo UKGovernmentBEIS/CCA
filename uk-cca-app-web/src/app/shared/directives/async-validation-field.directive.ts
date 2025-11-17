@@ -7,7 +7,6 @@ import { TextInputComponent } from '@netz/govuk-components';
 
 @Directive({
   selector: 'govuk-text-input[ccaAsyncValidationField],[govuk-text-input][ccaAsyncValidationField]',
-  standalone: true,
 })
 export class AsyncValidationFieldDirective implements OnInit {
   constructor(

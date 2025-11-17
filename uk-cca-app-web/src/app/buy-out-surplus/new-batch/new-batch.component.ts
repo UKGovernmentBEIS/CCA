@@ -17,7 +17,6 @@ import { BuyOutAndSurplusInfoService, RequestsService } from 'cca-api';
 @Component({
   selector: 'cca-new-batch',
   templateUrl: './new-batch.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     ButtonDirective,

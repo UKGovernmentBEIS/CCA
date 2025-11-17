@@ -14,7 +14,6 @@ import { PageHeadingComponent } from '@netz/common/components';
       if you have any questions.
     </p>
   `,
-  standalone: true,
   imports: [PageHeadingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -17,7 +17,7 @@ public class FacilityItemVO {
     //Account
     private String businessId;
     
-    private String facilityId;
+    private String facilityBusinessId;
     private LocalDateTime createdDate;
 
     //FacilityDetails

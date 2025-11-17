@@ -15,7 +15,6 @@ describe('BooleanRadioGroupComponent', () => {
   let page: Page;
 
   @Component({
-    standalone: true,
     template: `
       <form [formGroup]="form">
         <cca-boolean-radio-group controlName="flag">

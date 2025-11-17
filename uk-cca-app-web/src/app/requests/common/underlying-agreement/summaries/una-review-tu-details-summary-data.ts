@@ -1,15 +1,18 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { OperatorTypePipe } from '@shared/pipes';
-import { getAddressAsArray } from '@shared/utils';
+import { OperatorTypePipe, transformAddress } from '@shared/pipes';
+import { equalAddressFields, equalFields } from '@shared/utils';
 
 import { UnderlyingAgreementReviewDecision, UnderlyingAgreementTargetUnitDetails } from 'cca-api';
 
+import { CompaniesHouseState } from '../companies-house-details';
 import { ReviewTargetUnitDetailsWizardStep } from '../types';
 import { addDecisionSummaryData } from './decision-summary-data';
 
 function reviewTargetUnitDetailsSummaryFactory(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
   isEditable: boolean,
+  companiesHouseState?: CompaniesHouseState,
+  toggleCompaniesHouseDetails?: boolean,
   prefix = '../',
 ): SummaryFactory {
   const operatorTypePipe = new OperatorTypePipe();
@@ -18,15 +21,27 @@ function reviewTargetUnitDetailsSummaryFactory(
     .addSection('Target unit details', prefix + ReviewTargetUnitDetailsWizardStep?.TARGET_UNIT_DETAILS)
     .addRow('Operator name', targetUnitDetails?.operatorName, {
       change: isEditable,
+      fieldDiff:
+        toggleCompaniesHouseDetails &&
+        equalFields(targetUnitDetails?.operatorName, companiesHouseState?.details?.name) === false,
     })
     .addRow('Operator type', operatorTypePipe.transform(targetUnitDetails?.operatorType), {
       change: isEditable,
+      fieldDiff:
+        toggleCompaniesHouseDetails &&
+        equalFields(targetUnitDetails?.operatorType, companiesHouseState?.details?.operatorType) === false,
     })
-    .addRow('Company number', targetUnitDetails.companyRegistrationNumber ?? 'Not provided', {
+    .addRow('Company number', targetUnitDetails?.companyRegistrationNumber ?? 'Not provided', {
       change: isEditable,
+      changeLink: prefix + ReviewTargetUnitDetailsWizardStep.COMPANY_REGISTRATION_NUMBER,
+      fieldDiff:
+        toggleCompaniesHouseDetails &&
+        equalFields(targetUnitDetails?.companyRegistrationNumber, companiesHouseState?.details?.registrationNumber) ===
+          false,
     })
-    .addRow('Reason for not having a registration number', targetUnitDetails.registrationNumberMissingReason, {
+    .addRow('Reason for not having a registration number', targetUnitDetails?.registrationNumberMissingReason, {
       change: isEditable,
+      changeLink: prefix + ReviewTargetUnitDetailsWizardStep.COMPANY_REGISTRATION_NUMBER,
     });
 
   if (targetUnitDetails?.subsectorAssociationName) {
@@ -37,8 +52,14 @@ function reviewTargetUnitDetailsSummaryFactory(
 
   factory
     .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep?.OPERATOR_ADDRESS)
-    .addRow('Address', getAddressAsArray(targetUnitDetails?.operatorAddress), {
+    .addRow('Address', transformAddress(targetUnitDetails?.operatorAddress), {
       change: isEditable,
+      fieldDiff:
+        toggleCompaniesHouseDetails &&
+        equalAddressFields(
+          transformAddress(targetUnitDetails?.operatorAddress),
+          transformAddress(companiesHouseState?.details?.address),
+        ) === false,
     })
     .addSection('Responsible Person', prefix + ReviewTargetUnitDetailsWizardStep?.RESPONSIBLE_PERSON)
     .addRow('First name', targetUnitDetails?.responsiblePersonDetails?.firstName, {
@@ -50,7 +71,7 @@ function reviewTargetUnitDetailsSummaryFactory(
     .addRow('Email address', targetUnitDetails?.responsiblePersonDetails?.email, {
       change: isEditable,
     })
-    .addRow('Address', getAddressAsArray(targetUnitDetails?.responsiblePersonDetails?.address), {
+    .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address), {
       change: isEditable,
     });
 
@@ -60,9 +81,17 @@ function reviewTargetUnitDetailsSummaryFactory(
 export function toReviewTargetUnitDetailsUNAReviewSummaryData(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
   isEditable: boolean,
+  companiesHouseState?: CompaniesHouseState,
+  toggleCompaniesHouseDetails?: boolean,
   prefix = '../',
 ): SummaryData {
-  return reviewTargetUnitDetailsSummaryFactory(targetUnitDetails, isEditable, prefix).create();
+  return reviewTargetUnitDetailsSummaryFactory(
+    targetUnitDetails,
+    isEditable,
+    companiesHouseState,
+    toggleCompaniesHouseDetails,
+    prefix,
+  ).create();
 }
 
 export function toReviewTargetUnitDetailsSummaryDataWithDecision(
@@ -71,8 +100,17 @@ export function toReviewTargetUnitDetailsSummaryDataWithDecision(
   attachments: Record<string, string>,
   downloadUrl: string,
   isEditable: boolean,
+  companiesHouseState?: CompaniesHouseState,
+  toggleCompaniesHouseDetails?: boolean,
   prefix = '../',
 ): SummaryData {
-  const factory = reviewTargetUnitDetailsSummaryFactory(targetUnitDetails, isEditable, prefix);
+  const factory = reviewTargetUnitDetailsSummaryFactory(
+    targetUnitDetails,
+    isEditable,
+    companiesHouseState,
+    toggleCompaniesHouseDetails,
+    prefix,
+  );
+
   return addDecisionSummaryData(factory, decision, attachments, isEditable, downloadUrl).create();
 }

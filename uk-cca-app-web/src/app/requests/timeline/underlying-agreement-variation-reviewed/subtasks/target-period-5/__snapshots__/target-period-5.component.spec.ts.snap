@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`TargetPeriod5Component should match snapshot 1`] = `
 <cca-timeline-variation-review-target-period-5
@@ -33,7 +33,9 @@ exports[`TargetPeriod5Component should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             No 
+            <span>
+              No
+            </span>
           </dd>
         </div>
       </dl>
@@ -60,7 +62,9 @@ exports[`TargetPeriod5Component should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Accepted 
+            <span>
+              Accepted
+            </span>
           </dd>
         </div>
         <div
@@ -77,7 +81,9 @@ exports[`TargetPeriod5Component should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             ok 
+            <span>
+              ok
+            </span>
           </dd>
         </div>
         <div

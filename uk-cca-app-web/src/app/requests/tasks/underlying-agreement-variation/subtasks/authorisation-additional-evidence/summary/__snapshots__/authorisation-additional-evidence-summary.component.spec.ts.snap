@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SummaryComponent should display the correct header and caption 1`] = `
 <cca-authorisation-additional-evidence-summary

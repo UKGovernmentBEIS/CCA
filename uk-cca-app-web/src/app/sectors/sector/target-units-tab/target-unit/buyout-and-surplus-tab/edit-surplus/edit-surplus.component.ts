@@ -21,7 +21,6 @@ import { notEqualToCurrentValidator } from './edit-surplus.helper';
 @Component({
   selector: 'cca-edit-surplus-history',
   templateUrl: './edit-surplus.component.html',
-  standalone: true,
   imports: [
     SummaryListComponent,
     SummaryListRowDirective,

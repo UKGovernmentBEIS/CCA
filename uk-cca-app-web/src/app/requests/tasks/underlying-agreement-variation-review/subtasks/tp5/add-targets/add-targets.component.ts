@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,7 +7,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
+  areEntitiesIdentical,
   BaselineAndTargetPeriodsSubtasks,
+  filterFieldsWithFalsyValues,
   getBaselineUnits,
   OVERALL_DECISION_SUBTASK,
   TaskItemStatus,
@@ -19,14 +21,15 @@ import {
 import { TextInputComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
+import { UnderlyingAgreementVariationReviewSavePayload } from 'cca-api';
+
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../transform';
-import { resetDetermination } from '../../../utils';
+import { deleteDecision, resetDetermination } from '../../../utils';
 import { ADD_TARGETS_FORM, AddTargetsFormModel, AddTargetsFormProvider } from './add-targets-form.provider';
 
 @Component({
   selector: 'cca-add-targets',
   templateUrl: './add-targets.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -49,8 +52,6 @@ export class AddTargetsComponent {
     initialValue: this.form.value.target,
   });
 
-  protected readonly showTargets = computed(() => typeof this.targets() === 'number');
-
   protected readonly baselineData = this.store.select(underlyingAgreementQuery.selectBaselineData(true))();
 
   protected readonly targetComposition = this.store.select(underlyingAgreementQuery.selectTargetComposition(true))();
@@ -66,14 +67,20 @@ export class AddTargetsComponent {
       requestTaskQuery.selectRequestTaskPayload,
     )() as UNAVariationReviewRequestTaskPayload;
 
-    const actionPayload = toUnderlyingAgreementVariationReviewSavePayload(payload);
+    const originalPayload = (
+      this.store.select(requestTaskQuery.selectRequestTaskPayload)() as UNAVariationReviewRequestTaskPayload
+    )?.originalUnderlyingAgreementContainer;
 
-    const updatedPayload = produce(actionPayload, (draft) => {
-      draft.targetPeriod5Details.details.targets = {
-        improvement: this.form.value.improvement,
-        target: this.form.value.target,
-      };
-    });
+    const actionPayload = toUnderlyingAgreementVariationReviewSavePayload(payload);
+    const updatedPayload = updateTargets(actionPayload, this.form);
+
+    const originalTP5 = filterFieldsWithFalsyValues(originalPayload?.underlyingAgreement?.targetPeriod5Details);
+    const currentTP5 = filterFieldsWithFalsyValues(updatedPayload?.targetPeriod5Details);
+
+    const areIdentical = areEntitiesIdentical(currentTP5, originalTP5);
+
+    const currentDecisions = this.store.select(underlyingAgreementReviewQuery.selectReviewGroupDecisions)();
+    const decisions = areIdentical ? deleteDecision(currentDecisions, 'TARGET_PERIOD5_DETAILS') : currentDecisions;
 
     const currentReviewSectionsCompleted = this.store.select(
       underlyingAgreementReviewQuery.selectReviewSectionsCompleted,
@@ -92,10 +99,27 @@ export class AddTargetsComponent {
     const dto = createSaveActionDTO(requestTaskId, updatedPayload, {
       determination,
       reviewSectionsCompleted,
+      reviewGroupDecisions: decisions,
+      facilitiesReviewGroupDecisions: this.store.select(
+        underlyingAgreementReviewQuery.selectFacilityReviewGroupDecisions,
+      )(),
     });
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['../decision'], { relativeTo: this.activatedRoute });
+      const targetPath = areIdentical ? '../check-your-answers' : '../decision';
+      this.router.navigate([targetPath], { relativeTo: this.activatedRoute });
     });
   }
+}
+
+function updateTargets(
+  actionPayload: UnderlyingAgreementVariationReviewSavePayload,
+  form: AddTargetsFormModel,
+): UnderlyingAgreementVariationReviewSavePayload {
+  return produce(actionPayload, (draft) => {
+    draft.targetPeriod5Details.details.targets = {
+      improvement: String(form.value.improvement),
+      target: form.value.target,
+    };
+  });
 }

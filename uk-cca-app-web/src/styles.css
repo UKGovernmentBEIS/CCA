@@ -70,3 +70,14 @@ a[role='button'] {
     margin-bottom: 15px;
   }
 }
+
+.field-diff {
+  font-weight: bold;
+  background-color: yellow;
+  padding: 4px;
+}
+
+.grey-background {
+  background: var(--govuk-light-grey);
+  padding: var(--govuk-spacing-2) var(--govuk-spacing-2) var(--govuk-spacing-2) var(--govuk-spacing-5);
+}

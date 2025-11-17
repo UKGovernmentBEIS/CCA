@@ -46,7 +46,6 @@ type SectorMoasState = {
 @Component({
   selector: 'cca-sector-moas',
   templateUrl: './sector-moas.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -154,7 +153,7 @@ export class SectorMoasComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.state().pageSize) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   private fetchMoas() {

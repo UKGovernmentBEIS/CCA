@@ -1,3 +1,5 @@
+<govuk-error-summary [form]="facilitiesForm" />
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
     <netz-page-heading>Manage facilities</netz-page-heading>
@@ -76,7 +78,7 @@
                 }
 
                 @case ('workflowStatus') {
-                  @if (row[column.field] === 'COMPLETED') {
+                  @if (row[column.field] === 'COMPLETED' || row[column.field] === 'UNCHANGED') {
                     {{ row[column.field] | statusTagText }}
                   } @else {
                     <strong class="govuk-tag" [class]="'govuk-tag--' + (row[column.field] | statusTagColor)">

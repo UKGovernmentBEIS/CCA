@@ -7,6 +7,7 @@ import { GovukValidators } from '@netz/govuk-components';
 import {
   facilityBaselineDataConditionallyRequiredFieldsValidator,
   FacilityBaselineDataFormModel,
+  isCCA3Scheme,
   underlyingAgreementQuery,
   UPLOAD_SECTION_ATTACHMENT_TYPE,
 } from '@requests/common';
@@ -29,6 +30,10 @@ export const FacilityBaselineDataFormProvider: Provider = {
     const requestTaskType = requestTaskStore.select(requestTaskQuery.selectRequestTaskType)();
     const una = requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreement)();
     const facilityIndex = una.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
+
+    const facility = requestTaskStore.select(underlyingAgreementQuery.selectFacility(facilityId))();
+    const schemeVersions = facility?.facilityDetails?.participatingSchemeVersions ?? [];
+    const isCCA3 = facilityId && isCCA3Scheme(schemeVersions);
 
     const baselineData = requestTaskStore.select(underlyingAgreementQuery.selectFacilityBaselineData(facilityIndex))();
 
@@ -64,7 +69,7 @@ export const FacilityBaselineDataFormProvider: Provider = {
           validators: [GovukValidators.maxDecimalsValidator(7)],
           updateOn: 'change',
         }),
-        usedReportingMechanism: fb.control(baselineData?.usedReportingMechanism ?? null),
+        usedReportingMechanism: fb.control(baselineData?.usedReportingMechanism ?? null, { updateOn: 'change' }),
         energyCarbonFactor: fb.control(baselineData?.energyCarbonFactor ?? null, {
           validators: [GovukValidators.maxDecimalsValidator(7)],
           updateOn: 'change',
@@ -73,6 +78,7 @@ export const FacilityBaselineDataFormProvider: Provider = {
       {
         validators: facilityBaselineDataConditionallyRequiredFieldsValidator(
           targetComposition?.agreementCompositionType,
+          isCCA3,
         ),
         updateOn: 'submit',
       },

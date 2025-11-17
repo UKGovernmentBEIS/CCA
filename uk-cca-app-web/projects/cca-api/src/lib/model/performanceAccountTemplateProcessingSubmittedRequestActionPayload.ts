@@ -9,13 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { SubsistenceFeesRunCompletedRequestActionPayloadChargingYear } from './subsistenceFeesRunCompletedRequestActionPayloadChargingYear';
 import { PerformanceAccountTemplateDataContainer } from './performanceAccountTemplateDataContainer';
 
 export interface PerformanceAccountTemplateProcessingSubmittedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
   targetPeriodType?: 'TP5' | 'TP6';
-  targetPeriodYear?: SubsistenceFeesRunCompletedRequestActionPayloadChargingYear;
+  targetPeriodYear?: number;
   data?: PerformanceAccountTemplateDataContainer;
 }

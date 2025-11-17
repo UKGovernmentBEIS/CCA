@@ -19,7 +19,6 @@ import { createSaveDeterminationActionDTO } from '../../../transform';
 @Component({
   selector: 'cca-underlying-agreement-available-actions',
   templateUrl: './available-actions.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PageHeadingComponent, ButtonDirective, WarningTextComponent, ReturnToTaskOrActionPageComponent],
 })

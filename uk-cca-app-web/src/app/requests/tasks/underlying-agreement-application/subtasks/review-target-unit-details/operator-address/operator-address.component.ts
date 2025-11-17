@@ -5,9 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
+  areEntitiesIdentical,
+  filterFieldsWithFalsyValues,
+  isTargetUnitDetailsWizardCompleted,
   OPERATOR_ADDRESS_FORM,
   OperatorAddressFormProvider,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
+  ReviewTargetUnitDetailsWizardStep,
   TaskItemStatus,
   TasksApiService,
   underlyingAgreementQuery,
@@ -35,7 +39,6 @@ import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } f
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [ReactiveFormsModule, WizardStepComponent, AccountAddressInputComponent, ReturnToTaskOrActionPageComponent],
   providers: [OperatorAddressFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,9 +57,9 @@ export class OperatorAddressComponent {
     )() as UnderlyingAgreementSubmitRequestTaskPayload;
 
     const actionPayload = toUnderlyingAgreementSavePayload(payload);
-    const updatedPayload = update(actionPayload, this.form);
-    const currentSectionsCompleted = this.store.select(underlyingAgreementQuery.selectSectionsCompleted)();
+    const updatedPayload = updateOperatorAddress(actionPayload, this.form);
 
+    const currentSectionsCompleted = this.store.select(underlyingAgreementQuery.selectSectionsCompleted)();
     const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
       draft[REVIEW_TARGET_UNIT_DETAILS_SUBTASK] = TaskItemStatus.IN_PROGRESS;
     });
@@ -64,13 +67,28 @@ export class OperatorAddressComponent {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
     const dto = createRequestTaskActionProcessDTO(requestTaskId, updatedPayload, sectionsCompleted);
 
-    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['../check-your-answers'], { relativeTo: this.route });
-    });
+    this.tasksApiService
+      .saveRequestTaskAction(dto)
+      .subscribe((payload: UnderlyingAgreementSubmitRequestTaskPayload) => {
+        const tuDetails = payload.underlyingAgreement?.underlyingAgreementTargetUnitDetails;
+        const completed = isTargetUnitDetailsWizardCompleted(tuDetails);
+
+        const isSameAddress = areEntitiesIdentical(
+          filterFieldsWithFalsyValues(tuDetails?.operatorAddress),
+          filterFieldsWithFalsyValues(tuDetails?.responsiblePersonDetails?.address),
+        );
+
+        const path =
+          completed && isSameAddress
+            ? '../check-your-answers'
+            : `../${ReviewTargetUnitDetailsWizardStep.RESPONSIBLE_PERSON}`;
+
+        this.router.navigate([path], { relativeTo: this.route });
+      });
   }
 }
 
-function update(
+function updateOperatorAddress(
   payload: UnderlyingAgreementApplySavePayload,
   form: FormGroup<AccountAddressFormModel>,
 ): UnderlyingAgreementApplySavePayload {

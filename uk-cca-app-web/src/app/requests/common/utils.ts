@@ -9,10 +9,21 @@ import {
   UnderlyingAgreementReviewRequestTaskPayload,
   UnderlyingAgreementTargetUnitDetails,
   UnderlyingAgreementTargetUnitResponsiblePerson,
+  UnderlyingAgreementVariationApplySaveTargetUnitDetails,
 } from 'cca-api';
 
 import { TaskItemStatus } from './task-item-status';
 import { nonFacilityReviewSections, OVERALL_DECISION_SUBTASK } from './underlying-agreement';
+
+export type TUDetailsSection = {
+  isCompanyRegistrationNumber: boolean;
+  operatorName: string;
+  operatorType: 'LIMITED_COMPANY' | 'PARTNERSHIP' | 'SOLE_TRADER' | 'NONE';
+  companyRegistrationNumber: string;
+  registrationNumberMissingReason: string;
+  subsectorAssociationId: number;
+  subsectorAssociationName: string;
+};
 
 export function sortFacilitiesById(facilities: Facility[]): Facility[] {
   if (!facilities || facilities.length === 0) return [];
@@ -51,7 +62,9 @@ export function overallDecisionStatus(payload: UnderlyingAgreementReviewRequestT
   return status || TaskItemStatus.UNDECIDED;
 }
 
-export const transform = (accountReferenceData: AccountReferenceData): UnderlyingAgreementTargetUnitDetails => ({
+export const transformAccountReferenceData = (
+  accountReferenceData: AccountReferenceData,
+): UnderlyingAgreementTargetUnitDetails => ({
   operatorName: accountReferenceData.targetUnitAccountDetails.operatorName,
   operatorAddress: accountReferenceData.targetUnitAccountDetails.address,
   responsiblePersonDetails: deletePhoneNumberAndJobTitle(
@@ -65,6 +78,25 @@ export const transform = (accountReferenceData: AccountReferenceData): Underlyin
   subsectorAssociationName: accountReferenceData.sectorAssociationDetails.subsectorAssociationName,
 });
 
+export function transformAccountReferenceDataToTUDetails(
+  accountReferenceData: AccountReferenceData,
+): UnderlyingAgreementVariationApplySaveTargetUnitDetails {
+  const originalResponsiblePerson: UnderlyingAgreementTargetUnitResponsiblePerson = {
+    firstName: accountReferenceData?.targetUnitAccountDetails?.responsiblePerson?.firstName,
+    lastName: accountReferenceData?.targetUnitAccountDetails?.responsiblePerson?.lastName,
+    email: accountReferenceData?.targetUnitAccountDetails?.responsiblePerson?.email,
+    address: accountReferenceData?.targetUnitAccountDetails?.responsiblePerson?.address,
+  };
+
+  const originalTUDetails: UnderlyingAgreementVariationApplySaveTargetUnitDetails = {
+    operatorName: accountReferenceData?.targetUnitAccountDetails?.operatorName,
+    operatorAddress: accountReferenceData?.targetUnitAccountDetails?.address,
+    responsiblePersonDetails: originalResponsiblePerson,
+  };
+
+  return originalTUDetails;
+}
+
 export const isCCA2Scheme = (schemeVersions: SchemeVersions): boolean => schemeVersions?.includes(SchemeVersion.CCA_2);
 
 export const isCCA3Scheme = (schemeVersions: SchemeVersions): boolean => schemeVersions?.includes(SchemeVersion.CCA_3);
@@ -75,9 +107,18 @@ export const hasBothCCASchemes = (schemeVersions: SchemeVersions): boolean =>
 export const isCreationDateAfterCutOffDate = (creationDate: string, cutOffDate: string): boolean =>
   new Date(creationDate).getTime() >= new Date(cutOffDate).getTime();
 
-export function calcManageFacilitiesStatus(reviewSectionsCompleted: Record<string, string>): TaskItemStatus {
+export function calcManageFacilitiesStatus(
+  reviewSectionsCompleted: Record<string, string>,
+  facilities: Facility[],
+): TaskItemStatus {
   const facilitySections = Object.keys(reviewSectionsCompleted).filter((s) => !nonFacilityReviewSections.includes(s));
   if (facilitySections.length === 0) return TaskItemStatus.UNDECIDED;
+
+  const undecidedFacilityExists = facilitySections.some(
+    (s) => reviewSectionsCompleted?.[s] === TaskItemStatus.UNDECIDED,
+  );
+
+  if (undecidedFacilityExists || facilities.length !== facilitySections.length) return TaskItemStatus.UNDECIDED;
 
   const allFacilitiesAccepted = facilitySections.every((s) => reviewSectionsCompleted?.[s] === TaskItemStatus.ACCEPTED);
   if (allFacilitiesAccepted) return TaskItemStatus.ACCEPTED;
@@ -85,13 +126,80 @@ export function calcManageFacilitiesStatus(reviewSectionsCompleted: Record<strin
   const allFacilitiesRejected = facilitySections.every((s) => reviewSectionsCompleted?.[s] === TaskItemStatus.REJECTED);
   if (allFacilitiesRejected) return TaskItemStatus.REJECTED;
 
-  const undecidedFacilityExists = facilitySections.some(
-    (s) => reviewSectionsCompleted?.[s] === TaskItemStatus.UNDECIDED,
-  );
-
-  if (undecidedFacilityExists) return TaskItemStatus.UNDECIDED;
-
   return facilitySections.some((s) => reviewSectionsCompleted?.[s] === TaskItemStatus.ACCEPTED)
     ? TaskItemStatus.ACCEPTED
     : TaskItemStatus.REJECTED;
+}
+
+export function filterFieldsWithFalsyValues(obj: unknown): unknown {
+  if (obj === null || obj === undefined || typeof obj !== 'object') return obj;
+
+  return Object.keys(obj).reduce((acc, key) => {
+    const value = obj[key];
+
+    if (value) {
+      acc[key] = typeof value === 'object' ? filterFieldsWithFalsyValues(value) : value;
+    }
+
+    return acc;
+  }, {});
+}
+
+export function areEntitiesIdentical(current: unknown, original: unknown): boolean {
+  // Check for strict equality first (handles primitives and same reference)
+  if (current === original) return true;
+
+  // Check if either is null or not an object
+  if (current == null || original == null) return false;
+  if (typeof current !== 'object' || typeof original !== 'object') return false;
+
+  // Get all keys from both objects
+  const keysCurrent = Object.keys(current);
+  const keysOriginal = Object.keys(original);
+
+  // Check if they have the same number of keys
+  if (keysCurrent.length !== keysOriginal.length) return false;
+
+  // Check each key-value pair recursively
+  for (const key of keysCurrent) {
+    // Check if key exists in second object
+    if (!(key in original)) return false;
+
+    // Recursively check if values are identical
+    if (!areEntitiesIdentical(current[key], original[key])) return false;
+  }
+
+  return true;
+}
+
+export function isStatusFinal(section: string): boolean {
+  return section === TaskItemStatus.COMPLETED || section === TaskItemStatus.UNCHANGED;
+}
+
+export function resetFacilityNonComparisonFields(facility: Facility): Facility {
+  return produce(facility, (f) => {
+    f.excludedDate = null;
+    f.status = null;
+  });
+}
+
+export function extractBaselineYear(dateStr: string) {
+  const date = new Date(dateStr);
+  const year = date.getFullYear();
+
+  if (Number.isNaN(year)) throw new Error('Year is not a number');
+
+  // Determine if the year is a leap year
+  const isLeapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+
+  // July is month index 6 in JS Date (0-based)
+  const month = date.getMonth();
+  const day = date.getDate();
+
+  // Cutoff day: on/after 3 July in non-leap years; on/after 2 July in leap years
+  const cutoffDay = isLeapYear ? 2 : 3;
+
+  const onOrAfterCutoff = month > 6 || (month === 6 && day >= cutoffDay);
+
+  return onOrAfterCutoff ? year + 1 : year;
 }

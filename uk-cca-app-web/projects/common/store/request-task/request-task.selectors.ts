@@ -97,25 +97,20 @@ const selectRequestTaskType: StateSelector<RequestTaskState, RequestTaskDTO['typ
 const selectRelatedTasks: StateSelector<RequestTaskState, ItemDTO[]> = createAggregateSelector(
   (state) => state?.relatedTasks,
   selectRequestTask,
-  (relatedTasks, requestTask) =>
-    relatedTasks?.filter((t) => {
-      return t.taskId !== requestTask.id;
-    }) ?? [],
+  (relatedTasks, requestTask) => relatedTasks?.filter((t) => t.taskId !== requestTask.id) ?? [],
 );
 
-const selectTimeline: StateSelector<RequestTaskState, RequestActionInfoDTO[]> = createSelector((state) =>
-  produce(state?.timeline, (timeline) =>
-    timeline.sort((a, b) => new Date(a.creationDate).getTime() - new Date(b.creationDate).getTime()),
-  ),
+const selectTimeline: StateSelector<RequestTaskState, RequestActionInfoDTO[]> = createSelector(
+  (state) => state?.timeline,
 );
 
 const selectTaskReassignedTo: StateSelector<RequestTaskState, string> = pipe((state) => state?.taskReassignedTo);
 
 const selectIsEditable: StateSelector<RequestTaskState, boolean> = createSelector((state) => state.isEditable);
 
-const selectMetadata: StateSelector<RequestTaskState, { [key: string]: unknown }> = createSelector((state) => {
-  return state.metadata;
-});
+const selectMetadata: StateSelector<RequestTaskState, Record<string, unknown>> = createSelector(
+  (state) => state.metadata,
+);
 
 export const requestTaskQuery = {
   selectRequestTaskItem,

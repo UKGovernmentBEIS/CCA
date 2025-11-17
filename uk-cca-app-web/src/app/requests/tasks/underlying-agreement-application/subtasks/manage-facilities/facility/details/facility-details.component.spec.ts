@@ -1,6 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { DestroyRef, signal } from '@angular/core';
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -45,7 +45,6 @@ describe('FacilityDetailsComponent', () => {
       saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
     };
 
-    const destroyRef = { onDestroy: jest.fn() } as unknown as DestroyRef;
     const facilityService = {} as FacilityService;
 
     const formBuilder = new FormBuilder();
@@ -78,7 +77,6 @@ describe('FacilityDetailsComponent', () => {
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },
         { provide: TasksApiService, useValue: tasksApiService },
-        { provide: DestroyRef, useValue: destroyRef },
         { provide: FacilityService, useValue: facilityService },
         { provide: FACILITY_DETAILS_FORM, useValue: testForm },
       ],
@@ -91,6 +89,23 @@ describe('FacilityDetailsComponent', () => {
       if (selector === requestTaskQuery.selectRequestTaskPayload) {
         return signal({
           underlyingAgreement: {
+            underlyingAgreementTargetUnitDetails: {
+              operatorName: 'operator',
+              operatorAddress: {
+                line1: 'tu Line1',
+                line2: 'tu Line2',
+                city: 'tu City',
+                postcode: 'tu 14',
+                country: 'GB',
+              },
+              responsiblePersonDetails: {},
+              operatorType: 'LIMITED_COMPANY',
+              isCompanyRegistrationNumber: false,
+              companyRegistrationNumber: null,
+              registrationNumberMissingReason: 'reason',
+              subsectorAssociationName: 'subsector',
+              subsectorAssociationId: 1,
+            },
             facilities: [
               {
                 facilityId: 'ADS_1-F00001',

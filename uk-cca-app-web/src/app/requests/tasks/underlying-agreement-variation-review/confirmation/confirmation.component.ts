@@ -13,7 +13,6 @@ import { underlyingAgreementReviewQuery } from '@requests/common';
     <p>The selected users will receive an email notification of your decision.</p>
     <a class="govuk-link" [routerLink]="['/dashboard']"> Return to: Dashboard </a>
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PanelComponent, RouterLink],
 })

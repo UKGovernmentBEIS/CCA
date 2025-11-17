@@ -33,7 +33,6 @@ import { PatUploadProcessedComponent } from './processed/pat-upload-processed.co
 @Component({
   selector: 'cca-performance-account-template-upload',
   templateUrl: './pat-upload-process.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     SelectComponent,

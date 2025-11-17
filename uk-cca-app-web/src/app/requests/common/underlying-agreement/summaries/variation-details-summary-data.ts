@@ -16,7 +16,7 @@ function toSummaryData(
   isEditable: boolean,
   prefix = '../',
 ): SummaryFactory {
-  const factory = new SummaryFactory().addSection('', prefix + 'variation-details');
+  const factory = new SummaryFactory().addSection('', `${prefix}variation-details`);
 
   let facilityChanges = [];
   let baselineChanges = [];

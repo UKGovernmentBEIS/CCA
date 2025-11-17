@@ -11,9 +11,9 @@
  */
 
 export interface TargetPeriodPerformanceResult {
-  targetEnergyCarbonTpThroughput?: number;
-  byEnergyCarbonTpThroughput?: number;
-  tpPerformance: number;
-  tpPerformancePercent: number;
+  targetEnergyCarbonTpThroughput?: string;
+  byEnergyCarbonTpThroughput?: string;
+  tpPerformance: string;
+  tpPerformancePercent: string;
   tpOutcome: 'TARGET_MET' | 'BUY_OUT_REQUIRED' | 'SURPLUS_USED_BUY_OUT_REQUIRED' | 'SURPLUS_USED' | 'OUTSTANDING';
 }

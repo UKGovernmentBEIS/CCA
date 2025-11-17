@@ -1,4 +1,4 @@
-import { DestroyRef, InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, Provider } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 
@@ -17,8 +17,8 @@ export const TARGET_UNIT_RESPONSIBLE_PERSON_FORM = new InjectionToken<Responsibl
 
 export const TargetUnitResponsiblePersonFormProvider: Provider = {
   provide: TARGET_UNIT_RESPONSIBLE_PERSON_FORM,
-  deps: [FormBuilder, CreateTargetUnitStore, DestroyRef],
-  useFactory: (fb: FormBuilder, createTargetUnitStore: CreateTargetUnitStore, destroyRef: DestroyRef) => {
+  deps: [FormBuilder, CreateTargetUnitStore],
+  useFactory: (fb: FormBuilder, createTargetUnitStore: CreateTargetUnitStore) => {
     const addressPayload = createTargetUnitStore.state.address;
     const responsiblePersonPayload = createTargetUnitStore.state.responsiblePerson;
     const addressFormGroup = createAccountAddressForm(responsiblePersonPayload?.address);
@@ -35,7 +35,7 @@ export const TargetUnitResponsiblePersonFormProvider: Provider = {
 
     const group = createResponsibleForm(fb, formConfig, createTargetUnitStore.sameAddressWithOperator);
 
-    group.controls.sameAddress.valueChanges.pipe(takeUntilDestroyed(destroyRef)).subscribe((isSameAddress) => {
+    group.controls.sameAddress.valueChanges.pipe(takeUntilDestroyed()).subscribe((isSameAddress) => {
       if (isSameAddress[0]) {
         group.controls.address.setValue(addressPayload);
         group.controls.address.disable();

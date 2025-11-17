@@ -12,7 +12,6 @@ import { ItemDTO } from 'cca-api';
 @Component({
   selector: 'netz-related-tasks',
   templateUrl: './related-tasks.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, ItemNamePipe, ItemLinkPipe, DaysRemainingPipe],
 })

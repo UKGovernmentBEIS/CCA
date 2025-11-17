@@ -28,7 +28,6 @@ import { performanceDataUploadQuery } from '../+state/performance-data-upload-se
       </div>
     </div>
   `,
-  standalone: true,
   imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

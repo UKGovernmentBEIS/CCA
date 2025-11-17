@@ -28,7 +28,6 @@ const FILTERS_AND_PAGINATION_LIMIT = 10;
 @Component({
   selector: 'cca-una-manage-facilities',
   templateUrl: './manage-facilities.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     ReactiveFormsModule,
@@ -163,7 +162,7 @@ export class ManageFacilitiesComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.pageSize()) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   private handleQueryParamsNavigation(

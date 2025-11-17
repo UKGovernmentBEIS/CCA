@@ -11,7 +11,6 @@ import { PageHeadingComponent } from '@netz/common/components';
       <li>cca-help&#64;environment-agency.gov.uk</li>
     </ul>
   `,
-  standalone: true,
   imports: [PageHeadingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

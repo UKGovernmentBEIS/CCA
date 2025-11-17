@@ -28,7 +28,6 @@ type TargetUnitMoasState = {
 @Component({
   selector: 'cca-tu-moas',
   templateUrl: './tu-moas.component.html',
-  standalone: true,
   imports: [TableComponent, PaginationComponent, TagComponent, RouterLink, DecimalPipe, StatusColorPipe, StatusPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -83,7 +82,7 @@ export class TuMoasComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.state().pageSize) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   private fetchMoas() {

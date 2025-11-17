@@ -76,19 +76,19 @@ public class SubsistenceFeesMoaTargetUnitCustomRepositoryImpl implements Subsist
 			String term = "%" + criteria.getTerm() + "%";
         	jpaQuery = jpaQuery.where(account.businessId.likeIgnoreCase(term)
         			.or(account.name.likeIgnoreCase(term)
-        					.or(moaTargetUnit.id.in(constructFacilityIdSubquery(moaFacility, facilityData, term)))));
+        					.or(moaTargetUnit.id.in(constructFacilitySubquery(moaFacility, facilityData, term)))));
         }
 		return jpaQuery;
 		
 	}
 
-	private JPQLQuery<Long> constructFacilityIdSubquery(QSubsistenceFeesMoaFacility moaFacility,
+	private JPQLQuery<Long> constructFacilitySubquery(QSubsistenceFeesMoaFacility moaFacility,
 			QFacilityData facilityData, String term) {
 		return JPAExpressions.select(moaFacility.subsistenceFeesMoaTargetUnit.id).distinct()
 				.from(moaFacility)
 				.innerJoin(facilityData)
 				.on(facilityData.id.eq(moaFacility.facilityId))
-				.where(facilityData.facilityId.likeIgnoreCase(term));
+				.where(facilityData.facilityBusinessId.likeIgnoreCase(term));
 	}
 
 	private JPAQuery<SubsistenceFeesMoaTargetUnitSearchResultInfo> constructHavingClause(

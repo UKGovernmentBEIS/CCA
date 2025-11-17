@@ -14,7 +14,9 @@ export const tp6RedirectGuard: CanActivateFn = (route: ActivatedRouteSnapshot): 
   const statusPending =
     reviewSectionStatus !== TaskItemStatus.ACCEPTED && reviewSectionStatus !== TaskItemStatus.REJECTED;
 
-  if (!statusPending) return createUrlTreeFromSnapshot(route, ['summary']);
+  if (!statusPending || reviewSectionStatus === TaskItemStatus.UNCHANGED) {
+    return createUrlTreeFromSnapshot(route, ['summary']);
+  }
 
   const decision = store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_PERIOD6_DETAILS'))();
 

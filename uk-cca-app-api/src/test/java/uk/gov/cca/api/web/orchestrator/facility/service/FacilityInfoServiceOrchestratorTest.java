@@ -43,20 +43,20 @@ class FacilityInfoServiceOrchestratorTest {
 
     @Test
     void getFacilityInfo() {
-        String facilityId = "facilityId";
-        Long facilityDataId = 1L;
+        String facilityBusinessId = "facilityId";
+        Long facilityId = 1L;
         Long certificationPeriodId = 2L;
         LocalDate startDate = LocalDate.of(2020, 1, 1);
         LocalDate endDate = LocalDate.of(2020, 2, 1);
         FacilityDataDetailsDTO facilityDataDetailsDTO = FacilityDataDetailsDTO.builder()
-                .id(facilityDataId)
-                .facilityId(facilityId)
+                .id(facilityId)
+                .facilityBusinessId(facilityBusinessId)
                 .siteName("siteName")
                 .status(FacilityDataStatus.LIVE)
                 .build();
 
         FacilityCertificationDTO facilityCertificationDTO = FacilityCertificationDTO.builder()
-                .facilityId(facilityDataId)
+                .facilityId(facilityId)
                 .certificationPeriodId(certificationPeriodId)
                 .certificationStatus(FacilityCertificationStatus.CERTIFIED)
                 .startDate(startDate)
@@ -91,14 +91,14 @@ class FacilityInfoServiceOrchestratorTest {
         verify(certificationPeriodService, times(1)).getAllCertificationPeriods();
 
         assertThat(result.getFacilityCertificationDetails()).hasSize(1);
-        assertThat(result.getFacilityId()).isEqualTo(facilityId);
+        assertThat(result.getFacilityBusinessId()).isEqualTo(facilityBusinessId);
         assertThat(result.getFacilityCertificationDetails().getFirst()).isEqualTo(certificationDetailsDTO);
     }
 
     @Test
     void updateFacilityCertificationStatus() {
 
-        final String facilityId = "ADS_1-F00023";
+        final Long facilityId = 1L;
         final FacilityCertificationStatusUpdateDTO facilityCertificationStatusUpdateDTO = FacilityCertificationStatusUpdateDTO.builder()
                 .certificationStatus(FacilityCertificationStatus.CERTIFIED)
                 .certificationPeriodId(2L)

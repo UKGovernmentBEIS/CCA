@@ -10,8 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.netz.api.common.validation.SpELExpression;
 
 import java.util.HashSet;
@@ -50,5 +50,5 @@ public class FacilityDetails {
 	
 	@NotNull
 	@Valid
-	private AccountAddressDTO facilityAddress;
+	private FacilityAddressDTO facilityAddress;
 }

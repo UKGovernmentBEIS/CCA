@@ -24,7 +24,6 @@ import { FileUploadListComponent } from '../file-upload-list/file-upload-list.co
 @Component({
   selector: 'cca-multiple-file-input[baseDownloadUrl]',
   templateUrl: './multiple-file-input.component.html',
-  standalone: true,
   imports: [FileUploadListComponent, AsyncPipe, ErrorMessageComponent],
 })
 export class MultipleFileInputComponent implements ControlValueAccessor, OnInit {

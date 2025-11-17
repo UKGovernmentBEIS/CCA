@@ -12,10 +12,7 @@ export function transformAgreementCompositionType(value: keyof typeof AgreementC
   return text;
 }
 
-@Pipe({
-  name: 'agreementCompositionType',
-  standalone: true,
-})
+@Pipe({ name: 'agreementCompositionType' })
 export class AgreementCompositionTypePipe implements PipeTransform {
   transform = transformAgreementCompositionType;
 }

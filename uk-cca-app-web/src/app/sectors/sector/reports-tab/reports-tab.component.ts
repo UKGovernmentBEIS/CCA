@@ -13,7 +13,6 @@ import { PerformanceReportFiltersComponent } from './performance-data/performanc
 @Component({
   selector: 'cca-reports-tab',
   templateUrl: './reports-tab.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     SelectComponent,

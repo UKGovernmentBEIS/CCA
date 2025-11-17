@@ -17,7 +17,6 @@ import { BusinessErrorService } from './business-error.service';
       </cca-error-page>
     }
   `,
-  standalone: true,
   imports: [ErrorPageComponent, RouterLink, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -16,7 +16,6 @@ import {
 
 @Component({
   selector: 'cca-peer-review-decision',
-  standalone: true,
   templateUrl: './peer-review-decision.component.html',
   imports: [
     FormsModule,

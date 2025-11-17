@@ -14,7 +14,10 @@ import {
 import { AccountAddressInputComponent, PhoneInputComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
-import { UnderlyingAgreementVariationSubmitRequestTaskPayload } from 'cca-api';
+import {
+  UnderlyingAgreementVariationApplySavePayload,
+  UnderlyingAgreementVariationSubmitRequestTaskPayload,
+} from 'cca-api';
 
 import { createRequestTaskActionProcessDTO, toUnderlyingAgreementVariationSavePayload } from '../../../../transform';
 import { extractReviewProps } from '../../../../utils';
@@ -27,7 +30,6 @@ import {
 @Component({
   selector: 'cca-facility-contact-details',
   templateUrl: './facility-contact-details.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -62,19 +64,7 @@ export class FacilityContactDetailsComponent {
 
     const actionPayload = toUnderlyingAgreementVariationSavePayload(payload);
 
-    // Update facility contact details
-    const updatedPayload = produce(actionPayload, (draft) => {
-      const facility = draft.facilities.find((f) => f.facilityId === this.facilityId);
-      if (facility) {
-        facility.facilityContact = {
-          firstName: this.form.getRawValue().firstName,
-          lastName: this.form.getRawValue().lastName,
-          email: this.form.getRawValue().email,
-          address: this.form.getRawValue().address,
-          phoneNumber: this.form.getRawValue().phoneNumber,
-        };
-      }
-    });
+    const updatedPayload = updateFacilityContact(actionPayload, this.form, this.facilityId);
 
     const currentSectionsCompleted =
       this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)() || {};
@@ -98,4 +88,23 @@ export class FacilityContactDetailsComponent {
         }
       });
   }
+}
+
+function updateFacilityContact(
+  payload: UnderlyingAgreementVariationApplySavePayload,
+  form: FormGroup<FacilityContactFormModel>,
+  facilityId: string,
+): UnderlyingAgreementVariationApplySavePayload {
+  return produce(payload, (draft) => {
+    const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
+    if (facilityIndex === -1) return;
+
+    draft.facilities[facilityIndex].facilityContact = {
+      firstName: form.getRawValue().firstName,
+      lastName: form.getRawValue().lastName,
+      email: form.getRawValue().email,
+      address: form.getRawValue().address,
+      phoneNumber: form.getRawValue().phoneNumber,
+    };
+  });
 }

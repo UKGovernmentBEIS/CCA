@@ -26,6 +26,7 @@ import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityInfoDTO;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilitySearchResults;
 import uk.gov.cca.api.web.orchestrator.facility.service.FacilityInfoServiceOrchestrator;
 import uk.gov.cca.api.web.orchestrator.facility.service.FacilitySearchServiceOrchestrator;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.security.Authorized;
 
@@ -54,11 +55,13 @@ public class FacilityViewController {
             @PathVariable("accountId") @Parameter(description = "The account id") Long accountId,
             @RequestParam(value = "term", required = false) @Size(min = 3, max = 256) @Parameter(name = "term", description = "The term to search") String term,
             @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Integer page,
-            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}") Integer pageSize
+            @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}") Integer pageSize,
+            @Parameter(hidden = true) AppUser appUser
     ) {
         return new ResponseEntity<>(
                 facilitySearchServiceOrchestrator.searchFacilities(
                         accountId,
+						appUser,
                         FacilitySearchCriteria.builder()
                                 .term(term)
                                 .paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
@@ -77,7 +80,7 @@ public class FacilityViewController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#facilityId")
     public ResponseEntity<FacilityInfoDTO> getFacilityDetailsById(
-            @PathVariable("facilityId") @Parameter(description = "The facility id") String facilityId) {
+            @PathVariable("facilityId") @Parameter(description = "The facility id") Long facilityId) {
         return new ResponseEntity<>(facilityInfoServiceOrchestrator.getFacilityInfo(facilityId), HttpStatus.OK);
     }
 }

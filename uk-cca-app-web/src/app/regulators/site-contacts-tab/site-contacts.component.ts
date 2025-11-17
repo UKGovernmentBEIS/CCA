@@ -35,7 +35,6 @@ const DEFAULT_PAGE_SIZE = 20;
 @Component({
   selector: 'cca-site-contacts',
   templateUrl: './site-contacts.component.html',
-  standalone: true,
   imports: [
     TableComponent,
     SelectComponent,
@@ -127,7 +126,7 @@ export class SiteContactsComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.pageSize()) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   refreshSectorAssociationSiteContacts() {

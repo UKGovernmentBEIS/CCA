@@ -24,7 +24,6 @@ import { ADD_SECTOR_FORM, AddSectorFormModel, AddSectorFormProvider } from './ad
 @Component({
   selector: 'cca-add-sector-user',
   templateUrl: './add-sector-user.component.html',
-  standalone: true,
   imports: [
     ButtonDirective,
     TextInputComponent,

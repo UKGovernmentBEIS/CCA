@@ -9,7 +9,6 @@ import { toPatSubmittedSummaryData } from './pat-upload-submitted-summary-data';
 @Component({
   selector: 'cca-pat-upload-submitted',
   template: `<cca-summary [data]="summaryData" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

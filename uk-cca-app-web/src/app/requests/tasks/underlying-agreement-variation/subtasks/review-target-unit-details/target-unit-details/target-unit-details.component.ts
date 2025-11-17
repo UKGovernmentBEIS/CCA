@@ -24,7 +24,6 @@ import { extractReviewProps } from '../../../utils';
 @Component({
   selector: 'cca-variation-target-unit-details',
   templateUrl: './target-unit-details.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,

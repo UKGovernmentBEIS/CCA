@@ -9,7 +9,6 @@ import { targetUnitCreationTimelineQuery } from './+state/target-unit-account-su
 @Component({
   selector: 'cca-target-unit-account-submitted-timeline',
   template: `<cca-summary [data]="data" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -30,7 +30,6 @@ const DEFAULT_PAGE_SIZE = 50;
 @Component({
   selector: 'cca-pat-report-table',
   templateUrl: './pat-report-table.component.html',
-  standalone: true,
   imports: [TableComponent, RouterLink, GovukDatePipe, TitleCasePipe, PaginationComponent, ButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -107,7 +106,7 @@ export class PatReportTableComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.state().pageSize) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   exportToXlsx(): void {

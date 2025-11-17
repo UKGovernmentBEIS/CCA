@@ -10,7 +10,6 @@ import {
 
 @Component({
   selector: 'govuk-notification-banner',
-  standalone: true,
   templateUrl: './notification-banner.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

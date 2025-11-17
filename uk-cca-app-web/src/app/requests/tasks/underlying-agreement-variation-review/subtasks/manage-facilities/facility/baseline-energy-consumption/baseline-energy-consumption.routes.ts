@@ -1,0 +1,37 @@
+import { Routes } from '@angular/router';
+
+import { FacilityWizardStep } from '@requests/common';
+
+export const BASELINE_ENERGY_CONSUMPTION_ROUTES: Routes = [
+  {
+    path: '',
+    title: 'Baseline energy consumption',
+    data: { backlink: `../${FacilityWizardStep.BASELINE_DATA}`, breadcrumb: false },
+    loadComponent: () =>
+      import('./baseline-energy-consumption.component').then((c) => c.BaselineEnergyConsumptionComponent),
+  },
+  {
+    path: 'add-product',
+    title: 'Add product',
+    data: { backlink: '../', breadcrumb: false },
+    loadComponent: () => import('./add-product/add-product.component').then((c) => c.AddProductComponent),
+  },
+  {
+    path: 'delete-product/:productName',
+    title: 'Delete product',
+    data: { backlink: '../../', breadcrumb: false },
+    loadComponent: () => import('./delete-product/delete-product.component').then((c) => c.DeleteProductComponent),
+  },
+  {
+    path: 'exclude-product/:productName',
+    title: 'Exclude product',
+    data: { backlink: '../../', breadcrumb: false },
+    loadComponent: () => import('./exclude-product/exclude-product.component').then((c) => c.ExcludeProductComponent),
+  },
+  {
+    path: 'undo-product/:productName',
+    title: 'Undo product exclusion',
+    data: { backlink: '../../', breadcrumb: false },
+    loadComponent: () => import('./undo-product/undo-product.component').then((c) => c.UndoProductComponent),
+  },
+];

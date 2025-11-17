@@ -45,16 +45,16 @@ public class FacilitiesAttachmentsBuilder {
     private final FileAttachmentMigrationRepository fileAttachmentRepository;
 
     public void populateAttachments(List<LegacyFileAttachment> sectionAttachments, Facility facility) {
-        final String facilityId = facility.getFacilityItem().getFacilityId();
+        final String facilityBusinessId = facility.getFacilityItem().getFacilityId();
         
-        final List<FileAttachment> attachments = fileAttachmentRepository.searchByNameLike(facilityId);
+        final List<FileAttachment> attachments = fileAttachmentRepository.searchByNameLike(facilityBusinessId);
         
         //Permit File - conditionally mandatory based on erpAuthorisationExists
-        final String permitFileIndex = String.join(" ", facilityId, MANAGE_FACILITIES_PERMIT_FILE.getIndex());
+        final String permitFileIndex = String.join(" ", facilityBusinessId, MANAGE_FACILITIES_PERMIT_FILE.getIndex());
         List<FileAttachment> permitFile = FileAttachmentUtil.startsWith(attachments, permitFileIndex);
         if (Boolean.TRUE.equals(facility.getFacilityItem().getEligibilityDetailsAndAuthorisation().getErpAuthorisationExists())) {
             if (CollectionUtils.isEmpty(permitFile)) {
-                PlaceholderAttachment placeholderAttachment = new EprLaapcPermitPlaceholderAttachment(facilityId);
+                PlaceholderAttachment placeholderAttachment = new EprLaapcPermitPlaceholderAttachment(facilityBusinessId);
                 permitFile.add(fileAttachmentMapper.toFileAttachment(placeholderAttachment));
             } else if (permitFile.size() != 1) {
                 permitFile.clear();
@@ -66,10 +66,10 @@ public class FacilitiesAttachmentsBuilder {
         }
         
         //Manufacturing process description - mandatory
-        final String manufacturingProcessFileIndex = String.join(" ", facilityId, MANAGE_FACILITIES_MANUFACTURING_PROCESS_DESCRIPTION.getIndex());                
+        final String manufacturingProcessFileIndex = String.join(" ", facilityBusinessId, MANAGE_FACILITIES_MANUFACTURING_PROCESS_DESCRIPTION.getIndex());                
         List<FileAttachment> manufacturingProcessFile = FileAttachmentUtil.startsWith(attachments, manufacturingProcessFileIndex);
         if (CollectionUtils.isEmpty(manufacturingProcessFile)) {
-            PlaceholderAttachment placeholderAttachment = new ManufacturingProcessDescriptionPlaceholderAttachment(facilityId);
+            PlaceholderAttachment placeholderAttachment = new ManufacturingProcessDescriptionPlaceholderAttachment(facilityBusinessId);
             manufacturingProcessFile.add(fileAttachmentMapper.toFileAttachment(placeholderAttachment));
         } else if (manufacturingProcessFile.size() != 1) {
             manufacturingProcessFile.clear();
@@ -80,10 +80,10 @@ public class FacilitiesAttachmentsBuilder {
         }
         
         //Process flow maps - mandatory
-        final String processFlowFileIndex = String.join(" ", facilityId, MANAGE_FACILITIES_PROCESS_FLOW_MAPS.getIndex());
+        final String processFlowFileIndex = String.join(" ", facilityBusinessId, MANAGE_FACILITIES_PROCESS_FLOW_MAPS.getIndex());
         List<FileAttachment> processFlowFile = FileAttachmentUtil.startsWith(attachments, processFlowFileIndex);
         if (CollectionUtils.isEmpty(processFlowFile)) {
-            PlaceholderAttachment placeholderAttachment = new ProcessFlowMapPlaceholderAttachment(facilityId);
+            PlaceholderAttachment placeholderAttachment = new ProcessFlowMapPlaceholderAttachment(facilityBusinessId);
             processFlowFile.add(fileAttachmentMapper.toFileAttachment(placeholderAttachment));
         } else if (processFlowFile.size() != 1) {
             processFlowFile.clear();
@@ -94,10 +94,10 @@ public class FacilitiesAttachmentsBuilder {
         }
         
         //Annotated site plans - mandatory
-        final String annotatedSitePlansFileIndex = String.join(" ", facilityId, MANAGE_FACILITIES_ANNOTATED_SITE_PLANS.getIndex());
+        final String annotatedSitePlansFileIndex = String.join(" ", facilityBusinessId, MANAGE_FACILITIES_ANNOTATED_SITE_PLANS.getIndex());
         List<FileAttachment> annotatedSitePlansFile = FileAttachmentUtil.startsWith(attachments, annotatedSitePlansFileIndex);
         if (CollectionUtils.isEmpty(annotatedSitePlansFile)) {
-            PlaceholderAttachment placeholderAttachment = new AnnotatedSitePlanPlaceholderAttachment(facilityId);
+            PlaceholderAttachment placeholderAttachment = new AnnotatedSitePlanPlaceholderAttachment(facilityBusinessId);
             annotatedSitePlansFile.add(fileAttachmentMapper.toFileAttachment(placeholderAttachment));
         } else if (annotatedSitePlansFile.size() != 1) {
             annotatedSitePlansFile.clear();
@@ -108,10 +108,10 @@ public class FacilitiesAttachmentsBuilder {
         }
         
         //Eligible process description - mandatory
-        final String eligibleProcessFileIndex = String.join(" ", facilityId, MANAGE_FACILITIES_ELIGIBLE_PROCESS_DESCRIPTION.getIndex());
+        final String eligibleProcessFileIndex = String.join(" ", facilityBusinessId, MANAGE_FACILITIES_ELIGIBLE_PROCESS_DESCRIPTION.getIndex());
         List<FileAttachment> eligibleProcessFile = FileAttachmentUtil.startsWith(attachments, eligibleProcessFileIndex);
         if (CollectionUtils.isEmpty(eligibleProcessFile)) {
-            PlaceholderAttachment placeholderAttachment = new EligibleProcessDescriptionPlaceholderAttachment(facilityId);
+            PlaceholderAttachment placeholderAttachment = new EligibleProcessDescriptionPlaceholderAttachment(facilityBusinessId);
             eligibleProcessFile.add(fileAttachmentMapper.toFileAttachment(placeholderAttachment));
         } else if (eligibleProcessFile.size() != 1) {
             eligibleProcessFile.clear();
@@ -122,7 +122,7 @@ public class FacilitiesAttachmentsBuilder {
         }
 
         //Directly associated activities - conditionally mandatory based on areActivitiesClaimed
-        final String activitiesDescriptionFileIndex = String.join(" ", facilityId, MANAGE_FACILITIES_DIRECTLY_ASSOCIATED_ACTIVITIES_DESCRIPTION.getIndex());                
+        final String activitiesDescriptionFileIndex = String.join(" ", facilityBusinessId, MANAGE_FACILITIES_DIRECTLY_ASSOCIATED_ACTIVITIES_DESCRIPTION.getIndex());                
         List<FileAttachment> activitiesDescriptionFile = FileAttachmentUtil.startsWith(attachments, activitiesDescriptionFileIndex);
         if (CollectionUtils.isNotEmpty(activitiesDescriptionFile) && activitiesDescriptionFile.size() == 1) {
             facility.getFacilityItem().getFacilityExtent().setAreActivitiesClaimed(Boolean.TRUE);
@@ -131,17 +131,17 @@ public class FacilitiesAttachmentsBuilder {
         }
         
         //Evidence File for 70% rule - mandatory
-        final String evidenceFileIndex = String.join(" ", facilityId, MANAGE_FACILITIES_EVIDENCE.getIndex());
+        final String evidenceFileIndex = String.join(" ", facilityBusinessId, MANAGE_FACILITIES_EVIDENCE.getIndex());
         List<FileAttachment> evidenceFile = FileAttachmentUtil.startsWith(attachments, evidenceFileIndex);
         if (CollectionUtils.isEmpty(evidenceFile)) {
-            PlaceholderAttachment placeholderAttachment = new Rule70EvidencePlaceholderAttachment(facilityId);
+            PlaceholderAttachment placeholderAttachment = new Rule70EvidencePlaceholderAttachment(facilityBusinessId);
             evidenceFile.add(fileAttachmentMapper.toFileAttachment(placeholderAttachment));
         } else if (evidenceFile.size() != 1) {
             evidenceFile.clear();
         } else if (!FileType.XLSX.getMimeTypes().contains(evidenceFile.get(0).getFileType())
                 && !FileType.XLS.getMimeTypes().contains(evidenceFile.get(0).getFileType())) {
             evidenceFile.clear();
-            PlaceholderAttachment placeholderAttachment = new Rule70EvidencePlaceholderAttachment(facilityId);
+            PlaceholderAttachment placeholderAttachment = new Rule70EvidencePlaceholderAttachment(facilityBusinessId);
             evidenceFile.add(fileAttachmentMapper.toFileAttachment(placeholderAttachment));
         }
         if(CollectionUtils.isNotEmpty(evidenceFile)) {

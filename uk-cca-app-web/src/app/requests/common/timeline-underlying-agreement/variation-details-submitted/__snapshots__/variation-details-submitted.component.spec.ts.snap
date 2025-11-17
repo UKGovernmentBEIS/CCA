@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`VariationDetailsComponent should show summary values 1`] = `
 <cca-una-submitted-variation-details
@@ -32,7 +32,9 @@ exports[`VariationDetailsComponent should show summary values 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Amend the name of the operator/organisation 
+            <span>
+              Amend the name of the operator/organisation
+            </span>
           </dd>
         </div>
         <div
@@ -49,7 +51,9 @@ exports[`VariationDetailsComponent should show summary values 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             a structural change 
+            <span>
+              a structural change
+            </span>
           </dd>
         </div>
         <div
@@ -66,7 +70,9 @@ exports[`VariationDetailsComponent should show summary values 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             No reason 
+            <span>
+              No reason
+            </span>
           </dd>
         </div>
       </dl>

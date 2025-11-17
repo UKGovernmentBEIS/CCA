@@ -17,7 +17,6 @@ import { CreateTargetUnitStore } from '../create-target-unit.store';
 @Component({
   selector: 'cca-target-unit-creation-summary',
   templateUrl: './create-target-unit-summary.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent, ButtonDirective, RouterLink, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

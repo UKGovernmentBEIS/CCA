@@ -6,7 +6,6 @@ import { BackToTopComponent } from '@shared/components';
 @Component({
   selector: 'cca-accessibility',
   templateUrl: './accessibility.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, BackToTopComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -17,7 +17,6 @@ import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'govuk-accordion',
-  standalone: true,
   imports: [AsyncPipe],
   template: `
     <div class="govuk-accordion" [id]="id()" data-module="govuk-accordion">

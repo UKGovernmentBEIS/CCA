@@ -1,10 +1,17 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the correct header and caption 1`] = `
 <cca-authorisation-additional-evidence-summary
   activatedRoute={[Function ActivatedRouteStub]}
+  currentAdditionalEvidence={[Function Object]}
+  currentAttachments={[Function Object]}
+  decision={[Function Object]}
   downloadUrl={[Function String]}
+  isEditable={[Function Boolean]}
+  originalAdditionalEvidence={[Function Object]}
+  originalAttachments={[Function Object]}
   requestTaskStore={[Function _RequestTaskStore]}
+  reviewAttachments={[Function Object]}
   summaryDataCurrent={[Function Array]}
   summaryDataOriginal={[Function Array]}
   taskId="null"
@@ -123,7 +130,9 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 Accepted 
+                <span>
+                  Accepted
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -151,7 +160,9 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 Authorisation notes 
+                <span>
+                  Authorisation notes
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -296,7 +307,9 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 Accepted 
+                <span>
+                  Accepted
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -324,7 +337,9 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
                 class="govuk-summary-list__value"
                 govuksummarylistrowvalue=""
               >
-                 Authorisation notes 
+                <span>
+                  Authorisation notes
+                </span>
               </dd>
               <dd
                 class="govuk-summary-list__actions"
@@ -453,7 +468,9 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
             <dd
               class="govuk-summary-list__value"
             >
-               Accepted 
+              <span>
+                Accepted
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"
@@ -477,7 +494,9 @@ exports[`AuthorisationAdditionalEvidenceSummaryComponent should display the corr
             <dd
               class="govuk-summary-list__value"
             >
-               Authorisation notes 
+              <span>
+                Authorisation notes
+              </span>
             </dd>
             <dd
               class="govuk-summary-list__actions"

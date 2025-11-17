@@ -1,0 +1,467 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`BaselineEnergyConsumptionComponent should render the form with the correct initial values 1`] = `
+<cca-baseline-energy-consumption
+  activatedRoute={[Function Object]}
+  baselineVariableEnergyValue={[Function Function]}
+  baselineYear={[Function Number]}
+  calculatedFixedEnergy={[Function Function]}
+  calculatedOtherYearsVariable={[Function Function]}
+  calculatedTotalEnergy={[Function Function]}
+  calculatedVariableEnergy={[Function Function]}
+  decimalPipe={[Function _DecimalPipe]}
+  facility={[Function Function]}
+  facilityEnergyConsumption={[Function Function]}
+  facilityId={[Function String]}
+  facilityIndex="0"
+  facilityThroughputUnit={[Function String]}
+  form={[Function FormGroup]}
+  hasVariableEnergyValue={[Function Function]}
+  products={[Function Function]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  showSplitByProductFields={[Function Function]}
+  showThroughputFields={[Function Function]}
+  showTotalsOnlyFields={[Function Function]}
+  showVariableEnergyType={[Function Function]}
+  tasksApiService={[Function Object]}
+  throughputUnitValue={[Function Function]}
+  totalFixedEnergyValue={[Function Function]}
+  totalThroughputValue={[Function Function]}
+  una={[Function Object]}
+  variableEnergyTypeValue={[Function Function]}
+>
+  <cca-wizard-step
+    class="ng-untouched ng-pristine ng-valid"
+    data-testid="baseline-energy-consumption-form"
+    heading="Baseline energy or carbon consumption"
+  >
+    <form
+      class="ng-untouched ng-pristine ng-valid"
+      novalidate=""
+    >
+      <netz-page-heading>
+        <h1
+          class="govuk-heading-l"
+        >
+          Baseline energy or carbon consumption
+        </h1>
+      </netz-page-heading>
+      <div
+        class="govuk-grid-row"
+      >
+        <p
+          class="govuk-grid-column-two-thirds"
+        >
+           The baseline energy or carbon consumption refers to the energy or carbon consumed in the 12 month period from the Start date of the baseline. The targets set for the facility will be the percentage improvement in energy efficiency or carbon efficiency from this base year. 
+        </p>
+      </div>
+      <div
+        class="govuk-grid-row govuk-!-margin-top-7"
+      >
+        <div
+          class="govuk-grid-column-two-thirds"
+        >
+          <p
+            class="govuk-!-margin-bottom-0"
+          >
+             Enter the fixed amount of energy consumed (or carbon emitted) during the baseline 
+          </p>
+          <p
+            class="govuk-hint govuk-!-margin-top-1"
+          >
+             Fixed energy consumption is the portion of a facility's total energy consumed (or carbon emitted) that does not vary with throughput. This value may be entered as zero 
+          </p>
+          <div
+            class="govuk-!-width-one-half govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="totalFixedEnergy"
+            govuk-text-input=""
+            inputtype="number"
+            widthclass="govuk-!-width-one-half"
+          >
+            <label
+              class="govuk-label govuk-visually-hidden"
+              for="totalFixedEnergy"
+              id="l.totalFixedEnergy"
+            >
+            </label>
+            <div
+              class="govuk-input__wrapper"
+            >
+              <input
+                autocomplete="on"
+                class="govuk-input govuk-!-width-one-half"
+                id="totalFixedEnergy"
+                name="totalFixedEnergy"
+                type="text"
+              />
+              <div
+                aria-hidden="true"
+                class="govuk-input__suffix"
+              >
+                kWh
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="govuk-grid-row"
+      >
+        <div
+          class="govuk-grid-column-two-thirds"
+        >
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="hasVariableEnergy"
+            govuk-radio=""
+            hint="Variable energy consumption is the portion of a facility's total energy consumed (or carbon emitted) that is related to throughput"
+            legend="Should any of the energy consumed (or carbon emitted) during the baseline be categorised as variable"
+          >
+            <div
+              class="govuk-form-group"
+            >
+              <fieldset
+                aria-describedby="hasVariableEnergy-hint"
+                class="govuk-fieldset"
+                govukfieldset=""
+                id="hasVariableEnergy"
+              >
+                <legend
+                  class="govuk-fieldset__legend"
+                  govuklegend=""
+                  id="l.hasVariableEnergy"
+                >
+                   Should any of the energy consumed (or carbon emitted) during the baseline be categorised as variable 
+                </legend>
+                <div
+                  class="govuk-hint"
+                  govukfieldsethint=""
+                  id="hasVariableEnergy-hint"
+                >
+                  Variable energy consumption is the portion of a facility's total energy consumed (or carbon emitted) that is related to throughput
+                </div>
+                <div
+                  class="govuk-radios"
+                >
+                  <div
+                    class="govuk-radios__item"
+                  >
+                    <input
+                      class="govuk-radios__input"
+                      id="hasVariableEnergy-option0"
+                      name="hasVariableEnergy"
+                      type="radio"
+                      value="true"
+                    />
+                    <label
+                      class="govuk-label govuk-radios__label"
+                      for="hasVariableEnergy-option0"
+                    >
+                       Yes 
+                    </label>
+                  </div>
+                  <div
+                    class="govuk-radios__item"
+                  >
+                    <input
+                      class="govuk-radios__input"
+                      id="hasVariableEnergy-option1"
+                      name="hasVariableEnergy"
+                      type="radio"
+                      value="false"
+                    />
+                    <label
+                      class="govuk-label govuk-radios__label"
+                      for="hasVariableEnergy-option1"
+                    >
+                       No 
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="govuk-grid-row"
+      >
+        <div
+          class="govuk-grid-column-two-thirds"
+        >
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="variableEnergyType"
+            govuk-radio=""
+            legend="Indicate how you want to account for the portion of variable energy used (or carbon emitted) for your facility"
+          >
+            <div
+              class="govuk-form-group"
+            >
+              <fieldset
+                class="govuk-fieldset"
+                govukfieldset=""
+                id="variableEnergyType"
+              >
+                <legend
+                  class="govuk-fieldset__legend"
+                  govuklegend=""
+                  id="l.variableEnergyType"
+                >
+                   Indicate how you want to account for the portion of variable energy used (or carbon emitted) for your facility 
+                </legend>
+                <div
+                  class="govuk-radios govuk-radios--inline"
+                >
+                  <div
+                    class="govuk-radios__item"
+                  >
+                    <input
+                      class="govuk-radios__input"
+                      id="variableEnergyType-option0"
+                      name="variableEnergyType"
+                      type="radio"
+                      value="TOTALS"
+                    />
+                    <label
+                      class="govuk-label govuk-radios__label"
+                      for="variableEnergyType-option0"
+                    >
+                       Totals only 
+                    </label>
+                  </div>
+                  <div
+                    class="govuk-radios__item"
+                  >
+                    <input
+                      class="govuk-radios__input"
+                      id="variableEnergyType-option1"
+                      name="variableEnergyType"
+                      type="radio"
+                      value="BY_PRODUCT"
+                    />
+                    <label
+                      class="govuk-label govuk-radios__label"
+                      for="variableEnergyType-option1"
+                    >
+                       Split by product 
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="govuk-grid-row"
+      >
+        <div
+          class="govuk-grid-column-two-thirds"
+        >
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="baselineVariableEnergy"
+            govuk-text-input=""
+            hint="This value may be entered as zero"
+            inputtype="number"
+            label="Total baseline variable energy"
+            labelsize="small"
+            widthclass="govuk-!-width-one-half"
+          >
+            <label
+              class="govuk-label govuk-label--s"
+              for="baselineVariableEnergy"
+              id="l.baselineVariableEnergy"
+            >
+               Total baseline variable energy 
+            </label>
+            <div
+              class="govuk-hint"
+              id="baselineVariableEnergy-hint"
+            >
+               This value may be entered as zero 
+            </div>
+            <div
+              class="govuk-input__wrapper"
+            >
+              <input
+                autocomplete="on"
+                class="govuk-input govuk-!-width-one-half"
+                id="baselineVariableEnergy"
+                name="baselineVariableEnergy"
+                type="text"
+              />
+              <div
+                aria-hidden="true"
+                class="govuk-input__suffix"
+              >
+                kWh
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="govuk-grid-row"
+      >
+        <div
+          class="govuk-grid-column-full"
+        >
+          <p
+            class="govuk-label--s govuk-!-margin-bottom-0"
+          >
+            Total baseline throughput
+          </p>
+          <p
+            class="govuk-hint govuk-!-margin-top-1"
+          >
+             For facilities where SRM is used, this must be the adjusted throughput 
+          </p>
+        </div>
+        <div
+          class="govuk-grid-column-one-quarter"
+        >
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="totalThroughput"
+            govuk-text-input=""
+            inputtype="number"
+          >
+            <label
+              class="govuk-label govuk-visually-hidden"
+              for="totalThroughput"
+              id="l.totalThroughput"
+            >
+            </label>
+            <input
+              autocomplete="on"
+              class="govuk-input govuk-!-width-full"
+              id="totalThroughput"
+              name="totalThroughput"
+              type="text"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="govuk-grid-row"
+      >
+        <div
+          class="govuk-grid-column-one-third"
+        >
+          <div
+            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+            formcontrolname="throughputUnit"
+            govuk-text-input=""
+            label="Throughput unit"
+            labelsize="small"
+          >
+            <label
+              class="govuk-label govuk-label--s"
+              for="throughputUnit"
+              id="l.throughputUnit"
+            >
+               Throughput unit 
+            </label>
+            <input
+              autocomplete="on"
+              class="govuk-input govuk-!-width-full"
+              id="throughputUnit"
+              name="throughputUnit"
+              type="text"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="govuk-grid-row"
+      >
+        <div
+          class="govuk-grid-column-two-thirds"
+        >
+          <div
+            class="govuk-form-group govuk-!-margin-top-2"
+          >
+            <p
+              class="govuk-label govuk-label--s"
+            >
+              Energy intensity
+            </p>
+            <p
+              class="govuk-hint"
+            >
+              Automatically calculated
+            </p>
+            <p
+              class="govuk-body govuk-!-margin-bottom-0"
+            >
+               4 kWh/tonnes 
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="govuk-grid-row govuk-!-margin-bottom-3"
+      >
+        <div
+          class="govuk-grid-column-two-thirds grey-background"
+        >
+          <p
+            class="govuk-label--m"
+          >
+            Baseline year 2022 calculated energy amounts
+          </p>
+          <p
+            class="govuk-label--s"
+          >
+            Fixed baseline energy for the facility
+          </p>
+          <p>
+            100 kWh
+          </p>
+          <p
+            class="govuk-label--s"
+          >
+            Variable baseline energy for the facility
+          </p>
+          <p>
+            200 kWh
+          </p>
+          <hr
+            class="govuk-!-margin-bottom-3"
+          />
+          <p
+            class="govuk-label--s"
+          >
+            Baseline total energy for the facility
+          </p>
+          <p>
+            300 kWh
+          </p>
+        </div>
+        <div
+          class="govuk-grid-column-one-third"
+        >
+        </div>
+      </div>
+      <button
+        class="govuk-button"
+        govukbutton=""
+        netzpendingbutton=""
+        type="submit"
+      >
+        Continue
+      </button>
+    </form>
+  </cca-wizard-step><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><a
+    class="govuk-link"
+    href="/"
+  >
+     Return to: Manage facilities 
+  </a>
+</cca-baseline-energy-consumption>
+`;

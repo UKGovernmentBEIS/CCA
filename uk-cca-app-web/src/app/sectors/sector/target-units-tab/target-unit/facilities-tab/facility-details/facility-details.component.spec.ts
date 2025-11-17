@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -15,6 +17,8 @@ describe('FacilityDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FacilityDetailsComponent],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         {
           provide: ActivatedRoute,
           useValue: new ActivatedRouteStub(null, null, {
@@ -34,7 +38,7 @@ describe('FacilityDetailsComponent', () => {
   });
 
   it('should render all section titles', () => {
-    expect(screen.getByText('Facility details')).toBeInTheDocument();
+    expect(screen.getAllByText('Facility details')).toHaveLength(2);
     expect(screen.getByText('Subsistence fees')).toBeInTheDocument();
   });
 
@@ -49,7 +53,7 @@ describe('FacilityDetailsComponent', () => {
 
     expect(elements).toEqual([
       ['Site name', 'Fac 1'],
-      ['Address', ' address line 1 city 505050 country '],
+      ['Address', 'address line 1city505050country'],
     ]);
   });
 
@@ -63,8 +67,8 @@ describe('FacilityDetailsComponent', () => {
     });
 
     expect(elements).toEqual([
-      ['Subsistence fees start date', ' 01/01/2024 '],
-      ['Scheme exit date', ' 02/02/2024 '],
+      ['Subsistence fees start date', '01/01/2024'],
+      ['Scheme exit date', '02/02/2024'],
     ]);
   });
 });

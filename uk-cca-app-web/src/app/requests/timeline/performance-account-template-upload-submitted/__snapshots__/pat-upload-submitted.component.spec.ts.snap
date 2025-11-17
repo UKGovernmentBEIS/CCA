@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`PatUploadSubmittedComponent should show summary values 1`] = `
 <cca-pat-upload-submitted
@@ -24,7 +24,9 @@ exports[`PatUploadSubmittedComponent should show summary values 1`] = `
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           ADS_1-T00001 
+          <span>
+            ADS_1-T00001
+          </span>
         </dd>
       </div>
       <div
@@ -66,7 +68,9 @@ exports[`PatUploadSubmittedComponent should show summary values 1`] = `
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Novem Carbon 
+          <span>
+            Novem Carbon
+          </span>
         </dd>
       </div>
       <div
@@ -83,6 +87,8 @@ exports[`PatUploadSubmittedComponent should show summary values 1`] = `
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
+          <span>
+          </span>
         </dd>
       </div>
       <div
@@ -99,7 +105,9 @@ exports[`PatUploadSubmittedComponent should show summary values 1`] = `
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           -199.000% 
+          <span>
+            -199.000%
+          </span>
         </dd>
       </div>
       <div
@@ -116,7 +124,9 @@ exports[`PatUploadSubmittedComponent should show summary values 1`] = `
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           -2.150% 
+          <span>
+            -2.150%
+          </span>
         </dd>
       </div>
       <div
@@ -133,7 +143,9 @@ exports[`PatUploadSubmittedComponent should show summary values 1`] = `
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Yes 
+          <span>
+            Yes
+          </span>
         </dd>
       </div>
       <div
@@ -150,6 +162,8 @@ exports[`PatUploadSubmittedComponent should show summary values 1`] = `
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
+          <span>
+          </span>
         </dd>
       </div>
     </dl>

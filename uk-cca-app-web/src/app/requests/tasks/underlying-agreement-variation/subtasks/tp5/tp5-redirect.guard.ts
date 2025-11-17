@@ -22,7 +22,6 @@ export const tp5RedirectGuard: CanActivateFn = (route: ActivatedRouteSnapshot) =
 
   if (statusPending && !completed) return createUrlTreeFromSnapshot(route, [BaseLineAndTargetsStep.BASELINE_EXISTS]);
   if (statusPending && completed) return createUrlTreeFromSnapshot(route, ['check-your-answers']);
-  if (sectionStatus === TaskItemStatus.COMPLETED) return createUrlTreeFromSnapshot(route, ['summary']);
 
-  return false;
+  return createUrlTreeFromSnapshot(route, ['summary']);
 };

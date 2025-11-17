@@ -57,7 +57,7 @@ describe('SurplusCalculatedComponent', () => {
       [
         ['Users'],
         [
-          'resp1 user, Responsible person, resp1@cca.uk  administr1 user, Administrative contact, administr1@cca.uk  Fred_1 William_1, Sector contact, fredwilliam_1@agindustries.org.uk',
+          'resp1 user, Responsible person, resp1@cca.ukadministr1 user, Administrative contact, administr1@cca.ukFred_1 William_1, Sector contact, fredwilliam_1@agindustries.org.uk',
         ],
       ],
     ]);

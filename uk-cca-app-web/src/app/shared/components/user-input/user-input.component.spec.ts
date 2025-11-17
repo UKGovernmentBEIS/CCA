@@ -82,7 +82,6 @@ describe('UserInputComponent', () => {
   }
 
   @Component({
-    standalone: true,
     template: `
       <form id="national-group" [formGroup]="nationalForm">
         <cca-user-input phoneType="national" />

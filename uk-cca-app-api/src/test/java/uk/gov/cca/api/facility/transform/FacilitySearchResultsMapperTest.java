@@ -15,12 +15,12 @@ class FacilitySearchResultsMapperTest {
 
     @Test
     void toFacilitySearchResultInfo() {
-        final String facilityId = "SA-F00001";
+        final String facilityBusinessId = "SA-F00001";
         final String siteName = "site1";
 
         final FacilityData facilityData = FacilityData.builder()
                 .id(1L)
-                .facilityId(facilityId)
+                .facilityBusinessId(facilityBusinessId)
                 .siteName(siteName)
                 .build();
 
@@ -28,7 +28,7 @@ class FacilitySearchResultsMapperTest {
         FacilitySearchResultInfoDTO resultInfo = mapper.toFacilitySearchResultInfo(facilityData);
 
         final FacilitySearchResultInfoDTO facilitySearchResultInfoDTO =
-                new FacilitySearchResultInfoDTO(1L, facilityId, siteName, null, FacilityDataStatus.LIVE);
+                new FacilitySearchResultInfoDTO(1L, facilityBusinessId, siteName, null, FacilityDataStatus.LIVE);
 
         assertThat(resultInfo).isEqualTo(facilitySearchResultInfoDTO);
 

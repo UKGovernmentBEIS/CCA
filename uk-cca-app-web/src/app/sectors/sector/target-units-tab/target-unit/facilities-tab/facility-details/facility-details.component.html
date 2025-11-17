@@ -1,7 +1,7 @@
 @if (facilityInfoDTO; as details) {
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <netz-page-heading size="l" [caption]="details.facilityId" class="govuk-tag-heading-align">
+    <div class="govuk-grid-column-three-quarters">
+      <netz-page-heading size="l" [caption]="details.facilityBusinessId" class="govuk-tag-heading-align">
         {{ details.siteName }}
 
         <span>
@@ -11,102 +11,37 @@
         </span>
       </netz-page-heading>
     </div>
+
+    <!-- @if (isAllowedToTriggerFacilityAudit()) {
+      <div class="govuk-grid-column-one-quarter" style="text-align: end">
+        <button
+          class="govuk-!-margin-top-3"
+          govukSecondaryButton
+          netzPendingButton
+          type="button"
+          (click)="onAuditTaskStart()"
+        >
+          Start an audit task
+        </button>
+      </div>
+    } -->
   </div>
 
-  <h2 class="govuk-heading-m">Facility details</h2>
-  <dl govuk-summary-list data-testid="facility-details">
-    <div govukSummaryListRow>
-      <dt govukSummaryListRowKey>Site name</dt>
-      <dd govukSummaryListRowValue>{{ details.siteName }}</dd>
-    </div>
+  <section data-testid="target-unit">
+    <govuk-tabs queryParamsHandling="replace">
+      <ng-template govukTabLazy id="details" label="Facility details">
+        <cca-summary [data]="summaryData()" />
+      </ng-template>
 
-    <div govukSummaryListRow>
-      <dt govukSummaryListRowKey>Address</dt>
-      <dd govukSummaryListRowValue>
-        {{ details.address.line1 }}<br />
-
-        @if (details.address.line2) {
-          {{ details.address.line2 }}<br />
-        }
-
-        {{ details.address.city }}<br />
-
-        @if (details.address.county) {
-          {{ details.address.county }}<br />
-        }
-
-        {{ details.address.postcode }}<br />
-        {{ details.address.country }}
-      </dd>
-    </div>
-  </dl>
-
-  <h2 class="govuk-heading-m">Subsistence fees</h2>
-  <dl govuk-summary-list data-testid="subsistence-fees">
-    <div govukSummaryListRow>
-      <dt govukSummaryListRowKey>Subsistence fees start date</dt>
-      <dd govukSummaryListRowValue>
-        @if (details.chargeStartDate) {
-          {{ details.chargeStartDate | date: 'dd/MM/yyyy' }}
-        } @else {
-          Not provided
-        }
-      </dd>
-    </div>
-
-    <div govukSummaryListRow>
-      <dt govukSummaryListRowKey>Scheme exit date</dt>
-      <dd govukSummaryListRowValue>
-        @if (details.schemeExitDate) {
-          {{ details.schemeExitDate | date: 'dd/MM/yyyy' }}
-        } @else {
-          Not Provided
-        }
-      </dd>
-
-      @if (roleType() === 'REGULATOR') {
-        <dd govukSummaryListRowActions>
-          <a class="govuk-link" [routerLink]="'../edit'" [queryParams]="queryParams">Change</a>
-        </dd>
+      <!-- @if (roleType() !== 'SECTOR_USER') {
+        <ng-template govukTabLazy id="audit" label="Audit">
+          <cca-audit-summary />
+        </ng-template>
       }
-    </div>
-  </dl>
 
-  <h2 class="govuk-heading-m">Certification Period</h2>
-  @for (certificationDetails of details.facilityCertificationDetails; track certificationDetails.certificationPeriod) {
-    <dl govuk-summary-list>
-      <div govukSummaryListRow>
-        <dt govukSummaryListRowKey>Certification period</dt>
-        <dd govukSummaryListRowValue>
-          {{ certificationDetails.certificationPeriod }}
-        </dd>
-      </div>
-
-      <div govukSummaryListRow>
-        <dt govukSummaryListRowKey>Current status</dt>
-        <dd govukSummaryListRowValue>
-          {{ certificationDetails.status | status }}
-        </dd>
-        @if (roleType() === 'REGULATOR') {
-          <dd govukSummaryListRowActions>
-            <a
-              class="govuk-link"
-              routerLink="../{{ certificationDetails.certificationPeriod }}/change-certification-status"
-              [queryParams]="queryParams"
-              >Change</a
-            >
-          </dd>
-        }
-      </div>
-
-      @if (certificationDetails.status === 'CERTIFIED') {
-        <div govukSummaryListRow>
-          <dt govukSummaryListRowKey>Certification duration</dt>
-          <dd govukSummaryListRowValue>
-            {{ certificationDetails.startDate | duration: certificationDetails.certificationPeriodEndDate }}
-          </dd>
-        </div>
-      }
-    </dl>
-  }
+      <ng-template govukTabLazy id="workflow-history" label="Workflow history">
+        <p>Workflow history</p>
+      </ng-template> -->
+    </govuk-tabs>
+  </section>
 }

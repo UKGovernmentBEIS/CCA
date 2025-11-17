@@ -11,7 +11,6 @@ import { WorkflowHistoryDetailsResponse } from './workflow-history.resolver';
 @Component({
   selector: 'cca-workflow-history',
   templateUrl: './workflow-history.component.html',
-  standalone: true,
   imports: [
     TagComponent,
     PageHeadingComponent,

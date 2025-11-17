@@ -12,7 +12,6 @@ import { RequestActionPageComponent } from './request-action-page.component';
 
 @Component({
   template: `<h1>TEST CONTENT</h1>`,
-  standalone: true,
 })
 class MockContentComponent {}
 

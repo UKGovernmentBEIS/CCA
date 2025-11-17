@@ -1,6 +1,6 @@
 @if (selectedFacility()) {
   <netz-page-heading size="l" data-testid="page-heading" class="govuk-!-margin-bottom-6">
-    Are you sure you want to mark {{ selectedFacility()?.facilityId }} as In progress?
+    Are you sure you want to mark {{ selectedFacility()?.facilityBusinessId }} as In progress?
   </netz-page-heading>
 
   <dl govuk-summary-list>
@@ -16,7 +16,7 @@
 
     <div govukSummaryListRow>
       <dt govukSummaryListRowKey>Selected facilities</dt>
-      <dd govukSummaryListRowValue>{{ selectedFacility().facilityId }}</dd>
+      <dd govukSummaryListRowValue>{{ selectedFacility().facilityBusinessId }}</dd>
     </div>
   </dl>
 } @else {

@@ -13,6 +13,8 @@ import {
 import { ResponsiblePersonFormModel, ResponsiblePersonInputComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
+import { UnderlyingAgreementApplySavePayload } from 'cca-api';
+
 import { createSaveActionDTO, toUnderlyingAgreementSaveReviewPayload } from '../../../transform';
 import { applySaveActionSideEffects } from '../../../utils';
 import {
@@ -30,7 +32,6 @@ import {
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -53,15 +54,7 @@ export class ResponsiblePersonComponent {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
 
     const actionPayload = toUnderlyingAgreementSaveReviewPayload(payload);
-
-    const updatedPayload = produce(actionPayload, (draft) => {
-      draft.underlyingAgreementTargetUnitDetails.responsiblePersonDetails = {
-        address: this.form.getRawValue().address,
-        firstName: this.form.value.firstName,
-        lastName: this.form.value.lastName,
-        email: this.form.value.email,
-      };
-    });
+    const updatedPayload = updateResponsiblePerson(actionPayload, this.form);
 
     const { determination, reviewSectionsCompleted, sectionsCompleted } = applySaveActionSideEffects(
       this.store.select(underlyingAgreementReviewQuery.selectDetermination)(),
@@ -80,4 +73,29 @@ export class ResponsiblePersonComponent {
       this.router.navigate(['../decision'], { relativeTo: this.activatedRoute });
     });
   }
+}
+
+function updateResponsiblePerson(
+  payload: UnderlyingAgreementApplySavePayload,
+  form: FormGroup<ResponsiblePersonFormModel>,
+): UnderlyingAgreementApplySavePayload {
+  const formValue = form.getRawValue();
+
+  return produce(payload, (draft) => {
+    draft.underlyingAgreementTargetUnitDetails.responsiblePersonDetails = {
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      email: formValue.email,
+      address: formValue.sameAddress?.[0]
+        ? draft.underlyingAgreementTargetUnitDetails.operatorAddress // Use operator address if same
+        : {
+            line1: formValue.address.line1,
+            line2: formValue.address.line2,
+            city: formValue.address.city,
+            county: formValue.address.county,
+            postcode: formValue.address.postcode,
+            country: formValue.address.country,
+          },
+    };
+  });
 }

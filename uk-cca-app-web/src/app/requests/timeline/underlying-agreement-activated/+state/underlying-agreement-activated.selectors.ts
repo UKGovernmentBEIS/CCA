@@ -35,10 +35,10 @@ const selectDecisionNotification: StateSelector<RequestActionState, CcaDecisionN
   (payload) => payload.decisionNotification,
 );
 
-const selectUnderlyingAgreementDocument: StateSelector<RequestActionState, FileInfoDTO> = createDescendingSelector(
-  selectPayload,
-  (payload) => payload.underlyingAgreementDocument,
-);
+const selectUnderlyingAgreementDocuments: StateSelector<
+  RequestActionState,
+  Record<string, FileInfoDTO>
+> = createDescendingSelector(selectPayload, (payload) => payload.underlyingAgreementDocuments);
 
 const selectUnderlyingAgreementActivationDetails: StateSelector<
   RequestActionState,
@@ -56,7 +56,7 @@ export const underlyingAgreementActivatedQuery = {
   selectUsersInfo,
   selectDefaultContacts,
   selectDecisionNotification,
-  selectUnderlyingAgreementDocument,
+  selectUnderlyingAgreementDocuments,
   selectUnderlyingAgreementActivationDetails,
   selectUnderlyingAgreementActivationAttachments,
 };

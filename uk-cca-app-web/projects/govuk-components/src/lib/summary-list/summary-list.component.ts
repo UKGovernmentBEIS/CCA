@@ -23,7 +23,6 @@ import { SummaryItem } from './summary-list.interface';
  */
 @Component({
   selector: 'dl[govuk-summary-list]',
-  standalone: true,
   imports: [SummaryListRowKeyDirective, SummaryListRowDirective, NgTemplateOutlet, SummaryListRowValueDirective],
   templateUrl: './summary-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

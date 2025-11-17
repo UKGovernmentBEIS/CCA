@@ -4,9 +4,13 @@ import { fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
+import { of } from 'rxjs';
+
 import { AuthStore } from '@netz/common/auth';
 import { screen } from '@testing-library/dom';
 import UserEvent from '@testing-library/user-event';
+
+import { CompaniesInformationService } from 'cca-api';
 
 import { SECTORS_ROUTES } from '../sectors.routes';
 import { mockAuthState } from './fixtures/mock';
@@ -23,7 +27,17 @@ describe('Add operator Spec', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [provideRouter(SECTORS_ROUTES), provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideRouter(SECTORS_ROUTES),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        {
+          provide: CompaniesInformationService,
+          useValue: {
+            getCompanyProfileByRegistrationNumber: () => of(null),
+          },
+        },
+      ],
     });
 
     httpTestingController = TestBed.inject(HttpTestingController);

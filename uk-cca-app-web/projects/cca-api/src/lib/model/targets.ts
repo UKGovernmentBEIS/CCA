@@ -11,6 +11,6 @@
  */
 
 export interface Targets {
-  improvement: number;
-  target?: number;
+  improvement: string;
+  target?: string;
 }

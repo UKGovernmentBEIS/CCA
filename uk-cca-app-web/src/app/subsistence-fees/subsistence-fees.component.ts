@@ -13,7 +13,6 @@ import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-his
 @Component({
   selector: 'cca-subsistence-fees',
   templateUrl: './subsistence-fees.component.html',
-  standalone: true,
   imports: [
     RouterLink,
     TabsComponent,

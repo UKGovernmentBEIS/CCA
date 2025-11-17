@@ -10,10 +10,7 @@ export enum CaNameEnum {
   OTHER = 'Other',
 }
 
-@Pipe({
-  name: 'caName',
-  standalone: true,
-})
+@Pipe({ name: 'caName' })
 export class CaNamePipe implements PipeTransform {
   transform(value: EligibilityDetailsAndAuthorisation['regulatorName']): string {
     const text = CaNameEnum[value];

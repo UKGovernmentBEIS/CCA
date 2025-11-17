@@ -51,13 +51,13 @@ describe('MarkPaidComponent', () => {
       totalFacilityItems: 100,
       moaTUDetails: mockTuMoaDetails,
       facilities: mockFacilitiesList,
-      selectedFacilities: new Map([[selectedUnit.facilityId, selectedUnit]]),
+      selectedFacilities: new Map([[selectedUnit.facilityBusinessId, selectedUnit]]),
     });
 
     fixture.detectChanges();
 
     const heading = fixture.debugElement.query(By.css('[data-testid="page-heading"]'));
-    expect(heading.nativeElement.textContent).toContain(selectedUnit.facilityId);
+    expect(heading.nativeElement.textContent).toContain(selectedUnit.facilityBusinessId);
 
     const targetUnitId = fixture.debugElement.query(By.css('dd')).nativeElement;
     expect(targetUnitId.textContent.trim()).toBe('ADS_53-T00001');
@@ -70,7 +70,7 @@ describe('MarkPaidComponent', () => {
       totalFacilityItems: 100,
       moaTUDetails: mockTuMoaDetails,
       facilities: mockFacilitiesList,
-      selectedFacilities: new Map(selectedUnits.map((unit) => [unit.facilityId, unit])),
+      selectedFacilities: new Map(selectedUnits.map((unit) => [unit.facilityBusinessId, unit])),
     });
 
     fixture.detectChanges();

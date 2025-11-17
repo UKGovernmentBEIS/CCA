@@ -17,7 +17,6 @@ import { generateDownloadUrl } from '@shared/utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [SummaryComponent, PageHeadingComponent, ReturnToTaskOrActionPageComponent],
 })

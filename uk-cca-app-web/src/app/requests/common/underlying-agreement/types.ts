@@ -60,10 +60,10 @@ export type BaselineDataUserInput = Omit<BaselineData, 'greenfieldEvidences'> & 
 
 export const VARIATION_DETAILS_SUBTASK = 'underlyingAgreementVariationDetails';
 export const REVIEW_TARGET_UNIT_DETAILS_SUBTASK = 'underlyingAgreementTargetUnitDetails';
-export const MANAGE_FACILITIES_SUBTASK = 'manageFacilities';
 export const AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK = 'authorisationAndAdditionalEvidence';
 export const PROVIDE_EVIDENCE_SUBTASK = 'underlyingAgreementActivationDetails';
 export const OVERALL_DECISION_SUBTASK = 'overallDecision';
+export const CCA3_MIGRATION_PROVIDE_EVIDENCE_SUBTASK = 'activationDetails';
 
 export enum BaselineAndTargetPeriodsSubtasks {
   TARGET_PERIOD_5_DETAILS = 'targetPeriod5Details',
@@ -75,6 +75,11 @@ export type TargetPeriod =
   | BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS;
 
 export const BASELINE_AND_TARGETS_SUBTASK = new InjectionToken<TargetPeriod>('target period');
+
+export const nonBaselineAndTargetsTasks = [
+  REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
+  AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
+];
 
 export const nonFacilitySections = [
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
@@ -112,9 +117,15 @@ export const DECISION_TO_SUBTASK_MAP = Object.fromEntries(
 
 export const staticVariationSections = [VARIATION_DETAILS_SUBTASK, ...nonFacilitySections];
 
+export const staticVariationSectionsWithoutBaselineAndTargets = [
+  VARIATION_DETAILS_SUBTASK,
+  ...nonBaselineAndTargetsTasks,
+];
+
 export const staticVariationGroupDecisions = ['VARIATION_DETAILS', ...staticGroupDecisions] as const;
 
 export enum ReviewTargetUnitDetailsWizardStep {
+  COMPANY_REGISTRATION_NUMBER = 'company-registration-number',
   TARGET_UNIT_DETAILS = 'target-unit-details',
   OPERATOR_ADDRESS = 'operator-address',
   RESPONSIBLE_PERSON = 'responsible-person',
@@ -141,6 +152,7 @@ export enum FacilityWizardStep {
   APPLY_RULE = 'apply-rule',
   TARGET_COMPOSITION = 'target-composition',
   BASELINE_DATA = 'baseline-data',
+  BASELINE_ENERGY_CONSUMPTION = 'baseline-energy-consumption',
   TARGETS = 'targets',
 }
 
@@ -148,6 +160,7 @@ export enum BaseLineAndTargetsStep {
   BASELINE_EXISTS = 'baseline-exists',
   TARGET_COMPOSITION = 'target-composition',
   ADD_BASELINE_DATA = 'add-baseline-data',
+  ADD_BASELINE_ENERGY_CONSUMPTION = 'add-baseline-energy-consumption',
   ADD_TARGETS = 'add-targets',
 }
 

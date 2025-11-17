@@ -2,10 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { SummarySection } from './type';
 
-@Pipe({
-  standalone: true,
-  name: 'parseQueryParams',
-})
+@Pipe({ name: 'parseQueryParams' })
 export class SummaryQueryParamsPipe implements PipeTransform {
   transform(value: SummarySection) {
     if (value.appendChangeParam === false) return {};

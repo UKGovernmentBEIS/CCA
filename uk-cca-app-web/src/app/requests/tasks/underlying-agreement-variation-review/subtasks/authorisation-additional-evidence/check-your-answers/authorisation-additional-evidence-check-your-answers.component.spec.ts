@@ -57,14 +57,6 @@ describe('AuthorisationAdditionalEvidenceCheckYourAnswersComponent', () => {
     expect(heading).toBeInTheDocument();
   });
 
-  it('should render the summary sections and rows', () => {
-    const authorisationAndAdditionalEvidenceHeading = screen.getAllByText('Uploaded files');
-    expect(
-      authorisationAndAdditionalEvidenceHeading[0] && authorisationAndAdditionalEvidenceHeading[1],
-    ).toHaveTextContent('Uploaded files');
-    expect(screen.getAllByText('No files provided')).toBeTruthy();
-  });
-
   it('should contain submit button and "return to" link', () => {
     expect(screen.getByText('Confirm and complete')).toBeInTheDocument();
     expect(screen.getByText('Return to: Review underlying agreement variation')).toBeInTheDocument();

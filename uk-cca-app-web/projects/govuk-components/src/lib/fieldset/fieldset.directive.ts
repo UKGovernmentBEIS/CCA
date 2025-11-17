@@ -2,7 +2,7 @@ import { AfterContentInit, Directive, ElementRef, HostBinding, input, contentChi
 
 import { FieldsetHintDirective } from './fieldset-hint.directive';
 
-@Directive({ selector: 'fieldset[govukFieldset]', standalone: true })
+@Directive({ selector: 'fieldset[govukFieldset]' })
 export class FieldsetDirective implements AfterContentInit {
   readonly id = input('fieldset');
   readonly hint = contentChild(FieldsetHintDirective, { read: ElementRef });

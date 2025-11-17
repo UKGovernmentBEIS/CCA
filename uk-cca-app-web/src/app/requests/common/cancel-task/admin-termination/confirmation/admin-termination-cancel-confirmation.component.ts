@@ -10,7 +10,6 @@ import { CancelConfirmationComponent } from '@netz/common/components';
       <p>You can start this task again at any time.</p>
     </netz-cancel-confirmation>
   `,
-  standalone: true,
   imports: [CancelConfirmationComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

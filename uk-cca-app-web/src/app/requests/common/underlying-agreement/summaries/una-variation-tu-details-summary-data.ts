@@ -1,6 +1,5 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { OperatorTypePipe } from '@shared/pipes';
-import { getAddressAsArray } from '@shared/utils';
+import { OperatorTypePipe, transformAddress } from '@shared/pipes';
 
 import { AccountReferenceData, UnderlyingAgreementTargetUnitDetails } from 'cca-api';
 
@@ -18,17 +17,17 @@ export function toVariationTargetUnitDetailsSummaryData(
     .addRow('Operator name', targetUnitDetails?.operatorName, {
       change: isEditable,
     })
-    .addRow('Operator type', operatorTypePipe.transform(targetUnitDetails.operatorType))
-    .addRow('Company number', targetUnitDetails.companyRegistrationNumber ?? 'Not provided')
-    .addRow('Reason for not having a registration number', targetUnitDetails.registrationNumberMissingReason);
+    .addRow('Operator type', operatorTypePipe.transform(targetUnitDetails?.operatorType))
+    .addRow('Company number', targetUnitDetails?.companyRegistrationNumber ?? 'Not provided')
+    .addRow('Reason for not having a registration number', targetUnitDetails?.registrationNumberMissingReason);
 
-  if (targetUnitDetails.subsectorAssociationName) {
-    factory.addRow('Subsector', targetUnitDetails.subsectorAssociationName);
+  if (targetUnitDetails?.subsectorAssociationName) {
+    factory.addRow('Subsector', targetUnitDetails?.subsectorAssociationName);
   }
 
   factory
     .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep?.OPERATOR_ADDRESS)
-    .addRow('Address', getAddressAsArray(targetUnitDetails?.operatorAddress), {
+    .addRow('Address', transformAddress(targetUnitDetails?.operatorAddress), {
       change: isEditable,
     })
 
@@ -42,7 +41,7 @@ export function toVariationTargetUnitDetailsSummaryData(
     .addRow('Email address', targetUnitDetails?.responsiblePersonDetails?.email, {
       change: isEditable,
     })
-    .addRow('Address', getAddressAsArray(targetUnitDetails?.responsiblePersonDetails?.address), {
+    .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address), {
       change: isEditable,
     });
 
@@ -74,7 +73,7 @@ export function toVariationTargetUnitDetailsOriginalSummaryData(
 
   factory
     .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep?.OPERATOR_ADDRESS)
-    .addRow('Address', getAddressAsArray(accountReferenceData.targetUnitAccountDetails.address), {
+    .addRow('Address', transformAddress(accountReferenceData.targetUnitAccountDetails.address), {
       change: isEditable,
     })
     .addSection('Responsible Person', prefix + ReviewTargetUnitDetailsWizardStep?.RESPONSIBLE_PERSON)
@@ -87,7 +86,7 @@ export function toVariationTargetUnitDetailsOriginalSummaryData(
     .addRow('Email address', accountReferenceData.targetUnitAccountDetails.responsiblePerson.email, {
       change: isEditable,
     })
-    .addRow('Address', getAddressAsArray(accountReferenceData.targetUnitAccountDetails.responsiblePerson.address), {
+    .addRow('Address', transformAddress(accountReferenceData.targetUnitAccountDetails.responsiblePerson.address), {
       change: isEditable,
     });
 

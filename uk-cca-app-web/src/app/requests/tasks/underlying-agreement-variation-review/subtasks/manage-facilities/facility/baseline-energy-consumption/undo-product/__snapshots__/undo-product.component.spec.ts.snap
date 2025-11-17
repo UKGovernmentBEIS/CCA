@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`UndoProductComponent should render the component with the correct content 1`] = `
+<cca-undo-product
+  activatedRoute={[Function Object]}
+  facility={[Function Function]}
+  facilityId={[Function String]}
+  productName={[Function String]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  tasksApiService={[Function Object]}
+>
+  <netz-page-heading>
+    <h1
+      class="govuk-heading-l"
+    >
+       Are you sure you want to undo the exclusion for Product 1? 
+    </h1>
+  </netz-page-heading><p>
+    The product will be reinstated as live and included when calculating targets.
+  </p><govuk-warning-text
+    assistivetext=""
+  >
+    <div
+      class="govuk-warning-text"
+    >
+      <span
+        aria-hidden="true"
+        class="govuk-warning-text__icon"
+      >
+        !
+      </span>
+      <strong
+        class="govuk-warning-text__text"
+      >
+        <span
+          class="govuk-warning-text__assistive"
+        >
+        </span>
+        Only undo if the product should remain in scope.
+      </strong>
+    </div>
+  </govuk-warning-text><button
+    class="govuk-button"
+  >
+    Undo exclusion
+  </button>
+</cca-undo-product>
+`;

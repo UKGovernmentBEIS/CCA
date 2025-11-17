@@ -8,7 +8,6 @@ import { StatusPipe } from '@shared/pipes';
 @Component({
   selector: 'cca-facility-item-list',
   templateUrl: './facility-item-list.component.html',
-  standalone: true,
   imports: [StatusPipe, TableComponent, RouterLink],
 })
 export class FacilityItemListComponent {

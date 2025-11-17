@@ -12,7 +12,6 @@ import { GovukSelectOption } from '@netz/govuk-components';
       margin-left: auto !important;
     }
   `,
-  standalone: true,
   imports: [ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,5 +1,7 @@
 export * from './account-address-input/account-address-input-controls';
 export * from './account-address-input/account-address-input.component';
+export * from './facility-address-input/facility-address-input-controls';
+export * from './facility-address-input/facility-address-input.component';
 export * from './back-to-top/back-to-top.component';
 export * from './boolean-radio-group/boolean-radio-group.component';
 export * from './confirmation/confirmation.component';

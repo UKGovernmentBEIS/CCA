@@ -1,9 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'targetType',
-  standalone: true,
-})
+@Pipe({ name: 'targetType' })
 export class TargetTypePipe implements PipeTransform {
   transform(targetType: 'ABSOLUTE' | 'RELATIVE' | 'NOVEM_ENERGY' | 'NOVEM_CARBON'): string {
     switch (targetType) {

@@ -1,4 +1,4 @@
 import { Directive } from '@angular/core';
 
-@Directive({ selector: '[govukLabel]', standalone: true })
+@Directive({ selector: '[govukLabel]' })
 export class LabelDirective {}

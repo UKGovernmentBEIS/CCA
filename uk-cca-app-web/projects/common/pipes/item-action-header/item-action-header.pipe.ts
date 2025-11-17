@@ -32,6 +32,10 @@ export function getItemActionHeader(item: RequestActionDTO | RequestActionInfoDT
     case 'ADMIN_TERMINATION_APPLICATION_PEER_REVIEWER_REJECTED':
     case 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEWER_ACCEPTED':
     case 'UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEWER_REJECTED':
+    case 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEWER_ACCEPTED':
+    case 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEWER_REJECTED':
+    case 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_CANCELLED':
+    case 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED':
       return `${ItemActionEnum[item.type]} by ${item.submitter}`;
 
     case 'UNDERLYING_AGREEMENT_APPLICATION_MIGRATED':
@@ -53,16 +57,18 @@ export function getItemActionHeader(item: RequestActionDTO | RequestActionInfoDT
     case 'TP6_SURPLUS_ACCOUNT_PROCESSING_SUBMITTED':
       return 'Surplus calculated';
 
-      return 'Peer review agreement';
+    case 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_SUBMITTED':
+      return 'CCA3 migration completed by System user';
 
-      return 'Peer review disagreement';
+    case 'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED':
+      return 'CCA2 agreement extended by System user';
 
     default:
       return ItemActionEnum[item.type] || 'Approved Application';
   }
 }
 
-@Pipe({ name: 'itemActionHeader', standalone: true, pure: true })
+@Pipe({ name: 'itemActionHeader', pure: true })
 export class ItemActionHeaderPipe implements PipeTransform {
   transform(item: RequestActionDTO | RequestActionInfoDTO): string {
     return getItemActionHeader(item);

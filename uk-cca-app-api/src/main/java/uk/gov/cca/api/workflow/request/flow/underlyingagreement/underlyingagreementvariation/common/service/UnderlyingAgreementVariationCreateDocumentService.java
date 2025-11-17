@@ -3,8 +3,8 @@ package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagree
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
+
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.notification.template.constants.CcaDocumentTemplateType;
@@ -25,7 +25,7 @@ public class UnderlyingAgreementVariationCreateDocumentService {
     private final CcaFileDocumentGeneratorService ccaFileDocumentGeneratorService;
     private final AccountReferenceDetailsService accountReferenceDetailsService;
 
-    public CompletableFuture<FileInfoDTO> create(final String requestId) {
+    public CompletableFuture<FileInfoDTO> create(final String requestId, SchemeVersion schemeVersion) {
         final Request request = requestService.findRequestById(requestId);
         final Long accountId = request.getAccountId();
         final UnderlyingAgreementVariationRequestPayload requestPayload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();
@@ -34,14 +34,33 @@ public class UnderlyingAgreementVariationCreateDocumentService {
         final boolean isFinalDocument = requestPayload.getUnderlyingAgreementActivationDetails() != null;
         return ccaFileDocumentGeneratorService.generateAsync(request,
                 decisionNotification,
-                isFinalDocument ? CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_FINAL_DOCUMENT
-                        : CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_PROPOSED_DOCUMENT,
-                CcaDocumentTemplateType.UNDERLYING_AGREEMENT,
-                constructFileName(accountDetails.getBusinessId(), requestPayload.getUnderlyingAgreementVersion() + 1, isFinalDocument), SchemeVersion.CCA_2);
+                getContextActionType(isFinalDocument, schemeVersion),
+        		getDocumentTemplateType(schemeVersion),
+                constructFileName(accountDetails.getBusinessId(), requestPayload.getUnderlyingAgreementVersionMap().getOrDefault(schemeVersion, 0) + 1, isFinalDocument, schemeVersion), 
+                schemeVersion);
     }
+    
+    private String getDocumentTemplateType(SchemeVersion schemeVersion) {
+		return SchemeVersion.CCA_2.equals(schemeVersion) 
+				? CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA2 
+						: CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA3;
+	}
 
-    private String constructFileName(final String businessId, final int version, final boolean isFinalDocument) {
-        return businessId +
+	private String getContextActionType(final boolean isFinalDocument, SchemeVersion schemeVersion) {
+		if (isFinalDocument) {
+			return SchemeVersion.CCA_2.equals(schemeVersion)
+					? CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_FINAL_DOCUMENT_CCA2
+					: CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_FINAL_DOCUMENT_CCA3;
+		} else { 
+			return SchemeVersion.CCA_2.equals(schemeVersion) 
+					? CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_PROPOSED_DOCUMENT_CCA2 
+							: CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_PROPOSED_DOCUMENT_CCA3;
+		}
+	}
+
+    private String constructFileName(final String businessId, final int version, final boolean isFinalDocument, SchemeVersion schemeVersion) {
+        return businessId + " " +
+        		schemeVersion.getDescription() +
                 " Underlying Agreement" +
                 " v" +
                 version +

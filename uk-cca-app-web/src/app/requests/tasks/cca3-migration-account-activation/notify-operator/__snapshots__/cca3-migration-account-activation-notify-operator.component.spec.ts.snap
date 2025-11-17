@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`UnderlyingAgreementActivationNotifyOperatorComponent should render the view 1`] = `
+<cca-underlying-agreement-activation-notify-operator
+  activatedRoute={[Function ActivatedRouteStub]}
+  form={[Function FormGroup]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  tasksApiService={[Function TasksApiService]}
+>
+  <cca-wizard-step
+    caption="Notify operator"
+    class="ng-untouched ng-pristine ng-valid"
+    data-testid="underlying-agreement-activation-notify-operator-form"
+    heading="Select who should receive the active Underlying Agreement notice"
+    submittext="Confirm and complete"
+  >
+    <form
+      class="ng-untouched ng-pristine ng-valid"
+      novalidate=""
+    >
+      <netz-page-heading>
+        <span
+          class="govuk-caption-l"
+        >
+          Notify operator
+        </span>
+        <h1
+          class="govuk-heading-l"
+        >
+          Select who should receive the active Underlying Agreement notice
+        </h1>
+      </netz-page-heading>
+      <cca-notify-operator-of-decision>
+        <h3
+          class="govuk-heading-m"
+        >
+          Users automatically notified
+        </h3>
+        <div
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="signatory"
+          govuk-select=""
+          label="Select the name and signature that will be shown on the official notice document"
+        >
+          <label
+            class="govuk-label"
+            for="signatory"
+            id="l.signatory"
+          >
+             Select the name and signature that will be shown on the official notice document
+          </label>
+          <select
+            class="govuk-select ng-untouched ng-pristine ng-valid"
+            govukformerror=""
+            id="signatory"
+            name="signatory"
+          >
+          </select>
+        </div>
+      </cca-notify-operator-of-decision>
+      <button
+        class="govuk-button"
+        govukbutton=""
+        netzpendingbutton=""
+        type="submit"
+      >
+        Confirm and complete
+      </button>
+    </form>
+  </cca-wizard-step><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Dashboard 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-underlying-agreement-activation-notify-operator>
+`;

@@ -29,11 +29,11 @@ export interface UnderlyingAgreementVariationAcceptedRequestActionPayload {
   decisionNotification: CcaDecisionNotification;
   defaultContacts: DefaultNoticeRecipient[];
   usersInfo?: Record<string, RequestActionUserInfo>;
-  officialNotice: FileInfoDTO;
+  officialNotices: FileInfoDTO[];
   determination: Determination;
   reviewSectionsCompleted?: Record<string, string>;
   reviewGroupDecisions?: Record<string, UnderlyingAgreementReviewDecision>;
   facilitiesReviewGroupDecisions?: Record<string, UnderlyingAgreementVariationFacilityReviewDecision>;
   reviewAttachments?: Record<string, string>;
-  underlyingAgreementDocument: FileInfoDTO;
+  underlyingAgreementDocuments: Record<string, FileInfoDTO>;
 }

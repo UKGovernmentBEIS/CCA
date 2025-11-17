@@ -20,7 +20,6 @@ import { toChangeAmountSummaryData } from './change-amount-summary-data';
 @Component({
   selector: 'cca-change-amount-component',
   templateUrl: './change-amount.component.html',
-  standalone: true,
   imports: [
     SummaryComponent,
     WizardStepComponent,

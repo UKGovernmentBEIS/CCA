@@ -18,7 +18,6 @@ import { REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK } from '../withdraw-admin
       </button>
     }
   `,
-  standalone: true,
   imports: [ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

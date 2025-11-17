@@ -25,6 +25,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -81,6 +82,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -137,6 +139,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -193,6 +196,7 @@ const facilities: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -251,6 +255,7 @@ const facilitiesOriginal: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -307,6 +312,7 @@ const facilitiesOriginal: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -363,6 +369,7 @@ const facilitiesOriginal: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',
@@ -419,6 +426,7 @@ const facilitiesOriginal: Facility[] = [
       },
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
+      participatingSchemeVersions: ['CCA_3'],
     },
     facilityContact: {
       firstName: 'FacilityFirst',

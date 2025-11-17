@@ -25,7 +25,6 @@ import { DateInputValidators } from './date-input.validators';
  */
 @Component({
   selector: 'div[govuk-date-input]',
-  standalone: true,
   imports: [ErrorMessageComponent, ReactiveFormsModule, FieldsetHintDirective, LegendDirective, FieldsetDirective],
   templateUrl: './date-input.component.html',
   providers: [DatePipe],

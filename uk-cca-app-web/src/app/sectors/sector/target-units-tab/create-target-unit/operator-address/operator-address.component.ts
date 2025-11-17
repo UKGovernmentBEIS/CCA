@@ -13,7 +13,6 @@ import {
 @Component({
   selector: 'cca-operator-address',
   templateUrl: './operator-address.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, AccountAddressInputComponent, WizardStepComponent],
   providers: [TargetUnitOperatorAddressFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -5,7 +5,6 @@ import { MessageValidationErrors } from './message-validation-errors';
 
 @Component({
   selector: 'govuk-error-message',
-  standalone: true,
   imports: [KeyValuePipe],
   templateUrl: './error-message.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

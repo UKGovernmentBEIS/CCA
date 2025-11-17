@@ -11,22 +11,22 @@
  */
 
 export interface PerformanceDataCalculatedMetrics {
-  byPerformance?: number;
-  numericalTarget?: number;
-  tolerance?: number;
-  tpEnergy?: number;
-  tpChpDeliveredElectricity?: number;
-  tpPerformance?: number;
-  tpPerformancePercent?: number;
+  byPerformance?: string;
+  numericalTarget?: string;
+  tolerance?: string;
+  tpEnergy?: string;
+  tpChpDeliveredElectricity?: string;
+  tpPerformance?: string;
+  tpPerformancePercent?: string;
   tpOutcome?: 'TARGET_MET' | 'BUY_OUT_REQUIRED' | 'SURPLUS_USED_BUY_OUT_REQUIRED' | 'SURPLUS_USED' | 'OUTSTANDING';
-  tpCarbonFactor?: number;
-  energyCarbonUnderTarget?: number;
-  carbonUnderTarget?: number;
-  co2Emissions?: number;
-  surplusUsed?: number;
-  surplusGained?: number;
-  priBuyOutCarbon?: number;
-  priBuyOutCost?: number;
-  secondaryBuyOutCo2?: number;
-  secondaryBuyOutCost?: number;
+  tpCarbonFactor?: string;
+  energyCarbonUnderTarget?: string;
+  carbonUnderTarget?: string;
+  co2Emissions?: string;
+  surplusUsed?: string;
+  surplusGained?: string;
+  priBuyOutCarbon?: string;
+  priBuyOutCost?: string;
+  secondaryBuyOutCo2?: string;
+  secondaryBuyOutCost?: string;
 }

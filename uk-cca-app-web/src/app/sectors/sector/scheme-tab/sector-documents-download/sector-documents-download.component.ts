@@ -21,7 +21,6 @@ import { Configuration, FileToken, SectorAssociationSchemeService } from 'cca-ap
     <p>You should see your downloads in the downloads folder.</p>
     <a class="govuk-link" [href]="downloadURL()" download #anchor>Click to restart download if it fails</a>
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorDocumentsDownloadComponent {

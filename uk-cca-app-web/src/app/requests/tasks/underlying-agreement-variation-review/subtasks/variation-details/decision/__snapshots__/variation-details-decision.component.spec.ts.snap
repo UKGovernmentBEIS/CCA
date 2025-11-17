@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 1`] = `
 <div
@@ -36,7 +36,9 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             
             
             
-             Amend the 70% rule evaluation for one or more facilities 
+            <span>
+              Amend the 70% rule evaluation for one or more facilities
+            </span>
             
             
             
@@ -73,7 +75,9 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             
             
             
-             change the throughput unit 
+            <span>
+              change the throughput unit
+            </span>
             
             
             
@@ -110,7 +114,9 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             
             
             
-             Variation reason 
+            <span>
+              Variation reason
+            </span>
             
             
             

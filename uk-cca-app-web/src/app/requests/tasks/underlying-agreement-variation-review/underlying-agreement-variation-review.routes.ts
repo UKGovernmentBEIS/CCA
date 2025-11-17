@@ -21,8 +21,9 @@ export const UNDERLYING_AGREEMENT_VARIATION_REVIEW_ROUTES: Routes = [
           ),
       },
       {
-        path: 'facility',
-        loadChildren: () => import('./subtasks/facility/facility.routes').then((r) => r.FACILITY_ROUTES),
+        path: 'manage-facilities',
+        loadChildren: () =>
+          import('./subtasks/manage-facilities/manage-facilities.routes').then((r) => r.MANAGE_FACILITIES_ROUTES),
       },
       {
         path: 'target-period-5',
@@ -55,6 +56,14 @@ export const UNDERLYING_AGREEMENT_VARIATION_REVIEW_ROUTES: Routes = [
         loadChildren: () =>
           import('./notify-operator/notify-operator.routes').then(
             (r) => r.UNDERLYING_AGREEMENT_REVIEW_NOTIFY_OPERATOR_ROUTES,
+          ),
+      },
+      {
+        path: 'send-for-peer-review',
+        canActivate: [isEditableGuard],
+        loadChildren: () =>
+          import('./send-for-peer-review/underlying-agreement-variation-send-for-peer-review.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_VARIATION_SEND_FOR_PEER_REVIEW_ROUTES,
           ),
       },
     ],

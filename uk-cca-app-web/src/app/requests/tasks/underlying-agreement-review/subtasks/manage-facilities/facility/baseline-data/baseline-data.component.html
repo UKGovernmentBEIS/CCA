@@ -91,14 +91,23 @@
             govuk-text-input
           ></div>
 
-          <div
-            formControlName="usedReportingMechanism"
-            [isInline]="true"
-            govuk-radio
-            legend="Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities
-             in the target unit using combined heat and power (CHP)?"
-            hint="If yes, the adjusted throughput should be entered and used in calculating targets."
-          >
+          <div class="govuk-!-margin-bottom-2">
+            Must the Special Reporting Methodology be applied for this facility?
+          </div>
+          <span class="govuk-hint">
+            SRM must be applied if all of the following factors apply:
+            <ul>
+              <li>
+                all the facility’s direct fuel consumption (everything other than electricity) is covered by the UK
+                Emissions Trading Scheme (UK ETS)
+              </li>
+              <li>
+                the facility consumes electricity generated in a CHP plant and this CHP plant is covered by UK ETS
+              </li>
+              <li>the facility can import electricity from the grid.</li>
+            </ul>
+          </span>
+          <div formControlName="usedReportingMechanism" [isInline]="true" govuk-radio>
             <govuk-radio-option [value]="true" [label]="'Yes'" />
             <govuk-radio-option [value]="false" [label]="'No'" />
           </div>

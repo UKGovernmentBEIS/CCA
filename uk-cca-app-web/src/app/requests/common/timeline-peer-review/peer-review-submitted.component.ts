@@ -7,7 +7,6 @@ import { SummaryComponent } from '@shared/components';
 @Component({
   selector: 'cca-peer-review-submitted',
   template: `<cca-summary [data]="summaryData" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

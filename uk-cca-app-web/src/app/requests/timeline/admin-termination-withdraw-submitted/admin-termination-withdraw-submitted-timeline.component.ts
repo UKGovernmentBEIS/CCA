@@ -10,7 +10,6 @@ import { toAdminTerminationWithdrawSubmittedTimelineSummaryData } from './admin-
 @Component({
   selector: 'cca-admin-termination-withdraw-submited-timeline',
   template: `<cca-summary [data]="data" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

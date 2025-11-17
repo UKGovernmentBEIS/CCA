@@ -2,7 +2,7 @@ package uk.gov.cca.api.workflow.request.flow.admintermination.submit.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
+import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransformationMapper;
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.service.CalculateAdminTerminationWithdrawExpirationRemindersService;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
@@ -17,6 +17,7 @@ public class AdminTerminationSubmittedDocumentTemplateWorkflowParamsProvider imp
         DocumentTemplateWorkflowParamsProvider<AdminTerminationRequestPayload> {
 
     private final CalculateAdminTerminationWithdrawExpirationRemindersService calculateAdminTerminationWithdrawExpirationRemindersService;
+    private final DocumentTemplateTransformationMapper documentTemplateTransformationMapper;
 
     @Override
     public String getContextActionType() {
@@ -31,7 +32,7 @@ public class AdminTerminationSubmittedDocumentTemplateWorkflowParamsProvider imp
 
         return Map.of(
                 "reasonDetails", payload.getAdminTerminationReasonDetails(),
-                "version", "v" + payload.getUnderlyingAgreementVersion(),
+                "versionMap", documentTemplateTransformationMapper.constructVersionMap(payload.getUnderlyingAgreementVersionMap()),
                 "terminationDate", terminationDate
         );
     }

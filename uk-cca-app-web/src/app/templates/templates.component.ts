@@ -21,7 +21,6 @@ import { EmailsComponent } from './emails/emails.component';
       </ng-template>
     </govuk-tabs>
   `,
-  standalone: true,
   imports: [PageHeadingComponent, TabsComponent, TabLazyDirective, EmailsComponent, DocumentsComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

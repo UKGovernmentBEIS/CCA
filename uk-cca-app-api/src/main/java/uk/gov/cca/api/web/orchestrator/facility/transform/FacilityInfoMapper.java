@@ -8,7 +8,7 @@ import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.Facilit
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.CertificationPeriodDTO;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityCertificationDetailsDTO;
-import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityCertificationSearchResultInfoDTO;
+import uk.gov.cca.api.web.orchestrator.facility.dto.FacilitySearchResultExtendedDTO;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityInfoDTO;
 import uk.gov.netz.api.common.config.MapperConfig;
 
@@ -17,8 +17,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", config = MapperConfig.class)
 public interface FacilityInfoMapper {
 
-    @Mapping(target = "id", source = "facilitySearchResultInfo.facilityId")
-    FacilityCertificationSearchResultInfoDTO toFacilityCertificationSearchResultInfo(FacilitySearchResultInfoDTO facilitySearchResultInfo, FacilityCertificationStatus certificationStatus);
+    FacilitySearchResultExtendedDTO toFacilityCertificationSearchResultInfo(FacilitySearchResultInfoDTO facilitySearchResultInfo, FacilityCertificationStatus certificationStatus);
 
     @Mapping(target = "status", source = "facilityCertification.certificationStatus")
     @Mapping(target = "startDate", source = "facilityCertification.startDate")
@@ -27,6 +26,7 @@ public interface FacilityInfoMapper {
     @Mapping(target = "certificationPeriodEndDate", source = "certificationPeriod.endDate")
     FacilityCertificationDetailsDTO toFacilityCertificationDetails(FacilityCertificationDTO facilityCertification, CertificationPeriodDTO certificationPeriod);
 
+    @Mapping(target = "facilityId", source = "facilityDetails.id")
     FacilityInfoDTO toFacilityInfoDTO(FacilityDataDetailsDTO facilityDetails, List<FacilityCertificationDetailsDTO> facilityCertificationDetails);
 
 }

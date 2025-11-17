@@ -17,7 +17,6 @@ import { CreateTargetUnitStore } from '../create-target-unit.store';
       </div>
     </div>
   `,
-  standalone: true,
   imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

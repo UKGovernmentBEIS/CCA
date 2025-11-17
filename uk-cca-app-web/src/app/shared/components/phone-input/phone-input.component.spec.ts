@@ -3,13 +3,38 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
+import { map, of } from 'rxjs';
+
 import { BasePage } from '@netz/common/testing';
 import { GovukValidators } from '@netz/govuk-components';
-import { CountryService } from '@shared/services';
-
-import { CountryServiceStub } from 'src/testing/country.service.stub';
+import { COUNTRIES, CountryCallingCodeService, UK_COUNTRY_CODES } from '@shared/services';
+import { Country } from '@shared/types';
 
 import { PhoneInputComponent } from './phone-input.component';
+
+const mockCountries: Country[] = [
+  {
+    code: 'GB-ENG',
+    name: 'England',
+    officialName: 'England',
+  },
+  {
+    code: 'AF',
+    name: 'Afghanistan',
+    officialName: 'Afghanistan',
+  },
+];
+
+const mockCountryCallingCodeService = {
+  getCountryCallingCode: (code: string) => {
+    const codes = {
+      'GB-ENG': 44,
+      AF: 93,
+      GR: 30,
+    };
+    return codes[code];
+  },
+};
 
 describe('PhoneInputComponent', () => {
   let component: PhoneInputComponent;
@@ -18,7 +43,6 @@ describe('PhoneInputComponent', () => {
   let page: Page;
 
   @Component({
-    standalone: true,
     template: `
       <form [formGroup]="form">
         <div cca-phone-input formControlName="firstPhone"></div>
@@ -86,9 +110,12 @@ describe('PhoneInputComponent', () => {
   }
 
   beforeEach(async () => {
+    COUNTRIES.length = 0;
+    COUNTRIES.push(...mockCountries);
+
     await TestBed.configureTestingModule({
       imports: [TestComponent],
-      providers: [{ provide: CountryService, useClass: CountryServiceStub }],
+      providers: [{ provide: CountryCallingCodeService, useValue: mockCountryCallingCodeService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);
@@ -103,7 +130,7 @@ describe('PhoneInputComponent', () => {
   });
 
   it('should render the govuk countries', () => {
-    expect(page.options[1].textContent).toEqual('AF (93)');
+    expect(page.options[2].textContent).toEqual('AF (93)');
   });
 
   it('should apply identifiers', () => {
@@ -156,8 +183,50 @@ describe('PhoneInputComponent', () => {
     expect(hostComponent.form.get('firstPhone').touched).toBeTruthy();
   });
 
-  it('should apply a supplied value', () => {
+  it('should apply a supplied value', async () => {
+    COUNTRIES.push({
+      code: 'GR',
+      name: 'Greece',
+      officialName: 'Greece',
+    });
+
+    // Force a refresh of the options
+    component.phoneCodes$ = of(COUNTRIES).pipe(
+      map((countries) => {
+        const emptyOption = [{ text: '--', value: '' }];
+        const ukCountries = [];
+        const otherCountries = [];
+
+        countries.forEach((country) => {
+          const callingCode = mockCountryCallingCodeService.getCountryCallingCode(country.code);
+          const option = {
+            text: `${country.code} (${callingCode})`,
+            value: String(callingCode),
+          };
+
+          if ([...UK_COUNTRY_CODES, 'GB'].includes(country.code)) {
+            ukCountries.push(option);
+          } else {
+            otherCountries.push(option);
+          }
+        });
+
+        return [
+          ...component.sortByProp(ukCountries, 'text'),
+          ...emptyOption,
+          ...component.sortByProp(otherCountries, 'text'),
+        ];
+      }),
+    );
+
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
     hostComponent.form.get('firstPhone').setValue({ countryCode: '30', number: '1234567890' });
+
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(page.countryCodeValue).toEqual('30');

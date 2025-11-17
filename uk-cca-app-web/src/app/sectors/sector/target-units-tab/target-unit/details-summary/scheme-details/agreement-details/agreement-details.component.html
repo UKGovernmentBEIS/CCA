@@ -1,0 +1,39 @@
+<div class="govuk-grid-row">
+  <div [class]="mainColumnClass()">
+    <h2>{{ title() }}</h2>
+
+    <dl govuk-summary-list [attr.data-testid]="title().toLowerCase().replace(' ', '-')">
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Status</dt>
+        <dd govukSummaryListRowValue>{{ isTerminated() ? 'Terminated' : 'Active' }}</dd>
+        <dd govukSummaryListRowActions></dd>
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Downloadable version</dt>
+        <dd govukSummaryListRowValue>
+          <cca-summary-download-files [files]="files()" />
+        </dd>
+        <dd govukSummaryListRowActions></dd>
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Activation date</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ agreement()?.activationDate | date: 'dd MMM y' }}</span>
+        </dd>
+        <dd govukSummaryListRowActions></dd>
+      </div>
+
+      @if (isTerminated()) {
+        <div govukSummaryListRow>
+          <dt govukSummaryListRowKey>Termination date</dt>
+          <dd govukSummaryListRowValue>
+            <span>{{ agreement()?.terminatedDate | date: 'dd MMM y' }}</span>
+          </dd>
+          <dd govukSummaryListRowActions></dd>
+        </div>
+      }
+    </dl>
+  </div>
+</div>

@@ -29,7 +29,7 @@ export interface UnderlyingAgreementVariationRejectedRequestActionPayload {
   decisionNotification: CcaDecisionNotification;
   defaultContacts: DefaultNoticeRecipient[];
   usersInfo?: Record<string, RequestActionUserInfo>;
-  officialNotice: FileInfoDTO;
+  officialNotices: FileInfoDTO[];
   determination: Determination;
   reviewSectionsCompleted?: Record<string, string>;
   reviewGroupDecisions?: Record<string, UnderlyingAgreementReviewDecision>;

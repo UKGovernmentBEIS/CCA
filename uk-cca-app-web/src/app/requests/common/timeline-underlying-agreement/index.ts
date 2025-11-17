@@ -1,5 +1,6 @@
 export * from './authorisation-additional-evidence-submitted/authorisation-additional-evidence-submitted.component';
 export * from './facility-submitted/facility-submitted.component';
+export * from './products';
 export * from './manage-facilities-submitted/manage-facilities-submitted.component';
 export * from './review-target-unit-details-submitted/review-target-unit-details-submitted.component';
 export * from './target-period-5-submitted/target-period-5-submitted.component';

@@ -21,7 +21,6 @@ import { DocumentTemplateInfoDTO, NotificationTemplateInfoDTO } from 'cca-api';
       </ng-template>
     </govuk-table>
   `,
-  standalone: true,
   imports: [TableComponent, RouterLink, DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

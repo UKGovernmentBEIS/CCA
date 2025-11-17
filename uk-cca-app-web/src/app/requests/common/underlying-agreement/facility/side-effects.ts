@@ -1,13 +1,13 @@
 import { produce } from 'immer';
 
-import type { UnderlyingAgreementApplySavePayload } from 'cca-api';
+import type { UnderlyingAgreementApplySavePayload, UnderlyingAgreementVariationApplySavePayload } from 'cca-api';
 
 import { isCCA3Scheme } from '../../utils';
 
 export function applySchemeVersionsSideEffect(
-  payload: UnderlyingAgreementApplySavePayload,
+  payload: UnderlyingAgreementApplySavePayload | UnderlyingAgreementVariationApplySavePayload,
   facilityId: string,
-): UnderlyingAgreementApplySavePayload {
+): UnderlyingAgreementApplySavePayload | UnderlyingAgreementVariationApplySavePayload {
   return produce(payload, (draft) => {
     const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
     if (facilityIndex === -1) return;

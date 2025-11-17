@@ -26,7 +26,6 @@ import { CcaTableColumn, SelectableRow } from './types';
       padding: 0 0 0 10px;
     }
   `,
-  standalone: true,
   imports: [NgTemplateOutlet, NgClass],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

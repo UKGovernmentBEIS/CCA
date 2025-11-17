@@ -88,27 +88,27 @@ export class FacilityInfoViewService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getFacilityDetailsById(facilityId: string): Observable<FacilityInfoDTO>;
+  public getFacilityDetailsById(facilityId: number): Observable<FacilityInfoDTO>;
   public getFacilityDetailsById(
-    facilityId: string,
+    facilityId: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<FacilityInfoDTO>>;
   public getFacilityDetailsById(
-    facilityId: string,
+    facilityId: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<FacilityInfoDTO>>;
   public getFacilityDetailsById(
-    facilityId: string,
+    facilityId: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<FacilityInfoDTO>;
   public getFacilityDetailsById(
-    facilityId: string,
+    facilityId: number,
     observe: any = 'body',
     reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },

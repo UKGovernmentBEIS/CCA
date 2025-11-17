@@ -24,7 +24,6 @@ type RateWithoutNotApplicable = Exclude<Rate, 'NOT_APPLICABLE_NOT_USED_YET'>;
 @Component({
   selector: 'cca-feedback',
   templateUrl: './feedback.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     AsyncPipe,

@@ -24,7 +24,7 @@
                 }
 
                 @case ('paymentStatus') {
-                  <govuk-tag [color]="row[column.field] | statusColor: 'grey'" class="tag-width">
+                  <govuk-tag [color]="row[column.field] | statusColor" class="tag-width">
                     {{ row[column.field] | status }}
                   </govuk-tag>
                 }

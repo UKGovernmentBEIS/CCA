@@ -23,5 +23,9 @@ public class Cca3FacilityBaselineAndTargets {
 
     @NotNull
     @Valid
+    private FacilityBaselineEnergyConsumption facilityBaselineEnergyConsumption;
+
+    @NotNull
+    @Valid
     private FacilityTargets facilityTargets;
 }

@@ -9,7 +9,13 @@ import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.Adm
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.TP6BuyOutCalculatedAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.run.domain.BuyOutSurplusRunCompletedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.processing.domain.Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivatedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerReviewDecisionSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaGeneratedRequestActionPayload;
@@ -90,6 +96,18 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
 		addResolvedShemas(BuyOutSurplusRunCompletedRequestActionPayload.class.getSimpleName(), BuyOutSurplusRunCompletedRequestActionPayload.class);
 		addResolvedShemas(TP6BuyOutCalculatedAccountProcessingSubmittedRequestActionPayload.class.getSimpleName(), TP6BuyOutCalculatedAccountProcessingSubmittedRequestActionPayload.class);
 		addResolvedShemas(TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload.class.getSimpleName(), TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload.class);
+
+		// CCA3 Existing Facilities Migration
+		addResolvedShemas(Cca3ExistingFacilitiesMigrationAccountProcessingSubmittedRequestActionPayload.class.getSimpleName(), Cca3ExistingFacilitiesMigrationAccountProcessingSubmittedRequestActionPayload.class);
+		addResolvedShemas(Cca3ExistingFacilitiesMigrationAccountProcessingActivatedRequestActionPayload.class.getSimpleName(), Cca3ExistingFacilitiesMigrationAccountProcessingActivatedRequestActionPayload.class);
+
+		// Facility Audit
+		addResolvedShemas(PreAuditReviewSubmittedRequestActionPayload.class.getSimpleName(), PreAuditReviewSubmittedRequestActionPayload.class);
+		addResolvedShemas(AuditDetailsCorrectiveActionsSubmittedRequestActionPayload.class.getSimpleName(), AuditDetailsCorrectiveActionsSubmittedRequestActionPayload.class);
+		addResolvedShemas(AuditTrackCorrectiveActionsSubmittedRequestActionPayload.class.getSimpleName(), AuditDetailsCorrectiveActionsSubmittedRequestActionPayload.class);
+
+		// CCA2 Extension Notice
+		addResolvedShemas(Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload.class.getSimpleName(), Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload.class);
 	}
 
 }

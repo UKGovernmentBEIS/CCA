@@ -24,7 +24,6 @@ import {
 
 @Component({
   selector: 'cca-change-certification-status',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     ReactiveFormsModule,
@@ -47,7 +46,7 @@ export class ChangeCertificationStatusComponent {
   private readonly router = inject(Router);
   protected readonly activatedRoute = inject(ActivatedRoute);
 
-  protected readonly facilityId = this.activatedRoute.snapshot.paramMap.get('facilityId');
+  protected readonly facilityId = +this.activatedRoute.snapshot.paramMap.get('facilityId');
   protected readonly facilityInfoDTO = this.activatedRoute.snapshot.data.facilityDetails as FacilityInfoDTO;
 
   readonly form = inject<ChangeCertificationStatusFormModel>(CHANGE_CERTIFICATION_STATUS_FORM);
@@ -80,6 +79,6 @@ export class ChangeCertificationStatusComponent {
         certificationPeriodId: this.certificationPeriodId,
         startDate: this.form.value.certificationStatus === 'CERTIFIED' ? this.form.value.startDate : null,
       })
-      .subscribe(() => this.router.navigate(['../../details'], { relativeTo: this.activatedRoute }));
+      .subscribe(() => this.router.navigate(['../..'], { relativeTo: this.activatedRoute }));
   }
 }

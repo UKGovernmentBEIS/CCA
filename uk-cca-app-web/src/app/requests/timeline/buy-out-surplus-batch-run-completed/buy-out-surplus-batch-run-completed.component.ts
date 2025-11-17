@@ -10,7 +10,6 @@ import { toBuyoutSurplusBatchRunCompletedSummaryData } from './buy-out-surplus-b
 @Component({
   selector: 'cca-buy-out-surplus-batch-run-completed',
   template: `<cca-summary [data]="data" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

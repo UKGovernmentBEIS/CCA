@@ -1,0 +1,35 @@
+<h3 class="govuk-heading-m">Facilities migrated</h3>
+
+<div class="govuk-grid-row" data-testid="facilities-search">
+  @if (sortedFacilityItems()?.length) {
+    <div class="govuk-grid-column-full">
+      <govuk-table [columns]="tableColumns" [data]="paginatedItems()" (sort)="sorting.set($event)">
+        <ng-template let-column="column" let-index="index" let-row="row">
+          @switch (column.field) {
+            @case ('facilityName') {
+              <a [routerLink]="['cca3-migration', 'facility', row.facilityBusinessId]" class="govuk-link">{{
+                row[column.field]
+              }}</a>
+            }
+
+            @default {
+              {{ row[column.field] }}
+            }
+          }
+        </ng-template>
+      </govuk-table>
+
+      <cca-pagination
+        [count]="migratedFacilities().length"
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
+      />
+    </div>
+  } @else {
+    <div class="govuk-grid-column-full">
+      <p tabindex="-1" role="status">There are no results to show.</p>
+    </div>
+  }
+</div>

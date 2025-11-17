@@ -12,7 +12,7 @@ public class FacilityCreatedDateRowMapper implements RowMapper<FacilityCreatedDa
         
         return FacilityCreatedDateVO.builder()
                 .targetUnitId(rs.getString("tu_id"))
-                .facilityId(rs.getString("facility_id"))
+                .facilityBusinessId(rs.getString("facility_id"))
                 .createdDate(rs.getTimestamp("facility_entry_date") != null
                         ? rs.getTimestamp("facility_entry_date").toLocalDateTime()
                         : null)

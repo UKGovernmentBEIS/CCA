@@ -17,7 +17,6 @@ import { generateDownloadUrl } from '@shared/utils';
 @Component({
   selector: 'cca-baseline-and-targets-summary',
   templateUrl: './tp6-summary.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     SummaryComponent,
@@ -33,26 +32,22 @@ export class TP6SummaryComponent {
 
   private readonly taskId = this.activatedRoute.snapshot.paramMap.get('taskId');
 
-  private readonly decision = this.requestTaskStore.select(
-    underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_PERIOD6_DETAILS'),
-  )();
-
   private readonly sectorAssociationDetailsSchemeData = this.requestTaskStore.select(
     underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(SchemeVersion.CCA_2),
-  )();
-
-  private readonly targetPeriodDetails = this.requestTaskStore.select(
-    underlyingAgreementQuery.selectTargetPeriodDetails(false),
   )();
 
   private readonly originalTargetPeriodDetails = this.requestTaskStore.select(
     underlyingAgreementVariationQuery.selectOriginalTargetPeriodDetails(false),
   )();
+  private readonly currentTargetPeriodDetails = this.requestTaskStore.select(
+    underlyingAgreementQuery.selectTargetPeriodDetails(false),
+  )();
 
-  private readonly submitAttachments = this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)();
-
-  private readonly submitOriginalAttachments = this.requestTaskStore.select(
+  private readonly originalSubmitAttachments = this.requestTaskStore.select(
     underlyingAgreementVariationQuery.selectOriginalUnderlyingAgreementAttachments,
+  )();
+  private readonly currentSubmitAttachments = this.requestTaskStore.select(
+    underlyingAgreementQuery.selectAttachments,
   )();
 
   private readonly reviewAttachments = this.requestTaskStore.select(
@@ -61,20 +56,24 @@ export class TP6SummaryComponent {
 
   private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();
 
+  private readonly decision = this.requestTaskStore.select(
+    underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_PERIOD6_DETAILS'),
+  )();
+
   private readonly summaryOriginalMetadata = {
     isTp5Period: false,
     baselineExists: null,
     downloadUrl: generateDownloadUrl(this.taskId),
     isEditable: this.isEditable,
-    attachments: { submit: this.submitOriginalAttachments, review: this.reviewAttachments },
+    attachments: { submit: this.originalSubmitAttachments, review: this.reviewAttachments },
   };
 
-  private readonly summaryMetadata = {
+  private readonly summaryCurrentMetadata = {
     isTp5Period: false,
     baselineExists: null,
     downloadUrl: generateDownloadUrl(this.taskId),
     isEditable: this.isEditable,
-    attachments: { submit: this.submitAttachments, review: this.reviewAttachments },
+    attachments: { submit: this.currentSubmitAttachments, review: this.reviewAttachments },
   };
 
   protected readonly summaryDataOriginal = toBaselineAndTargetsSummaryDataWithDecision(
@@ -86,8 +85,8 @@ export class TP6SummaryComponent {
 
   protected readonly summaryDataCurrent = toBaselineAndTargetsSummaryDataWithDecision(
     this.sectorAssociationDetailsSchemeData,
-    this.targetPeriodDetails,
+    this.currentTargetPeriodDetails,
     this.decision,
-    this.summaryMetadata,
+    this.summaryCurrentMetadata,
   );
 }

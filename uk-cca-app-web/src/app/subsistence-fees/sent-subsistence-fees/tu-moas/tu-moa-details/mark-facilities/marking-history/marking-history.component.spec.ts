@@ -20,7 +20,7 @@ describe('MarkingHistoryComponent', () => {
   let subsistenceFeesMoAFacilityViewService: Partial<jest.Mocked<SubsistenceFeesMoAFacilityViewService>>;
 
   const history = {
-    facilityId: 'ADS_50-F00001',
+    facilityBusinessId: 'ADS_50-F00001',
     siteName: 'fac52-2-1',
     markingStatusHistoryList: [
       {
@@ -75,7 +75,7 @@ describe('MarkingHistoryComponent', () => {
     const govukDatePipe = new GovukDatePipe();
 
     const caption = debugElement.querySelector('.govuk-caption-l');
-    expect(caption.textContent.trim()).toBe(history.facilityId);
+    expect(caption.textContent.trim()).toBe(history.facilityBusinessId);
 
     const heading = debugElement.querySelector('.govuk-heading-l');
     expect(heading.textContent.trim()).toBe(history.siteName);

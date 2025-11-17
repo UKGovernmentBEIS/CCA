@@ -1,11 +1,11 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`CheckYourAnswersComponent should render the summary sections and rows 1`] = `
 <cca-check-your-answers
   requestTaskStore={[Function _RequestTaskStore]}
   route={[Function ActivatedRouteStub]}
   router={[Function Object]}
-  summaryData={[Function Array]}
+  summaryData={[Function Function]}
   tasksApiService={[Function Object]}
 >
   <div>
@@ -47,7 +47,9 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             operator name 
+            <span>
+              operator name
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -75,7 +77,9 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Limited company 
+            <span>
+              Limited company
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -103,7 +107,9 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             11112222 
+            <span>
+              11112222
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -131,6 +137,8 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -168,13 +176,21 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             una operator addr line 1 
+            <span>
+              una operator addr line 1
+            </span>
             <br />
-             una operator addr city 
+            <span>
+              una operator addr city
+            </span>
             <br />
-             una operator addr postcode 
+            <span>
+              una operator addr postcode
+            </span>
             <br />
-             una operator addr country 
+            <span>
+              una operator addr country
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -212,7 +228,9 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             test 1 
+            <span>
+              test 1
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -240,7 +258,9 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             test 2 
+            <span>
+              test 2
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -268,7 +288,9 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             test@test.com 
+            <span>
+              test@test.com
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -296,17 +318,29 @@ exports[`CheckYourAnswersComponent should render the summary sections and rows 1
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             una resp addr line 1 
+            <span>
+              una resp addr line 1
+            </span>
             <br />
-             una resp addr line 2 
+            <span>
+              una resp addr line 2
+            </span>
             <br />
-             una resp addr line city 
+            <span>
+              una resp addr line city
+            </span>
             <br />
-             una resp addr county 
+            <span>
+              una resp addr county
+            </span>
             <br />
-             una resp addr line postcode 
+            <span>
+              una resp addr line postcode
+            </span>
             <br />
-             una resp addr country 
+            <span>
+              una resp addr country
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"

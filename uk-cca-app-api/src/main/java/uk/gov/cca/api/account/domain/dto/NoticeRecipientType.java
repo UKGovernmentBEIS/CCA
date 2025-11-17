@@ -7,7 +7,8 @@ public enum NoticeRecipientType {
 	RESPONSIBLE_PERSON, 
 	ADMINISTRATIVE_CONTACT, 
 	SECTOR_CONTACT, 
-	SECTOR_USER, 
+	SECTOR_USER,
+	SECTOR_CONSULTANT,
 	OPERATOR;
 
 	public static NoticeRecipientType fromTargetUnitAccountContactType(TargetUnitAccountContactType tuaContactType) {

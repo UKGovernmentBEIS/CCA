@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { ItemDTO } from 'cca-api';
 
-@Pipe({ name: 'itemName', pure: true, standalone: true })
+@Pipe({ name: 'itemName', pure: true })
 export class ItemNamePipe implements PipeTransform {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   transform(value: ItemDTO['taskType'], year?: string | number): string {
@@ -43,6 +43,10 @@ export class ItemNamePipe implements PipeTransform {
         return 'Application to vary underlying agreement sent for review';
       case 'UNDERLYING_AGREEMENT_VARIATION_ACTIVATION':
         return 'Upload target unit assent on variation';
+      case 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW':
+        return 'Peer review application for underlying agreement variation';
+      case 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW':
+        return 'Application for underlying agreement variation sent to peer reviewer';
 
       case 'PERFORMANCE_DATA_DOWNLOAD_SUBMIT':
         return 'Download target period reporting (TPR) spreadsheets';
@@ -50,6 +54,12 @@ export class ItemNamePipe implements PipeTransform {
         return 'Target period reporting (TPR) spreadsheets upload';
       case 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT':
         return 'Performance account template (PAT) upload';
+
+      case 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION':
+        return 'Upload target unit assent';
+
+      case 'PRE_AUDIT_REVIEW_SUBMIT':
+        return 'Pre-audit review';
 
       default:
         return null;

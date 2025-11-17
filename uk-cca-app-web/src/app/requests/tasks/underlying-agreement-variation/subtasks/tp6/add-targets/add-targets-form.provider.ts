@@ -45,7 +45,7 @@ export const addTargetsFormProvider: Provider = {
           ? calculateAbsoluteTarget(energyOrCarbon, value, false)
           : calculateRelativeTarget(energyOrCarbon, baselineData.throughput, value);
 
-      if (typeof targets === 'number') targetsControl.patchValue(targets);
+      targetsControl.patchValue(String(targets));
     });
 
     return fb.group({

@@ -42,7 +42,7 @@ public class FacilityCreatedDateMigrationService {
             migrationContainerMap.get(targetUnitId)
                     .setFacilitiesCreatedDate(facilities.stream()
                             .collect(Collectors.toMap(
-                                    fac -> MigrationUtil.convertLegacyToCcaBusinessId(fac.getFacilityId()),
+                                    fac -> MigrationUtil.convertLegacyToCcaBusinessId(fac.getFacilityBusinessId()),
                                     FacilityCreatedDateVO::getCreatedDate)))
             );
     }

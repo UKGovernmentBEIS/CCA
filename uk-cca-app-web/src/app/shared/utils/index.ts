@@ -1,4 +1,3 @@
-export * from './address';
 export * from './crypto';
 export * from './download-url-generator';
 export * from './files';
@@ -6,5 +5,5 @@ export * from './object';
 export * from './phone';
 export * from './summary/target-unit/target-unit-create-submitted-summary-data';
 export * from './summary/target-unit/target-unit-create-summary-data';
-export * from './summary/target-unit/target-unit-details-summary-data';
 export * from './user-status-util';
+export * from './equal-fields';

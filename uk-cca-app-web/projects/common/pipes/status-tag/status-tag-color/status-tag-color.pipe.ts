@@ -4,11 +4,7 @@ import { TagColor } from '@netz/govuk-components';
 
 import { TASK_STATUS_TAG_MAP, TaskStatusTagMap } from '../status-tag.providers';
 
-@Pipe({
-  name: 'statusTagColor',
-  pure: true,
-  standalone: true,
-})
+@Pipe({ name: 'statusTagColor', pure: true })
 export class StatusTagColorPipe implements PipeTransform {
   constructor(@Inject(TASK_STATUS_TAG_MAP) private statusMap: TaskStatusTagMap) {}
 

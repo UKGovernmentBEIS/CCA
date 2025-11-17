@@ -27,7 +27,6 @@ import { savePartiallyNotFoundRegulatorError } from '../errors/business-error';
 @Component({
   selector: 'cca-regulators-users',
   templateUrl: './regulators-users.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     TableComponent,

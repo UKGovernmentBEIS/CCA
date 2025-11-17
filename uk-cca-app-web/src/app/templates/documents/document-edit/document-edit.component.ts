@@ -26,7 +26,6 @@ import { toDocumentTemplateSummary } from '../document-template-summary';
 @Component({
   selector: 'cca-document-edit',
   templateUrl: './document-edit.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     PageHeadingComponent,

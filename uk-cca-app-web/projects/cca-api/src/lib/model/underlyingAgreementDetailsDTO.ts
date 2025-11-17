@@ -9,10 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { FileInfoDTO } from './fileInfoDTO';
+import { UnderlyingAgreementDocumentDetailsDTO } from './underlyingAgreementDocumentDetailsDTO';
 
 export interface UnderlyingAgreementDetailsDTO {
   id?: number;
-  activationDate?: string;
-  fileDocument?: FileInfoDTO;
+  underlyingAgreementDocumentMap?: Record<string, UnderlyingAgreementDocumentDetailsDTO>;
 }

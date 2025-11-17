@@ -18,7 +18,6 @@ import { underlyingAgreementReviewedRequestActionQuery } from '../../+state/unde
       <cca-summary [data]="summaryData()" />
     </div>
   `,
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

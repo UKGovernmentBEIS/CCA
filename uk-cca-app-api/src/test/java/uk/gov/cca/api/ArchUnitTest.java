@@ -49,6 +49,7 @@ public class ArchUnitTest {
     static final String BUY_OUT_SURPLUS_PACKAGE = BASE_PACKAGE + ".targetperiodreporting.buyoutsurplus..";
     static final String WORKFLOW_CCA_PACKAGE = BASE_PACKAGE + ".workflow..";
     static final String FACILITY_CERTIFICATION_PACKAGE = BASE_PACKAGE + ".targetperiodreporting.facilitycertification..";
+    static final String FACILITY_AUDIT_PACKAGE = BASE_PACKAGE + ".facilityaudit..";
 
     static final String WEB_PACKAGE = BASE_PACKAGE + ".web..";
 
@@ -77,6 +78,7 @@ public class ArchUnitTest {
             SUBSISTENCE_FEES_PACKAGE,
             WORKFLOW_CCA_PACKAGE,
             FACILITY_CERTIFICATION_PACKAGE,
+		    FACILITY_AUDIT_PACKAGE,
 
             WEB_PACKAGE
     );
@@ -432,7 +434,21 @@ public class ArchUnitTest {
                             FACILITY_PACKAGE,
                             TARGET_PERIOD_PACKAGE
                     ));
-    
+
+	@ArchTest
+	public static final ArchRule facilityAuditPackageChecks =
+			noClasses().that()
+					.resideInAPackage(FACILITY_AUDIT_PACKAGE)
+					.should().dependOnClassesThat()
+					.resideInAnyPackage(except(
+							FACILITY_AUDIT_PACKAGE,
+							COMMON_PACKAGE,
+							COMMON_CCA_PACKAGE,
+							AUTHORIZATION_PACKAGE,
+							CA_PACKAGE,
+							FACILITY_PACKAGE
+					));
+
     @ArchTest
     public static final ArchRule workflowCcaPackageChecks =
             noClasses().that()
@@ -461,7 +477,8 @@ public class ArchUnitTest {
                             PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PACKAGE,
                             BUY_OUT_SURPLUS_PACKAGE,
                             FACILITY_CERTIFICATION_PACKAGE,
-                            SUBSISTENCE_FEES_PACKAGE));
+                            SUBSISTENCE_FEES_PACKAGE,
+		                    FACILITY_AUDIT_PACKAGE));
     
     private static String[] except(String... packages) {
         return ALL_PACKAGES.stream()

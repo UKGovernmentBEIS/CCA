@@ -47,6 +47,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @ExtendWith(MockitoExtension.class)
 class CcaOfficialNoticeSendServiceTest {
 
@@ -232,6 +233,100 @@ class CcaOfficialNoticeSendServiceTest {
                         emailData,
                         List.of("administrative@test.com", "responsiblePerson@test.com"),
                         List.of("sector1@example.com", "sector@test.com"),
+                        List.of());
+    }
+
+    @Test
+    void sendOfficialNotice_with_consultants() {
+        final Long accountId = 1L;
+        final String businessId = "businessId";
+        final String fileUuid = UUID.randomUUID().toString();
+        final String fileName = "fileName";
+        final byte[] fileContent = "content".getBytes();
+        final CompetentAuthorityEnum competentAuthority = CompetentAuthorityEnum.ENGLAND;
+
+        final List<FileInfoDTO> attachments = List.of(FileInfoDTO.builder().name(fileName).uuid(fileUuid).build());
+        final FileDTO fileDTO = FileDTO.builder().fileContent(fileContent).build();
+        final Request request = Request.builder()
+                .type(RequestType.builder()
+                        .code(CcaRequestType.UNDERLYING_AGREEMENT)
+                        .build())
+                .build();
+        addAccountResourceToRequest(accountId, request);
+        addCaResourceToRequest(CompetentAuthorityEnum.ENGLAND, request);
+        List<String> ccRecipientsEmails = new ArrayList<>();
+        ccRecipientsEmails.add("sector1@example.com");
+
+        final TargetUnitAccountDetailsDTO accountDetails = TargetUnitAccountDetailsDTO.builder()
+                .businessId(businessId)
+                .build();
+
+        final List<DefaultNoticeRecipient> defaultRecipients = List.of(
+                DefaultNoticeRecipient.builder()
+                        .name("Responsible Last Name")
+                        .email("responsiblePerson@test.com")
+                        .recipientType(NoticeRecipientType.RESPONSIBLE_PERSON)
+                        .build(),
+                DefaultNoticeRecipient.builder()
+                        .name("Administrative Last Name")
+                        .email("administrative@test.com")
+                        .recipientType(NoticeRecipientType.ADMINISTRATIVE_CONTACT)
+                        .build(),
+                DefaultNoticeRecipient.builder()
+                        .name("Sector Last Name")
+                        .email("sector@test.com")
+                        .recipientType(NoticeRecipientType.SECTOR_CONTACT)
+                        .build(),
+                DefaultNoticeRecipient.builder()
+                        .name("Sector Consultant Last Name1")
+                        .email("consultant1@test.com")
+                        .recipientType(NoticeRecipientType.SECTOR_CONSULTANT)
+                        .build(),
+                DefaultNoticeRecipient.builder()
+                        .name("Sector Consultant Last Name2")
+                        .email("consultant2@test.com")
+                        .recipientType(NoticeRecipientType.SECTOR_CONSULTANT)
+                        .build()
+        );
+
+        final EmailData emailData = EmailData.builder()
+                .notificationTemplateData(EmailNotificationTemplateData.builder()
+                        .templateName(CcaNotificationTemplateName.GENERIC_EMAIL_TEMPLATE)
+                        .competentAuthority(competentAuthority)
+                        .templateParams(Map.of(
+                                CcaEmailNotificationTemplateConstants.RESPONSIBLE_USER, "Responsible Last Name",
+                                CcaEmailNotificationTemplateConstants.TARGET_UNIT_ID, businessId,
+                                CcaEmailNotificationTemplateConstants.CONTACT, "/contact-us"
+                        ))
+                        .build())
+                .attachments(Map.of(fileName, fileContent)).build();
+
+        NotificationProperties.Email notificationEmail = mock(NotificationProperties.Email.class);
+
+        when(accountReferenceDetailsService.getTargetUnitAccountDetails(accountId))
+                .thenReturn(accountDetails);
+        when(notificationProperties.getEmail()).thenReturn(notificationEmail);
+        when(notificationEmail.getContactUsLink()).thenReturn("/contact-us");
+        when(fileDocumentService.getFileDTO(fileUuid))
+                .thenReturn(fileDTO);
+        when(underlyingAgreementDefaultNoticeRecipients.getType())
+                .thenReturn(CcaRequestType.UNDERLYING_AGREEMENT);
+        when(underlyingAgreementDefaultNoticeRecipients.getRecipients(request))
+                .thenReturn(defaultRecipients);
+
+        // Invoke
+        service.sendOfficialNotice(attachments, request, ccRecipientsEmails);
+
+        // Verify
+        verify(accountReferenceDetailsService, times(1))
+                .getTargetUnitAccountDetails(accountId);
+        verify(fileDocumentService, times(1))
+                .getFileDTO(fileUuid);
+        verify(notificationEmailService, times(1))
+                .notifyRecipients(
+                        emailData,
+                        List.of("administrative@test.com", "responsiblePerson@test.com"),
+                        List.of("sector1@example.com", "sector@test.com", "consultant1@test.com", "consultant2@test.com"),
                         List.of());
     }
 

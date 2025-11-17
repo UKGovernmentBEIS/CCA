@@ -7,10 +7,7 @@ export enum ApplicationReasonTypeEnum {
   CHANGE_OF_OWNERSHIP = 'Change of ownership',
 }
 
-@Pipe({
-  name: 'applicationReasonType',
-  standalone: true,
-})
+@Pipe({ name: 'applicationReasonType' })
 export class ApplicationReasonTypePipe implements PipeTransform {
   transform(value: FacilityDetails['applicationReason']): string {
     const text = ApplicationReasonTypeEnum[value];

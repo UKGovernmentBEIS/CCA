@@ -9,7 +9,6 @@ import { TextareaComponent } from './textarea.component';
 
 describe('TextareaComponent', () => {
   @Component({
-    standalone: true,
     imports: [TextareaComponent, ReactiveFormsModule],
     template: `
       <div govuk-textarea [formControl]="control" [maxLength]="maxLength" [label]="label" [labelSize]="labelSize"></div>

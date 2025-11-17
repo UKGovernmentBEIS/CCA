@@ -18,7 +18,6 @@ import {
 
 @Component({
   selector: 'cca-provide-evidence-details',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,

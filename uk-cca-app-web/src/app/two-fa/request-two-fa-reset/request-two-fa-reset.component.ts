@@ -6,7 +6,6 @@ import { BackToTopComponent } from '@shared/components';
 @Component({
   selector: 'cca-request-two-fa-reset',
   templateUrl: './request-two-fa-reset.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, BackToTopComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

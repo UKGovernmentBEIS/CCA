@@ -11,12 +11,12 @@
  */
 
 export interface PrimaryDetermination {
-  tpCarbonFactor: number;
-  energyCarbonUnderTarget: number;
-  carbonUnderTarget: number;
-  co2Emissions: number;
-  surplusUsed: number;
-  surplusGained: number;
-  priBuyOutCarbon: number;
-  priBuyOutCost: number;
+  tpCarbonFactor: string;
+  energyCarbonUnderTarget: string;
+  carbonUnderTarget: string;
+  co2Emissions: string;
+  surplusUsed: string;
+  surplusGained: string;
+  priBuyOutCarbon: string;
+  priBuyOutCost: string;
 }

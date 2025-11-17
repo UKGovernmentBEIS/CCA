@@ -15,6 +15,5 @@ import uk.gov.netz.api.workflow.request.core.domain.RequestMetadata;
 @AllArgsConstructor
 @SuperBuilder
 public class UnderlyingAgreementVariationRequestMetadata extends RequestMetadata {
-    private Integer underlyingAgreementVersion;
     private SchemeVersion workflowSchemeVersion;
 }

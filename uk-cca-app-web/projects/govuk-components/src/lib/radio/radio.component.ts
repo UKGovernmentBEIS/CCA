@@ -14,7 +14,6 @@ import { RadioOptionComponent } from './radio-option/radio-option.component';
  */
 @Component({
   selector: 'div[govuk-radio]',
-  standalone: true,
   templateUrl: './radio.component.html',
   imports: [LegendDirective, FieldsetDirective, FieldsetHintDirective, ErrorMessageComponent, NgTemplateOutlet],
 })

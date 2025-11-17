@@ -17,7 +17,6 @@ describe('TabsComponent', () => {
   let router: Router;
 
   @Component({
-    standalone: true,
     imports: [TabsComponent, AsyncPipe, TabDirective],
     template: `
       <govuk-tabs>

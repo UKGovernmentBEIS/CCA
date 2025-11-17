@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FacilityDecisionComponent should match snapshot 1`] = `
 <div
@@ -46,7 +46,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             ADS_53-F00007 
+            <span>
+              ADS_53-F00007
+            </span>
             
             
             
@@ -72,7 +74,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             Facility 1 
+            <span>
+              Facility 1
+            </span>
             
             
             
@@ -109,7 +113,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             No 
+            <span>
+              No
+            </span>
             
             
             
@@ -146,7 +152,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
+            <span>
               
+            </span>
             
             
             
@@ -183,7 +191,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             New entrant 
+            <span>
+              New entrant
+            </span>
             
             
             
@@ -220,7 +230,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
+            <span>
               
+            </span>
             
             
             
@@ -257,7 +269,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             No 
+            <span>
+              No
+            </span>
             
             
             
@@ -294,7 +308,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             CCA2 
+            <span>
+              CCA2
+            </span>
             
             
             
@@ -331,27 +347,37 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             Address 
+            <span>
+              Address
+            </span>
             
             <br />
             
             
-             Apartment 1 
+            <span>
+              Apartment 1
+            </span>
             
             <br />
             
             
-             Addres1 
+            <span>
+              Addres1
+            </span>
             
             <br />
             
             
-             94043 
+            <span>
+              94043
+            </span>
             
             <br />
             
             
-             GB 
+            <span>
+              GB
+            </span>
             
             
             
@@ -403,7 +429,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             Operator 
+            <span>
+              Operator
+            </span>
             
             
             
@@ -440,7 +468,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             Admin 
+            <span>
+              Admin
+            </span>
             
             
             
@@ -477,7 +507,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             administrative_conctact@cca.uk 
+            <span>
+              administrative_conctact@cca.uk
+            </span>
             
             
             
@@ -514,27 +546,37 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             Address 
+            <span>
+              Address
+            </span>
             
             <br />
             
             
-             Apartment 1 
+            <span>
+              Apartment 1
+            </span>
             
             <br />
             
             
-             Addres1 
+            <span>
+              Addres1
+            </span>
             
             <br />
             
             
-             94043 
+            <span>
+              94043
+            </span>
             
             <br />
             
             
-             GB 
+            <span>
+              GB
+            </span>
             
             
             
@@ -571,7 +613,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
+            <span>
               
+            </span>
             
             
             
@@ -623,7 +667,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             No 
+            <span>
+              No
+            </span>
             
             
             
@@ -660,7 +706,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
+            <span>
               
+            </span>
             
             
             
@@ -697,7 +745,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             Energy Intensive 
+            <span>
+              Energy Intensive
+            </span>
             
             
             
@@ -734,7 +784,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
+            <span>
               
+            </span>
             
             
             
@@ -771,7 +823,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
+            <span>
               
+            </span>
             
             
             
@@ -808,7 +862,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
+            <span>
               
+            </span>
             
             
             
@@ -1077,7 +1133,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             No 
+            <span>
+              No
+            </span>
             
             
             
@@ -1166,7 +1224,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             100 % 
+            <span>
+              100 %
+            </span>
             
             
             
@@ -1203,7 +1263,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
+            <span>
               
+            </span>
             
             
             
@@ -1240,7 +1302,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
-             100 % 
+            <span>
+              100 %
+            </span>
             
             
             
@@ -1277,7 +1341,9 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
             
             
             
+            <span>
               
+            </span>
             
             
             
@@ -1452,6 +1518,7 @@ exports[`FacilityDecisionComponent should match snapshot 1`] = `
                         <div
                           class="govuk-checkboxes"
                         >
+                          
                           <div
                             class="govuk-checkboxes__item"
                           >

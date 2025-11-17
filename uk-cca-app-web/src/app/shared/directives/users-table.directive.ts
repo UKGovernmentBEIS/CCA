@@ -11,7 +11,6 @@ import { UsersTableItem } from './users-table-item';
 
 @Directive({
   selector: 'govuk-table[ccaUsersTable]',
-  standalone: true,
   providers: [UserFullNamePipe],
 })
 export class UsersTableDirective implements OnInit {

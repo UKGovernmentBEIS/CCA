@@ -15,7 +15,6 @@ import { OperatorUserInvitationStore } from '../store';
       </div>
     </div>
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PanelComponent, RouterLink],
 })

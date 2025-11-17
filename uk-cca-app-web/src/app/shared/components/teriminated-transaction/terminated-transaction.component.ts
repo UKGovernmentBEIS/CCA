@@ -7,7 +7,6 @@ import { BuyOutSurplusTransactionDetailsDTO } from 'cca-api';
 
 @Component({
   selector: 'cca-terminated-transaction',
-  standalone: true,
   imports: [PageHeadingComponent, RouterLink],
   template: `
     <netz-page-heading caption="Change">{{ heading() }}</netz-page-heading>

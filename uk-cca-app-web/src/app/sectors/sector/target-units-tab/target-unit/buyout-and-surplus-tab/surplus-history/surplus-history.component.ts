@@ -19,7 +19,6 @@ import { BuyOutAndSurplusInfoService } from 'cca-api';
 @Component({
   selector: 'cca-view-surplus-history',
   templateUrl: './surplus-history.component.html',
-  standalone: true,
   imports: [
     AccordionComponent,
     AccordionItemComponent,

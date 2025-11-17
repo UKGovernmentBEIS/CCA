@@ -7,7 +7,6 @@ import { underlyingAgreementReviewQuery } from '@requests/common';
 
 @Component({
   selector: 'cca-confirmation',
-  standalone: true,
   template: `
     <govuk-panel>Application {{ determinationType === 'ACCEPTED' ? 'accepted' : 'rejected' }}</govuk-panel>
     <a class="govuk-link" [routerLink]="['/dashboard']"> Return to: Dashboard </a>

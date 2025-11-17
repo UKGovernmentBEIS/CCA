@@ -13,6 +13,7 @@ import uk.gov.netz.api.account.repository.AccountBaseRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 @Transactional(readOnly = true)
@@ -23,8 +24,12 @@ public interface TargetUnitAccountRepository extends AccountBaseRepository<Targe
 
     List<TargetUnitAccount> findAllByIdIn(List<Long> ids);
 
+    List<TargetUnitAccount> findAllByStatus(TargetUnitAccountStatus status);
+
     @Query(name = TargetUnitAccount.NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNT_IDS_BY_SECTOR_ASSOCIATION)
     List<Long> findAllIdsBySectorAssociationId(Long sectorAssociationId);
+
+    List<TargetUnitAccount> findAllByBusinessIdInAndStatus(Set<String> businessIds, TargetUnitAccountStatus status);
 
     @Query(name = TargetUnitAccount.NAMED_QUERY_FIND_ACCOUNTS_BY_CONTACT_TYPE_AND_USER_ID_AND_SECTOR_ASSOCIATION)
     List<TargetUnitAccount> findTargetUnitAccountsByContactTypeAndUserIdAndSectorAsssociationId(String contactType, String userId, Long sectorAssociationId);
@@ -35,14 +40,13 @@ public interface TargetUnitAccountRepository extends AccountBaseRepository<Targe
     boolean existsByBusinessId(String businessId);
 
     @Transactional
-    @Query("SELECT acc FROM TargetUnitAccount acc WHERE migrated = true AND acc.status = :status and acc.sectorAssociationId in (:sectorIds)")
+    @Query("SELECT acc FROM TargetUnitAccount acc WHERE acc.migrated = true AND acc.status = :status and acc.sectorAssociationId in (:sectorIds)")
     List<TargetUnitAccount> findMigratedTargetUnitAccountsByStatusAndSectorIdIn(TargetUnitAccountStatus status, List<Long> sectorIds);
 
     @Transactional
-    @Query("SELECT acc FROM TargetUnitAccount acc WHERE migrated = true AND acc.status = :status")
+    @Query("SELECT acc FROM TargetUnitAccount acc WHERE acc.migrated = true AND acc.status = :status")
     List<TargetUnitAccount> findMigratedTargetUnitAccountsByStatus(TargetUnitAccountStatus status);
-    
-    @Transactional(readOnly = true)
+
     @Query(name = TargetUnitAccount.NAMED_QUERY_FIND_TARGET_UNIT_ACCOUNTS_ACTIVATED_BEFORE_WITH_STATUS_ACTIVE_OR_TERMINATED_BETWEEN)
 	List<TargetUnitAccountBusinessInfoDTO> findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedBetween(
 			Long sectorAssociationId, LocalDateTime acceptedDate, LocalDateTime terminatedDateFrom,

@@ -21,7 +21,6 @@ import {
 @Component({
   selector: 'cca-reason-for-withdraw-admin-termination',
   templateUrl: './reason-for-withdraw-admin-termination.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     TextareaComponent,

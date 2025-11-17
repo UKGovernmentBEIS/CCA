@@ -26,7 +26,6 @@ import { PASSWORD_FORM, passwordFormFactory } from './password-form.factory';
       <button type="submit">Submit</button>
     </form>
   `,
-  standalone: true,
   imports: [PasswordComponent, ReactiveFormsModule, ErrorSummaryComponent],
   providers: [passwordFormFactory],
 })

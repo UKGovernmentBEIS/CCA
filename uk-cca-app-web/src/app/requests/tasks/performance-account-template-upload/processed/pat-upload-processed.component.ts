@@ -19,7 +19,6 @@ import { toSubmissionResultsSummaryData } from './pat-submission-results-summary
 @Component({
   selector: 'cca-pat-processed',
   templateUrl: './pat-upload-processed.component.html',
-  standalone: true,
   imports: [NotificationBannerComponent, ButtonDirective, PendingButtonDirective, SummaryComponent, ErrorTypePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -9,7 +9,6 @@ import { CaExternalContactDTO, CaExternalContactsService } from 'cca-api';
 @Component({
   selector: 'cca-external-contacts',
   templateUrl: './external-contacts.component.html',
-  standalone: true,
   imports: [RouterLink, ButtonDirective, TableComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

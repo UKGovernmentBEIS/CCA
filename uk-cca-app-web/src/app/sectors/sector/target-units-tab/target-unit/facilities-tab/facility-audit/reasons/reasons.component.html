@@ -1,0 +1,34 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    caption="Change"
+    heading="Why should this facility be audited?"
+    submitText="Save and continue"
+    data-testid="audit-form"
+  >
+    <p class="govuk-!-padding-bottom-4">Select the reasons that apply for this audit.</p>
+
+    <h2 class="govuk-heading-m">Audit reasons</h2>
+    <div formControlName="reasons" govuk-checkboxes>
+      @for (option of reasonOptions; track option) {
+        <govuk-checkbox
+          [value]="option"
+          [label]="option | facilityAuditReason"
+          [divider]="option === 'OTHER' ? 'or' : null"
+        />
+      }
+    </div>
+
+    <div
+      govuk-textarea
+      label="Comments"
+      labelSize="medium"
+      hint="Provide further details on your reasons for auditing this facility"
+      formControlName="comments"
+    ></div>
+  </cca-wizard-step>
+
+  <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+  <a class="govuk-link" routerLink="../.." fragment="audit">Return to: {{ facilityInfoDTO?.facilityBusinessId }}</a>
+</div>

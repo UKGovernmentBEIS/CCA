@@ -8,7 +8,6 @@ import { RelatedActionsMap, TASK_RELATED_ACTIONS_MAP } from './related-actions.p
 
 @Component({
   selector: 'netz-related-actions',
-  standalone: true,
   template: `
     <aside class="app-related-items" role="complementary">
       <h2 class="govuk-heading-m" id="subsection-title">Related actions</h2>

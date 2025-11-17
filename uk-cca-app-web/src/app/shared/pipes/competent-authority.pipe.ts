@@ -2,10 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { RequestInfoDTO } from 'cca-api';
 
-@Pipe({
-  name: 'competentAuthority',
-  standalone: true,
-})
+@Pipe({ name: 'competentAuthority' })
 export class CompetentAuthorityPipe implements PipeTransform {
   transform(value: RequestInfoDTO['competentAuthority']): string {
     switch (value) {

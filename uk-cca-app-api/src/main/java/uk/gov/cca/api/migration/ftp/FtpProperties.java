@@ -55,4 +55,24 @@ public class FtpProperties {
     @Valid
     @NotBlank
     private String serverFacilityCertificationSourceFile;
+
+	@Valid
+	@NotBlank
+	private String serverCca3SectorUmbrellaAgreementsDirectory;
+
+    @Valid
+    @NotBlank
+    private String serverCca3ExistingFacilitiesMigrationDirectory;
+
+    @Valid
+    @NotBlank
+    private String serverCca3ExistingFacilitiesMigrationSourceFile;
+
+    @Valid
+    @NotBlank
+    private String serverCca3InProgressFacilitiesMigrationDirectory;
+
+    @Valid
+    @NotBlank
+    private String serverCca3InProgressFacilitiesMigrationSourceFile;
 }

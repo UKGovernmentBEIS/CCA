@@ -9,7 +9,6 @@ describe('DebounceClickDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
-    standalone: true,
     imports: [DebounceClickDirective],
     template: ` <button #button govukDebounceClick (debounceClick)="onClick()">Simple button</button> `,
   })

@@ -32,7 +32,6 @@ import {
 @Component({
   selector: 'cca-edit-operator-details',
   templateUrl: './edit-operator-details.component.html',
-  standalone: true,
   imports: [
     RouterLink,
     PageHeadingComponent,

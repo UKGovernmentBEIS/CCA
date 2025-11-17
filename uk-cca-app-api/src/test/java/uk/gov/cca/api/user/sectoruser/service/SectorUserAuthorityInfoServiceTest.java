@@ -92,10 +92,37 @@ class SectorUserAuthorityInfoServiceTest {
 
         assertTrue(sectorUsersAuthoritiesInfo.isEditable());
         assertThat(sectorUsersAuthoritiesInfo.getAuthorities()).hasSize(1);
-        assertEquals(expectedUserAuthInfo, sectorUsersAuthoritiesInfo.getAuthorities().get(0));
+        assertEquals(expectedUserAuthInfo, sectorUsersAuthoritiesInfo.getAuthorities().getFirst());
 
         verify(sectorAuthorityQueryService, times(1)).getSectorUserAuthorities(authUser, sectorId);
         verify(sectorUserInfoService, times(1)).getSectorUsersInfo(List.of(userId));
+    }
+
+    @Test
+    void getConsultantSectorUsersNoticeRecipients() {
+        final Long sectorId = 1L;
+        final List<SectorUserAuthorityDTO> sectors = List.of(
+                SectorUserAuthorityDTO.builder()
+                        .userId("user_1")
+                        .authorityCreationDate(null)
+                        .contactType(ContactType.CONSULTANT)
+                        .build()
+        );
+        final UserInfoDTO user =  UserInfoDTO.builder().userId("user_1").firstName("fn").lastName("ln").build();
+
+        when(sectorAuthorityQueryService.getActiveSectorUserAuthoritiesByContactType(sectorId, ContactType.CONSULTANT))
+                .thenReturn(sectors);
+        when(sectorUserInfoService.getSectorUsersInfo(List.of("user_1")))
+                .thenReturn(List.of(user));
+
+        // Invoke
+        sectorUserAuthorityInfoService.getConsultantSectorUsersNoticeRecipients(sectorId);
+
+        // Verify
+        verify(sectorAuthorityQueryService, times(1))
+                .getActiveSectorUserAuthoritiesByContactType(sectorId, ContactType.CONSULTANT);
+        verify(sectorUserInfoService, times(1)).getSectorUsersInfo(List.of("user_1"));
+        verify(noticeRecipientMapper, times(1)).toSectorUSerNoticeRecipientDTO(user);
     }
 
     @Test

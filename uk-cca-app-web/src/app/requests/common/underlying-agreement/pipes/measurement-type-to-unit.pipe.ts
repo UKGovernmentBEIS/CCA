@@ -14,10 +14,7 @@ export function transformMeasurementTypeToUnit(value: keyof typeof MeasurementTy
   return text;
 }
 
-@Pipe({
-  name: 'measurementTypeToUnit',
-  standalone: true,
-})
+@Pipe({ name: 'measurementTypeToUnit' })
 export class MeasurementTypeToUnitPipe implements PipeTransform {
   transform = transformMeasurementTypeToUnit;
 }

@@ -10,7 +10,6 @@ import { NotificationBannerComponent } from '@netz/govuk-components';
       <p>This page will automatically update once the files are uploaded.</p>
     </govuk-notification-banner>
   `,
-  standalone: true,
   imports: [NotificationBannerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

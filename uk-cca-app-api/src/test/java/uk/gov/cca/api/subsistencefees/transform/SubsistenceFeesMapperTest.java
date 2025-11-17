@@ -290,7 +290,7 @@ class SubsistenceFeesMapperTest {
     @Test
     void toSubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO() {
         String submitter = "SubmitterFullName";
-        String facilityId = "FACILITY_ID";
+        String facilityBusinessId = "FACILITY_ID";
         String facilityName = "FACILITY_NAME";
         LocalDateTime submissionDate = LocalDateTime.of(2025, 1, 1, 1, 1);
 
@@ -302,13 +302,13 @@ class SubsistenceFeesMapperTest {
 
         FacilityBaseInfoDTO facilityBaseInfo = FacilityBaseInfoDTO.builder()
                 .siteName(facilityName)
-                .facilityId(facilityId)
+                .facilityBusinessId(facilityBusinessId)
                 .build();
 
         SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO expectedDTO = SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO.builder()
                 .markingStatusHistoryList(List.of(subsistenceFeesMoaFacilityMarkingStatusHistoryDTO))
                 .siteName(facilityName)
-                .facilityId(facilityId)
+                .facilityBusinessId(facilityBusinessId)
                 .build();
 
         // invoke

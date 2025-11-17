@@ -25,7 +25,6 @@ import { ADD_TARGETS_FORM, AddTargetsFormModel, addTargetsFormProvider } from '.
 @Component({
   selector: 'cca-add-targets',
   templateUrl: './add-targets.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,

@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CompaniesHouseDetailsComponent should display correct view 1`] = `
+<cca-companies-house-details
+  companiesHouseState={[Function Function]}
+  fieldDiffs={[Function Function]}
+  toggleCompaniesHouseDetails={[Function Function]}
+  tuDetails={[Function Function]}
+>
+  <div
+    class="govuk-grid-column-one-third govuk-!-padding-top-1"
+  >
+    <cca-utility-panel
+      heading="Companies House details"
+    >
+      <div
+        class="utility-panel-container background"
+      >
+        <div
+          class="govuk-grid-row govuk-!-margin-bottom-4 govuk-!-margin-top-0 utility-panel-header background"
+        >
+           Companies House details 
+        </div>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+          data-testid="companies-house-target-unit-details"
+          govuk-summary-list=""
+        >
+          <div
+            class="govuk-summary-list__row"
+            govuksummarylistrow=""
+          >
+            <dd
+              class="govuk-summary-list__value"
+              govuksummarylistrowvalue=""
+            >
+              <span>
+                COMPANY 73388338 LIMITED
+              </span>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+            govuksummarylistrow=""
+          >
+            <dd
+              class="govuk-summary-list__value"
+              govuksummarylistrowvalue=""
+            >
+              <span
+                class="field-diff"
+              >
+                Private limited company
+              </span>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+            govuksummarylistrow=""
+          >
+            <dd
+              class="govuk-summary-list__value"
+              govuksummarylistrowvalue=""
+            >
+              <span
+                class="field-diff"
+              >
+                73388338
+              </span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </cca-utility-panel>
+  </div><div
+    class="govuk-grid-column-one-third govuk-!-padding-top-7"
+  >
+    <cca-utility-panel
+      heading="Companies House details"
+    >
+      <div
+        class="utility-panel-container background"
+      >
+        <div
+          class="govuk-grid-row govuk-!-margin-bottom-4 govuk-!-margin-top-0 utility-panel-header background"
+        >
+           Companies House details 
+        </div>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+          data-testid="companies-house-operator-address"
+          govuk-summary-list=""
+        >
+          <div
+            class="govuk-summary-list__row"
+            govuksummarylistrow=""
+          >
+            <dd
+              class="pre-line govuk-summary-list__value"
+              govuksummarylistrowvalue=""
+            >
+               [object Object] 
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </cca-utility-panel>
+  </div>
+</cca-companies-house-details>
+`;

@@ -11,3 +11,5 @@ export * from './target-periods';
 export * from './variation-details';
 export * from './target-unit-details';
 export * from './provide-evidence-form.provider';
+export * from './split-by-product-table';
+export * from './companies-house-details';

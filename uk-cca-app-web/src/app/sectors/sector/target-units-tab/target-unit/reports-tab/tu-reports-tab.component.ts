@@ -8,7 +8,6 @@ import { PerformanceReportComponent } from './performance-data/performance-repor
 @Component({
   selector: 'cca-tu-reports-tab-component',
   templateUrl: './tu-reports-tab.component.html',
-  standalone: true,
   imports: [PerformanceReportComponent, PatReportComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

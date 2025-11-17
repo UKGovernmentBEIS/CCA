@@ -26,6 +26,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Map;
+
 @ExtendWith(MockitoExtension.class)
 class UnderlyingAgreementVariationCreateDocumentServiceTest {
 
@@ -42,11 +44,11 @@ class UnderlyingAgreementVariationCreateDocumentServiceTest {
     private AccountReferenceDetailsService accountReferenceDetailsService;
 
     @Test
-    void create_proposed_document() {
-
+    void create_proposed_document_CCA2() {
         final String requestId = "1";
         final long accountId = 5L;
         final String businessId = "businessId";
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_2;
         final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder().build();
         final CcaDecisionNotification notification = CcaDecisionNotification.builder()
                 .decisionNotification(DecisionNotification.builder().build())
@@ -56,7 +58,7 @@ class UnderlyingAgreementVariationCreateDocumentServiceTest {
                 .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
                 		.underlyingAgreement(underlyingAgreement)
                 		.build())
-                .underlyingAgreementVersion(100)
+                .underlyingAgreementVersionMap(Map.of(SchemeVersion.CCA_2, 100))
                 .build();
         final Request request = Request.builder().payload(requestPayload).build();
         addResourcesToRequest(accountId, request);
@@ -66,22 +68,57 @@ class UnderlyingAgreementVariationCreateDocumentServiceTest {
         when(requestService.findRequestById(requestId)).thenReturn(request);
         when(accountReferenceDetailsService.getTargetUnitAccountDetails(accountId)).thenReturn(accountDetails);
 
-        service.create(requestId);
+        service.create(requestId, schemeVersion);
         
         verify(requestService, times(1)).findRequestById(requestId);
         verify(accountReferenceDetailsService, times(1)).getTargetUnitAccountDetails(accountId);
         verify(ccaOfficialNoticeGeneratorService, times(1)).generateAsync(request, notification, 
-        		CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_PROPOSED_DOCUMENT,
-        		CcaDocumentTemplateType.UNDERLYING_AGREEMENT,
-        		"businessId Underlying Agreement v101 [proposed].pdf", SchemeVersion.CCA_2);
+        		CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_PROPOSED_DOCUMENT_CCA2,
+        		CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA2,
+        		"businessId CCA2 Underlying Agreement v101 [proposed].pdf", schemeVersion);
     }
 
     @Test
-    void create_final_document() {
-
+    void create_proposed_document_CCA3() {
         final String requestId = "1";
         final long accountId = 5L;
         final String businessId = "businessId";
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
+        final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder().build();
+        final CcaDecisionNotification notification = CcaDecisionNotification.builder()
+                .decisionNotification(DecisionNotification.builder().build())
+                .build();
+        final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
+                .decisionNotification(notification)
+                .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
+                        .underlyingAgreement(underlyingAgreement)
+                        .build())
+                .underlyingAgreementVersionMap(Map.of(SchemeVersion.CCA_3, 100))
+                .build();
+        final Request request = Request.builder().payload(requestPayload).build();
+        addResourcesToRequest(accountId, request);
+
+        TargetUnitAccountDetailsDTO accountDetails = TargetUnitAccountDetailsDTO.builder().businessId(businessId).build();
+
+        when(requestService.findRequestById(requestId)).thenReturn(request);
+        when(accountReferenceDetailsService.getTargetUnitAccountDetails(accountId)).thenReturn(accountDetails);
+
+        service.create(requestId, schemeVersion);
+
+        verify(requestService, times(1)).findRequestById(requestId);
+        verify(accountReferenceDetailsService, times(1)).getTargetUnitAccountDetails(accountId);
+        verify(ccaOfficialNoticeGeneratorService, times(1)).generateAsync(request, notification,
+                CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_PROPOSED_DOCUMENT_CCA3,
+                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA3,
+                "businessId CCA3 Underlying Agreement v101 [proposed].pdf", schemeVersion);
+    }
+
+    @Test
+    void create_final_document_CCA2() {
+        final String requestId = "1";
+        final long accountId = 5L;
+        final String businessId = "businessId";
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_2;
         final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder().build();
         final CcaDecisionNotification notification = CcaDecisionNotification.builder()
                 .decisionNotification(DecisionNotification.builder().build())
@@ -92,7 +129,7 @@ class UnderlyingAgreementVariationCreateDocumentServiceTest {
                         .underlyingAgreement(underlyingAgreement)
                         .build())
                 .underlyingAgreementActivationDetails(UnderlyingAgreementActivationDetails.builder().comments("comments").build())
-                .underlyingAgreementVersion(1)
+                .underlyingAgreementVersionMap(Map.of(SchemeVersion.CCA_2, 100))
                 .build();
         final Request request = Request.builder().payload(requestPayload).build();
         addResourcesToRequest(accountId, request);
@@ -102,14 +139,50 @@ class UnderlyingAgreementVariationCreateDocumentServiceTest {
         when(requestService.findRequestById(requestId)).thenReturn(request);
         when(accountReferenceDetailsService.getTargetUnitAccountDetails(accountId)).thenReturn(accountDetails);
 
-        service.create(requestId);
+        service.create(requestId, schemeVersion);
 
         verify(requestService, times(1)).findRequestById(requestId);
         verify(accountReferenceDetailsService, times(1)).getTargetUnitAccountDetails(accountId);
         verify(ccaOfficialNoticeGeneratorService, times(1)).generateAsync(request, notification,
-                CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_FINAL_DOCUMENT,
-                CcaDocumentTemplateType.UNDERLYING_AGREEMENT,
-                "businessId Underlying Agreement v2.pdf", SchemeVersion.CCA_2);
+                CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_FINAL_DOCUMENT_CCA2,
+                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA2,
+                "businessId CCA2 Underlying Agreement v101.pdf", schemeVersion);
+    }
+
+    @Test
+    void create_final_document_CCA3() {
+        final String requestId = "1";
+        final long accountId = 5L;
+        final String businessId = "businessId";
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
+        final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder().build();
+        final CcaDecisionNotification notification = CcaDecisionNotification.builder()
+                .decisionNotification(DecisionNotification.builder().build())
+                .build();
+        final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
+                .decisionNotification(notification)
+                .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
+                        .underlyingAgreement(underlyingAgreement)
+                        .build())
+                .underlyingAgreementActivationDetails(UnderlyingAgreementActivationDetails.builder().comments("comments").build())
+                .underlyingAgreementVersionMap(Map.of(SchemeVersion.CCA_3, 100))
+                .build();
+        final Request request = Request.builder().payload(requestPayload).build();
+        addResourcesToRequest(accountId, request);
+
+        TargetUnitAccountDetailsDTO accountDetails = TargetUnitAccountDetailsDTO.builder().businessId(businessId).build();
+
+        when(requestService.findRequestById(requestId)).thenReturn(request);
+        when(accountReferenceDetailsService.getTargetUnitAccountDetails(accountId)).thenReturn(accountDetails);
+
+        service.create(requestId, schemeVersion);
+
+        verify(requestService, times(1)).findRequestById(requestId);
+        verify(accountReferenceDetailsService, times(1)).getTargetUnitAccountDetails(accountId);
+        verify(ccaOfficialNoticeGeneratorService, times(1)).generateAsync(request, notification,
+                CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_FINAL_DOCUMENT_CCA3,
+                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA3,
+                "businessId CCA3 Underlying Agreement v101.pdf", schemeVersion);
     }
     
     private void addResourcesToRequest(Long accountId, Request request) {

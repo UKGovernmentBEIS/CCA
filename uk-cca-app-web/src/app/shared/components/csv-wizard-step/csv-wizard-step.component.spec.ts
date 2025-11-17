@@ -14,7 +14,6 @@ describe('CsvWizardStepComponent', () => {
   let element: HTMLElement;
 
   @Component({
-    standalone: true,
     template: `
       <cca-csv-wizard-step
         [formGroup]="formGroup"

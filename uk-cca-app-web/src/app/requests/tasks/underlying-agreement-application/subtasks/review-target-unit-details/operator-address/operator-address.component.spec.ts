@@ -99,7 +99,7 @@ describe('OperatorAddressComponent', () => {
     expect(screen.getByText('Country')).toBeInTheDocument();
   });
 
-  it('should submit form and call saveRequestTaskAction method, then navigate to summary', async () => {
+  it('should submit form and call saveRequestTaskAction method, then navigate to next step', async () => {
     saveRequestTaskActionSpy.mockClear();
     saveRequestTaskActionSpy.mockReturnValue(of({}));
 
@@ -116,7 +116,7 @@ describe('OperatorAddressComponent', () => {
     expect(callArg.requestTaskActionType).toBe('UNDERLYING_AGREEMENT_SAVE_APPLICATION');
 
     // Verify navigation
-    expect(router.navigate).toHaveBeenCalledWith(['../check-your-answers'], { relativeTo: route });
+    expect(router.navigate).toHaveBeenCalledWith(['../responsible-person'], { relativeTo: route });
   });
 
   it('should update operator address when form is filled and submitted', async () => {
@@ -149,6 +149,6 @@ describe('OperatorAddressComponent', () => {
     });
 
     // Verify navigation
-    expect(router.navigate).toHaveBeenCalledWith(['../check-your-answers'], { relativeTo: route });
+    expect(router.navigate).toHaveBeenCalledWith(['../responsible-person'], { relativeTo: route });
   });
 });

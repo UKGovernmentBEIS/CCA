@@ -11,6 +11,7 @@ import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.common.domain.SchemeData;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.AgreementType;
@@ -191,7 +192,7 @@ class UnderlyingAgreementVariationApplicationReasonDataValidatorTest {
                                 .isCoveredByUkets(Boolean.TRUE)
                                 .applicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP)
                                 .previousFacilityId(previousFacilityId)
-                                .facilityAddress(AccountAddressDTO.builder()
+                                .facilityAddress(FacilityAddressDTO.builder()
                                         .line1("Line 1")
                                         .line2("Line 2")
                                         .city("City")

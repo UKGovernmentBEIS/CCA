@@ -24,7 +24,6 @@ import {
 @Component({
   selector: 'cca-sector-user-invitation',
   templateUrl: './sector-user-invitation.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     ErrorSummaryComponent,

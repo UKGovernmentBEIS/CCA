@@ -502,4 +502,94 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_PERM_FACILITY_AUDIT_SUBMISSION_cca_au_role_permission" author="P70311">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission)
+            SELECT nextval('au_role_permission_seq'), id, 'PERM_FACILITY_AUDIT_SUBMISSION'
+            FROM au_role
+            WHERE code IN ('regulator_administrator', 'regulator_basic_user');
+        </sql>
+        <rollback>
+            delete from au_role_permission
+            where permission = 'PERM_FACILITY_AUDIT_SUBMISSION'
+            and role_id in
+            ( select id
+            from au_role
+            where code in ( 'regulator_administrator', 'regulator_basic_user'));
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_populate_regulator_users_with_permission_PERM_FACILITY_AUDIT_SUBMISSION" author="P70311">
+        <sql>
+            insert into au_authority_permission(id, authority_id, permission)
+            select nextval('au_authority_permission_seq'), au.id, 'PERM_FACILITY_AUDIT_SUBMISSION'
+            from au_authority au
+            where au.competent_authority is not null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_authority_permission
+                where permission = 'PERM_FACILITY_AUDIT_SUBMISSION'
+                and authority_id in (select au.id
+                from au_authority au where au.competent_authority is not null);
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_PERM_FACILITY_AUDIT_EDIT_in_cca_au_role_permission" author="vourdoukasd">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission)
+            SELECT nextval('au_role_permission_seq'), r.id, 'PERM_FACILITY_AUDIT_EDIT'
+            FROM au_role r
+            WHERE code IN ('regulator_administrator', 'regulator_basic_user');
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_role_permission
+                where permission = 'PERM_FACILITY_AUDIT_EDIT'
+                and role_id in
+                (select r.id
+                from au_role r
+                where r.code in ('regulator_administrator', 'regulator_basic_user'));
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_PERM_FACILITY_AUDIT_EDIT_in_cca_au_authority_permission" author="vourdoukasd">
+        <sql>
+            insert into au_authority_permission (id, authority_id, "permission")
+            select nextval('au_authority_permission_seq'), aa.id, 'PERM_FACILITY_AUDIT_EDIT'
+            from au_authority aa
+            where aa.code in ('regulator_administrator', 'regulator_basic_user');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_authority_permission
+                WHERE permission = 'PERM_FACILITY_AUDIT_EDIT'
+                AND authority_id in
+                (select aa.id from au_authority aa
+                where aa.code in ('regulator_administrator', 'regulator_basic_user'));
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_PERM_FACILITY_AUDIT_EDIT_to_regulators" author="vourdoukasd">
+        <sql>
+            insert into au_authority_permission (id, authority_id, "permission")
+            select nextval('au_authority_permission_seq'), aa.id, 'PERM_FACILITY_AUDIT_EDIT'
+            from au_authority aa
+            where aa.competent_authority is not null
+              and aa.code is null;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_authority_permission
+                WHERE permission = 'PERM_FACILITY_AUDIT_EDIT'
+                  AND authority_id in
+                (select aa.id from au_authority aa
+                where aa.competent_authority is not null);
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

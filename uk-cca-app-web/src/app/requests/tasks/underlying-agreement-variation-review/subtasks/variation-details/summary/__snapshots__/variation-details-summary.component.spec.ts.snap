@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`VariationDetailsSummaryComponent should display the correct header and caption 1`] = `
 <cca-variation-details-summary
@@ -42,7 +42,9 @@ exports[`VariationDetailsSummaryComponent should display the correct header and 
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Amend the 70% rule evaluation for one or more facilities 
+            <span>
+              Amend the 70% rule evaluation for one or more facilities
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -70,7 +72,9 @@ exports[`VariationDetailsSummaryComponent should display the correct header and 
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             change the throughput unit 
+            <span>
+              change the throughput unit
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -98,7 +102,9 @@ exports[`VariationDetailsSummaryComponent should display the correct header and 
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Variation reason 
+            <span>
+              Variation reason
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -136,7 +142,9 @@ exports[`VariationDetailsSummaryComponent should display the correct header and 
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Accepted 
+            <span>
+              Accepted
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -164,7 +172,9 @@ exports[`VariationDetailsSummaryComponent should display the correct header and 
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Variation details notes 
+            <span>
+              Variation details notes
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"

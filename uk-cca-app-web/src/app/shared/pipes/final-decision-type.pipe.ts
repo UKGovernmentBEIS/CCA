@@ -16,10 +16,7 @@ export function transformAdminTerminationFinalDecisionType(
   return type ? adminTerminationFinalDecisionTypeMap[type] : '';
 }
 
-@Pipe({
-  name: 'finalDecisionType',
-  standalone: true,
-})
+@Pipe({ name: 'finalDecisionType' })
 export class FinalDecisionTypePipe implements PipeTransform {
   transform = transformAdminTerminationFinalDecisionType;
 }

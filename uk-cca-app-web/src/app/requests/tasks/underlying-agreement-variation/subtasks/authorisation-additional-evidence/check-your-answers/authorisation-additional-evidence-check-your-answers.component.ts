@@ -7,6 +7,7 @@ import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import {
+  areEntitiesIdentical,
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
   TaskItemStatus,
   TasksApiService,
@@ -26,7 +27,6 @@ import { extractReviewProps, resetReviewSection } from '../../../utils';
 @Component({
   selector: 'cca-check-your-answers',
   templateUrl: './authorisation-additional-evidence-check-your-answers.component.html',
-  standalone: true,
   imports: [
     ButtonDirective,
     PageHeadingComponent,
@@ -67,19 +67,31 @@ export default class AuthorisationAdditionalEvidenceCheckYourAnswersComponent {
       requestTaskQuery.selectRequestTaskPayload,
     )() as UnderlyingAgreementVariationSubmitRequestTaskPayload;
 
+    const originalPayload = (
+      this.requestTaskStore.select(
+        requestTaskQuery.selectRequestTaskPayload,
+      )() as UnderlyingAgreementVariationSubmitRequestTaskPayload
+    )?.originalUnderlyingAgreementContainer;
+
     const actionPayload = toUnderlyingAgreementVariationSavePayload(payload);
+
+    const currentAdditionalEvidence = actionPayload.authorisationAndAdditionalEvidence;
+    const originalAdditionalEvidence = originalPayload?.underlyingAgreement?.authorisationAndAdditionalEvidence;
+    const areIdentical = areEntitiesIdentical(currentAdditionalEvidence, originalAdditionalEvidence);
 
     const currentSectionsCompleted =
       this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)() || {};
 
     const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
-      draft[AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK] = TaskItemStatus.COMPLETED;
+      draft[AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK] = areIdentical
+        ? TaskItemStatus.UNCHANGED
+        : TaskItemStatus.COMPLETED;
     });
 
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
 
     const reviewProps = extractReviewProps(this.requestTaskStore);
-    const resetedProps = resetReviewSection(reviewProps, AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK);
+    const resetedProps = resetReviewSection(reviewProps, AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK, areIdentical);
 
     const dto = createRequestTaskActionProcessDTO(requestTaskId, actionPayload, sectionsCompleted, {
       ...reviewProps,

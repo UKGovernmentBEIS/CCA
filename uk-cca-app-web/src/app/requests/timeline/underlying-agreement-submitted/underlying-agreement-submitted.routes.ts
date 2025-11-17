@@ -24,9 +24,21 @@ export const UNDERLYING_AGREEMENT_SUBMITTED_ROUTES: Routes = [
     children: [
       {
         path: ':facilityId',
-        title: 'Facility',
-        data: { backlink: '../../manage-facilities', breadcrumb: false },
-        loadComponent: () => import('@requests/common').then((c) => c.FacilitySubmittedComponent),
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            title: 'Facility',
+            data: { backlink: '../../manage-facilities', breadcrumb: false },
+            loadComponent: () => import('@requests/common').then((c) => c.FacilitySubmittedComponent),
+          },
+          {
+            path: 'products',
+            title: 'View Products',
+            data: { breadcrumb: false, backlink: '../' },
+            loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsTimelineComponent),
+          },
+        ],
       },
     ],
   },

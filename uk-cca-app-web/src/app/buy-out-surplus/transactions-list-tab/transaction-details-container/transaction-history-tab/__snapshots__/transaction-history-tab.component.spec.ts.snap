@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`TransactionHistoryTabComponent should show summary values 1`] = `
 <cca-transaction-history-tab
@@ -114,7 +114,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     Under appeal 
+                    <span>
+                      Under appeal
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -131,7 +133,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     under appeal giwrgos test 
+                    <span>
+                      under appeal giwrgos test
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -263,7 +267,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     12.22 
+                    <span>
+                      12.22
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -280,7 +286,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     test 
+                    <span>
+                      test
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -396,7 +404,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     12.22 
+                    <span>
+                      12.22
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -413,7 +423,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     test 
+                    <span>
+                      test
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -529,7 +541,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     Awaiting payment 
+                    <span>
+                      Awaiting payment
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -546,7 +560,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     Not provided 
+                    <span>
+                      Not provided
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -656,7 +672,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     Not required 
+                    <span>
+                      Not required
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -673,7 +691,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     6543 
+                    <span>
+                      6543
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -783,7 +803,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     Under appeal 
+                    <span>
+                      Under appeal
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -800,7 +822,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     ytr 
+                    <span>
+                      ytr
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -910,7 +934,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     Awaiting payment 
+                    <span>
+                      Awaiting payment
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -927,7 +953,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     Not provided 
+                    <span>
+                      Not provided
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -1037,7 +1065,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     Awaiting payment 
+                    <span>
+                      Awaiting payment
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -1054,7 +1084,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     Not provided 
+                    <span>
+                      Not provided
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -1164,7 +1196,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     Awaiting payment 
+                    <span>
+                      Awaiting payment
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -1181,7 +1215,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     Not provided 
+                    <span>
+                      Not provided
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -1291,7 +1327,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     Under appeal 
+                    <span>
+                      Under appeal
+                    </span>
                   </dd>
                 </div>
                 <div
@@ -1308,7 +1346,9 @@ exports[`TransactionHistoryTabComponent should show summary values 1`] = `
                     class="govuk-summary-list__value"
                     govuksummarylistrowvalue=""
                   >
-                     gdf 
+                    <span>
+                      gdf
+                    </span>
                   </dd>
                 </div>
                 <div

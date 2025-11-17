@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod5Details;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
@@ -90,6 +91,7 @@ class UnderlyingAgreementVariationActivationMapperTest {
                 .name("una.pdf")
                 .uuid(uuid.toString())
                 .build();
+        Map<SchemeVersion, FileInfoDTO> documentMap = Map.of(SchemeVersion.CCA_2, document);
 
         UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
                 .payloadType(CcaRequestPayloadType.UNDERLYING_AGREEMENT_REQUEST_PAYLOAD)
@@ -105,7 +107,7 @@ class UnderlyingAgreementVariationActivationMapperTest {
                                 .facilityStatus(FacilityStatus.NEW)
                                 .build()))
                 .underlyingAgreementAttachments(attachments)
-                .underlyingAgreementDocument(document)
+                .underlyingAgreementDocuments(documentMap)
                 .sectionsCompleted(sectionsCompleted)
                 .underlyingAgreementActivationDetails(details)
                 .underlyingAgreementActivationAttachments(activationAttachments)
@@ -122,7 +124,7 @@ class UnderlyingAgreementVariationActivationMapperTest {
         assertThat(actionPayload.getDefaultContacts()).isEqualTo(defaultContacts);
         assertThat(actionPayload.getUnderlyingAgreementAttachments()).containsExactlyInAnyOrderEntriesOf(attachments);
         assertThat(actionPayload.getUnderlyingAgreementActivationAttachments()).containsExactlyInAnyOrderEntriesOf(activationAttachments);
-        assertThat(actionPayload.getUnderlyingAgreementDocument()).isEqualTo(document);
+        assertThat(actionPayload.getUnderlyingAgreementDocuments()).isEqualTo(documentMap);
         assertThat(actionPayload.getReviewSectionsCompleted()).isEmpty();
         assertThat(actionPayload.getReviewGroupDecisions()).isEmpty();
         assertThat(actionPayload.getReviewAttachments()).isEmpty();

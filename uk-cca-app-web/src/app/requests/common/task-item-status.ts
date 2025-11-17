@@ -6,4 +6,5 @@ export enum TaskItemStatus {
   ACCEPTED = 'ACCEPTED',
   REJECTED = 'REJECTED',
   UNDECIDED = 'UNDECIDED',
+  UNCHANGED = 'UNCHANGED',
 }

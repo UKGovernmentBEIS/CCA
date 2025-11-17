@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`AuditComponent should display correct view 1`] = `
+<cca-audit-summary
+  activatedRoute={[Function Object]}
+  audit={[Function Function]}
+  availableWorkflows={[Function Function]}
+  data={[Function Function]}
+  facilityAuditControllerService={[Function _FacilityAuditControllerService]}
+  facilityId={[Function String]}
+  inProgressFacilityAuditTask={[Function Function]}
+  requestsService={[Function _RequestsService]}
+>
+  <div
+    class="govuk-!-width-two-thirds"
+  >
+  </div><cca-summary>
+    <h2
+      class="undefined"
+    >
+      Facility audit
+    </h2>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      data-testid="facility-audit"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Should this facility be considered for audit?
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+          </span>
+        </dd>
+      </div>
+    </dl>
+  </cca-summary>
+</cca-audit-summary>
+`;

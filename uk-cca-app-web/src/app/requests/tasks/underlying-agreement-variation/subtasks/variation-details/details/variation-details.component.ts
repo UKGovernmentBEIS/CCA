@@ -31,7 +31,6 @@ import {
 @Component({
   selector: 'cca-variation-details',
   templateUrl: './variation-details.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,

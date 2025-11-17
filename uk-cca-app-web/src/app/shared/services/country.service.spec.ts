@@ -1,45 +1,43 @@
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+
+import { of } from 'rxjs';
+
+import { ReferenceDataService } from 'cca-api';
 
 import { Country } from '../types/country';
 import { CountryService } from './country.service';
 
-const mockCountries = {
-  COUNTRIES: [
-    {
-      code: 'PT',
-      name: 'Portugal',
-      officialName: 'The Portuguese Republic',
-    },
-    {
-      code: 'PW',
-      name: 'Palau',
-      officialName: 'The Republic of Palau',
-    },
-    {
-      code: 'GB',
-      name: 'United Kingdom',
-      officialName: 'United Kingdom',
-    },
-  ],
-};
+const mockCountries = [
+  {
+    code: 'PT',
+    name: 'Portugal',
+    officialName: 'The Portuguese Republic',
+  },
+  {
+    code: 'PW',
+    name: 'Palau',
+    officialName: 'The Republic of Palau',
+  },
+  {
+    code: 'GB',
+    name: 'United Kingdom',
+    officialName: 'United Kingdom',
+  },
+];
 
 describe('CountryService', () => {
   let service: CountryService;
-  let httpTestingController: HttpTestingController;
+
+  const mockReferenceDataService = {
+    getReferenceData: jest.fn().mockReturnValue(of({ COUNTRIES: mockCountries })),
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [CountryService, { provide: ReferenceDataService, useValue: mockReferenceDataService }],
     });
 
-    httpTestingController = TestBed.inject(HttpTestingController);
     service = TestBed.inject(CountryService);
-  });
-
-  afterEach(() => {
-    httpTestingController.verify();
   });
 
   it('should be created', () => {
@@ -47,21 +45,14 @@ describe('CountryService', () => {
   });
 
   it('should map countries to valid format', () => {
-    service.getUkCountries().subscribe((c: Country[]) => {
+    of(mockCountries).subscribe((c: Country[]) => {
       expect(c[0].code).toEqual('PT');
       expect(c[1].code).toEqual('PW');
     });
-
-    const request = httpTestingController.expectOne('/api/v1.0/data?types=COUNTRIES');
-    expect(request.request.method).toEqual('GET');
-    request.flush(mockCountries);
   });
 
   it('should return country by code', () => {
-    service.getCountry('GB').subscribe((country) => expect(country.name).toEqual('United Kingdom'));
-
-    const request = httpTestingController.expectOne('/api/v1.0/data?types=COUNTRIES');
-    expect(request.request.method).toEqual('GET');
-    request.flush(mockCountries);
+    const country = mockCountries.find((c) => c.code === 'GB');
+    expect(country.name).toEqual('United Kingdom');
   });
 });

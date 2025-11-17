@@ -14,8 +14,7 @@ import {
 } from 'cca-api';
 
 import { boolToString } from '../../utils';
-import { AgreementCompositionTypePipe, MeasurementTypeToUnitPipe } from '../pipes';
-import { MeasurementTypeToOptionTextPipe } from '../pipes';
+import { AgreementCompositionTypePipe, MeasurementTypeToOptionTextPipe, MeasurementTypeToUnitPipe } from '../pipes';
 import { getBaselineUnits, getMeasurementAndThroughputUnits } from '../target-periods';
 import { BaseLineAndTargetsStep } from '../types';
 import { addDecisionSummaryData } from './decision-summary-data';
@@ -79,18 +78,7 @@ export function toBaselineAndTargetsSummaryDataWithDecision(
 ) {
   let factory = new SummaryFactory();
 
-  if (!isTp5Period) {
-    factory = targetPeriodSummaryData(
-      factory,
-      sectorSchemeData,
-      targetPeriodDetails,
-      attachments.submit,
-      isEditable,
-      downloadUrl,
-    );
-
-    return addDecisionSummaryData(factory, decision, attachments.review, isEditable, downloadUrl).create();
-  } else {
+  if (isTp5Period) {
     factory
       .addSection('', `../${BaseLineAndTargetsStep.BASELINE_EXISTS}`)
       .addRow(
@@ -103,7 +91,11 @@ export function toBaselineAndTargetsSummaryDataWithDecision(
       );
 
     if (!baselineExists) {
-      return addDecisionSummaryData(factory, decision, attachments.review, isEditable, downloadUrl).create();
+      if (decision?.type) {
+        return addDecisionSummaryData(factory, decision, attachments.review, isEditable, downloadUrl).create();
+      }
+
+      return factory.create();
     }
 
     factory = targetPeriodSummaryData(
@@ -114,6 +106,21 @@ export function toBaselineAndTargetsSummaryDataWithDecision(
       isEditable,
       downloadUrl,
     );
+
+    if (!decision?.type) return factory.create();
+
+    return addDecisionSummaryData(factory, decision, attachments.review, isEditable, downloadUrl).create();
+  } else {
+    factory = targetPeriodSummaryData(
+      factory,
+      sectorSchemeData,
+      targetPeriodDetails,
+      attachments.submit,
+      isEditable,
+      downloadUrl,
+    );
+
+    if (!decision?.type) return factory.create();
 
     return addDecisionSummaryData(factory, decision, attachments.review, isEditable, downloadUrl).create();
   }
@@ -304,7 +311,7 @@ function addBaselineDataSection(
       },
     )
     .addRow(
-      'Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?',
+      'Must the Special Reporting Methodology be applied for this facility?',
       boolToString(baselineData?.usedReportingMechanism),
       {
         change: isEditable,
@@ -332,7 +339,7 @@ function addBaselineDataSection(
   }
 
   factory.addRow(
-    'Baseline energy to carbon factor (kgC/kWh)',
+    `Baseline energy to carbon factor (kgC/${measurementTypeToUnit.transform(targetComposition.measurementType)})`,
     decimalPipe.transform(baselineData?.energyCarbonFactor, '1.0-7'),
     {
       change: isEditable,

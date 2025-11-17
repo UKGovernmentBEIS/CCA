@@ -6,5 +6,6 @@ import lombok.experimental.UtilityClass;
 public class CcaScope {
 	
     public static final String EDIT_SECTOR_ASSOCIATION = "EDIT_SECTOR_ASSOCIATION";
-    
+
+	public static final String EDIT_AUDIT_DATA = "EDIT_AUDIT_DATA";
 }

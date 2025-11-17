@@ -1,0 +1,36 @@
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { SummaryComponent } from '@shared/components';
+
+import { preAuditReviewQuery } from '../../../pre-audit-review.selectors';
+import { toPreAuditReviewRequestedDocumentsSummaryData } from '../pre-audit-review-requested-documents-summary-data';
+
+@Component({
+  selector: 'cca-pre-audit-review-requested-documents-summary',
+  template: `
+    <netz-page-heading caption="Requested documents">Summary</netz-page-heading>
+    <cca-summary [data]="data()" />
+
+    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+    <netz-return-to-task-or-action-page />
+  `,
+  imports: [PageHeadingComponent, ReturnToTaskOrActionPageComponent, SummaryComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class PreAuditReviewRequestedDocumentsSummaryComponent {
+  private readonly requestTaskStore = inject(RequestTaskStore);
+
+  private readonly auditReasonDetails = this.requestTaskStore.select(preAuditReviewQuery.selectPreAuditReviewDetails);
+  private readonly attachments = this.requestTaskStore.select(preAuditReviewQuery.selectFacilityAuditAttachments);
+
+  protected readonly data = computed(() =>
+    toPreAuditReviewRequestedDocumentsSummaryData(
+      this.auditReasonDetails()?.requestedDocuments,
+      this.attachments(),
+      this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+      '../../file-download',
+    ),
+  );
+}

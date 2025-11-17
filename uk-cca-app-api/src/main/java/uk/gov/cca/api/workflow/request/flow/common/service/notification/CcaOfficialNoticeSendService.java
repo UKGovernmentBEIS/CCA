@@ -32,6 +32,7 @@ import uk.gov.netz.api.workflow.request.core.domain.Request;
 
 @Service
 @RequiredArgsConstructor
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class CcaOfficialNoticeSendService {
 
     private final AccountReferenceDetailsService accountReferenceDetailsService;
@@ -56,9 +57,16 @@ public class CcaOfficialNoticeSendService {
                 .orElseThrow(() -> new BusinessException(CcaErrorCode.SECTOR_ASSOCIATION_NO_CONTACT_FOUND));
         ccRecipientsEmails.add(sectorContact.getEmail());
 
-        // Find to List, remove duplicates in case responsible and administrative email is the same
+        // Add Sector Consultants to cc List if exist
+        defaultNoticeRecipients.stream()
+                .filter(recipient -> recipient.getRecipientType().equals(NoticeRecipientType.SECTOR_CONSULTANT))
+                .forEach(recipient -> ccRecipientsEmails.add(recipient.getEmail()));
+
+        // Find to List, remove duplicates in case responsible and administrative email is the same and exclude specific recipient types
+        List<NoticeRecipientType> excludedFromToRecipients = List.of(NoticeRecipientType.SECTOR_CONTACT,
+                NoticeRecipientType.SECTOR_CONSULTANT);
         final Set<String> toRecipientsEmails = defaultNoticeRecipients.stream()
-                .filter(recipient -> !recipient.getRecipientType().equals(NoticeRecipientType.SECTOR_CONTACT))
+                .filter(recipient -> !excludedFromToRecipients.contains(recipient.getRecipientType()))
                 .map(DefaultNoticeRecipient::getEmail)
                 .collect(Collectors.toSet());
 

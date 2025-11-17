@@ -5,7 +5,7 @@ import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective, WarningTextComponent } from '@netz/govuk-components';
-import { MANAGE_FACILITIES_SUBTASK, TasksApiService, underlyingAgreementQuery } from '@requests/common';
+import { TasksApiService, underlyingAgreementQuery } from '@requests/common';
 import { produce } from 'immer';
 
 import {
@@ -20,7 +20,6 @@ import { extractReviewProps, removeFacilityReviewSection } from '../../../utils'
 @Component({
   selector: 'cca-facility-item-delete',
   templateUrl: './facility-item-delete.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, RouterLink, ButtonDirective, PendingButtonDirective, WarningTextComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -50,7 +49,6 @@ export class FacilityItemDeleteComponent {
     // Update sections completed
     const currentSectionsCompleted = this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)();
     const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
-      draft[MANAGE_FACILITIES_SUBTASK] = 'IN_PROGRESS';
       delete draft[this.facilityId];
     });
 

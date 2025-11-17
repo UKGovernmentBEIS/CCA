@@ -1160,7 +1160,6 @@ After each subtask:
 @Component({
   selector: 'app-facility-details',
   templateUrl: './facility-details.component.html',
-  standalone: true,
   imports: [SharedModule, AddressInputComponent],
   providers: [facilityItemFormProvider('facilityDetails')],
 })

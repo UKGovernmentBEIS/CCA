@@ -31,7 +31,6 @@ import { GovukTextWidthClass, HTMLInputType } from './text-input.type';
 @Component({
   selector: 'div[govuk-text-input]',
   templateUrl: './text-input.component.html',
-  standalone: true,
   imports: [ErrorMessageComponent, NgClass, NgTemplateOutlet],
   providers: [DecimalPipe],
   schemas: [NO_ERRORS_SCHEMA],

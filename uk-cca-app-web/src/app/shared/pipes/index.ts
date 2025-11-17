@@ -1,8 +1,10 @@
+export * from './address.pipe';
 export * from './action-type-to-breadcrumb.pipe';
 export * from './competent-authority.pipe';
 export * from './contact-type.pipe';
 export * from './duration-pipe';
 export * from './final-decision-type.pipe';
+export * from './facility-audit-reason.pipe';
 export * from './include.pipe';
 export * from './marking-of-facilities-status.pipe';
 export * from './notice-recipients-type.pipe';
@@ -19,3 +21,4 @@ export * from './submit-if-empty.pipe';
 export * from './target-type.pipe';
 export * from './text-ellipsis.pipe';
 export * from './tpr-version.pipe';
+export * from './workflow-type.pipe';

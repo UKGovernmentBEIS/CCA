@@ -17,7 +17,6 @@ import { toSummaryData } from './operator-details-summary-helper';
       <a class="govuk-link" routerLink="/2fa/change" fragment="target-units"> Reset two factor authentication </a>
     }
   `,
-  standalone: true,
   imports: [RouterLink, PageHeadingComponent, SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

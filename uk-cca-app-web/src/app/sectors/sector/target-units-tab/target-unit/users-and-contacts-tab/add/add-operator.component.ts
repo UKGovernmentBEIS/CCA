@@ -25,7 +25,6 @@ type ContactType = CcaOperatorUserInvitationDTO['contactType'];
 @Component({
   selector: 'cca-add-operator',
   templateUrl: './add-operator.component.html',
-  standalone: true,
   imports: [
     ErrorSummaryComponent,
     TextInputComponent,

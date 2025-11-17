@@ -101,17 +101,12 @@ class UnderlyingAgreementVariationReviewDeterminationSubmittedServiceTest {
         service.acceptUnderlyingAgreementVariation(requestId);
 
         // Verify
-        verify(requestService, times(1))
-                .findRequestById(requestId);
-        verify(resolver, times(1))
-                .getUsersInfo(ccaDecisionNotification, request);
-        verify(officialNoticeSendService, times(1))
-                .getOfficialNoticeToDefaultRecipients(request);
-        verify(generateDocumentsService, times(1))
-        		.generateDocuments(requestId);
-        verify(officialNoticeService, times(1))
-                .sendOfficialNotice(requestId);
-        verify(requestService, times(1))
-                .addActionToRequest(request, actionPayload, CcaRequestActionType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACCEPTED, regulator);
+        verify(requestService, times(1)).findRequestById(requestId);
+        verify(resolver, times(1)).getUsersInfo(ccaDecisionNotification, request);
+        verify(officialNoticeSendService, times(1)).getOfficialNoticeToDefaultRecipients(request);
+        verify(generateDocumentsService, times(1)).generateDocuments(requestId);
+        verify(officialNoticeService, times(1)).sendOfficialNotice(requestId);
+        verify(requestService, times(1)).addActionToRequest(
+        		request, actionPayload, CcaRequestActionType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACCEPTED, regulator);
     }
 }

@@ -8,7 +8,6 @@ import { FormErrorDirective } from './form-error.directive';
 
 describe('FormErrorDirective', () => {
   @Component({
-    standalone: true,
     imports: [ReactiveFormsModule, FormErrorDirective],
     template: `
       <div>

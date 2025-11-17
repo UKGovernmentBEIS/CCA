@@ -31,39 +31,41 @@ class CcaRequestCreateValidatorServiceTest {
 
     @Test
     void validate() {
-        final Long sectorId = 1L;
+        final Long resourceId = 1L;
+        final String resourceType = CcaResourceType.SECTOR_ASSOCIATION;
         final Set<String> mutuallyExclusiveRequestsTypes = Set.of("DUMMY_REQUEST_TYPE");
 
-        when(requestQueryService.findInProgressRequestsByResource(sectorId, CcaResourceType.SECTOR_ASSOCIATION)).thenReturn(
+        when(requestQueryService.findInProgressRequestsByResource(resourceId, resourceType)).thenReturn(
                 List.of(Request.builder().type(RequestType.builder().code("another").build()).build())
         );
 
         // Invoke
         RequestCreateValidationResult result = validatorService
-                .validate(sectorId, mutuallyExclusiveRequestsTypes);
+                .validate(resourceId, resourceType, mutuallyExclusiveRequestsTypes);
 
         // Verify
         assertThat(result).isEqualTo(RequestCreateValidationResult.builder().valid(true).build());
-        verify(requestQueryService, times(1)).findInProgressRequestsByResource(sectorId, CcaResourceType.SECTOR_ASSOCIATION);
+        verify(requestQueryService, times(1)).findInProgressRequestsByResource(resourceId, resourceType);
     }
 
     @Test
     void validate_whenConflicts_thenFail() {
-        final Long sectorId = 1L;
+    	final Long resourceId = 1L;
+        final String resourceType = CcaResourceType.SECTOR_ASSOCIATION;
         final Set<String> mutuallyExclusiveRequestsTypes = Set.of("DUMMY_REQUEST_TYPE");
 
-        when(requestQueryService.findInProgressRequestsByResource(sectorId, CcaResourceType.SECTOR_ASSOCIATION)).thenReturn(
+        when(requestQueryService.findInProgressRequestsByResource(resourceId, resourceType)).thenReturn(
                 List.of(Request.builder().type(RequestType.builder().code("DUMMY_REQUEST_TYPE").build()).build())
         );
 
         // Invoke
         RequestCreateValidationResult result = validatorService
-                .validate(sectorId, mutuallyExclusiveRequestsTypes);
+                .validate(resourceId, resourceType, mutuallyExclusiveRequestsTypes);
 
         // Verify
         assertThat(result).isEqualTo(RequestCreateValidationResult.builder().valid(false)
                 .reportedRequestTypes(Set.of("DUMMY_REQUEST_TYPE")).build());
 
-        verify(requestQueryService, times(1)).findInProgressRequestsByResource(sectorId, CcaResourceType.SECTOR_ASSOCIATION);
+        verify(requestQueryService, times(1)).findInProgressRequestsByResource(resourceId, resourceType);
     }
 }

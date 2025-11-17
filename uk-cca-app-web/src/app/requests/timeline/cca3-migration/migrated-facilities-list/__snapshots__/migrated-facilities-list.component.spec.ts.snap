@@ -1,0 +1,202 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`MigratedFacilitiesListComponent should show proper view 1`] = `
+<cca-migrated-facilities-list
+  activatedRoute={[Function ActivatedRouteStub]}
+  currentPage={[Function Function]}
+  mappedFacilities={[Function Function]}
+  migratedFacilities={[Function Function]}
+  pageSize={[Function Function]}
+  paginatedItems={[Function Function]}
+  router={[Function _Router]}
+  sortedFacilityItems={[Function Function]}
+  sorting={[Function Function]}
+  tableColumns={[Function Array]}
+>
+  <h3
+    class="govuk-heading-m"
+  >
+    Facilities migrated
+  </h3><div
+    class="govuk-grid-row"
+    data-testid="facilities-search"
+  >
+    <div
+      class="govuk-grid-column-full"
+    >
+      <govuk-table>
+        <table
+          class="govuk-table"
+        >
+          <thead
+            class="govuk-table__head"
+          >
+            <tr
+              class="govuk-table__row"
+            >
+              <th
+                class="govuk-table__header"
+                scope="col"
+              >
+                 Site name 
+              </th>
+              <th
+                class="govuk-table__header"
+                scope="col"
+              >
+                 Facility ID 
+              </th>
+              <th
+                class="govuk-table__header"
+                scope="col"
+              >
+                 Scheme participation 
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class="govuk-table__body"
+          >
+            <tr
+              class="govuk-table__row"
+            >
+              <td
+                class="govuk-table__cell"
+              >
+                <a
+                  class="govuk-link"
+                  href="/"
+                >
+                  fac1-1-1
+                </a>
+              </td>
+              <td
+                class="govuk-table__cell"
+              >
+                 ADS_1-F00001 
+              </td>
+              <td
+                class="govuk-table__cell"
+              >
+                 Both 
+              </td>
+            </tr>
+            <tr
+              class="govuk-table__row"
+            >
+              <td
+                class="govuk-table__cell"
+              >
+                <a
+                  class="govuk-link"
+                  href="/"
+                >
+                  fac1-1-2
+                </a>
+              </td>
+              <td
+                class="govuk-table__cell"
+              >
+                 ADS_1-F00002 
+              </td>
+              <td
+                class="govuk-table__cell"
+              >
+                 CCA2 
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </govuk-table>
+      <cca-pagination>
+        <nav
+          aria-label="Pagination navigation"
+          class="govuk-pagination"
+        >
+          <p
+            class="govuk-visually-hidden"
+          >
+            Pagination navigation
+          </p>
+          <div
+            class="govuk-grid-row row-flex govuk-!-margin-right-3 govuk-!-margin-left-3 pagination-items-row"
+          >
+            <label
+              class="govuk-label govuk-!-margin-right-3"
+              for="pageSize"
+            >
+               Rows per page 
+            </label>
+            <form
+              class="ng-untouched ng-pristine ng-valid"
+              novalidate=""
+            >
+              <div
+                class="govuk-form-group"
+              >
+                <select
+                  class="govuk-select ng-untouched ng-pristine ng-valid"
+                  formcontrolname="pageSize"
+                  id="pageSize"
+                  name="pageSize"
+                  style="min-width: fit-content;"
+                  tabindex="0"
+                >
+                  <option
+                    value="10"
+                  >
+                    10
+                  </option>
+                  <option
+                    value="20"
+                  >
+                    20
+                  </option>
+                  <option
+                    value="30"
+                  >
+                    30
+                  </option>
+                  <option
+                    value="40"
+                  >
+                    40
+                  </option>
+                  <option
+                    value="50"
+                  >
+                    50
+                  </option>
+                  <option
+                    value="100"
+                  >
+                    100
+                  </option>
+                </select>
+              </div>
+            </form>
+            <p
+              class="govuk-!-margin-left-3 govuk-!-margin-right-3"
+              id="show-items"
+            >
+               Showing 
+              <strong>
+                1
+              </strong>
+               to 
+              <strong>
+                2
+              </strong>
+               from 
+              <strong>
+                2
+              </strong>
+               results 
+            </p>
+          </div>
+        </nav>
+      </cca-pagination>
+    </div>
+  </div>
+</cca-migrated-facilities-list>
+`;

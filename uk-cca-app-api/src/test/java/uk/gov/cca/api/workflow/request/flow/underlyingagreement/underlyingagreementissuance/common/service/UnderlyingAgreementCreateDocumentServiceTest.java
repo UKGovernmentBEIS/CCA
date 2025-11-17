@@ -71,9 +71,9 @@ class UnderlyingAgreementCreateDocumentServiceTest {
         verify(requestService, times(1)).findRequestById(requestId);
         verify(accountReferenceDetailsService, times(1)).getTargetUnitAccountDetails(accountId);
         verify(ccaOfficialNoticeGeneratorService, times(1)).generateAsync(request, notification, 
-        		CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACCEPTED_PROPOSED_DOCUMENT,
-        		CcaDocumentTemplateType.UNDERLYING_AGREEMENT,
-        		"businessId Underlying Agreement v1 [proposed].pdf", SchemeVersion.CCA_2);
+        		CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACCEPTED_PROPOSED_DOCUMENT_CCA2,
+        		CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA2,
+        		"businessId CCA2 Underlying Agreement v1 [proposed].pdf", SchemeVersion.CCA_2);
     }
     
     @Test
@@ -106,9 +106,9 @@ class UnderlyingAgreementCreateDocumentServiceTest {
         verify(requestService, times(1)).findRequestById(requestId);
         verify(accountReferenceDetailsService, times(1)).getTargetUnitAccountDetails(accountId);
         verify(ccaOfficialNoticeGeneratorService, times(1)).generateAsync(request, notification, 
-        		CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACTIVATED_FINAL_DOCUMENT,
-        		CcaDocumentTemplateType.UNDERLYING_AGREEMENT,
-        		"businessId Underlying Agreement v1.pdf", SchemeVersion.CCA_2);
+        		CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACTIVATED_FINAL_DOCUMENT_CCA2,
+        		CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA2,
+        		"businessId CCA2 Underlying Agreement v1.pdf", SchemeVersion.CCA_2);
     }
     
     private void addResourcesToRequest(Long accountId, Request request) {

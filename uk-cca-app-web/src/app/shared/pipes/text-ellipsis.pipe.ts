@@ -1,9 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'textEllipsis',
-  standalone: true,
-})
+@Pipe({ name: 'textEllipsis' })
 export class TextEllipsisPipe implements PipeTransform {
   transform(value: string | null, numOfChars = 100): unknown {
     if (numOfChars && value?.length > numOfChars) {

@@ -34,7 +34,7 @@ public class FacilityInfoServiceOrchestrator {
     private static final FacilityCertificationDTO NOT_YET_DEFINED =
             FacilityCertificationDTO.builder().certificationStatus(FacilityCertificationStatus.NOT_YET_DEFINED).build();
 
-    public FacilityInfoDTO getFacilityInfo(String facilityId) {
+    public FacilityInfoDTO getFacilityInfo(Long facilityId) {
 
         FacilityDataDetailsDTO facilityDetails = facilityDataQueryService.getFacilityData(facilityId);
 
@@ -53,7 +53,7 @@ public class FacilityInfoServiceOrchestrator {
         return FACILITY_INFO_MAPPER.toFacilityInfoDTO(facilityDetails, facilityCertificationDetails);
     }
 
-    public void updateFacilityCertificationStatus(String facilityId,
+    public void updateFacilityCertificationStatus(Long facilityId,
                                                   FacilityCertificationStatusUpdateDTO statusUpdateDTO) {
 
         facilityCertificationService

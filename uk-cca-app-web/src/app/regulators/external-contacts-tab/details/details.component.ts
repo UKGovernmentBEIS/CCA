@@ -20,7 +20,6 @@ import { ActiveExternalContactStore } from '../active-external-contact.store';
 @Component({
   selector: 'cca-external-contact-details',
   templateUrl: './details.component.html',
-  standalone: true,
   imports: [
     ErrorSummaryComponent,
     PageHeadingComponent,

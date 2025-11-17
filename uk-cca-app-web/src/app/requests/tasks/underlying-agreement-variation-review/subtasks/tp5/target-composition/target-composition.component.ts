@@ -19,8 +19,10 @@ import {
   AgreementCompositionTypeEnum,
   AgreementCompositionTypePipe,
   applyTp5TargetCompositionSideEffect,
+  areEntitiesIdentical,
   BaselineAndTargetPeriodsSubtasks,
   BaseLineAndTargetsStep,
+  filterFieldsWithFalsyValues,
   isTargetPeriodWizardCompleted,
   MeasurementTypeEnum,
   OVERALL_DECISION_SUBTASK,
@@ -39,10 +41,10 @@ import {
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
-import { TargetComposition } from 'cca-api';
+import { TargetComposition, UnderlyingAgreementVariationReviewSavePayload } from 'cca-api';
 
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../transform';
-import { resetDetermination } from '../../../utils';
+import { deleteDecision, resetDetermination } from '../../../utils';
 import {
   TARGET_COMPOSITION_FORM,
   TargetCompositionFormModel,
@@ -52,7 +54,6 @@ import {
 @Component({
   selector: 'cca-target-composition',
   templateUrl: './target-composition.component.html',
-  standalone: true,
   imports: [
     FormsModule,
     RadioComponent,
@@ -98,15 +99,13 @@ export class TargetCompositionComponent {
 
   protected readonly sectorAssociationThroughputUnit = this.form.controls.sectorAssociationThroughputUnit.value;
 
-  protected readonly isAgreementCompositionTypeNovem = computed(() => {
-    return this.agreementCompositionTypeValue() === 'NOVEM';
-  });
+  protected readonly isAgreementCompositionTypeNovem = computed(() => this.agreementCompositionTypeValue() === 'NOVEM');
 
   protected readonly transformMeasurementType = transformMeasurementType;
 
-  protected readonly showDifferentThroughputUnitControls = computed(() => {
-    return !!this.sectorAssociationThroughputUnit && !!this.targetUnitThroughputMeasuredDiffers();
-  });
+  protected readonly showDifferentThroughputUnitControls = computed(
+    () => !!this.sectorAssociationThroughputUnit && !!this.targetUnitThroughputMeasuredDiffers(),
+  );
 
   protected getSingleFileDownloadUrl(uuid: string) {
     return ['../../../file-download', uuid];
@@ -142,29 +141,31 @@ export class TargetCompositionComponent {
       requestTaskQuery.selectRequestTaskPayload,
     )() as UNAVariationReviewRequestTaskPayload;
 
+    const originalPayload = (
+      this.store.select(requestTaskQuery.selectRequestTaskPayload)() as UNAVariationReviewRequestTaskPayload
+    )?.originalUnderlyingAgreementContainer;
+
     const actionPayload = toUnderlyingAgreementVariationReviewSavePayload(payload);
 
     const isTargetUnitThroughputMeasured = this.form.controls.isTargetUnitThroughputMeasured.value;
     const sectorThroughputUnit = this.form.controls.sectorAssociationThroughputUnit?.value;
 
-    // Direct form to payload mapping
-    let updatedPayload = produce(actionPayload, (draft) => {
-      draft.targetPeriod5Details.details.targetComposition = {
-        calculatorFile: this.form.controls.calculatorFile.value?.uuid ?? null,
-        measurementType: this.form.controls.measurementType.value,
-        agreementCompositionType: this.form.controls.agreementCompositionType.value,
-        isTargetUnitThroughputMeasured,
-        throughputUnit:
-          isTargetUnitThroughputMeasured === false && !!sectorThroughputUnit
-            ? sectorThroughputUnit
-            : this.form.controls.throughputUnit.value,
-        conversionFactor: this.form.controls.conversionFactor.value,
-        conversionEvidences: this.form.controls.conversionEvidences.value?.map((f) => f.uuid) || [],
-      };
-    });
+    let updatedPayload = updateTargetComposition(
+      actionPayload,
+      this.form,
+      isTargetUnitThroughputMeasured,
+      sectorThroughputUnit,
+    );
 
-    // Apply side effects separately
     updatedPayload = applyTp5TargetCompositionSideEffect(updatedPayload);
+
+    const originalTP5 = filterFieldsWithFalsyValues(originalPayload?.underlyingAgreement?.targetPeriod5Details);
+    const currentTP5 = filterFieldsWithFalsyValues(updatedPayload?.targetPeriod5Details);
+
+    const areIdentical = areEntitiesIdentical(currentTP5, originalTP5);
+
+    const currentDecisions = this.store.select(underlyingAgreementReviewQuery.selectReviewGroupDecisions)();
+    const decisions = areIdentical ? deleteDecision(currentDecisions, 'TARGET_PERIOD5_DETAILS') : currentDecisions;
 
     const currentReviewSectionsCompleted = this.store.select(
       underlyingAgreementReviewQuery.selectReviewSectionsCompleted,
@@ -183,14 +184,45 @@ export class TargetCompositionComponent {
     const dto = createSaveActionDTO(requestTaskId, updatedPayload, {
       determination,
       reviewSectionsCompleted,
+      reviewGroupDecisions: decisions,
+      facilitiesReviewGroupDecisions: this.store.select(
+        underlyingAgreementReviewQuery.selectFacilityReviewGroupDecisions,
+      )(),
     });
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe((payload: UNAVariationReviewRequestTaskPayload) => {
       const wizardCompleted = isTargetPeriodWizardCompleted(payload.underlyingAgreement.targetPeriod5Details.details);
+      const shouldNavigateToDecision = !areIdentical && wizardCompleted;
 
-      wizardCompleted
-        ? this.router.navigate(['../decision'], { relativeTo: this.activatedRoute })
-        : this.router.navigate(['../', BaseLineAndTargetsStep.ADD_BASELINE_DATA], { relativeTo: this.activatedRoute });
+      const targetPath = shouldNavigateToDecision
+        ? '../decision'
+        : wizardCompleted
+          ? '../check-your-answers'
+          : `../${BaseLineAndTargetsStep.ADD_BASELINE_DATA}`;
+
+      this.router.navigate([targetPath], { relativeTo: this.activatedRoute });
     });
   }
+}
+
+function updateTargetComposition(
+  actionPayload: UnderlyingAgreementVariationReviewSavePayload,
+  form: TargetCompositionFormModel,
+  isTargetUnitThroughputMeasured: boolean,
+  sectorThroughputUnit: string | null,
+): UnderlyingAgreementVariationReviewSavePayload {
+  return produce(actionPayload, (draft) => {
+    draft.targetPeriod5Details.details.targetComposition = {
+      calculatorFile: form.controls.calculatorFile.value?.uuid ?? null,
+      measurementType: form.controls.measurementType.value,
+      agreementCompositionType: form.controls.agreementCompositionType.value,
+      isTargetUnitThroughputMeasured,
+      throughputUnit:
+        isTargetUnitThroughputMeasured === false && !!sectorThroughputUnit
+          ? sectorThroughputUnit
+          : String(form.controls.throughputUnit.value),
+      conversionFactor: String(form.controls.conversionFactor.value),
+      conversionEvidences: form.controls.conversionEvidences.value?.map((f) => f.uuid) || [],
+    };
+  });
 }

@@ -15,7 +15,6 @@ import { GovukTextWidthClass } from './select.type';
 */
 @Component({
   selector: 'div[govuk-select]',
-  standalone: true,
   templateUrl: './select.component.html',
   imports: [ReactiveFormsModule, NgClass, ErrorMessageComponent],
 })

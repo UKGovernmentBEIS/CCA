@@ -36,7 +36,7 @@ public class SubsistenceFeesUtility {
                         Collectors.collectingAndThen(
                                 toList(),
                                 list -> list.stream()
-                                        .sorted(Comparator.comparing(EligibleFacilityDTO::getFacilityId))
+                                        .sorted(Comparator.comparing(EligibleFacilityDTO::getFacilityBusinessId))
                                         .toList())));
 
         final List<FacilitiesTemplateData> lineItems = new ArrayList<>();
@@ -56,7 +56,7 @@ public class SubsistenceFeesUtility {
 
             accountFacilities.forEach(facility -> lineItems.add(
                     FacilitiesTemplateData.builder()
-                            .id(facility.getFacilityId())
+                            .id(facility.getFacilityBusinessId())
                             .name(facility.getSiteName())
                             .period(String.valueOf(chargingYear))
                             .build()));
@@ -72,11 +72,11 @@ public class SubsistenceFeesUtility {
         final List<FacilitiesTemplateData> lineItems = new ArrayList<>();
         AtomicInteger accountLineIdx = new AtomicInteger(1);
         facilities.stream()
-                .sorted(Comparator.comparing(EligibleFacilityDTO::getFacilityId))
+                .sorted(Comparator.comparing(EligibleFacilityDTO::getFacilityBusinessId))
                 .forEach(facility -> {
                     lineItems.add(FacilitiesTemplateData.builder()
                             .groupId(String.format("%03d", accountLineIdx.get()))
-                            .id(facility.getFacilityId())
+                            .id(facility.getFacilityBusinessId())
                             .name(facility.getSiteName())
                             .amount(facilityFee.setScale(2, RoundingMode.UNNECESSARY))
                             .period(String.valueOf(chargingYear))

@@ -8,7 +8,7 @@ import { pipe, switchMap, tap } from 'rxjs';
 
 import { CheckboxComponent, CheckboxesComponent } from '@netz/govuk-components';
 import { PaginationComponent } from '@shared/components';
-import { PerformanceOutcomePipe, StatusColorPipe, StatusPipe, TprVersionPipe } from '@shared/pipes';
+import { PerformanceOutcomePipe, StatusColorPipe, StatusPipe, TprVersionPipe, WorkflowTypePipe } from '@shared/pipes';
 import { HistoryCategory } from '@shared/types';
 
 import { RequestDetailsSearchResults, type RequestSearchCriteria, RequestsService } from 'cca-api';
@@ -26,7 +26,6 @@ const DEFAULT_PAGE_SIZE = 10;
 @Component({
   selector: 'cca-workflow-history-tab',
   templateUrl: './workflow-history-tab.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -39,6 +38,7 @@ const DEFAULT_PAGE_SIZE = 10;
     StatusPipe,
     TprVersionPipe,
     PerformanceOutcomePipe,
+    WorkflowTypePipe,
   ],
   providers: [WorkflowHistoryTabFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -118,7 +118,7 @@ export class WorkflowHistoryTabComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.state().pageSize) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   private fetchWorkflows(requestSearchCriteria: RequestSearchCriteria) {

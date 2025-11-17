@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FacilityDetailsComponent should render the form with the correct initial values 1`] = `
 <cca-facility-details
@@ -234,51 +234,14 @@ exports[`FacilityDetailsComponent should render the form with the correct initia
           >
             Facility address
           </h2>
-          <div
-            class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
-            formcontrolname="sameAddress"
-            govuk-checkboxes=""
-          >
-            <fieldset
-              class="govuk-fieldset"
-              govukfieldset=""
-              id="sameAddress"
-            >
-              <legend
-                class="govuk-fieldset__legend govuk-fieldset__legend--l"
-                govuklegend=""
-                id="l.sameAddress"
-              >
-              </legend>
-              <div
-                class="govuk-checkboxes"
-              >
-                <div
-                  class="govuk-checkboxes__item"
-                >
-                  <input
-                    aria-describedby="sameAddress-0-item-hint"
-                    class="govuk-checkboxes__input"
-                    id="sameAddress-0"
-                    name="sameAddress"
-                    type="checkbox"
-                    value="true"
-                  />
-                  <label
-                    class="govuk-label govuk-checkboxes__label"
-                    for="sameAddress-0"
-                  >
-                     The facility address is the same as target unit address 
-                  </label>
-                </div>
-              </div>
-            </fieldset>
-          </div>
+          <p>
+            The facility address must be in England, Scotland, Wales or Northern Ireland
+          </p>
           <div
             class="ng-untouched ng-pristine ng-invalid"
             formgroupname="facilityAddress"
           >
-            <cca-account-address-input>
+            <cca-facility-address-input>
               <div
                 autocomplete="address-line1"
                 class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
@@ -395,7 +358,6 @@ exports[`FacilityDetailsComponent should render the form with the correct initia
                 />
               </div>
               <div
-                ccacountries=""
                 class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
                 formcontrolname="country"
                 govuk-select=""
@@ -417,7 +379,7 @@ exports[`FacilityDetailsComponent should render the form with the correct initia
                 >
                 </select>
               </div>
-            </cca-account-address-input>
+            </cca-facility-address-input>
           </div>
         </div>
         <button

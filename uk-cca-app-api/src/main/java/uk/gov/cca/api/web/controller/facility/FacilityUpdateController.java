@@ -50,7 +50,7 @@ public class FacilityUpdateController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#facilityId")
     public ResponseEntity<Void> updateFacilitySchemeExitDate(
-            @PathVariable("facilityId") @Parameter(description = "The facility id") String facilityId,
+            @PathVariable("facilityId") @Parameter(description = "The facility id") Long facilityId,
             @RequestBody @Valid @Parameter(description = "The updated scheme exit date", required = true) UpdateFacilitySchemeExitDateDTO updateFacilitySchemeExitDateDTO) {
 
         facilityDataUpdateService.updateFacilitySchemeExitDate(facilityId, updateFacilitySchemeExitDateDTO.getSchemeExitDate());
@@ -68,7 +68,7 @@ public class FacilityUpdateController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#facilityId")
     public ResponseEntity<Void> updateFacilityCertificationStatus(
-            @PathVariable @NotNull @Parameter(description = "The facility business id") String facilityId,
+            @PathVariable @NotNull @Parameter(description = "The facility id") Long facilityId,
             @RequestBody @Valid @Parameter(description = "The updated certification status") FacilityCertificationStatusUpdateDTO facilityCertificationStatusUpdateDTO) {
 
         facilityInfoServiceOrchestrator.updateFacilityCertificationStatus(facilityId, facilityCertificationStatusUpdateDTO);

@@ -2,12 +2,17 @@ package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagree
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.underlyingagreement.utils.UnderlyingAgreementCalculateSchemeVersionsUtil;
+import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransformationMapper;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.notification.DocumentTemplateUnderlyingAgreementParamsProvider;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateWorkflowParamsProvider;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 @Component
@@ -16,6 +21,7 @@ public class UnderlyingAgreementVariationActivatedDocumentTemplateWorkflowParams
         DocumentTemplateWorkflowParamsProvider<UnderlyingAgreementVariationRequestPayload> {
 
     private final DocumentTemplateUnderlyingAgreementParamsProvider documentTemplateUnderlyingAgreementParamsProvider;
+    private final DocumentTemplateTransformationMapper documentTemplateTransformationMapper;
 
     @Override
     public String getContextActionType() {
@@ -24,12 +30,20 @@ public class UnderlyingAgreementVariationActivatedDocumentTemplateWorkflowParams
 
     @Override
     public Map<String, Object> constructParams(UnderlyingAgreementVariationRequestPayload payload) {
-        final int version = payload.getUnderlyingAgreementVersion() + 1;
-
-        UnderlyingAgreementTargetUnitDetails targetUnitDetails = payload.getUnderlyingAgreementProposed()
+        final UnderlyingAgreementTargetUnitDetails targetUnitDetails = payload.getUnderlyingAgreementProposed()
                 .getUnderlyingAgreementTargetUnitDetails();
+        final Map<SchemeVersion, Integer> versionMap = payload.getUnderlyingAgreementVersionMap();
 
-        return documentTemplateUnderlyingAgreementParamsProvider
-                .constructTargetUnitDetailsTemplateParams(targetUnitDetails, version);
+        Map<String, Object> params = documentTemplateUnderlyingAgreementParamsProvider
+                .constructTargetUnitDetailsTemplateParams(targetUnitDetails);
+
+        Map<SchemeVersion, Integer> activatedVersionMap = new EnumMap<>(SchemeVersion.class);
+        UnderlyingAgreementCalculateSchemeVersionsUtil
+                .calculateSchemeVersionsFromActiveFacilities(payload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities())
+                .forEach(version -> activatedVersionMap.put(version, versionMap.getOrDefault(version, 0)  + 1));
+
+        params.put("versionMap", documentTemplateTransformationMapper.constructVersionMap(activatedVersionMap));
+
+        return params;
     }
 }

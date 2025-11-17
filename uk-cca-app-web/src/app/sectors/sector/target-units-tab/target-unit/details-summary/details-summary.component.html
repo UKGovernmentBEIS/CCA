@@ -1,0 +1,347 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h3 class="govuk-heading-m">Details</h3>
+  </div>
+
+  <div class="govuk-grid-column-one-third">
+    <div class="govuk-form-group">
+      <fieldset class="govuk-fieldset">
+        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+          <div class="govuk-checkboxes__item">
+            <input
+              [formControl]="toggleCompaniesHouseDetailsCtrl"
+              class="govuk-checkboxes__input"
+              id="toggleCompaniesHouseDetails"
+              name="toggleCompaniesHouseDetails"
+              type="checkbox"
+              [value]="toggleCompaniesHouseDetails()"
+            />
+            <label class="govuk-label govuk-checkboxes__label" for="toggleCompaniesHouseDetails">
+              Show Companies House details
+            </label>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+</div>
+
+<cca-scheme-details
+  [downloadURL]="downloadURL()"
+  [mainColumnClass]="mainColumnClass()"
+  [cca2Details]="cca2UnderlyingAgreementDetails()"
+  [cca3Details]="cca3UnderlyingAgreementDetails()"
+/>
+
+<!-- TARGET UIT DETAILS SECTION -->
+<div class="govuk-grid-row">
+  <div [class]="mainColumnClass()">
+    <h2>Target unit details</h2>
+
+    <dl govuk-summary-list [attr.data-testid]="'target-unit-details'">
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Operator name</dt>
+        <dd govukSummaryListRowValue>
+          <span [class]="getDiffClass(fieldDiffs()?.name)">
+            {{ tuDetails().name }}
+          </span>
+        </dd>
+        <dd govukSummaryListRowActions></dd>
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Operator type</dt>
+        <dd govukSummaryListRowValue>
+          <span [class]="getDiffClass(fieldDiffs()?.operatorType)">
+            {{ tuDetails().operatorType | operatorType }}
+          </span>
+        </dd>
+        <dd govukSummaryListRowActions></dd>
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Company number</dt>
+        <dd govukSummaryListRowValue>
+          <span [class]="getDiffClass(fieldDiffs()?.companyRegistrationNumber)">{{
+            tuDetails().companyRegistrationNumber ?? 'Not provided'
+          }}</span>
+        </dd>
+        <dd govukSummaryListRowActions></dd>
+      </div>
+
+      @if (tuDetails().registrationNumberMissingReason) {
+        <div govukSummaryListRow>
+          <dt govukSummaryListRowKey>Reason for not having a registration number</dt>
+          <dd govukSummaryListRowValue>
+            <span>{{ tuDetails().registrationNumberMissingReason }}</span>
+          </dd>
+          <dd govukSummaryListRowActions>
+            <a class="govuk-link" [routerLink]="'edit/details'">Change</a>
+          </dd>
+        </div>
+      }
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Standard industrial classification (SIC) codes</dt>
+        <dd govukSummaryListRowValue>
+          <span [class]="getDiffClass(fieldDiffs()?.sicCodes)">{{ tuDetails().sicCodes }}</span>
+        </dd>
+        @if (isEditableData().isEditable) {
+          <dd govukSummaryListRowActions>
+            <a class="govuk-link" [routerLink]="'edit/details'">Change</a>
+          </dd>
+        }
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Subsector</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ subsectorAssociation()?.name }}</span>
+        </dd>
+        <dd govukSummaryListRowActions></dd>
+      </div>
+    </dl>
+  </div>
+
+  @if (toggleCompaniesHouseDetails()) {
+    <div class="govuk-grid-column-one-third">
+      <cca-utility-panel heading="Companies House details" [isFullBackground]="true">
+        @if (companiesHouseState().details) {
+          <dl govuk-summary-list [attr.data-testid]="'companies-house-target-unit-details'">
+            <div govukSummaryListRow>
+              <dd govukSummaryListRowValue>
+                <span [class]="getDiffClass(fieldDiffs()?.name)">{{ companiesHouseState().details?.name }}</span>
+              </dd>
+            </div>
+
+            <div govukSummaryListRow>
+              <dd govukSummaryListRowValue>
+                <span [class]="getDiffClass(fieldDiffs()?.operatorType)">{{
+                  companiesHouseState().details?.operatorType
+                }}</span>
+              </dd>
+            </div>
+
+            <div govukSummaryListRow>
+              <dd govukSummaryListRowValue>
+                <span [class]="getDiffClass(fieldDiffs()?.companyRegistrationNumber)">{{
+                  companiesHouseState().details?.registrationNumber
+                }}</span>
+              </dd>
+            </div>
+
+            <div govukSummaryListRow>
+              <dd govukSummaryListRowValue>
+                <span [class]="getDiffClass(fieldDiffs()?.sicCodes)">{{
+                  companiesHouseState().details?.sicCodes
+                }}</span>
+              </dd>
+            </div>
+          </dl>
+        } @else if (companiesHouseState().error === 404) {
+          <p>The company number was not found at the Companies House</p>
+        } @else {
+          <p>The Companies House is currently unavailable</p>
+        }
+      </cca-utility-panel>
+    </div>
+  }
+</div>
+
+<!-- FINANCIAL INDEPENDENCE SECTION -->
+<div class="govuk-grid-row">
+  <div [class]="mainColumnClass()">
+    <h2>Financial independence</h2>
+
+    <dl govuk-summary-list [attr.data-testid]="'financial-independence'">
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Status</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ tuDetails().financialIndependenceStatus | status }}</span>
+        </dd>
+        @if (isEditableData().isEditable) {
+          <dd govukSummaryListRowActions>
+            <a class="govuk-link" [routerLink]="'edit/financial-independence'">Change</a>
+          </dd>
+        }
+      </div>
+    </dl>
+  </div>
+</div>
+
+<!-- OPERATOR ADDRESS SECTION -->
+<div class="govuk-grid-row">
+  <div [class]="mainColumnClass()">
+    <h2>Operator address</h2>
+
+    <dl govuk-summary-list [attr.data-testid]="'operator-address'">
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Address</dt>
+        <dd govukSummaryListRowValue class="pre-line" [class]="getDiffClass(fieldDiffs()?.address)">
+          {{ addresses().operator }}
+        </dd>
+        <dd govukSummaryListRowActions></dd>
+      </div>
+    </dl>
+  </div>
+
+  @if (toggleCompaniesHouseDetails() && companiesHouseState().details) {
+    <div class="govuk-grid-column-one-third">
+      <cca-utility-panel heading="Companies House details" [isFullBackground]="true">
+        <dl govuk-summary-list [attr.data-testid]="'companies-house-operator-address'">
+          <div govukSummaryListRow>
+            <dd govukSummaryListRowValue class="pre-line" [class]="getDiffClass(fieldDiffs()?.address)">
+              {{ companiesHouseState().address }}
+            </dd>
+          </div>
+        </dl>
+      </cca-utility-panel>
+    </div>
+  }
+</div>
+
+<!-- PRESPONSIBLE PERSON SECTION -->
+<div class="govuk-grid-row">
+  <div [class]="mainColumnClass()">
+    <h2>Responsible Person</h2>
+
+    <dl govuk-summary-list [attr.data-testid]="'responsible-person'">
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>First name</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ responsiblePerson().firstName }}</span>
+        </dd>
+        <dd govukSummaryListRowActions></dd>
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Last name</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ responsiblePerson().lastName }}</span>
+        </dd>
+        <dd govukSummaryListRowActions></dd>
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Job title</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ responsiblePerson().jobTitle }}</span>
+        </dd>
+        @if (isEditableData().isEditable) {
+          <dd govukSummaryListRowActions>
+            <a class="govuk-link" [routerLink]="'edit/responsible-person'">Change</a>
+          </dd>
+        }
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Email address</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ responsiblePerson().email }}</span>
+        </dd>
+        <dd govukSummaryListRowActions></dd>
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Phone number</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ phoneNumbers().responsiblePerson }}</span>
+        </dd>
+        @if (isEditableData().isEditable) {
+          <dd govukSummaryListRowActions>
+            <a class="govuk-link" [routerLink]="'edit/responsible-person'">Change</a>
+          </dd>
+        }
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Address</dt>
+        <dd govukSummaryListRowValue class="pre-line">
+          {{ addresses().responsiblePerson }}
+        </dd>
+        <dd govukSummaryListRowActions></dd>
+      </div>
+    </dl>
+  </div>
+</div>
+
+<!-- ADMINISTRATIVE CONTACT SECTION -->
+<div class="govuk-grid-row">
+  <div [class]="mainColumnClass()">
+    <h2>Administrative contact details</h2>
+
+    <dl govuk-summary-list [attr.data-testid]="'administrative-contact-details'">
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>First name</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ administrativePerson().firstName }}</span>
+        </dd>
+        @if (isEditableData().isEditable) {
+          <dd govukSummaryListRowActions>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+          </dd>
+        }
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Last name</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ administrativePerson().lastName }}</span>
+        </dd>
+        @if (isEditableData().isEditable) {
+          <dd govukSummaryListRowActions>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+          </dd>
+        }
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Job title</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ administrativePerson().jobTitle }}</span>
+        </dd>
+        @if (isEditableData().isEditable) {
+          <dd govukSummaryListRowActions>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+          </dd>
+        }
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Email address</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ administrativePerson().email }}</span>
+        </dd>
+        @if (isEditableData().isEditable) {
+          <dd govukSummaryListRowActions>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+          </dd>
+        }
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Phone number</dt>
+        <dd govukSummaryListRowValue>
+          <span>{{ phoneNumbers().administrativePerson }}</span>
+        </dd>
+        @if (isEditableData().isEditable) {
+          <dd govukSummaryListRowActions>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+          </dd>
+        }
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Address</dt>
+        <dd govukSummaryListRowValue class="pre-line">
+          {{ addresses().administrativePerson }}
+        </dd>
+        @if (isEditableData().isEditable) {
+          <dd govukSummaryListRowActions>
+            <a class="govuk-link" [routerLink]="'edit/administrative-contact'">Change</a>
+          </dd>
+        }
+      </div>
+    </dl>
+  </div>
+</div>

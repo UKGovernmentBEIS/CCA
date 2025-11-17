@@ -7,6 +7,9 @@ import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import {
+  areEntitiesIdentical,
+  isCCA3Scheme,
+  resetFacilityNonComparisonFields,
   TaskItemStatus,
   TasksApiService,
   toFacilitySummaryDataWithStatus,
@@ -14,6 +17,7 @@ import {
   underlyingAgreementVariationQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
+import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
@@ -25,7 +29,6 @@ import { extractReviewProps, resetFacilityReviewSection } from '../../../../util
 @Component({
   selector: 'cca-facility-check-answers',
   templateUrl: './facility-check-answers.component.html',
-  standalone: true,
   imports: [
     SummaryComponent,
     PageHeadingComponent,
@@ -51,11 +54,27 @@ export default class FacilityCheckAnswersComponent {
     this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId))(),
   );
 
+  private readonly originalFacility = computed(() =>
+    this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalFacility(this.facilityId))(),
+  );
+
+  private readonly schemeVersion = computed(() =>
+    isCCA3Scheme(this.facility()?.facilityDetails?.participatingSchemeVersions)
+      ? SchemeVersion.CCA_3
+      : SchemeVersion.CCA_2,
+  );
+
+  private readonly sectorSchemeData = computed(() =>
+    this.requestTaskStore.select(
+      underlyingAgreementQuery.selectSectorAssociationDetailsSchemeData(this.schemeVersion()),
+    )(),
+  );
+
   protected readonly summaryDataOriginal = computed(() =>
     toFacilitySummaryDataWithStatus(
-      this.facility().status === 'NEW'
-        ? this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId))()
-        : this.requestTaskStore.select(underlyingAgreementVariationQuery.selectOriginalFacility(this.facilityId))(),
+      this.facility().status === 'NEW' ? this.facility() : this.originalFacility(),
+      this.sectorSchemeData(),
+      this.facility()?.facilityDetails?.participatingSchemeVersions,
       this.facility().status === 'NEW'
         ? this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)()
         : this.requestTaskStore.select(
@@ -69,7 +88,9 @@ export default class FacilityCheckAnswersComponent {
 
   protected readonly summaryDataCurrent = computed(() =>
     toFacilitySummaryDataWithStatus(
-      this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId))(),
+      this.facility(),
+      this.sectorSchemeData(),
+      this.facility()?.facilityDetails?.participatingSchemeVersions,
       this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)(),
       this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
       this.downloadUrl,
@@ -82,19 +103,37 @@ export default class FacilityCheckAnswersComponent {
       requestTaskQuery.selectRequestTaskPayload,
     )() as UnderlyingAgreementVariationSubmitRequestTaskPayload;
 
+    const originalPayload = (
+      this.requestTaskStore.select(
+        requestTaskQuery.selectRequestTaskPayload,
+      )() as UnderlyingAgreementVariationSubmitRequestTaskPayload
+    )?.originalUnderlyingAgreementContainer;
+
     const actionPayload = toUnderlyingAgreementVariationSavePayload(payload);
+
+    const currentFacility = actionPayload.facilities?.find((f) => f.facilityId === this.facilityId);
+    const originalFacility = originalPayload?.underlyingAgreement?.facilities?.find(
+      (f) => f.facilityId === this.facilityId,
+    );
+
+    const areIdentical = originalFacility
+      ? areEntitiesIdentical(
+          resetFacilityNonComparisonFields(currentFacility),
+          resetFacilityNonComparisonFields(originalFacility),
+        )
+      : false;
+
     const currentSectionsCompleted =
       this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)() || {};
 
-    // Mark facility as completed
     const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
-      draft[this.facilityId] = TaskItemStatus.COMPLETED;
+      draft[this.facilityId] = areIdentical ? TaskItemStatus.UNCHANGED : TaskItemStatus.COMPLETED;
     });
 
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
 
     const reviewProps = extractReviewProps(this.requestTaskStore);
-    const resetedProps = resetFacilityReviewSection(reviewProps, this.facilityId);
+    const resetedProps = resetFacilityReviewSection(reviewProps, this.facilityId, areIdentical);
 
     const dto = createRequestTaskActionProcessDTO(requestTaskId, actionPayload, sectionsCompleted, {
       ...reviewProps,
@@ -102,7 +141,7 @@ export default class FacilityCheckAnswersComponent {
     });
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['../../../..'], { relativeTo: this.activatedRoute });
+      this.router.navigate(['../..'], { relativeTo: this.activatedRoute });
     });
   }
 }

@@ -13,7 +13,6 @@ import { BuyoutAndSurplusTabStore } from '../buyout-and-surplus-tab.store';
 @Component({
   selector: 'cca-edit-surplus-on-hold',
   templateUrl: './edit-on-hold.component.html',
-  standalone: true,
   imports: [ButtonDirective, FormsModule, RadioComponent, RadioOptionComponent, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -10,7 +10,6 @@ import { toAdminTerminationFinalDecisionSubmittedTimelineSummaryData } from './a
 @Component({
   selector: 'cca-admin-termination-final-decision-submited-timeline',
   template: `<cca-summary [data]="data" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

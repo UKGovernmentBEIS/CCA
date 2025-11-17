@@ -5,13 +5,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
 import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.common.domain.SchemeData;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.underlyingagreement.config.UnderlyingAgreementConfig;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
@@ -19,18 +19,22 @@ import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.AgreementType;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.ApplicationReasonType;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Apply70Rule;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.Cca3FacilityBaselineAndTargets;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.EligibilityDetailsAndAuthorisation;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.Cca3FacilityBaselineAndTargets;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityBaselineData;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityBaselineEnergyConsumption;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityExtent;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityTargetComposition;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityTargets;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductStatus;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductVariableEnergyConsumptionData;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.RegulatorNameType;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.TargetImprovementType;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.VariableEnergyDepictionType;
 import uk.gov.netz.api.common.domain.PhoneNumberDTO;
 import uk.gov.netz.api.files.attachments.service.FileAttachmentService;
 import uk.gov.netz.api.files.common.FileType;
@@ -39,6 +43,7 @@ import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,13 +57,16 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_AGREEMENT_COMPOSITION_TYPE;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_EVIDENCE_ATTACHMENT_TYPE;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT_STATUS;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ID;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_ON_OWNERSHIP_CHANGE;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_TARGETS;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_PREVIOUS_FACILITY_ID;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_CALCULATOR_ATTACHMENT_TYPE;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_UNIT_TYPE;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_UNIQUE_PRODUCT_NAME;
 
 @ExtendWith(MockitoExtension.class)
 class UnderlyingAgreementFacilityValidatorServiceTest {
@@ -71,7 +79,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
 
     @Mock
     private FacilityDataQueryService facilityDataQueryService;
-    
+
     @Mock
     private UnderlyingAgreementConfig underlyingAgreementConfig;
 
@@ -83,7 +91,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -94,19 +102,19 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .build();
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
-        
+
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
         // Verify
         assertThat(violations).isEmpty();
         verify(facilityDataQueryService, times(1))
-                .isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
         verifyNoMoreInteractions(facilityDataQueryService);
@@ -121,7 +129,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         facility.getFacilityItem().getFacilityDetails().setParticipatingSchemeVersions(Set.of(SchemeVersion.CCA_2));
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -158,7 +166,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -169,19 +177,19 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .build();
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(true);
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(true);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
-        
+
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
         // Verify
         assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(INVALID_FACILITY_ID.getMessage());
         verify(facilityDataQueryService, times(1))
-                .isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
         verifyNoMoreInteractions(facilityDataQueryService);
@@ -195,7 +203,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final Facility facility = createFacility(FacilityStatus.LIVE, evidenceFile, calculatorFile);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -211,7 +219,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
-        
+
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
@@ -232,7 +240,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -243,7 +251,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .build();
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.PDF.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
@@ -255,7 +263,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         // Verify
         assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(INVALID_EVIDENCE_ATTACHMENT_TYPE.getMessage());
         verify(facilityDataQueryService, times(1))
-                .isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
         verifyNoMoreInteractions(facilityDataQueryService);
@@ -272,7 +280,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         facility.getFacilityItem().getFacilityDetails().setPreviousFacilityId(previousFacilityId);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -283,7 +291,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .build();
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
@@ -299,7 +307,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         // Verify
         assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(INVALID_PREVIOUS_FACILITY_ID.getMessage());
         verify(facilityDataQueryService, times(1))
-                .isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
         verify(facilityDataQueryService, times(1)).isActiveFacility(previousFacilityId);
@@ -315,7 +323,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -326,7 +334,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .build();
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
@@ -338,7 +346,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         // Verify
         assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(INVALID_TARGET_UNIT_TYPE.getMessage());
         verify(facilityDataQueryService, times(1))
-                .isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
         verifyNoMoreInteractions(facilityDataQueryService);
@@ -353,7 +361,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         facility.getFacilityItem().getCca3BaselineAndTargets().getTargetComposition().setAgreementCompositionType(AgreementCompositionType.RELATIVE);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -364,7 +372,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .build();
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
@@ -376,7 +384,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         // Verify
         assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(INVALID_AGREEMENT_COMPOSITION_TYPE.getMessage());
         verify(facilityDataQueryService, times(1))
-                .isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
         verifyNoMoreInteractions(facilityDataQueryService);
@@ -390,7 +398,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -401,7 +409,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .build();
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
@@ -413,7 +421,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         // Verify
         assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(INVALID_TARGET_CALCULATOR_ATTACHMENT_TYPE.getMessage());
         verify(facilityDataQueryService, times(1))
-                .isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
         verifyNoMoreInteractions(facilityDataQueryService);
@@ -431,7 +439,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         ));
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -442,19 +450,19 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .build();
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
-        
+
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
         // Verify
         assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(INVALID_FACILITY_TARGETS.getMessage());
         verify(facilityDataQueryService, times(1))
-                .isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
         verifyNoMoreInteractions(facilityDataQueryService);
@@ -469,7 +477,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         facility.getFacilityItem().getFacilityDetails().setParticipatingSchemeVersions(Set.of(SchemeVersion.CCA_2));
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -480,7 +488,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .build();
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
@@ -493,7 +501,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage)
                 .containsExactly(INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME.getMessage());
         verify(facilityDataQueryService, times(1))
-                .isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
         verifyNoMoreInteractions(facilityDataQueryService);
@@ -511,7 +519,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         facility.getFacilityItem().getFacilityDetails().setPreviousFacilityId(previousFacilityId);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -522,7 +530,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .build();
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
@@ -539,7 +547,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage)
                 .containsExactly(INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_ON_OWNERSHIP_CHANGE.getMessage());
         verify(facilityDataQueryService, times(1))
-                .isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
         verify(facilityDataQueryService, times(1)).isActiveFacility(previousFacilityId);
@@ -556,7 +564,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         facility.getFacilityItem().setCca3BaselineAndTargets(null);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -567,7 +575,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .build();
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
 
@@ -577,7 +585,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         // Verify
         assertThat(violations).isEmpty();
         verify(facilityDataQueryService, times(1))
-                .isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verifyNoMoreInteractions(facilityDataQueryService);
     }
@@ -590,7 +598,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
                 .build();
 
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
@@ -601,7 +609,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 .build();
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
 
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
@@ -615,39 +623,39 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                 INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME.getMessage(),
                 INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME.getMessage());
         verify(facilityDataQueryService, times(1))
-                .isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
         verifyNoMoreInteractions(facilityDataQueryService);
     }
-    
+
     @Test
     void validate_participating_scheme_versions_on_change_of_ownership_after_cutoff_date_not_equal_should_be_invalid() {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
         final String previousFacilityId = "previousFacilityId";
-        
+
         final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
         facility.getFacilityItem().getFacilityDetails().setApplicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP);
         facility.getFacilityItem().getFacilityDetails().setPreviousFacilityId(previousFacilityId);
         facility.getFacilityItem().getFacilityDetails().setParticipatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3));
-        
+
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2027,1,1, 0, 0))
+                .requestCreationDate(LocalDateTime.of(2027, 1, 1, 0, 0))
                 .build();
-        
+
         final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
                 .schemeDataMap(Map.of(SchemeVersion.CCA_3, SchemeData.builder().sectorMeasurementType(MeasurementType.ENERGY_KWH).build()))
                 .underlyingAgreement(UnderlyingAgreement.builder()
                         .facilities(Set.of(facility))
                         .build())
                 .build();
-        
+
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
-        
-        when(facilityDataQueryService.isExistingFacilityId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
         when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
                 .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
         when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
@@ -656,21 +664,173 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         when(facilityDataQueryService.getParticipatingFacilitySchemeVersions(previousFacilityId))
                 .thenReturn(Set.of(SchemeVersion.CCA_3));
         when(underlyingAgreementConfig.getSchemeParticipationFlagCutOffDate()).thenReturn(LocalDate.of(2025, 1, 1));
-        
+
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
-        
+
         assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage)
                 .contains(INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_ON_OWNERSHIP_CHANGE.getMessage());
-        
-        verify(facilityDataQueryService, times(1)).isExistingFacilityId(facility.getFacilityItem().getFacilityId());
+
+        verify(facilityDataQueryService, times(1)).isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
         verify(facilityDataQueryService, times(1)).isActiveFacility(previousFacilityId);
         verify(facilityDataQueryService, times(1)).getParticipatingFacilitySchemeVersions(previousFacilityId);
         verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
         verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
         verifyNoMoreInteractions(facilityDataQueryService);
     }
-    
-    
+
+    @Test
+    void validateFacilityBaselineEnergyConsumption_by_product_not_valid() {
+        final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
+        final UUID evidenceFile = UUID.randomUUID();
+        final UUID calculatorFile = UUID.randomUUID();
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        // exclude all products
+        facility.getFacilityItem().getCca3BaselineAndTargets().getFacilityBaselineEnergyConsumption().getVariableEnergyConsumptionDataByProduct()
+                .forEach(p -> p.setProductStatus(ProductStatus.EXCLUDED));
+        final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
+                .schemeVersion(currentSchemeVersion)
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
+                .build();
+
+        final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
+                .schemeDataMap(Map.of(SchemeVersion.CCA_3, SchemeData.builder().sectorMeasurementType(MeasurementType.ENERGY_KWH).build()))
+                .underlyingAgreement(UnderlyingAgreement.builder()
+                        .facilities(Set.of(facility))
+                        .build())
+                .build();
+
+        List<UnderlyingAgreementViolation> violations = new ArrayList<>();
+
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
+                .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
+        when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
+                .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
+
+        // Invoke
+        validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
+
+        // Verify
+        assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactlyInAnyOrder(
+                INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT_STATUS.getMessage(),
+                INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT.getMessage());
+        verify(facilityDataQueryService, times(1))
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
+        verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
+        verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
+        verifyNoMoreInteractions(facilityDataQueryService);
+    }
+
+    @Test
+    void validateFacilityBaselineEnergyConsumption_by_product_status_not_valid() {
+        final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
+        final UUID evidenceFile = UUID.randomUUID();
+        final UUID calculatorFile = UUID.randomUUID();
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        // exclude all products
+        facility.getFacilityItem().getCca3BaselineAndTargets().getFacilityBaselineEnergyConsumption().getVariableEnergyConsumptionDataByProduct()
+                .forEach(p -> p.setProductStatus(ProductStatus.LIVE));
+        final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
+                .schemeVersion(currentSchemeVersion)
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
+                .build();
+
+        final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
+                .schemeDataMap(Map.of(SchemeVersion.CCA_3, SchemeData.builder().sectorMeasurementType(MeasurementType.ENERGY_KWH).build()))
+                .underlyingAgreement(UnderlyingAgreement.builder()
+                        .facilities(Set.of(facility))
+                        .build())
+                .build();
+
+        List<UnderlyingAgreementViolation> violations = new ArrayList<>();
+
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
+                .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
+        when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
+                .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
+
+        // Invoke
+        validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
+
+        // Verify
+        assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(
+                INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT_STATUS.getMessage());
+        verify(facilityDataQueryService, times(1))
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
+        verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
+        verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
+        verifyNoMoreInteractions(facilityDataQueryService);
+    }
+
+    @Test
+    void validateFacilityBaselineEnergyConsumption_by_product_duplicate_names_not_valid() {
+        final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
+        final UUID evidenceFile = UUID.randomUUID();
+        final UUID calculatorFile = UUID.randomUUID();
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        List<ProductVariableEnergyConsumptionData> products = List.of(
+                ProductVariableEnergyConsumptionData.builder()
+                        .baselineYear(Year.of(2022))
+                        .productName("FacilityProduct1")
+                        .energy(BigDecimal.valueOf(-125.69))
+                        .throughput(BigDecimal.valueOf(56))
+                        .throughputUnit("Each")
+                        .productStatus(ProductStatus.NEW)
+                        .build(),
+                ProductVariableEnergyConsumptionData.builder()
+                        .baselineYear(Year.of(2022))
+                        .productName("FacilityProduct2")
+                        .energy(BigDecimal.valueOf(-125.69))
+                        .throughput(BigDecimal.valueOf(56))
+                        .throughputUnit("Each")
+                        .productStatus(ProductStatus.NEW)
+                        .build(),
+                ProductVariableEnergyConsumptionData.builder()
+                        .baselineYear(Year.of(2022))
+                        .productName("FacilityProduct2")
+                        .energy(BigDecimal.valueOf(-125.69))
+                        .throughput(BigDecimal.valueOf(56))
+                        .throughputUnit("Each")
+                        .productStatus(ProductStatus.NEW)
+                        .build()
+                );
+        facility.getFacilityItem().getCca3BaselineAndTargets().getFacilityBaselineEnergyConsumption()
+                .setVariableEnergyConsumptionDataByProduct(products);
+
+        final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
+                .schemeVersion(currentSchemeVersion)
+                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
+                .build();
+
+        final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
+                .schemeDataMap(Map.of(SchemeVersion.CCA_3, SchemeData.builder().sectorMeasurementType(MeasurementType.ENERGY_KWH).build()))
+                .underlyingAgreement(UnderlyingAgreement.builder()
+                        .facilities(Set.of(facility))
+                        .build())
+                .build();
+
+        List<UnderlyingAgreementViolation> violations = new ArrayList<>();
+
+        when(facilityDataQueryService.isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId())).thenReturn(false);
+        when(fileAttachmentService.getFileDTO(evidenceFile.toString()))
+                .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
+        when(fileAttachmentService.getFileDTO(calculatorFile.toString()))
+                .thenReturn(FileDTO.builder().fileType((String) FileType.XLS.getMimeTypes().toArray()[0]).build());
+
+        // Invoke
+        validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
+
+        // Verify
+        assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(
+                INVALID_UNIQUE_PRODUCT_NAME.getMessage());
+        verify(facilityDataQueryService, times(1))
+                .isExistingFacilityBusinessId(facility.getFacilityItem().getFacilityId());
+        verify(fileAttachmentService, times(1)).getFileDTO(evidenceFile.toString());
+        verify(fileAttachmentService, times(1)).getFileDTO(calculatorFile.toString());
+        verifyNoMoreInteractions(facilityDataQueryService);
+    }
+
     private Facility createFacility(FacilityStatus status, UUID evidenceFile, UUID calculatorFile) {
         return Facility.builder()
                 .status(status)
@@ -680,7 +840,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                                 .isCoveredByUkets(Boolean.TRUE)
                                 .applicationReason(ApplicationReasonType.NEW_AGREEMENT)
                                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_3))
-                                .facilityAddress(AccountAddressDTO.builder()
+                                .facilityAddress(FacilityAddressDTO.builder()
                                         .line1("Line 1")
                                         .line2("Line 2")
                                         .city("City")
@@ -737,7 +897,20 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                                         .measurementType(MeasurementType.ENERGY_KWH)
                                         .agreementCompositionType(AgreementCompositionType.NOVEM)
                                         .build())
-                                .baselineData(FacilityBaselineData.builder().build())
+                                .baselineData(FacilityBaselineData.builder().baselineDate(LocalDate.of(2022, 1, 1)).build())
+                                .facilityBaselineEnergyConsumption(FacilityBaselineEnergyConsumption.builder()
+                                        .totalFixedEnergy(BigDecimal.valueOf(253.36))
+                                        .hasVariableEnergy(true)
+                                        .variableEnergyType(VariableEnergyDepictionType.BY_PRODUCT)
+                                        .variableEnergyConsumptionDataByProduct(List.of(ProductVariableEnergyConsumptionData.builder()
+                                                .baselineYear(Year.of(2022))
+                                                .productName("FacilityProduct1")
+                                                .energy(BigDecimal.valueOf(-125.69))
+                                                .throughput(BigDecimal.valueOf(56))
+                                                .throughputUnit("Each")
+                                                .productStatus(ProductStatus.NEW)
+                                                .build()))
+                                        .build())
                                 .facilityTargets(FacilityTargets.builder()
                                         .improvements(Map.of(
                                                 TargetImprovementType.TP7, BigDecimal.TEN,

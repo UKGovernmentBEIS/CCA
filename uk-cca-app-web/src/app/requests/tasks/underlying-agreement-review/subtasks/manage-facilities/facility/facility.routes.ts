@@ -7,6 +7,7 @@ import {
   isEditableSummaryRedirectGuard,
   resetCurrentFacility,
   setCurrentFacility,
+  TaskItemStatus,
   underlyingAgreementQuery,
 } from '@requests/common';
 
@@ -64,19 +65,27 @@ export const FACILITY_ROUTES: Routes = [
         title: 'Target composition',
         data: { backlink: `../${FacilityWizardStep.APPLY_RULE}`, breadcrumb: false },
         loadComponent: () =>
-          import('./target-composition/target-composition.component').then((m) => m.TargetCompositionComponent),
+          import('./target-composition/target-composition.component').then((c) => c.TargetCompositionComponent),
       },
       {
         path: FacilityWizardStep.BASELINE_DATA,
         title: 'Baseline data',
         data: { backlink: `../${FacilityWizardStep.TARGET_COMPOSITION}`, breadcrumb: false },
-        loadComponent: () => import('./baseline-data/baseline-data.component').then((m) => m.BaselineDataComponent),
+        loadComponent: () => import('./baseline-data/baseline-data.component').then((c) => c.BaselineDataComponent),
+      },
+      {
+        path: FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION,
+        data: { backlink: `../${FacilityWizardStep.BASELINE_DATA}`, breadcrumb: false },
+        loadChildren: () =>
+          import('./baseline-energy-consumption/baseline-energy-consumption.routes').then(
+            (r) => r.BASELINE_ENERGY_CONSUMPTION_ROUTES,
+          ),
       },
       {
         path: FacilityWizardStep.TARGETS,
         title: 'Targets',
-        data: { backlink: `../${FacilityWizardStep.BASELINE_DATA}`, breadcrumb: false },
-        loadComponent: () => import('./targets/targets.component').then((m) => m.TargetsComponent),
+        data: { backlink: `../${FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION}`, breadcrumb: false },
+        loadComponent: () => import('./targets/targets.component').then((c) => c.TargetsComponent),
       },
       {
         path: 'decision',
@@ -93,6 +102,24 @@ export const FACILITY_ROUTES: Routes = [
         title: 'Check your answers',
         data: { backlink: '../../', breadcrumb: false },
         loadComponent: () => import('./check-answers/facility-check-answers.component'),
+      },
+      {
+        path: 'products',
+        title: 'View Products',
+        data: {
+          breadcrumb: false,
+          backlink: ({ sectionStatus }) =>
+            sectionStatus === TaskItemStatus.COMPLETED ? '../summary' : '../check-your-answers',
+        },
+        resolve: {
+          sectionStatus: (route: ActivatedRouteSnapshot) => {
+            const store = inject(RequestTaskStore);
+            const facilityId = route.paramMap.get('facilityId');
+            const sectionsCompleted = store.select(underlyingAgreementQuery.selectSectionsCompleted)();
+            return sectionsCompleted?.[facilityId];
+          },
+        },
+        loadComponent: () => import('@requests/common').then((c) => c.SummaryProductsComponent),
       },
       {
         path: 'summary',

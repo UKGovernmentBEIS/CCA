@@ -17,7 +17,6 @@ describe('CheckboxesComponent', () => {
   let element: HTMLElement;
 
   @Component({
-    standalone: true,
     imports: [ReactiveFormsModule, CheckboxesComponent, CheckboxComponent, ConditionalContentDirective],
     template: `
       <form [formGroup]="form">

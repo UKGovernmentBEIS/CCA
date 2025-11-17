@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class SubsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO {
 
-    private String facilityId;
+    private String facilityBusinessId;
 
     private String siteName;
 

@@ -8,7 +8,6 @@ import { roleOptions } from '../../types';
 
 @Component({
   selector: 'cca-add-sector-confirmation',
-  standalone: true,
   template: `
     <div class="govuk-grid-row" data-testid="confirmation-screen">
       <div class="govuk-grid-column-two-thirds">

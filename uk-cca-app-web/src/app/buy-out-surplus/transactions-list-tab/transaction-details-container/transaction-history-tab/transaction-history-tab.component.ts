@@ -30,7 +30,6 @@ import { toAmountHistorySummaryData, toStatusHistorySummaryData } from './transa
       </govuk-accordion>
     }
   `,
-  standalone: true,
   imports: [AccordionComponent, AccordionItemComponent, GovukDatePipe, SummaryComponent],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

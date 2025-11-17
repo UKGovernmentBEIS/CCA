@@ -10,7 +10,6 @@ describe('PaginationComponent', () => {
   let fixture: ComponentFixture<TestHostComponent>;
 
   @Component({
-    standalone: true,
     template: `
       <cca-pagination
         [count]="count"

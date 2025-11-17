@@ -17,7 +17,6 @@ import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-his
 @Component({
   selector: 'cca-sector',
   templateUrl: './sector.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     TabsComponent,

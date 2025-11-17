@@ -28,7 +28,6 @@ import { peerReviewDecisionToSummaryData } from './peer-review-decision-to-summa
     </div>
     <a routerLink="../../../" class="govuk-link">Return to: Peer review application for underlying agreement</a>
   `,
-  standalone: true,
   imports: [SummaryComponent, ButtonDirective, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

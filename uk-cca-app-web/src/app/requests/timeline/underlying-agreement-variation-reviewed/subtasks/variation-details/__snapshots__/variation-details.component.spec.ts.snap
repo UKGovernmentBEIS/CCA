@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`VariationDetailsComponent should match snapshot 1`] = `
 <cca-timeline-variation-details
@@ -32,7 +32,9 @@ exports[`VariationDetailsComponent should match snapshot 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Amend the 70% rule evaluation for one or more facilities 
+            <span>
+              Amend the 70% rule evaluation for one or more facilities
+            </span>
           </dd>
         </div>
         <div
@@ -49,7 +51,9 @@ exports[`VariationDetailsComponent should match snapshot 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             change the throughput unit 
+            <span>
+              change the throughput unit
+            </span>
           </dd>
         </div>
         <div
@@ -66,7 +70,9 @@ exports[`VariationDetailsComponent should match snapshot 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Variation reason 
+            <span>
+              Variation reason
+            </span>
           </dd>
         </div>
       </dl>
@@ -93,7 +99,9 @@ exports[`VariationDetailsComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Accepted 
+            <span>
+              Accepted
+            </span>
           </dd>
         </div>
         <div
@@ -110,7 +118,9 @@ exports[`VariationDetailsComponent should match snapshot 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             test 
+            <span>
+              test
+            </span>
           </dd>
         </div>
         <div

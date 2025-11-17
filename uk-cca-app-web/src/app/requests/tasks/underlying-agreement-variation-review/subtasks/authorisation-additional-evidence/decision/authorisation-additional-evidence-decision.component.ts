@@ -54,7 +54,6 @@ import { createSaveDecisionActionDTO } from '../../../transform';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [
     PageHeadingComponent,
     SummaryComponent,
@@ -108,7 +107,7 @@ export class AuthorisationAdditionalEvidenceDecisionComponent {
     const determination = resetDetermination(this.store.select(underlyingAgreementReviewQuery.selectDetermination)());
 
     const decision = {
-      type: this.form.value.type!,
+      type: this.form.value.type,
       details: {
         notes: this.form.value.notes,
         files: this.form.value.files?.map((f: any) => f.uuid) || [],

@@ -10,7 +10,7 @@ import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.Fac
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.CertificationPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.CertificationPeriodDTO;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityCertificationDetailsDTO;
-import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityCertificationSearchResultInfoDTO;
+import uk.gov.cca.api.web.orchestrator.facility.dto.FacilitySearchResultExtendedDTO;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityInfoDTO;
 
 import java.time.LocalDate;
@@ -28,15 +28,15 @@ class FacilityInfoMapperTest {
         FacilitySearchResultInfoDTO facilitySearchResultInfoDTO =
                 new FacilitySearchResultInfoDTO(1L, "facilityId", "siteName", null, FacilityDataStatus.LIVE);
 
-        FacilityCertificationSearchResultInfoDTO facilityCertificationSearchResultInfoDTO =
-                new FacilityCertificationSearchResultInfoDTO("facilityId", "siteName", null, FacilityDataStatus.LIVE, FacilityCertificationStatus.CERTIFIED);
+        FacilitySearchResultExtendedDTO facilitySearchResultExtendedDTO =
+                new FacilitySearchResultExtendedDTO(1L, "facilityId", "siteName", null, FacilityDataStatus.LIVE, FacilityCertificationStatus.CERTIFIED, null);
 
         // invoke
-        FacilityCertificationSearchResultInfoDTO result =
+        FacilitySearchResultExtendedDTO result =
                 mapper.toFacilityCertificationSearchResultInfo(facilitySearchResultInfoDTO, FacilityCertificationStatus.CERTIFIED);
 
         // verify
-        assertThat(result).isEqualTo(facilityCertificationSearchResultInfoDTO);
+        assertThat(result).isEqualTo(facilitySearchResultExtendedDTO);
     }
 
     @Test
@@ -76,11 +76,11 @@ class FacilityInfoMapperTest {
     void toFacilityInfoDTO() {
         LocalDate startDate = LocalDate.of(2025, 1, 1);
         LocalDate endDate = LocalDate.of(2025, 12, 31);
-        String facilityId = "facilityId";
+        String facilityBusinessId = "facilityBusinessId";
         String siteName = "Facility Name";
 
         FacilityDataDetailsDTO facilityDataDetailsDTO = FacilityDataDetailsDTO.builder()
-                .facilityId(facilityId)
+                .facilityBusinessId(facilityBusinessId)
                 .status(FacilityDataStatus.LIVE)
                 .siteName(siteName)
                 .build();
@@ -94,7 +94,7 @@ class FacilityInfoMapperTest {
 
         FacilityInfoDTO facilityInfoDTO = FacilityInfoDTO.builder()
                 .facilityCertificationDetails(List.of(certificationDetailsDTO))
-                .facilityId(facilityId)
+                .facilityBusinessId(facilityBusinessId)
                 .status(FacilityDataStatus.LIVE)
                 .siteName(siteName)
                 .build();

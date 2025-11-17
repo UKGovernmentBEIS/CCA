@@ -23,11 +23,11 @@ public interface SubsistenceFeesMoaFacilityRepository extends JpaRepository<Subs
 
     @Transactional(readOnly = true)
     @Query(value = "select new uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaFacilitySearchResultInfoDTO("
-            + "smf.id, fd.facilityId, fd.siteName, smf.paymentStatus, smf.paymentDate, (smf.markingStatusHistoryList IS NOT EMPTY)) "
+            + "smf.id, fd.facilityBusinessId, fd.siteName, smf.paymentStatus, smf.paymentDate, (smf.markingStatusHistoryList IS NOT EMPTY)) "
             + "from SubsistenceFeesMoaFacility smf "
             + "inner join FacilityData fd on fd.id = smf.facilityId "
             + "where smf.subsistenceFeesMoaTargetUnit.id = :moaTargetUnitId "
-            + "and (LOWER(fd.facilityId) like CONCAT('%',:term,'%') or LOWER(fd.siteName) like CONCAT('%',:term,'%')) "
+            + "and (LOWER(fd.facilityBusinessId) like CONCAT('%',:term,'%') or LOWER(fd.siteName) like CONCAT('%',:term,'%')) "
             + "and (:facilityPaymentStatus is null or smf.paymentStatus = :facilityPaymentStatus) ")
     Page<SubsistenceFeesMoaFacilitySearchResultInfoDTO> findBySearchCriteria(
             Pageable pageable, Long moaTargetUnitId, String term, FacilityPaymentStatus facilityPaymentStatus);

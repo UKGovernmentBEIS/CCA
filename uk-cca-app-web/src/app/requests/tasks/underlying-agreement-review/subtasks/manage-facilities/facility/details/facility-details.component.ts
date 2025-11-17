@@ -29,7 +29,6 @@ import { resetDetermination } from '../../../../utils';
 @Component({
   selector: 'cca-facility-details',
   template: `<cca-facility-details-form (submitChange)="onSubmit($event)" />`,
-  standalone: true,
   imports: [FacilityDetailsFormComponent],
   providers: [FacilityDetailsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,7 +53,10 @@ export class FacilityDetailsComponent {
     const actionPayload = toUnderlyingAgreementSaveReviewPayload(payload);
 
     let updatedPayload = updateFacilityDetails(actionPayload, form, this.facilityId);
-    updatedPayload = applySchemeVersionsSideEffect(updatedPayload, this.facilityId);
+    updatedPayload = applySchemeVersionsSideEffect(
+      updatedPayload,
+      this.facilityId,
+    ) as UnderlyingAgreementApplySavePayload;
 
     const currentReviewSectionsCompleted = this.store.select(
       underlyingAgreementReviewQuery.selectReviewSectionsCompleted,

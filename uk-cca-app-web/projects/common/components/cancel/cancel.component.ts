@@ -7,7 +7,6 @@ import { PageHeadingComponent } from '../page-heading';
 
 @Component({
   selector: 'netz-cancel-task',
-  standalone: true,
   template: `
     <div class="govuk-grid-row">
       <netz-page-heading size="xl">{{ heading() }}</netz-page-heading>

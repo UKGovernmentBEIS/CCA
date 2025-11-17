@@ -1,34 +1,21 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
-import { of } from 'rxjs';
-
-import { MockType } from '@netz/common/testing';
 import { SelectComponent } from '@netz/govuk-components';
-import { CountyService } from '@shared/services';
 
 import { CountiesDirective } from './counties.directive';
 
-const mockCountyService: MockType<CountyService> = {
-  getUkCounties: jest.fn().mockReturnValue(
-    of([
-      {
-        id: 1,
-        name: 'Cyprus',
-      },
-      {
-        id: 2,
-        name: 'Greece',
-      },
-      {
-        id: 3,
-        name: 'Afghanistan',
-      },
-    ]),
-  ),
-};
+// Mock the COUNTIES constant that the directive uses
+jest.mock('@shared/services', () => ({
+  COUNTIES: [
+    { id: 0, name: '' },
+    { id: 1, name: 'Cyprus' },
+    { id: 2, name: 'Greece' },
+    { id: 3, name: 'Afghanistan' },
+  ],
+}));
 
 describe('CountiesDirective', () => {
   let directive: CountiesDirective;
@@ -36,7 +23,6 @@ describe('CountiesDirective', () => {
 
   @Component({
     template: '<div govuk-select ccaCounties [formControl]="county" label="County"> </div>',
-    standalone: true,
     imports: [CountiesDirective, ReactiveFormsModule, SelectComponent],
   })
   class TestComponent {
@@ -46,7 +32,6 @@ describe('CountiesDirective', () => {
   beforeEach(() => {
     fixture = TestBed.configureTestingModule({
       imports: [TestComponent],
-      providers: [{ provide: CountyService, useValue: mockCountyService }],
     }).createComponent(TestComponent);
 
     fixture.detectChanges();
@@ -57,8 +42,17 @@ describe('CountiesDirective', () => {
     expect(directive).toBeTruthy();
   });
 
-  it('should assign counties to select', () => {
+  it('should assign counties to select', fakeAsync(() => {
+    fixture.detectChanges();
+    tick();
+
     const selectElement = fixture.debugElement.query(By.css('select'));
-    expect((selectElement.nativeElement as HTMLSelectElement).options[1].label).toEqual('Cyprus');
-  });
+    const options = selectElement.nativeElement.options;
+
+    expect(options.length).toBe(4);
+    expect(options[0].value).toBe('0: ');
+    expect(options[1].text).toBe('Afghanistan');
+    expect(options[2].text).toBe('Cyprus');
+    expect(options[3].text).toBe('Greece');
+  }));
 });

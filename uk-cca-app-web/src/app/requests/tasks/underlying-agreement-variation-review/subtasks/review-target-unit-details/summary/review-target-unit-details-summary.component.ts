@@ -4,8 +4,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
-  toReviewTargetUnitDetailsSummaryDataWithDecision,
-  transform,
+  toVariationReviewTargetUnitDetailsSummaryDataWithDecision,
+  transformAccountReferenceData,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
@@ -31,7 +31,6 @@ import { generateDownloadUrl } from '@shared/utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [
     PageHeadingComponent,
     SummaryComponent,
@@ -48,27 +47,33 @@ export class ReviewTargetUnitDetailsSummaryComponent {
     this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
   );
 
+  private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();
   private readonly attachments = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
-
   private readonly accountReferenceData = this.requestTaskStore.select(
     underlyingAgreementQuery.selectAccountReferenceData,
-  );
+  )();
+  private readonly originalTargetUnitDetails = transformAccountReferenceData(this.accountReferenceData);
+  private readonly currentTargetUnitDetails = this.requestTaskStore.select(
+    underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails,
+  )();
 
-  private readonly originalTargetUnitDetails = transform(this.accountReferenceData());
+  private readonly decision = this.requestTaskStore.select(
+    underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'),
+  )();
 
-  protected readonly summaryDataOriginal = toReviewTargetUnitDetailsSummaryDataWithDecision(
+  protected readonly summaryDataOriginal = toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
     this.originalTargetUnitDetails,
-    this.requestTaskStore.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
+    this.decision,
     this.attachments,
     this.downloadUrl,
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    this.isEditable,
   );
 
-  protected readonly summaryDataCurrent = toReviewTargetUnitDetailsSummaryDataWithDecision(
-    this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
-    this.requestTaskStore.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
+  protected readonly summaryDataCurrent = toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
+    this.currentTargetUnitDetails,
+    this.decision,
     this.attachments,
     this.downloadUrl,
-    this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
+    this.isEditable,
   );
 }

@@ -26,11 +26,11 @@ public class UnderlyingAgreementViolation extends BusinessViolation {
 
     @Getter
     public enum UnderlyingAgreementViolationMessage {
-        INVALID_SECTION_DATA ("Invalid section data"),
+        INVALID_SECTION_DATA("Invalid section data"),
         ATTACHMENT_NOT_FOUND("Attachment not found"),
-        INVALID_ATTACHMENT_TYPE ("Invalid attachment type"),
-        INVALID_EVIDENCE_ATTACHMENT_TYPE ("Invalid evidence attachment type"),
-        INVALID_TARGET_CALCULATOR_ATTACHMENT_TYPE ("Invalid target calculator attachment type"),
+        INVALID_ATTACHMENT_TYPE("Invalid attachment type"),
+        INVALID_EVIDENCE_ATTACHMENT_TYPE("Invalid evidence attachment type"),
+        INVALID_TARGET_CALCULATOR_ATTACHMENT_TYPE("Invalid target calculator attachment type"),
 
         INVALID_TARGET_UNIT_TYPE("Target unit type not in compliance with sector or subsector scheme"),
         INVALID_TARGET_UNIT_THROUGHPUT_MEASURED("Is target unit throughput measured not in compliance with sector or subsector scheme"),
@@ -41,7 +41,7 @@ public class UnderlyingAgreementViolation extends BusinessViolation {
 
         INVALID_TARGET_PERIOD("Invalid target period data"),
         INVALID_TARGET_PERIOD_DECLARED("Invalid target period declared"),
-        
+
         INVALID_FACILITIES("Should include at least one facility"),
         INVALID_FACILITY_ID("Facility ID not in compliance with status"),
         INVALID_UNIQUE_FACILITY_ID("Facility ID should be unique"),
@@ -50,6 +50,10 @@ public class UnderlyingAgreementViolation extends BusinessViolation {
         INVALID_FACILITY_TARGETS("Facility target improvements with scheme version are not mutually valid"),
         INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME("Facility participating scheme versions with current scheme version are not mutually valid"),
         INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_ON_OWNERSHIP_CHANGE("Facility participating scheme versions with ownership change are not mutually valid"),
+
+        INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT("Variable year energy by product should have at least one non EXCLUDED product"),
+        INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT_STATUS("Product status for by product year energy is not valid"),
+        INVALID_UNIQUE_PRODUCT_NAME("Product names should be unique"),
 
         INVALID_UNDERLYING_AGREEMENT_ACTIVATION_DETAILS_DATA("Invalid underlying agreement activation details data");
 

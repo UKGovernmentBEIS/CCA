@@ -13,7 +13,7 @@ public class FacilityBaseInfoDTO {
 
     private Long id;
 
-    private String facilityId;
+    private String facilityBusinessId;
 
     private String siteName;
 }

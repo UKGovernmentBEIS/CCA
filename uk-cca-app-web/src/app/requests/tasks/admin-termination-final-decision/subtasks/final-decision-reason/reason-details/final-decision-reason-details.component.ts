@@ -24,7 +24,6 @@ import {
 @Component({
   selector: 'cca-final-decision-reason-details',
   templateUrl: './final-decision-reason-details.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     TextareaComponent,

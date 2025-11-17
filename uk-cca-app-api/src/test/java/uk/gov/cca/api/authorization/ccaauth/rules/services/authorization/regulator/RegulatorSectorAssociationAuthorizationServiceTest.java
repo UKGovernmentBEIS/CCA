@@ -21,6 +21,7 @@ import java.util.Map;
 
 @ExtendWith(MockitoExtension.class)
 class RegulatorSectorAssociationAuthorizationServiceTest {
+	
     @InjectMocks
     private RegulatorSectorAssociationAuthorizationService regulatorSectorAssociationAuthorizationService;
 

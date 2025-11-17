@@ -38,7 +38,7 @@ public class FacilitySearchService {
         return PageRequest.of(
                 facilitySearchCriteria.getPaging().getPageNumber(),
                 facilitySearchCriteria.getPaging().getPageSize(),
-                Sort.by("facilityId"));
+                Sort.by("facilityBusinessId"));
     }
 
 

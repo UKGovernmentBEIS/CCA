@@ -2,7 +2,7 @@ import {
   OVERALL_DECISION_SUBTASK,
   staticReviewGroupDecisions,
   TaskItemStatus,
-  transform,
+  transformAccountReferenceData,
   UNAReviewRequestTaskPayload,
 } from '@requests/common';
 import { produce } from 'immer';
@@ -67,7 +67,7 @@ export const createProposedUnderlyingAgreementPayload = (
   };
 
   if (reviewGroupDecisions['TARGET_UNIT_DETAILS'].type === 'REJECTED')
-    proposed.underlyingAgreementTargetUnitDetails = transform(accountReferenceData);
+    proposed.underlyingAgreementTargetUnitDetails = transformAccountReferenceData(accountReferenceData);
 
   proposed.facilities = Object.entries(facilitiesReviewGroupDecisions)
     .filter((frg) => frg[1].type === 'ACCEPTED')

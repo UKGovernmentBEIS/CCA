@@ -20,7 +20,6 @@ import { NestedMessageValidationError } from './nested-message-validation-error.
 @Component({
   selector: 'cca-csv-error-summary',
   templateUrl: './csv-error-summary.component.html',
-  standalone: true,
   imports: [AsyncPipe, DetailsComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

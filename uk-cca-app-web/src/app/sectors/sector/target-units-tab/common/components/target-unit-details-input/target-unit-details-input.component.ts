@@ -10,7 +10,6 @@ import {
 
 import {
   ButtonDirective,
-  ConditionalContentDirective,
   GovukSelectOption,
   RadioComponent,
   RadioOptionComponent,
@@ -27,13 +26,11 @@ import { addSicCodeFormControl } from '../../utils';
 @Component({
   selector: 'cca-target-unit-details-input',
   templateUrl: './target-unit-details-input.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     TextInputComponent,
     RadioComponent,
     RadioOptionComponent,
-    ConditionalContentDirective,
     SelectComponent,
     ButtonDirective,
   ],

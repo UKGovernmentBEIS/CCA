@@ -54,10 +54,10 @@ describe('OperatorDetailsComponent', () => {
     });
 
     expect(elements).toEqual([
-      ['First name', ' oper1 '],
-      ['Last name', ' tu '],
-      ['Job title', ' job12 '],
-      ['Email', ' op1tu@cca.uk '],
+      ['First name', 'oper1'],
+      ['Last name', 'tu'],
+      ['Job title', 'job12'],
+      ['Email', 'op1tu@cca.uk'],
     ]);
   });
 
@@ -71,10 +71,10 @@ describe('OperatorDetailsComponent', () => {
     });
 
     expect(elements).toEqual([
-      ['Contact type', ' Consultant '],
-      ['Organisation name', ' organisation '],
-      ['Phone number 1', ' UK (44) 1234567890 '],
-      ['Phone number 2', ' UK (44) 1234567890 '],
+      ['Contact type', 'Consultant'],
+      ['Organisation name', 'organisation'],
+      ['Phone number 1', 'UK (44) 1234567890'],
+      ['Phone number 2', 'UK (44) 1234567890'],
     ]);
   });
 

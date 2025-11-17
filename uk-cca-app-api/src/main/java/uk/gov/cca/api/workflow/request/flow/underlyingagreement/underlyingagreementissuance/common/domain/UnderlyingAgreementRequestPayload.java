@@ -68,7 +68,7 @@ public class UnderlyingAgreementRequestPayload extends CcaRequestPayload {
 
     private FileInfoDTO officialNotice;
 
-    private FileInfoDTO underlyingAgreementDocument;
+    private Map<SchemeVersion, FileInfoDTO> underlyingAgreementDocuments;
 
     @JsonIgnore
     public Set<String> getFacilityIds() {

@@ -5,9 +5,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
+  areEntitiesIdentical,
+  filterFieldsWithFalsyValues,
+  isTargetUnitDetailsWizardCompleted,
   OPERATOR_ADDRESS_FORM,
   OperatorAddressFormProvider,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
+  ReviewTargetUnitDetailsWizardStep,
   TasksApiService,
   underlyingAgreementQuery,
 } from '@requests/common';
@@ -36,7 +40,6 @@ import { extractReviewProps } from '../../../utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [ReactiveFormsModule, WizardStepComponent, AccountAddressInputComponent, ReturnToTaskOrActionPageComponent],
   providers: [OperatorAddressFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,8 +74,23 @@ export default class OperatorAddressComponent {
     const reviewProps = extractReviewProps(this.store);
     const dto = createRequestTaskActionProcessDTO(requestTaskId, updatedPayload, sectionsCompleted, reviewProps);
 
-    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['../check-your-answers'], { relativeTo: this.route });
-    });
+    this.tasksApiService
+      .saveRequestTaskAction(dto)
+      .subscribe((payload: UnderlyingAgreementVariationSubmitRequestTaskPayload) => {
+        const tuDetails = payload.underlyingAgreement.underlyingAgreementTargetUnitDetails;
+        const completed = isTargetUnitDetailsWizardCompleted(tuDetails);
+
+        const isSameAddress = areEntitiesIdentical(
+          filterFieldsWithFalsyValues(tuDetails.operatorAddress),
+          filterFieldsWithFalsyValues(tuDetails.responsiblePersonDetails.address),
+        );
+
+        const path =
+          completed && isSameAddress
+            ? '../check-your-answers'
+            : `../${ReviewTargetUnitDetailsWizardStep.RESPONSIBLE_PERSON}`;
+
+        this.router.navigate([path], { relativeTo: this.route });
+      });
   }
 }

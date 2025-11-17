@@ -2,17 +2,15 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } 
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { take } from 'rxjs';
+
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { RadioComponent, RadioOptionComponent, SelectComponent, TextInputComponent } from '@netz/govuk-components';
 import {
-  ConditionalContentDirective,
-  RadioComponent,
-  RadioOptionComponent,
-  SelectComponent,
-  TextInputComponent,
-} from '@netz/govuk-components';
-import {
+  isTargetUnitDetailsWizardCompleted,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
+  ReviewTargetUnitDetailsWizardStep,
   TARGET_UNIT_DETAILS_SUBMIT_FORM,
   TargetUnitDetailsSubmitFormModel,
   TargetUnitDetailsSubmitFormProvider,
@@ -28,6 +26,7 @@ import { produce } from 'immer';
 import {
   SectorAssociationSchemeService,
   SubsectorAssociationInfoDTO,
+  UnderlyingAgreementApplySavePayload,
   UnderlyingAgreementSubmitRequestTaskPayload,
 } from 'cca-api';
 
@@ -36,7 +35,6 @@ import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } f
 @Component({
   selector: 'cca-target-unit-details',
   templateUrl: './target-unit-details.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
@@ -44,7 +42,6 @@ import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } f
     RadioComponent,
     RadioOptionComponent,
     SelectComponent,
-    ConditionalContentDirective,
     ReturnToTaskOrActionPageComponent,
   ],
   providers: [TargetUnitDetailsSubmitFormProvider],
@@ -77,6 +74,7 @@ export class TargetUnitDetailsComponent implements OnInit {
     if (this.sectorAssociationId()) {
       this.sectorAssociationSchemeService
         .getSectorAssociationSchemeBySectorAssociationId(this.sectorAssociationId())
+        .pipe(take(1))
         .subscribe((scheme) => {
           if (scheme.subsectorAssociations) this.subsectors.set(scheme.subsectorAssociations);
         });
@@ -89,19 +87,9 @@ export class TargetUnitDetailsComponent implements OnInit {
     )() as UnderlyingAgreementSubmitRequestTaskPayload;
 
     const actionPayload = toUnderlyingAgreementSavePayload(payload);
-
-    const updatedPayload = produce(actionPayload, (draft) => {
-      draft.underlyingAgreementTargetUnitDetails = {
-        ...draft.underlyingAgreementTargetUnitDetails,
-        ...this.form.getRawValue(),
-        subsectorAssociationName: this.subsectors().find(
-          (subsector) => subsector.id === this.form.get('subsectorAssociationId')?.value,
-        )?.name,
-      };
-    });
+    const updatedPayload = updateTUDetails(actionPayload, this.form, this.subsectors());
 
     const currentSectionsCompleted = this.store.select(underlyingAgreementQuery.selectSectionsCompleted)();
-
     const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
       draft[REVIEW_TARGET_UNIT_DETAILS_SUBTASK] = TaskItemStatus.IN_PROGRESS;
     });
@@ -109,8 +97,32 @@ export class TargetUnitDetailsComponent implements OnInit {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
     const dto = createRequestTaskActionProcessDTO(requestTaskId, updatedPayload, sectionsCompleted);
 
-    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['../check-your-answers'], { relativeTo: this.route });
-    });
+    this.tasksApiService
+      .saveRequestTaskAction(dto)
+      .subscribe((payload: UnderlyingAgreementSubmitRequestTaskPayload) => {
+        const path = isTargetUnitDetailsWizardCompleted(
+          payload.underlyingAgreement?.underlyingAgreementTargetUnitDetails,
+        )
+          ? '../check-your-answers'
+          : `../${ReviewTargetUnitDetailsWizardStep.OPERATOR_ADDRESS}`;
+
+        this.router.navigate([path], { relativeTo: this.route });
+      });
   }
+}
+
+function updateTUDetails(
+  payload: UnderlyingAgreementApplySavePayload,
+  form: FormGroup<TargetUnitDetailsSubmitFormModel>,
+  subSectors: SubsectorAssociationInfoDTO[],
+): UnderlyingAgreementApplySavePayload {
+  return produce(payload, (draft) => {
+    draft.underlyingAgreementTargetUnitDetails = {
+      ...draft.underlyingAgreementTargetUnitDetails,
+      ...form.getRawValue(),
+      subsectorAssociationName: subSectors.find(
+        (subsector) => subsector.id === form.controls.subsectorAssociationId?.value,
+      )?.name,
+    };
+  });
 }

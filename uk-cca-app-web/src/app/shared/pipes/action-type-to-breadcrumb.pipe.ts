@@ -2,11 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { RequestActionDTO } from 'cca-api';
 
-@Pipe({
-  name: 'actionTypeToBreadcrumb',
-  standalone: true,
-  pure: true,
-})
+@Pipe({ name: 'actionTypeToBreadcrumb', pure: true })
 export class ActionTypeToBreadcrumbPipe implements PipeTransform {
   transform(requestAction: RequestActionDTO): string | null {
     switch (requestAction?.type) {

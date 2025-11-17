@@ -29,7 +29,6 @@ import { PerformanceDataUploadProcessedComponent } from './processed/performance
 @Component({
   selector: 'cca-performance-data-upload',
   templateUrl: './performance-data-upload-process.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     FormsModule,

@@ -15,7 +15,7 @@ export const CanActivateTargetUnitCreationStep: CanActivateFn = (route): boolean
   if (change && isWizardCompleted(payload, subSectorsExist)) return true;
   if (!change && isWizardCompleted(payload, subSectorsExist)) return createUrlTreeFromSnapshot(route, ['../summary']);
   if (isTargetUnitDetailsCompleted(payload, subSectorsExist)) return true;
-  return createUrlTreeFromSnapshot(route, ['../target-unit-details']);
+  return createUrlTreeFromSnapshot(route, ['../company-registration-number']);
 };
 
 export const CanActivateTargetUnitCreationSummary: CanActivateFn = (route): boolean | UrlTree => {

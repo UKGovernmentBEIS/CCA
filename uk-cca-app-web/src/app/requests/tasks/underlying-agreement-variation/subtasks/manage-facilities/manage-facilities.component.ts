@@ -9,6 +9,7 @@ import { StatusTagColorPipe, StatusTagTextPipe, TASK_STATUS_TAG_MAP } from '@net
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   ButtonDirective,
+  ErrorSummaryComponent,
   GovukSelectOption,
   GovukTableColumn,
   GovukValidators,
@@ -18,6 +19,7 @@ import {
   TextInputComponent,
 } from '@netz/govuk-components';
 import {
+  atLeastOneActiveFacilityValidator,
   FacilityItemViewModel,
   staticVariationSections,
   TaskItemStatus,
@@ -36,7 +38,6 @@ export type FacilityStatus = 'NEW' | 'LIVE' | 'EXCLUDED' | null;
 @Component({
   selector: 'cca-manage-facilities',
   templateUrl: './manage-facilities.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     ReactiveFormsModule,
@@ -51,6 +52,7 @@ export type FacilityStatus = 'NEW' | 'LIVE' | 'EXCLUDED' | null;
     UtilityPanelComponent,
     SelectComponent,
     TextInputComponent,
+    ErrorSummaryComponent,
   ],
   providers: [{ provide: TASK_STATUS_TAG_MAP, useValue: taskStatusTagMap }, StatusPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -141,6 +143,10 @@ export class ManageFacilitiesComponent {
     workflowStatus: new FormControl<TaskItemStatus>(null),
   });
 
+  protected readonly facilitiesForm = new FormGroup({
+    facilities: new FormControl(this.manageFacilities() ?? [], { validators: [atLeastOneActiveFacilityValidator()] }),
+  });
+
   constructor() {
     this.activatedRoute.queryParamMap.pipe(takeUntilDestroyed()).subscribe((queryParamMap) => {
       const pageNumber = +queryParamMap.get('page') || DEFAULT_PAGE;
@@ -198,7 +204,7 @@ export class ManageFacilitiesComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.pageSize()) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   private handleQueryParamsNavigation(

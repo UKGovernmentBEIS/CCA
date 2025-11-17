@@ -114,7 +114,7 @@ class SectorMoaGenerateServiceTest {
 
         final String transactionId = "transactionId";
         final List<EligibleFacilityDTO> facilities = List.of(EligibleFacilityDTO.builder()
-                .facilityId("facilityId")
+                .facilityBusinessId("facilityId")
                 .targetUnitBusinessId("businessId")
                 .build());
 

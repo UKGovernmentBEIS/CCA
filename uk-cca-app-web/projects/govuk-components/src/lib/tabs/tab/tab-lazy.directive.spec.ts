@@ -13,7 +13,6 @@ describe('TabLazyDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   @Component({
-    standalone: true,
     imports: [TabsComponent, TabLazyDirective, AsyncPipe],
     template: `
       <govuk-tabs>

@@ -16,7 +16,6 @@ describe('TextInputComponent', () => {
   let fixtureNumericComponent: ComponentFixture<TestNumericComponent>;
 
   @Component({
-    standalone: true,
     imports: [TextInputComponent, ReactiveFormsModule, LabelDirective],
     template: `
       <div govuk-text-input [formControl]="control" [prefix]="prefix" [suffix]="suffix" label="First control"></div>
@@ -40,7 +39,6 @@ describe('TextInputComponent', () => {
   }
 
   @Component({
-    standalone: true,
     imports: [TextInputComponent, ReactiveFormsModule],
     template: '<div govuk-text-input [formControl]="control" inputType="number" [numberFormat]="format"></div>',
   })

@@ -2,6 +2,7 @@ package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagree
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -20,7 +21,6 @@ import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
-import uk.gov.cca.api.workflow.request.flow.common.domain.UnderlyingAgreementVersion;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.activation.UnderlyingAgreementActivationDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.review.UnderlyingAgreementReviewDecision;
@@ -31,11 +31,11 @@ import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class UnderlyingAgreementVariationRequestPayload extends CcaRequestPayload implements UnderlyingAgreementVersion {
+public class UnderlyingAgreementVariationRequestPayload extends CcaRequestPayload {
 
 	private SchemeVersion workflowSchemeVersion;
 
-	private int underlyingAgreementVersion;
+	private Map<SchemeVersion, Integer> underlyingAgreementVersionMap;
 	
 	private AccountReferenceData accountReferenceData;
 
@@ -72,9 +72,9 @@ public class UnderlyingAgreementVariationRequestPayload extends CcaRequestPayloa
 
 	private Determination determination;
 	
-	private FileInfoDTO officialNotice;
+	private List<FileInfoDTO> officialNotices;
     
-    private FileInfoDTO underlyingAgreementDocument;
+	private Map<SchemeVersion, FileInfoDTO> underlyingAgreementDocuments;
 
 	@JsonIgnore
 	public Set<String> getFacilityIds() {

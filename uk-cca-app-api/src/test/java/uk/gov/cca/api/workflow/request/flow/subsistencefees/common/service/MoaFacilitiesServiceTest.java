@@ -32,7 +32,7 @@ class MoaFacilitiesServiceTest {
         final MoaType moaType = MoaType.SECTOR_MOA;
         final List<EligibleFacilityDTO> eligibleFacilityDTOs = List.of(EligibleFacilityDTO.builder()
                 .id(1L)
-                .facilityId("ADS_1-F00014")
+                .facilityBusinessId("ADS_1-F00014")
                 .siteName("site name 1")
                 .targetUnitBusinessId("business id 1")
                 .operatorName("Operator name 1")

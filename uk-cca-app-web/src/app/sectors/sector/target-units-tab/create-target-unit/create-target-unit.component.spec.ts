@@ -58,7 +58,6 @@ describe('CreateTargetUnitComponent', () => {
   it('should display the correct form fields', () => {
     expect(screen.getByText('Operator type')).toBeInTheDocument();
     expect(screen.getByText('Operator name')).toBeInTheDocument();
-    expect(screen.getByText('Does your company have a registration number?')).toBeInTheDocument();
     expect(screen.getByText('Standard Industrial Classification (SIC) codes (optional)')).toBeInTheDocument();
     expect(screen.getByText('Subsector')).toBeInTheDocument();
   });

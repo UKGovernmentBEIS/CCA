@@ -24,7 +24,6 @@ interface TransactionsTableState {
 @Component({
   selector: 'cca-transaction-table',
   templateUrl: './transactions-table.component.html',
-  standalone: true,
   imports: [TableComponent, RouterLink, GovukDatePipe, PaginationComponent, StatusPipe, StatusColorPipe, DecimalPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -78,7 +77,7 @@ export class TransactionsTableComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.state().pageSize) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   private handleQueryParamsNavigation(pagination: Partial<{ page: number; pageSize: number }>) {

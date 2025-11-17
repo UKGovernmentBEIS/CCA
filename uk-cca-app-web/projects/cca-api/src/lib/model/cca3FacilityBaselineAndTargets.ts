@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { FacilityBaselineEnergyConsumption } from './facilityBaselineEnergyConsumption';
 import { FacilityTargetComposition } from './facilityTargetComposition';
 import { FacilityTargets } from './facilityTargets';
 import { FacilityBaselineData } from './facilityBaselineData';
@@ -16,5 +17,6 @@ import { FacilityBaselineData } from './facilityBaselineData';
 export interface Cca3FacilityBaselineAndTargets {
   targetComposition: FacilityTargetComposition;
   baselineData: FacilityBaselineData;
+  facilityBaselineEnergyConsumption: FacilityBaselineEnergyConsumption;
   facilityTargets: FacilityTargets;
 }

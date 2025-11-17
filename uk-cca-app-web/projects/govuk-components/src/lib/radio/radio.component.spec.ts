@@ -8,7 +8,6 @@ import { RadioOptionComponent } from './radio-option/radio-option.component';
 
 describe('RadioComponent', () => {
   @Component({
-    standalone: true,
     imports: [RadioComponent, ReactiveFormsModule, RadioOptionComponent],
     template: `
       <div govuk-radio [formControl]="control">

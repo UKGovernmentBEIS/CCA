@@ -53,9 +53,9 @@ export class TuMoaDetailsStore extends SignalStore<TuMoaDetailsState> {
     const selectedFacilities = this.state.selectedFacilities;
 
     if (checked) {
-      selectedFacilities.set(selectedRow.facilityId, selectedRow);
+      selectedFacilities.set(selectedRow.facilityBusinessId, selectedRow);
     } else {
-      selectedFacilities.delete(selectedRow.facilityId);
+      selectedFacilities.delete(selectedRow.facilityBusinessId);
     }
 
     this.updateState({ selectedFacilities });

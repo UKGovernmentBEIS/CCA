@@ -3,7 +3,6 @@ package uk.gov.cca.api.migration.facilitycertification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.stereotype.Service;
-import uk.gov.cca.api.facility.domain.dto.FacilityDataDetailsDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationStatus;
 import uk.gov.cca.api.migration.MigrationEndpoint;
@@ -48,16 +47,16 @@ public class FacilityCertificationMigrationValidationService {
         
         // Rule: Facility ID must exist
         try {
-            FacilityDataDetailsDTO facilityData = facilityDataQueryService.getFacilityData(vo.getFacilityId());
-            vo.setId(facilityData.getId());
+            Long facilityId = facilityDataQueryService.getIdByFacilityBusinessId(vo.getFacilityBusinessId());
+            vo.setFacilityId(facilityId);
         } catch (Exception e) {
-            errors.add(validationError("Facility ID %s does not exist.", vo.getFacilityId()));
+            errors.add(validationError("Facility ID %s does not exist.", vo.getFacilityBusinessId()));
             return errors;
         }
         
         // Rule: Migrate Facility Certification Status only if not already set
-        if (facilityCertificationService.existsFacilityCertificationByFacilityIdAndCertificationPeriodId(vo.getId(), vo.getCertificationPeriodId())) {
-            errors.add(validationError("Facility ID %s has already defined Certification Status.", vo.getFacilityId()));
+        if (facilityCertificationService.existsFacilityCertificationByFacilityIdAndCertificationPeriodId(vo.getFacilityId(), vo.getCertificationPeriodId())) {
+            errors.add(validationError("Facility ID %s has already defined Certification Status.", vo.getFacilityBusinessId()));
             return errors;
         }
         
@@ -68,13 +67,13 @@ public class FacilityCertificationMigrationValidationService {
         if (status == FacilityCertificationStatus.CERTIFIED) {
             if (startDate == null) {
                 errors.add(validationError(
-                        "Facility ID %s is certified but no certification start date is provided.", vo.getFacilityId()));
+                        "Facility ID %s is certified but no certification start date is provided.", vo.getFacilityBusinessId()));
             } else {
                 // Rule: Start Date must be within CP range
                 if (startDate.isBefore(certificationPeriod.getStartDate()) || startDate.isAfter(certificationPeriod.getEndDate())) {
                     errors.add(validationError(
                             "Facility ID %s has certification start date out of %s range.",
-                            vo.getFacilityId(),
+                            vo.getFacilityBusinessId(),
                             vo.getCertificationPeriodType()));
                 }
             }
@@ -83,7 +82,7 @@ public class FacilityCertificationMigrationValidationService {
         // Rule: Decertified must not have a date
         if (status == FacilityCertificationStatus.DECERTIFIED && startDate != null) {
             errors.add(validationError(
-                    "Facility ID %s is decertified but certification start date is present.", vo.getFacilityId()));
+                    "Facility ID %s is decertified but certification start date is present.", vo.getFacilityBusinessId()));
         }
         
         return errors;

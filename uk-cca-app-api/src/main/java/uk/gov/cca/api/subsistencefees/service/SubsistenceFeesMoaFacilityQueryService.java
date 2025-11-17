@@ -64,7 +64,7 @@ public class SubsistenceFeesMoaFacilityQueryService implements SubsistenceFeesMo
         return PageRequest.of(
                 criteria.getPaging().getPageNumber(),
                 criteria.getPaging().getPageSize(),
-                Sort.by("fd.facilityId")
+                Sort.by("fd.facilityBusinessId")
         		);
     }
 }

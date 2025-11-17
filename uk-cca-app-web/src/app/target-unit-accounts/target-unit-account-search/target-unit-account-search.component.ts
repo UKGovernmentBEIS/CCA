@@ -14,6 +14,9 @@ import { AccountSearchResultInfoDTO, TargetUnitAccountInfoViewService } from 'cc
 
 import { TargetUnitAccountsListComponent } from '../target-unit-accounts-list/target-unit-accounts-list.component';
 
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 50;
+
 type SearchCriteria = {
   term: string | null;
   page: number;
@@ -28,7 +31,6 @@ type AccountSearchState = {
 @Component({
   selector: 'cca-target-unit-account-search',
   templateUrl: './target-unit-account-search.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     PageHeadingComponent,
@@ -51,8 +53,8 @@ export class TargetUnitAccountSearchComponent {
     totalItems: 0,
   });
 
-  readonly currentPage = signal(1);
-  readonly pageSize = signal(50);
+  readonly currentPage = signal(DEFAULT_PAGE);
+  readonly pageSize = signal(DEFAULT_PAGE_SIZE);
   readonly accounts = computed(() => this.state().accounts);
   readonly count = computed(() => this.state().totalItems);
 

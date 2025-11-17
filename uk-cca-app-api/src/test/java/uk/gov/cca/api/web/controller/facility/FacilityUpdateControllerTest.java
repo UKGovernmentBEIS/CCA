@@ -51,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @EnableWebMvc
 class FacilityUpdateControllerTest {
 
-    private static final String BASE_PATH = "/v1.0/facilities/ADS_1-F00023";
+    private static final String BASE_PATH = "/v1.0/facilities/1";
 
     private MockMvc mockMvc;
 
@@ -115,7 +115,7 @@ class FacilityUpdateControllerTest {
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
         verify(facilityDataUpdateService, times(1))
-                .updateFacilitySchemeExitDate("ADS_1-F00023", facilitySchemeExitDateDTO.getSchemeExitDate());
+                .updateFacilitySchemeExitDate(1L, facilitySchemeExitDateDTO.getSchemeExitDate());
     }
 
     @Test
@@ -128,7 +128,7 @@ class FacilityUpdateControllerTest {
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         doThrow(new BusinessException(ErrorCode.FORBIDDEN))
                 .when(appUserAuthorizationService)
-                .authorize(user, "updateFacilitySchemeExitDate", "ADS_1-F00023", null, null);
+                .authorize(user, "updateFacilitySchemeExitDate", "1", null, null);
 
         mockMvc.perform(MockMvcRequestBuilders.patch(BASE_PATH + "/scheme-exit-date")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -143,17 +143,16 @@ class FacilityUpdateControllerTest {
     @Test
     void updateFacilityCertificationStatus() {
 
-        final String facilityId = "ADS_1-F00023";
         final FacilityCertificationStatusUpdateDTO facilityCertificationStatusUpdateDTO = FacilityCertificationStatusUpdateDTO.builder()
                 .certificationStatus(FacilityCertificationStatus.CERTIFIED)
                 .certificationPeriodId(2L)
                 .build();
 
-        ResponseEntity<Void> result = controller.updateFacilityCertificationStatus(facilityId, facilityCertificationStatusUpdateDTO);
+        ResponseEntity<Void> result = controller.updateFacilityCertificationStatus(1L, facilityCertificationStatusUpdateDTO);
 
         assertEquals(new ResponseEntity<Void>(HttpStatus.NO_CONTENT), result);
         verify(facilityInfoServiceOrchestrator, times(1))
-                .updateFacilityCertificationStatus(facilityId, facilityCertificationStatusUpdateDTO);
+                .updateFacilityCertificationStatus(1L, facilityCertificationStatusUpdateDTO);
     }
 
 }

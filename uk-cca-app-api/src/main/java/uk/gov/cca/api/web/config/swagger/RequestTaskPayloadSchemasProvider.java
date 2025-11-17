@@ -6,6 +6,10 @@ import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domai
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.peerreview.domain.AdminTerminationPeerReviewRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.AdminTerminationWithdrawRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivationRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataDownloadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadSubmitRequestTaskPayload;
@@ -67,6 +71,15 @@ public class RequestTaskPayloadSchemasProvider extends SwaggerSchemasAbstractPro
 		// PAT
 		addResolvedShemas(PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class.getSimpleName(),
 				PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload.class);
-    }
+
+		// CCA3 Existing Facilities Migration
+		addResolvedShemas(Cca3ExistingFacilitiesMigrationAccountProcessingActivationRequestTaskPayload.class.getSimpleName(),
+				Cca3ExistingFacilitiesMigrationAccountProcessingActivationRequestTaskPayload.class);
+
+		// Facility Audit
+		addResolvedShemas(PreAuditReviewSubmitRequestTaskPayload.class.getSimpleName(), PreAuditReviewSubmitRequestTaskPayload.class);
+		addResolvedShemas(AuditDetailsCorrectiveActionsSubmitRequestTaskPayload.class.getSimpleName(), AuditDetailsCorrectiveActionsSubmitRequestTaskPayload.class);
+		addResolvedShemas(AuditTrackCorrectiveActionsRequestTaskPayload.class.getSimpleName(), AuditTrackCorrectiveActionsRequestTaskPayload.class);
+	}
 
 }

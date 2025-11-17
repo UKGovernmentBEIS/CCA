@@ -16,7 +16,6 @@ import { AssigneeUserInfoDTO } from 'cca-api';
       </div>
     </div>
   `,
-  standalone: true,
   imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

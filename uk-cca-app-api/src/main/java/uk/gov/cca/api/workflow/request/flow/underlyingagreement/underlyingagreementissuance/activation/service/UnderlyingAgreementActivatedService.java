@@ -3,13 +3,16 @@ package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagree
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
+
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountUpdateDTO;
 import uk.gov.cca.api.account.service.TargetUnitAccountUpdateService;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataCreationDTO;
 import uk.gov.cca.api.facility.service.FacilityDataUpdateService;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
+import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementDocument;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementEntity;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
@@ -17,6 +20,7 @@ import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.UnderlyingAgreementFacilityCertificationTransferService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.transform.UnderlyingAgreementAccountReferenceDataMapper;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementFacilityReviewDecision;
@@ -69,20 +73,22 @@ public class UnderlyingAgreementActivatedService {
         saveFacilityDataAndCertifications(accountId, unaContainerFinal, requestPayload.getFacilitiesReviewGroupDecisions());
 
         // Save search keywords
-        saveKeywords(accountId, unaContainerFinal);
+        saveKeywords(accountId, requestPayload.getUnderlyingAgreement().getUnderlyingAgreementTargetUnitDetails(), unaContainerFinal);
 
         TargetUnitAccountUpdateDTO targetUnitAccountUpdateDTO = ACCOUNT_DATA_MAPPER.toTargetUnitAccountUpdateDTO(
                 requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails());
 
         // Update account status and details
         targetUnitAccountUpdateService.activateTargetUnitAccount(
-                accountId, targetUnitAccountUpdateDTO, underlyingAgreementEntity.getActivationDate());
+                accountId, targetUnitAccountUpdateDTO, getMinActivationDate(underlyingAgreementEntity.getUnderlyingAgreementDocuments()));
     }
 
-    private void saveKeywords(Long accountId, UnderlyingAgreementContainer unaContainer) {
+	private void saveKeywords(final Long accountId, final UnderlyingAgreementTargetUnitDetails underlyingAgreementTargetUnitDetails,
+                              final UnderlyingAgreementContainer unaContainer) {
 
         // Create search keywords
-        final Map<String, String> searchKeywordsForAccount = underlyingAgreementService.createSearchKeywordsForAccount(unaContainer);
+        final Map<String, String> searchKeywordsForAccount = underlyingAgreementService
+                .createSearchKeywordsForAccount(underlyingAgreementTargetUnitDetails.getOperatorName(), unaContainer);
 
         // Store facility IDs and postcodes as search keywords
         accountSearchAdditionalKeywordService.storeKeywordsForAccount(accountId, searchKeywordsForAccount);
@@ -93,7 +99,7 @@ public class UnderlyingAgreementActivatedService {
                 .map(Facility::getFacilityItem)
                 .collect(Collectors.toSet());
 
-        Map<String, LocalDate> chargeStartDateByFacilityId =
+        Map<String, LocalDate> chargeStartDateByFacilityBusinessId =
                 facilitiesReviewGroupDecisions.entrySet().stream()
                         .filter(facilityReviewDecision -> facilityReviewDecision.getValue().getStartDate() != null)
                         .collect(Collectors.toMap(Map.Entry::getKey,
@@ -101,29 +107,37 @@ public class UnderlyingAgreementActivatedService {
 
         // Save facility data
         Set<FacilityBaseInfoDTO> createdFacilities = facilityDataUpdateService.createFacilitiesData(
-                buildFacilitiesData(accountId, facilities, chargeStartDateByFacilityId));
+                buildFacilitiesData(accountId, facilities, chargeStartDateByFacilityBusinessId));
 
         facilityTransferService.processFacilityCertificationsForNewFacilities(createdFacilities, facilities);
     }
 
-    private List<FacilityDataCreationDTO> buildFacilitiesData(Long accountId, Set<FacilityItem> facilities, Map<String, LocalDate> chargeStartDatePerFacilityId) {
+    private List<FacilityDataCreationDTO> buildFacilitiesData(Long accountId, Set<FacilityItem> facilities, Map<String, LocalDate> chargeStartDatePerFacilityBusinessId) {
         LocalDateTime createdDate = LocalDateTime.now();
         return facilities.stream()
                 .map(facility -> {
-                    String facilityId = facility.getFacilityId();
+                    String facilityBusinessId = facility.getFacilityId();
                     String siteName = facility.getFacilityDetails().getName();
-                    AccountAddressDTO facilityAddress = facility.getFacilityDetails().getFacilityAddress();
+                    FacilityAddressDTO facilityAddress = facility.getFacilityDetails().getFacilityAddress();
 
                     return FacilityDataCreationDTO.builder()
                             .accountId(accountId)
-                            .facilityId(facilityId)
+                            .facilityBusinessId(facilityBusinessId)
                             .siteName(siteName)
                             .createdDate(createdDate)
-                            .chargeStartDate(chargeStartDatePerFacilityId.get(facilityId))
+                            .chargeStartDate(chargeStartDatePerFacilityBusinessId.get(facilityBusinessId))
                             .address(facilityAddress)
                             .participatingSchemeVersions(facility.getFacilityDetails().getParticipatingSchemeVersions())
                             .build();
                 })
                 .toList();
     }
+    
+    private LocalDateTime getMinActivationDate(List<UnderlyingAgreementDocument> underlyingAgreementDocuments) {
+		return underlyingAgreementDocuments.stream()
+				.map(UnderlyingAgreementDocument::getActivationDate)
+			      .min(LocalDateTime::compareTo)
+			      .orElse(null);
+			      
+	}
 }

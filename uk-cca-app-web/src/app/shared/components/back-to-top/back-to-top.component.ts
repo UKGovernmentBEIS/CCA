@@ -19,7 +19,6 @@ import { RouterLink } from '@angular/router';
       Back to top
     </a>
   `,
-  standalone: true,
   imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

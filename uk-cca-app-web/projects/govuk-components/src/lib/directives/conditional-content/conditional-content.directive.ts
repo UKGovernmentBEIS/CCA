@@ -1,10 +1,7 @@
 import { Directive, forwardRef, contentChildren } from '@angular/core';
 import { AbstractControl, AbstractControlDirective, ControlContainer, NgControl } from '@angular/forms';
 
-@Directive({
-  selector: '[govukConditionalContent]',
-  standalone: true,
-})
+@Directive({ selector: '[govukConditionalContent]' })
 export class ConditionalContentDirective {
   private readonly childControls = contentChildren(NgControl, { descendants: true });
   private readonly childContainers = contentChildren(ControlContainer, { descendants: true });

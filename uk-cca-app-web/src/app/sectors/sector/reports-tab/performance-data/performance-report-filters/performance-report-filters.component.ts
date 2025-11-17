@@ -15,7 +15,6 @@ import {
 @Component({
   selector: 'cca-performance-report-filters',
   templateUrl: './performance-report-filters.component.html',
-  standalone: true,
   imports: [SelectComponent, ButtonDirective, ReactiveFormsModule, UtilityPanelComponent, TextInputComponent],
   providers: [PerformanceDataReportFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,

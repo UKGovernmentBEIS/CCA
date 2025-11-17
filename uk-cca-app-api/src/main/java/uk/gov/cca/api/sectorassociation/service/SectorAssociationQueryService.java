@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.authorization.ccaauth.core.service.AppUserService;
 import uk.gov.cca.api.authorization.ccaauth.rules.services.authorityinfo.providers.SectorAssociationAuthorityInfoProvider;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDTO;
 import uk.gov.cca.api.sectorassociation.domain.dto.SectorAssociationDetailsDTO;
@@ -109,6 +110,10 @@ public class SectorAssociationQueryService implements SectorAssociationAuthority
     			.map(sectorAssociationMapper::toSectorAssociationInfoNameDTO)
     			.collect(Collectors.toList());
     }
+
+	public Optional<SectorAssociation> findSectorAssociationByAcronymAndScheme(String acronym, SchemeVersion version) {
+		return sectorAssociationRepository.findByAcronymAndSectorAssociationSchemesSchemeVersionIs(acronym, version);
+	}
 
     SectorAssociation getById(Long id) {
         return sectorAssociationRepository.findById(id)

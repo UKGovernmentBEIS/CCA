@@ -1,6 +1,5 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
-import { OperatorTypePipe } from '@shared/pipes';
-import { getAddressAsArray } from '@shared/utils';
+import { OperatorTypePipe, transformAddress } from '@shared/pipes';
 
 import { UnderlyingAgreementReviewDecision, UnderlyingAgreementTargetUnitDetails } from 'cca-api';
 
@@ -24,9 +23,11 @@ function toVariationReviewTargetUnitDetailsSummaryFactory(
     })
     .addRow('Company number', targetUnitDetails?.companyRegistrationNumber ?? 'Not provided', {
       change: isEditable,
+      changeLink: prefix + ReviewTargetUnitDetailsWizardStep.COMPANY_REGISTRATION_NUMBER,
     })
     .addRow('Reason for not having a registration number', targetUnitDetails?.registrationNumberMissingReason, {
       change: isEditable,
+      changeLink: prefix + ReviewTargetUnitDetailsWizardStep.COMPANY_REGISTRATION_NUMBER,
     });
 
   if (targetUnitDetails?.subsectorAssociationName) {
@@ -37,7 +38,7 @@ function toVariationReviewTargetUnitDetailsSummaryFactory(
 
   factory
     .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep?.OPERATOR_ADDRESS)
-    .addRow('Address', getAddressAsArray(targetUnitDetails?.operatorAddress), {
+    .addRow('Address', transformAddress(targetUnitDetails?.operatorAddress), {
       change: isEditable,
     })
 
@@ -51,7 +52,7 @@ function toVariationReviewTargetUnitDetailsSummaryFactory(
     .addRow('Email address', targetUnitDetails?.responsiblePersonDetails?.email, {
       change: isEditable,
     })
-    .addRow('Address', getAddressAsArray(targetUnitDetails?.responsiblePersonDetails?.address), {
+    .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address), {
       change: isEditable,
     });
 
@@ -75,6 +76,7 @@ export function toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
   prefix = '../',
 ): SummaryData {
   const factory = toVariationReviewTargetUnitDetailsSummaryFactory(targetUnitDetails, isEditable, prefix);
+  if (!decision?.type) return factory.create();
   return addDecisionSummaryData(factory, decision, attachments, isEditable, downloadUrl).create();
 }
 
@@ -108,7 +110,7 @@ function toVariationReviewTargetUnitDetailsOriginalSummaryFactory(
 
   factory
     .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep?.OPERATOR_ADDRESS)
-    .addRow('Address', getAddressAsArray(targetUnitDetails.operatorAddress), {
+    .addRow('Address', transformAddress(targetUnitDetails.operatorAddress), {
       change: isEditable,
     })
     .addSection('Responsible Person', prefix + ReviewTargetUnitDetailsWizardStep?.RESPONSIBLE_PERSON)
@@ -121,7 +123,7 @@ function toVariationReviewTargetUnitDetailsOriginalSummaryFactory(
     .addRow('Email address', targetUnitDetails.responsiblePersonDetails.email, {
       change: isEditable,
     })
-    .addRow('Address', getAddressAsArray(targetUnitDetails.responsiblePersonDetails.address), {
+    .addRow('Address', transformAddress(targetUnitDetails.responsiblePersonDetails.address), {
       change: isEditable,
     });
 
@@ -134,16 +136,4 @@ export function toVariationReviewTargetUnitDetailsOriginalSummaryData(
   prefix = '../',
 ): SummaryData {
   return toVariationReviewTargetUnitDetailsOriginalSummaryFactory(targetUnitDetails, isEditable, prefix).create();
-}
-
-export function toVariationReviewTargetUnitDetailsOriginalSummaryDataWithDecision(
-  targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
-  decision: UnderlyingAgreementReviewDecision,
-  attachments: Record<string, string>,
-  downloadUrl: string,
-  isEditable: boolean,
-  prefix = '../',
-): SummaryData {
-  const factory = toVariationReviewTargetUnitDetailsOriginalSummaryFactory(targetUnitDetails, isEditable, prefix);
-  return addDecisionSummaryData(factory, decision, attachments, isEditable, downloadUrl).create();
 }

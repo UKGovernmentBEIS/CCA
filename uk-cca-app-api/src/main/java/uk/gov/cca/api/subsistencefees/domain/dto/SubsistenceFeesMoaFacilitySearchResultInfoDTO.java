@@ -16,7 +16,7 @@ public class SubsistenceFeesMoaFacilitySearchResultInfoDTO {
 
 	private Long moaFacilityId;
 	
-	private String facilityId;
+	private String facilityBusinessId;
 	
 	private String facilityName;
         

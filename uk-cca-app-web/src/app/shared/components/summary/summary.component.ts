@@ -16,7 +16,6 @@ import { SummaryData, SummarySection } from './type';
 @Component({
   selector: 'cca-summary',
   templateUrl: './summary.component.html',
-  standalone: true,
   imports: [
     SummaryListComponent,
     SummaryListRowDirective,

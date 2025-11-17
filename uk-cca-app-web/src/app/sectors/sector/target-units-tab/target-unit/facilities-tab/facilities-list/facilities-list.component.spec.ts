@@ -151,7 +151,7 @@ describe('FacilitiesListComponent', () => {
       component.form.get('term')?.setValue('');
       component.onSearch();
 
-      expect(routerNavigateSpy).not.toHaveBeenCalled();
+      expect(routerNavigateSpy).toHaveBeenCalledTimes(1);
     });
   });
 

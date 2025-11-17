@@ -12,7 +12,6 @@ import { PageHeadingComponent } from '@netz/common/components';
       </div>
     </div>
   `,
-  standalone: true,
   imports: [PageHeadingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

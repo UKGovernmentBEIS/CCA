@@ -20,8 +20,6 @@ const mockState = {
       underlyingAgreementTargetUnitDetails: {
         operatorName: 'Test Operator',
         operatorType: 'LIMITED_COMPANY',
-        isCompanyRegistrationNumber: true,
-        companyRegistrationNumber: '12345678',
         subsectorAssociationId: 1,
       },
     },
@@ -33,9 +31,6 @@ const mockState = {
 const mockForm = new FormGroup({
   operatorName: new FormControl('Test Operator'),
   operatorType: new FormControl('LIMITED_COMPANY'),
-  isCompanyRegistrationNumber: new FormControl(true),
-  companyRegistrationNumber: new FormControl('12345678'),
-  registrationNumberMissingReason: new FormControl(null),
   subsectorAssociationId: new FormControl(1),
 });
 
@@ -98,7 +93,7 @@ describe('TargetUnitDetailsComponent', () => {
     expect(heading.nativeElement.textContent).toContain('Target unit details');
   });
 
-  it('should submit form and navigate to check-your-answers', () => {
+  it('should submit form and navigate to operator address', () => {
     const onSubmitSpy = jest.spyOn(component, 'onSubmit');
     const navigateSpy = jest.spyOn(router, 'navigate');
 
@@ -109,7 +104,7 @@ describe('TargetUnitDetailsComponent', () => {
 
     expect(onSubmitSpy).toHaveBeenCalled();
     expect(tasksApiService.saveRequestTaskAction).toHaveBeenCalled();
-    expect(navigateSpy).toHaveBeenCalledWith(['../check-your-answers'], { relativeTo: route });
+    expect(navigateSpy).toHaveBeenCalledWith(['../operator-address'], { relativeTo: route });
   });
 
   it('should update form and submit with new values', () => {

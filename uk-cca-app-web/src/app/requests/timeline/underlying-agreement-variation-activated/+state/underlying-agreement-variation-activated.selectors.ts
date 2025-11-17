@@ -15,9 +15,9 @@ const selectPayload: StateSelector<RequestActionState, UnderlyingAgreementVariat
     (actionPayload) => actionPayload as UnderlyingAgreementVariationActivatedRequestActionPayload,
   );
 
-const selectOfficialNotice: StateSelector<RequestActionState, FileInfoDTO> = createDescendingSelector(
+const selectOfficialNotices: StateSelector<RequestActionState, FileInfoDTO[]> = createDescendingSelector(
   selectPayload,
-  (payload) => payload.officialNotice,
+  (payload) => payload.officialNotices,
 );
 
 const selectUsersInfo: StateSelector<
@@ -35,10 +35,10 @@ const selectDecisionNotification: StateSelector<RequestActionState, CcaDecisionN
   (payload) => payload.decisionNotification,
 );
 
-const selectUnderlyingAgreementDocument: StateSelector<RequestActionState, FileInfoDTO> = createDescendingSelector(
-  selectPayload,
-  (payload) => payload.underlyingAgreementDocument,
-);
+const selectUnderlyingAgreementDocuments: StateSelector<
+  RequestActionState,
+  Record<string, FileInfoDTO>
+> = createDescendingSelector(selectPayload, (payload) => payload.underlyingAgreementDocuments);
 
 const selectUnderlyingAgreementActivationDetails: StateSelector<
   RequestActionState,
@@ -52,11 +52,11 @@ const selectUnderlyingAgreementActivationAttachments: StateSelector<
 
 export const underlyingAgreementVariationActivatedQuery = {
   selectPayload,
-  selectOfficialNotice,
+  selectOfficialNotices,
   selectUsersInfo,
   selectDefaultContacts,
   selectDecisionNotification,
-  selectUnderlyingAgreementDocument,
+  selectUnderlyingAgreementDocuments,
   selectUnderlyingAgreementActivationDetails,
   selectUnderlyingAgreementActivationAttachments,
 };

@@ -13,5 +13,11 @@
 export interface DefaultNoticeRecipient {
   name: string;
   email: string;
-  recipientType: 'RESPONSIBLE_PERSON' | 'ADMINISTRATIVE_CONTACT' | 'SECTOR_CONTACT' | 'SECTOR_USER' | 'OPERATOR';
+  recipientType:
+    | 'RESPONSIBLE_PERSON'
+    | 'ADMINISTRATIVE_CONTACT'
+    | 'SECTOR_CONTACT'
+    | 'SECTOR_USER'
+    | 'SECTOR_CONSULTANT'
+    | 'OPERATOR';
 }

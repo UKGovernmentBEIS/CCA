@@ -18,7 +18,7 @@ import {
 } from '@netz/govuk-components';
 import { PhaseBarComponent, WorkflowTaskHeaderComponent } from '@shared/components';
 import { ConfigService } from '@shared/config';
-import { AnalyticsService, AuthService } from '@shared/services';
+import { AnalyticsService, AuthService, CountryService, CountyService } from '@shared/services';
 
 import { CookiesService } from './cookies/cookies.service';
 import { CookiesContainerComponent } from './cookies/cookies-container.component';
@@ -27,7 +27,6 @@ import { TimeoutBannerComponent } from './timeout/timeout-banner/timeout-banner.
 @Component({
   selector: 'cca-root',
   templateUrl: './app.component.html',
-  standalone: true,
   imports: [
     CookiesContainerComponent,
     HeaderComponent,
@@ -56,6 +55,8 @@ export class AppComponent implements OnInit {
   private readonly analyticsService = inject(AnalyticsService);
   private readonly configService = inject(ConfigService);
   protected readonly authService = inject(AuthService);
+  protected readonly countryService = inject(CountryService);
+  protected readonly countyService = inject(CountyService);
 
   private readonly userState = this.authStore.select(selectUserState);
   private readonly roleType = this.authStore.select(selectUserRoleType);

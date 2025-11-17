@@ -16,7 +16,6 @@ import { LabelSizeType } from './label-size.type';
 @Component({
   selector: 'div[govuk-textarea]',
   templateUrl: './textarea.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, ErrorMessageComponent],
 })
 export class TextareaComponent extends FormInput implements ControlValueAccessor, AfterViewInit {

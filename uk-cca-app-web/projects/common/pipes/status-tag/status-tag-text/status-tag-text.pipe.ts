@@ -4,7 +4,6 @@ import { TASK_STATUS_TAG_MAP, TaskStatusTagMap } from '../status-tag.providers';
 
 @Pipe({
   name: 'statusTagText',
-  standalone: true,
   pure: true,
 })
 export class StatusTagTextPipe implements PipeTransform {

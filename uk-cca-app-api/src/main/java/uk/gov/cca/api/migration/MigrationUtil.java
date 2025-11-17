@@ -1,6 +1,7 @@
 package uk.gov.cca.api.migration;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
 import lombok.experimental.UtilityClass;
@@ -37,6 +38,14 @@ public class MigrationUtil {
         }
         return bigDecimal.multiply(BigDecimal.valueOf(100L));
     }
+
+	public BigDecimal toDecimal(BigDecimal bigDecimal) {
+        if (bigDecimal == null) {
+            return null;
+        }
+        return bigDecimal.divide(BigDecimal.valueOf(100L), 9, RoundingMode.HALF_UP)
+		        .stripTrailingZeros();
+    }
     
     public AgreementType getAgreementType(String agreementType) {
         if (agreementType == null) {
@@ -61,7 +70,7 @@ public class MigrationUtil {
         return measurementType;
     }
 
-    private MeasurementType getMeasurementTypeByDescription(String description) {
+    public MeasurementType getMeasurementTypeByDescription(String description) {
         return Arrays.stream(MeasurementType.values())
                 .filter(targetUnit -> targetUnit.getDescription().equalsIgnoreCase(description))
                 .findFirst()

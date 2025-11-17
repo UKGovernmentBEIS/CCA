@@ -25,7 +25,6 @@ import { PatReportStore } from '../../pat-report-store';
 @Component({
   selector: 'cca-pat-report',
   templateUrl: './pat-report.component.html',
-  standalone: true,
   imports: [
     FormsModule,
     ReactiveFormsModule,

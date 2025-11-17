@@ -32,7 +32,6 @@ export type TargetUnitUserFormModel = FormGroup<{
 @Component({
   selector: 'cca-users-and-contacts',
   templateUrl: './users-and-contacts-tab.component.html',
-  standalone: true,
   imports: [
     ButtonDirective,
     RouterLink,

@@ -9,7 +9,6 @@ import { toReasonForAdminTerminationDetailsSummaryData } from './to-reason-for-a
 @Component({
   selector: 'cca-reason-for-admin-termination',
   template: `<cca-summary [data]="summaryData" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

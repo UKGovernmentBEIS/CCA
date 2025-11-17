@@ -17,7 +17,6 @@ import { MiReportsExportService } from '../core/mi-reports-export.service';
 @Component({
   selector: 'cca-custom',
   templateUrl: './custom.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, ReactiveFormsModule, TextareaComponent, ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

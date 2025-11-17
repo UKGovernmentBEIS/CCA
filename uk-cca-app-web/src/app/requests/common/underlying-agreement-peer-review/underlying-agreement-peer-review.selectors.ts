@@ -81,6 +81,18 @@ const selectSectorAssociationDetailsSchemeData = (scheme: string) =>
 const selectFacility = (facilityId: string): StateSelector<RequestTaskState, Facility> =>
   createDescendingSelector(selectFacilities, (facilities) => facilities?.find((f) => f.facilityId === facilityId));
 
+const selectFacilityTargetComposition = (facilityIndex: number) =>
+  createDescendingSelector(
+    selectUnderlyingAgreement,
+    (una) => una?.facilities?.[facilityIndex]?.cca3BaselineAndTargets?.targetComposition,
+  );
+
+const selectFacilityBaselineEnergyConsumption = (facilityIndex: number) =>
+  createDescendingSelector(
+    selectUnderlyingAgreement,
+    (una) => una?.facilities?.[facilityIndex]?.cca3BaselineAndTargets?.facilityBaselineEnergyConsumption,
+  );
+
 export const underlyingAgreementPeerReviewQuery = {
   selectPayload,
   selectAccountReferenceData,
@@ -91,6 +103,8 @@ export const underlyingAgreementPeerReviewQuery = {
   selectManageFacilities,
   selectFacilities,
   selectFacility,
+  selectFacilityTargetComposition,
+  selectFacilityBaselineEnergyConsumption,
   selectDetermination,
   selectReviewGroupDecisions,
   selectFacilitiesReviewGroupDecisions,

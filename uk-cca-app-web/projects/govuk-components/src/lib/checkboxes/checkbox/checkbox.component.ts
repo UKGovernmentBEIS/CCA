@@ -14,7 +14,6 @@ import { ConditionalContentDirective } from '../../directives';
 
 @Component({
   selector: 'govuk-checkbox',
-  standalone: true,
   templateUrl: './checkbox.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [],
@@ -25,6 +24,7 @@ export class CheckboxComponent<T> implements ControlValueAccessor {
   readonly value = input<T>();
   readonly label = input<string>();
   readonly hint = input<string>();
+  readonly divider = input<string | null>(null);
 
   readonly conditional = contentChild(ConditionalContentDirective);
 

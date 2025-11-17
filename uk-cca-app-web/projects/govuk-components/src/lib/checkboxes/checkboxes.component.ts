@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { AfterContentInit, Component, input, contentChildren, inject } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, NgControl, UntypedFormBuilder } from '@angular/forms';
+import { ControlContainer, ControlValueAccessor, NgControl } from '@angular/forms';
 
 import { ErrorMessageComponent } from '../error-message';
 import { FieldsetDirective, FieldsetHintDirective, LegendDirective, LegendSizeType } from '../fieldset';
@@ -14,13 +14,10 @@ import { CheckboxComponent } from './checkbox/checkbox.component';
  */
 @Component({
   selector: 'div[govuk-checkboxes]',
-  standalone: true,
   templateUrl: './checkboxes.component.html',
   imports: [ErrorMessageComponent, NgTemplateOutlet, LegendDirective, FieldsetHintDirective, FieldsetDirective],
 })
 export class CheckboxesComponent<T> extends FormInput implements AfterContentInit, ControlValueAccessor {
-  private readonly fb = inject(UntypedFormBuilder);
-
   readonly legend = input<string>();
   readonly legendSize = input<LegendSizeType>('large');
   readonly hint = input<string>();

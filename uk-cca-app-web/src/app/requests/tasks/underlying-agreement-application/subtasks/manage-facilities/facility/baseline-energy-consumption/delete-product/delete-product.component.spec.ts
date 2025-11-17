@@ -1,0 +1,128 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+
+import { of } from 'rxjs';
+
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { MockType } from '@netz/common/testing';
+import { TasksApiService, underlyingAgreementQuery } from '@requests/common';
+
+import {
+  mockActivatedRouteWithProductParams,
+  mockFacilityWithProducts,
+  mockRequestTaskId,
+  mockRequestTaskPayloadWithProducts,
+} from '../testing/mock-data';
+import { DeleteProductComponent } from './delete-product.component';
+
+describe('DeleteProductComponent', () => {
+  let component: DeleteProductComponent;
+  let fixture: ComponentFixture<DeleteProductComponent>;
+  let store: RequestTaskStore;
+  let tasksApiService: MockType<TasksApiService>;
+  let router: Router;
+
+  beforeEach(() => {
+    tasksApiService = {
+      saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    };
+
+    TestBed.configureTestingModule({
+      imports: [DeleteProductComponent, RouterModule],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        RequestTaskStore,
+        { provide: ActivatedRoute, useValue: mockActivatedRouteWithProductParams },
+        { provide: TasksApiService, useValue: tasksApiService },
+      ],
+    }).compileComponents();
+
+    store = TestBed.inject(RequestTaskStore);
+    router = TestBed.inject(Router);
+
+    jest.spyOn(store, 'select').mockImplementation((selector) => {
+      if (selector === requestTaskQuery.selectRequestTaskPayload) {
+        return signal(mockRequestTaskPayloadWithProducts);
+      }
+
+      if (selector === underlyingAgreementQuery.selectSectionsCompleted) return signal({});
+      if (selector === requestTaskQuery.selectRequestTaskId) return signal(mockRequestTaskId);
+
+      if (typeof selector === 'function') {
+        return signal(mockFacilityWithProducts);
+      }
+
+      return signal({});
+    });
+
+    fixture = TestBed.createComponent(DeleteProductComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should render the delete confirmation', () => {
+    expect(fixture).toMatchSnapshot();
+  });
+
+  it('should display product name in heading', () => {
+    const compiled = fixture.nativeElement;
+    expect(compiled.textContent).toContain('Product 1');
+  });
+
+  it('should display delete confirmation message', () => {
+    const compiled = fixture.nativeElement;
+    expect(compiled.textContent).toContain('Are you sure you want to delete');
+  });
+
+  it('should display warning about permanent deletion', () => {
+    const compiled = fixture.nativeElement;
+    expect(compiled.textContent).toContain('Your product and all its data will be deleted permanently');
+  });
+
+  it('should display warning about irreversible action', () => {
+    const compiled = fixture.nativeElement;
+    expect(compiled.textContent).toContain('You will not be able to undo this action');
+  });
+
+  it('should display delete product button', () => {
+    const compiled = fixture.nativeElement;
+    expect(compiled.textContent).toContain('Delete product');
+  });
+
+  it('should have product name from route params', () => {
+    expect(component['productName']).toBe('Product 1');
+  });
+
+  it('should have facility from store', () => {
+    expect(component['facility']()).toEqual(mockFacilityWithProducts);
+  });
+
+  it('should call saveRequestTaskAction when onDelete is called', () => {
+    jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    component.onDelete();
+    expect(tasksApiService.saveRequestTaskAction).toHaveBeenCalled();
+  });
+
+  it('should navigate after successful deletion', (done) => {
+    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    component.onDelete();
+
+    setTimeout(() => {
+      expect(navigateSpy).toHaveBeenCalledWith(['../..'], expect.any(Object));
+      done();
+    }, 100);
+  });
+
+  it('should display facility name in caption', () => {
+    const compiled = fixture.nativeElement;
+    expect(compiled.textContent).toContain('Facility 1');
+  });
+});

@@ -49,7 +49,7 @@ export function getAllUnderlyingAgreementSections(payload: UnderlyingAgreementRe
       title: 'Facilities',
       tasks: [
         {
-          status: calcManageFacilitiesStatus(payload.reviewSectionsCompleted),
+          status: calcManageFacilitiesStatus(payload.reviewSectionsCompleted, payload.underlyingAgreement?.facilities),
           link: `${routePrefix}/manage-facilities`,
           linkText: 'Manage facilities',
         },

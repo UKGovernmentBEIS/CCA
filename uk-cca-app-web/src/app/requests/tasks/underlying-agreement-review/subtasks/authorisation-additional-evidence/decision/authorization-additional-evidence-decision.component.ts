@@ -45,7 +45,6 @@ import { resetDetermination } from '../../../utils';
     <netz-return-to-task-or-action-page />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   providers: [decisionFormProvider('AUTHORISATION_AND_ADDITIONAL_EVIDENCE')],
   imports: [
     PageHeadingComponent,

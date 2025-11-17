@@ -4,9 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -16,7 +17,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
@@ -51,13 +57,34 @@ class UnderlyingAgreementVariationAcceptedGenerateDocumentsServiceTest {
         final String requestId = "1";
         final Long accountId = 5L;
         final String signatory = "signatory";
-        final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder().build();
+        final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder()
+        		.facilities(Set.of(Facility.builder()
+        				.facilityItem(FacilityItem.builder()
+        						.facilityDetails(FacilityDetails.builder()
+        								.participatingSchemeVersions(Set.of(SchemeVersion.CCA_2)).build()
+        								).build()
+        						)
+        				.status(FacilityStatus.LIVE)
+        				.build(), 
+        				Facility.builder()
+        				.facilityItem(FacilityItem.builder()
+        						.facilityDetails(FacilityDetails.builder()
+        								.participatingSchemeVersions(Set.of(SchemeVersion.CCA_3)).build()
+        								).build()
+        						)
+        				.status(FacilityStatus.LIVE)
+        				.build()
+        				))
+        		.build();
 
         final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
                 .decisionNotification(CcaDecisionNotification.builder()
                         .decisionNotification(DecisionNotification.builder().signatory(signatory).build())
                         .build())
                 .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
+                		.underlyingAgreement(underlyingAgreement)
+                		.build())
+                .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                 		.underlyingAgreement(underlyingAgreement)
                 		.build())
                 .build();
@@ -67,11 +94,15 @@ class UnderlyingAgreementVariationAcceptedGenerateDocumentsServiceTest {
                 .build();
         addResourcesToRequest(accountId, request);
 
-        UUID pdfUuid = UUID.randomUUID();
-        FileInfoDTO document = FileInfoDTO.builder()
-                .name("una.pdf")
-                .uuid(pdfUuid.toString())
+        FileInfoDTO document1 = FileInfoDTO.builder()
+                .name("una-cca2.pdf")
+                .uuid(UUID.randomUUID().toString())
                 .build();
+        FileInfoDTO document2 = FileInfoDTO.builder()
+                .name("una-cca3.pdf")
+                .uuid(UUID.randomUUID().toString())
+                .build();
+        Map<SchemeVersion, FileInfoDTO> documentMap = Map.of(SchemeVersion.CCA_2, document1, SchemeVersion.CCA_3, document2);
 
         UUID officialNoticePdfUuid = UUID.randomUUID();
         FileInfoDTO officialNotice = FileInfoDTO.builder()
@@ -79,34 +110,51 @@ class UnderlyingAgreementVariationAcceptedGenerateDocumentsServiceTest {
                 .uuid(officialNoticePdfUuid.toString())
                 .build();
 
-        when(createDocumentService.create(requestId))
-                .thenReturn(CompletableFuture.completedFuture(document));
+        when(createDocumentService.create(requestId, SchemeVersion.CCA_2))
+        		.thenReturn(CompletableFuture.completedFuture(document1));
+        when(createDocumentService.create(requestId, SchemeVersion.CCA_3))
+				.thenReturn(CompletableFuture.completedFuture(document2));
         when(officialNoticeService.generateAcceptedOfficialNotice(requestId))
                 .thenReturn(CompletableFuture.completedFuture(officialNotice));
         when(requestService.findRequestById(requestId)).thenReturn(request);
 
         service.generateDocuments(requestId);
 
-        verify(createDocumentService, times(1)).create(requestId);
+        verify(createDocumentService, times(1)).create(requestId, SchemeVersion.CCA_2);
+        verify(createDocumentService, times(1)).create(requestId, SchemeVersion.CCA_3);
         verify(officialNoticeService, times(1)).generateAcceptedOfficialNotice(requestId);
         verify(requestService, times(1)).findRequestById(requestId);
 
-        assertThat(requestPayload.getUnderlyingAgreementDocument()).isEqualTo(document);
-        assertThat(requestPayload.getOfficialNotice()).isEqualTo(officialNotice);
+        assertThat(requestPayload.getUnderlyingAgreementDocuments()).isEqualTo(documentMap);
+        assertThat(requestPayload.getOfficialNotices()).containsOnly(officialNotice);
     }
 
     @Test
     void generateDocuments_throws_business_exception() {
         final String requestId = "1";
         final String signatory = "signatory";
-
-        final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder().build();
+        final Long accountId = 5L;
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_2;
+        final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder()
+        		.facilities(Set.of(Facility.builder()
+        				.facilityItem(FacilityItem.builder()
+        						.facilityDetails(FacilityDetails.builder()
+        								.participatingSchemeVersions(Set.of(schemeVersion)).build()
+        								).build()
+        						)
+        				.status(FacilityStatus.LIVE)
+        				.build()
+        				))
+        		.build();
 
         final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
                 .decisionNotification(CcaDecisionNotification.builder()
                         .decisionNotification(DecisionNotification.builder().signatory(signatory).build())
                         .build())
                 .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
+                		.underlyingAgreement(underlyingAgreement)
+                		.build())
+                .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                 		.underlyingAgreement(underlyingAgreement)
                 		.build())
                 .build();
@@ -116,39 +164,58 @@ class UnderlyingAgreementVariationAcceptedGenerateDocumentsServiceTest {
                 .name("offnotice.pdf")
                 .uuid(officialNoticePdfUuid.toString())
                 .build();
+        
+        final Request request = Request.builder()
+                .payload(requestPayload)
+                .build();
+        addResourcesToRequest(accountId, request);
 
-        when(createDocumentService.create(requestId)).thenAnswer(answer -> {
+        when(createDocumentService.create(requestId, schemeVersion)).thenAnswer(answer -> {
             CompletableFuture<?> future = new CompletableFuture<>();
             future.completeExceptionally(new BusinessException(ErrorCode.DOCUMENT_TEMPLATE_FILE_GENERATION_ERROR, "una.pdf"));
             return future;
         });
-
+        when(requestService.findRequestById(requestId)).thenReturn(request);
         when(officialNoticeService.generateAcceptedOfficialNotice(requestId))
                 .thenReturn(CompletableFuture.completedFuture(officialNotice));
 
         BusinessException be = assertThrows(BusinessException.class, () -> service.generateDocuments(requestId));
         assertThat(be.getErrorCode()).isEqualTo(ErrorCode.DOCUMENT_TEMPLATE_FILE_GENERATION_ERROR);
 
-        verify(createDocumentService, times(1)).create(requestId);
+        verify(createDocumentService, times(1)).create(requestId, schemeVersion);
         verify(officialNoticeService, times(1)).generateAcceptedOfficialNotice(requestId);
-        verifyNoInteractions(requestService);
+        verify(requestService, times(1)).findRequestById(requestId);
 
-        assertThat(requestPayload.getUnderlyingAgreementDocument()).isNull();
-        assertThat(requestPayload.getOfficialNotice()).isNull();
+        assertThat(requestPayload.getUnderlyingAgreementDocuments()).isNull();
+        assertThat(requestPayload.getOfficialNotices()).isNull();
     }
 
     @Test
     void generateDocuments_throws_internal_server_error_exception() {
         final String requestId = "1";
         final String signatory = "signatory";
-
-        final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder().build();
+        final Long accountId = 5L;
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_2;
+        final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder()
+        		.facilities(Set.of(Facility.builder()
+        				.facilityItem(FacilityItem.builder()
+        						.facilityDetails(FacilityDetails.builder()
+        								.participatingSchemeVersions(Set.of(schemeVersion)).build()
+        								).build()
+        						)
+        				.status(FacilityStatus.LIVE)
+        				.build()
+        				))
+        		.build();
 
         final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
                 .decisionNotification(CcaDecisionNotification.builder()
                         .decisionNotification(DecisionNotification.builder().signatory(signatory).build())
                         .build())
                 .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
+                		.underlyingAgreement(underlyingAgreement)
+                		.build())
+                .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                 		.underlyingAgreement(underlyingAgreement)
                 		.build())
                 .build();
@@ -158,25 +225,30 @@ class UnderlyingAgreementVariationAcceptedGenerateDocumentsServiceTest {
                 .name("offnotice.pdf")
                 .uuid(officialNoticePdfUuid.toString())
                 .build();
+        
+        final Request request = Request.builder()
+                .payload(requestPayload)
+                .build();
+        addResourcesToRequest(accountId, request);
 
-        when(createDocumentService.create(requestId)).thenAnswer(answer -> {
+        when(createDocumentService.create(requestId, schemeVersion)).thenAnswer(answer -> {
             CompletableFuture<?> future = new CompletableFuture<>();
             future.completeExceptionally(new RuntimeException("something unexpected happened"));
             return future;
         });
-
+        when(requestService.findRequestById(requestId)).thenReturn(request);
         when(officialNoticeService.generateAcceptedOfficialNotice(requestId))
                 .thenReturn(CompletableFuture.completedFuture(officialNotice));
 
         BusinessException be = assertThrows(BusinessException.class, () -> service.generateDocuments(requestId));
         assertThat(be.getErrorCode()).isEqualTo(ErrorCode.INTERNAL_SERVER);
 
-        verify(createDocumentService, times(1)).create(requestId);
+        verify(createDocumentService, times(1)).create(requestId, schemeVersion);
         verify(officialNoticeService, times(1)).generateAcceptedOfficialNotice(requestId);
-        verifyNoInteractions(requestService);
+        verify(requestService, times(1)).findRequestById(requestId);
 
-        assertThat(requestPayload.getUnderlyingAgreementDocument()).isNull();
-        assertThat(requestPayload.getOfficialNotice()).isNull();
+        assertThat(requestPayload.getUnderlyingAgreementDocuments()).isNull();
+        assertThat(requestPayload.getOfficialNotices()).isNull();
     }
     
     private void addResourcesToRequest(Long accountId, Request request) {

@@ -29,7 +29,6 @@ type ViewModel = {
 
 @Component({
   selector: 'netz-request-action-page',
-  standalone: true,
   imports: [NgIf, NgComponentOutlet, PageHeadingComponent, TaskListComponent, GovukDatePipe],
   templateUrl: './request-action-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

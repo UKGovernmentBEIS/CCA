@@ -30,7 +30,6 @@ import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } f
 @Component({
   selector: 'cca-add-facility',
   template: `<cca-facility-details-form (submitChange)="onSubmit($event)" />`,
-  standalone: true,
   imports: [FacilityDetailsFormComponent],
   providers: [FacilityDetailsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,8 +45,8 @@ export class AddFacilityComponent {
 
   onSubmit(form: FormGroup<FacilityDetailsFormModel>) {
     this.facilityService
-      .generateFacilityId(this.requestInfo().accountId)
-      .pipe(switchMap((facility) => this.update(form, facility.facilityId)))
+      .generateFacilityBusinessId(this.requestInfo().accountId)
+      .pipe(switchMap((facility) => this.update(form, facility.facilityBusinessId)))
       .subscribe();
   }
 
@@ -88,7 +87,7 @@ function updateFacility(
 
     const facilityDetails: FacilityDetails = {
       name: form.value.name,
-      participatingSchemeVersions: participatingSchemeVersions,
+      participatingSchemeVersions,
       isCoveredByUkets: form.value.isCoveredByUkets ?? false,
       applicationReason: form.value.applicationReason,
       facilityAddress: form.getRawValue().facilityAddress,
@@ -108,6 +107,7 @@ function updateFacility(
             baselineData: null,
             facilityTargets: null,
             targetComposition: null,
+            facilityBaselineEnergyConsumption: null,
           }
         : null,
     };

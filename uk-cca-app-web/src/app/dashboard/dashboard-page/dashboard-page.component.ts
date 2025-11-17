@@ -1,9 +1,9 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
-import { switchMap, tap } from 'rxjs';
+import { combineLatest, switchMap, tap } from 'rxjs';
 
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
 import { PageHeadingComponent } from '@netz/common/components';
@@ -36,7 +36,6 @@ const getTableColumns = (activeTab: WorkflowItemsAssignmentType): GovukTableColu
 @Component({
   selector: 'cca-dashboard-page',
   templateUrl: './dashboard-page.component.html',
-  standalone: true,
   imports: [
     PageHeadingComponent,
     TabsComponent,
@@ -55,9 +54,8 @@ export class DashboardPageComponent {
   private readonly authStore = inject(AuthStore);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly isLoading = signal(false);
 
-  private readonly queryParams = toSignal(this.activatedRoute.queryParamMap);
+  private readonly isLoading = signal(false);
 
   protected readonly state = computed(() => ({
     items: this.dashboardStore.select(selectItems)(),
@@ -66,27 +64,31 @@ export class DashboardPageComponent {
     isLoading: this.isLoading(),
   }));
 
+  protected readonly currentPage = signal(DEFAULT_PAGE);
+  protected readonly pageSize = signal(DEFAULT_PAGE_SIZE);
   protected readonly role = computed(() => this.authStore.select(selectUserRoleType)());
-  protected readonly currentPage = computed(() => +this.queryParams()?.get('page') || DEFAULT_PAGE);
-  protected readonly pageSize = computed(() => +this.queryParams()?.get('pageSize') || DEFAULT_PAGE_SIZE);
   protected readonly tableColumns = computed(() => getTableColumns(this.state().activeTab));
 
   constructor() {
-    this.activatedRoute.fragment
+    combineLatest([this.activatedRoute.fragment, this.activatedRoute.queryParamMap])
       .pipe(
         takeUntilDestroyed(),
         tap(() => this.isLoading.set(true)),
-        switchMap((fragment) => {
+        switchMap(([fragment, params]) => {
           const defaultTab = this.role() === 'OPERATOR' ? 'assigned-to-others' : 'assigned-to-me';
           const tab = (fragment || defaultTab) as WorkflowItemsAssignmentType;
+          const page = +params.get('page') || this.currentPage();
+          const pageSize = +params.get('pageSize') || this.pageSize();
 
           this.dashboardStore.setActiveTab(tab);
+          this.currentPage.set(page);
+          this.pageSize.set(pageSize);
 
-          return this.workflowItemsService.getItems(tab, this.currentPage(), this.pageSize());
+          return this.workflowItemsService.getItems(tab, page, pageSize);
         }),
         tap(({ items, totalItems }) => {
-          this.dashboardStore.setItems(items);
-          this.dashboardStore.setTotal(totalItems);
+          this.dashboardStore.setItems(items || []);
+          this.dashboardStore.setTotal(totalItems || 0);
           this.isLoading.set(false);
         }),
       )
@@ -100,7 +102,7 @@ export class DashboardPageComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.pageSize()) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   private handleQueryParamsNavigation(pagination: Partial<{ page: number; pageSize: number }>) {

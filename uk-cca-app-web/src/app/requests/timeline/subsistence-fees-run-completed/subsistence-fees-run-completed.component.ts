@@ -10,7 +10,6 @@ import { toSubsistenceFeesRunCompletedSummaryData } from './subsistence-fees-run
 @Component({
   selector: 'cca-subsistence-fees-run-completed',
   template: `<cca-summary [data]="data" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

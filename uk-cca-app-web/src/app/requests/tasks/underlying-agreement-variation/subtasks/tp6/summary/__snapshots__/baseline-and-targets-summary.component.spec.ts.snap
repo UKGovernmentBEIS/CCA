@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SummaryComponent should match snapshot for TP5 1`] = `
 <div
@@ -46,7 +46,9 @@ exports[`SummaryComponent should match snapshot for TP5 1`] = `
                 
                 
                 
-                 No 
+                <span>
+                  No
+                </span>
                 
                 
                 
@@ -90,7 +92,9 @@ exports[`SummaryComponent should match snapshot for TP5 1`] = `
                 
                 
                 
-                 No 
+                <span>
+                  No
+                </span>
                 
                 
                 
@@ -125,7 +129,9 @@ exports[`SummaryComponent should match snapshot for TP5 1`] = `
             <dd
               class="govuk-summary-list__value"
             >
-               No 
+              <span>
+                No
+              </span>
             </dd>
           </div>
         </dl>
@@ -231,7 +237,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 Energy (kWh) 
+                <span>
+                  Energy (kWh)
+                </span>
                 
                 
                 
@@ -257,7 +265,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 Energy (kWh) 
+                <span>
+                  Energy (kWh)
+                </span>
                 
                 
                 
@@ -283,7 +293,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 Relative 
+                <span>
+                  Relative
+                </span>
                 
                 
                 
@@ -309,7 +321,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 GJ 
+                <span>
+                  GJ
+                </span>
                 
                 
                 
@@ -350,7 +364,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 No 
+                <span>
+                  No
+                </span>
                 
                 
                 
@@ -376,7 +392,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 12 Dec 2020 
+                <span>
+                  12 Dec 2020
+                </span>
                 
                 
                 
@@ -402,7 +420,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 test 
+                <span>
+                  test
+                </span>
                 
                 
                 
@@ -462,7 +482,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 100 
+                <span>
+                  100
+                </span>
                 
                 
                 
@@ -479,7 +501,7 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
+                Must the Special Reporting Methodology be applied for this facility?
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -488,7 +510,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 Yes 
+                <span>
+                  Yes
+                </span>
                 
                 
                 
@@ -514,7 +538,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 10 
+                <span>
+                  10
+                </span>
                 
                 
                 
@@ -540,7 +566,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 10 
+                <span>
+                  10
+                </span>
                 
                 
                 
@@ -566,7 +594,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 1 
+                <span>
+                  1
+                </span>
                 
                 
                 
@@ -607,7 +637,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 0.1 
+                <span>
+                  0.1
+                </span>
                 
                 
                 
@@ -633,7 +665,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 9 
+                <span>
+                  9
+                </span>
                 
                 
                 
@@ -716,7 +750,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 Energy (kWh) 
+                <span>
+                  Energy (kWh)
+                </span>
                 
                 
                 
@@ -742,7 +778,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 Energy (kWh) 
+                <span>
+                  Energy (kWh)
+                </span>
                 
                 
                 
@@ -768,7 +806,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 Relative 
+                <span>
+                  Relative
+                </span>
                 
                 
                 
@@ -794,7 +834,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 MWh 
+                <span>
+                  MWh
+                </span>
                 
                 
                 
@@ -835,7 +877,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 Yes 
+                <span>
+                  Yes
+                </span>
                 
                 
                 
@@ -861,7 +905,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 30 Jun 2023 
+                <span>
+                  30 Jun 2023
+                </span>
                 
                 
                 
@@ -887,7 +933,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 Updated baseline due to facility upgrades and new equipment installation 
+                <span>
+                  Updated baseline due to facility upgrades and new equipment installation
+                </span>
                 
                 
                 
@@ -913,7 +961,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 250,000 
+                <span>
+                  250,000
+                </span>
                 
                 
                 
@@ -930,7 +980,7 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
+                Must the Special Reporting Methodology be applied for this facility?
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -939,7 +989,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 Yes 
+                <span>
+                  Yes
+                </span>
                 
                 
                 
@@ -965,7 +1017,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 75,000 
+                <span>
+                  75,000
+                </span>
                 
                 
                 
@@ -991,7 +1045,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 3.33 
+                <span>
+                  3.33
+                </span>
                 
                 
                 
@@ -1017,7 +1073,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 0.233 
+                <span>
+                  0.233
+                </span>
                 
                 
                 
@@ -1058,7 +1116,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 0.15 
+                <span>
+                  0.15
+                </span>
                 
                 
                 
@@ -1084,7 +1144,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 
                 
                 
-                 2.83 
+                <span>
+                  2.83
+                </span>
                 
                 
                 
@@ -1154,7 +1216,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="govuk-summary-list__value"
             >
-               Energy (kWh) 
+              <span>
+                Energy (kWh)
+              </span>
             </dd>
           </div>
           <div
@@ -1168,7 +1232,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="govuk-summary-list__value"
             >
-               Energy (kWh) 
+              <span>
+                Energy (kWh)
+              </span>
             </dd>
           </div>
           <div
@@ -1182,7 +1248,9 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="govuk-summary-list__value"
             >
-               Relative 
+              <span>
+                Relative
+              </span>
             </dd>
           </div>
           <div
@@ -1196,18 +1264,18 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="govuk-summary-list__value"
             >
-               
-              <del
-                class="diffmod"
-              >
-                MWh
-              </del>
-              <ins
-                class="diffmod"
-              >
-                GJ
-              </ins>
-               
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  MWh
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  GJ
+                </ins>
+              </span>
             </dd>
           </div>
         </dl>
@@ -1230,18 +1298,18 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="govuk-summary-list__value"
             >
-               
-              <del
-                class="diffmod"
-              >
-                Yes
-              </del>
-              <ins
-                class="diffmod"
-              >
-                No
-              </ins>
-               
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  Yes
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  No
+                </ins>
+              </span>
             </dd>
           </div>
           <div
@@ -1281,40 +1349,40 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="govuk-summary-list__value"
             >
-               
-              <del
-                class="diffmod"
-              >
-                30
-              </del>
-              <ins
-                class="diffmod"
-              >
-                12
-              </ins>
-               
-              <del
-                class="diffmod"
-              >
-                Jun
-              </del>
-              <ins
-                class="diffmod"
-              >
-                Dec
-              </ins>
-               202
-              <del
-                class="diffmod"
-              >
-                3
-              </del>
-              <ins
-                class="diffmod"
-              >
-                0
-              </ins>
-               
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  30
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  12
+                </ins>
+                 
+                <del
+                  class="diffmod"
+                >
+                  Jun
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  Dec
+                </ins>
+                 202
+                <del
+                  class="diffmod"
+                >
+                  3
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  0
+                </ins>
+              </span>
             </dd>
           </div>
           <div
@@ -1415,23 +1483,18 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="pre-line govuk-summary-list__value"
             >
-               
-              <del
-                class="diffmod"
-              >
-                Updated
-              </del>
-              <ins
-                class="diffmod"
-              >
-                test
-              </ins>
-               
-              <del
-                class="diffmod"
-              >
-                baseline due to facility upgrades and new equipment installation 
-              </del>
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  Updated baseline due to facility upgrades and new equipment installation
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  test
+                </ins>
+              </span>
             </dd>
           </div>
           <div
@@ -1441,7 +1504,7 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
               class="govuk-summary-list__key"
             >
               <ins
-                class="diffmod"
+                class="diffins"
               >
                 Evidence
               </ins>
@@ -1455,7 +1518,7 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 target="_blank"
               >
                 <ins
-                  class="diffmod"
+                  class="diffins"
                 >
                   greenfield_evidence_tp6.pdf
                 </ins>
@@ -1473,18 +1536,19 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="govuk-summary-list__value"
             >
-               
-              <del
-                class="diffmod"
-              >
-                250,0
-              </del>
-              <ins
-                class="diffmod"
-              >
-                1
-              </ins>
-              00 
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  250,0
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  1
+                </ins>
+                00
+              </span>
             </dd>
           </div>
           <div
@@ -1493,12 +1557,14 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dt
               class="govuk-summary-list__key"
             >
-              Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
+              Must the Special Reporting Methodology be applied for this facility?
             </dt>
             <dd
               class="govuk-summary-list__value"
             >
-               Yes 
+              <span>
+                Yes
+              </span>
             </dd>
           </div>
           <div
@@ -1523,18 +1589,19 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="govuk-summary-list__value"
             >
-               
-              <del
-                class="diffmod"
-              >
-                75,00
-              </del>
-              <ins
-                class="diffmod"
-              >
-                1
-              </ins>
-              0 
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  75,00
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  1
+                </ins>
+                0
+              </span>
             </dd>
           </div>
           <div
@@ -1559,18 +1626,18 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="govuk-summary-list__value"
             >
-               
-              <del
-                class="diffmod"
-              >
-                3.33
-              </del>
-              <ins
-                class="diffmod"
-              >
-                10
-              </ins>
-               
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  3.33
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  10
+                </ins>
+              </span>
             </dd>
           </div>
           <div
@@ -1584,18 +1651,18 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="govuk-summary-list__value"
             >
-               
-              <del
-                class="diffmod"
-              >
-                0.233
-              </del>
-              <ins
-                class="diffmod"
-              >
-                1
-              </ins>
-               
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  0.233
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  1
+                </ins>
+              </span>
             </dd>
           </div>
         </dl>
@@ -1618,13 +1685,14 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="govuk-summary-list__value"
             >
-               0.1
-              <del
-                class="diffdel"
-              >
-                5
-              </del>
-               
+              <span>
+                0.1
+                <del
+                  class="diffdel"
+                >
+                  5
+                </del>
+              </span>
             </dd>
           </div>
           <div
@@ -1649,18 +1717,18 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dd
               class="govuk-summary-list__value"
             >
-               
-              <del
-                class="diffmod"
-              >
-                2.83
-              </del>
-              <ins
-                class="diffmod"
-              >
-                9
-              </ins>
-               
+              <span>
+                <del
+                  class="diffmod"
+                >
+                  2.83
+                </del>
+                <ins
+                  class="diffmod"
+                >
+                  9
+                </ins>
+              </span>
             </dd>
           </div>
         </dl>

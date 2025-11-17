@@ -48,7 +48,7 @@ public class UnderlyingAgreementVariationCreateActionHandler
                 .requestPayload(UnderlyingAgreementVariationRequestPayload.builder()
                         .payloadType(CcaRequestPayloadType.UNDERLYING_AGREEMENT_VARIATION_REQUEST_PAYLOAD)
                         .workflowSchemeVersion(workflowSchemeVersion)
-                        .underlyingAgreementVersion(underlyingAgreementQueryService.getConsolidationNumber(accountId))
+                        .underlyingAgreementVersionMap(underlyingAgreementQueryService.getConsolidationNumberMap(accountId))
                         .originalUnderlyingAgreementContainer(underlyingAgreementQueryService.getUnderlyingAgreementContainerByAccountId(accountId))
                         .sectorUserAssignee(appUser.getUserId())
                         .build())

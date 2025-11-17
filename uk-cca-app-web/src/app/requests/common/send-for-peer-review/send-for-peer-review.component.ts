@@ -35,7 +35,6 @@ import { AssigneeUserInfoDTO, PeerReviewRequestTaskActionPayload, TasksService }
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <a class="govuk-link" routerLink="../../" [replaceUrl]="true"> {{ returnToText() }} </a>
   `,
-  standalone: true,
   imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, SelectComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -64,7 +63,6 @@ export class SendForPeerReviewComponent {
   protected readonly form = this.formBuilder.group({
     assigneeUserInfoId: ['', GovukValidators.required('Please select an option')],
   });
-
   onSubmit() {
     if (this.form.valid) {
       const selectedAssigneeId = this.form.value.assigneeUserInfoId;

@@ -94,7 +94,6 @@ class FacilityCertificationServiceTest {
     void updateOrCreateFacilityCertificationStatus_update() {
 
         final Long facilityId = 99L;
-        final String facilityBusinessId = "ADS_1-F00023";
         final FacilityCertificationStatusUpdateDTO facilityCertificationStatusUpdateDTO = FacilityCertificationStatusUpdateDTO.builder()
                 .certificationStatus(FacilityCertificationStatus.CERTIFIED)
                 .certificationPeriodId(1L)
@@ -110,20 +109,19 @@ class FacilityCertificationServiceTest {
 
 
         when(facilityCertificationRepository
-                .findByFacilityIdAndCertificationPeriodId(facilityBusinessId, facilityCertificationStatusUpdateDTO.getCertificationPeriodId()))
+                .findByFacilityIdAndCertificationPeriodId(facilityId, facilityCertificationStatusUpdateDTO.getCertificationPeriodId()))
                 .thenReturn(Optional.of(facilityCertification));
 
-        facilityCertificationService.updateOrCreateFacilityCertificationStatus(facilityBusinessId, facilityCertificationStatusUpdateDTO);
+        facilityCertificationService.updateOrCreateFacilityCertificationStatus(facilityId, facilityCertificationStatusUpdateDTO);
 
         verify(facilityCertificationRepository, times(1))
-                .findByFacilityIdAndCertificationPeriodId(facilityBusinessId, 1L);
+                .findByFacilityIdAndCertificationPeriodId(facilityId, 1L);
         assertEquals(facilityCertification.getCertificationStatus(), facilityCertificationStatusUpdateDTO.getCertificationStatus());
     }
 
     @Test
     void updateOrCreateFacilityCertificationStatus_create() {
         final Long facilityId = 99L;
-        final String facilityBusinessId = "ADS_1-F00023";
         final FacilityCertificationStatusUpdateDTO facilityCertificationStatusUpdateDTO = FacilityCertificationStatusUpdateDTO.builder()
                 .certificationStatus(FacilityCertificationStatus.CERTIFIED)
                 .certificationPeriodId(1L)
@@ -131,18 +129,14 @@ class FacilityCertificationServiceTest {
                 .build();
 
         when(facilityCertificationRepository
-                .findByFacilityIdAndCertificationPeriodId(facilityBusinessId, facilityCertificationStatusUpdateDTO.getCertificationPeriodId()))
+                .findByFacilityIdAndCertificationPeriodId(facilityId, facilityCertificationStatusUpdateDTO.getCertificationPeriodId()))
                 .thenReturn(Optional.empty());
-        when(facilityDataQueryService.getIdByFacilityId(facilityBusinessId))
-                .thenReturn(facilityId );
 
 
-        facilityCertificationService.updateOrCreateFacilityCertificationStatus(facilityBusinessId, facilityCertificationStatusUpdateDTO);
+        facilityCertificationService.updateOrCreateFacilityCertificationStatus(facilityId, facilityCertificationStatusUpdateDTO);
 
-        verify(facilityDataQueryService, times(1))
-                .getIdByFacilityId(facilityBusinessId);
         verify(facilityCertificationRepository, times(1))
-                .findByFacilityIdAndCertificationPeriodId(facilityBusinessId, 1L);
+                .findByFacilityIdAndCertificationPeriodId(facilityId, 1L);
         verify(facilityCertificationRepository, times(1))
                 .save(any(FacilityCertification.class));
     }

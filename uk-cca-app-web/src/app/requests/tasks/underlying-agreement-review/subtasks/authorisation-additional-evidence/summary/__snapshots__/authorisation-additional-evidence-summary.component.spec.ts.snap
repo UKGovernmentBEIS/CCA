@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SummaryComponent should display the correct header and caption 1`] = `
 <cca-authorisation-additional-evidence-summary
@@ -118,7 +118,9 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Accepted 
+            <span>
+              Accepted
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -146,7 +148,9 @@ exports[`SummaryComponent should display the correct header and caption 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             asdasd 
+            <span>
+              asdasd
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"

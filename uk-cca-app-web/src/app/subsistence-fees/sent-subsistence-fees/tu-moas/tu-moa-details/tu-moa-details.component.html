@@ -10,7 +10,7 @@
         {{ moaTUDetails.transactionId }}
 
         <span>
-          <govuk-tag [color]="moaTUDetails.paymentStatus | statusColor: 'grey'" class="tag-width">
+          <govuk-tag [color]="moaTUDetails.paymentStatus | statusColor" class="tag-width">
             {{ moaTUDetails.paymentStatus | status }}
           </govuk-tag>
         </span>
@@ -115,7 +115,7 @@
         >
           <ng-template let-column="column" let-row="row">
             @switch (column.field) {
-              @case ('facilityId') {
+              @case ('facilityBusinessId') {
                 <span>{{ row[column.field] }}</span>
               }
 

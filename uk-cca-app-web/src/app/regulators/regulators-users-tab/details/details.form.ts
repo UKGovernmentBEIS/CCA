@@ -70,6 +70,11 @@ export function createForm(
       userPermissions?.UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW || 'NONE',
     ),
     UNDERLYING_AGREEMENT_VARIATION_REVIEW: fb.control(userPermissions?.UNDERLYING_AGREEMENT_VARIATION_REVIEW || 'NONE'),
+    UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW: fb.control(
+      userPermissions?.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW || 'NONE',
+    ),
+    MANAGE_FACILITY_AUDIT: fb.control(userPermissions?.MANAGE_FACILITY_AUDIT || 'NONE'),
+    FACILITY_AUDIT_SUBMISSION: fb.control(userPermissions?.FACILITY_AUDIT_SUBMISSION || 'NONE'),
   });
 
   return fb.group<DetailsForm>({

@@ -25,11 +25,12 @@ public class FacilityAccessRuleHandler implements AuthorizationResourceRuleHandl
                               AppUser user,
                               String resourceId) {
 
-        final Long accountId = facilityAuthorityInfoProvider.getAccountIdByFacilityId(resourceId);
+        final Long accountId = facilityAuthorityInfoProvider.getAccountIdByFacilityId(Long.parseLong(resourceId));
 
         authorizationRules.forEach(rule -> {
             AuthorizationCriteria authorizationCriteria = AuthorizationCriteria.builder()
                     .requestResources(Map.of(ResourceType.ACCOUNT, accountId.toString()))
+		            .permission(rule.getPermission())
                     .build();
             appAuthorizationService.authorize(user, authorizationCriteria);
         });

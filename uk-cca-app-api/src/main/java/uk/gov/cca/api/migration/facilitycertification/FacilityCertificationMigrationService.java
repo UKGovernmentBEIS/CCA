@@ -84,7 +84,7 @@ public class FacilityCertificationMigrationService extends MigrationBaseService 
                 failCounter.incrementAndGet();
                 allErrors.add(
                         String.format("Failed to save Facility with ID %s, reason: %s",
-                                vo.getFacilityId(), e.getLocalizedMessage()));
+                                vo.getFacilityBusinessId(), e.getLocalizedMessage()));
             }
         } else {
             allErrors.addAll(errors);

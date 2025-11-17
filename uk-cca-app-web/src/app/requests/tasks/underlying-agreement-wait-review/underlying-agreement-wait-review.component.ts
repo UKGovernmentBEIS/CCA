@@ -7,7 +7,6 @@ import { WarningTextComponent } from '@netz/govuk-components';
   template: `
     <govuk-warning-text assistiveText="">Waiting for the regulator to complete the review</govuk-warning-text>
   `,
-  standalone: true,
   imports: [WarningTextComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

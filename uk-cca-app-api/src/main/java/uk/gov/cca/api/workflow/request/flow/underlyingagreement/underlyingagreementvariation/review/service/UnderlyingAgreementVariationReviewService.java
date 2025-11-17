@@ -47,6 +47,8 @@ public class UnderlyingAgreementVariationReviewService {
 
         reviewRequestTaskPayload.setUnderlyingAgreement(underlyingAgreementPayload);
         reviewRequestTaskPayload.setSectionsCompleted(payload.getSectionsCompleted());
+        reviewRequestTaskPayload.setReviewGroupDecisions(payload.getReviewGroupDecisions());
+        reviewRequestTaskPayload.setFacilitiesReviewGroupDecisions(payload.getFacilitiesReviewGroupDecisions());
         reviewRequestTaskPayload.setReviewSectionsCompleted(payload.getReviewSectionsCompleted());
         reviewRequestTaskPayload.setDetermination(payload.getDetermination());
     }

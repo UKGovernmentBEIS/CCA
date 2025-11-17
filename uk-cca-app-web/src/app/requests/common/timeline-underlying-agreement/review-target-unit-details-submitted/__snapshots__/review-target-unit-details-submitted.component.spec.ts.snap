@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`ReviewTargetUnitDetailsComponent should show summary values 1`] = `
 [
@@ -20,7 +20,7 @@ exports[`ReviewTargetUnitDetailsComponent should show summary values 1`] = `
   ],
   [
     "Address",
-    "una operator addr line 1  una operator addr city  una operator addr postcode  una operator addr country",
+    "una operator addr line 1una operator addr cityuna operator addr postcodeuna operator addr country",
   ],
   [
     "First name",
@@ -36,7 +36,7 @@ exports[`ReviewTargetUnitDetailsComponent should show summary values 1`] = `
   ],
   [
     "Address",
-    "una resp addr line 1  una resp addr line 2  una resp addr line city  una resp addr county  una resp addr line postcode  una resp addr country",
+    "una resp addr line 1una resp addr line 2una resp addr line cityuna resp addr countyuna resp addr line postcodeuna resp addr country",
   ],
 ]
 `;

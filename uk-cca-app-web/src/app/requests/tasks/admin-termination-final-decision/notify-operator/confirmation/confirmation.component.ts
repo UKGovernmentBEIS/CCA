@@ -21,7 +21,6 @@ import { AdminTerminationFinalDecisionQuery } from '../../+state/admin-terminati
       </div>
     </div>
   `,
-  standalone: true,
   imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

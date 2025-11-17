@@ -17,7 +17,6 @@ interface ViewModel {
 @Component({
   selector: 'cca-landing-page',
   templateUrl: './landing-page.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, RouterLink, BackToTopComponent, NgTemplateOutlet, ServiceBannerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

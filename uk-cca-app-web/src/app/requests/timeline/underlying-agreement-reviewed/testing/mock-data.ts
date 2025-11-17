@@ -42,6 +42,7 @@ const facilityDetails: FacilityDetails = {
   isCoveredByUkets: false,
   applicationReason: 'NEW_AGREEMENT',
   facilityAddress: operatorAddress,
+  participatingSchemeVersions: ['CCA_2', 'CCA_3'],
 };
 
 const facilityContact = {

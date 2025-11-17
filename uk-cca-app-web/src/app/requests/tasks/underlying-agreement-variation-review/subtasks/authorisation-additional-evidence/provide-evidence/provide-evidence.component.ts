@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
+  areEntitiesIdentical,
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
   PROVIDE_EVIDENCE_FORM,
   ProvideEvidenceFormModel,
@@ -21,7 +22,7 @@ import { UnderlyingAgreementVariationReviewSavePayload } from 'cca-api';
 import { UnderlyingAgreementVariationReviewRequestTaskPayload } from 'cca-api';
 
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../transform';
-import { applySaveActionSideEffects } from '../../../utils';
+import { applySaveActionSideEffects, deleteDecision } from '../../../utils';
 
 @Component({
   selector: 'cca-provide-evidence',
@@ -58,7 +59,6 @@ import { applySaveActionSideEffects } from '../../../utils';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  standalone: true,
   imports: [WizardStepComponent, ReactiveFormsModule, ReturnToTaskOrActionPageComponent, MultipleFileInputComponent],
   providers: [ProvideEvidenceFormProvider],
 })
@@ -85,10 +85,24 @@ export class ProvideEvidenceComponent {
       requestTaskQuery.selectRequestTaskPayload,
     )() as UnderlyingAgreementVariationReviewRequestTaskPayload;
 
+    const originalPayload = (
+      this.store.select(
+        requestTaskQuery.selectRequestTaskPayload,
+      )() as UnderlyingAgreementVariationReviewRequestTaskPayload
+    )?.originalUnderlyingAgreementContainer;
+
     const actionPayload = toUnderlyingAgreementVariationReviewSavePayload(currentPayload);
 
-    // Update the payload with form values
     const updatedPayload = update(actionPayload, this.form);
+
+    const currentAdditionalEvidence = updatedPayload?.authorisationAndAdditionalEvidence;
+    const originalAdditionalEvidence = originalPayload?.underlyingAgreement?.authorisationAndAdditionalEvidence;
+    const areIdentical = areEntitiesIdentical(currentAdditionalEvidence, originalAdditionalEvidence);
+
+    const currentDecisions = this.store.select(underlyingAgreementReviewQuery.selectReviewGroupDecisions)();
+    const decisions = areIdentical
+      ? deleteDecision(currentDecisions, 'AUTHORISATION_AND_ADDITIONAL_EVIDENCE')
+      : currentDecisions;
 
     const { determination, reviewSectionsCompleted, sectionsCompleted } = applySaveActionSideEffects(
       this.store.select(underlyingAgreementReviewQuery.selectDetermination)(),
@@ -101,10 +115,15 @@ export class ProvideEvidenceComponent {
       sectionsCompleted,
       reviewSectionsCompleted,
       determination,
+      reviewGroupDecisions: decisions,
+      facilitiesReviewGroupDecisions: this.store.select(
+        underlyingAgreementReviewQuery.selectFacilityReviewGroupDecisions,
+      )(),
     });
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['../decision'], { relativeTo: this.activatedRoute });
+      const path = areIdentical ? '../check-your-answers' : '../decision';
+      this.router.navigate([path], { relativeTo: this.activatedRoute });
     });
   }
 }
@@ -115,8 +134,8 @@ function update(
 ): UnderlyingAgreementVariationReviewSavePayload {
   return produce(payload, (draft) => {
     draft.authorisationAndAdditionalEvidence = {
-      authorisationAttachmentIds: fileUtils.toUUIDs(form.get('authorisationAttachmentIds')?.value),
-      additionalEvidenceAttachmentIds: fileUtils.toUUIDs(form.get('additionalEvidenceAttachmentIds')?.value),
+      authorisationAttachmentIds: fileUtils.toUUIDs(form.controls.authorisationAttachmentIds?.value),
+      additionalEvidenceAttachmentIds: fileUtils.toUUIDs(form.controls.additionalEvidenceAttachmentIds?.value),
     };
   });
 }

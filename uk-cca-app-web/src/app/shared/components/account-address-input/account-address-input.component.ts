@@ -8,7 +8,6 @@ import { existingControlContainer } from '@shared/providers';
 @Component({
   selector: 'cca-account-address-input',
   templateUrl: './account-address-input.component.html',
-  standalone: true,
   imports: [TextInputComponent, ReactiveFormsModule, SelectComponent, CountriesDirective],
   viewProviders: [existingControlContainer],
 })

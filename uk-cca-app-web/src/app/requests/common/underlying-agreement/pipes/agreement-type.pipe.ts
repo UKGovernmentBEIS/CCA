@@ -7,10 +7,7 @@ export enum AgreementTypeEnum {
   ENERGY_INTENSIVE = 'Energy Intensive',
 }
 
-@Pipe({
-  name: 'agreementType',
-  standalone: true,
-})
+@Pipe({ name: 'agreementType' })
 export class AgreementTypePipe implements PipeTransform {
   transform(value: EligibilityDetailsAndAuthorisation['agreementType']): string {
     const text = AgreementTypeEnum[value];

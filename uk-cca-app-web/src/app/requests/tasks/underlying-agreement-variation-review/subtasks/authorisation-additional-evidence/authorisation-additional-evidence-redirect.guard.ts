@@ -17,6 +17,7 @@ export const authorisationAdditionalEvidenceRedirectGuard: CanActivateFn = (
   const decision = store.select(
     underlyingAgreementReviewQuery.selectSubtaskDecision('AUTHORISATION_AND_ADDITIONAL_EVIDENCE'),
   )();
+
   return decision
     ? createUrlTreeFromSnapshot(route, ['check-your-answers'])
     : createUrlTreeFromSnapshot(route, ['decision']);

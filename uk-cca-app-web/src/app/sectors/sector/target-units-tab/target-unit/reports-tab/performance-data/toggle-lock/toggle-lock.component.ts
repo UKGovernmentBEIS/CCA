@@ -13,7 +13,6 @@ import { PerformanceReportStore } from '../../../performance-report-store';
 
 @Component({
   selector: 'cca-unlock-performance-report',
-  standalone: true,
   imports: [RadioComponent, RadioOptionComponent, ReactiveFormsModule, ButtonDirective],
   templateUrl: './toggle-lock.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

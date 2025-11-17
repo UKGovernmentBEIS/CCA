@@ -34,7 +34,8 @@ class UnderlyingAgreementVariationCreateValidatorTest {
 
         RequestCreateValidationResult result = RequestCreateValidationResult.builder().valid(true).build();
         Set<AccountStatus> applicableAccountStatuses = Set.of(TargetUnitAccountStatus.LIVE);
-        Set<String> mutuallyExclusiveRequests = Set.of(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION);
+        Set<String> mutuallyExclusiveRequests = Set.of(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION,
+                CcaRequestType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING);
 
         when(requestCreateValidatorService.validate(accountId, applicableAccountStatuses, mutuallyExclusiveRequests))
                 .thenReturn(result);
@@ -60,7 +61,8 @@ class UnderlyingAgreementVariationCreateValidatorTest {
 
     @Test
     void getMutuallyExclusiveRequests() {
-        Set<String> mutuallyExclusiveRequests = Set.of(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION);
+        Set<String> mutuallyExclusiveRequests = Set.of(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION,
+                CcaRequestType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING);
 
         assertThat(validator.getMutuallyExclusiveRequests()).isEqualTo(mutuallyExclusiveRequests);
     }

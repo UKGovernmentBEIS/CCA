@@ -15,7 +15,6 @@ import {
 @Component({
   selector: 'cca-edit-responsible-person',
   templateUrl: './edit-responsible-person.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, WizardStepComponent, RouterLink, ResponsiblePersonInputComponent],
   providers: [EditResponsiblePersonFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,

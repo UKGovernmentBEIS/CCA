@@ -27,7 +27,6 @@ import { toEmailTemplateSummary } from '../email-template-summary';
       <cca-summary [data]="data()" />
     }
   `,
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent, NotificationBannerComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

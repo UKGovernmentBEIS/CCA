@@ -38,6 +38,11 @@ describe('TimelineItemLinkPipe', () => {
       'SUBSISTENCE_FEES_RUN_SUBMITTED',
 
       'BUY_OUT_SURPLUS_RUN_SUBMITTED',
+
+      'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_CANCELLED',
+
+      'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED',
+      'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED',
     ];
 
     noLinkActionTypes.forEach((type) => {
@@ -93,6 +98,12 @@ describe('TimelineItemLinkPipe', () => {
 
     requestAction.type = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACTIVATED';
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEWER_ACCEPTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEWER_REJECTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 
   it('should return link for subsistence fees run', () => {
@@ -128,6 +139,11 @@ describe('TimelineItemLinkPipe', () => {
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
 
     requestAction.type = 'PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+  });
+
+  it('should return link for CCA3 migration', () => {
+    requestAction.type = 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_SUBMITTED';
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 

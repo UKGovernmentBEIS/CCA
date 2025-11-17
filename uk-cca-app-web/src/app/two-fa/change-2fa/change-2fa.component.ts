@@ -15,7 +15,6 @@ import { WizardStepComponent } from '../../shared/components/wizard/wizard-step.
 @Component({
   selector: 'cca-change-2fa',
   templateUrl: './change-2fa.component.html',
-  standalone: true,
   imports: [WizardStepComponent, ReactiveFormsModule, TextInputComponent, PanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

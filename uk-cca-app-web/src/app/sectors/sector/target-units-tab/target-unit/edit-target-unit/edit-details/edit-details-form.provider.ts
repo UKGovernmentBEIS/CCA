@@ -2,8 +2,6 @@ import { InjectionToken, Provider } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { textFieldValidators } from '@shared/validators';
-
 import { SectorAssociationSchemesDTO } from 'cca-api';
 
 import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
@@ -30,16 +28,7 @@ export const EditDetailsFormProvider: Provider = {
     const group = fb.group<TargetUnitCreationFormModel>(
       {
         operatorType: fb.control({ value: accountDetails?.operatorType ?? null, disabled: true }),
-        name: fb.control(accountDetails?.name ?? null, textFieldValidators('operator name')),
-        isCompanyRegistrationNumber: fb.control({ value: !!accountDetails?.companyRegistrationNumber, disabled: true }),
-        companyRegistrationNumber: fb.control({
-          value: accountDetails?.companyRegistrationNumber ?? null,
-          disabled: true,
-        }),
-        registrationNumberMissingReason: fb.control({
-          value: accountDetails?.registrationNumberMissingReason ?? null,
-          disabled: true,
-        }),
+        name: fb.control({ value: accountDetails?.name ?? null, disabled: true }),
         sicCodes: fb.array(sicCodeFormControls),
       },
       { updateOn: 'change' },

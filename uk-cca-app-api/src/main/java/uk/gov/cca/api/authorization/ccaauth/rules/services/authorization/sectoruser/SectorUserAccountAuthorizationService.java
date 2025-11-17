@@ -13,7 +13,8 @@ import uk.gov.netz.api.authorization.rules.services.authorization.AuthorizationC
 @Order(200)
 @RequiredArgsConstructor
 public class SectorUserAccountAuthorizationService extends AccountAuthorizationService implements SectorUserResourceTypeAuthorizationService {
-    private final TargetUnitAuthorityInfoProvider targetUnitAuthorityInfoProvider;
+    
+	private final TargetUnitAuthorityInfoProvider targetUnitAuthorityInfoProvider;
     private final SectorUserSectorAssociationAuthorizationService sectorUserSectorAssociationAuthorizationService;
 
     @Override

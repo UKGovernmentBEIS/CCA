@@ -23,7 +23,6 @@ import { underlyingAgreementReviewedRequestActionQuery } from '../../+state/unde
       </div>
     }
   `,
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -65,6 +64,7 @@ export class FacilityComponent {
       },
       false,
       '../../../file-download',
+      { productsLink: './products' },
     ),
   );
 }

@@ -12,7 +12,6 @@ import { SendForPeerReviewComponent } from '@requests/common';
       returnToText="Return to: Admin Termination"
     />
   `,
-  standalone: true,
   imports: [SendForPeerReviewComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

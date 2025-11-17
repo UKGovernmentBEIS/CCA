@@ -25,7 +25,6 @@ import { TabLazyDirective } from './tab/tab-lazy.directive';
 @Component({
   selector: 'govuk-tabs',
   templateUrl: './tabs.component.html',
-  standalone: true,
   imports: [AsyncPipe, NgTemplateOutlet, RouterLink],
   styles: `
     .badge {

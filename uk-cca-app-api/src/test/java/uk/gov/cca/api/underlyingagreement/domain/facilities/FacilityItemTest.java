@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -90,7 +91,7 @@ class FacilityItemTest {
                         .applicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP)
                         .previousFacilityId("AAA_1-F11111")
                         .participatingSchemeVersions(Set.of(SchemeVersion.CCA_3))
-                        .facilityAddress(AccountAddressDTO.builder()
+                        .facilityAddress(FacilityAddressDTO.builder()
                                 .line1("Line 1")
                                 .line2("Line 2")
                                 .city("City")
@@ -156,7 +157,7 @@ class FacilityItemTest {
                         .applicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP)
                         .previousFacilityId("AAA_1-F11111")
                         .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
-                        .facilityAddress(AccountAddressDTO.builder()
+                        .facilityAddress(FacilityAddressDTO.builder()
                                 .line1("Line 1")
                                 .line2("Line 2")
                                 .city("City")

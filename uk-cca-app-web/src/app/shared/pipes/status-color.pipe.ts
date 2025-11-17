@@ -2,12 +2,9 @@ import { Pipe, type PipeTransform } from '@angular/core';
 
 import type { TagColor } from '@netz/govuk-components';
 
-@Pipe({
-  name: 'statusColor',
-  standalone: true,
-})
+@Pipe({ name: 'statusColor' })
 export class StatusColorPipe implements PipeTransform {
-  transform(status: string, cancelledColor: 'grey' | 'red' = 'red'): TagColor {
+  transform(status: string): TagColor {
     if (!status) throw new Error(`invalid status. Received: ${status}`);
 
     const lowerCaseStatus = status.toLowerCase();
@@ -29,6 +26,7 @@ export class StatusColorPipe implements PipeTransform {
       case 'rejected':
       case 'withdrawn':
       case 'overpaid':
+      case 'cancelled':
         return 'red';
 
       case 'refunded':
@@ -44,9 +42,6 @@ export class StatusColorPipe implements PipeTransform {
       case 'closed':
       case 'new':
         return 'grey';
-
-      case 'cancelled':
-        return cancelledColor;
 
       default:
         throw new Error(`invalid status. Received: ${status}`);

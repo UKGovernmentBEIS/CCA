@@ -68,14 +68,14 @@ export function applyTp5TargetCompositionSideEffect<T extends HasTp5Details>(pay
 
       case 'RELATIVE':
         if (energy && throughput && improvement !== null && improvement !== undefined) {
-          targets.target = calculateRelativeTarget(energy, throughput, improvement);
-          baselineData.performance = calculatePerformance(energy, throughput);
+          targets.target = String(calculateRelativeTarget(energy, throughput, improvement));
+          baselineData.performance = String(calculatePerformance(energy, throughput));
         }
         break;
 
       case 'ABSOLUTE':
         if (energy && improvement !== null && improvement !== undefined) {
-          targets.target = calculateAbsoluteTarget(energy, improvement, true);
+          targets.target = String(calculateAbsoluteTarget(energy, improvement, true));
         }
         break;
     }
@@ -109,14 +109,14 @@ export function applyTp5BaselineDataSideEffect<T extends HasTp5Details>(payload:
     switch (agreementCompositionType) {
       case 'RELATIVE':
         if (energyOrCarbon && baselineData?.throughput) {
-          targets.target = calculateRelativeTarget(energyOrCarbon, baselineData.throughput, improvement);
-          baselineData.performance = calculatePerformance(energyOrCarbon, baselineData.throughput);
+          targets.target = String(calculateRelativeTarget(energyOrCarbon, baselineData.throughput, improvement));
+          baselineData.performance = String(calculatePerformance(energyOrCarbon, baselineData.throughput));
         }
         break;
 
       case 'ABSOLUTE':
         if (energyOrCarbon) {
-          targets.target = calculateAbsoluteTarget(energyOrCarbon, improvement, true);
+          targets.target = String(calculateAbsoluteTarget(energyOrCarbon, improvement, true));
         }
         break;
     }
@@ -150,14 +150,14 @@ export function applyTp6TargetCompositionSideEffect<T extends HasTp6Details>(pay
 
       case 'RELATIVE':
         if (energy && throughput && improvement !== null && improvement !== undefined) {
-          targets.target = calculateRelativeTarget(energy, throughput, improvement);
-          baselineData.performance = calculatePerformance(energy, throughput);
+          targets.target = String(calculateRelativeTarget(energy, throughput, improvement));
+          baselineData.performance = String(calculatePerformance(energy, throughput));
         }
         break;
 
       case 'ABSOLUTE':
         if (energy && improvement !== null && improvement !== undefined) {
-          targets.target = calculateAbsoluteTarget(energy, improvement, false);
+          targets.target = String(calculateAbsoluteTarget(energy, improvement, false));
         }
         break;
     }
@@ -183,14 +183,14 @@ export function applyTp6BaselineDataSideEffect<T extends HasTp6Details>(payload:
     switch (agreementCompositionType) {
       case 'RELATIVE':
         if (energyOrCarbon && baselineData?.throughput) {
-          targets.target = calculateRelativeTarget(energyOrCarbon, baselineData.throughput, improvement);
-          baselineData.performance = calculatePerformance(energyOrCarbon, baselineData.throughput);
+          targets.target = String(calculateRelativeTarget(energyOrCarbon, baselineData.throughput, improvement));
+          baselineData.performance = String(calculatePerformance(energyOrCarbon, baselineData.throughput));
         }
         break;
 
       case 'ABSOLUTE':
         if (energyOrCarbon) {
-          targets.target = calculateAbsoluteTarget(energyOrCarbon, improvement, false);
+          targets.target = String(calculateAbsoluteTarget(energyOrCarbon, improvement, false));
         }
         break;
     }

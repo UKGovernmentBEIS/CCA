@@ -10,7 +10,6 @@ import { TargetUnitAccountInfoViewService } from 'cca-api';
 @Component({
   selector: 'cca-workflow-task-header',
   templateUrl: './workflow-task-header.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowTaskHeaderComponent {

@@ -28,6 +28,7 @@ const facilities: Array<Facility> = [
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
       facilityAddress: operatorAddress,
+      participatingSchemeVersions: ['CCA_2', 'CCA_3'],
     },
     facilityContact: {
       email: 'test29@test.com',
@@ -51,8 +52,8 @@ const facilities: Array<Facility> = [
       areActivitiesClaimed: false,
     },
     apply70Rule: {
-      energyConsumed: 75,
-      energyConsumedEligible: 100,
+      energyConsumed: '75',
+      energyConsumedEligible: '100',
       evidenceFile: '3ca25915-bbb5-4f03-9ecf-3a8ad583443e',
     },
   },
@@ -64,6 +65,7 @@ const facilities: Array<Facility> = [
       isCoveredByUkets: false,
       applicationReason: 'NEW_AGREEMENT',
       facilityAddress: operatorAddress,
+      participatingSchemeVersions: ['CCA_2', 'CCA_3'],
     },
     facilityContact: {
       email: 'test29@test.com',
@@ -87,8 +89,8 @@ const facilities: Array<Facility> = [
       areActivitiesClaimed: false,
     },
     apply70Rule: {
-      energyConsumed: 75,
-      energyConsumedEligible: 100,
+      energyConsumed: '75',
+      energyConsumedEligible: '100',
       evidenceFile: '3ca25915-bbb5-4f03-9ecf-3a8ad583443e',
     },
   },
@@ -129,15 +131,15 @@ const underlyingAgreement: UnderlyingAgreementVariationPayload = {
       baselineDate: '2020-02-02',
       explanation: 'test',
       greenfieldEvidences: [],
-      energy: 1,
+      energy: '1',
       usedReportingMechanism: true,
-      throughput: 1,
-      performance: 1,
-      energyCarbonFactor: 1,
+      throughput: '1',
+      performance: '1',
+      energyCarbonFactor: '1',
     },
     targets: {
-      improvement: 1,
-      target: 0.99,
+      improvement: '1',
+      target: '0.99',
     },
   },
   authorisationAndAdditionalEvidence: {
@@ -191,10 +193,12 @@ const usersInfo = {
   },
 };
 
-const officialNotice = {
-  name: 'Underlying agreement rejection notice.pdf',
-  uuid: 'ad2d77a4-9882-4bcd-bfc1-5f7818a527aa',
-};
+const officialNotices = [
+  {
+    name: 'Underlying agreement rejection notice.pdf',
+    uuid: 'ad2d77a4-9882-4bcd-bfc1-5f7818a527aa',
+  },
+];
 
 const determination: Determination = {
   type: 'REJECTED',
@@ -280,7 +284,7 @@ const underlyingAgreementVariationPayload: UnderlyingAgreementVariationDecisionR
   decisionNotification: decisionNotification,
   defaultContacts: defaultContacts,
   usersInfo: usersInfo,
-  officialNotice: officialNotice,
+  officialNotices: officialNotices,
   determination: determination,
   reviewSectionsCompleted: reviewSectionsCompleted,
   reviewGroupDecisions: reviewGroupDecisions,
@@ -298,9 +302,11 @@ const mockAcceptedRequestActionDTO: RequestActionDTO = {
       additionalInformation: 'My info',
       files: [],
     },
-    underlyingAgreementDocument: {
-      name: 'underlying-agreement.pdf',
-      uuid: 'abcd-1234',
+    underlyingAgreementDocuments: {
+      CCA_2: {
+        name: 'underlying-agreement.pdf',
+        uuid: 'abcd-1234',
+      },
     },
   } as UnderlyingAgreementVariationDecisionRequestActionPayload,
   requestId: 'ADS_2-T00026-UNA',

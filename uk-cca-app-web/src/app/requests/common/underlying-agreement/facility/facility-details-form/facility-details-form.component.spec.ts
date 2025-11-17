@@ -13,7 +13,6 @@ import { FacilityDetailsFormComponent } from './facility-details-form.component'
 import { FACILITY_DETAILS_FORM } from './facility-details-form.provider';
 
 @Component({
-  standalone: true,
   template: `<form [formGroup]="form"><cca-facility-details-form /></form>`,
   imports: [FacilityDetailsFormComponent, ReactiveFormsModule],
 })

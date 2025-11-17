@@ -38,9 +38,9 @@ const selectRequestActionUserInfo: StateSelector<
   Record<string, RequestActionUserInfo>
 > = createDescendingSelector(selectPayload, (payload) => payload.usersInfo);
 
-const selectOfficialNotice: StateSelector<RequestActionState, FileInfoDTO> = createDescendingSelector(
+const selectOfficialNotices: StateSelector<RequestActionState, FileInfoDTO[]> = createDescendingSelector(
   selectPayload,
-  (payload) => payload.officialNotice,
+  (payload) => payload.officialNotices,
 );
 
 const selectDetermination: StateSelector<RequestActionState, Determination> = createDescendingSelector(
@@ -77,7 +77,7 @@ export const underlyingAgreementVariationReviewedRequestActionQuery = {
   selectDecisionNotification,
   selectDefaultContacts,
   selectRequestActionUserInfo,
-  selectOfficialNotice,
+  selectOfficialNotices,
   selectDetermination,
   selectReviewSectionsCompleted,
   selectSubtaskDecision,

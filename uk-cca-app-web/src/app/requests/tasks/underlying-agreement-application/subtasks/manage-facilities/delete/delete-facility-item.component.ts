@@ -15,7 +15,6 @@ import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } f
 @Component({
   selector: 'cca-delete-facility-item',
   templateUrl: './delete-facility-item.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, ButtonDirective, PendingButtonDirective, WarningTextComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

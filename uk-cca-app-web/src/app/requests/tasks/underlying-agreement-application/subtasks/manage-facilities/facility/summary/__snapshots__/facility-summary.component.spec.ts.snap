@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FacilitySummaryComponent should display facility details when data is available 1`] = `
 <cca-facility-summary
@@ -48,7 +48,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           ADS_1-F00001 
+          <span>
+            ADS_1-F00001
+          </span>
         </dd>
       </div>
       <div
@@ -65,7 +67,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Facility 1 
+          <span>
+            Facility 1
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -93,7 +97,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           No 
+          <span>
+            No
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -121,6 +127,8 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
+          <span>
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -148,7 +156,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           New entrant 
+          <span>
+            New entrant
+          </span>
         </dd>
       </div>
       <div
@@ -165,6 +175,8 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
+          <span>
+          </span>
         </dd>
       </div>
       <div
@@ -181,7 +193,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           CCA3 
+          <span>
+            CCA3
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -209,15 +223,25 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="pre-line govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Facility Line1 
+          <span>
+            Facility Line1
+          </span>
           <br />
-           Facility Line2 
+          <span>
+            Facility Line2
+          </span>
           <br />
-           Facility City 
+          <span>
+            Facility City
+          </span>
           <br />
-           Facility 14 
+          <span>
+            Facility 14
+          </span>
           <br />
-           GR 
+          <span>
+            GR
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -255,7 +279,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           FacilityFirst 
+          <span>
+            FacilityFirst
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -283,7 +309,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           FacilityLast 
+          <span>
+            FacilityLast
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -311,7 +339,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           facility@email.com 
+          <span>
+            facility@email.com
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -339,15 +369,25 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="pre-line govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Facility Contact Line1 
+          <span>
+            Facility Contact Line1
+          </span>
           <br />
-           Facility Contact Line2 
+          <span>
+            Facility Contact Line2
+          </span>
           <br />
-           Facility Contact City 
+          <span>
+            Facility Contact City
+          </span>
           <br />
-           Facility Contact 14 
+          <span>
+            Facility Contact 14
+          </span>
           <br />
-           GR 
+          <span>
+            GR
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -375,7 +415,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           UK (44) 1234567890 
+          <span>
+            UK (44) 1234567890
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -413,7 +455,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Yes 
+          <span>
+            Yes
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -441,6 +485,8 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
+          <span>
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -468,7 +514,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Environmental Permitting Regulations (EPR) 
+          <span>
+            Environmental Permitting Regulations (EPR)
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -496,7 +544,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Yes 
+          <span>
+            Yes
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -524,6 +574,8 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
+          <span>
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -551,7 +603,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Environment Agency (England) 
+          <span>
+            Environment Agency (England)
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -739,7 +793,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Yes 
+          <span>
+            Yes
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -807,7 +863,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           50 % 
+          <span>
+            50 %
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -835,6 +893,8 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
+          <span>
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -862,7 +922,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           70 % 
+          <span>
+            70 %
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -890,6 +952,8 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
+          <span>
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -987,7 +1051,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Energy (kWh) 
+          <span>
+            Energy (kWh)
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -1015,7 +1081,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Energy (kWh) 
+          <span>
+            Energy (kWh)
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -1043,7 +1111,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Novem 
+          <span>
+            Novem
+          </span>
         </dd>
       </div>
     </dl>
@@ -1070,7 +1140,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           No 
+          <span>
+            No
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -1098,7 +1170,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           1 Jan 2022 
+          <span>
+            1 Jan 2022
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -1126,7 +1200,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="pre-line govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           asdsadsadda 
+          <span>
+            asdsadsadda
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -1178,13 +1254,15 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__key"
           govuksummarylistrowkey=""
         >
-          Baseline kWh for the target facility
+          Must the Special Reporting Methodology be applied for this facility?
         </dt>
         <dd
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           70 
+          <span>
+            Yes
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -1206,13 +1284,15 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__key"
           govuksummarylistrowkey=""
         >
-          Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
+          Baseline energy to carbon factor (kgC/kWh)
         </dt>
         <dd
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           Yes 
+          <span>
+            90
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -1224,6 +1304,234 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           >
             Change
           </a>
+        </dd>
+      </div>
+    </dl>
+    <h2
+      class="govuk-heading-m"
+    >
+      Details of baseline energy or carbon consumption
+    </h2>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Fixed baseline energy for the facility (kWh)
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            100
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Is there a variable energy amount?
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Yes
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Indicate how you want to account for the portion of variable energy used (or carbon emitted) for your facility
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Totals only
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Total baseline variable energy (kWh)
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            200
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Total baseline throughput
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            50
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Throughput unit
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            tonnes
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Variable baseline energy for the facility (kWh)
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            200
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Total baseline energy for the facility (kWh)
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            300
+          </span>
         </dd>
       </div>
     </dl>
@@ -1250,7 +1558,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           25 
+          <span>
+            25
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -1278,7 +1588,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           35 
+          <span>
+            35
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"
@@ -1306,7 +1618,9 @@ exports[`FacilitySummaryComponent should display facility details when data is a
           class="govuk-summary-list__value"
           govuksummarylistrowvalue=""
         >
-           45 
+          <span>
+            45
+          </span>
         </dd>
         <dd
           class="govuk-summary-list__actions"

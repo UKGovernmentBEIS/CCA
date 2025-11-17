@@ -6,7 +6,7 @@ export function transformUsername(userDto: UserInfoDTO): string {
   return userDto.firstName ? `${userDto.firstName} ${userDto.lastName}` : `${userDto.lastName}`;
 }
 
-@Pipe({ name: 'userFullName', pure: true, standalone: true })
+@Pipe({ name: 'userFullName', pure: true })
 export class UserFullNamePipe implements PipeTransform {
   transform = transformUsername;
 }

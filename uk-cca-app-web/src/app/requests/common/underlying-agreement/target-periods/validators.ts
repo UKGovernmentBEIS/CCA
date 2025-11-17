@@ -159,10 +159,10 @@ function handleSharedValidations(
   const throughputControl = group.controls.throughput;
   const energyCarbonFactorControl = group.controls.energyCarbonFactor;
 
-  const energy = energyControl.value;
+  const energy = Number(energyControl.value);
   const usedReportingMechanism = usedReportingMechanismControl.value;
-  const throughput = throughputControl.value;
-  const energyCarbonFactor = energyCarbonFactorControl.value;
+  const throughput = Number(throughputControl.value);
+  const energyCarbonFactor = Number(energyCarbonFactorControl.value);
 
   updateControlError(
     energyControl,

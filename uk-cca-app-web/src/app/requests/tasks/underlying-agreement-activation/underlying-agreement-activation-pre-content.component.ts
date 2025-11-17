@@ -17,7 +17,6 @@ import { underlyingAgreementActivationQuery } from './+state/una-activation.sele
       </button>
     }
   `,
-  standalone: true,
   imports: [ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

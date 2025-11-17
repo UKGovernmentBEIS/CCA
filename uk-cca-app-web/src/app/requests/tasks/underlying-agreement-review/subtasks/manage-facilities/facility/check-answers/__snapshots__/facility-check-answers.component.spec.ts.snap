@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
 <cca-facility-check-answers
@@ -53,7 +53,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             ADS_53-F00007 
+            <span>
+              ADS_53-F00007
+            </span>
           </dd>
         </div>
         <div
@@ -70,7 +72,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Facility 1 
+            <span>
+              Facility 1
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -98,7 +102,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             No 
+            <span>
+              No
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -126,6 +132,8 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -153,7 +161,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             New entrant 
+            <span>
+              New entrant
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -181,6 +191,8 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -208,7 +220,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             No 
+            <span>
+              No
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -236,7 +250,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             CCA2 
+            <span>
+              CCA2
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -264,15 +280,25 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Address 
+            <span>
+              Address
+            </span>
             <br />
-             Apartment 1 
+            <span>
+              Apartment 1
+            </span>
             <br />
-             Addres1 
+            <span>
+              Addres1
+            </span>
             <br />
-             94043 
+            <span>
+              94043
+            </span>
             <br />
-             GB 
+            <span>
+              GB
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -310,7 +336,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Operator 
+            <span>
+              Operator
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -338,7 +366,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Admin 
+            <span>
+              Admin
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -366,7 +396,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             administrative_conctact@cca.uk 
+            <span>
+              administrative_conctact@cca.uk
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -394,15 +426,25 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Address 
+            <span>
+              Address
+            </span>
             <br />
-             Apartment 1 
+            <span>
+              Apartment 1
+            </span>
             <br />
-             Addres1 
+            <span>
+              Addres1
+            </span>
             <br />
-             94043 
+            <span>
+              94043
+            </span>
             <br />
-             GB 
+            <span>
+              GB
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -430,6 +472,8 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -467,7 +511,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             No 
+            <span>
+              No
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -495,6 +541,8 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -522,7 +570,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Energy Intensive 
+            <span>
+              Energy Intensive
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -550,6 +600,8 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -577,6 +629,8 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -604,6 +658,8 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -815,7 +871,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             No 
+            <span>
+              No
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -883,7 +941,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             100 % 
+            <span>
+              100 %
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -911,6 +971,8 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -938,7 +1000,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             100 % 
+            <span>
+              100 %
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -966,6 +1030,8 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
+            <span>
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -1039,7 +1105,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             Rejected 
+            <span>
+              Rejected
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"
@@ -1067,7 +1135,9 @@ exports[`FacilityCheckAnswersComponent should show summary values 1`] = `
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-             asd 
+            <span>
+              asd
+            </span>
           </dd>
           <dd
             class="govuk-summary-list__actions"

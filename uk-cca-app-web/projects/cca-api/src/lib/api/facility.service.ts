@@ -82,38 +82,38 @@ export class FacilityService {
   }
 
   /**
-   * Get the next facility id per sector association id
+   * Get the next facility business id per sector association id
    * @param accountId The account id
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public generateFacilityId(accountId: number): Observable<FacilityDTO>;
-  public generateFacilityId(
+  public generateFacilityBusinessId(accountId: number): Observable<FacilityDTO>;
+  public generateFacilityBusinessId(
     accountId: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<FacilityDTO>>;
-  public generateFacilityId(
+  public generateFacilityBusinessId(
     accountId: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<FacilityDTO>>;
-  public generateFacilityId(
+  public generateFacilityBusinessId(
     accountId: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<FacilityDTO>;
-  public generateFacilityId(
+  public generateFacilityBusinessId(
     accountId: number,
     observe: any = 'body',
     reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
     if (accountId === null || accountId === undefined) {
-      throw new Error('Required parameter accountId was null or undefined when calling generateFacilityId.');
+      throw new Error('Required parameter accountId was null or undefined when calling generateFacilityBusinessId.');
     }
 
     let headers = this.defaultHeaders;
@@ -152,45 +152,45 @@ export class FacilityService {
   }
 
   /**
-   * Checks if facility ID exists and returns scheme versions
-   * @param facilityId The facility ID to check
+   * Checks if facility business ID exists and returns scheme versions
+   * @param facilityBusinessId The facility business ID to check
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public getActiveFacilityParticipatingSchemeVersions(facilityId: string): Observable<string[]>;
+  public getActiveFacilityParticipatingSchemeVersions(facilityBusinessId: string): Observable<string[]>;
   public getActiveFacilityParticipatingSchemeVersions(
-    facilityId: string,
+    facilityBusinessId: string,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<string[]>>;
   public getActiveFacilityParticipatingSchemeVersions(
-    facilityId: string,
+    facilityBusinessId: string,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<string[]>>;
   public getActiveFacilityParticipatingSchemeVersions(
-    facilityId: string,
+    facilityBusinessId: string,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<string[]>;
   public getActiveFacilityParticipatingSchemeVersions(
-    facilityId: string,
+    facilityBusinessId: string,
     observe: any = 'body',
     reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<any> {
-    if (facilityId === null || facilityId === undefined) {
+    if (facilityBusinessId === null || facilityBusinessId === undefined) {
       throw new Error(
-        'Required parameter facilityId was null or undefined when calling getActiveFacilityParticipatingSchemeVersions.',
+        'Required parameter facilityBusinessId was null or undefined when calling getActiveFacilityParticipatingSchemeVersions.',
       );
     }
 
     let queryParameters = new HttpParams({ encoder: this.encoder });
-    if (facilityId !== undefined && facilityId !== null) {
-      queryParameters = this.addToHttpParams(queryParameters, facilityId as any, 'facilityId');
+    if (facilityBusinessId !== undefined && facilityBusinessId !== null) {
+      queryParameters = this.addToHttpParams(queryParameters, facilityBusinessId as any, 'facilityBusinessId');
     }
 
     let headers = this.defaultHeaders;
@@ -216,7 +216,7 @@ export class FacilityService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<string[]>(`${this.configuration.basePath}/v1.0/facility/facilityId`, {
+    return this.httpClient.get<string[]>(`${this.configuration.basePath}/v1.0/facility/facilityBusinessId`, {
       params: queryParameters,
       responseType: responseType_ as any,
       withCredentials: this.configuration.withCredentials,

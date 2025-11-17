@@ -27,4 +27,8 @@ export const taskRelatedActionsMap: RelatedActionsMap = {
   ADMIN_TERMINATION_FINAL_DECISION_SAVE_APPLICATION: { text: '', path: [''] },
   UNDERLYING_AGREEMENT_CANCEL_APPLICATION: { text: 'Cancel task', path: ['cancel'] },
   UNDERLYING_AGREEMENT_VARIATION_CANCEL_APPLICATION: { text: 'Cancel task', path: ['cancel'] },
+  CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_CANCEL_APPLICATION: {
+    text: 'Cancel task',
+    path: ['cancel'],
+  },
 };

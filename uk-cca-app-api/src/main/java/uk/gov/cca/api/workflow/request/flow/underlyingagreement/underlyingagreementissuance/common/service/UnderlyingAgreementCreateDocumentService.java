@@ -34,16 +34,33 @@ public class UnderlyingAgreementCreateDocumentService {
         final boolean isFinalDocument = requestPayload.getUnderlyingAgreementActivationDetails() != null;
         return ccaFileDocumentGeneratorService.generateAsync(request,
         		decisionNotification,
-        		isFinalDocument ? CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACTIVATED_FINAL_DOCUMENT 
-        				: CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACCEPTED_PROPOSED_DOCUMENT,
-                CcaDocumentTemplateType.UNDERLYING_AGREEMENT,
-                constructFileName(accountDetails.getBusinessId(), isFinalDocument), version);
+        		getContextActionType(isFinalDocument, version),
+        		getDocumentTemplateType(version),
+                constructFileName(accountDetails.getBusinessId(), isFinalDocument, version ), version);
     }
+
+	private String getDocumentTemplateType(SchemeVersion version) {
+		return SchemeVersion.CCA_2.equals(version) 
+				? CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA2 
+						: CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA3;
+	}
+
+	private String getContextActionType(final boolean isFinalDocument, SchemeVersion version) {
+		if (isFinalDocument) {
+			return SchemeVersion.CCA_2.equals(version)
+					? CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACTIVATED_FINAL_DOCUMENT_CCA2
+							: CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACTIVATED_FINAL_DOCUMENT_CCA3;
+		} else { 
+			return SchemeVersion.CCA_2.equals(version) 
+					? CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACCEPTED_PROPOSED_DOCUMENT_CCA2 
+							: CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACCEPTED_PROPOSED_DOCUMENT_CCA3;
+		}
+	}
     
-    private String constructFileName(final String businessId, boolean isFinalDocument) {
-        return businessId + 
-        		" Underlying Agreement" + 
-        		" v1" + 
+    private String constructFileName(final String businessId, boolean isFinalDocument, SchemeVersion version) {
+        return businessId + " " +
+        		version.getDescription() +
+        		" Underlying Agreement v1" + 
         		(isFinalDocument ? "" : " [proposed]") +
         		".pdf";
     }

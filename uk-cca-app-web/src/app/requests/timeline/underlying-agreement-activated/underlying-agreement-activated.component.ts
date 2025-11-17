@@ -11,7 +11,6 @@ import { toUnderlyingAgreementActivatedSummaryData } from './underlying-agreemen
 @Component({
   selector: 'cca-underlying-agreement-activated',
   template: `<cca-summary [data]="summaryData()" />`,
-  standalone: true,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -26,8 +25,8 @@ export class UnderlyingAgreementActivatedComponent {
       decisionNotification: this.requestActionStore.select(
         underlyingAgreementActivatedQuery.selectDecisionNotification,
       )(),
-      underlyingAgreementDocument: this.requestActionStore.select(
-        underlyingAgreementActivatedQuery.selectUnderlyingAgreementDocument,
+      underlyingAgreementDocuments: this.requestActionStore.select(
+        underlyingAgreementActivatedQuery.selectUnderlyingAgreementDocuments,
       )(),
       underlyingAgreementActivationDetails: this.requestActionStore.select(
         underlyingAgreementActivatedQuery.selectUnderlyingAgreementActivationDetails,

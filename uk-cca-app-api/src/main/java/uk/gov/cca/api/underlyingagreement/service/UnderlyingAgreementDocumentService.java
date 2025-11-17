@@ -17,8 +17,9 @@ public class UnderlyingAgreementDocumentService {
 
     public FileToken generateGetFileDocumentToken(final Long underlyingAgreementId, final UUID fileDocumentUuid) {
                 
-        //Validate existence of Underlying Agreement
-        underlyingAgreementQueryService.getUnderlyingAgreementByIdAndFileDocumentUuid(underlyingAgreementId, fileDocumentUuid.toString());
+        //Validate existence of Underlying Agreement document
+        underlyingAgreementQueryService.getUnderlyingAgreementDocumentByUnderlyingAgreementIdAndFileDocumentUuid(
+        		underlyingAgreementId, fileDocumentUuid.toString());
         
         return fileDocumentTokenService.generateGetFileDocumentToken(fileDocumentUuid.toString());
     }

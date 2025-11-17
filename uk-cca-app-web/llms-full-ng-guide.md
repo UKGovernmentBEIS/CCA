@@ -30,7 +30,7 @@ If you're starting a new project, you'll most likely want to create a local proj
 
 ### Prerequisites
 
-- **Node.js** - [v20.11.1 or newer](/reference/versions)
+- **Node.js** - [v20.19.0 or newer](/reference/versions)
 - **Text editor** - We recommend [Visual Studio Code](https://code.visualstudio.com/)
 - **Terminal** - Required for running Angular CLI commands
 - **Development Tool** - To improve your development workflow, we recommend the [Angular Language Service](/tools/language-service)
@@ -88,7 +88,7 @@ In your terminal, switch to your new Angular project.
 ```shell
 cd my-first-angular-app
 ```
-All of your dependencies should be installed at this point (which you can verify by checking for the existent for a `node_modules` folder in your project), so you can start your project by running the command:
+All of your dependencies should be installed at this point (which you can verify by checking for the existence of a `node_modules` folder in your project), so you can start your project by running the command:
 
 ```shell
 npm start
@@ -103,6 +103,10 @@ NOTE: Raw file sizes do not reflect development server per-request transformatio
 ```
 
 And now you can visit the path in `Local` (e.g., `http://localhost:4200`) to see your application. Happy coding! 🎉
+
+### Using AI for Development
+
+To get started with building in your preferred AI powered IDE, [check out Angular prompt rules and best practices](/ai/develop-with-ai).
 
 ## Next steps
 
@@ -185,7 +189,7 @@ tests into a single `tests` directory.
 
 ### Organize your project by feature areas
 
-Organize your project into subdirectories based on the features or your application or common themes
+Organize your project into subdirectories based on the features of your application or common themes
 to the code in those directories. For example, the project structure for a movie theater site,
 MovieReel, might look like this:
 
@@ -204,7 +208,7 @@ Avoid creating subdirectories based on the type of code that lives in those dire
 example, avoid creating directories like `components`, `directives`, and `services`.
 
 Avoid putting so many files into one directory that it becomes hard to read or navigate. As the
-number files in a directory grows, consider splitting further into additional sub-directories.
+number of files in a directory grows, consider splitting further into additional sub-directories.
 
 ### One concept per file
 
@@ -273,8 +277,7 @@ accommodate [JavaScript-like expressions](guide/templates/expression-syntax).
 You should take advantage of these expressions to capture relatively straightforward logic directly
 in template expressions.
 
-When the code in a template gets too complex, though, refactor logic into the TypeScript code (
-typically with a [computed](guide/signals#computed-signals)).
+When the code in a template gets too complex, though, refactor logic into the TypeScript code (typically with a [computed](guide/signals#computed-signals)).
 
 There's no one hard-and-fast rule that determines what constitutes "complex". Use your best
 judgement.
@@ -299,7 +302,7 @@ export class UserProfile {
 }
 ```
 
-### Use `readonly` on properties that are initialized by Angular
+### Use `readonly` for properties that shouldn't change
 
 Mark component and directive properties initialized by Angular as `readonly`. This includes
 properties initialized by `input`, `model`, `output`, and queries. The readonly access modifier
@@ -310,6 +313,7 @@ ensures that the value set by Angular is not overwritten.
 export class UserProfile {
   readonly userId = input();
   readonly userSaved = output();
+  readonly userName = model();
 }
 ```
 
@@ -326,12 +330,13 @@ export class UserProfile {
 
 ### Prefer `class` and `style` over `ngClass` and `ngStyle`
 
-Prefer `class` and `style` bindings over using the `NgClass` and `NgStyle` directives.
+Prefer `class` and `style` bindings over using the [`NgClass`](/api/common/NgClass) and [`NgStyle`](/api/common/NgStyle) directives.
 
 ```html
 <!-- PREFER -->
 <div [class.admin]="isAdmin" [class.dense]="density === 'high'">
-
+<!-- OR -->
+<div [class]="{admin: isAdmin, dense: density === 'high'}">
 <!-- AVOID -->
 <div [ngClass]="{admin: isAdmin, dense: density === 'high'}">
 ```
@@ -342,6 +347,8 @@ developers familiar with basic HTML.
 
 Additionally, the `NgClass` and `NgStyle` directives incur an additional performance cost compared
 to the built-in `class` and `style` binding syntax.
+
+For more details, refer to the [bindings guide](/guide/templates/binding#css-class-and-style-property-bindings)
 
 ### Name event handlers for what they _do_, not for the triggering event
 
@@ -479,7 +486,7 @@ export class UserProfile {
 
 ```html
 <!-- user-profile.html -->
-<h1>Use profile</h1>
+<h1>User profile</h1>
 <p>This is the user profile page</p>
 ```
 
@@ -650,9 +657,7 @@ prefix your components with `yt-`, with components like `yt-menu`, `yt-player`, 
 your selectors like this makes it immediately clear where a particular component comes from. By
 default, the Angular CLI uses `app-`.
 
-Angular uses the `ng` selector prefix for its own framework APIs. Never use `ng` as a selector
-prefix for your own custom components.
-
+IMPORTANT: Angular uses the `ng` selector prefix for its own framework APIs. Never use `ng` as a selector prefix for your own custom components.
 ### When to use an attribute selector
 
 You should consider an attribute selector when you want to create a component on a standard native
@@ -853,11 +858,11 @@ import {Component, input} from '@angular/core';
 
 @Component({/*...*/})
 export class CustomSlider {
-  // Declare an input named 'value' with a default value of zero.
+  // Declare an input named 'value' with a default value of zero. 
   value = input(0);
 
   // Create a computed expression that reads the value input
-  label = computed(() => `The slider's value is ${this.value()}`);
+  label = computed(() => `The slider's value is ${this.value()}`); 
 }
 ```
 Signals created by the `input` function are read-only.
@@ -935,8 +940,8 @@ import {Component, input, booleanAttribute, numberAttribute} from '@angular/core
 
 @Component({/*...*/})
 export class CustomSlider {
-  disabled = input(false, {transform: booleanAttribute});
-  value = input(0, {transform: numberAttribute});
+  disabled = input(false, {transform: booleanAttribute}); 
+  value = input(0, {transform: numberAttribute}); 
 }
 ```
 `booleanAttribute` imitates the behavior of standard HTML [boolean attributes](https://developer.mozilla.org/docs/Glossary/Boolean/HTML), where the
@@ -977,7 +982,7 @@ export class CustomSlider {
   value = model(0);
 
   increment() {
-    // Update the model input with a new value, propagating the value to any bindings.
+    // Update the model input with a new value, propagating the value to any bindings. 
     this.value.update(oldValue => oldValue + 10);
   }
 }
@@ -990,7 +995,7 @@ export class CustomSlider {
   template: `<custom-slider [(value)]="volume" />`,
 })
 export class MediaControls {
-  // Create a writable signal for the `volume` local state.
+  // Create a writable signal for the `volume` local state. 
   volume = signal(0);
 }
 ```
@@ -1130,9 +1135,10 @@ export class CustomSlider {
     return this.internalValue;
   }
 
-set value(newValue: number) { this.internalValue = newValue; }
+  set value(newValue: number) { this.internalValue = newValue; }
 
-private internalValue = 0; }
+  private internalValue = 0;
+}
 ```
 You can even create a _write-only_ input by only defining a public setter:
 
@@ -1143,7 +1149,8 @@ export class CustomSlider {
     this.internalValue = newValue;
   }
 
-private internalValue = 0; }
+  private internalValue = 0;
+}
 ```
 **Prefer using input transforms instead of getters and setters** if possible.
 
@@ -1413,21 +1420,48 @@ Angular supports projecting multiple different elements into different `<ng-cont
 based on CSS selector. Expanding the card example from above, you could create two placeholders for
 a card title and a card body by using the `select` attribute:
 
-```html
-<!-- Component template -->
-<div class="card-shadow">
-  <ng-content select="card-title"></ng-content>
-  <div class="card-divider"></div>
-  <ng-content select="card-body"></ng-content>
-</div>
+```typescript
+@Component({
+  selector: 'card-title',
+  template: `<ng-content>card-title</ng-content>`,
+})
+export class CardTitle {}
+
+@Component({
+  selector: 'card-body',
+  template: `<ng-content>card-body</ng-content>`,
+})
+export class CardBody {}
 ```
 
-```html
+```typescript
+<!-- Component template -->
+Component({
+  selector: 'custom-card',
+  template: `
+  <div class="card-shadow">
+    <ng-content select="card-title"></ng-content>
+    <div class="card-divider"></div>
+    <ng-content select="card-body"></ng-content>
+  </div>
+  `,
+})
+export class CustomCard {}
+```
+
+```typescript
 <!-- Using the component -->
-<custom-card>
-  <card-title>Hello</card-title>
-  <card-body>Welcome to the example</card-body>
-</custom-card>
+@Component({
+  selector: 'app-root',
+  imports: [CustomCard, CardTitle, CardBody],
+  template: `
+    <custom-card>
+      <card-title>Hello</card-title>
+      <card-body>Welcome to the example</card-body>
+    </custom-card>
+`,
+})
+export class App {}
 ```
 
 ```html
@@ -1969,12 +2003,12 @@ Angular lets you add event listeners to an element in your template with parenth
 ```typescript
 @Component({
   /*...*/
-  // Add an 'click' event handler that calls the `cancelSubscription` method.
+  // Add an 'click' event handler that calls the `cancelSubscription` method. 
   template: `<button (click)="cancelSubscription()">Cancel subscription</button>`,
 })
 export class UserProfile {
   /* ... */
-
+  
   cancelSubscription() { /* Your event handling code goes here. */  }
 }
 ```
@@ -1984,12 +2018,12 @@ If you need to pass the [event](https://developer.mozilla.org/docs/Web/API/Event
 ```typescript
 @Component({
   /*...*/
-  // Add an 'click' event handler that calls the `cancelSubscription` method.
+  // Add an 'click' event handler that calls the `cancelSubscription` method. 
   template: `<button (click)="cancelSubscription($event)">Cancel subscription</button>`,
 })
 export class UserProfile {
   /* ... */
-
+  
   cancelSubscription(event: Event) { /* Your event handling code goes here. */  }
 }
 ```
@@ -2017,7 +2051,7 @@ The `@if` block also supports an optional `@else` block:
   <!-- ... -->
 } @else {
   <h2>User settings</h2>
-  <!-- ... -->
+  <!-- ... -->  
 }
 ```
 
@@ -2187,9 +2221,26 @@ In this example, when the snippet is rendered to the page, Angular will replace 
 <p>Your color preference is dark.</p>
 ```
 
-In addition to evaluating the expression at first render, Angular also updates the rendered content when the expression's value changes.
+Bindings that change over time should read values from [signals](/guide/signals). Angular tracks the signals read in the template, and updates the rendered page when those signal values change.
 
-Continuing the theme example, if a user clicks on a button that changes the value of `theme` to `'light'` after the page loads, the page updates accordingly to:
+```typescript
+@Component({
+  template: `
+    <!-- Does not necessarily update when `welcomeMessage` changes. --> 
+    <p>{{ welcomeMessage }}</p> 
+
+    <p>Your color preference is {{ theme() }}.</p> <!-- Always updates when the value of the `name` signal changes. -->
+  `
+  ...
+})
+export class AppComponent {
+  welcomeMessage = "Welcome, enjoy this app that we built for you"; 
+  theme = signal('dark');
+}
+```
+For more details, see the [Signals guide](/guide/signals).
+
+Continuing the theme example, if a user clicks on a button that updates the `theme` signal to `'light'` after the page loads, the page updates accordingly to:
 
 ```html
 <!-- Rendered Output -->
@@ -2212,7 +2263,7 @@ Every HTML element has a corresponding DOM representation. For example, each `<b
 
 ```html
 <!-- Bind the `disabled` property on the button element's DOM object -->
-<button [disabled]="isFormValid">Save</button>
+<button [disabled]="isFormValid()">Save</button>
 ```
 
 In this example, every time `isFormValid` changes, Angular automatically sets the `disabled` property of the `HTMLButtonElement` instance.
@@ -2223,7 +2274,7 @@ When an element is an Angular component, you can use property bindings to set co
 
 ```html
 <!-- Bind the `value` property on the `MyListbox` component instance. -->
-<my-listbox [value]="mySelection" />
+<my-listbox [value]="mySelection()" />
 ```
 
 In this example, every time `mySelection` changes, Angular automatically sets the `value` property of the `MyListbox` instance.
@@ -2232,7 +2283,7 @@ You can bind to directive properties as well.
 
 ```html
 <!-- Bind to the `ngSrc` property of the `NgOptimizedImage` directive  -->
-<img [ngSrc]="profilePhotoUrl" alt="The current user's profile photo">
+<img [ngSrc]="profilePhotoUrl()" alt="The current user's profile photo">
 ```
 
 ### Attributes
@@ -2241,7 +2292,7 @@ When you need to set HTML attributes that do not have corresponding DOM properti
 
 ```html
 <!-- Bind the `role` attribute on the `<ul>` element to the component's `listRole` property. -->
-<ul [attr.role]="listRole">
+<ul [attr.role]="listRole()">
 ```
 
 In this example, every time `listRole` changes, Angular automatically sets the `role` attribute of the `<ul>` element by calling `setAttribute`.
@@ -2254,13 +2305,13 @@ You can also use text interpolation syntax in properties and attributes by using
 
 ```html
 <!-- Binds a value to the `alt` property of the image element's DOM object. -->
-<img src="profile-photo.jpg" alt="Profile photo of {{ firstName }}" >
+<img src="profile-photo.jpg" alt="Profile photo of {{ firstName() }}" >
 ```
 
 To bind to an attribute with the text interpolation syntax, prefix the attribute name with `attr.`
 
 ```html
-<button attr.aria-label="Save changes to {{ objectType }}">
+<button attr.aria-label="Save changes to {{ objectType() }}">
 ```
 
 ## CSS class and style property bindings
@@ -2273,7 +2324,7 @@ You can create a CSS class binding to conditionally add or remove a CSS class on
 
 ```html
 <!-- When `isExpanded` is truthy, add the `expanded` CSS class. -->
-<ul [class.expanded]="isExpanded">
+<ul [class.expanded]="isExpanded()">
 ```
 
 You can also bind directly to the `class` property. Angular accepts three types of value:
@@ -2288,18 +2339,18 @@ You can also bind directly to the `class` property. Angular accepts three types 
 @Component({
   template: `
     <ul [class]="listClasses"> ... </ul>
-    <section [class]="sectionClasses"> ... </section>
-    <button [class]="buttonClasses"> ... </button>
+    <section [class]="sectionClasses()"> ... </section>
+    <button [class]="buttonClasses()"> ... </button>
   `,
   ...
 })
 export class UserProfile {
   listClasses = 'full-width outlined';
-  sectionClasses = ['expandable', 'elevated'];
-  buttonClasses = {
+  sectionClasses = signal(['expandable', 'elevated']);
+  buttonClasses = ({
     highlighted: true,
     embiggened: false,
-  };
+  });
 }
 ```
 
@@ -2317,12 +2368,12 @@ When using static CSS classes, directly binding `class`, and binding specific cl
 
 ```typescript
 @Component({
-  template: `<ul class="list" [class]="listType" [class.expanded]="isExpanded"> ...`,
+  template: `<ul class="list" [class]="listType()" [class.expanded]="isExpanded()"> ...`,
   ...
 })
 export class Listbox {
-  listType = 'box';
-  isExpanded = true;
+  listType = signal('box');
+  isExpanded = signal(true);
 }
 ```
 
@@ -2338,20 +2389,22 @@ When binding `class` to an array or an object, Angular compares the previous val
 
 If an element has multiple bindings for the same CSS class, Angular resolves collisions by following its style precedence order.
 
+NOTE: Class bindings do not support space-separated class names in a single key. They also don't support mutations on objects as the reference of the binding remains the same. If you need one or the other, use the [ngClass](/api/common/NgClass) directive. 
+
 ### CSS style properties
 
 You can also bind to CSS style properties directly on an element.
 
 ```html
 <!-- Set the CSS `display` property based on the `isExpanded` property. -->
-<section [style.display]="isExpanded ? 'block' : 'none'">
+<section [style.display]="isExpanded() ? 'block' : 'none'">
 ```
 
 You can further specify units for CSS properties that accept units.
 
 ```html
 <!-- Set the CSS `height` property to a pixel value based on the `sectionHeightInPixels` property. -->
-<section [style.height.px]="sectionHeightInPixels">
+<section [style.height.px]="sectionHeightInPixels()">
 ```
 
 You can also set multiple style values in one binding. Angular accepts the following types of value:
@@ -2364,17 +2417,17 @@ You can also set multiple style values in one binding. Angular accepts the follo
 ```typescript
 @Component({
   template: `
-    <ul [style]="listStyles"> ... </ul>
-    <section [style]="sectionStyles"> ... </section>
+    <ul [style]="listStyles()"> ... </ul>
+    <section [style]="sectionStyles()"> ... </section>
   `,
   ...
 })
 export class UserProfile {
-  listStyles = 'display: flex; padding: 8px';
-  sectionStyles = {
+  listStyles = signal('display: flex; padding: 8px');
+  sectionStyles = signal({
     border: '1px solid black',
     'font-weight': 'bold',
-  };
+  });
 }
 ```
 
@@ -2531,7 +2584,7 @@ Use `@let` to declare a variable whose value is based on the result of a templat
 @let name = user.name;
 @let greeting = 'Hello, ' + name;
 @let data = data$ | async;
-@let pi = 3.1459;
+@let pi = 3.14159;
 @let coordinates = {x: 50, y: 100};
 @let longExpression = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit ' +
                       'sed do eiusmod tempor incididunt ut labore et dolore magna ' +
@@ -2738,9 +2791,9 @@ Angular's compiler produces a [dynamic import](https://developer.mozilla.org/en-
 
 ### `@defer`
 
-This is the primary block that defines the section of content that is lazily loaded. It is not rendered initially– deferred content loads and renders once the specified [trigger](/guide/defer#triggers) occurs or the `when` condition is met.
+This is the primary block that defines the section of content that is lazily loaded. It is not rendered initially– deferred content loads and renders once the specified [trigger](/guide/templates/defer#triggers) occurs or the `when` condition is met.
 
-By default, a @defer block is triggered when the browser state becomes [idle](/guide/defer#idle).
+By default, a @defer block is triggered when the browser state becomes [idle](/guide/templates/defer#idle).
 
 ```html
 @defer {
@@ -2762,7 +2815,7 @@ The `@placeholder` is an optional block that declares what content to show befor
 }
 ```
 
-While optional, certain triggers may require the presence of either a `@placeholder` or a [template reference variable](/guide/templates/variables#template-reference-variables) to function. See the [Triggers](/guide/defer#triggers) section for more details.
+While optional, certain triggers may require the presence of either a `@placeholder` or a [template reference variable](/guide/templates/variables#template-reference-variables) to function. See the [Triggers](/guide/templates/defer#triggers) section for more details.
 
 Angular replaces placeholder content with the main content once loading is complete. You can use any content in the placeholder section including plain HTML, components, directives, and pipes. Keep in mind the _dependencies of the placeholder block are eagerly loaded_.
 
@@ -3053,23 +3106,21 @@ Angular supports a subset of [literal values](https://developer.mozilla.org/en-U
 
 ### Supported value literals
 
-| Literal type           | Example values                  |
-| ---------------------- | ------------------------------- |
-| String                 | `'Hello'`, `"World"`            |
-| Boolean                | `true`, `false`                 |
-| Number                 | `123`, `3.14`                   |
-| Object                 | `{name: 'Alice'}`               |
-| Array                  | `['Onion', 'Cheese', 'Garlic']` |
-| null                   | `null`                          |
-| Template string        | `` `Hello ${name}` ``           |
-| Tagged template string | `` tag`Hello ${name}` ``        |
+| Literal type    | Example values                  |
+| --------------- | ------------------------------- |
+| String          | `'Hello'`, `"World"`            |
+| Boolean         | `true`, `false`                 |
+| Number          | `123`, `3.14`                   |
+| Object          | `{name: 'Alice'}`               |
+| Array           | `['Onion', 'Cheese', 'Garlic']` |
+| null            | `null`                          |
+| Template string | `` `Hello ${name}` ``           |
 
 ### Unsupported literals
 
-| Literal type           | Example value            |
-| ---------------------- | ------------------------ |
-| RegExp                 | `/\d+/`                  |
-| Tagged template string | `` tag`Hello ${name}` `` |
+| Literal type | Example value |
+| ------------ | ------------- |
+| RegExp       | `/\d+/`       |
 
 ## Globals
 
@@ -3092,33 +3143,40 @@ For example, `@for` blocks make several local variables corresponding to informa
 
 Angular supports the following operators from standard JavaScript.
 
-| Operator              | Example(s)                               |
-| --------------------- | ---------------------------------------- |
-| Add / Concatenate     | `1 + 2`                                  |
-| Subtract              | `52 - 3`                                 |
-| Multiply              | `41 * 6`                                 |
-| Divide                | `20 / 4`                                 |
-| Remainder (Modulo)    | `17 % 5`                                 |
-| Exponentiation        | `10 ** 3`                                |
-| Parenthesis           | `9 * (8 + 4)`                            |
-| Conditional (Ternary) | `a > b ? true : false`                   |
-| And (Logical)         | `&&`                                     |
-| Or (Logical)          | `\|\|`                                   |
-| Not (Logical)         | `!`                                      |
-| Nullish Coalescing    | `possiblyNullValue ?? 'default'`         |
-| Comparison Operators  | `<`, `<=`, `>`, `>=`, `==`, `===`, `!==` |
-| Unary Negation        | `-x`                                     |
-| Unary Plus            | `+y`                                     |
-| Property Accessor     | `person['name']`                         |
-| typeof                | `typeof 42`                              |
-| void                  | `void 1`                                 |
-| in                    | `'model' in car`                         |
+| Operator                      | Example(s)                                     |
+| ----------------------------- | ---------------------------------------------- |
+| Add / Concatenate             | `1 + 2`                                        |
+| Subtract                      | `52 - 3`                                       |
+| Multiply                      | `41 * 6`                                       |
+| Divide                        | `20 / 4`                                       |
+| Remainder (Modulo)            | `17 % 5`                                       |
+| Exponentiation                | `10 ** 3`                                      |
+| Parenthesis                   | `9 * (8 + 4)`                                  |
+| Conditional (Ternary)         | `a > b ? true : false`                         |
+| And (Logical)                 | `&&`                                           |
+| Or (Logical)                  | `\|\|`                                         |
+| Not (Logical)                 | `!`                                            |
+| Nullish Coalescing            | `possiblyNullValue ?? 'default'`               |
+| Comparison Operators          | `<`, `<=`, `>`, `>=`, `==`, `===`, `!==`, `!=` |
+| Unary Negation                | `-x`                                           |
+| Unary Plus                    | `+y`                                           |
+| Property Accessor             | `person['name']`                               |
+| Assignment                    | `a = b`                                        |
+| Addition Assignment           | `a += b`                                       |
+| Subtraction Assignment        | `a -= b`                                       |
+| Multiplication Assignment     | `a *= b`                                       |
+| Division Assignment           | `a /= b`                                       |
+| Remainder Assignment          | `a %= b`                                       |
+| Exponentiation Assignment     | `a **= b`                                      |
+| Logical AND Assignment        | `a &&= b`                                      |
+| Logical OR Assignment         | `a \|\|= b`                                    |
+| Nullish Coalescing Assignment | `a ??= b`                                      |
 
 Angular expressions additionally also support the following non-standard operators:
 
 | Operator                        | Example(s)                     |
 | ------------------------------- | ------------------------------ |
-| [Pipe](/guide/templates/pipes) | `{{ total \| currency }}`      |
+| [Pipe](/guide/templates/pipes)  | `{{ total \| currency }}`      |
 | Optional chaining\*             | `someObj.someProp?.nestedProp` |
 | Non-null assertion (TypeScript) | `someObj!.someProp`            |
 
@@ -3129,13 +3187,9 @@ NOTE: Optional chaining behaves differently from the standard JavaScript version
 | Operator              | Example(s)                        |
 | --------------------- | --------------------------------- |
 | All bitwise operators | `&`, `&=`, `~`, `\|=`, `^=`, etc. |
-| Assignment operators  | `=`                               |
 | Object destructuring  | `const { name } = person`         |
 | Array destructuring   | `const [firstItem] = items`       |
 | Comma operator        | `x = (x++, x)`                    |
-| in                    | `'model' in car`                  |
-| typeof                | `typeof 42`                       |
-| void                  | `void 1`                          |
 | instanceof            | `car instanceof Automobile`       |
 | new                   | `new Car()`                       |
 
@@ -3158,7 +3212,7 @@ Generally speaking, declarations are not supported in Angular expressions. This 
 
 # Event listener statements
 
-Event handlers are **statements** rather than expressions. While they support all of the same syntax as Angular expressions, the are two key differences:
+Event handlers are **statements** rather than expressions. While they support all of the same syntax as Angular expressions, there are two key differences:
 
 1. Statements **do support** assignment operators (but not destructing assignments)
 1. Statements **do not support** pipes
@@ -3405,13 +3459,13 @@ export class SelectDirective {
 
 </docs-step>
 <docs-step title="Add the 'selectFrom' input">
-Add a `selectFrom` `@Input()` property.
+Add a `selectFrom` `input()` property.
 
 ```ts
 export class SelectDirective {
   // ...
 
-  @Input({required: true}) selectFrom!: DataSource;
+  selectFrom = input.required<DataSource>();
 }
 ```
 
@@ -3513,9 +3567,9 @@ To narrow the input expression by defining a type assertion function:
 // expression is narrowed to `User`.
 @Directive(...)
 class ActorIsUser {
-  @Input() actor: User|Robot;
+  actor = input<User | Robot>();
 
-  static ngTemplateGuard_actor(dir: ActorIsUser, expr: User|Robot): expr is User {
+  static ngTemplateGuard_actor(dir: ActorIsUser, expr: User | Robot): expr is User {
     // The return statement is unnecessary in practice, but included to
     // prevent TypeScript errors.
     return true;
@@ -3530,7 +3584,7 @@ Some directives only render their templates when an input is truthy. It's not po
 ```ts
 @Directive(...)
 class CustomIf {
-  @Input() condition!: any;
+  condition = input.required<boolean>();
 
   static ngTemplateGuard_condition: 'binding';
 }
@@ -3554,7 +3608,7 @@ export interface SelectTemplateContext<T> {
 export class SelectDirective<T> {
   // The directive's generic type `T` will be inferred from the `DataSource` type
   // passed to the input.
-  @Input({required: true}) selectFrom!: DataSource<T>;
+  selectFrom = input.required<DataSource<T>>();
 
   // Narrow the type of the context using the generic type of the directive.
   static ngTemplateContextGuard<T>(dir: SelectDirective<T>, ctx: any): ctx is SelectTemplateContext<T> {
@@ -4172,7 +4226,7 @@ firstName.set('Jaime');
 
 // You can also use the `update` method to change the value
 // based on the previous value.
-firstName.update(name => name.toUpperCase());
+firstName.update(name => name.toUpperCase()); 
 ```
 
 Angular tracks where signals are read and when they're updated. The framework uses this information to do additional work, such as updating the DOM with new state. This ability to respond to changing signal values over time is known as *reactivity*.
@@ -4188,7 +4242,7 @@ const firstName = signal('Morgan');
 const firstNameCapitalized = computed(() => firstName().toUpperCase());
 
 console.log(firstNameCapitalized()); // MORGAN
-```
+``` 
 
 A `computed` signal is read-only; it does not have a `set` or an `update` method. Instead, the value of the `computed` signal automatically changes when any of the signals it reads change:
 
@@ -4335,7 +4389,7 @@ The `source` can be any signal, such as a `computed` or component `input`. When 
 
 The `computation` is a function that receives the new value of `source` and a `previous` object. The `previous` object has two properties— `previous.source` is the previous value of `source`, and `previous.value` is the previous result of the `computation`. You can use these previous values to decide the new result of the computation.
 
-HELPFUL: When using the `previous` parameter, it is necessary to provide the generic type arguments of `linkedSignal` explicitly. The first generic type corresponds with the type of `source` and the second generic type determines the output type of `computation`.
+HELPFUL: When using the `previous` parameter, it is necessary to provide the generic type arguments of `linkedSignal` explicitly. The first generic type corresponds with the type of `source` and the second generic type determines the output type of `computation`.  
 
 ## Custom equality comparison
 
@@ -4382,7 +4436,17 @@ const userResource = resource({
 });
 
 // Create a computed signal based on the result of the resource's loader function.
-const firstName = computed(() => userResource.value().firstName);
+const firstName = computed(() => {
+  if (userResource.hasValue()) {
+    // `hasValue` serves 2 purposes:
+    // - It acts as type guard to strip `undefined` from the type
+    // - If protects against reading a throwing `value` when the resource is in error state
+    return userResource.value().firstName;
+  }
+
+  // fallback in case the resource value is `undefined` or if the resource is in error state
+  return undefined;
+});
 ```
 
 The `resource` function accepts a `ResourceOptions` object with two main properties: `params` and `loader`.
@@ -4418,10 +4482,10 @@ const userId: Signal<string> = getUserId();
 
 const userResource = resource({
   params: () => ({id: userId()}),
-  loader: ({request, abortSignal}): Promise<User> => {
+  loader: ({params, abortSignal}): Promise<User> => {
     // fetch cancels any outstanding HTTP requests when the given `AbortSignal`
     // indicates that the request has been aborted.
-    return fetch(`users/${request.id}`, {signal: abortSignal});
+    return fetch(`users/${params.id}`, {signal: abortSignal});
   },
 });
 ```
@@ -4463,12 +4527,16 @@ The `status` signal provides a specific `ResourceStatus` that describes the stat
 | ------------- | :---------------- | ---------------------------------------------------------------------------- |
 | `'idle'`      | `undefined`       | The resource has no valid request and the loader has not run.                |
 | `'error'`     | `undefined`       | The loader has encountered an error.                                         |
-| `'loading'`   | `undefined`       | The loader is running as a result of the `request` value changing.           |
+| `'loading'`   | `undefined`       | The loader is running as a result of the `params` value changing.           |
 | `'reloading'` | Previous value    | The loader is running as a result calling of the resource's `reload` method. |
 | `'resolved'`  | Resolved value    | The loader has completed.                                                    |
 | `'local'`     | Locally set value | The resource's value has been set locally via `.set()` or `.update()`        |
 
 You can use this status information to conditionally display user interface elements, such loading indicators and error messages.
+
+## Reactive data fetching with `httpResource`
+
+[`httpResource`](/guide/http/http-resource) is a wrapper around `HttpClient` that gives you the request status and response as signals. It makes HTTP requests through the Angular HTTP stack, including interceptors.
 # Understanding dependency injection
 
 Dependency injection, or DI, is one of the fundamental concepts in Angular. DI is wired into the Angular framework and allows classes with Angular decorators, such as Components, Directives, Pipes, and Injectables, to configure dependencies that they need.
@@ -5288,7 +5356,7 @@ export class HostComponent {
 ```
 Since `HostComponent` has the `host` option , no matter what the parent of `HostComponent` might have as a `flower.emoji` value, the `HostComponent` will use tulip <code>&#x1F337;</code>.
 
-### Modifiers with constructor injection
+### Modifiers with constructor injection  
 
 Similarly as presented before, the behavior of constructor injection can be modified with `@Optional()`, `@Self()`, `@SkipSelf()` and `@Host()`.
 
@@ -5546,7 +5614,7 @@ Here, it has a value of dog <code>&#x1F436;</code>.
 })
 export class ChildComponent {
   // inject services
-  flower = inject(FlowerService);
+  flower = inject(FlowerService); 
   animal = inject(AnimalService)
 ...
 }
@@ -6344,7 +6412,7 @@ Use the `toObservable` utility to create an `Observable` which tracks the value 
 import { Component, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 
-@Component(...)
+@Component(/* ... */)
 export class SearchResults {
   query: Signal<string> = inject(QueryService).query;
   query$ = toObservable(this.query);
@@ -6377,6 +6445,37 @@ mySignal.set(3);
 ```
 
 Here, only the last value (3) will be logged.
+
+## Using `rxResource` for async data
+
+IMPORTANT: `rxResource` is [experimental](reference/releases#experimental). It's ready for you to try, but it might change before it is stable.
+
+Angular's [`resource` function](/guide/signals/resource) gives you a way to incorporate async data into your application's signal-based code. Building on top of this pattern, `rxResource` lets you define a resource where the source of your data is defined in terms of an RxJS `Observable`. Instead of accepting a `loader` function, `rxResource` accepts a `stream` function that accepts an RxJS `Observable`.
+
+```typescript
+import {Component, inject} from '@angular/core';
+import {rxResource} from '@angular/core/rxjs-interop';
+
+@Component(/* ... */)
+export class UserProfile {
+  // This component relies on a service that exposes data through an RxJS Observable.
+  private userData = inject(MyUserDataClient);
+
+  protected userId = input<string>();
+
+  private userResource = rxResource({
+    params: () => this.userId(),
+
+    // The `stream` property expects a factory function that returns
+    // a data stream as an RxJS Observable.
+    stream: ({params}) => this.userData.load(params.userId),
+  });
+}
+```
+
+The `stream` property accepts a factory function for an RxJS `Observable`. This factory function is passed the resource's `params` value and returns an `Observable`. The resource calls this factory function every time the `params` computation produces a new value. See [Resource loaders](/guide/signals/resource#resource-loaders) for more details on the parameters passed to the factory function.
+
+In all other ways, `rxResource` behaves like and provides the same APIs as `resource` for specifying parameters, reading values, checking loading state, and examining errors.
 # RxJS interop with component and directive outputs
 
 TIP: This guide assumes you're familiar with [component and directive outputs](guide/components/outputs).
@@ -6394,7 +6493,7 @@ import {outputFromObservable} from '@angular/core/rxjs-interop';
 @Directive({/*...*/})
 class Draggable {
   pointerMoves$: Observable<PointerMovements> = listenToPointerMoves();
-
+  
   // Whenever `pointerMoves$` emits, the `pointerMove` event fires.
   pointerMove = outputFromObservable(this.pointerMoves$);
 }
@@ -6709,18 +6808,277 @@ Each `HttpEvent` reported in the event stream has a `type` which distinguishes w
 
 ## Handling request failure
 
-There are two ways an HTTP request can fail:
+There are three ways an HTTP request can fail:
 
 * A network or connection error can prevent the request from reaching the backend server.
+* A request didn't respond in time when the timeout option was set.
 * The backend can receive the request but fail to process it, and return an error response.
 
-`HttpClient` captures both kinds of errors in an `HttpErrorResponse` which it returns through the `Observable`'s error channel. Network errors have a `status` code of `0` and an `error` which is an instance of [`ProgressEvent`](https://developer.mozilla.org/docs/Web/API/ProgressEvent). Backend errors have the failing `status` code returned by the backend, and the error response as the `error`. Inspect the response to identify the error's cause and the appropriate action to handle the error.
+`HttpClient` captures all of the above kinds of errors in an `HttpErrorResponse` which it returns through the `Observable`'s error channel. Network and timeout errors have a `status` code of `0` and an `error` which is an instance of [`ProgressEvent`](https://developer.mozilla.org/docs/Web/API/ProgressEvent). Backend errors have the failing `status` code returned by the backend, and the error response as the `error`. Inspect the response to identify the error's cause and the appropriate action to handle the error.
 
 The [RxJS library](https://rxjs.dev/) offers several operators which can be useful for error handling.
 
 You can use the `catchError` operator to transform an error response into a value for the UI. This value can tell the UI to display an error page or value, and capture the error's cause if necessary.
 
 Sometimes transient errors such as network interruptions can cause a request to fail unexpectedly, and simply retrying the request will allow it to succeed. RxJS provides several *retry* operators which automatically re-subscribe to a failed `Observable` under certain conditions. For example, the `retry()` operator will automatically attempt to re-subscribe a specified number of times.
+
+### Timeouts
+
+To set a timeout for a request, you can set the `timeout` option to a number of milliseconds along other request options. If the backend request does not complete within the specified time, the request will be aborted and an error will be emitted.
+
+NOTE: The timeout will only apply to the backend HTTP request itself. It is not a timeout for the entire request handling chain. Therefore, this option is not affected by any delay introduced by interceptors.
+
+```ts
+http.get('/api/config', {
+  timeout: 3000,
+}).subscribe({
+  next: config => {
+    console.log('Config fetched successfully:', config);
+  },
+  error: err => {
+    // If the request times out, an error will have been emitted.
+  }
+});
+```
+## Advanced fetch options
+
+When using the `withFetch()` provider, Angular's `HttpClient` provides access to advanced fetch API options that can improve performance and user experience. These options are only available when using the fetch backend.
+
+### Fetch options
+
+The following options provide fine-grained control over request behavior when using the fetch backend.
+
+#### Keep-alive connections
+
+The `keepalive` option allows a request to outlive the page that initiated it. This is particularly useful for analytics or logging requests that need to complete even if the user navigates away from the page.
+
+```ts
+http.post('/api/analytics', analyticsData, {
+  keepalive: true
+}).subscribe();
+```
+#### HTTP caching control
+
+The `cache` option controls how the request interacts with the browser's HTTP cache, which can significantly improve performance for repeated requests.
+
+```ts
+//  Use cached response regardless of freshness
+http.get('/api/config', {
+  cache: 'force-cache'
+}).subscribe(config => {
+  // ...
+});
+
+// Always fetch from network, bypass cache
+http.get('/api/live-data', {
+  cache: 'no-cache'
+}).subscribe(data => {
+  // ...
+});
+
+// Use cached response only, fail if not in cache
+http.get('/api/static-data', {
+  cache: 'only-if-cached'
+}).subscribe(data => {
+  // ...
+});
+```
+#### Request priority for Core Web Vitals
+
+The `priority` option allows you to indicate the relative importance of a request, helping browsers optimize resource loading for better Core Web Vitals scores.
+
+```ts
+// High priority for critical resources
+http.get('/api/user-profile', {
+  priority: 'high'
+}).subscribe(profile => {
+  // ...
+});
+
+// Low priority for non-critical resources
+http.get('/api/recommendations', {
+  priority: 'low'
+}).subscribe(recommendations => {
+  // ...
+});
+
+// Auto priority (default) lets the browser decide
+http.get('/api/settings', {
+  priority: 'auto'
+}).subscribe(settings => {
+  // ...
+});
+```
+Available `priority` values:
+- `'high'`: High priority, loaded early (e.g., critical user data, above-the-fold content)
+- `'low'`: Low priority, loaded when resources are available (e.g., analytics, prefetch data)
+- `'auto'`: Browser determines priority based on request context (default)
+
+TIP: Use `priority: 'high'` for requests that affect Largest Contentful Paint (LCP) and `priority: 'low'` for requests that don't impact initial user experience.
+
+#### Request mode
+
+The `mode` option controls how the request handles cross-origin requests and determines the response type.
+
+```ts
+// Same-origin requests only
+http.get('/api/local-data', {
+  mode: 'same-origin'
+}).subscribe(data => {
+  // ...
+});
+
+// CORS-enabled cross-origin requests
+http.get('https://api.external.com/data', {
+  mode: 'cors'
+}).subscribe(data => {
+  // ...
+});
+
+// No-CORS mode for simple cross-origin requests
+http.get('https://external-api.com/public-data', {
+  mode: 'no-cors'
+}).subscribe(data => {
+  // ...
+});
+```
+Available `mode` values:
+- `'same-origin'`: Only allow same-origin requests, fail for cross-origin requests
+- `'cors'`: Allow cross-origin requests with CORS (default)
+- `'no-cors'`: Allow simple cross-origin requests without CORS, response is opaque
+
+TIP: Use `mode: 'same-origin'` for sensitive requests that should never go cross-origin.
+
+#### Redirect handling
+
+The `redirect` option specifies how to handle redirect responses from the server.
+
+```ts
+// Follow redirects automatically (default behavior)
+http.get('/api/resource', {
+  redirect: 'follow'
+}).subscribe(data => {
+  // ...
+});
+
+// Prevent automatic redirects
+http.get('/api/resource', {
+  redirect: 'manual'
+}).subscribe(response => {
+  // Handle redirect manually
+});
+
+// Treat redirects as errors
+http.get('/api/resource', {
+  redirect: 'error'
+}).subscribe({
+  next: data => {
+    // Success response
+  },
+  error: err => {
+    // Redirect responses will trigger this error handler
+  }
+});
+```
+Available `redirect` values:
+- `'follow'`: Automatically follow redirects (default)
+- `'error'`: Treat redirects as errors
+- `'manual'`: Don't follow redirects automatically, return redirect response
+
+TIP: Use `redirect: 'manual'` when you need to handle redirects with custom logic.
+
+#### Credentials handling
+
+The `credentials` option controls whether cookies, authorization headers, and other credentials are sent with cross-origin requests. This is particularly important for authentication scenarios.
+
+```ts
+// Include credentials for cross-origin requests
+http.get('https://api.example.com/protected-data', {
+  credentials: 'include'
+}).subscribe(data => {
+  // ...
+});
+
+// Never send credentials (default for cross-origin)
+http.get('https://api.example.com/public-data', {
+  credentials: 'omit'
+}).subscribe(data => {
+  // ...
+});
+
+// Send credentials only for same-origin requests
+http.get('/api/user-data', {
+  credentials: 'same-origin'
+}).subscribe(data => {
+  // ...
+});
+
+// withCredentials overrides credentials setting
+http.get('https://api.example.com/data', {
+  credentials: 'omit',        // This will be ignored
+  withCredentials: true       // This forces credentials: 'include'
+}).subscribe(data => {
+  // Request will include credentials despite credentials: 'omit'
+});
+
+// Legacy approach (still supported)
+http.get('https://api.example.com/data', {
+  withCredentials: true
+}).subscribe(data => {
+  // Equivalent to credentials: 'include'
+});
+```
+IMPORTANT: The `withCredentials` option takes precedence over the `credentials` option. If both are specified, `withCredentials: true` will always result in `credentials: 'include'`, regardless of the explicit `credentials` value.
+
+Available `credentials` values:
+- `'omit'`: Never send credentials
+- `'same-origin'`: Send credentials only for same-origin requests (default)
+- `'include'`: Always send credentials, even for cross-origin requests
+
+TIP: Use `credentials: 'include'` when you need to send authentication cookies or headers to a different domain that supports CORS. Avoid mixing `credentials` and `withCredentials` options to prevent confusion.
+
+#### Referrer
+
+The `referrer` option allows you to control what referrer information is sent with the request. This is important for privacy and security considerations.
+
+```ts
+// Send a specific referrer URL
+http.get('/api/data', {
+  referrer: 'https://example.com/page'
+}).subscribe(data => {
+  // ...
+});
+
+// Use the current page as referrer (default behavior)
+http.get('/api/analytics', {
+  referrer: 'about:client'
+}).subscribe(data => {
+  // ...
+});
+```
+The `referrer` option accepts:
+- A valid URL string: Sets the specific referrer URL to send
+- An empty string `''`: Sends no referrer information
+- `'about:client'`: Uses the default referrer (current page URL)
+
+TIP: Use `referrer: ''` for sensitive requests where you don't want to leak the referring page URL.
+
+#### Integrity
+
+The `integrity` option allows you to verify that the response hasn't been tampered with by providing a cryptographic hash of the expected content. This is particularly useful for loading scripts or other resources from CDNs.
+
+```ts
+// Verify response integrity with SHA-256 hash
+http.get('/api/script.js', {
+  integrity: 'sha256-ABC123...',
+  responseType: 'text'
+}).subscribe(script => {
+  // Script content is verified against the hash
+});
+```
+IMPORTANT: The `integrity` option requires an exact match between the response content and the provided hash. If the content doesn't match, the request will fail with a network error.
+
+TIP: Use subresource integrity when loading critical resources from external sources to ensure they haven't been modified. Generate hashes using tools like `openssl`.
 
 ## Http `Observable`s
 
@@ -6772,7 +7130,9 @@ export class UserProfileComponent {
   private userService = inject(UserService);
 
   constructor(): void {
-    this.user$ = this.userService.getUser(this.userId());
+    effect(() => {
+      this.user$ = this.userService.getUser(this.userId());
+    });
   }
 }
 ```
@@ -6934,6 +7294,37 @@ const resp = new HttpResponse({
   body: 'response body',
 });
 ```
+## Working with redirect information
+
+When using `HttpClient` with the `withFetch` provider, responses include a `redirected` property that indicates whether the response was the result of a redirect. This property aligns with the native Fetch API specification and can be useful in interceptors for handling redirect scenarios.
+
+An interceptor can access and act upon the redirect information:
+
+```ts
+export function redirectTrackingInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
+  return next(req).pipe(tap(event => {
+    if (event.type === HttpEventType.Response && event.redirected) {
+      console.log('Request to', req.url, 'was redirected to', event.url);
+      // Handle redirect logic - maybe update analytics, security checks, etc.
+    }
+  }));
+}
+```
+You can also use the redirect information to implement conditional logic in your interceptors:
+
+```ts
+export function authRedirectInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
+  return next(req).pipe(tap(event => {
+    if (event.type === HttpEventType.Response && event.redirected) {
+      // Check if we were redirected to a login page
+      if (event.url?.includes('/login')) {
+        // Handle authentication redirect
+        handleAuthRedirect();
+      }
+    }
+  }));
+}
+```
 ## DI-based interceptors
 
 `HttpClient` also supports interceptors which are defined as injectable classes and configured through the DI system. The capabilities of DI-based interceptors are identical to those of functional interceptors, but the configuration mechanism is different.
@@ -6974,7 +7365,7 @@ At the end, tests can verify that the app made no unexpected requests.
 
 To begin testing usage of `HttpClient`, configure `TestBed` and include `provideHttpClient()` and `provideHttpClientTesting()` in your test's setup. This configures `HttpClient` to use a test backend instead of the real network. It also provides `HttpTestingController`, which you'll use to interact with the test backend, set expectations about which requests have been made, and flush responses to those requests. `HttpTestingController` can be injected from `TestBed` once configured.
 
-Keep in mind to provide `provideHttpClient()` **before** `provideHttpClientTesting()`, as `provideHttpClientTesting()` will overwrite parts of `provideHttpCient()`. Doing it the other way around can potentially break your tests.
+Keep in mind to provide `provideHttpClient()` **before** `provideHttpClientTesting()`, as `provideHttpClientTesting()` will overwrite parts of `provideHttpClient()`. Doing it the other way around can potentially break your tests.
 
 ```ts
 TestBed.configureTestingModule({
@@ -8610,7 +9001,7 @@ Angular Router is included by default in all Angular projects setup with the Ang
 
 ### Add to an existing project
 
-If your project does not have routing, you can install it manually with the following command:
+If your project does not include Angular Router, you can install it manually with the following command:
 
 ```bash
 ng add @angular/router
@@ -8862,11 +9253,11 @@ export const routes: Routes = [
   // their corresponding routes become active.
   {
     path: 'login',
-    loadComponent: () => import('./components/auth/login-page')
+    loadComponent: () => import('./components/auth/login-page').then(m => m.LoginPage)
   },
   {
     path: '',
-    loadComponent: () => import('./components/home/home-page')
+    loadComponent: () => import('./components/home/home-page').then(m => m.HomePage)
   }
 ]
 ```
@@ -8908,7 +9299,7 @@ If you modify or remove a route, some users may still click on out-of-date links
 
 You can associate a **title** with each route. Angular automatically updates the [page title](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title) when a route activates. Always define appropriate page titles for your application, as these titles are necessary to create an accessible experience.
 
-```typescript
+```ts
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
@@ -8925,13 +9316,25 @@ const routes: Routes = [
     component: AboutComponent,
     title: 'About Us'
   },
+];
+```
+
+The page `title` property can be set dynamincally to a resolver function using [`ResolveFn`](/api/router/ResolveFn).
+
+```ts
+const titleResolver: ResolveFn<string> = (route) => route.queryParams['id'];
+const routes: Routes = [
+   ...
   {
     path: 'products',
     component: ProductsComponent,
-    title: 'Our Products'
+    title: titleResolver,
   }
 ];
+
 ```
+
+Route titles can also be set via a service extending the [`TitleStrategy`](/api/router/TitleStrategy) abstract class. By default, Angular uses the [`DefaultTitleStrategy`](/api/router/DefaultTitleStrategy).
 
 ## Route-level providers for dependency injection
 
@@ -8957,7 +9360,7 @@ export const ROUTES: Route[] = [
 ];
 ```
 
-In this code sample, the `admin` path contains a protected data property of `ADMIN_API_KEY` that is only available to children within its section. As a result, no other paths will be able to access the data provided via `ADMIN_AP
+In this code sample, the `admin` path contains a protected data property of `ADMIN_API_KEY` that is only available to children within its section. As a result, no other paths will be able to access the data provided via `ADMIN_API_KEY`.
 
 See the [Dependency injection guide](/guide/di) for more information about providers and injection in Angular.
 
@@ -8997,7 +9400,7 @@ You can read this static data by injecting the `ActivatedRoute`. See [Reading ro
 
 ### Dynamic data with data resolvers
 
-When you need to provide dynamic data to a route, check out the [guide on route data resolvers](/guide/router/route-data-resolvers).
+When you need to provide dynamic data to a route, check out the [guide on route data resolvers](/guide/routing/data-resolvers).
 
 ## Nested Routes
 
@@ -9009,18 +9412,20 @@ You can add child routes to any route definition with the `children` property:
 
 ```typescript
 const routes: Routes = [
-  path: 'product/:id',
-  component: 'ProductComponent',
-  children: [
-    {
-      path: 'info',
-      component: ProductInfoComponent
-    },
-    {
-      path: 'reviews',
-      component: ProductReviewsComponent
-    }
-  ]
+  {
+    path: 'product/:id',
+    component: ProductComponent,
+    children: [
+      {
+        path: 'info',
+        component: ProductInfoComponent
+      },
+      {
+        path: 'reviews',
+        component: ProductReviewsComponent
+      }
+    ]
+  }
 ]
 ```
 
@@ -9090,17 +9495,17 @@ const routes: Routes = [
 When a user visits `/products`, Angular renders the following:
 
 ```html
-<app-header></app-header>
-<app-products></app-products>
-<app-footer></app-footer>
+<app-header />
+<app-products />
+<app-footer />
 ```
 
 If the user goes back to the home page, then Angular renders:
 
 ```html
-<app-header></app-header>
-<app-home></app-home>
-<app-footer></app-footer>
+<app-header />
+<app-home />
+<app-footer />
 ```
 
 When displaying a route, the `<router-outlet>` element remains present in the DOM as a reference point for future navigations. Angular inserts routed content just after the outlet element as a sibling.
@@ -9220,12 +9625,19 @@ The RouterLink directive is Angular's declarative approach to navigation. It all
 ## How to use RouterLink
 
 Instead of using regular anchor elements `<a>` with an `href` attribute, you add a RouterLink directive with the appropriate path in order to leverage Angular routing.
-
-```html
-<nav>
-  <a routerLink="/user-profile">User profile</a>
-  <a routerLink="/settings">Settings</a>
-</nav>
+```typescript
+import {RouterLink} from '@angular/router';
+@Component({
+  template: `
+    <nav>
+      <a routerLink="/user-profile">User profile</a>
+      <a routerLink="/settings">Settings</a>
+    </nav>
+  `
+  imports: [RouterLink],
+  ...
+})
+export class App {}
 ```
 
 ### Using absolute or relative links
@@ -9426,7 +9838,7 @@ import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 @Component({ ... })
 export class UserProfileComponent {
   readonly userId: string;
-  private activatedRoute = inject(ActivatedRoute);
+  private route = inject(ActivatedRoute);
 
   constructor() {
     // Example URL: https://www.angular.dev/users/123?role=admin&status=active#contact
@@ -9678,7 +10090,7 @@ To edit an item, users click an Edit button, which opens an `EditGroceryItem` co
 You want that component to retrieve the `id` for the grocery item so it can display the right information to the user.
 
 Use a route to pass this type of information to your application components.
-To do so, you use the [withComponentInputBinding](api/router/withComponentInputBinding) feature with `provideRouter` or the `bindToComponentInputs` option of `RouterModule.forRoot`.
+To do so, you use the [`withComponentInputBinding`](api/router/withComponentInputBinding) feature with `provideRouter` or the `bindToComponentInputs` option of `RouterModule.forRoot`.
 
 To get information from a route:
 
@@ -9696,22 +10108,38 @@ providers: [
 
 </docs-step>
 
-<docs-step title="Add an `Input` to the component">
+<docs-step title="Add an `input` to the component">
 
 Update the component to have an `input()` property matching the name of the parameter.
 
 ```ts
 id = input.required<string>()
-hero = computed(() => this.service.getHero(heroId));
+hero = computed(() => this.service.getHero(id));
 ```
+
+</docs-step>
+<docs-step title="Optional: Use a default value">
+The router assigns values to all inputs based on the current route when `withComponentInputBinding` is enabled.
+The router assigns `undefined` if no route data matches the input key, such as when an optional query parameter is missing.
+You should include `undefined` in the `input`'s type when there's a possibility that an input might not be matched by the route.
+
+Provide a default value by either using the `transform` option on the input or managing a local state with a `linkedSignal`.
+
+```ts
+id = input.required({
+  transform: (maybeUndefined: string | undefined) => maybeUndefined ?? '0',
+});
+// or
+id = input<string|undefined>();
+internalId = linkedSignal(() => this.id() ?? getDefaultId());
+```
+
+</docs-step>
+</docs-workflow>
 
 NOTE: You can bind all route data with key, value pairs to component inputs: static or resolved route data, path parameters, matrix parameters, and query parameters.
 If you want to use the parent components route info you will need to set the router `paramsInheritanceStrategy` option:
 `withRouterConfig({paramsInheritanceStrategy: 'always'})`
-
-</docs-step>
-
-</docs-workflow>
 
 ## Displaying a 404 page
 
@@ -9727,41 +10155,6 @@ const routes: Routes = [
 
 The last route with the `path` of `**` is a wildcard route.
 The router selects this route if the requested URL doesn't match any of the paths earlier in the list and sends the user to the `PageNotFoundComponent`.
-
-## Preventing unauthorized access with route guards
-
-Use route guards to prevent users from navigating to parts of an application without authorization.
-The following route guards are available in Angular:
-To use route guards, consider using [component-less routes](api/router/Route#componentless-routes) as this facilitates guarding child routes.
-
-Create a file for your guard:
-
-```bash
-ng generate guard your-guard
-```
-
-In your guard file, add the guard functions you want to use.
-The following example uses `canActivateFn` to guard the route.
-
-```ts
-export const yourGuardFunction: CanActivateFn = (
-  next: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot
-) => {
-  // your  logic goes here
-}
-```
-
-In your routing module, use the appropriate property in your `routes` configuration.
-Here, `canActivate` tells the router to mediate navigation to this particular route.
-
-```ts
-{
-  path: '/your-path',
-  component: YourComponent,
-  canActivate: [yourGuardFunction],
-}
-```
 
 ## Link parameters array
 
@@ -10244,7 +10637,7 @@ Angular ships all applications as client-side rendered (CSR) by default. While t
 
 ## What is hybrid rendering?
 
-Hybrid rendering allows developers to leverage the benefits of server-side rendering (SSR), pre-rendering (also known as "static site generation" or SSG) and client-side rendering (CSR) to optimize your Angular application. It gives you fine-grained control over how your different parts of your app is rendered to give your users the best experience possible.
+Hybrid rendering allows developers to leverage the benefits of server-side rendering (SSR), pre-rendering (also known as "static site generation" or SSG) and client-side rendering (CSR) to optimize your Angular application. It gives you fine-grained control over how the different parts of your app are rendered to give your users the best experience possible.
 
 ## Setting up hybrid rendering
 
@@ -10808,7 +11201,7 @@ Application stability is an important part of the hydration process. Hydration a
 
 ## I18N
 
-HELPFUL: Support for internationalization with hydration is currently in [developer preview](/reference/releases#developer-preview). By default, Angular will skip hydration for components that use i18n blocks, effectively re-rendering those components from scratch.
+HELPFUL: By default, Angular will skip hydration for components that use i18n blocks, effectively re-rendering those components from scratch.
 
 To enable hydration for i18n blocks, you can add [`withI18nSupport`](/api/platform-browser/withI18nSupport) to your `provideClientHydration` call.
 
@@ -10834,7 +11227,7 @@ There are a number of third party libraries that depend on DOM manipulation to b
 
 ## Third Party Scripts with DOM Manipulation
 
-Many third party scripts, such as ad trackers and analytics, modify the DOM before hydration can occur. These scripts may cause hydration errors because the page no longer matches the structure expected by Angular. Prefer deferring this type of script until after hydration whenever possible. Consider using [`AfterNextRender`](api/core/afterNextRender) to delay the script until post-hydration processes have occured.
+Many third party scripts, such as ad trackers and analytics, modify the DOM before hydration can occur. These scripts may cause hydration errors because the page no longer matches the structure expected by Angular. Prefer deferring this type of script until after hydration whenever possible. Consider using [`AfterNextRender`](api/core/afterNextRender) to delay the script until post-hydration processes have occurred.
 
 ## Incremental Hydration
 
@@ -12034,9 +12427,8 @@ The setup for the `test-host` tests is similar to the setup for the stand-alone 
 
 <docs-code header="app/dashboard/dashboard-hero.component.spec.ts (test host setup)" path="adev/src/content/examples/testing/src/app/dashboard/dashboard-hero.component.spec.ts" visibleRegion="test-host-setup"/>
 
-This testing module configuration shows three important differences:
+This testing module configuration shows two important differences:
 
-* It *imports* both the `DashboardHeroComponent` and the `TestHostComponent`
 * It *creates* the `TestHostComponent` instead of the `DashboardHeroComponent`
 * The `TestHostComponent` sets the `DashboardHeroComponent.hero` with a binding
 
@@ -12091,23 +12483,6 @@ The component has to *subscribe* to the `ActivatedRoute.paramMap` observable and
 
 Tests can explore how the `HeroDetailComponent` responds to different `id` parameter values by navigating to different routes.
 
-### Testing with the `RouterTestingHarness`
-
-Here's a test demonstrating the component's behavior when the observed `id` refers to an existing hero:
-
-<docs-code header="app/hero/hero-detail.component.spec.ts (existing id)" path="adev/src/content/examples/testing/src/app/hero/hero-detail.component.spec.ts" visibleRegion="route-good-id"/>
-
-HELPFUL: In the following section, the `createComponent()` method and `page` object are discussed.
-Rely on your intuition for now.
-
-When the `id` cannot be found, the component should re-route to the `HeroListComponent`.
-
-The test suite setup provided the same router harness [described above](#routing-component).
-
-This test expects the component to try to navigate to the `HeroListComponent`.
-
-<docs-code header="app/hero/hero-detail.component.spec.ts (bad id)" path="adev/src/content/examples/testing/src/app/hero/hero-detail.component.spec.ts" visibleRegion="route-bad-id"/>
-
 ## Nested component tests
 
 Component templates often have nested components, whose templates might contain more components.
@@ -12140,17 +12515,15 @@ In the first technique, you create and declare stub versions of the components a
 The stub selectors match the selectors for the corresponding real components.
 But their templates and classes are empty.
 
-Then declare them in the `TestBed` configuration next to the components, directives, and pipes that need to be real.
+Then declare them by overriding the `imports` of your component using `TestBed.overrideComponent`. 
 
 <docs-code header="app/app.component.spec.ts (TestBed stubs)" path="adev/src/content/examples/testing/src/app/app.component.spec.ts" visibleRegion="testbed-stubs"/>
 
-The `AppComponent` is the test subject, so of course you declare the real version.
-
-The rest are stubs.
+HELPFUL: The `set` key in this example replaces all the exisiting imports on your component, make sure to imports all dependencies, not only the stubs. Alternatively you can use the `remove`/`add` keys to selectively remove and add imports.
 
 ### `NO_ERRORS_SCHEMA`
 
-In the second approach, add `NO_ERRORS_SCHEMA` to the `TestBed.schemas` metadata.
+In the second approach, add `NO_ERRORS_SCHEMA` to the metadata overrides of your component.
 
 <docs-code header="app/app.component.spec.ts (NO_ERRORS_SCHEMA)" path="adev/src/content/examples/testing/src/app/app.component.spec.ts" visibleRegion="no-errors-schema"/>
 
@@ -12234,149 +12607,6 @@ A `createComponent` method creates a `page` object and fills in the blanks once 
 Here are a few more `HeroDetailComponent` tests to reinforce the point.
 
 <docs-code header="app/hero/hero-detail.component.spec.ts (selected tests)" path="adev/src/content/examples/testing/src/app/hero/hero-detail.component.spec.ts" visibleRegion="selected-tests"/>
-
-## Calling `compileComponents()`
-
-HELPFUL: Ignore this section if you *only* run tests with the CLI `ng test` command because the CLI compiles the application before running the tests.
-
-If you run tests in a **non-CLI environment**, the tests might fail with a message like this one:
-
-<docs-code hideCopy language="shell">
-
-Error: This test module uses the component BannerComponent
-which is using a "templateUrl" or "styleUrls", but they were never compiled.
-Please call "TestBed.compileComponents" before your test.
-```
-The root of the problem is at least one of the components involved in the test specifies an external template or CSS file as the following version of the `BannerComponent` does.
-
-```
-The test fails when the `TestBed` tries to create the component.
-
-<docs-code avoid header="app/banner/banner-external.component.spec.ts (setup that fails)" path="adev/src/content/examples/testing/src/app/banner/banner-external.component.spec.ts" visibleRegion="setup-may-fail"/>
-
-Recall that the application hasn't been compiled.
-So when you call `createComponent()`, the `TestBed` compiles implicitly.
-
-That's not a problem when the source code is in memory.
-But the `BannerComponent` requires external files that the compiler must read from the file system, an inherently *asynchronous* operation.
-
-If the `TestBed` were allowed to continue, the tests would run and fail mysteriously before the compiler could finish.
-
-The preemptive error message tells you to compile explicitly with `compileComponents()`.
-
-### `compileComponents()` is async
-
-You must call `compileComponents()` within an asynchronous test function.
-
-CRITICAL: If you neglect to make the test function async (for example, forget to use `waitForAsync()` as described), you'll see this error message
-
-<docs-code hideCopy language="shell">
-
-Error: ViewDestroyedError: Attempt to use a destroyed view
-```
-A typical approach is to divide the setup logic into two separate `beforeEach()` functions:
-
-| Functions                   | Details                      |
-| :-------------------------- | :--------------------------- |
-| Asynchronous `beforeEach()` | Compiles the components      |
-| Synchronous `beforeEach()`  | Performs the remaining setup |
-
-### The async `beforeEach`
-
-Write the first async `beforeEach` like this.
-
-```
-The `TestBed.configureTestingModule()` method returns the `TestBed` class so you can chain calls to other `TestBed` static methods such as `compileComponents()`.
-
-In this example, the `BannerComponent` is the only component to compile.
-Other examples configure the testing module with multiple components and might import application modules that hold yet more components.
-Any of them could require external files.
-
-The `TestBed.compileComponents` method asynchronously compiles all components configured in the testing module.
-
-IMPORTANT: Do not re-configure the `TestBed` after calling `compileComponents()`.
-
-Calling `compileComponents()` closes the current `TestBed` instance to further configuration.
-You cannot call any more `TestBed` configuration methods, not `configureTestingModule()` nor any of the `override...` methods.
-The `TestBed` throws an error if you try.
-
-Make `compileComponents()` the last step before calling `TestBed.createComponent()`.
-
-### The synchronous `beforeEach`
-
-The second, synchronous `beforeEach()` contains the remaining setup steps, which include creating the component and querying for elements to inspect.
-
-<docs-code header="app/banner/banner-external.component.spec.ts (synchronous beforeEach)" path="adev/src/content/examples/testing/src/app/banner/banner-external.component.spec.ts" visibleRegion="sync-before-each"/>
-
-Count on the test runner to wait for the first asynchronous `beforeEach` to finish before calling the second.
-
-### Consolidated setup
-
-You can consolidate the two `beforeEach()` functions into a single, async `beforeEach()`.
-
-The `compileComponents()` method returns a promise so you can perform the synchronous setup tasks *after* compilation by moving the synchronous code after the `await` keyword, where the promise has been resolved.
-
-<docs-code header="app/banner/banner-external.component.spec.ts (one beforeEach)" path="adev/src/content/examples/testing/src/app/banner/banner-external.component.spec.ts" visibleRegion="one-before-each"/>
-
-### `compileComponents()` is harmless
-
-There's no harm in calling `compileComponents()` when it's not required.
-
-The component test file generated by the CLI calls `compileComponents()` even though it is never required when running `ng test`.
-
-The tests in this guide only call `compileComponents` when necessary.
-
-## Setup with module imports
-
-Earlier component tests configured the testing module with a few `declarations` like this:
-
-<docs-code header="app/dashboard/dashboard-hero.component.spec.ts (configure TestBed)" path="adev/src/content/examples/testing/src/app/dashboard/dashboard-hero.component.spec.ts" visibleRegion="config-testbed"/>
-
-The `DashboardComponent` is simple.
-It needs no help.
-But more complex components often depend on other components, directives, pipes, and providers and these must be added to the testing module too.
-
-Fortunately, the `TestBed.configureTestingModule` parameter parallels the metadata passed to the `@NgModule` decorator which means you can also specify `providers` and `imports`.
-
-The `HeroDetailComponent` requires a lot of help despite its small size and simple construction.
-In addition to the support it receives from the default testing module `CommonModule`, it needs:
-
-* `NgModel` and friends in the `FormsModule` to enable two-way data binding
-* The `TitleCasePipe` from the `shared` folder
-* The Router services
-* The Hero data access services
-
-One approach is to configure the testing module from the individual pieces as in this example:
-
-<docs-code header="app/hero/hero-detail.component.spec.ts (FormsModule setup)" path="adev/src/content/examples/testing/src/app/hero/hero-detail.component.spec.ts" visibleRegion="setup-forms-module"/>
-
-HELPFUL: Notice that the `beforeEach()` is asynchronous and calls `TestBed.compileComponents` because the `HeroDetailComponent` has an external template and css file.
-
-As explained in [Calling `compileComponents()`](#calling-compilecomponents), these tests could be run in a non-CLI environment where Angular would have to compile them in the browser.
-
-### Import a shared module
-
-Because many application components need the `FormsModule` and the `TitleCasePipe`, the developer created a `SharedModule` to combine these and other frequently requested parts.
-
-The test configuration can use the `SharedModule` too as seen in this alternative setup:
-
-<docs-code header="app/hero/hero-detail.component.spec.ts (SharedModule setup)" path="adev/src/content/examples/testing/src/app/hero/hero-detail.component.spec.ts" visibleRegion="setup-shared-module"/>
-
-It's a bit tighter and smaller, with fewer import statements, which are not shown in this example.
-
-### Import a feature module
-
-The `HeroDetailComponent` is part of the `HeroModule` [Feature Module](guide/ngmodules/feature-modules) that aggregates more of the interdependent pieces including the `SharedModule`.
-Try a test configuration that imports the `HeroModule` like this one:
-
-<docs-code header="app/hero/hero-detail.component.spec.ts (HeroModule setup)" path="adev/src/content/examples/testing/src/app/hero/hero-detail.component.spec.ts" visibleRegion="setup-hero-module"/>
-
-Only the *test doubles* in the `providers` remain.
-Even the `HeroDetailComponent` declaration is gone.
-
-In fact, if you try to declare it, Angular will throw an error because `HeroDetailComponent` is declared in both the `HeroModule` and the `DynamicTestModule` created by the `TestBed`.
-
-HELPFUL: Importing the component's feature module can be the best way to configure tests when there are many mutual dependencies within the module and the module is small, as feature modules tend to be.
 
 ## Override component providers
 
@@ -13131,20 +13361,112 @@ The methods on `TestElement` automatically trigger Angular's change detection an
 Under some circumstances, Angular animations may require a second cycle of change detection and subsequent `NgZone` stabilization before animation events are fully flushed. In cases where this is needed, the `ComponentHarness` offers a `forceStabilize()` method that can be called to do the second round.
 
 You can use `NgZone.runOutsideAngular()` to schedule tasks outside of NgZone. Call the `waitForTasksOutsideAngular()` method on the corresponding harness if you need to explicitly wait for tasks outside `NgZone` since this does not happen automatically.
+# Animating your applications with `animate.enter` and `animate.leave`
+
+Well-designed animations can make your application more fun and straightforward to use, but they aren't just cosmetic.
+Animations can improve your application and user experience in a number of ways:
+
+* Without animations, web page transitions can seem abrupt and jarring
+* Motion greatly enhances the user experience, so animations give users a chance to detect the application's response to their actions
+* Good animations can smoothly direct the user's attention throughout a workflow
+
+Angular provides `animate.enter` and `animate.leave` to animate your application's elements. These two features apply enter and leave CSS classes at the appropriate times or call functions to apply animations from third party libraries. `animate.enter` and `animate.leave` are not directives. They are special API supported directly by the Angular compiler. They can be used on elements directly and can also be used as a host binding.
+
+## `animate.enter`
+
+You can use `animate.enter` to animate elements as they _enter_ the DOM. You can define enter animations using CSS classes with either transforms or keyframe animations.
+
+<docs-code-multifile preview path="adev/src/content/examples/animations/src/app/enter-and-leave/enter.ts">
+    <docs-code header="src/app/enter.ts" path="adev/src/content/examples/animations/src/app/enter-and-leave/enter.ts" />
+    <docs-code header="src/app/enter.html" path="adev/src/content/examples/animations/src/app/enter-and-leave/enter.html" />
+    <docs-code header="src/app/enter.css" path="adev/src/content/examples/animations/src/app/enter-and-leave/enter.css"/>
+</docs-code-multifile>
+
+When the animation completes, Angular removes the class or classes that you specified in `animate.enter` from the DOM. Animation classes are only be present while the animation is active.
+
+NOTE: When using multiple keyframe animations or transition properties on an element, Angular removes all classes only _after_ the longest animation has completed.
+
+You can use `animate.enter` with any other Angular features, such as control flow or dynamic expressions. `animate.enter` accepts both a single class string (with multiple classes separated by spaces), or an array of class strings.
+
+<docs-code-multifile preview path="adev/src/content/examples/animations/src/app/enter-and-leave/enter-binding.ts">
+    <docs-code header="src/app/enter-binding.ts" path="adev/src/content/examples/animations/src/app/enter-and-leave/enter-binding.ts" />
+    <docs-code header="src/app/enter-binding.html" path="adev/src/content/examples/animations/src/app/enter-and-leave/enter-binding.html" />
+    <docs-code header="src/app/enter-binding.css" path="adev/src/content/examples/animations/src/app/enter-and-leave/enter-binding.css"/>
+</docs-code-multifile>
+
+## `animate.leave`
+
+You can use `animate.leave` to animate elements as they _leave_ the DOM. You can define leave animations using CSS classes with either transforms or keyframe animations.
+
+<docs-code-multifile preview path="adev/src/content/examples/animations/src/app/enter-and-leave/leave.ts">
+    <docs-code header="src/app/leave.ts" path="adev/src/content/examples/animations/src/app/enter-and-leave/leave.ts" />
+    <docs-code header="src/app/leave.html" path="adev/src/content/examples/animations/src/app/enter-and-leave/leave.html" />
+    <docs-code header="src/app/leave.css" path="adev/src/content/examples/animations/src/app/enter-and-leave/leave.css"/>
+</docs-code-multifile>
+
+When the animation completes, Angular automatically removes the animated element from the DOM.
+
+NOTE: When using multiple keyframe animations or transition properties on a an element, Angular waits to remove the element only _after_ the longest of those animations has completed.
+
+`animate.leave` can also be used with signals, and other bindings. You can use `animate.leave` with a single class or multiple classes. Either specify it as a simple string with spaces or a string array.
+
+<docs-code-multifile preview path="adev/src/content/examples/animations/src/app/enter-and-leave/leave-binding.ts">
+    <docs-code header="src/app/leave-binding.ts" path="adev/src/content/examples/animations/src/app/enter-and-leave/leave-binding.ts" />
+    <docs-code header="src/app/leave-binding.html" path="adev/src/content/examples/animations/src/app/enter-and-leave/leave-binding.html" />
+    <docs-code header="src/app/leave-binding.css" path="adev/src/content/examples/animations/src/app/enter-and-leave/leave-binding.css"/>
+</docs-code-multifile>
+
+## Event Bindings, Functions, and Third-party Libraries
+
+Both `animate.enter` and `animate.leave` support event binding syntax that allows for function calls. You can use this syntax to call a function in your component code or utilize third-party animation libraries, like [GSAP](https://gsap.com/), [anime.js](https://animejs.com/), or any other JavaScript animation library.
+
+<docs-code-multifile preview path="adev/src/content/examples/animations/src/app/enter-and-leave/leave-event.ts">
+    <docs-code header="src/app/leave-event.ts" path="adev/src/content/examples/animations/src/app/enter-and-leave/leave-event.ts" />
+    <docs-code header="src/app/leave-event.html" path="adev/src/content/examples/animations/src/app/enter-and-leave/leave-event.html" />
+    <docs-code header="src/app/leave-event.css" path="adev/src/content/examples/animations/src/app/enter-and-leave/leave-event.css"/>
+</docs-code-multifile>
+
+The `$event` object has the type `AnimationCallbackEvent`. It includes the element as the `target` and provides an `animationComplete()` function to notify the framework when the animation finishes.
+
+IMPORTANT: You **must** call the `animationComplete()` function when using `animate.leave` for Angular to remove the element.
+
+If you don't call `animationComplete()` when using `animate.leave`, Angular calls the function automatically after a four-second delay. You can configure the duration of the delay by providing the token `MAX_ANIMATION_TIMEOUT` in milliseconds.
+
+```typescript
+{ provide: MAX_ANIMATION_TIMEOUT, useValue: 6000 }
+```
+
+## Testing
+
+TestBed provides built-in support for enabling or disabling animations in your test environment. CSS animations require a browser to run, and many of the APIs are not available in a test environment. By default, TestBed disables animations for you in your test environments.
+
+If you want to test that the animations are animating in a browser test, for example an end-to-end test, you can configure TestBed to enable animations by specifying `animationsEnabled: true` in your test configuration.
+
+```typescript
+TestBed.configureTestingModule({animationsEnabled: true});
+```
+
+This will configure animations in your test environment to behave normally.
+
+NOTE: Some test environments do not emit animation events like `animationstart`, `animationend` and their transition event equivalents.
+
+## More on Angular animations
+
+You might also be interested in the following:
 # Animating your Application with CSS
 
 CSS offers a robust set of tools for you to create beautiful and engaging animations within your application.
 
 ## How to write animations in native CSS
 
-If you've never written any native CSS animations, there are a number of excellent guides to get you started. Here's a few of them:
-[MDN's CSS Animations guide](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_animations/Using_CSS_animations)
-[W3Schools CSS3 Animations guide](https://www.w3schools.com/css/css3_animations.asp)
-[The Complete CSS Animations Tutorial](https://www.lambdatest.com/blog/css-animations-tutorial/)
-[CSS Animation for Beginners](https://thoughtbot.com/blog/css-animation-for-beginners)
+If you've never written any native CSS animations, there are a number of excellent guides to get you started. Here's a few of them:  
+[MDN's CSS Animations guide](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_animations/Using_CSS_animations)  
+[W3Schools CSS3 Animations guide](https://www.w3schools.com/css/css3_animations.asp)  
+[The Complete CSS Animations Tutorial](https://www.lambdatest.com/blog/css-animations-tutorial/)  
+[CSS Animation for Beginners](https://thoughtbot.com/blog/css-animation-for-beginners)  
 
-and a couple of videos:
-[Learn CSS Animation in 9 Minutes](https://www.youtube.com/watch?v=z2LQYsZhsFw)
+and a couple of videos:  
+[Learn CSS Animation in 9 Minutes](https://www.youtube.com/watch?v=z2LQYsZhsFw)  
 [Net Ninja CSS Animation Tutorial Playlist](https://www.youtube.com/watch?v=jgw82b5Y2MU&list=PL4cUxeGkcC9iGYgmEd2dm3zAKzyCGDtM5)
 
 Check some of these various guides and tutorials out, and then come back to this guide.
@@ -13207,7 +13529,7 @@ If you don't have to worry about supporting all browsers, you can also check out
 
 ### Animate entering and leaving a view
 
-You can create animations for when an item enters a view or leaves a view. Let's start by looking at how to animate an element leaving a view.
+You can create animations for when an item enters a view or leaves a view. Let's start by looking at how to animate an element entering a view. We'll do this with `animate.enter`, which will apply animation classes when an element enters the view.
 
 <docs-code-multifile preview path="adev/src/content/examples/animations/src/app/native-css/insert.component.ts">
     <docs-code header="src/app/insert.component.ts" path="adev/src/content/examples/animations/src/app/native-css/insert.component.ts" />
@@ -13215,13 +13537,15 @@ You can create animations for when an item enters a view or leaves a view. Let's
     <docs-code header="src/app/insert.component.css" path="adev/src/content/examples/animations/src/app/native-css/insert.component.css"  />
 </docs-code-multifile>
 
-Leaving a view is slightly more complex. The element removal needs to be delayed until the exit animation is complete. This requires a bit of extra code in your component class to accomplish.
+Animating an element when it leaves the view is similar to animating when entering a view. Use `animate.leave` to specify which CSS classes to apply when the element leaves the view.
 
 <docs-code-multifile preview path="adev/src/content/examples/animations/src/app/native-css/remove.component.ts">
     <docs-code header="src/app/remove.component.ts" path="adev/src/content/examples/animations/src/app/native-css/remove.component.ts" />
     <docs-code header="src/app/remove.component.html" path="adev/src/content/examples/animations/src/app/native-css/remove.component.html" />
     <docs-code header="src/app/remove.component.css" path="adev/src/content/examples/animations/src/app/native-css/remove.component.css"  />
 </docs-code-multifile>
+
+For more information on `animate.enter` and `animate.leave`, see the [Enter and Leave animations guide](guide/animations).
 
 ### Animating increment and decrement
 
@@ -13256,15 +13580,15 @@ Applying this class to an element prevents any animation from firing on that ele
 
 If you have actions you would like to execute at certain points during animations, there are a number of available events you can listen to. Here's a few of them.
 
-[`OnAnimationStart`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationstart_event)
-[`OnAnimationEnd`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationend_event)
-[`OnAnimationIteration`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationitration_event)
-[`OnAnimationCancel`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationcancel_event)
+[`OnAnimationStart`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationstart_event)  
+[`OnAnimationEnd`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationend_event)  
+[`OnAnimationIteration`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationitration_event)  
+[`OnAnimationCancel`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationcancel_event)  
 
-[`OnTransitionStart`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionstart_event)
-[`OnTransitionRun`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionrun_event)
-[`OnTransitionEnd`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionend_event)
-[`OnTransitionCancel`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitioncancel_event)
+[`OnTransitionStart`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionstart_event)  
+[`OnTransitionRun`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionrun_event)  
+[`OnTransitionEnd`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionend_event)  
+[`OnTransitionCancel`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitioncancel_event)  
 
 The Web Animations API has a lot of additional functionality. [Take a look at the documentation](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) to see all the available animation APIs.
 
@@ -13298,7 +13622,7 @@ In this example, the `rotate` and `fade-in` animations fire at the same time, bu
 
 ### Animating the items of a reordering list
 
-Items in a `@for` loop will be removed and re-added, which will fire off animations using `@starting-styles` for entry animations. Removal animations will require additional code to add the event listener, as seen in the example above.
+Items in a `@for` loop will be removed and re-added, which will fire off animations using `@starting-styles` for entry animations. Alternatively, you can use `animate.enter` for this same behavior. Use `animate.leave` to animate elements as they are removed, as seen in the example above.
 
 <docs-code-multifile preview path="adev/src/content/examples/animations/src/app/native-css/reorder.component.ts">
     <docs-code header="src/app/reorder.component.ts" path="adev/src/content/examples/animations/src/app/native-css/reorder.component.ts" />
@@ -13309,17 +13633,26 @@ Items in a `@for` loop will be removed and re-added, which will fire off animati
 ## Programmatic control of animations
 
 You can retrieve animations off an element directly using [`Element.getAnimations()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/getAnimations). This returns an array of every [`Animation`](https://developer.mozilla.org/en-US/docs/Web/API/Animation) on that element. You can use the `Animation` API to do much more than you could with what the `AnimationPlayer` from the animations package offered. From here you can `cancel()`, `play()`, `pause()`, `reverse()` and much more. This native API should provide everything you need to control your animations.
+
+## More on Angular animations
+
+You might also be interested in the following:
 # Route transition animations
 
-When a user navigates from one route to another, the Angular Router maps the URL path to the relevant component and displays its view. Animating this route transition can greatly enhance the user experience. The Router has support for the View Transitions API when navigating between routes in Chrome/Chromium browsers.
+Route transition animations enhance user experience by providing smooth visual transitions when navigating between different views in your Angular application. [Angular Router](/guide/routing/overview) includes built-in support for the browser's View Transitions API, enabling seamless animations between route changes in supported browsers.
 
-HELPFUL: The Router's native View Transitions integration is currently in [developer preview](/reference/releases#developer-preview). Native View Transitions are also a relatively new feature so there may be limited support in some browsers.
+HELPFUL: The Router's native View Transitions integration is currently in [developer preview](/reference/releases#developer-preview). Native View Transitions are a relatively new browser feature with limited support across all browsers.
 
 ## How View Transitions work
 
-The native browser method that’s used for view transitions is `document.startViewTransition`. When `startViewTransition()` is called, the browser captures the current state of the page which includes taking a screenshot. The method takes a callback that updates the DOM and this function can be asynchronous. The new state is captured and the transition begins in the next animation frame when the promise returned by the callback resolves.
+View transitions use the browser's native [`document.startViewTransition` API](https://developer.mozilla.org/en-US/docs/Web/API/Document/startViewTransition) to create smooth animations between different states of your application. The API works by:
 
-Here’s an example of the startViewTransition api:
+1. **Capturing the current state** - The browser takes a screenshot of the current page
+2. **Executing the DOM update** - Your callback function runs to update the DOM
+3. **Capturing the new state** - The browser captures the updated page state
+4. **Playing the transition** - The browser animates between the old and new states
+
+Here's the basic structure of the `startViewTransition` API:
 
 ```ts
 document.startViewTransition(async () => {
@@ -13327,159 +13660,200 @@ document.startViewTransition(async () => {
 });
 ```
 
-If you’re curious to read more about the details of the browser API, the [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions) is an invaluable resource.
+For more details about the browser API, see the [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions).
 
 ## How the Router uses view transitions
 
-Several things happen after navigation starts in the router: route matching, loading lazy routes and components, executing guards and resolvers to name a few. Once these have completed successfully, the new routes are ready to be activated. This route activation is the DOM update that we want to perform as part of the view transition.
+Angular Router integrates view transitions into the navigation lifecycle to create seamless route changes. During navigation, the Router:
 
-When the view transition feature is enabled, navigation “pauses” and a call is made to the browser’s `startViewTransition` method. Once the `startViewTransition` callback executes (this happens asynchronously, as outlined in the spec here), navigation “resumes”. The remaining steps for the router navigation include updating the browser URL and activating or deactivating the matched routes (the DOM update).
+1. **Completes navigation preparation** - Route matching, [lazy loading](/guide/routing/define-routes#lazily-loaded-components), [guards](/guide/routing/route-guards), and [resolvers](/guide/routing/data-resolvers) execute
+2. **Initiates the view transition** - Router calls `startViewTransition` when routes are ready for activation
+3. **Updates the DOM** - Router activates new routes and deactivates old ones within the transition callback
+4. **Finalizes the transition** - The transition Promise resolves when Angular completes rendering
 
-Finally, the callback passed to `startViewTransition` returns a Promise that resolves once Angular has finished rendering. As described above, this indicates to the browser that the new DOM state should be captured and the transition should begin.
-
-View transitions are a [progressive enhancement](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement). If the browser does not support the API, the Router will perform the DOM updates without calling `startViewTransition` and the navigation will not be animated.
+The Router's view transition integration acts as a [progressive enhancement](https://developer.mozilla.org/en-US/docs/Glossary/Progressive_Enhancement). When browsers don't support the View Transitions API, the Router performs normal DOM updates without animation, ensuring your application works across all browsers.
 
 ## Enabling View Transitions in the Router
 
-To enable this feature, simply add `withViewTransitions` to the `provideRouter` or set `enableViewTransitions: true` in `RouterModule.forRoot`:
+Enable view transitions by adding the `withViewTransitions` feature to your [router configuration](/guide/routing/define-routes#adding-the-router-to-your-application). Angular supports both standalone and NgModule bootstrap approaches:
+
+### Standalone bootstrap
 
 ```ts
-// Standalone bootstrap
-bootstrapApplication(MyApp, {providers: [
-  provideRouter(ROUTES, withViewTransitions()),
-]});
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter, withViewTransitions } from '@angular/router';
+import { routes } from './app.routes';
 
-// NgModule bootstrap
+bootstrapApplication(MyApp, {
+  providers: [
+    provideRouter(routes, withViewTransitions()),
+  ]
+});
+```
+
+### NgModule bootstrap
+
+```ts
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+
 @NgModule({
   imports: [RouterModule.forRoot(routes, {enableViewTransitions: true})]
 })
 export class AppRouting {}
 ```
 
-[Try the “count” example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-2dnvtm?file=src%2Fmain.ts)
+[Try the "count" example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-2dnvtm?file=src%2Fmain.ts)
 
-This example uses the counter application from the Chrome explainer and replaces the direct call to startViewTransition when the counter increments with a router navigation.
+This example demonstrates how router navigation can replace direct `startViewTransition` calls for counter updates.
 
-## Using CSS to customize transitions
+## Customizing transitions with CSS
 
-View transitions can be customized with CSS. We can also instruct the browser to create separate elements for the transition by setting a view-transition-name. We can expand the first example by adding view-transition-name: count to the .count style in the Counter component. Then, in the global styles, we can define a custom animation for this view transition:
+You can customize view transitions using CSS to create unique animation effects. The browser creates separate transition elements that you can target with CSS selectors.
+
+To create custom transitions:
+
+1. **Add view-transition-name** - Assign unique names to elements you want to animate
+2. **Define global animations** - Create CSS animations in your global styles
+3. **Target transition pseudo-elements** - Use `::view-transition-old()` and `::view-transition-new()` selectors
+
+Here's an example that adds a rotation effect to a counter element:
 
 ```css
-/* Custom transition */
+/* Define keyframe animations */
 @keyframes rotate-out {
- to {
-   transform: rotate(90deg);
- }
+  to {
+    transform: rotate(90deg);
+  }
 }
+
 @keyframes rotate-in {
- from {
-   transform: rotate(-90deg);
- }
+  from {
+    transform: rotate(-90deg);
+  }
 }
+
+/* Target view transition pseudo-elements */
 ::view-transition-old(count),
 ::view-transition-new(count) {
- animation-duration: 200ms;
- animation-name: -ua-view-transition-fade-in, rotate-in;
+  animation-duration: 200ms;
+  animation-name: -ua-view-transition-fade-in, rotate-in;
 }
+
 ::view-transition-old(count) {
- animation-name: -ua-view-transition-fade-out, rotate-out;
+  animation-name: -ua-view-transition-fade-out, rotate-out;
 }
 ```
 
-It is important that the view transition animations are defined in a global style file. They cannot be defined in the component styles because the default view encapsulation will scope the styles to the component.
+IMPORTANT: Define view transition animations in your global styles file, not in component styles. Angular's [view encapsulation](/guide/components/styling#view-encapsulation) scopes component styles, which prevents them from targeting the transition pseudo-elements correctly.
 
 [Try the updated “count” example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-fwn4i7?file=src%2Fmain.ts)
 
-## Controlling transitions with onViewTransitionCreated
+## Advanced transition control with onViewTransitionCreated
 
-The `withViewTransitions` router feature can also be called with an options object that includes an `onViewTransitionCreated` callback. This callback is run in an [injection context](/guide/di/dependency-injection-context#run-within-an-injection-context) and receives a [ViewTransitionInfo](/api/router/ViewTransitionInfo) object that includes the `ViewTransition` returned from `startViewTransition`, as well as the `ActivatedRouteSnapshot` that the navigation is transitioning from and the new one that it is transitioning to.
+The `withViewTransitions` feature accepts an options object with an `onViewTransitionCreated` callback for advanced control over view transitions. This callback:
 
-This callback can be used for any number of customizations. For example, you might want to skip transitions under certain conditions. We use this on the new angular.dev docs site:
+- Runs in an [injection context](/guide/di/dependency-injection-context#run-within-an-injection-context)
+- Receives a [`ViewTransitionInfo`](/api/router/ViewTransitionInfo) object containing:
+  - The `ViewTransition` instance from `startViewTransition`
+  - The [`ActivatedRouteSnapshot`](/api/router/ActivatedRouteSnapshot) for the route being navigated from
+  - The [`ActivatedRouteSnapshot`](/api/router/ActivatedRouteSnapshot) for the route being navigated to
+
+Use this callback to customize transition behavior based on navigation context. For example, you can skip transitions for specific navigation types:
 
 ```ts
-withViewTransitions({
- onViewTransitionCreated: ({transition}) => {
-   const router = inject(Router);
-   const targetUrl = router.getCurrentNavigation()!.finalUrl!;
-   // Skip the transition if the only thing
-   // changing is the fragment and queryParams
-   const config = {
-     paths: 'exact',
-     matrixParams: 'exact',
-     fragment: 'ignored',
-     queryParams: 'ignored',
-   };
+import { inject } from '@angular/core';
+import { Router, withViewTransitions } from '@angular/router';
 
-   if (router.isActive(targetUrl, config)) {
-     transition.skipTransition();
-   }
- },
-}),
+withViewTransitions({
+  onViewTransitionCreated: ({transition}) => {
+    const router = inject(Router);
+    const targetUrl = router.getCurrentNavigation()!.finalUrl!;
+
+    // Skip transition if only fragment or query params change
+    const config = {
+      paths: 'exact',
+      matrixParams: 'exact',
+      fragment: 'ignored',
+      queryParams: 'ignored',
+    };
+
+    if (router.isActive(targetUrl, config)) {
+      transition.skipTransition();
+    }
+  },
+})
 ```
 
-In this code snippet, we create a `UrlTree` from the `ActivatedRouteSnapshot` the navigation is going to. We then check with the Router to see if this `UrlTree` is already active, ignoring any differences in the fragment or query parameters. If it is already active, we call skipTransition which will skip the animation portion of the view transition. This is the case when clicking on an anchor link that will only scroll to another location in the same document.
+This example skips the view transition when navigation only changes the [URL fragment or query parameters](/guide/routing/read-route-state#query-parameters) (such as anchor links within the same page). The `skipTransition()` method prevents the animation while still allowing the navigation to complete.
 
 ## Examples from the Chrome explainer adapted to Angular
 
-We’ve recreated some of the great examples from the Chrome Team in Angular for you to explore.
+The following examples demonstrate various view transition techniques adapted from the Chrome team's documentation for use with Angular Router:
 
-### Transitioning elements don’t need to be the same DOM element
+### Transitioning elements don't need to be the same DOM element
 
-* [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#transitioning_elements_dont_need_to_be_the_same_dom_element)
-* [Angular Example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-dh8npr?file=src%2Fmain.ts)
+Elements can transition smoothly between different DOM elements as long as they share the same `view-transition-name`.
+
+- [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#transitioning_elements_dont_need_to_be_the_same_dom_element)
+- [Angular Example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-dh8npr?file=src%2Fmain.ts)
 
 ### Custom entry and exit animations
 
-* [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#custom_entry_and_exit_transitions)
-* [Angular Example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-8kly3o)
+Create unique animations for elements entering and leaving the viewport during route transitions.
+
+- [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#custom_entry_and_exit_transitions)
+- [Angular Example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-8kly3o)
 
 ### Async DOM updates and waiting for content
 
-* [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#async_dom_updates_and_waiting_for_content)
+Angular Router prioritizes immediate transitions over waiting for additional content to load.
 
-> During this time, the page is frozen, so delays here should be kept to a minimum…in some cases it’s better to avoid the delay altogether, and use the content you already have.
+- [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#async_dom_updates_and_waiting_for_content)
 
-The view transition feature in the Angular router does not provide a way to delay the animation. For the moment, our stance is that it’s always better to use the content you have rather than making the page non-interactive for any additional amount of time.
+NOTE: Angular Router does not provide a way to delay view transitions. This design choice prevents pages from becoming non-interactive while waiting for additional content. As the Chrome documentation notes: "During this time, the page is frozen, so delays here should be kept to a minimum…in some cases it's better to avoid the delay altogether, and use the content you already have."
 
 ### Handle multiple view transition styles with view transition types
 
-* [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#view-transition-types)
-* [Angular Example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-vxzcam)
+Use view transition types to apply different animation styles based on navigation context.
+
+- [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#view-transition-types)
+- [Angular Example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-vxzcam)
 
 ### Handle multiple view transition styles with a class name on the view transition root (deprecated)
 
-* [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#changing-on-navigation-type)
-* [Angular Example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-nmnzzg?file=src%2Fmain.ts)
+This approach uses CSS classes on the transition root element to control animation styles.
+
+- [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#changing-on-navigation-type)
+- [Angular Example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-nmnzzg?file=src%2Fmain.ts)
 
 ### Transitioning without freezing other animations
 
-* [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#transitioning-without-freezing)
-* [Angular Example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-76kgww)
+Maintain other page animations during view transitions to create more dynamic user experiences.
 
-### Animating with Javascript
+- [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#transitioning-without-freezing)
+- [Angular Example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-76kgww)
 
-* [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#animating-with-javascript)
-* [Angular Example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-cklnkm)
+### Animating with JavaScript
 
-## Native View Transitions Alternative
+Control view transitions programmatically using JavaScript APIs for complex animation scenarios.
 
-Animating the transition between routes can also be done with the `@angular/animations` package.
-The animation [triggers and transitions](/guide/animations/transition-and-triggers)
-can be derived from the router state, such as the current URL or `ActivatedRoute`.
+- [Chrome Explainer](https://developer.chrome.com/docs/web-platform/view-transitions/same-document#animating-with-javascript)
+- [Angular Example on StackBlitz](https://stackblitz.com/edit/stackblitz-starters-cklnkm)
 # Migrating away from Angular's Animations package
 
-Almost all the features supported by `@angular/animations` have simpler alternatives with native CSS. Consider removing the Angular Animations package from your application, as the package can contribute around 60 kilobytes to your JavaScript bundle. Native CSS animations offer superior performance, as they can benefit from hardware acceleration. Animations defined in the animations package lack that ability. This guide walks through the process of refactoring your code from `@angular/animations` to native CSS animations.
+The `@angular/animations` package is deprecated as of v20.2, which also introduced the new `animate.enter` and `animate.leave` feature to add animations to your application. Using these new features, you can replace all animations based on `@angular/animations`  with plain CSS or JS animation libraries. Removing `@angular/animations` from your application can significantly reduce the size of your JavaScript bundle. Native CSS animations generally offer superior performance, as they can benefit from hardware acceleration. This guide walks through the process of refactoring your code from `@angular/animations` to native CSS animations.
 
 ## How to write animations in native CSS
 
-If you've never written any native CSS animations, there are a number of excellent guides to get you started. Here's a few of them:
-[MDN's CSS Animations guide](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_animations/Using_CSS_animations)
-[W3Schools CSS3 Animations guide](https://www.w3schools.com/css/css3_animations.asp)
-[The Complete CSS Animations Tutorial](https://www.lambdatest.com/blog/css-animations-tutorial/)
-[CSS Animation for Beginners](https://thoughtbot.com/blog/css-animation-for-beginners)
+If you've never written any native CSS animations, there are a number of excellent guides to get you started. Here's a few of them:  
+[MDN's CSS Animations guide](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_animations/Using_CSS_animations)  
+[W3Schools CSS3 Animations guide](https://www.w3schools.com/css/css3_animations.asp)  
+[The Complete CSS Animations Tutorial](https://www.lambdatest.com/blog/css-animations-tutorial/)  
+[CSS Animation for Beginners](https://thoughtbot.com/blog/css-animation-for-beginners)  
 
-and a couple of videos:
-[Learn CSS Animation in 9 Minutes](https://www.youtube.com/watch?v=z2LQYsZhsFw)
+and a couple of videos:  
+[Learn CSS Animation in 9 Minutes](https://www.youtube.com/watch?v=z2LQYsZhsFw)  
 [Net Ninja CSS Animation Tutorial Playlist](https://www.youtube.com/watch?v=jgw82b5Y2MU&list=PL4cUxeGkcC9iGYgmEd2dm3zAKzyCGDtM5)
 
 Check some of these various guides and tutorials out, and then come back to this guide.
@@ -13567,7 +13941,7 @@ If you don't have to worry about supporting all browsers, you can also check out
 The animations package offered the previously mentioned pattern matching for entering and leaving but also included the shorthand aliases of `:enter` and `:leave`.
 
 #### With Animations Package
-Here's how the same thing can be accomplished without the animations package.
+Here's how the same thing can be accomplished without the animations package using `animate.enter`.
 
 #### With Native CSS
 <docs-code-multifile preview path="adev/src/content/examples/animations/src/app/native-css/insert.component.ts">
@@ -13576,7 +13950,7 @@ Here's how the same thing can be accomplished without the animations package.
     <docs-code header="src/app/insert.component.css" path="adev/src/content/examples/animations/src/app/native-css/insert.component.css"  />
 </docs-code-multifile>
 
-Leaving a view is slightly more complex. The element removal needs to be delayed until the exit animation is complete. This requires a bit of extra code in your component class to accomplish.
+Use `animate.leave` to animate elements as they leave the view, which will apply the specified CSS classes to the element as it leaves the view.
 
 #### With Native CSS
 <docs-code-multifile preview path="adev/src/content/examples/animations/src/app/native-css/remove.component.ts">
@@ -13584,6 +13958,8 @@ Leaving a view is slightly more complex. The element removal needs to be delayed
     <docs-code header="src/app/remove.component.html" path="adev/src/content/examples/animations/src/app/native-css/remove.component.html" />
     <docs-code header="src/app/remove.component.css" path="adev/src/content/examples/animations/src/app/native-css/remove.component.css"  />
 </docs-code-multifile>
+
+For more information on `animate.enter` and `animate.leave`, see the [Enter and Leave animations guide](guide/animations).
 
 ### Animating increment and decrement
 
@@ -13624,15 +14000,15 @@ Applying this class to an element prevents any animation from firing on that ele
 
 The animations package exposed callbacks for you to use in the case that you want to do something when the animation has finished. Native CSS animations also have these callbacks.
 
-[`OnAnimationStart`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationstart_event)
-[`OnAnimationEnd`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationend_event)
-[`OnAnimationIteration`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationitration_event)
-[`OnAnimationCancel`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationcancel_event)
+[`OnAnimationStart`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationstart_event)  
+[`OnAnimationEnd`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationend_event)  
+[`OnAnimationIteration`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationitration_event)  
+[`OnAnimationCancel`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationcancel_event)  
 
-[`OnTransitionStart`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionstart_event)
-[`OnTransitionRun`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionrun_event)
-[`OnTransitionEnd`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionend_event)
-[`OnTransitionCancel`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitioncancel_event)
+[`OnTransitionStart`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionstart_event)  
+[`OnTransitionRun`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionrun_event)  
+[`OnTransitionEnd`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionend_event)  
+[`OnTransitionCancel`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitioncancel_event)  
 
 The Web Animations API has a lot of additional functionality. [Take a look at the documentation](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) to see all the available animation APIs.
 
@@ -13674,7 +14050,7 @@ In this example, the `rotate` and `fade-in` animations fire at the same time.
 
 ### Animating the items of a reordering list
 
-Items reordering in a list works out of the box using the previously described techniques. No additional special work is required. Items in a `@for` loop will be removed and re-added properly, which will fire off animations using `@starting-styles` for entry animations. Removal animations will require additional code to add the event listener, as seen in the example above.
+Items reordering in a list works out of the box using the previously described techniques. No additional special work is required. Items in a `@for` loop will be removed and re-added properly, which will fire off animations using `@starting-styles` for entry animations. Alternatively, you can use `animate.enter` for this same behavior. Use `animate.leave` to animate elements as they are removed, as seen in the example above.
 
 #### With Animations Package<
 #### With Native CSS
@@ -13691,7 +14067,7 @@ You can retrieve animations off an element directly using [`Element.getAnimation
 
 ## Route Transitions
 
-You can use view transitions to animate between routes. See the [Route Transition Animations Guide](guide/animations/route-animations) to get started.# Angular without ZoneJS (Zoneless)
+You can use view transitions to animate between routes. See the [Route Transition Animations Guide](guide/routing/route-transition-animations) to get started.# Angular without ZoneJS (Zoneless)
 
 ## Why use Zoneless?
 
@@ -13703,9 +14079,6 @@ The main advantages to removing ZoneJS as a dependency are:
 - **Better ecosystem compatibility**: ZoneJS works by patching browser APIs but does not automatically have patches for every new browser API. Some APIs cannot be patched effectively, such as `async`/`await`, and have to be downleveled to work with ZoneJS. Sometimes libraries in the ecosystem are also incompatible with the way ZoneJS patches the native APIs. Removing ZoneJS as a dependency ensures better long-term compatibility by removing a source of complexity, monkey patching, and ongoing maintenance.
 
 ## Enabling Zoneless in an application
-
-The API for enabling Zoneless is currently in developer preview. The shape of the API and underlying behavior can change in patch versions.
-
 ```typescript
 // standalone bootstrap
 bootstrapApplication(MyApp, {providers: [
@@ -13786,7 +14159,7 @@ taskService.run(async () => {
 });
 ```
 
-For more complicated use-cases, you can manuall add and remove a pending tasks:
+For more complicated use-cases, you can manually add and remove a pending task:
 
 ```typescript
 const taskService = inject(PendingTasks);
@@ -13801,7 +14174,7 @@ try {
 ```
 
 In addition, the [pendingUntilEvent](/api/core/rxjs-interop/pendingUntilEvent#) helper in `rxjs-interop` ensures
-the application remains unstable until the observable emits, complets, errors, or is unsubscribed.
+the application remains unstable until the observable emits, completes, errors, or is unsubscribed.
 
 ```typescript
 readonly myObservableState = someObservable.pipe(pendingUntilEvent());
@@ -13870,12 +14243,12 @@ Start developing with the latest Angular features from our roadmap. This list re
 
 ### Available to experiment with
 
-* [Zoneless change detection](/guide/zoneless)
 * [Resource API](/guide/signals/resource)
 * [httpResource](/api/common/http/httpResource)
 
 ### Production ready
 
+* [Zoneless change detection](/guide/zoneless)
 * [Linked Signal API](/guide/signals/linked-signal)
 * [Incremental hydration](/guide/incremental-hydration)
 * [Effect API](/api/core/effect)

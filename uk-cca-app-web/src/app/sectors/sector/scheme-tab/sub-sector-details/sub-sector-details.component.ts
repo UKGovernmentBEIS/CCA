@@ -11,7 +11,6 @@ import { toSubsectorSchemeSummaryData } from '../scheme-summary-data';
 @Component({
   selector: 'cca-sub-sector-details',
   templateUrl: './sub-sector-details.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

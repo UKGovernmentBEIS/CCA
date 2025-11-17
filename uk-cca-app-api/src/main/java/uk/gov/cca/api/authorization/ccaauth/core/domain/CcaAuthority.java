@@ -22,6 +22,10 @@ import uk.gov.netz.api.authorization.core.domain.Authority;
         query = "select new uk.gov.cca.api.authorization.ccaauth.sectoruser.domain.SectorUserAuthorityDTO(au.userId AS userId, r.name AS roleName, r.code as roleCode, au.status as authorityStatus, au.creationDate as authorityCreationDate, det.contactType as contactType) from CcaAuthority au join Role r on r.code = au.code join CcaAuthorityDetails det on au.id = det.authority.id where au.sectorAssociationId = :sectorAssociationId"
 )
 @NamedQuery(
+        name = CcaAuthority.NAMED_QUERY_FIND_ACTIVE_AUTHORITIES_WITH_DETAILS_BY_SECTOR_ASSOCIATION_ID_AND_CONTACT_TYPE,
+        query = "select new uk.gov.cca.api.authorization.ccaauth.sectoruser.domain.SectorUserAuthorityDTO(au.userId AS userId, r.name AS roleName, r.code as roleCode, au.status as authorityStatus, au.creationDate as authorityCreationDate, det.contactType as contactType) from CcaAuthority au join Role r on r.code = au.code join CcaAuthorityDetails det on au.id = det.authority.id where au.sectorAssociationId = :sectorAssociationId and det.contactType = :contactType and au.status = 'ACTIVE'"
+)
+@NamedQuery(
         name = CcaAuthority.NAMED_QUERY_FIND_AUTHORITIES_WITH_DETAILS_BY_ACCOUNT_ID,
         query = "select new uk.gov.cca.api.authorization.ccaauth.operator.domain.OperatorAuthorityDTO(au.userId AS userId, r.name AS roleName, r.code as roleCode, au.status as authorityStatus, au.creationDate as authorityCreationDate, det.contactType as contactType) from Authority au join Role r on r.code = au.code join CcaAuthorityDetails det on au.id = det.authority.id where au.accountId = :accountId"
 )
@@ -78,6 +82,7 @@ import uk.gov.netz.api.authorization.core.domain.Authority;
 public class CcaAuthority extends Authority {
 
     public static final String NAMED_QUERY_FIND_AUTHORITIES_WITH_DETAILS_BY_SECTOR_ASSOCIATION_ID = "CcaAuthority.findAuthoritiesWithDetailsBySectorAssociationId";
+    public static final String NAMED_QUERY_FIND_ACTIVE_AUTHORITIES_WITH_DETAILS_BY_SECTOR_ASSOCIATION_ID_AND_CONTACT_TYPE = "CcaAuthority.findActiveAuthoritiesWithDetailsBySectorAssociationIdAndContactType";
     public static final String NAMED_QUERY_FIND_AUTHORITIES_WITH_DETAILS_BY_ACCOUNT_ID = "CcaAuthority.findAuthoritiesWithDetailsByAccountId";
     public static final String NAMED_QUERY_EXIST_OTHER_SECTOR_USER_ADMIN = "CcaAuthority.existsOtherSectorUserAdmin";
     public static final String NAMED_QUERY_FIND_AUTHORITIES_BY_USER_ID = "CcaAuthority.findAuthoritiesByUserId";

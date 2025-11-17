@@ -15,7 +15,6 @@ describe('ErrorPageComponent', () => {
         <p>Some text</p>
       </cca-error-page>
     `,
-    standalone: true,
     imports: [ErrorPageComponent],
   })
   class TestComponent {}

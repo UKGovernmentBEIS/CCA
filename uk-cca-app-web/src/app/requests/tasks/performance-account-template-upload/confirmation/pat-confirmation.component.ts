@@ -28,7 +28,6 @@ import { PATUploadQuery } from '../+state/pat-selectors';
       </div>
     </div>
   `,
-  standalone: true,
   imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

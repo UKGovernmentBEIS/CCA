@@ -7,15 +7,16 @@ import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import {
+  areEntitiesIdentical,
+  filterFieldsWithFalsyValues,
   TaskItemStatus,
   TasksApiService,
-  toVariationReviewTargetUnitDetailsOriginalSummaryDataWithDecision,
   toVariationReviewTargetUnitDetailsSummaryDataWithDecision,
   UNAVariationReviewRequestTaskPayload,
 } from '@requests/common';
 import {
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
-  transform,
+  transformAccountReferenceData,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
@@ -28,7 +29,6 @@ import { resetDetermination } from '../../../utils';
 
 @Component({
   selector: 'cca-check-your-answers',
-  standalone: true,
   template: `
     <div>
       <netz-page-heading caption="Target unit details">Check your answers</netz-page-heading>
@@ -69,26 +69,37 @@ export class ReviewTargetUnitDetailsCheckYourAnswersComponent {
     this.store.select(requestTaskQuery.selectRequestTaskId)().toString(),
   );
 
+  private readonly isEditable = this.store.select(requestTaskQuery.selectIsEditable)();
   private readonly attachments = this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
+  private readonly accountReferenceData = this.store.select(underlyingAgreementQuery.selectAccountReferenceData)();
+  private readonly originalTargetUnitDetails = transformAccountReferenceData(this.accountReferenceData);
+  private readonly currentTargetUnitDetails = this.store.select(
+    underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails,
+  )();
 
-  private readonly accountReferenceData = this.store.select(underlyingAgreementQuery.selectAccountReferenceData);
+  private readonly areIdentical = areEntitiesIdentical(
+    filterFieldsWithFalsyValues(this.currentTargetUnitDetails),
+    filterFieldsWithFalsyValues(this.originalTargetUnitDetails),
+  );
 
-  private readonly originalTargetUnitDetails = transform(this.accountReferenceData());
+  private readonly decision = this.store.select(
+    underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'),
+  )();
 
-  protected readonly summaryDataOriginal = toVariationReviewTargetUnitDetailsOriginalSummaryDataWithDecision(
+  protected readonly summaryDataOriginal = toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
     this.originalTargetUnitDetails,
-    this.store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
+    this.decision,
     this.attachments,
     this.downloadUrl,
-    this.store.select(requestTaskQuery.selectIsEditable)(),
+    this.isEditable,
   );
 
   protected readonly summaryDataCurrent = toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
-    this.store.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
-    this.store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
+    this.currentTargetUnitDetails,
+    this.decision,
     this.attachments,
     this.downloadUrl,
-    this.store.select(requestTaskQuery.selectIsEditable)(),
+    this.isEditable,
   );
 
   onSubmit() {
@@ -107,13 +118,14 @@ export class ReviewTargetUnitDetailsCheckYourAnswersComponent {
       },
     );
 
-    const decision = this.store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))();
-
     const reviewSectionsCompleted = produce(
       this.store.select(underlyingAgreementReviewQuery.selectReviewSectionsCompleted)(),
       (draft) => {
-        draft[REVIEW_TARGET_UNIT_DETAILS_SUBTASK] =
-          decision.type === 'ACCEPTED' ? TaskItemStatus.ACCEPTED : TaskItemStatus.REJECTED;
+        draft[REVIEW_TARGET_UNIT_DETAILS_SUBTASK] = this.areIdentical
+          ? TaskItemStatus.UNCHANGED
+          : this.decision.type === 'ACCEPTED'
+            ? TaskItemStatus.ACCEPTED
+            : TaskItemStatus.REJECTED;
       },
     );
 
@@ -123,6 +135,8 @@ export class ReviewTargetUnitDetailsCheckYourAnswersComponent {
       sectionsCompleted,
       reviewSectionsCompleted,
       determination: determination,
+      reviewGroupDecisions: payload.reviewGroupDecisions,
+      facilitiesReviewGroupDecisions: payload.facilitiesReviewGroupDecisions,
     });
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {

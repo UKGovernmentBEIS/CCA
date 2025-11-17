@@ -34,7 +34,7 @@ class FacilityAccessRuleHandlerTest {
 
     @Test
     void evaluateRules() {
-        String facilityId = "ADS_1-F00023";
+    	String facilityId = String.valueOf(99L);
         long accountId = 1L;
         AppUser user = AppUser.builder().roleType(SECTOR_USER).build();
         AuthorizationRuleScopePermission rule = AuthorizationRuleScopePermission.builder()
@@ -46,13 +46,13 @@ class FacilityAccessRuleHandlerTest {
                 .permission(rule.getPermission())
                 .build();
 
-        when(facilityAuthorityInfoProvider.getAccountIdByFacilityId(facilityId)).thenReturn(accountId);
+        when(facilityAuthorityInfoProvider.getAccountIdByFacilityId(Long.parseLong(facilityId))).thenReturn(accountId);
 
         // invoke
         facilityAccessRuleHandler.evaluateRules(Set.of(rule), user, facilityId);
 
         // verify
         verify(appAuthorizationService, times(1)).authorize(user, authorizationCriteria);
-        verify(facilityAuthorityInfoProvider, times(1)).getAccountIdByFacilityId(facilityId);
+        verify(facilityAuthorityInfoProvider, times(1)).getAccountIdByFacilityId(99L);
     }
 }

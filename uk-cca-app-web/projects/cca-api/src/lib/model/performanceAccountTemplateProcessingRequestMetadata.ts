@@ -9,7 +9,6 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { SubsistenceFeesRunCompletedRequestActionPayloadChargingYear } from './subsistenceFeesRunCompletedRequestActionPayloadChargingYear';
 import { SectorAssociationInfo } from './sectorAssociationInfo';
 
 export interface PerformanceAccountTemplateProcessingRequestMetadata {
@@ -20,6 +19,6 @@ export interface PerformanceAccountTemplateProcessingRequestMetadata {
   accountId?: number;
   accountBusinessId?: string;
   targetPeriodType?: 'TP5' | 'TP6';
-  targetPeriodYear?: SubsistenceFeesRunCompletedRequestActionPayloadChargingYear;
+  targetPeriodYear?: number;
   reportVersion?: number;
 }

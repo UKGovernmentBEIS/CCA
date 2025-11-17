@@ -9,7 +9,6 @@ import { FileUploadEvent } from '../file-input/file-upload-event';
 @Component({
   selector: 'cca-file-upload-list',
   templateUrl: './file-upload-list.component.html',
-  standalone: true,
   imports: [NgTemplateOutlet, RouterLink, PercentPipe, KeyValuePipe, ButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,0 +1,155 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Cca3MigrationActivatedComponent should show proper view 1`] = `
+<cca-cca3-migration-activated
+  actionPayload={[Function Object]}
+  data={[Function Array]}
+  requestActionStore={[Function _RequestActionStore]}
+>
+  <cca-summary>
+    <h2
+      class="govuk-heading-m"
+    >
+      Details
+    </h2>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Uploaded files
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <cca-summary-download-files>
+            <a
+              class="govuk-link"
+              href="/"
+              target="_blank"
+            >
+              sample_profile1.png
+            </a>
+          </cca-summary-download-files>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Comments
+        </dt>
+        <dd
+          class="pre-line govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Not provided
+          </span>
+        </dd>
+      </div>
+    </dl>
+    <h2
+      class="govuk-heading-m"
+    >
+      Recipients
+    </h2>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Users
+        </dt>
+        <dd
+          class="pre-line govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            resp1 user, Responsible person, resp1@cca.uk
+          </span>
+          <br />
+          <span>
+            administr1 user, Administrative contact, administr1@cca.uk
+          </span>
+          <br />
+          <span>
+            Fred_50 William_50, Sector contact, fredwilliam_50@agindustries.org.uk
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Name and signature of the official notice
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Regulator England
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Official notice
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <cca-summary-download-files>
+            <a
+              class="govuk-link"
+              href="/"
+              target="_blank"
+            >
+              ADS_50-T00004 CCA3 Underlying Agreement v1.pdf
+            </a>
+            <br />
+            <a
+              class="govuk-link"
+              href="/"
+              target="_blank"
+            >
+              CCA3 Migration Activated underlying agreement cover letter.pdf
+            </a>
+          </cca-summary-download-files>
+        </dd>
+      </div>
+    </dl>
+  </cca-summary>
+</cca-cca3-migration-activated>
+`;

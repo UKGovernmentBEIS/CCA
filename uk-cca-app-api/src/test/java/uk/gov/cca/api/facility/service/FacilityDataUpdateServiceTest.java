@@ -10,14 +10,17 @@ import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.FacilityAddress;
 import uk.gov.cca.api.facility.domain.FacilityData;
+import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataCreationDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataUpdateDTO;
 import uk.gov.cca.api.facility.domain.dto.UpdateFacilitySchemeExitDateDTO;
 import uk.gov.cca.api.facility.repository.FacilityDataRepository;
 import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,8 +31,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("unchecked")
 @ExtendWith(MockitoExtension.class)
 class FacilityDataUpdateServiceTest {
 
@@ -46,14 +51,14 @@ class FacilityDataUpdateServiceTest {
     void createFacilities_shouldSaveAllFacilities() {
 
         FacilityDataCreationDTO dto1 = FacilityDataCreationDTO.builder()
-                .facilityId("FAC001")
+                .facilityBusinessId("FAC001")
                 .accountId(1001L)
                 .createdDate(LocalDateTime.of(2023, 9, 10, 12, 0))
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3))
                 .build();
 
         FacilityDataCreationDTO dto2 = FacilityDataCreationDTO.builder()
-                .facilityId("FAC002")
+                .facilityBusinessId("FAC002")
                 .accountId(1002L)
                 .createdDate(LocalDateTime.of(2023, 9, 11, 12, 0))
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3))
@@ -70,13 +75,13 @@ class FacilityDataUpdateServiceTest {
 
         assertEquals(2, savedFacilities.size());
 
-        FacilityData savedFacility1 = savedFacilities.get(0);
-        assertEquals("FAC001", savedFacility1.getFacilityId());
+        FacilityData savedFacility1 = savedFacilities.getFirst();
+        assertEquals("FAC001", savedFacility1.getFacilityBusinessId());
         assertEquals(1001L, savedFacility1.getAccountId());
         assertEquals(LocalDateTime.of(2023, 9, 10, 12, 0), savedFacility1.getCreatedDate());
 
         FacilityData savedFacility2 = savedFacilities.get(1);
-        assertEquals("FAC002", savedFacility2.getFacilityId());
+        assertEquals("FAC002", savedFacility2.getFacilityBusinessId());
         assertEquals(1002L, savedFacility2.getAccountId());
         assertEquals(LocalDateTime.of(2023, 9, 11, 12, 0), savedFacility2.getCreatedDate());
     }
@@ -85,17 +90,17 @@ class FacilityDataUpdateServiceTest {
     void updateFacilitiesData_shouldUpdateFacilities() {
 
         FacilityDataUpdateDTO dto1 = FacilityDataUpdateDTO.builder()
-                .facilityId("FAC001")
+                .facilityBusinessId("FAC001")
                 .siteName("site1New")
-                .facilityAddress(AccountAddressDTO.builder().line1("line1Updated").build())
+                .facilityAddress(FacilityAddressDTO.builder().line1("line1Updated").build())
                 .closedDate(null)
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3))
                 .build();
 
         FacilityDataUpdateDTO dto2 = FacilityDataUpdateDTO.builder()
-                .facilityId("FAC002")
+                .facilityBusinessId("FAC002")
                 .siteName("site2")
-                .facilityAddress(AccountAddressDTO.builder().build())
+                .facilityAddress(FacilityAddressDTO.builder().build())
                 .closedDate(LocalDate.of(2024, 9, 2))
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3))
                 .build();
@@ -104,7 +109,7 @@ class FacilityDataUpdateServiceTest {
 
         FacilityData facilityData1 = FacilityData.builder()
                 .id(1L)
-                .facilityId("FAC001")
+                .facilityBusinessId("FAC001")
                 .address(FacilityAddress.builder().line1("line1Original").build())
                 .siteName("site1")
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
@@ -112,7 +117,7 @@ class FacilityDataUpdateServiceTest {
 
         FacilityData facilityData2 = FacilityData.builder()
                 .id(2L)
-                .facilityId("FAC002")
+                .facilityBusinessId("FAC002")
                 .address(FacilityAddress.builder().build())
                 .siteName("site2")
                 .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
@@ -120,7 +125,7 @@ class FacilityDataUpdateServiceTest {
 
         List<FacilityData> facilitiesData = List.of(facilityData1, facilityData2);
 
-        when(repository.findAllByFacilityIdIn(Set.of("FAC001", "FAC002"))).thenReturn(facilitiesData);
+        when(repository.findAllByFacilityBusinessIdIn(Set.of("FAC001", "FAC002"))).thenReturn(facilitiesData);
 
         service.updateFacilitiesData(dtoList);
 
@@ -144,19 +149,19 @@ class FacilityDataUpdateServiceTest {
     @Test
     void updateFacilitiesData_shouldThrowBusinessException_whenFacilityIdNotFound() {
         FacilityDataUpdateDTO dto1 = FacilityDataUpdateDTO.builder()
-                .facilityId("FAC001")
+                .facilityBusinessId("FAC001")
                 .closedDate(LocalDate.of(2024, 9, 19))
                 .build();
 
         FacilityDataUpdateDTO dto2 = FacilityDataUpdateDTO.builder()
-                .facilityId("FAC002")
+                .facilityBusinessId("FAC002")
                 .closedDate(LocalDate.of(2024, 9, 19))
                 .build();
 
         List<FacilityDataUpdateDTO> dtoList = List.of(dto1, dto2);
 
-        FacilityData facilityData1 = FacilityData.builder().facilityId("FAC001").build();
-        when(repository.findAllByFacilityIdIn(Set.of("FAC001", "FAC002")))
+        FacilityData facilityData1 = FacilityData.builder().facilityBusinessId("FAC001").build();
+        when(repository.findAllByFacilityBusinessIdIn(Set.of("FAC001", "FAC002")))
                 .thenReturn(List.of(facilityData1));
 
         assertThrows(BusinessException.class, () -> service.updateFacilitiesData(dtoList));
@@ -168,14 +173,14 @@ class FacilityDataUpdateServiceTest {
     void terminateFacilities() {
         final Long accountId = 999L;
         List<FacilityData> facilitiesData = List.of(FacilityData.builder()
-                .facilityId("facilityId")
+                .facilityBusinessId("facilityId")
                 .createdDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0))
                 .accountId(accountId)
                 .closedDate(null)
                 .schemeExitDate(null)
                 .build(),
                 FacilityData.builder()
-                        .facilityId("facilityId2")
+                        .facilityBusinessId("facilityId2")
                         .createdDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0))
                         .accountId(accountId)
                         .closedDate(LocalDateTime.of(2030, 1, 1, 2, 32))
@@ -198,20 +203,81 @@ class FacilityDataUpdateServiceTest {
     }
 
     @Test
+    void updateFacilitiesDataParticipatingScheme() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
+        final Set<String> facilityIds = Set.of("FAC001", "FAC002");
+        Set<SchemeVersion> participatingSchemeVersions = new HashSet<>();
+        participatingSchemeVersions.add(schemeVersion);
+        FacilityData facilityData1 = FacilityData.builder()
+                .facilityBusinessId("FAC001")
+                .participatingSchemeVersions(participatingSchemeVersions)
+                .build();
+        FacilityData facilityData2 = FacilityData.builder()
+                .facilityBusinessId("FAC002")
+                .participatingSchemeVersions(participatingSchemeVersions)
+                .build();
+        List<FacilityData> facilitiesData = List.of(facilityData1, facilityData2);
+
+        when(repository.findAllByFacilityBusinessIdIn(facilityIds)).thenReturn(facilitiesData);
+
+        // Invoke
+        service.updateFacilitiesDataParticipatingScheme(facilityIds, schemeVersion);
+
+        // Verify
+        verify(repository).findAllByFacilityBusinessIdIn(facilityIds);
+        assertThat(facilityData1.getParticipatingSchemeVersions()).contains(schemeVersion);
+        assertThat(facilityData2.getParticipatingSchemeVersions()).contains(schemeVersion);
+
+        ArgumentCaptor<List<FacilityData>> captor = ArgumentCaptor.forClass(List.class);
+        verify(repository).saveAll(captor.capture());
+        List<FacilityData> updatedFacilities = captor.getValue();
+        assertThat(updatedFacilities.getFirst().getParticipatingSchemeVersions()).contains(schemeVersion);
+        assertThat(updatedFacilities.get(1).getParticipatingSchemeVersions()).contains(schemeVersion);
+    }
+
+    @Test
+    void updateFacilitiesDataParticipatingScheme_facility_not_exist() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
+        final Set<String> facilityIds = Set.of("FAC001", "FAC002");
+        Set<SchemeVersion> participatingSchemeVersions = new HashSet<>();
+        participatingSchemeVersions.add(schemeVersion);
+        FacilityData facilityData1 = FacilityData.builder()
+                .facilityBusinessId("FAC001")
+                .participatingSchemeVersions(participatingSchemeVersions)
+                .build();
+        List<FacilityData> facilitiesData = List.of(facilityData1);
+
+        when(repository.findAllByFacilityBusinessIdIn(facilityIds)).thenReturn(facilitiesData);
+
+        // Invoke
+        BusinessException ex = assertThrows(BusinessException.class, () ->
+                service.updateFacilitiesDataParticipatingScheme(facilityIds, schemeVersion));
+
+        // Verify
+        assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
+        verify(repository).findAllByFacilityBusinessIdIn(facilityIds);
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
     void updateFacilitySchemeExitDate() {
 
-        FacilityData facility = FacilityData.builder().facilityId("ADS_1-F00023").siteName("site1").build();
+        FacilityData facility = FacilityData.builder()
+        		.id(1L)
+        		.facilityBusinessId("ADS_1-F00023")
+        		.siteName("site1")
+        		.build();
 
         UpdateFacilitySchemeExitDateDTO facilitySchemeExitDateDTO = UpdateFacilitySchemeExitDateDTO.builder()
                 .schemeExitDate(LocalDate.of(2023, 4, 22))
                 .build();
 
-        when(facilityDataQueryService.getFacilityDataById("ADS_1-F00023")).thenReturn(facility);
+        when(facilityDataQueryService.getFacilityDataById(1L)).thenReturn(facility);
 
         // invoke
-        service.updateFacilitySchemeExitDate("ADS_1-F00023", facilitySchemeExitDateDTO.getSchemeExitDate());
+        service.updateFacilitySchemeExitDate(1L, facilitySchemeExitDateDTO.getSchemeExitDate());
 
-        verify(facilityDataQueryService, times(1)).getFacilityDataById("ADS_1-F00023");
+        verify(facilityDataQueryService, times(1)).getFacilityDataById(1L);
         assertThat(facility.getSchemeExitDate()).isNotNull();
     }
 }

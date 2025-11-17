@@ -24,7 +24,6 @@ describe('SummaryTemplateComponent', () => {
 
   @Component({
     template: '<cca-user-input-summary-template [userInfo]="userInfo"/>',
-    standalone: true,
     imports: [UserInputSummaryTemplateComponent],
   })
   class TestComponent {

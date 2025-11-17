@@ -29,7 +29,6 @@ import {
       </dl>
     </div>
   `,
-  standalone: true,
   imports: [SummaryListComponent, SummaryListRowDirective, SummaryListRowKeyDirective, SummaryListRowValueDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

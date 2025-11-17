@@ -39,7 +39,6 @@ function toSummaryData(user: InvitedOperatorUserExtended): SummaryData {
     <cca-summary [data]="summaryData" />
     <button netzPendingButton govukButton type="button" (click)="onSaveUserInvitationDetails()">Submit</button>
   `,
-  standalone: true,
   imports: [SummaryComponent, PageHeadingComponent, ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

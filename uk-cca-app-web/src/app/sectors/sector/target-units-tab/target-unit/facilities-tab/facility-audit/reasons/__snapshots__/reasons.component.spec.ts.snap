@@ -1,0 +1,235 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ReasonsComponent should display correct view 1`] = `
+<cca-reasons
+  activatedRoute={[Function ActivatedRouteStub]}
+  facilityAuditStore={[Function FacilityAuditStore]}
+  facilityInfoDTO={[Function Object]}
+  form={[Function FormGroup]}
+  reasonOptions={[Function Array]}
+  router={[Function _Router]}
+>
+  <div
+    class="govuk-!-width-two-thirds"
+  >
+    <cca-wizard-step
+      caption="Change"
+      class="ng-untouched ng-pristine ng-invalid"
+      data-testid="audit-form"
+      heading="Why should this facility be audited?"
+      submittext="Save and continue"
+    >
+      <form
+        class="ng-untouched ng-pristine ng-invalid"
+        novalidate=""
+      >
+        <netz-page-heading>
+          <span
+            class="govuk-caption-l"
+          >
+            Change
+          </span>
+          <h1
+            class="govuk-heading-l"
+          >
+            Why should this facility be audited?
+          </h1>
+        </netz-page-heading>
+        <p
+          class="govuk-!-padding-bottom-4"
+        >
+          Select the reasons that apply for this audit.
+        </p>
+        <h2
+          class="govuk-heading-m"
+        >
+          Audit reasons
+        </h2>
+        <div
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+          formcontrolname="reasons"
+          govuk-checkboxes=""
+        >
+          <fieldset
+            class="govuk-fieldset"
+            govukfieldset=""
+            id="reasons"
+          >
+            <legend
+              class="govuk-fieldset__legend govuk-fieldset__legend--l"
+              govuklegend=""
+              id="l.reasons"
+            >
+            </legend>
+            <div
+              class="govuk-checkboxes"
+            >
+              <div
+                class="govuk-checkboxes__item"
+              >
+                <input
+                  aria-describedby="reasons-0-item-hint"
+                  class="govuk-checkboxes__input"
+                  id="reasons-0"
+                  name="reasons"
+                  type="checkbox"
+                  value="ELIGIBILITY"
+                />
+                <label
+                  class="govuk-label govuk-checkboxes__label"
+                  for="reasons-0"
+                >
+                   Eligibility 
+                </label>
+              </div>
+              <div
+                class="govuk-checkboxes__item"
+              >
+                <input
+                  aria-describedby="reasons-1-item-hint"
+                  class="govuk-checkboxes__input"
+                  id="reasons-1"
+                  name="reasons"
+                  type="checkbox"
+                  value="SEVENTY_RULE_EVALUATION"
+                />
+                <label
+                  class="govuk-label govuk-checkboxes__label"
+                  for="reasons-1"
+                >
+                   70% evaluation 
+                </label>
+              </div>
+              <div
+                class="govuk-checkboxes__item"
+              >
+                <input
+                  aria-describedby="reasons-2-item-hint"
+                  class="govuk-checkboxes__input"
+                  id="reasons-2"
+                  name="reasons"
+                  type="checkbox"
+                  value="BASE_YEAR_DATA"
+                />
+                <label
+                  class="govuk-label govuk-checkboxes__label"
+                  for="reasons-2"
+                >
+                   Base year data 
+                </label>
+              </div>
+              <div
+                class="govuk-checkboxes__item"
+              >
+                <input
+                  aria-describedby="reasons-3-item-hint"
+                  class="govuk-checkboxes__input"
+                  id="reasons-3"
+                  name="reasons"
+                  type="checkbox"
+                  value="REPORTING_DATA"
+                />
+                <label
+                  class="govuk-label govuk-checkboxes__label"
+                  for="reasons-3"
+                >
+                   Reporting data 
+                </label>
+              </div>
+              <div
+                class="govuk-checkboxes__item"
+              >
+                <input
+                  aria-describedby="reasons-4-item-hint"
+                  class="govuk-checkboxes__input"
+                  id="reasons-4"
+                  name="reasons"
+                  type="checkbox"
+                  value="NON_COMPLIANCE"
+                />
+                <label
+                  class="govuk-label govuk-checkboxes__label"
+                  for="reasons-4"
+                >
+                   Non-compliance 
+                </label>
+              </div>
+              <div
+                class="govuk-checkboxes__divider"
+              >
+                or
+              </div>
+              <div
+                class="govuk-checkboxes__item"
+              >
+                <input
+                  aria-describedby="reasons-5-item-hint"
+                  class="govuk-checkboxes__input"
+                  id="reasons-5"
+                  name="reasons"
+                  type="checkbox"
+                  value="OTHER"
+                />
+                <label
+                  class="govuk-label govuk-checkboxes__label"
+                  for="reasons-5"
+                >
+                   Other 
+                </label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-invalid"
+          formcontrolname="comments"
+          govuk-textarea=""
+          hint="Provide further details on your reasons for auditing this facility"
+          label="Comments"
+          labelsize="medium"
+        >
+          <label
+            class="govuk-label govuk-label--m"
+            for="comments"
+            id="l.comments"
+          >
+             Comments
+          </label>
+          <div
+            class="govuk-hint"
+            id="comments-hint"
+          >
+             Provide further details on your reasons for auditing this facility 
+          </div>
+          <textarea
+            aria-describedby="comments-hint"
+            class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-invalid"
+            id="comments"
+            name="comments"
+            rows="5"
+          />
+        </div>
+        <button
+          class="govuk-button"
+          govukbutton=""
+          netzpendingbutton=""
+          type="submit"
+        >
+          Save and continue
+        </button>
+      </form>
+    </cca-wizard-step>
+    <hr
+      class="govuk-footer__section-break govuk-!-margin-bottom-3"
+    />
+    <a
+      class="govuk-link"
+      fragment="audit"
+      href="/#audit"
+      routerlink="../.."
+    >
+      Return to: 
+    </a>
+  </div>
+</cca-reasons>
+`;

@@ -1,0 +1,181 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SchemeDetailsComponent should display correct view 1`] = `
+<cca-scheme-details
+  agreementsState={[Function Function]}
+  cca2Details={[Function Function]}
+  cca2FileDocument={[Function Function]}
+  cca3Details={[Function Function]}
+  cca3FileDocument={[Function Function]}
+  downloadURL={[Function Function]}
+  mainColumnClass={[Function Function]}
+>
+  <cca-agreement-details>
+    <div
+      class="govuk-grid-row"
+    >
+      <div
+        class="govuk-grid-column-two-thirds"
+      >
+        <h2>
+          CCA3 underlying agreement
+        </h2>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+          data-testid="cca3-underlying agreement"
+          govuk-summary-list=""
+        >
+          <div
+            class="govuk-summary-list__row"
+            govuksummarylistrow=""
+          >
+            <dt
+              class="govuk-summary-list__key"
+              govuksummarylistrowkey=""
+            >
+              Status
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+              govuksummarylistrowvalue=""
+            >
+              Active
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+              govuksummarylistrowactions=""
+            />
+          </div>
+          <div
+            class="govuk-summary-list__row"
+            govuksummarylistrow=""
+          >
+            <dt
+              class="govuk-summary-list__key"
+              govuksummarylistrowkey=""
+            >
+              Downloadable version
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+              govuksummarylistrowvalue=""
+            >
+              <cca-summary-download-files>
+              </cca-summary-download-files>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+              govuksummarylistrowactions=""
+            />
+          </div>
+          <div
+            class="govuk-summary-list__row"
+            govuksummarylistrow=""
+          >
+            <dt
+              class="govuk-summary-list__key"
+              govuksummarylistrowkey=""
+            >
+              Activation date
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+              govuksummarylistrowvalue=""
+            >
+              <span>
+              </span>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+              govuksummarylistrowactions=""
+            />
+          </div>
+        </dl>
+      </div>
+    </div>
+  </cca-agreement-details><cca-agreement-details>
+    <div
+      class="govuk-grid-row"
+    >
+      <div
+        class="govuk-grid-column-two-thirds"
+      >
+        <h2>
+          CCA2 underlying agreement
+        </h2>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+          data-testid="cca2-underlying agreement"
+          govuk-summary-list=""
+        >
+          <div
+            class="govuk-summary-list__row"
+            govuksummarylistrow=""
+          >
+            <dt
+              class="govuk-summary-list__key"
+              govuksummarylistrowkey=""
+            >
+              Status
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+              govuksummarylistrowvalue=""
+            >
+              Active
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+              govuksummarylistrowactions=""
+            />
+          </div>
+          <div
+            class="govuk-summary-list__row"
+            govuksummarylistrow=""
+          >
+            <dt
+              class="govuk-summary-list__key"
+              govuksummarylistrowkey=""
+            >
+              Downloadable version
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+              govuksummarylistrowvalue=""
+            >
+              <cca-summary-download-files>
+              </cca-summary-download-files>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+              govuksummarylistrowactions=""
+            />
+          </div>
+          <div
+            class="govuk-summary-list__row"
+            govuksummarylistrow=""
+          >
+            <dt
+              class="govuk-summary-list__key"
+              govuksummarylistrowkey=""
+            >
+              Activation date
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+              govuksummarylistrowvalue=""
+            >
+              <span>
+              </span>
+            </dd>
+            <dd
+              class="govuk-summary-list__actions"
+              govuksummarylistrowactions=""
+            />
+          </div>
+        </dl>
+      </div>
+    </div>
+  </cca-agreement-details>
+</cca-scheme-details>
+`;

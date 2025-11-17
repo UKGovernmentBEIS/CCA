@@ -16,4 +16,10 @@ public class CcaRequestParams extends RequestParams {
         		? Long.parseLong(getRequestResources().get(CcaResourceType.SECTOR_ASSOCIATION))
         				: null;
 	}
+	
+	public Long getFacilityId() {
+        return getRequestResources().get(CcaResourceType.FACILITY) != null 
+        		? Long.parseLong(getRequestResources().get(CcaResourceType.FACILITY))
+        				: null;
+	}
 }

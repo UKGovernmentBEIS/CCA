@@ -63,7 +63,7 @@ class SubsistenceFeesRunQueryServiceTest {
 
         EligibleFacilityDTO eligibleFacilityDTO = EligibleFacilityDTO.builder()
                 .id(1L)
-                .facilityId("ADS_1-F00014")
+                .facilityBusinessId("ADS_1-F00014")
                 .siteName("site name 1")
                 .targetUnitBusinessId("business id 1")
                 .operatorName("Operator name 1")
@@ -108,7 +108,7 @@ class SubsistenceFeesRunQueryServiceTest {
 
         EligibleFacilityDTO eligibleFacilityDTO = EligibleFacilityDTO.builder()
                 .id(1L)
-                .facilityId("ADS_1-F00014")
+                .facilityBusinessId("ADS_1-F00014")
                 .siteName("site name 1")
                 .targetUnitBusinessId("business id 1")
                 .operatorName("Operator name 1")
@@ -134,7 +134,7 @@ class SubsistenceFeesRunQueryServiceTest {
         final LocalDate endDateOfChargingYear = LocalDate.of(chargingYear.getValue(), 12, 31);
 
         EligibleFacilityDTO eligibleFacilityDTO = EligibleFacilityDTO.builder()
-                .facilityId("ADS_1-F00015")
+                .facilityBusinessId("ADS_1-F00015")
                 .siteName("site name 2")
                 .targetUnitBusinessId("business id 2")
                 .operatorName("Operator name 2")

@@ -16,6 +16,6 @@ export interface TargetComposition {
   agreementCompositionType: 'ABSOLUTE' | 'RELATIVE' | 'NOVEM';
   isTargetUnitThroughputMeasured?: boolean;
   throughputUnit?: string;
-  conversionFactor?: number;
+  conversionFactor?: string;
   conversionEvidences?: string[];
 }

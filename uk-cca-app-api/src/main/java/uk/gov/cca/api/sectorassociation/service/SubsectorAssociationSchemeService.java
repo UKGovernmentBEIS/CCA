@@ -51,4 +51,5 @@ public class SubsectorAssociationSchemeService {
             throw new BusinessException(CcaErrorCode.SUB_SECTOR_ASSOCIATION_NOT_RELATED_TO_SECTOR_ASSOCIATION);
         }
 	}
+
 }

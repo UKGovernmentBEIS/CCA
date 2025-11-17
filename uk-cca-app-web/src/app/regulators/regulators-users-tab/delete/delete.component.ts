@@ -19,7 +19,6 @@ import { DetailsStore } from '../details/details.store';
 @Component({
   selector: 'cca-delete',
   templateUrl: './delete.component.html',
-  standalone: true,
   imports: [
     WarningTextComponent,
     PanelComponent,

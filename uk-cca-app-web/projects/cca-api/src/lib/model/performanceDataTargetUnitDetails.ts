@@ -17,12 +17,12 @@ export interface PerformanceDataTargetUnitDetails {
   energyCarbonUnit: 'ENERGY_KWH' | 'ENERGY_MWH' | 'ENERGY_GJ' | 'CARBON_KG' | 'CARBON_TONNE';
   throughputUnit?: string;
   byStartDate: string;
-  byEnergyCarbon: number;
-  byThroughput?: number;
-  byPerformance?: number;
-  numericalTarget?: number;
-  tolerance?: number;
-  percentTarget: number;
-  tolerancePercentage?: number;
-  bankedSurplus: number;
+  byEnergyCarbon: string;
+  byThroughput?: string;
+  byPerformance?: string;
+  numericalTarget?: string;
+  tolerance?: string;
+  percentTarget: string;
+  tolerancePercentage?: string;
+  bankedSurplus: string;
 }

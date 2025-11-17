@@ -28,7 +28,6 @@ const DEFAULT_PAGE_SIZE = 50;
 @Component({
   selector: 'cca-performance-data-report-table',
   templateUrl: './performance-data-report-table.component.html',
-  standalone: true,
   imports: [
     TableComponent,
     RouterLink,
@@ -115,7 +114,7 @@ export class PerformanceDataReportTableComponent {
 
   onPageSizeChange(pageSize: number) {
     if (pageSize === this.state().pageSize) return;
-    this.handleQueryParamsNavigation({ pageSize });
+    this.handleQueryParamsNavigation({ page: 1, pageSize });
   }
 
   exportToXlsx(): void {

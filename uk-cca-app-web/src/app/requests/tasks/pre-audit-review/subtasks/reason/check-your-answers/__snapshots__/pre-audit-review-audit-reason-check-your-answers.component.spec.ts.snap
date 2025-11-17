@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`PreAuditReviewAuditReasonCheckYourAnswersComponent should display the correct content 1`] = `
+<cca-pre-audit-review-audit-reason-check-your-answers
+  activatedRoute={[Function ActivatedRouteStub]}
+  auditReasonDetails={[Function Function]}
+  data={[Function Function]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  tasksApiService={[Function TasksApiService]}
+>
+  <div>
+    <netz-page-heading
+      caption="Audit reason"
+    >
+      <span
+        class="govuk-caption-l"
+      >
+        Audit reason
+      </span>
+      <h1
+        class="govuk-heading-l"
+      >
+        Check your answers
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+    </cca-summary>
+    <button
+      class="govuk-button"
+      govukbutton=""
+      netzpendingbutton=""
+      type="button"
+    >
+      Confirm and complete
+    </button>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Dashboard 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-pre-audit-review-audit-reason-check-your-answers>
+`;

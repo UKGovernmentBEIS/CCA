@@ -10,7 +10,6 @@ import { ErrorSummaryComponent } from './error-summary.component';
 
 describe('ErrorSummaryComponent', () => {
   @Component({
-    standalone: true,
     imports: [ErrorSummaryComponent, ReactiveFormsModule, TextInputComponent, FormsModule],
     template: `
       @if (!isTemplate) {

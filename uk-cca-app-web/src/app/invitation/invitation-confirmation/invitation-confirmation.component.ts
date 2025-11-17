@@ -22,7 +22,6 @@ import { AuthService } from '@shared/services';
       </div>
     </div>
   `,
-  standalone: true,
   imports: [PanelComponent, ButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

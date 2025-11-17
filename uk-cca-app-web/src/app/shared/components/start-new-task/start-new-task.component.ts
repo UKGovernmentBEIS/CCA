@@ -29,7 +29,6 @@ import {
 @Component({
   selector: 'cca-start-new-task',
   templateUrl: './start-new-task.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, PendingButtonDirective, ButtonDirective, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

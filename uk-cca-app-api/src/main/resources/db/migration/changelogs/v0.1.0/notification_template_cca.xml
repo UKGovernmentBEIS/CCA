@@ -701,9 +701,10 @@ This is an automatic email - please do not reply to this address.'
     </changeSet>
     
     <changeSet id="0_1_0_insert_UNDERLYING_AGREEMENT_document_template" author="apostolouk@unisystems.gr">
+    	<validCheckSum>1:any</validCheckSum>
         <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
             <param name="competentAuthority" value="ENGLAND" />
-            <param name="fileDocumentName" value="Updated UnA template - v03.docx" />
+            <param name="fileDocumentName" value="CCA2 agreement.docx" />
         </customChange>
         <sql>
             insert into document_template (
@@ -722,7 +723,7 @@ This is an automatic email - please do not reply to this address.'
                        'ENGLAND',
                        'Underlying Agreement',
                        '2024-09-14 00:00:00',
-                       (select id from file_document_template where file_name = 'Updated UnA template - v03.docx' order by id desc limit 1),
+                       (select id from file_document_template where file_name = 'CCA2 agreement.docx' order by id desc limit 1),
                    (select id from notification_template where name = 'GenericEmailTemplate'));
         </sql>
         <rollback>
@@ -730,7 +731,7 @@ This is an automatic email - please do not reply to this address.'
             where name = 'Underlying agreement notice' and competent_authority = 'ENGLAND';
 
             delete from file_document_template
-            where ctid IN (select ctid FROM file_document_template where file_name = 'Updated UnA template - v03.docx' order by id desc limit 1);
+            where ctid IN (select ctid FROM file_document_template where file_name = 'CCA2 agreement.docx' order by id desc limit 1);
         </rollback>
     </changeSet>
     
@@ -799,9 +800,10 @@ This is an automatic email - please do not reply to this address.'
     </changeSet>
 
     <changeSet id="0_1_0_insert_UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_template" author="apostolouk@unisystems.gr">
+    	<validCheckSum>1:any</validCheckSum>
         <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
             <param name="competentAuthority" value="ENGLAND" />
-            <param name="fileDocumentName" value="CR_L002_Variation_Approved.docx" />
+            <param name="fileDocumentName" value="CCA3 variation proposed agreement cover letter.docx" />
         </customChange>
         <sql>
             insert into document_template (
@@ -820,7 +822,7 @@ This is an automatic email - please do not reply to this address.'
                        'ENGLAND',
                        'Underlying Agreement Variation',
                        '2024-10-02 00:00:00',
-                       (select id from file_document_template where file_name = 'CR_L002_Variation_Approved.docx' order by id desc limit 1),
+                       (select id from file_document_template where file_name = 'CCA3 variation proposed agreement cover letter.docx' order by id desc limit 1),
                    (select id from notification_template where name = 'GenericEmailTemplate'));
         </sql>
         <rollback>
@@ -828,7 +830,7 @@ This is an automatic email - please do not reply to this address.'
             where name = 'Variation of Underlying agreement proposed cover letter' and competent_authority = 'ENGLAND';
 
             delete from file_document_template
-            where ctid IN (select ctid FROM file_document_template where file_name = 'CR_L002_Variation_Approved.docx' order by id desc limit 1);
+            where ctid IN (select ctid FROM file_document_template where file_name = 'CCA3 variation proposed agreement cover letter.docx' order by id desc limit 1);
         </rollback>
     </changeSet>
 
@@ -1760,6 +1762,343 @@ This is an automatic email - please do not reply to this address.')
                 SET notification_template_id = nt.id
                 FROM notification_template nt
                 WHERE type = 'TARGET_UNIT_MOA' and nt.name = 'GenericSectorEmailTemplate';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_document_template_with_CCA2_extension" author="P70383">
+        <comment>Update CCA2 extension date for Updated UnA template - v03.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT"/>
+            <param name="fileDocumentName" value="Updated UnA template - v03.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_UPDATE_DOCUMENT_TEMPLATE_for_underlying_agreement_CCA2" author="apostolouk@unisystems.gr">
+        <sql>
+            UPDATE document_template
+            SET type = 'UNDERLYING_AGREEMENT_CCA2',
+            	name = 'Underlying agreement CCA2'
+            WHERE type = 'UNDERLYING_AGREEMENT' and name = 'Underlying agreement notice';
+    </sql>
+        <rollback>
+            <sql>
+                UPDATE document_template
+            	SET type = 'UNDERLYING_AGREEMENT',
+            		name = 'Underlying agreement notice'
+            	WHERE type = 'UNDERLYING_AGREEMENT_CCA2' and name = 'Underlying agreement CCA2';
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_file_document_template_name" author="apostolouk@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_CCA2"/>
+            <param name="fileDocumentName" value="CCA2 agreement.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_insert_UNDERLYING_AGREEMENT_CCA3_document_template" author="apostolouk@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="CCA3 agreement.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'UNDERLYING_AGREEMENT_CCA3',
+                       'Underlying agreement CCA3',
+                       'ENGLAND',
+                       'Underlying Agreement',
+                       '2025-10-12 00:00:00',
+                       (select id from file_document_template where file_name = 'CCA3 agreement.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'Underlying agreement CCA3' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'CCA3 agreement.docx' order by id desc limit 1);
+        </rollback>
+        
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_proposed_underlying_agreement_notice_template" author="apostolouk@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_ACCEPTED"/>
+            <param name="fileDocumentName" value="AA_L002_Proposed_Underlying_Agreement.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_activated_underlying_agreement_notice_template" author="apostolouk@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_ACTIVATED"/>
+            <param name="fileDocumentName" value="AA_L003_Underlying_Agreement_Activated.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_date_comparison_in_cca3_underlying_agreement_template" author="apostolouk@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_CCA3"/>
+            <param name="fileDocumentName" value="CCA3 agreement.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_insert_EXTENSION_NOTICE_CCA2_template" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="CCA2 extension cover letter.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'EXTENSION_NOTICE_CCA2',
+                       'CCA2 Extension Underlying agreement activated',
+                       'ENGLAND',
+                       'CCA2 Extension Notices Issued in Bulk',
+                       '2025-10-15 00:00:00',
+                       (select id from file_document_template where file_name = 'CCA2 extension cover letter.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'CCA2 Extension Underlying agreement activated' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'CCA2 extension cover letter.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_underlying_agreement_variation_rejection_notice_template" author="apostolouk@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_REJECTED"/>
+            <param name="fileDocumentName" value="CR_L001_Variation_Refused.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_underlying_agreement_variation_accepted_notice_template" author="apostolouk@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_ACCEPTED"/>
+            <param name="fileDocumentName" value="CCA3 variation proposed agreement cover letter.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_proposed_underlying_agreement_notice_template_for_versionMap" author="apostolouk@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_ACCEPTED"/>
+            <param name="fileDocumentName" value="AA_L002_Proposed_Underlying_Agreement.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_activated_underlying_agreement_notice_template_for_versionMap" author="apostolouk@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_ACTIVATED"/>
+            <param name="fileDocumentName" value="AA_L003_Underlying_Agreement_Activated.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_ADMIN_TERMINATION_ADMINISTRATIVE_SUBMITTED_document_template_versionMap_variable" author="P70311">
+        <comment>Update versionMap variable for AIT_L001_Administrative_Termination.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="ADMIN_TERMINATION_ADMINISTRATIVE_SUBMITTED"/>
+            <param name="fileDocumentName" value="AIT_L001_Administrative_Termination.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_ADMIN_TERMINATION_REGULATORY_SUBMITTED_document_template_versionMap_variable" author="P70311">
+        <comment>Update versionMap variable for AIT_L002_Regulatory_Termination_Right_Of_Appeal.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="ADMIN_TERMINATION_REGULATORY_SUBMITTED"/>
+            <param name="fileDocumentName" value="AIT_L002_Regulatory_Termination_Right_Of_Appeal.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_regulatory_termination_document_versionMap_variable" author="P70311">
+        <comment>Update versionMap variable for AIT_L003_Regulatory_Termination.docx</comment>
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="ADMIN_TERMINATION_REGULATORY_TERMINATED"/>
+            <param name="fileDocumentName" value="AIT_L003_Regulatory_Termination.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_insert_MIGRATION_UNDERLYING_AGREEMENT_ACTIVATED_CCA3_template" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="CCA3 migration activated agreement cover letter.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'MIGRATION_UNDERLYING_AGREEMENT_ACTIVATED_CCA3',
+                       'CCA3 Migration Underlying agreement activated cover letter',
+                       'ENGLAND',
+                       'CCA3 Migration of Existing Facilities',
+                       '2025-10-22 00:00:00',
+                       (select id from file_document_template where file_name = 'CCA3 migration activated agreement cover letter.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'CCA3 Migration Underlying agreement activated cover letter' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'CCA3 migration activated agreement cover letter.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_insert_MIGRATION_UNDERLYING_AGREEMENT_ACCEPTED_CCA3_template" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="CCA3 migration proposed agreement cover letter.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'MIGRATION_UNDERLYING_AGREEMENT_ACCEPTED_CCA3',
+                       'CCA3 Migration Underlying agreement proposed cover letter',
+                       'ENGLAND',
+                       'CCA3 Migration of Existing Facilities',
+                       '2025-10-23 00:00:00',
+                       (select id from file_document_template where file_name = 'CCA3 migration proposed agreement cover letter.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'CCA3 Migration Underlying agreement proposed cover letter' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'CCA3 migration proposed agreement cover letter.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_cca2_extension_cover_letter_template_agreement_identifier" author="vourdoukasd@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="EXTENSION_NOTICE_CCA2"/>
+            <param name="fileDocumentName" value="CCA2 extension cover letter.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_insert_UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION_template" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="CCA3 variation termination letter.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION',
+                       'Variation of Underlying agreement termination notice',
+                       'ENGLAND',
+                       'Variation of Underlying agreement',
+                       '2025-10-23 00:00:00',
+                       (select id from file_document_template where file_name = 'CCA3 variation termination letter.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'Variation of Underlying agreement termination notice' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'CCA3 variation termination letter.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_insert_generic_expiration_reminder_notification_template_facility_task" author="P70311">
+        <sql>
+            <![CDATA[
+            INSERT INTO notification_template (
+                id,
+                name,
+                subject,
+                competent_authority,
+                event_trigger,
+                workflow,
+                text
+            )
+            VALUES (
+                       nextval('notification_template_seq'),
+                       'FacilityAuditGenericExpirationReminderTemplate',
+                       '${workflow} ${workflowTask} (${expirationTime} remaining)',
+                       'ENGLAND',
+                       'Expiration reminder for final review of corrective actions',
+                       'Audit Workflow',
+                       'Dear ${workflowUser},
+
+Facility: ${facilityBusinessId}-${facilityName}
+
+The deadline for the [${workflowTask}](${homeUrl}) of the ${workflow} (reference ${workflowId}) for the above facility is due ${expirationTimeLong}. The task must be completed by ${deadline?date?string(''dd MMMM yyyy'')}.
+
+Please contact your team leader if you are not able to complete the task before this date.
+
+If you think you should not have received this email, you must [contact the CCA Helpdesk](${contactRegulator}).
+
+This is an automatic email - please do not reply to this address.')
+            ]]>;
+        </sql>
+
+        <rollback>
+            <sql>
+                delete from notification_template
+                where name = 'FacilityAuditGenericExpirationReminderTemplate' and competent_authority = 'ENGLAND';
             </sql>
         </rollback>
     </changeSet>

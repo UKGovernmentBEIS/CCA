@@ -11,9 +11,9 @@
  */
 
 export interface Apply70Rule {
-  energyConsumed: number;
-  energyConsumedProvision?: number;
-  energyConsumedEligible: number;
+  energyConsumed: string;
+  energyConsumedProvision?: string;
+  energyConsumedEligible: string;
   startDate?: string;
   evidenceFile: string;
 }

@@ -37,7 +37,6 @@ import { existingControlContainer } from '../../providers/control-container.fact
       <ng-content select="[govukConditionalContent]" />
     </div>
   `,
-  standalone: true,
   imports: [RadioComponent, FormsModule, ReactiveFormsModule, RadioOptionComponent, AsyncPipe],
   providers: [existingControlContainer],
   viewProviders: [existingControlContainer],

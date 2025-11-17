@@ -2,10 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Directive, HostListener, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-@Directive({
-  selector: 'router-outlet[ccaSkipLinkFocus]',
-  standalone: true,
-})
+@Directive({ selector: 'router-outlet[ccaSkipLinkFocus]' })
 export class SkipLinkFocusDirective {
   constructor(
     @Inject(DOCUMENT) private readonly document,

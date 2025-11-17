@@ -29,7 +29,6 @@ import {
 @Component({
   selector: 'cca-received-amount',
   templateUrl: './received-amount.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     DecimalPipe,

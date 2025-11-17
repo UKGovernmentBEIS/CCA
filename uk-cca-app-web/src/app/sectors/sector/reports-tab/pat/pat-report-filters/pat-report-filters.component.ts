@@ -10,7 +10,6 @@ import { initialPatValues, PAT_REPORT_FORM, PatReportFormProvider } from '../pat
 @Component({
   selector: 'cca-pat-report-filters',
   templateUrl: './pat-report-filters.component.html',
-  standalone: true,
   imports: [UtilityPanelComponent, TextInputComponent, SelectComponent, ReactiveFormsModule, ButtonDirective],
   providers: [PatReportFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,

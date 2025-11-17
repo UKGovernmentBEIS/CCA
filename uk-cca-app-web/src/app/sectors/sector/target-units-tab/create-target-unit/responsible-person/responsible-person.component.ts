@@ -13,7 +13,6 @@ import {
 @Component({
   selector: 'cca-responsible-person',
   templateUrl: './responsible-person.component.html',
-  standalone: true,
   imports: [ReactiveFormsModule, WizardStepComponent, ResponsiblePersonInputComponent],
   providers: [TargetUnitResponsiblePersonFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,6 +44,10 @@ export class ResponsiblePersonComponent {
       });
     }
 
-    this.router.navigate(['..', 'administrative-contact'], { relativeTo: this.activatedRoute });
+    const path = this.createTargetUnitStore.sameAddressWithResponsiblePerson
+      ? '../check-your-answers'
+      : '../administrative-contact';
+
+    this.router.navigate([path], { relativeTo: this.activatedRoute });
   }
 }

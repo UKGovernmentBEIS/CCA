@@ -9,7 +9,6 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { SubsistenceFeesRunCompletedRequestActionPayloadChargingYear } from './subsistenceFeesRunCompletedRequestActionPayloadChargingYear';
 import { DefaultNoticeRecipient } from './defaultNoticeRecipient';
 import { FileInfoDTO } from './fileInfoDTO';
 
@@ -17,7 +16,7 @@ export interface TargetUnitMoaGeneratedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
   paymentRequestId: string;
-  chargingYear: SubsistenceFeesRunCompletedRequestActionPayloadChargingYear;
+  chargingYear: number;
   transactionId: string;
   moaDocument: FileInfoDTO;
   recipients: DefaultNoticeRecipient[];

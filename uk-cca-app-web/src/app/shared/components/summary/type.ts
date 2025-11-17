@@ -24,4 +24,5 @@ export type SummarySection = {
   changeLink?: string; // if a change link is present in a summary section, it precedes the section change link
   action?: string;
   actionLink?: string;
+  fieldDiff?: boolean;
 };

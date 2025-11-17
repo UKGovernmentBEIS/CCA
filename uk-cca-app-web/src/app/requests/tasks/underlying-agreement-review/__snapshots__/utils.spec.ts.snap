@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`createProposedUnderlyingAgreementPayload should create the correct payload when all decisions are accepted: una-with-initial-facilities 1`] = `
 {
@@ -11,9 +11,9 @@ exports[`createProposedUnderlyingAgreementPayload should create the correct payl
   "facilities": [
     {
       "apply70Rule": {
-        "energyConsumed": 50,
-        "energyConsumedEligible": 70,
-        "energyConsumedProvision": 40,
+        "energyConsumed": "50",
+        "energyConsumedEligible": "70",
+        "energyConsumedProvision": "40",
         "evidenceFile": "evidenceFile",
       },
       "eligibilityDetailsAndAuthorisation": {
@@ -69,9 +69,9 @@ exports[`createProposedUnderlyingAgreementPayload should create the correct payl
     },
     {
       "apply70Rule": {
-        "energyConsumed": 50,
-        "energyConsumedEligible": 70,
-        "energyConsumedProvision": 40,
+        "energyConsumed": "50",
+        "energyConsumedEligible": "70",
+        "energyConsumedProvision": "40",
         "evidenceFile": "evidenceFile",
       },
       "eligibilityDetailsAndAuthorisation": {
@@ -130,15 +130,15 @@ exports[`createProposedUnderlyingAgreementPayload should create the correct payl
     "details": {
       "baselineData": {
         "baselineDate": "2020-12-12T00:00:00.000Z",
-        "energy": 100,
-        "energyCarbonFactor": 1,
+        "energy": "100",
+        "energyCarbonFactor": "1",
         "explanation": "test",
         "greenfieldEvidences": [
           "f8dff40f-3fb7-4368-8723-244661fb686f",
         ],
         "isTwelveMonths": false,
-        "performance": 10,
-        "throughput": 10,
+        "performance": "10",
+        "throughput": "10",
         "usedReportingMechanism": true,
       },
       "targetComposition": {
@@ -147,14 +147,14 @@ exports[`createProposedUnderlyingAgreementPayload should create the correct payl
         "conversionEvidences": [
           "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
         ],
-        "conversionFactor": 1,
+        "conversionFactor": "1",
         "isTargetUnitThroughputMeasured": true,
         "measurementType": "ENERGY_KWH",
         "throughputUnit": "GJ",
       },
       "targets": {
-        "improvement": 0.1,
-        "target": 9,
+        "improvement": "0.1",
+        "target": "9",
       },
     },
     "exist": true,
@@ -162,15 +162,15 @@ exports[`createProposedUnderlyingAgreementPayload should create the correct payl
   "targetPeriod6Details": {
     "baselineData": {
       "baselineDate": "2020-12-12T00:00:00.000Z",
-      "energy": 100,
-      "energyCarbonFactor": 1,
+      "energy": "100",
+      "energyCarbonFactor": "1",
       "explanation": "test",
       "greenfieldEvidences": [
         "f8dff40f-3fb7-4368-8723-244661fb686f",
       ],
       "isTwelveMonths": false,
-      "performance": 10,
-      "throughput": 10,
+      "performance": "10",
+      "throughput": "10",
       "usedReportingMechanism": true,
     },
     "targetComposition": {
@@ -179,14 +179,14 @@ exports[`createProposedUnderlyingAgreementPayload should create the correct payl
       "conversionEvidences": [
         "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
       ],
-      "conversionFactor": 1,
+      "conversionFactor": "1",
       "isTargetUnitThroughputMeasured": true,
       "measurementType": "ENERGY_KWH",
       "throughputUnit": "GJ",
     },
     "targets": {
-      "improvement": 0.1,
-      "target": 9,
+      "improvement": "0.1",
+      "target": "9",
     },
   },
   "underlyingAgreementTargetUnitDetails": {
@@ -231,15 +231,15 @@ exports[`createProposedUnderlyingAgreementPayload should create the correct payl
     "details": {
       "baselineData": {
         "baselineDate": "2020-12-12T00:00:00.000Z",
-        "energy": 100,
-        "energyCarbonFactor": 1,
+        "energy": "100",
+        "energyCarbonFactor": "1",
         "explanation": "test",
         "greenfieldEvidences": [
           "f8dff40f-3fb7-4368-8723-244661fb686f",
         ],
         "isTwelveMonths": false,
-        "performance": 10,
-        "throughput": 10,
+        "performance": "10",
+        "throughput": "10",
         "usedReportingMechanism": true,
       },
       "targetComposition": {
@@ -248,14 +248,14 @@ exports[`createProposedUnderlyingAgreementPayload should create the correct payl
         "conversionEvidences": [
           "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
         ],
-        "conversionFactor": 1,
+        "conversionFactor": "1",
         "isTargetUnitThroughputMeasured": true,
         "measurementType": "ENERGY_KWH",
         "throughputUnit": "GJ",
       },
       "targets": {
-        "improvement": 0.1,
-        "target": 9,
+        "improvement": "0.1",
+        "target": "9",
       },
     },
     "exist": true,
@@ -263,15 +263,15 @@ exports[`createProposedUnderlyingAgreementPayload should create the correct payl
   "targetPeriod6Details": {
     "baselineData": {
       "baselineDate": "2020-12-12T00:00:00.000Z",
-      "energy": 100,
-      "energyCarbonFactor": 1,
+      "energy": "100",
+      "energyCarbonFactor": "1",
       "explanation": "test",
       "greenfieldEvidences": [
         "f8dff40f-3fb7-4368-8723-244661fb686f",
       ],
       "isTwelveMonths": false,
-      "performance": 10,
-      "throughput": 10,
+      "performance": "10",
+      "throughput": "10",
       "usedReportingMechanism": true,
     },
     "targetComposition": {
@@ -280,14 +280,14 @@ exports[`createProposedUnderlyingAgreementPayload should create the correct payl
       "conversionEvidences": [
         "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
       ],
-      "conversionFactor": 1,
+      "conversionFactor": "1",
       "isTargetUnitThroughputMeasured": true,
       "measurementType": "ENERGY_KWH",
       "throughputUnit": "GJ",
     },
     "targets": {
-      "improvement": 0.1,
-      "target": 9,
+      "improvement": "0.1",
+      "target": "9",
     },
   },
   "underlyingAgreementTargetUnitDetails": {
@@ -330,9 +330,9 @@ exports[`createProposedUnderlyingAgreementPayload should handle mixed decisions 
   "facilities": [
     {
       "apply70Rule": {
-        "energyConsumed": 50,
-        "energyConsumedEligible": 70,
-        "energyConsumedProvision": 40,
+        "energyConsumed": "50",
+        "energyConsumedEligible": "70",
+        "energyConsumedProvision": "40",
         "evidenceFile": "evidenceFile",
       },
       "eligibilityDetailsAndAuthorisation": {
@@ -391,15 +391,15 @@ exports[`createProposedUnderlyingAgreementPayload should handle mixed decisions 
     "details": {
       "baselineData": {
         "baselineDate": "2020-12-12T00:00:00.000Z",
-        "energy": 100,
-        "energyCarbonFactor": 1,
+        "energy": "100",
+        "energyCarbonFactor": "1",
         "explanation": "test",
         "greenfieldEvidences": [
           "f8dff40f-3fb7-4368-8723-244661fb686f",
         ],
         "isTwelveMonths": false,
-        "performance": 10,
-        "throughput": 10,
+        "performance": "10",
+        "throughput": "10",
         "usedReportingMechanism": true,
       },
       "targetComposition": {
@@ -408,14 +408,14 @@ exports[`createProposedUnderlyingAgreementPayload should handle mixed decisions 
         "conversionEvidences": [
           "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
         ],
-        "conversionFactor": 1,
+        "conversionFactor": "1",
         "isTargetUnitThroughputMeasured": true,
         "measurementType": "ENERGY_KWH",
         "throughputUnit": "GJ",
       },
       "targets": {
-        "improvement": 0.1,
-        "target": 9,
+        "improvement": "0.1",
+        "target": "9",
       },
     },
     "exist": true,
@@ -423,15 +423,15 @@ exports[`createProposedUnderlyingAgreementPayload should handle mixed decisions 
   "targetPeriod6Details": {
     "baselineData": {
       "baselineDate": "2020-12-12T00:00:00.000Z",
-      "energy": 100,
-      "energyCarbonFactor": 1,
+      "energy": "100",
+      "energyCarbonFactor": "1",
       "explanation": "test",
       "greenfieldEvidences": [
         "f8dff40f-3fb7-4368-8723-244661fb686f",
       ],
       "isTwelveMonths": false,
-      "performance": 10,
-      "throughput": 10,
+      "performance": "10",
+      "throughput": "10",
       "usedReportingMechanism": true,
     },
     "targetComposition": {
@@ -440,14 +440,14 @@ exports[`createProposedUnderlyingAgreementPayload should handle mixed decisions 
       "conversionEvidences": [
         "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
       ],
-      "conversionFactor": 1,
+      "conversionFactor": "1",
       "isTargetUnitThroughputMeasured": true,
       "measurementType": "ENERGY_KWH",
       "throughputUnit": "GJ",
     },
     "targets": {
-      "improvement": 0.1,
-      "target": 9,
+      "improvement": "0.1",
+      "target": "9",
     },
   },
   "underlyingAgreementTargetUnitDetails": {
@@ -490,9 +490,9 @@ exports[`createProposedUnderlyingAgreementPayload should transform target unit d
   "facilities": [
     {
       "apply70Rule": {
-        "energyConsumed": 50,
-        "energyConsumedEligible": 70,
-        "energyConsumedProvision": 40,
+        "energyConsumed": "50",
+        "energyConsumedEligible": "70",
+        "energyConsumedProvision": "40",
         "evidenceFile": "evidenceFile",
       },
       "eligibilityDetailsAndAuthorisation": {
@@ -551,15 +551,15 @@ exports[`createProposedUnderlyingAgreementPayload should transform target unit d
     "details": {
       "baselineData": {
         "baselineDate": "2020-12-12T00:00:00.000Z",
-        "energy": 100,
-        "energyCarbonFactor": 1,
+        "energy": "100",
+        "energyCarbonFactor": "1",
         "explanation": "test",
         "greenfieldEvidences": [
           "f8dff40f-3fb7-4368-8723-244661fb686f",
         ],
         "isTwelveMonths": false,
-        "performance": 10,
-        "throughput": 10,
+        "performance": "10",
+        "throughput": "10",
         "usedReportingMechanism": true,
       },
       "targetComposition": {
@@ -568,14 +568,14 @@ exports[`createProposedUnderlyingAgreementPayload should transform target unit d
         "conversionEvidences": [
           "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
         ],
-        "conversionFactor": 1,
+        "conversionFactor": "1",
         "isTargetUnitThroughputMeasured": true,
         "measurementType": "ENERGY_KWH",
         "throughputUnit": "GJ",
       },
       "targets": {
-        "improvement": 0.1,
-        "target": 9,
+        "improvement": "0.1",
+        "target": "9",
       },
     },
     "exist": true,
@@ -583,15 +583,15 @@ exports[`createProposedUnderlyingAgreementPayload should transform target unit d
   "targetPeriod6Details": {
     "baselineData": {
       "baselineDate": "2020-12-12T00:00:00.000Z",
-      "energy": 100,
-      "energyCarbonFactor": 1,
+      "energy": "100",
+      "energyCarbonFactor": "1",
       "explanation": "test",
       "greenfieldEvidences": [
         "f8dff40f-3fb7-4368-8723-244661fb686f",
       ],
       "isTwelveMonths": false,
-      "performance": 10,
-      "throughput": 10,
+      "performance": "10",
+      "throughput": "10",
       "usedReportingMechanism": true,
     },
     "targetComposition": {
@@ -600,14 +600,14 @@ exports[`createProposedUnderlyingAgreementPayload should transform target unit d
       "conversionEvidences": [
         "1b2af8ce-4311-4a8c-9a2c-03d77b5a8fbb",
       ],
-      "conversionFactor": 1,
+      "conversionFactor": "1",
       "isTargetUnitThroughputMeasured": true,
       "measurementType": "ENERGY_KWH",
       "throughputUnit": "GJ",
     },
     "targets": {
-      "improvement": 0.1,
-      "target": 9,
+      "improvement": "0.1",
+      "target": "9",
     },
   },
   "underlyingAgreementTargetUnitDetails": {

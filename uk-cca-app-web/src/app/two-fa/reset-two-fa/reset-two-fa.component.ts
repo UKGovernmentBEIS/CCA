@@ -13,7 +13,6 @@ import { OperatorUsersService, RegulatorUsersService, SectorUsersService } from 
 @Component({
   selector: 'cca-reset-two-fa',
   templateUrl: './reset-two-fa.component.html',
-  standalone: true,
   imports: [PageHeadingComponent, PendingButtonDirective, ButtonDirective, RouterLink, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

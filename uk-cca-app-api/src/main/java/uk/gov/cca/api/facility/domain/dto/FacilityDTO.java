@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class FacilityDTO {
 
-    private String facilityId;
+    private String facilityBusinessId;
 }

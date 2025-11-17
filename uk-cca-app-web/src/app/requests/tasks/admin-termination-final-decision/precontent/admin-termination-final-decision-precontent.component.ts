@@ -18,7 +18,6 @@ import { ADMIN_TERMINATION_FINAL_DECISION_SUBTASK } from '../admin-termination-f
       </button>
     }
   `,
-  standalone: true,
   imports: [ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

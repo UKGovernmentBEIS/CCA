@@ -15,7 +15,6 @@ import { PageHeadingComponent } from '@netz/common/components';
       </div>
     </div>
   `,
-  standalone: true,
   imports: [RouterModule, PageHeadingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

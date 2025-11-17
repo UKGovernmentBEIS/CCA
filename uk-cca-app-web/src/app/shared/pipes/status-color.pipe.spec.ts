@@ -33,7 +33,6 @@ describe('StatusColorPipe', () => {
     expect(pipe.transform('closed')).toEqual('grey');
     expect(pipe.transform('new')).toEqual('grey');
 
-    expect(pipe.transform('cancelled', 'grey')).toEqual('grey');
-    expect(pipe.transform('cancelled', 'red')).toEqual('red');
+    expect(pipe.transform('cancelled')).toEqual('red');
   });
 });

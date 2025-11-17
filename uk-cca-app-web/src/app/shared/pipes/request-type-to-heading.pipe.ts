@@ -6,7 +6,7 @@ import {
 } from 'cca-api';
 import { RequestMetadata } from 'cca-api';
 
-@Pipe({ name: 'requestTypeToHeading', pure: true, standalone: true })
+@Pipe({ name: 'requestTypeToHeading', pure: true })
 export class RequestTypeToHeadingPipe implements PipeTransform {
   transform(value: string, metadata?: RequestMetadata): any {
     switch (value) {
@@ -30,6 +30,12 @@ export class RequestTypeToHeadingPipe implements PipeTransform {
 
       case 'PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING':
         return `PAT Report Submission ${(metadata as PerformanceAccountTemplateProcessingRequestMetadata).targetPeriodType} Final`;
+
+      case 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING':
+        return 'Migration';
+
+      case 'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING':
+        return 'Extension';
     }
   }
 }

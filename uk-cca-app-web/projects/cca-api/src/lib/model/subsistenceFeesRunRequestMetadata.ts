@@ -9,12 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { SubsistenceFeesRunCompletedRequestActionPayloadChargingYear } from './subsistenceFeesRunCompletedRequestActionPayloadChargingYear';
 import { MoaReport } from './moaReport';
 
 export interface SubsistenceFeesRunRequestMetadata {
   type?: string;
-  chargingYear?: SubsistenceFeesRunCompletedRequestActionPayloadChargingYear;
+  chargingYear?: number;
   sectorsReports?: Record<string, MoaReport>;
   accountsReports?: Record<string, MoaReport>;
   readonly sentInvoices?: number;

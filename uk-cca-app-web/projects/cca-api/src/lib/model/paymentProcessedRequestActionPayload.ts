@@ -15,7 +15,7 @@ export interface PaymentProcessedRequestActionPayload {
   paymentRefNum?: string;
   paymentDate?: string;
   paidByFullName?: string;
-  amount?: number;
+  amount?: string;
   status?: 'MARK_AS_PAID' | 'MARK_AS_RECEIVED' | 'COMPLETED' | 'CANCELLED';
   paymentMethod?: 'BANK_TRANSFER' | 'CREDIT_OR_DEBIT_CARD';
   receivedDate?: string;

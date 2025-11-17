@@ -1,9 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({
-  name: 'markingOfFacilitiesStatus',
-  standalone: true,
-})
+@Pipe({ name: 'markingOfFacilitiesStatus' })
 export class MarkingOfFacilitiesStatusPipe implements PipeTransform {
   transform(totalFacilities: number, paidFacilities: number): string {
     if (totalFacilities == null || paidFacilities == null) {

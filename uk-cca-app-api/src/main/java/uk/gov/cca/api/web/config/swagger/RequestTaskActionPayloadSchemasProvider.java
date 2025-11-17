@@ -4,8 +4,13 @@ import org.springframework.stereotype.Component;
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.AdminTerminationWithdrawSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaNotifyOperatorForDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerReviewDecisionRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataGenerateRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadProcessingRequestTaskActionPayload;
@@ -89,6 +94,16 @@ public class RequestTaskActionPayloadSchemasProvider extends SwaggerSchemasAbstr
         // PAT
         addResolvedShemas(PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class.getSimpleName(),
                 PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class);
+
+        // CCA3 Existing Facilities Migration
+        addResolvedShemas(Cca3ExistingFacilitiesMigrationAccountProcessingActivationSaveRequestTaskActionPayload.class.getSimpleName(),
+                Cca3ExistingFacilitiesMigrationAccountProcessingActivationSaveRequestTaskActionPayload.class);
+
+        // Facility Audit
+        addResolvedShemas(PreAuditReviewSubmitSaveRequestTaskActionPayload.class.getSimpleName(), PreAuditReviewSubmitSaveRequestTaskActionPayload.class);
+        addResolvedShemas(AuditDetailsCorrectiveActionsSubmitSaveRequestTaskActionPayload.class.getSimpleName(), AuditDetailsCorrectiveActionsSubmitSaveRequestTaskActionPayload.class);
+        addResolvedShemas(AuditTrackCorrectiveActionsSaveRequestTaskActionPayload.class.getSimpleName(), AuditTrackCorrectiveActionsSaveRequestTaskActionPayload.class);
+        addResolvedShemas(AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload.class.getSimpleName(), AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload.class);
     }
 
 }

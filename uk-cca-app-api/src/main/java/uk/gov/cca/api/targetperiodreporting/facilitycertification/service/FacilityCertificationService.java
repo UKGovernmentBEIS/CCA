@@ -10,7 +10,6 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertification;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationStatus;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.dto.FacilityCertificationDTO;
@@ -33,7 +32,6 @@ public class FacilityCertificationService {
     private static final FacilityCertificationMapper FACILITY_CERTIFICATION_MAPPER = Mappers.getMapper(FacilityCertificationMapper.class);
     
     private final FacilityCertificationRepository facilityCertificationRepository;
-    private final FacilityDataQueryService facilityDataQueryService;
     private final FacilityCertificationValidationService validatorService;
 
     @Transactional
@@ -112,7 +110,7 @@ public class FacilityCertificationService {
     }
 
     @Transactional
-    public void updateOrCreateFacilityCertificationStatus(String facilityId,
+    public void updateOrCreateFacilityCertificationStatus(Long facilityId,
                                                           FacilityCertificationStatusUpdateDTO statusUpdateDTO) {
 
         validatorService.validateFacilityCertificationByCertificationPeriod(
@@ -127,11 +125,11 @@ public class FacilityCertificationService {
                         () -> createFacilityCertification(facilityId, statusUpdateDTO));
     }
 
-    private void createFacilityCertification(String facilityId, FacilityCertificationStatusUpdateDTO updateDTO) {
+    private void createFacilityCertification(Long facilityId, FacilityCertificationStatusUpdateDTO updateDTO) {
 
         facilityCertificationRepository
                 .save(FACILITY_CERTIFICATION_MAPPER
-                        .toFacilityCertification(facilityDataQueryService.getIdByFacilityId(facilityId), updateDTO));
+                        .toFacilityCertification(facilityId, updateDTO));
     }
 
 }

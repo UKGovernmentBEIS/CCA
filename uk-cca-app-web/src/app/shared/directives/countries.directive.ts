@@ -1,25 +1,20 @@
-import { ChangeDetectorRef, Directive, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject, OnInit } from '@angular/core';
 
-import { map } from 'rxjs';
+import { map, of } from 'rxjs';
 
 import { SelectComponent } from '@netz/govuk-components';
-import { CountryService } from '@shared/services';
+import { COUNTRIES, UK_COUNTRY_CODES } from '@shared/services';
 import { Country } from '@shared/types';
 
 @Directive({
   selector: 'govuk-select[ccaCountries],[govuk-select][ccaCountries]',
-  standalone: true,
 })
 export class CountriesDirective implements OnInit {
-  constructor(
-    private readonly apiService: CountryService,
-    private readonly selectComponent: SelectComponent,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-  ) {}
+  private readonly selectComponent = inject(SelectComponent);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   ngOnInit() {
-    this.apiService
-      .getUkCountries()
+    of(COUNTRIES)
       .pipe(
         map((countries: Country[]) =>
           countries
@@ -45,8 +40,5 @@ export class CountriesDirective implements OnInit {
       });
   }
 
-  private isUkCountry = (countryCode: string) => {
-    const ukCountryCodes = ['GB-ENG', 'GB-NIR', 'GB-SCT', 'GB-WLS'];
-    return ukCountryCodes.includes(countryCode);
-  };
+  private isUkCountry = (countryCode: string) => UK_COUNTRY_CODES.includes(countryCode);
 }

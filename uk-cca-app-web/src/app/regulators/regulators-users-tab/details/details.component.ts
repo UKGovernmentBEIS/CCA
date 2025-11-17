@@ -31,7 +31,6 @@ import { tableColumns, tableRows } from './permissions-table-data';
 @Component({
   selector: 'cca-details',
   templateUrl: './details.component.html',
-  standalone: true,
   imports: [
     ErrorSummaryComponent,
     ReactiveFormsModule,

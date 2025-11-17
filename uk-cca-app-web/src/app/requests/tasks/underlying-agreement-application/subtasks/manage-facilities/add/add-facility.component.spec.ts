@@ -31,7 +31,7 @@ describe('AddFacilityComponent', () => {
         provideHttpClientTesting(),
         {
           provide: FacilityService,
-          useValue: { generateFacilityId: jest.fn() },
+          useValue: { generateFacilityBusinessId: jest.fn() },
         },
         {
           provide: TasksApiService,
@@ -78,8 +78,10 @@ describe('AddFacilityComponent', () => {
   });
 
   it('should handle form submission and navigate to contact details', () => {
-    const facilityId = 'TEST_F00001';
-    jest.spyOn(facilityService, 'generateFacilityId').mockReturnValue(of({ facilityId }));
+    const facilityBusinessId = 'TEST_F00001';
+    jest
+      .spyOn(facilityService, 'generateFacilityBusinessId')
+      .mockReturnValue(of({ facilityBusinessId: facilityBusinessId }));
     jest.spyOn(tasksApiService, 'saveRequestTaskAction').mockReturnValue(of({}));
     jest.spyOn(router, 'navigate');
 
@@ -105,8 +107,8 @@ describe('AddFacilityComponent', () => {
       }),
     );
 
-    expect(facilityService.generateFacilityId).toHaveBeenCalled();
+    expect(facilityService.generateFacilityBusinessId).toHaveBeenCalled();
     expect(tasksApiService.saveRequestTaskAction).toHaveBeenCalled();
-    expect(router.navigate).toHaveBeenCalledWith(['../', facilityId, 'contact-details'], expect.any(Object));
+    expect(router.navigate).toHaveBeenCalledWith(['../', facilityBusinessId, 'contact-details'], expect.any(Object));
   });
 });

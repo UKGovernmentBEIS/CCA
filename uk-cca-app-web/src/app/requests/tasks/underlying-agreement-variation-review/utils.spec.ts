@@ -12,6 +12,7 @@ import { createProposedUnderlyingAgreementVariationPayload } from './utils';
 const basePayload: UnderlyingAgreementVariationReviewRequestTaskPayload = {
   originalUnderlyingAgreementContainer: mockOriginalUnderlyingAgreementContainer,
   underlyingAgreement: mockUnderlyingAgreementVariation,
+  reviewSectionsCompleted: { 'ADS_1-F00005': 'UNCHANGED' },
   reviewGroupDecisions: {
     VARIATION_DETAILS: { type: 'REJECTED', details: {} },
     TARGET_UNIT_DETAILS: { type: 'ACCEPTED' },

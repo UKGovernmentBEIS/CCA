@@ -48,9 +48,11 @@ const activatedPayloadDTO: UnderlyingAgreementActivatedRequestActionPayload = {
     evidenceFiles: [],
   },
   underlyingAgreementActivationAttachments: {},
-  underlyingAgreementDocument: {
-    name: 'underlying-agreement.pdf',
-    uuid: 'abcd-1234',
+  underlyingAgreementDocuments: {
+    CCA_2: {
+      name: 'underlying-agreement.pdf',
+      uuid: 'abcd-1234',
+    },
   },
 };
 

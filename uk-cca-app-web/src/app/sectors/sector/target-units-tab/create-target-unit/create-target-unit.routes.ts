@@ -17,35 +17,38 @@ export const CREATE_TARGET_UNIT_ROUTES: Routes = [
     canDeactivate: [ResetCreateUnitAccountStore],
     children: [
       {
-        path: 'target-unit-details',
+        path: 'company-registration-number',
         data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
-          import('../create-target-unit/create-target-unit.component').then((c) => c.CreateTargetUnitComponent),
+          import('./company-registration-number/company-registration-number.component').then(
+            (c) => c.CompanyRegistrationNumberComponent,
+          ),
+      },
+      {
+        path: 'target-unit-details',
+        data: { backlink: '../company-registration-number', breadcrumb: false },
+        loadComponent: () => import('./create-target-unit.component').then((c) => c.CreateTargetUnitComponent),
       },
       {
         path: 'operator-address',
         data: { backlink: '../target-unit-details', breadcrumb: false },
         canActivate: [CanActivateTargetUnitCreationStep],
         loadComponent: () =>
-          import('../create-target-unit/operator-address/operator-address.component').then(
-            (c) => c.OperatorAddressComponent,
-          ),
+          import('./operator-address/operator-address.component').then((c) => c.OperatorAddressComponent),
       },
       {
         path: 'responsible-person',
         data: { backlink: '../operator-address', breadcrumb: false },
         canActivate: [CanActivateTargetUnitCreationStep],
         loadComponent: () =>
-          import('../create-target-unit/responsible-person/responsible-person.component').then(
-            (c) => c.ResponsiblePersonComponent,
-          ),
+          import('./responsible-person/responsible-person.component').then((c) => c.ResponsiblePersonComponent),
       },
       {
         path: 'administrative-contact',
         data: { backlink: '../responsible-person', breadcrumb: false },
         canActivate: [CanActivateTargetUnitCreationStep],
         loadComponent: () =>
-          import('../create-target-unit/administrative-contact/administrative-contact.component').then(
+          import('./administrative-contact/administrative-contact.component').then(
             (c) => c.AdministrativeContactComponent,
           ),
       },
@@ -59,12 +62,11 @@ export const CREATE_TARGET_UNIT_ROUTES: Routes = [
       {
         path: 'confirmation',
         data: { breadcrumb: false },
-        loadComponent: () =>
-          import('../create-target-unit/confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
+        loadComponent: () => import('./confirmation/confirmation.component').then((c) => c.ConfirmationComponent),
       },
       {
         path: '**',
-        redirectTo: 'target-unit-details',
+        redirectTo: 'company-registration-number',
       },
     ],
   },

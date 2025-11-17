@@ -14,7 +14,7 @@ import {
   NotifyOperatorOfDecisionFormProvider,
   TasksApiService,
   toDecisionNotification,
-  transform,
+  transformAccountReferenceData,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
@@ -35,7 +35,6 @@ import { createProposedUnderlyingAgreementPayload } from '../utils';
 @Component({
   selector: 'cca-notify-operator',
   templateUrl: './notify-operator.component.html',
-  standalone: true,
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -101,7 +100,7 @@ export class NotifyOperatorComponent {
 
     const targetUnitDetails = this.store.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)();
 
-    const originalResponsiblePerson = transform(accountReferenceData).responsiblePersonDetails;
+    const originalResponsiblePerson = transformAccountReferenceData(accountReferenceData).responsiblePersonDetails;
 
     if (tudDecision === 'REJECTED') {
       recipients.push({

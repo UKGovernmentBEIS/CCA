@@ -6,8 +6,13 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadTy
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.submit.domain.AdminTerminationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.withdraw.domain.AdminTerminationWithdrawSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaNotifyOperatorForDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerReviewDecisionRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataGenerateRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadProcessingRequestTaskActionPayload;
@@ -35,6 +40,11 @@ import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPa
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.ADMIN_TERMINATION_SAVE_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.ADMIN_TERMINATION_SUBMIT_PEER_REVIEW_DECISION_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.ADMIN_TERMINATION_WITHDRAW_SAVE_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SAVE_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_SAVE_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SAVE_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.FACILITY_AUDIT_PRE_AUDIT_REVIEW_SAVE_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMIT_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.PERFORMANCE_DATA_DOWNLOAD_GENERATE_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.PERFORMANCE_DATA_UPLOAD_PROCESSING_PAYLOAD;
@@ -101,7 +111,17 @@ public class RequestTaskActionPayloadTypesProvider implements JsonSubTypesProvid
 
                 // PAT
                 new NamedType(PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload.class,
-                        CcaRequestTaskActionPayloadType.PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PROCESSING_PAYLOAD)
+                        CcaRequestTaskActionPayloadType.PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_PROCESSING_PAYLOAD),
+
+                // CCA3 Existing Facilities Migration
+                new NamedType(Cca3ExistingFacilitiesMigrationAccountProcessingActivationSaveRequestTaskActionPayload.class,
+                        CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_SAVE_PAYLOAD),
+
+                // Facility Audit
+                new NamedType(PreAuditReviewSubmitSaveRequestTaskActionPayload.class, FACILITY_AUDIT_PRE_AUDIT_REVIEW_SAVE_PAYLOAD),
+                new NamedType(AuditDetailsCorrectiveActionsSubmitSaveRequestTaskActionPayload.class, FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SAVE_PAYLOAD),
+                new NamedType(AuditTrackCorrectiveActionsSaveRequestTaskActionPayload.class, FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SAVE_PAYLOAD),
+                new NamedType(AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload.class, FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMIT_PAYLOAD)
         );
     }
 

@@ -11,11 +11,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       </strong>
     </div>
     <div class="govuk-hint">
-      Your workflow will be terminated and all its data will not be available for further processing. In addition, the
+      This workflow will be terminated and none of its data will be available for further processing. In addition, the
       target unit account will be closed.
     </div>
   `,
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementCancelTaskComponent {}

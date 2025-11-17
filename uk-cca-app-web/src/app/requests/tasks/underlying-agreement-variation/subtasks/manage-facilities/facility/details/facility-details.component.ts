@@ -4,8 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
+  applySchemeVersionsSideEffect,
   FacilityWizardStep,
-  isFacilityWizardCompleted,
+  isCCA2FacilityWizardCompleted,
+  isCCA3FacilityWizardCompleted,
+  isCCA3Scheme,
   TaskItemStatus,
   TasksApiService,
   underlyingAgreementQuery,
@@ -16,6 +19,7 @@ import {
 import { produce } from 'immer';
 
 import {
+  Facility,
   UnderlyingAgreementVariationApplySavePayload,
   UnderlyingAgreementVariationSubmitRequestTaskPayload,
 } from 'cca-api';
@@ -26,7 +30,6 @@ import { extractReviewProps } from '../../../../utils';
 @Component({
   selector: 'cca-facility-details',
   template: `<cca-variation-facility-details-form (submitChange)="onSubmit($event)" />`,
-  standalone: true,
   imports: [VariationFacilityDetailsFormComponent],
   providers: [VariationFacilityDetailsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,8 +53,12 @@ export class FacilityDetailsComponent {
 
     const actionPayload = toUnderlyingAgreementVariationSavePayload(payload);
 
-    // Update or add facility in the facilities array
-    const updatedPayload = this.update(actionPayload, form, this.facilityId);
+    let updatedPayload = updateFacilityDetails(actionPayload, form, this.facilityId);
+
+    updatedPayload = applySchemeVersionsSideEffect(
+      updatedPayload,
+      this.facilityId,
+    ) as UnderlyingAgreementVariationApplySavePayload;
 
     const currentSectionsCompleted =
       this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)() || {};
@@ -68,32 +75,47 @@ export class FacilityDetailsComponent {
       .saveRequestTaskAction(dto)
       .subscribe((payload: UnderlyingAgreementVariationSubmitRequestTaskPayload) => {
         const facility = payload.underlyingAgreement.facilities.find((f) => f.facilityId === this.facilityId);
-        if (isFacilityWizardCompleted(facility)) {
-          this.router.navigate(['../check-your-answers'], { relativeTo: this.activatedRoute });
-        } else {
-          this.router.navigate([`../${FacilityWizardStep.CONTACT_DETAILS}`], { relativeTo: this.activatedRoute });
-        }
+        this.router.navigate(nextRoute(facility), { relativeTo: this.activatedRoute });
       });
   }
+}
 
-  private update(
-    payload: UnderlyingAgreementVariationApplySavePayload,
-    form: FormGroup<VariationFacilityDetailsFormModel>,
-    facilityId: string,
-  ): UnderlyingAgreementVariationApplySavePayload {
-    return produce(payload, (draft) => {
-      const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
-      if (facilityIndex === -1) return;
+function updateFacilityDetails(
+  payload: UnderlyingAgreementVariationApplySavePayload,
+  form: FormGroup<VariationFacilityDetailsFormModel>,
+  facilityId: string,
+): UnderlyingAgreementVariationApplySavePayload {
+  return produce(payload, (draft) => {
+    const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
+    if (facilityIndex === -1) return;
 
-      draft.facilities[facilityIndex].facilityDetails = {
-        ...draft.facilities[facilityIndex].facilityDetails,
-        name: form.controls.name.value,
-        isCoveredByUkets: form.value.isCoveredByUkets,
-        uketsId: form.value.uketsId,
-        applicationReason: form.getRawValue().applicationReason,
-        previousFacilityId: form.getRawValue().previousFacilityId,
-        facilityAddress: form.getRawValue().facilityAddress,
-      };
-    });
+    const participatingSchemeVersions = form.value.participatingSchemeVersions;
+
+    draft.facilities[facilityIndex].facilityDetails = {
+      ...draft.facilities[facilityIndex].facilityDetails,
+      name: form.controls.name.value,
+      participatingSchemeVersions,
+      isCoveredByUkets: form.value.isCoveredByUkets,
+      uketsId: form.value.uketsId,
+      applicationReason: form.getRawValue().applicationReason,
+      previousFacilityId: form.getRawValue().previousFacilityId,
+      facilityAddress: form.getRawValue().facilityAddress,
+    };
+  });
+}
+
+function nextRoute(facility: Facility): string[] {
+  const schemeVersions = facility?.facilityDetails?.participatingSchemeVersions;
+
+  if (isCCA3Scheme(schemeVersions)) {
+    if (isCCA3FacilityWizardCompleted(facility)) return ['../check-your-answers'];
+
+    return isCCA2FacilityWizardCompleted(facility)
+      ? ['../', FacilityWizardStep.TARGET_COMPOSITION]
+      : ['../', FacilityWizardStep.CONTACT_DETAILS];
   }
+
+  return isCCA2FacilityWizardCompleted(facility)
+    ? ['../check-your-answers']
+    : ['../', FacilityWizardStep.CONTACT_DETAILS];
 }

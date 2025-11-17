@@ -53,14 +53,14 @@ public class FacilityCertificationParser {
             return;
         }
         
-        String facilityId = parseFacilityId(columns[0], lineErrors);
+        String facilityBusinessId = parseFacilityId(columns[0], lineErrors);
         FacilityCertificationStatus status = parseStatus(columns[1], lineErrors);
         LocalDate startDate = !Objects.equals(columns[2].trim(), "") ? parseDate(columns[2], lineErrors) : null;
         CertificationPeriodType certificationPeriodType = parseCertificationPeriod(columns[3], lineErrors);
         
         if (lineErrors.isEmpty()) {
             validRecords.add(FacilityCertificationVO.builder()
-                    .facilityId(facilityId)
+                    .facilityBusinessId(facilityBusinessId)
                     .certificationStatus(status)
                     .startDate(startDate)
                     .certificationPeriodType(certificationPeriodType)
@@ -73,12 +73,12 @@ public class FacilityCertificationParser {
         }
     }
     
-    private static String parseFacilityId(String facilityId, List<String> errors) {
-        if (StringUtils.isBlank(facilityId)) {
+    private static String parseFacilityId(String facilityBusinessId, List<String> errors) {
+        if (StringUtils.isBlank(facilityBusinessId)) {
             errors.add("Facility ID cannot be empty");
             return null;
         }
-        return facilityId.trim();
+        return facilityBusinessId.trim();
     }
     
     private static FacilityCertificationStatus parseStatus(String status, List<String> errors) {
