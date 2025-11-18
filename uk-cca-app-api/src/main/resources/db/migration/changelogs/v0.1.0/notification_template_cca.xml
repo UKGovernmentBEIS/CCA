@@ -877,15 +877,6 @@ This is an automatic email - please do not reply to this address.'
         </customChange>
     </changeSet>
 
-    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_template_with_workflow_data" author="P70383">
-        <comment>Update AIT_L001_Administrative_Termination.docx</comment>
-        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
-            <param name="competentAuthority" value="ENGLAND"/>
-            <param name="type" value="UNDERLYING_AGREEMENT"/>
-            <param name="fileDocumentName" value="Updated UnA template - v03.docx"/>
-        </customChange>
-    </changeSet>
-
     <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_REJECTED_template_with_workflow_data" author="P70383">
         <comment>Update AIT_L001_Administrative_Termination.docx</comment>
         <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
@@ -994,14 +985,7 @@ This is an automatic email - please do not reply to this address.'
             <param name="fileDocumentName" value="CR_L002_Variation_Approved.docx"/>
         </customChange>
     </changeSet>
-    <changeSet id="0_1_0_update_Updated_UnA_template-v03_document_info" author="P70628">
-        <comment>Update Updated UnA template - v03.docx</comment>
-        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
-            <param name="competentAuthority" value="ENGLAND"/>
-            <param name="type" value="UNDERLYING_AGREEMENT"/>
-            <param name="fileDocumentName" value="Updated UnA template - v03.docx"/>
-        </customChange>
-    </changeSet>
+
     <changeSet id="0_1_0_update_Withdrawal_of_termination_letter_document_info" author="P70628">
         <comment>Update Withdrawal of termination letter.docx</comment>
         <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
@@ -1177,15 +1161,6 @@ This is an automatic email - please do not reply to this address.'
             <param name="competentAuthority" value="ENGLAND"/>
             <param name="type" value="REPORTING_SPREADSHEETS_DOWNLOAD_TP6"/>
             <param name="fileDocumentName" value="Consolidated target reporting template (blank).xlsx"/>
-        </customChange>
-    </changeSet>
-
-    <changeSet id="0_1_1_Updated_UnA_template_fix_usedReportingMechanism" author="vourdoukasd@unisystems.gr">
-        <comment>Update Updated UnA template - v03.docx</comment>
-        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
-            <param name="competentAuthority" value="ENGLAND"/>
-            <param name="type" value="UNDERLYING_AGREEMENT"/>
-            <param name="fileDocumentName" value="Updated UnA template - v03.docx"/>
         </customChange>
     </changeSet>
 
@@ -1423,14 +1398,6 @@ This is an automatic email - please do not reply to this address.')
             delete from file_document_template
             where ctid IN (select ctid FROM file_document_template where file_name = 'L003_Secondary Buy-Out Overpayment Letter v01.docx' order by id desc limit 1);
         </rollback>
-    </changeSet>
-    
-    <changeSet id="0_1_0_update_target_percentage_in_UNDERLYING_AGREEMENT_template" author="apostolouk@unisystems.gr">
-        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
-            <param name="competentAuthority" value="ENGLAND"/>
-            <param name="type" value="UNDERLYING_AGREEMENT"/>
-            <param name="fileDocumentName" value="Updated UnA template - v03.docx"/>
-        </customChange>
     </changeSet>
 
     <changeSet id="0_1_0_update_SECONDARY_BUY_OUT_document_template_change_invoicedTotalBuyoutFee" author="P70383">
@@ -1736,15 +1703,6 @@ This is an automatic email - please do not reply to this address.')
             <param name="fileDocumentName" value="SC_L002_Sector_MoA.docx"/>
         </customChange>
     </changeSet>
-    
-    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_document_template_sector_variables" author="apostolouk@unisystems.gr">
-        <comment>Update sector variables for Updated UnA template - v03.docx</comment>
-        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
-            <param name="competentAuthority" value="ENGLAND"/>
-            <param name="type" value="UNDERLYING_AGREEMENT"/>
-            <param name="fileDocumentName" value="Updated UnA template - v03.docx"/>
-        </customChange>
-    </changeSet>
 
     <changeSet id="0_1_0_UPDATE_DOCUMENT_TEMPLATE_notification_template_id" author="P70311">
         <comment>Update notification template id for Target Unit MoA document</comment>
@@ -1764,15 +1722,6 @@ This is an automatic email - please do not reply to this address.')
                 WHERE type = 'TARGET_UNIT_MOA' and nt.name = 'GenericSectorEmailTemplate';
             </sql>
         </rollback>
-    </changeSet>
-
-    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_document_template_with_CCA2_extension" author="P70383">
-        <comment>Update CCA2 extension date for Updated UnA template - v03.docx</comment>
-        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
-            <param name="competentAuthority" value="ENGLAND"/>
-            <param name="type" value="UNDERLYING_AGREEMENT"/>
-            <param name="fileDocumentName" value="Updated UnA template - v03.docx"/>
-        </customChange>
     </changeSet>
     
     <changeSet id="0_1_0_UPDATE_DOCUMENT_TEMPLATE_for_underlying_agreement_CCA2" author="apostolouk@unisystems.gr">

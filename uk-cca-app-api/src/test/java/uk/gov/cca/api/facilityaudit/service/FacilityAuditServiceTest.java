@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.authorization.ccaauth.rules.services.resource.FacilityAuthorizationResourceService;
 import uk.gov.cca.api.facilityaudit.domain.FacilityAudit;
 import uk.gov.cca.api.facilityaudit.domain.FacilityAuditReasonType;
+import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditDTO;
 import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditViewDTO;
 import uk.gov.cca.api.facilityaudit.repository.FacilityAuditRepository;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -124,10 +125,28 @@ class FacilityAuditServiceTest {
 
 		Set<Long> auditRequiredFacilityIds = service.getAuditRequiredFacilityIds(Set.of(1L, 2L));
 
-		assertNotNull(auditRequiredFacilityIds);
-		assertEquals(1, auditRequiredFacilityIds.size());
-		assertTrue(auditRequiredFacilityIds.contains(1L));
-		verify(repository, times(1))
-				.findAllByAuditRequiredIsTrueAndFacilityIdIn(Set.of(1L, 2L));
-	}
+        assertNotNull(auditRequiredFacilityIds);
+        assertEquals(1, auditRequiredFacilityIds.size());
+        assertTrue(auditRequiredFacilityIds.contains(1L));
+        verify(repository, times(1))
+                .findAllByAuditRequiredIsTrueAndFacilityIdIn(Set.of(1L, 2L));
+    }
+
+    @Test
+    void getFacilityAuditByFacilityId() {
+        final Long facilityId = 123L;
+        final FacilityAudit facilityAudit = FacilityAudit.builder()
+                .facilityId(facilityId)
+                .comments("Comments")
+                .reasons(List.of(FacilityAuditReasonType.ELIGIBILITY, FacilityAuditReasonType.SEVENTY_RULE_EVALUATION))
+                .build();
+
+        when(repository.findFacilityAuditByFacilityId(facilityId)).thenReturn(Optional.of(facilityAudit));
+
+        final FacilityAuditDTO result = service.getFacilityAuditByFacilityId(facilityId);
+
+        assertNotNull(result);
+        assertEquals(facilityAudit.getComments(), result.getComments());
+        assertEquals(facilityAudit.getReasons(), result.getReasons());
+    }
 }

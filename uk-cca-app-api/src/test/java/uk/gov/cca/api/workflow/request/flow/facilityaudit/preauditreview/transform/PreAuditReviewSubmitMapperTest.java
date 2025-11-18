@@ -6,11 +6,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.facilityaudit.domain.FacilityAuditReasonType;
+import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditDTO;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
-import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewDetails;
-import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.AuditReasonDetails;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.AuditDetermination;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.AuditReasonDetails;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewDetails;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.RequestedDocuments;
@@ -60,5 +61,20 @@ class PreAuditReviewSubmitMapperTest {
         assertThat(requestTaskPayload.getPreAuditReviewDetails())
                 .isEqualTo(requestActionPayload.getPreAuditReviewDetails());
         assertThat(requestActionPayload.getAttachments()).isEqualTo(requestTaskPayload.getAttachments());
+    }
+
+    @Test
+    void toPreAuditReviewDetails() {
+        final FacilityAuditDTO facilityAuditDTO = FacilityAuditDTO.builder()
+                .reasons(List.of(FacilityAuditReasonType.NON_COMPLIANCE, FacilityAuditReasonType.ELIGIBILITY))
+                .comments("bla bla bla")
+                .build();
+
+        PreAuditReviewDetails preAuditReviewDetails = mapper.toPreAuditReviewDetails(facilityAuditDTO);
+
+        assertThat(preAuditReviewDetails).isNotNull();
+        assertThat(preAuditReviewDetails.getAuditReasonDetails()).isNotNull();
+        assertThat(preAuditReviewDetails.getAuditReasonDetails().getReasonsForAudit()).isEqualTo(facilityAuditDTO.getReasons());
+        assertThat(preAuditReviewDetails.getAuditReasonDetails().getComment()).isEqualTo(facilityAuditDTO.getComments());
     }
 }

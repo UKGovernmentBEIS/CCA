@@ -2,6 +2,8 @@ package uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.transf
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditDTO;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewDetails;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmittedRequestActionPayload;
 import uk.gov.netz.api.common.config.MapperConfig;
@@ -11,4 +13,8 @@ public interface PreAuditReviewSubmitMapper {
 
     @Mapping(target = "payloadType", expression = "java(uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED_PAYLOAD)")
     PreAuditReviewSubmittedRequestActionPayload toPreAuditReviewSubmittedRequestActionPayload(PreAuditReviewSubmitRequestTaskPayload taskPayload);
+
+    @Mapping(target = "auditReasonDetails.reasonsForAudit", source = "facilityAudit.reasons")
+    @Mapping(target = "auditReasonDetails.comment", source = "facilityAudit.comments")
+    PreAuditReviewDetails toPreAuditReviewDetails(FacilityAuditDTO facilityAudit);
 }

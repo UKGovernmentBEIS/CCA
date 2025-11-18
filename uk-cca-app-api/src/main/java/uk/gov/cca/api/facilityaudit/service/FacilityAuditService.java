@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaScope;
 import uk.gov.cca.api.authorization.ccaauth.rules.services.resource.FacilityAuthorizationResourceService;
 import uk.gov.cca.api.facilityaudit.domain.FacilityAudit;
+import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditDTO;
 import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditUpdateDTO;
 import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditViewDTO;
 import uk.gov.cca.api.facilityaudit.repository.FacilityAuditRepository;
@@ -37,6 +38,11 @@ public class FacilityAuditService {
 				.auditRequired(facilityAudit.isAuditRequired())
 				.editable(isEditable)
 				.build();
+	}
+
+	public FacilityAuditDTO getFacilityAuditByFacilityId(Long facilityId) {
+		final FacilityAudit facilityAudit = this.getOrInitializeFacilityAuditByFacilityId(facilityId);
+		return FACILITY_AUDIT_MAPPER.toFacilityAuditDTO(facilityAudit);
 	}
 
 	public void createOrUpdateFacilityAudit(Long facilityId, FacilityAuditUpdateDTO dto, String userId) {
