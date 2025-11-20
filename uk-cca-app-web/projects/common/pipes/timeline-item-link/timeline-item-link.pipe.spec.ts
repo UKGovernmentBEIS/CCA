@@ -147,6 +147,11 @@ describe('TimelineItemLinkPipe', () => {
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 
+  it('should return link for Facility pre-audit review', () => {
+    requestAction.type = 'FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+  });
+
   it('should return link for payment', () => {
     requestAction.type = 'PAYMENT_MARKED_AS_PAID';
     expect(pipe.transform(requestAction)).toEqual(['/payment', 'actions', requestAction.id, 'paid']);

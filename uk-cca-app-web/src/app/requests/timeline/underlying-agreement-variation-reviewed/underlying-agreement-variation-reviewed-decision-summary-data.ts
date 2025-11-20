@@ -70,7 +70,7 @@ function addSummaryDataToFactory(
 
   if ('underlyingAgreementDocuments' in payload) {
     factory.addFileListRow(
-      'Official notice',
+      'Official notices',
       fileUtils.toDownloadableDocument(
         [...Object.values(payload.underlyingAgreementDocuments), ...payload.officialNotices],
         'file-download',

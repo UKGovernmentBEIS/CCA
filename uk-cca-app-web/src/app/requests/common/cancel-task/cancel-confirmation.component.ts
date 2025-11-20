@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
+import { CancelConfirmationComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 
 import { AdminTerminationCancelTaskConfirmationComponent } from './admin-termination/confirmation/admin-termination-cancel-confirmation.component';
@@ -17,11 +18,12 @@ import { UnderlyingAgreementVariationConfirmationComponent } from './underlying-
     UnderlyingAgreementVariationSubmitConfirmationComponent,
     UnderlyingAgreementVariationConfirmationComponent,
     Cca3MigrationAccountActivationCancelConfirmationComponent,
+    CancelConfirmationComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CancelTaskConfirmationComponent {
   private readonly store = inject(RequestTaskStore);
 
-  protected readonly requestTaskType = this.store.select(requestTaskQuery.selectRequestTaskType)();
+  protected readonly requestTaskType = this.store.select(requestTaskQuery.selectRequestTaskType);
 }

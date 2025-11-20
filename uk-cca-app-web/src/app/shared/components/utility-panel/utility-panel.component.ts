@@ -10,21 +10,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       <ng-content />
     </div>
   `,
-  styles: `
-    .utility-panel-container {
-      border: 1px solid var(--govuk-border-colour);
-      padding: var(--govuk-spacing-0) var(--govuk-spacing-3) var(--govuk-spacing-1) var(--govuk-spacing-3);
-    }
-
-    .utility-panel-header {
-      padding: var(--govuk-spacing-4);
-      font-weight: bold;
-    }
-
-    .background {
-      background: var(--govuk-light-grey);
-    }
-  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UtilityPanelComponent {

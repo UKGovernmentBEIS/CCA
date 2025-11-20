@@ -5,17 +5,28 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.gov.cca.api.common.domain.MeasurementType;
+import uk.gov.cca.api.migration.ftp.FtpFileDTOResult;
+import uk.gov.cca.api.migration.ftp.FtpFileGenericException;
+import uk.gov.cca.api.migration.ftp.FtpFileService;
+import uk.gov.cca.api.migration.ftp.FtpProperties;
+import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,98 +36,163 @@ class Cca3SectorAssociationMigrationServiceTest {
 	private Cca3SectorAssociationMigrationService migrationService;
 
 	@Mock
-	private Cca3SectorAssociationMigrationValidationService validationService;
+	private FtpProperties ftpProperties;
 
 	@Mock
-	private Cca3SectorAssociationMigrationMapper mapper;
+	private FtpFileService ftpFileService;
+
+	@Mock
+	private Cca3SectorAssociationMigrationValidationService validationService;
 
 	@Mock
 	private Cca3SectorAssociationMigrationUpdateService updateService;
 
 	@Test
 	void migrate() {
-		final String input = "2|ADS_53|SUBSECTOR_3|Energy (kWh)|100|23|100|28/11/2023;" +
-				"3|ADS_1||Energy (MWh)|0|0|0|28/11/2023;";
-		final LocalDate umaDate = LocalDate.of(2023, 11, 28);
-		final Cca3SectorAssociationVO vo1 = Cca3SectorAssociationVO.builder()
-				.rowNumber(2L)
-				.sectorAcronym("ADS_53")
-				.subsectorName("SUBSECTOR_3")
-				.measurementType(MeasurementType.ENERGY_KWH)
-				.targetPeriod7Improvement(BigDecimal.ONE)
-				.targetPeriod8Improvement(BigDecimal.valueOf(0.23))
-				.targetPeriod9Improvement(BigDecimal.ONE)
-				.umaDate(umaDate)
+		final String directory = "directory";
+		final String sourceFile = "migration.csv";
+		final String filePath = directory + "/" + sourceFile;
+		final String content = "sector_acronym,subsector_name,energy_or_carbon_unit,tp7_improvement,tp8_improvement,tp9_improvement,uma_date,sector_definition\n"
+				+ "ADS_11,SUBSECTOR_1,Energy (kWh),2.000%,3.000%,4.000%,01/01/2026,sector definition";
+
+		final FtpFileDTOResult fileDTOResult = FtpFileDTOResult.builder()
+				.fileDTO(FileDTO.builder()
+						.fileName(sourceFile)
+						.fileContent(content.getBytes())
+						.build())
 				.build();
+		final List<Cca3SectorAssociationVO> dataList = List.of(
+				Cca3SectorAssociationVO.builder()
+						.sectorAcronym("ADS_11")
+						.subsectorName("SUBSECTOR_1")
+						.measurementType(MeasurementType.ENERGY_KWH)
+						.targetPeriod7Improvement(BigDecimal.valueOf(2).setScale(7, RoundingMode.HALF_DOWN))
+						.targetPeriod8Improvement(BigDecimal.valueOf(3).setScale(7, RoundingMode.HALF_DOWN))
+						.targetPeriod9Improvement(BigDecimal.valueOf(4).setScale(7, RoundingMode.HALF_DOWN))
+						.umaDate(LocalDate.of(2026, 1, 1))
+						.sectorDefinition("sector definition")
+						.build()
+		);
 
-		final Cca3SectorAssociationVO vo2 = Cca3SectorAssociationVO.builder()
-				.rowNumber(3L)
-				.sectorAcronym("ADS_1")
-				.subsectorName("")
-				.measurementType(MeasurementType.ENERGY_MWH)
-				.targetPeriod7Improvement(BigDecimal.ZERO)
-				.targetPeriod8Improvement(BigDecimal.ZERO)
-				.targetPeriod9Improvement(BigDecimal.ZERO)
-				.umaDate(LocalDate.of(2023, 11, 25))
-				.build();
+		when(ftpProperties.getServerCca3SectorAssociationMigrationDirectory()).thenReturn(directory);
+		when(ftpProperties.getServerCca3SectorAssociationMigrationSourceFile()).thenReturn(sourceFile);
+		when(ftpFileService.fetchFile(filePath)).thenReturn(fileDTOResult);
 
-		List<String> failedEntries = new ArrayList<>();
+		// Invoke
+		List<String> result = migrationService.migrate("");
 
-		when(mapper.toSectorAssociationVOList(input, failedEntries))
-				.thenReturn(List.of(vo1, vo2));
-
-		List<String> result = migrationService.migrate(input);
-
-		verify(validationService, times(1))
-				.validate(List.of(vo1, vo2), failedEntries);
-		verify(updateService, times(1))
-				.updateSectorAssociationDataList(List.of(vo1, vo2));
-		assertEquals(List.of(), result);
+		// Verify
+		assertThat(result).isEmpty();
+		verify(ftpProperties, times(1)).getServerCca3SectorAssociationMigrationDirectory();
+		verify(ftpProperties, times(1)).getServerCca3SectorAssociationMigrationSourceFile();
+		verify(ftpFileService, times(1)).fetchFile(filePath);
+		verify(validationService, times(1)).validate(dataList, new ArrayList<>());
+		verify(updateService, times(1)).updateSectorAssociationDataList(dataList);
 	}
 
 	@Test
-	void migrate_input_empty_fails() {
-		final String input = "";
+	void migrate_with_errors() {
+		final String directory = "directory";
+		final String sourceFile = "migration.csv";
+		final String filePath = directory + "/" + sourceFile;
+		final String content = "sector_acronym,subsector_name,energy_or_carbon_unit,tp7_improvement,tp8_improvement,tp9_improvement,uma_date,sector_definition\n"
+				+ ",SUBSECTOR_1,Energy (kWh),2.000%,3.000%,4.000%,01/01/2026,sector definition";
 
-		List<String> result = migrationService.migrate(input);
+		final FtpFileDTOResult fileDTOResult = FtpFileDTOResult.builder()
+				.fileDTO(FileDTO.builder()
+						.fileName(sourceFile)
+						.fileContent(content.getBytes())
+						.build())
+				.build();
 
-		assertEquals(1, result.size());
-		assertEquals("Please insert details for at least one sector association", result.getFirst());
+		when(ftpProperties.getServerCca3SectorAssociationMigrationDirectory()).thenReturn(directory);
+		when(ftpProperties.getServerCca3SectorAssociationMigrationSourceFile()).thenReturn(sourceFile);
+		when(ftpFileService.fetchFile(filePath)).thenReturn(fileDTOResult);
+
+		// Invoke
+		List<String> result = migrationService.migrate("");
+
+		// Verify
+		assertThat(result).containsExactly("[2] Field 'sectorAcronym' is mandatory but no value was provided.");
+		verify(ftpProperties, times(1)).getServerCca3SectorAssociationMigrationDirectory();
+		verify(ftpProperties, times(1)).getServerCca3SectorAssociationMigrationSourceFile();
+		verify(ftpFileService, times(1)).fetchFile(filePath);
+		verify(validationService, times(1)).validate(anyList(), anyList());
+		verifyNoInteractions(updateService);
 	}
 
 	@Test
 	void migrate_throw_error() {
-		final String input = "input";
-		final Cca3SectorAssociationVO vo1 = Cca3SectorAssociationVO.builder()
-				.rowNumber(2L)
-				.sectorAcronym("ADS_53")
-				.subsectorName("SUBSECTOR_3")
-				.measurementType(MeasurementType.ENERGY_KWH)
-				.targetPeriod7Improvement(BigDecimal.ONE)
-				.targetPeriod8Improvement(BigDecimal.valueOf(0.23))
-				.targetPeriod9Improvement(BigDecimal.ONE)
-				.umaDate(LocalDate.of(2023, 11, 28))
+		final String directory = "directory";
+		final String sourceFile = "migration.csv";
+		final String filePath = directory + "/" + sourceFile;
+		final String content = "sector_acronym,subsector_name,energy_or_carbon_unit,tp7_improvement,tp8_improvement,tp9_improvement,uma_date,sector_definition\n"
+				+ "ADS_11,SUBSECTOR_1,Energy (kWh),2.000%,3.000%,4.000%,01/01/2026,sector definition";
+
+		final FtpFileDTOResult fileDTOResult = FtpFileDTOResult.builder()
+				.fileDTO(FileDTO.builder()
+						.fileName(sourceFile)
+						.fileContent(content.getBytes())
+						.build())
 				.build();
-		List<Cca3SectorAssociationVO> voList = List.of(vo1);
+		final List<Cca3SectorAssociationVO> dataList = List.of(
+				Cca3SectorAssociationVO.builder()
+						.sectorAcronym("ADS_11")
+						.subsectorName("SUBSECTOR_1")
+						.measurementType(MeasurementType.ENERGY_KWH)
+						.targetPeriod7Improvement(BigDecimal.valueOf(2).setScale(7, RoundingMode.HALF_DOWN))
+						.targetPeriod8Improvement(BigDecimal.valueOf(3).setScale(7, RoundingMode.HALF_DOWN))
+						.targetPeriod9Improvement(BigDecimal.valueOf(4).setScale(7, RoundingMode.HALF_DOWN))
+						.umaDate(LocalDate.of(2026, 1, 1))
+						.sectorDefinition("sector definition")
+						.build()
+		);
 
-		when(mapper.toSectorAssociationVOList(input, new ArrayList<>()))
-				.thenReturn(voList);
-		doThrow(new RuntimeException("Error exception"))
-				.when(updateService).updateSectorAssociationDataList(voList);
+		when(ftpProperties.getServerCca3SectorAssociationMigrationDirectory()).thenReturn(directory);
+		when(ftpProperties.getServerCca3SectorAssociationMigrationSourceFile()).thenReturn(sourceFile);
+		when(ftpFileService.fetchFile(filePath)).thenReturn(fileDTOResult);
+		doThrow(new RuntimeException("Error exception")).when(updateService).updateSectorAssociationDataList(dataList);
 
-		List<String> result = migrationService.migrate(input);
+		// Invoke
+		List<String> result = migrationService.migrate("");
 
-		verify(updateService, times(1))
-				.updateSectorAssociationDataList(voList);
-		assertEquals(1, result.size());
-		assertEquals("Error exception", result.getFirst());
+		// Verify
+		assertThat(result).containsExactly("Error exception");
+		verify(ftpProperties, times(1)).getServerCca3SectorAssociationMigrationDirectory();
+		verify(ftpProperties, times(1)).getServerCca3SectorAssociationMigrationSourceFile();
+		verify(ftpFileService, times(1)).fetchFile(filePath);
+		verify(validationService, times(1)).validate(eq(dataList), anyList());
+		verify(updateService, times(1)).updateSectorAssociationDataList(dataList);
+	}
 
+	@Test
+	void migrate_with_file_report_error() {
+		final String directory = "directory";
+		final String sourceFile = "migration.csv";
+		final String filePath = directory + "/" + sourceFile;
+
+		final FtpFileDTOResult fileDTOResult = FtpFileDTOResult.builder()
+				.errorReport("Error report")
+				.build();
+
+		when(ftpProperties.getServerCca3SectorAssociationMigrationDirectory()).thenReturn(directory);
+		when(ftpProperties.getServerCca3SectorAssociationMigrationSourceFile()).thenReturn(sourceFile);
+		when(ftpFileService.fetchFile(filePath)).thenReturn(fileDTOResult);
+
+		// Invoke
+		FtpFileGenericException ex = assertThrows(FtpFileGenericException.class, () ->
+				migrationService.migrate(""));
+
+		// Verify
+		assertThat(ex.getMessage()).isEqualTo("Error fetching file from the FTP server: Error report");
+		verify(ftpProperties, times(1)).getServerCca3SectorAssociationMigrationDirectory();
+		verify(ftpProperties, times(1)).getServerCca3SectorAssociationMigrationSourceFile();
+		verify(ftpFileService, times(1)).fetchFile(filePath);
+		verifyNoInteractions(updateService, validationService);
 	}
 
 	@Test
 	void getResource() {
-
-		String result = migrationService.getResource();
-		assertEquals("cca3-sector-associations", result);
+		assertThat(migrationService.getResource()).isEqualTo("cca3-sector-associations");
 	}
 }

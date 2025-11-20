@@ -1,0 +1,365 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CorrectiveActionsComponent should display the correct content 1`] = `
+<cca-corrective-actions
+  activatedRoute={[Function ActivatedRouteStub]}
+  form={[Function FormGroup]}
+  formBuilder={[Function _FormBuilder]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  tasksApiService={[Function TasksApiService]}
+>
+  <div
+    class="govuk-!-width-two-thirds"
+  >
+    <cca-wizard-step
+      caption="Corrective actions"
+      class="ng-untouched ng-pristine ng-valid"
+      data-testid="corrective-actions-form"
+      heading="Add corrective actions"
+    >
+      <form
+        class="ng-untouched ng-pristine ng-valid"
+        novalidate=""
+      >
+        <netz-page-heading>
+          <span
+            class="govuk-caption-l"
+          >
+            Corrective actions
+          </span>
+          <h1
+            class="govuk-heading-l"
+          >
+            Add corrective actions
+          </h1>
+        </netz-page-heading>
+        <p>
+           Enter details of up to 10 corrective actions and completion dates exactly as they appear in the final audit report you sent to the operator 
+        </p>
+        <div
+          class="ng-untouched ng-pristine ng-valid"
+        >
+          <cca-action-item>
+            <div
+              class="govuk-!-margin-bottom-6 govuk-!-margin-top-6"
+            >
+              <div
+                class="govuk-grid-row govuk-!-margin-bottom-2"
+              >
+                <div
+                  class="govuk-grid-column-three-quarters"
+                >
+                  <h3
+                    class="govuk-heading-m"
+                  >
+                    Corrective action 1
+                  </h3>
+                </div>
+                <div
+                  class="govuk-grid-column-one-quarter govuk-!-text-align-right"
+                >
+                  <button
+                    class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
+                    type="button"
+                  >
+                     Remove 
+                  </button>
+                </div>
+              </div>
+              <div
+                class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+                formcontrolname="details"
+                govuk-textarea=""
+                hint="Provide details of the actions the operator must complete"
+                label="Corrective action details"
+                labelsize="medium"
+              >
+                <label
+                  class="govuk-label govuk-label--m"
+                  for="correctiveActions.0.details"
+                  id="l.correctiveActions.0.details"
+                >
+                   Corrective action details
+                </label>
+                <div
+                  class="govuk-hint"
+                  id="correctiveActions.0.details-hint"
+                >
+                   Provide details of the actions the operator must complete 
+                </div>
+                <textarea
+                  aria-describedby="correctiveActions.0.details-hint"
+                  class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-valid"
+                  id="correctiveActions.0.details"
+                  name="correctiveActions.0.details"
+                  rows="5"
+                />
+              </div>
+              <div
+                class="govuk-!-margin-bottom-9 govuk-!-margin-top-9 govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+                formcontrolname="deadline"
+                govuk-date-input=""
+                label="Corrective action deadline"
+                size="normal"
+              >
+                <fieldset
+                  class="govuk-fieldset"
+                  govukfieldset=""
+                  id="correctiveActions.0.deadline"
+                >
+                  <legend
+                    class="govuk-fieldset__legend govuk-fieldset__legend--m"
+                    govuklegend=""
+                    id="l.correctiveActions.0.deadline"
+                  >
+                    Corrective action deadline
+                  </legend>
+                  <div
+                    class="govuk-date-input ng-untouched ng-pristine ng-valid"
+                  >
+                    <div
+                      class="govuk-date-input__item"
+                    >
+                      <label
+                        class="govuk-label govuk-date-input__label"
+                        for="correctiveActions.0.deadline-day"
+                      >
+                         Day 
+                      </label>
+                      <input
+                        class="govuk-input govuk-date-input__input govuk-input--width-2 ng-untouched ng-pristine ng-valid"
+                        formcontrolname="day"
+                        id="correctiveActions.0.deadline-day"
+                        inputmode="numeric"
+                        max="31"
+                        min="1"
+                        name="correctiveActions.0.deadline-day"
+                        type="text"
+                      />
+                    </div>
+                    <div
+                      class="govuk-date-input__item"
+                    >
+                      <label
+                        class="govuk-label govuk-date-input__label"
+                        for="correctiveActions.0.deadline-month"
+                      >
+                         Month 
+                      </label>
+                      <input
+                        class="govuk-input govuk-date-input__input govuk-input--width-2 ng-untouched ng-pristine ng-valid"
+                        formcontrolname="month"
+                        id="correctiveActions.0.deadline-month"
+                        inputmode="numeric"
+                        max="12"
+                        min="1"
+                        type="text"
+                      />
+                    </div>
+                    <div
+                      class="govuk-date-input__item"
+                    >
+                      <label
+                        class="govuk-label govuk-date-input__label"
+                        for="correctiveActions.0.deadline-year"
+                      >
+                         Year 
+                      </label>
+                      <input
+                        class="govuk-input govuk-date-input__input govuk-input--width-4 ng-untouched ng-pristine ng-valid"
+                        formcontrolname="year"
+                        id="correctiveActions.0.deadline-year"
+                        inputmode="numeric"
+                        name="correctiveActions.0.deadline-year"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </cca-action-item>
+        </div>
+        <div
+          class="ng-untouched ng-pristine ng-valid"
+        >
+          <cca-action-item>
+            <div
+              class="govuk-!-margin-bottom-6 govuk-!-margin-top-6"
+            >
+              <div
+                class="govuk-grid-row govuk-!-margin-bottom-2"
+              >
+                <div
+                  class="govuk-grid-column-three-quarters"
+                >
+                  <h3
+                    class="govuk-heading-m"
+                  >
+                    Corrective action 2
+                  </h3>
+                </div>
+                <div
+                  class="govuk-grid-column-one-quarter govuk-!-text-align-right"
+                >
+                  <button
+                    class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
+                    type="button"
+                  >
+                     Remove 
+                  </button>
+                </div>
+              </div>
+              <div
+                class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+                formcontrolname="details"
+                govuk-textarea=""
+                hint="Provide details of the actions the operator must complete"
+                label="Corrective action details"
+                labelsize="medium"
+              >
+                <label
+                  class="govuk-label govuk-label--m"
+                  for="correctiveActions.1.details"
+                  id="l.correctiveActions.1.details"
+                >
+                   Corrective action details
+                </label>
+                <div
+                  class="govuk-hint"
+                  id="correctiveActions.1.details-hint"
+                >
+                   Provide details of the actions the operator must complete 
+                </div>
+                <textarea
+                  aria-describedby="correctiveActions.1.details-hint"
+                  class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-valid"
+                  id="correctiveActions.1.details"
+                  name="correctiveActions.1.details"
+                  rows="5"
+                />
+              </div>
+              <div
+                class="govuk-!-margin-bottom-9 govuk-!-margin-top-9 govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+                formcontrolname="deadline"
+                govuk-date-input=""
+                label="Corrective action deadline"
+                size="normal"
+              >
+                <fieldset
+                  class="govuk-fieldset"
+                  govukfieldset=""
+                  id="correctiveActions.1.deadline"
+                >
+                  <legend
+                    class="govuk-fieldset__legend govuk-fieldset__legend--m"
+                    govuklegend=""
+                    id="l.correctiveActions.1.deadline"
+                  >
+                    Corrective action deadline
+                  </legend>
+                  <div
+                    class="govuk-date-input ng-untouched ng-pristine ng-valid"
+                  >
+                    <div
+                      class="govuk-date-input__item"
+                    >
+                      <label
+                        class="govuk-label govuk-date-input__label"
+                        for="correctiveActions.1.deadline-day"
+                      >
+                         Day 
+                      </label>
+                      <input
+                        class="govuk-input govuk-date-input__input govuk-input--width-2 ng-untouched ng-pristine ng-valid"
+                        formcontrolname="day"
+                        id="correctiveActions.1.deadline-day"
+                        inputmode="numeric"
+                        max="31"
+                        min="1"
+                        name="correctiveActions.1.deadline-day"
+                        type="text"
+                      />
+                    </div>
+                    <div
+                      class="govuk-date-input__item"
+                    >
+                      <label
+                        class="govuk-label govuk-date-input__label"
+                        for="correctiveActions.1.deadline-month"
+                      >
+                         Month 
+                      </label>
+                      <input
+                        class="govuk-input govuk-date-input__input govuk-input--width-2 ng-untouched ng-pristine ng-valid"
+                        formcontrolname="month"
+                        id="correctiveActions.1.deadline-month"
+                        inputmode="numeric"
+                        max="12"
+                        min="1"
+                        type="text"
+                      />
+                    </div>
+                    <div
+                      class="govuk-date-input__item"
+                    >
+                      <label
+                        class="govuk-label govuk-date-input__label"
+                        for="correctiveActions.1.deadline-year"
+                      >
+                         Year 
+                      </label>
+                      <input
+                        class="govuk-input govuk-date-input__input govuk-input--width-4 ng-untouched ng-pristine ng-valid"
+                        formcontrolname="year"
+                        id="correctiveActions.1.deadline-year"
+                        inputmode="numeric"
+                        name="correctiveActions.1.deadline-year"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </cca-action-item>
+        </div>
+        <div
+          class="govuk-grid-row"
+        >
+          <div
+            class="govuk-grid-column-full"
+          >
+            <button
+              class="govuk-button govuk-button--secondary govuk-!-margin-bottom-5"
+              type="button"
+            >
+               Add another corrective action 
+            </button>
+          </div>
+        </div>
+        <button
+          class="govuk-button"
+          govukbutton=""
+          netzpendingbutton=""
+          type="submit"
+        >
+          Continue
+        </button>
+      </form>
+    </cca-wizard-step>
+    <hr
+      class="govuk-footer__section-break govuk-!-margin-bottom-3"
+    />
+    <netz-return-to-task-or-action-page>
+      <a
+        class="govuk-link"
+        href="/undefined"
+      >
+         Return to: Dashboard 
+      </a>
+    </netz-return-to-task-or-action-page>
+  </div>
+</cca-corrective-actions>
+`;

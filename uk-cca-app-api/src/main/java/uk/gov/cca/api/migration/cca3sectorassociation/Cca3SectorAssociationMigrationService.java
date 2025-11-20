@@ -1,12 +1,18 @@
 package uk.gov.cca.api.migration.cca3sectorassociation;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.stereotype.Service;
+
+import uk.gov.cca.api.common.utils.CsvUtils;
 import uk.gov.cca.api.migration.MigrationBaseService;
 import uk.gov.cca.api.migration.MigrationEndpoint;
+import uk.gov.cca.api.migration.ftp.FtpFileDTOResult;
+import uk.gov.cca.api.migration.ftp.FtpFileGenericException;
+import uk.gov.cca.api.migration.ftp.FtpFileService;
+import uk.gov.cca.api.migration.ftp.FtpProperties;
 import uk.gov.netz.api.common.utils.ExceptionUtils;
+import uk.gov.netz.api.files.common.domain.dto.FileDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,19 +22,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Cca3SectorAssociationMigrationService extends MigrationBaseService {
 
+	private final FtpProperties ftpProperties;
+	private final FtpFileService ftpFileService;
 	private final Cca3SectorAssociationMigrationValidationService validationService;
-	private final Cca3SectorAssociationMigrationMapper mapper;
 	private final Cca3SectorAssociationMigrationUpdateService updateService;
 
 	@Override
 	public List<String> migrate(String input) {
-
-		if (StringUtils.isEmpty(input)) {
-			return List.of("Please insert details for at least one sector association");
-		}
 		List<String> errors = new ArrayList<>();
 
-		List<Cca3SectorAssociationVO> cca3SectorAssociationVOList = mapper.toSectorAssociationVOList(input, errors);
+		// Get csv from server
+		FileDTO fileDTO = getCsvInputFromFtpServer();
+
+		// Parse CSV
+		List<Cca3SectorAssociationVO> cca3SectorAssociationVOList = CsvUtils
+				.convertToModel(fileDTO, Cca3SectorAssociationVO.class, true, errors);
+
+		// Validate
 		validationService.validate(cca3SectorAssociationVOList, errors);
 
 		if(errors.isEmpty()) {
@@ -46,4 +56,15 @@ public class Cca3SectorAssociationMigrationService extends MigrationBaseService 
 		return "cca3-sector-associations";
 	}
 
+	private FileDTO getCsvInputFromFtpServer() {
+		final String filePath = ftpProperties.getServerCca3SectorAssociationMigrationDirectory() + "/"
+				+ ftpProperties.getServerCca3SectorAssociationMigrationSourceFile();
+
+		final FtpFileDTOResult fileDTOResult = ftpFileService.fetchFile(filePath);
+		if (fileDTOResult.getErrorReport() != null) {
+			throw new FtpFileGenericException("Error fetching file from the FTP server: " + fileDTOResult.getErrorReport());
+		}
+
+		return fileDTOResult.getFileDTO();
+	}
 }

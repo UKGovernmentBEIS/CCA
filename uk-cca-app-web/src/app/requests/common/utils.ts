@@ -13,7 +13,7 @@ import {
 } from 'cca-api';
 
 import { TaskItemStatus } from './task-item-status';
-import { nonFacilityReviewSections, OVERALL_DECISION_SUBTASK } from './underlying-agreement';
+import { OVERALL_DECISION_SUBTASK, staticVariationSections } from './underlying-agreement';
 
 export type TUDetailsSection = {
   isCompanyRegistrationNumber: boolean;
@@ -111,13 +111,14 @@ export function calcManageFacilitiesStatus(
   reviewSectionsCompleted: Record<string, string>,
   facilities: Facility[],
 ): TaskItemStatus {
-  const facilitySections = Object.keys(reviewSectionsCompleted).filter((s) => !nonFacilityReviewSections.includes(s));
+  const facilitySections = Object.keys(reviewSectionsCompleted).filter(
+    (s) => ![...staticVariationSections, OVERALL_DECISION_SUBTASK].includes(s),
+  );
   if (facilitySections.length === 0) return TaskItemStatus.UNDECIDED;
 
   const undecidedFacilityExists = facilitySections.some(
     (s) => reviewSectionsCompleted?.[s] === TaskItemStatus.UNDECIDED,
   );
-
   if (undecidedFacilityExists || facilities.length !== facilitySections.length) return TaskItemStatus.UNDECIDED;
 
   const allFacilitiesAccepted = facilitySections.every((s) => reviewSectionsCompleted?.[s] === TaskItemStatus.ACCEPTED);

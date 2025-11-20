@@ -28,13 +28,13 @@ export class CancelTaskComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly taskService = inject(TasksService);
 
-  protected readonly requestTaskType = this.store.select(requestTaskQuery.selectRequestTaskType)();
+  protected readonly requestTaskType = this.store.select(requestTaskQuery.selectRequestTaskType);
 
   cancel() {
     return this.taskService
       .processRequestTaskAction({
         requestTaskId: this.store.select(requestTaskQuery.selectRequestTaskId)(),
-        requestTaskActionType: cancelTaskActionsMap[this.requestTaskType],
+        requestTaskActionType: cancelTaskActionsMap[this.requestTaskType()],
         requestTaskActionPayload: {
           payloadType: 'EMPTY_PAYLOAD',
         },

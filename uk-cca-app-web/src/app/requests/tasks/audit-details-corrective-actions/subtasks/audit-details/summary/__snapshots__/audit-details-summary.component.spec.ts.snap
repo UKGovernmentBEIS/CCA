@@ -1,0 +1,199 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`AuditDetailsSummaryComponent should display the correct content 1`] = `
+<cca-audit-details-summary
+  activatedRoute={[Function Object]}
+  attachments={[Function Function]}
+  auditDetailsAndCorrectiveActions={[Function Function]}
+  data={[Function Function]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  taskId="undefined"
+  tasksApiService={[Function TasksApiService]}
+>
+  <netz-page-heading
+    caption="Audit details"
+  >
+    <span
+      class="govuk-caption-l"
+    >
+      Audit details
+    </span>
+    <h1
+      class="govuk-heading-l"
+    >
+      Summary
+    </h1>
+  </netz-page-heading><cca-summary>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Audit technique
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Desk-based interview
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Audit date
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            01 Jan 2025
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Comments
+        </dt>
+        <dd
+          class="pre-line govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            dslkjfkjdsn
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Date final audit report sent
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            01 Jan 2025
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Annotated site plan
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <cca-summary-download-files>
+            <a
+              class="govuk-link"
+              href="/tasks/undefined/file-download/feecfb95-f4c4-47a1-b1b8-4acc68329eca"
+              target="_blank"
+            >
+              sample_profile1.png
+            </a>
+          </cca-summary-download-files>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+    </dl>
+  </cca-summary><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Dashboard 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-audit-details-summary>
+`;

@@ -1,6 +1,5 @@
 package uk.gov.cca.api.migration.cca3sectorassociation;
 
-import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -8,6 +7,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.validation.BusinessViolation;
+import uk.gov.cca.api.common.validation.DataValidator;
 import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.SubsectorAssociation;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
@@ -17,9 +18,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -35,14 +35,13 @@ class Cca3SectorAssociationMigrationValidationServiceTest {
 	private SectorAssociationQueryService sectorAssociationQueryService;
 
 	@Mock
-	private Validator validator;
+	private DataValidator<Cca3SectorAssociationVO> validator;
 
 	@Test
 	void validate() {
-
+		List<String> failedEntries = new ArrayList<>();
 		final LocalDate umaDate = java.time.LocalDate.of(2023, 11, 28);
-		final Cca3SectorAssociationVO vo1 = Cca3SectorAssociationVO.builder()
-				.rowNumber(2L)
+		final Cca3SectorAssociationVO vo = Cca3SectorAssociationVO.builder()
 				.sectorAcronym("ADS_1")
 				.subsectorName("")
 				.measurementType(MeasurementType.ENERGY_KWH)
@@ -52,25 +51,53 @@ class Cca3SectorAssociationMigrationValidationServiceTest {
 				.umaDate(umaDate)
 				.build();
 
-		List<String> failedEntries = new ArrayList<>();
-
-		when( sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme(vo1.getSectorAcronym(), SchemeVersion.CCA_3))
+		when(sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme(vo.getSectorAcronym(), SchemeVersion.CCA_3))
 				.thenReturn(Optional.of(SectorAssociation.builder().build()));
+		when(validator.validate(vo)).thenReturn(Optional.empty());
 
-		validationService.validate(List.of(vo1),  failedEntries);
+		// Invoke
+		validationService.validate(List.of(vo),  failedEntries);
 
-		assertTrue(failedEntries.isEmpty());
+		// Verify
+		assertThat(failedEntries).isEmpty();
 		verify(sectorAssociationQueryService, times(1))
-				.findSectorAssociationByAcronymAndScheme(vo1.getSectorAcronym(), SchemeVersion.CCA_3);
-		verify(validator, times(1)).validate(vo1);
+				.findSectorAssociationByAcronymAndScheme(vo.getSectorAcronym(), SchemeVersion.CCA_3);
+		verify(validator, times(1)).validate(vo);
+	}
 
+	@Test
+	void validate_data_error() {
+		List<String> failedEntries = new ArrayList<>();
+		final LocalDate umaDate = java.time.LocalDate.of(2023, 11, 28);
+		final Cca3SectorAssociationVO vo = Cca3SectorAssociationVO.builder()
+				.sectorAcronym("ADS_1")
+				.subsectorName("")
+				.measurementType(MeasurementType.ENERGY_KWH)
+				.targetPeriod7Improvement(BigDecimal.ONE)
+				.targetPeriod8Improvement(BigDecimal.valueOf(0.23))
+				.targetPeriod9Improvement(BigDecimal.ONE)
+				.umaDate(umaDate)
+				.build();
+
+		when(sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme(vo.getSectorAcronym(), SchemeVersion.CCA_3))
+				.thenReturn(Optional.of(SectorAssociation.builder().build()));
+		when(validator.validate(vo)).thenReturn(Optional.of(new BusinessViolation("section", "Data error")));
+
+		// Invoke
+		validationService.validate(List.of(vo),  failedEntries);
+
+		// Verify
+		assertThat(failedEntries).containsExactly("ADS_1| : Data error");
+		verify(sectorAssociationQueryService, times(1))
+				.findSectorAssociationByAcronymAndScheme(vo.getSectorAcronym(), SchemeVersion.CCA_3);
+		verify(validator, times(1)).validate(vo);
 	}
 
 	@Test
 	void validation_fails_SectorDoesNotExist() {
+		List<String> failedEntries = new ArrayList<>();
 		final LocalDate umaDate = LocalDate.of(2023, 11, 28);
-		Cca3SectorAssociationVO input = Cca3SectorAssociationVO.builder()
-				.rowNumber(5L)
+		final Cca3SectorAssociationVO vo = Cca3SectorAssociationVO.builder()
 				.sectorAcronym("UNKNOWN_SECTOR")
 				.subsectorName("ANY_SUB")
 				.measurementType(MeasurementType.ENERGY_KWH)
@@ -82,21 +109,23 @@ class Cca3SectorAssociationMigrationValidationServiceTest {
 
 		when(sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme("UNKNOWN_SECTOR", SchemeVersion.CCA_3))
 				.thenReturn(Optional.empty());
+		when(validator.validate(vo)).thenReturn(Optional.empty());
 
-		when(validator.validate(input)).thenReturn(Set.of());
+		// Invoke
+		validationService.validate(List.of(vo), failedEntries);
 
-		List<String> failedEntries = new ArrayList<>();
-		validationService.validate(List.of(input), failedEntries);
-
-		assertEquals(1, failedEntries.size());
-		assertTrue(failedEntries.getFirst().contains("Invalid sector/sector does not exist"));
+		// Verify
+		assertThat(failedEntries).containsExactly("UNKNOWN_SECTOR|ANY_SUB : Sector does not exist");
+		verify(sectorAssociationQueryService, times(1))
+				.findSectorAssociationByAcronymAndScheme(vo.getSectorAcronym(), SchemeVersion.CCA_3);
+		verify(validator, times(1)).validate(vo);
 	}
 
 	@Test
 	void validation_fails_SectorHasNoSubsectorsAndSubsectorIsProvided() {
+		List<String> failedEntries = new ArrayList<>();
 		final LocalDate umaDate = LocalDate.of(2023, 11, 28);
-		Cca3SectorAssociationVO input = Cca3SectorAssociationVO.builder()
-				.rowNumber(1L)
+		final Cca3SectorAssociationVO vo = Cca3SectorAssociationVO.builder()
 				.sectorAcronym("SEC")
 				.subsectorName("SUB")
 				.measurementType(MeasurementType.ENERGY_KWH)
@@ -111,20 +140,23 @@ class Cca3SectorAssociationMigrationValidationServiceTest {
 
 		when(sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme("SEC", SchemeVersion.CCA_3))
 				.thenReturn(Optional.of(sectorAssociation));
-		when(validator.validate(input)).thenReturn(Set.of());
+		when(validator.validate(vo)).thenReturn(Optional.empty());
 
-		List<String> failedEntries = new ArrayList<>();
-		validationService.validate(List.of(input), failedEntries);
+		// Invoke
+		validationService.validate(List.of(vo), failedEntries);
 
-		assertEquals(1, failedEntries.size());
-		assertTrue(failedEntries.getFirst().contains("Subsector \"SUB\" not valid for sector"));
+		// Verify
+		assertThat(failedEntries).containsExactly("SEC|SUB : Subsector not valid for sector");
+		verify(sectorAssociationQueryService, times(1))
+				.findSectorAssociationByAcronymAndScheme(vo.getSectorAcronym(), SchemeVersion.CCA_3);
+		verify(validator, times(1)).validate(vo);
 	}
 
 	@Test
 	void validation_fails_SubsectorIsBlankButRequired() {
+		List<String> failedEntries = new ArrayList<>();
 		final LocalDate umaDate = LocalDate.of(2023, 11, 28);
-		Cca3SectorAssociationVO input = Cca3SectorAssociationVO.builder()
-				.rowNumber(2L)
+		final Cca3SectorAssociationVO vo = Cca3SectorAssociationVO.builder()
 				.sectorAcronym("SEC")
 				.subsectorName("") // blank
 				.measurementType(MeasurementType.ENERGY_KWH)
@@ -134,28 +166,29 @@ class Cca3SectorAssociationMigrationValidationServiceTest {
 				.umaDate(umaDate)
 				.build();
 
-		SubsectorAssociation sub1 = mock(SubsectorAssociation.class);
-		when(sub1.getName()).thenReturn("SUB1");
-
-		SectorAssociation sectorAssociation = mock(SectorAssociation.class);
-		when(sectorAssociation.getSubsectorAssociations()).thenReturn(List.of(sub1));
+		final SectorAssociation sectorAssociation = SectorAssociation.builder()
+				.subsectorAssociations(List.of(SubsectorAssociation.builder().name("SUB1").build()))
+				.build();
 
 		when(sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme("SEC", SchemeVersion.CCA_3))
 				.thenReturn(Optional.of(sectorAssociation));
-		when(validator.validate(input)).thenReturn(Set.of());
+		when(validator.validate(vo)).thenReturn(Optional.empty());
 
-		List<String> failedEntries = new ArrayList<>();
-		validationService.validate(List.of(input), failedEntries);
+		// Invoke
+		validationService.validate(List.of(vo), failedEntries);
 
-		assertEquals(1, failedEntries.size());
-		assertTrue(failedEntries.getFirst().contains("Subsector cannot be blank for this sector"));
+		// Verify
+		assertThat(failedEntries).containsExactly("SEC| : Subsector cannot be blank for this sector");
+		verify(sectorAssociationQueryService, times(1))
+				.findSectorAssociationByAcronymAndScheme(vo.getSectorAcronym(), SchemeVersion.CCA_3);
+		verify(validator, times(1)).validate(vo);
 	}
 
 	@Test
 	void validation_fails_SubsectorDoesNotExistInSector() {
+		List<String> failedEntries = new ArrayList<>();
 		final LocalDate umaDate = LocalDate.of(2023, 11, 28);
-		Cca3SectorAssociationVO input = Cca3SectorAssociationVO.builder()
-				.rowNumber(3L)
+		final Cca3SectorAssociationVO vo = Cca3SectorAssociationVO.builder()
 				.sectorAcronym("SEC")
 				.subsectorName("INVALID_SUB")
 				.measurementType(MeasurementType.ENERGY_KWH)
@@ -165,30 +198,31 @@ class Cca3SectorAssociationMigrationValidationServiceTest {
 				.umaDate(umaDate)
 				.build();
 
-		SubsectorAssociation sub1 = mock(SubsectorAssociation.class);
-		when(sub1.getName()).thenReturn("SUB1");
-
-		SectorAssociation sectorAssociation = mock(SectorAssociation.class);
-		when(sectorAssociation.getSubsectorAssociations()).thenReturn(List.of(sub1));
+		final SectorAssociation sectorAssociation = SectorAssociation.builder()
+				.subsectorAssociations(List.of(SubsectorAssociation.builder().name("SUB1").build()))
+				.build();
 
 		when(sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme("SEC", SchemeVersion.CCA_3))
 				.thenReturn(Optional.of(sectorAssociation));
-		when(validator.validate(input)).thenReturn(Set.of());
+		when(validator.validate(vo)).thenReturn(Optional.empty());
 
-		List<String> failedEntries = new ArrayList<>();
-		validationService.validate(List.of(input), failedEntries);
+		// Invoke
+		validationService.validate(List.of(vo), failedEntries);
 
-		assertEquals(1, failedEntries.size());
-		assertTrue(failedEntries.getFirst().contains("Subsector does not exist"));
+		// Verify
+		assertThat(failedEntries).containsExactly("SEC|INVALID_SUB : Subsector does not exist");
+		verify(sectorAssociationQueryService, times(1))
+				.findSectorAssociationByAcronymAndScheme(vo.getSectorAcronym(), SchemeVersion.CCA_3);
+		verify(validator, times(1)).validate(vo);
 	}
 
 	@Test
 	void validation_fails_Subsector_SectorDefinition_error() {
-
+		List<String> failedEntries = new ArrayList<>();
 		final LocalDate umaDate = java.time.LocalDate.of(2023, 11, 28);
+		final String sectorAcronym = "ADS_53";
 		final Cca3SectorAssociationVO vo1 = Cca3SectorAssociationVO.builder()
-				.rowNumber(2L)
-				.sectorAcronym("ADS_53")
+				.sectorAcronym(sectorAcronym)
 				.subsectorName("sub1")
 				.measurementType(MeasurementType.ENERGY_KWH)
 				.targetPeriod7Improvement(BigDecimal.ONE)
@@ -198,8 +232,7 @@ class Cca3SectorAssociationMigrationValidationServiceTest {
 				.sectorDefinition("definition")
 				.build();
 		final Cca3SectorAssociationVO vo2 = Cca3SectorAssociationVO.builder()
-				.rowNumber(3L)
-				.sectorAcronym("ADS_53")
+				.sectorAcronym(sectorAcronym)
 				.subsectorName("sub2")
 				.measurementType(MeasurementType.ENERGY_KWH)
 				.targetPeriod7Improvement(BigDecimal.ONE)
@@ -219,27 +252,29 @@ class Cca3SectorAssociationMigrationValidationServiceTest {
 				))
 				.build();
 
-		List<String> failedEntries = new ArrayList<>();
-
-		when( sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme(vo1.getSectorAcronym(), SchemeVersion.CCA_3))
+		when(sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme(sectorAcronym, SchemeVersion.CCA_3))
 				.thenReturn(Optional.of(sectorAssociation));
+		when(validator.validate(vo1)).thenReturn(Optional.empty());
+		when(validator.validate(vo2)).thenReturn(Optional.empty());
 
+		// Invoke
 		validationService.validate(List.of(vo1, vo2),  failedEntries);
 
-		assertEquals(1, failedEntries.size());
+		// Verify
+		assertThat(failedEntries).containsExactly("Different sector definitions have been declared for the same sector 'ADS_53'");
+		verify(sectorAssociationQueryService, times(2))
+				.findSectorAssociationByAcronymAndScheme(sectorAcronym, SchemeVersion.CCA_3);
 		verify(validator, times(1)).validate(vo1);
-		assertEquals(failedEntries.getFirst(),
-				Cca3ErrorMessageUtil.constructSectorDefinitionError("ADS_53")
-		);
+		verify(validator, times(1)).validate(vo2);
 	}
 
 	@Test
 	void validation_passes_same_SectorDefinition() {
-
+		List<String> failedEntries = new ArrayList<>();
 		final LocalDate umaDate = java.time.LocalDate.of(2023, 11, 28);
+		final String sectorAcronym = "ADS_53";
 		final Cca3SectorAssociationVO vo1 = Cca3SectorAssociationVO.builder()
-				.rowNumber(2L)
-				.sectorAcronym("ADS_53")
+				.sectorAcronym(sectorAcronym)
 				.subsectorName("sub1")
 				.measurementType(MeasurementType.ENERGY_KWH)
 				.targetPeriod7Improvement(BigDecimal.ONE)
@@ -249,8 +284,7 @@ class Cca3SectorAssociationMigrationValidationServiceTest {
 				.sectorDefinition("definition")
 				.build();
 		final Cca3SectorAssociationVO vo2 = Cca3SectorAssociationVO.builder()
-				.rowNumber(3L)
-				.sectorAcronym("ADS_53")
+				.sectorAcronym(sectorAcronym)
 				.subsectorName("sub2")
 				.measurementType(MeasurementType.ENERGY_KWH)
 				.targetPeriod7Improvement(BigDecimal.ONE)
@@ -271,14 +305,19 @@ class Cca3SectorAssociationMigrationValidationServiceTest {
 				))
 				.build();
 
-		List<String> failedEntries = new ArrayList<>();
-
-		when( sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme(vo1.getSectorAcronym(), SchemeVersion.CCA_3))
+		when(sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme(sectorAcronym, SchemeVersion.CCA_3))
 				.thenReturn(Optional.of(sectorAssociation));
+		when(validator.validate(vo1)).thenReturn(Optional.empty());
+		when(validator.validate(vo2)).thenReturn(Optional.empty());
 
+		// Invoke
 		validationService.validate(List.of(vo1, vo2),  failedEntries);
 
-		assertTrue(failedEntries.isEmpty());
+		// Verify
+		assertThat(failedEntries).isEmpty();
+		verify(sectorAssociationQueryService, times(2))
+				.findSectorAssociationByAcronymAndScheme(sectorAcronym, SchemeVersion.CCA_3);
 		verify(validator, times(1)).validate(vo1);
+		verify(validator, times(1)).validate(vo2);
 	}
 }

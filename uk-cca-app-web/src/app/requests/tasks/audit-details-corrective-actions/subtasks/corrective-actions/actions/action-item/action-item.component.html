@@ -1,0 +1,31 @@
+<div class="govuk-!-margin-bottom-6 govuk-!-margin-top-6">
+  <div class="govuk-grid-row govuk-!-margin-bottom-2">
+    <div class="govuk-grid-column-three-quarters">
+      <h3 class="govuk-heading-m">Corrective action {{ index() + 1 }}</h3>
+    </div>
+
+    @if (canRemove()) {
+      <div class="govuk-grid-column-one-quarter govuk-!-text-align-right">
+        <button type="button" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" (click)="onRemove()">
+          Remove
+        </button>
+      </div>
+    }
+  </div>
+
+  <div
+    govuk-textarea
+    label="Corrective action details"
+    labelSize="medium"
+    hint="Provide details of the actions the operator must complete"
+    formControlName="details"
+  ></div>
+
+  <div
+    formControlName="deadline"
+    govuk-date-input
+    label="Corrective action deadline"
+    size="normal"
+    class="govuk-!-margin-bottom-9 govuk-!-margin-top-9"
+  ></div>
+</div>

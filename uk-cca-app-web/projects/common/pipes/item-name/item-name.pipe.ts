@@ -61,6 +61,9 @@ export class ItemNamePipe implements PipeTransform {
       case 'PRE_AUDIT_REVIEW_SUBMIT':
         return 'Pre-audit review';
 
+      case 'AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT':
+        return 'Audit details and corrective actions';
+
       default:
         return null;
     }

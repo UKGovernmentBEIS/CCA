@@ -37,7 +37,7 @@ export function toUnderlyingAgreementVariationActivatedSummaryData(
       extractSignatoryUserFromUsersInfo(payload.usersInfo, payload.decisionNotification.signatory),
     )
     .addFileListRow(
-      'Official notice',
+      'Official notices',
       fileUtils.toDownloadableDocument(
         [...Object.values(payload.underlyingAgreementDocuments), ...payload.officialNotices],
         'file-download',

@@ -14,18 +14,6 @@
           </div>
         }
 
-        @case ('requestType') {
-          {{ row[column.field] | itemType }}
-        }
-
-        @case ('taskAssignee') {
-          {{ !row[column.field] ? unassignedLabel() : (row[column.field] | userFullName) }}
-        }
-
-        @case ('daysRemaining') {
-          {{ row[column.field] | daysRemaining }}
-        }
-
         @case ('businessId') {
           {{ row[column.field] }}
         }
@@ -38,6 +26,10 @@
           @if (row[column.field]) {
             {{ row[column.field] }} - {{ row['siteName'] }}
           }
+        }
+
+        @case ('daysRemaining') {
+          {{ row[column.field] | daysRemaining }}
         }
 
         @default {

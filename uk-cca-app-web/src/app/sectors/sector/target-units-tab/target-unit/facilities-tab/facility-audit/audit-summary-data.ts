@@ -8,18 +8,18 @@ export function toFacilityAuditSummaryData(audit: FacilityAuditViewDTO): Summary
   const factory = new SummaryFactory()
     .addSection('Facility audit', null, { testid: 'facility-audit' })
     .addRow('Should this facility be considered for audit?', boolToString(audit?.auditRequired), {
-      change: audit?.isEditable,
+      change: audit?.editable,
       changeLink: './audit',
     });
 
   if (audit?.auditRequired) {
     factory
       .addTextAreaRow('Reason for audit', audit.reasons.map(transformFacilityAuditReason), {
-        change: audit?.isEditable,
+        change: audit?.editable,
         changeLink: './audit/reasons',
       })
       .addTextAreaRow('Comments', audit.comments, {
-        change: audit?.isEditable,
+        change: audit?.editable,
         changeLink: './audit/reasons',
       });
   }

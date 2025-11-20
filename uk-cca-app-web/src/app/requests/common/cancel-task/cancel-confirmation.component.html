@@ -1,4 +1,4 @@
-@switch (requestTaskType) {
+@switch (requestTaskType()) {
   @case ('UNDERLYING_AGREEMENT_APPLICATION_SUBMIT') {
     <cca-underlying-agreement-cancel-task-confirmation />
   }
@@ -29,5 +29,9 @@
 
   @case ('CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION') {
     <cca-cca3-migration-account-activation-cancel-confirmation />
+  }
+
+  @default {
+    <netz-cancel-confirmation />
   }
 }

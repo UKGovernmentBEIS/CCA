@@ -75,4 +75,12 @@ public class FtpProperties {
     @Valid
     @NotBlank
     private String serverCca3InProgressFacilitiesMigrationSourceFile;
+
+    @Valid
+    @NotBlank
+    private String serverCca3SectorAssociationMigrationDirectory;
+
+    @Valid
+    @NotBlank
+    private String serverCca3SectorAssociationMigrationSourceFile;
 }

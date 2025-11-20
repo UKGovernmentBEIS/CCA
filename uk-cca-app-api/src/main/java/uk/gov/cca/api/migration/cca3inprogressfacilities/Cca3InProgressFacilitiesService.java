@@ -3,6 +3,7 @@ package uk.gov.cca.api.migration.cca3inprogressfacilities;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.migration.MigrationEndpoint;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.Cca3FacilityBaselineAndTargets;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityBaselineEnergyConsumption;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
@@ -70,10 +72,10 @@ public class Cca3InProgressFacilitiesService {
         }
 
         FacilityTargets targets = facilityItem.getCca3BaselineAndTargets().getFacilityTargets();
-        FacilityBaselineEnergyConsumption baseline = facilityItem.getCca3BaselineAndTargets().getFacilityBaselineEnergyConsumption();
+        Cca3FacilityBaselineAndTargets cca3FacilityBaselineAndTargets = facilityItem.getCca3BaselineAndTargets();
 
         updateFacilityTargets(facilityVO, targets);
-        updateFacilityBaseline(facilityVO, baseline);
+        updateFacilityBaseline(facilityVO, cca3FacilityBaselineAndTargets);
         
     }
 
@@ -84,13 +86,18 @@ public class Cca3InProgressFacilitiesService {
         improvements.put(TargetImprovementType.TP9, facilityVO.getTp9Improvement());
     }
 
-    private static void updateFacilityBaseline(Cca3InProgressFacilityVO facilityVO, FacilityBaselineEnergyConsumption baseline) {
-        BigDecimal variableEnergy = facilityVO.getBaselineVariableEnergy();
+    private static void updateFacilityBaseline(Cca3InProgressFacilityVO facilityVO, Cca3FacilityBaselineAndTargets baselineAndTargets) {
+		FacilityBaselineEnergyConsumption baseline = Optional
+				.ofNullable(baselineAndTargets.getFacilityBaselineEnergyConsumption())
+				.orElseGet(FacilityBaselineEnergyConsumption::new);
+        
         baseline.setTotalFixedEnergy(facilityVO.getTotalFixedEnergy());
         baseline.setTotalThroughput(facilityVO.getTotalThroughput());
         baseline.setThroughputUnit(facilityVO.getThroughputUnit());
         
-        if (variableEnergy != null && variableEnergy.compareTo(BigDecimal.ZERO) > 0) {
+        BigDecimal variableEnergy = facilityVO.getBaselineVariableEnergy();
+        boolean hasVariableEnergy = variableEnergy != null && variableEnergy.compareTo(BigDecimal.ZERO) > 0;
+        if (hasVariableEnergy) {
             baseline.setBaselineVariableEnergy(variableEnergy);
             baseline.setHasVariableEnergy(Boolean.TRUE);
             baseline.setVariableEnergyType(VariableEnergyDepictionType.TOTALS);
@@ -99,5 +106,7 @@ public class Cca3InProgressFacilitiesService {
             baseline.setHasVariableEnergy(Boolean.FALSE);
             baseline.setVariableEnergyType(null);
         } 
+        
+        baselineAndTargets.setFacilityBaselineEnergyConsumption(baseline);
     }
 }

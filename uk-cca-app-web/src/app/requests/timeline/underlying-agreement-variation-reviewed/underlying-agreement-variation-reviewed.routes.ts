@@ -24,7 +24,7 @@ export const UNDERLYING_AGREEMENT_VARIATION_REVIEWED_TIMELINE_ROUTES = [
   {
     path: 'review-manage-facilities',
     title: 'Manage facilities list',
-    data: { backlink: '../../', breadcrumb: false },
+    data: { backlink: '../', breadcrumb: false },
     loadComponent: () =>
       import('./subtasks/review-manage-facilities/review-manage-facilities.component').then(
         (c) => c.ReviewManageFacilitiesComponent,

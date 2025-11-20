@@ -1,5 +1,5 @@
 <netz-cancel-task (cancelled)="cancel()">
-  @switch (requestTaskType) {
+  @switch (requestTaskType()) {
     @case ('UNDERLYING_AGREEMENT_APPLICATION_SUBMIT') {
       <cca-underlying-agreement-cancel-task />
     }

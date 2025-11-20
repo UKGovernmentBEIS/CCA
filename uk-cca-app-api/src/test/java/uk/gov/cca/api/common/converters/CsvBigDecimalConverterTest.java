@@ -23,11 +23,22 @@ class CsvBigDecimalConverterTest {
         BigDecimal result = converter.convert("105.560");
         assertThat(result).isEqualTo(BigDecimal.valueOf(105.56).setScale(7, RoundingMode.HALF_DOWN));
     }
+    @Test
+    void convert_with_percentage() throws CsvDataTypeMismatchException {
+        BigDecimal result = converter.convert("105.560%");
+        assertThat(result).isEqualTo(BigDecimal.valueOf(105.560).setScale(7, RoundingMode.HALF_DOWN));
+    }
 
     @Test
     void convert_negative() throws CsvDataTypeMismatchException {
         BigDecimal result = converter.convert("-105.560");
         assertThat(result).isEqualTo(BigDecimal.valueOf(105.56).negate().setScale(7, RoundingMode.HALF_DOWN));
+    }
+
+    @Test
+    void convert_negative_with_percentage() throws CsvDataTypeMismatchException {
+        BigDecimal result = converter.convert("-105.560 %");
+        assertThat(result).isEqualTo(BigDecimal.valueOf(105.560).negate().setScale(7, RoundingMode.HALF_DOWN));
     }
 
     @Test
@@ -49,9 +60,33 @@ class CsvBigDecimalConverterTest {
     }
 
     @Test
+    void convert_with_spaces_with_percentage() throws CsvDataTypeMismatchException {
+        BigDecimal result = converter.convert(" 105.560 % ");
+        assertThat(result).isEqualTo(BigDecimal.valueOf(105.56).setScale(7, RoundingMode.HALF_DOWN));
+    }
+
+    @Test
     void convert_nan() {
         CsvDataTypeMismatchException ex = assertThrows(CsvDataTypeMismatchException.class,
                 () -> converter.convert("xxxx"));
+
+        // Verify
+        assertThat(ex).isInstanceOf(CsvDataTypeMismatchException.class);
+    }
+
+    @Test
+    void convert_nan_with_percentage() {
+        CsvDataTypeMismatchException ex = assertThrows(CsvDataTypeMismatchException.class,
+                () -> converter.convert("xxxx%"));
+
+        // Verify
+        assertThat(ex).isInstanceOf(CsvDataTypeMismatchException.class);
+    }
+
+    @Test
+    void convert_only_percentage() {
+        CsvDataTypeMismatchException ex = assertThrows(CsvDataTypeMismatchException.class,
+                () -> converter.convert(" % "));
 
         // Verify
         assertThat(ex).isInstanceOf(CsvDataTypeMismatchException.class);

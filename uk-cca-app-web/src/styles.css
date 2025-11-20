@@ -81,3 +81,17 @@ a[role='button'] {
   background: var(--govuk-light-grey);
   padding: var(--govuk-spacing-2) var(--govuk-spacing-2) var(--govuk-spacing-2) var(--govuk-spacing-5);
 }
+
+.utility-panel-container {
+  border: 1px solid var(--govuk-border-colour);
+  padding: var(--govuk-spacing-0) var(--govuk-spacing-3) var(--govuk-spacing-1) var(--govuk-spacing-3);
+}
+
+.utility-panel-header {
+  padding: var(--govuk-spacing-4);
+  font-weight: bold;
+}
+
+.background {
+  background: var(--govuk-light-grey);
+}

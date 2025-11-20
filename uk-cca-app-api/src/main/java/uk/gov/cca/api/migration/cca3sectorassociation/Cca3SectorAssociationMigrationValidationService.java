@@ -1,20 +1,19 @@
 package uk.gov.cca.api.migration.cca3sectorassociation;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.stereotype.Service;
+
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.validation.DataValidator;
 import uk.gov.cca.api.migration.MigrationEndpoint;
-import uk.gov.cca.api.sectorassociation.domain.SectorAssociation;
 import uk.gov.cca.api.sectorassociation.domain.SubsectorAssociation;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class Cca3SectorAssociationMigrationValidationService {
 
-	private final Validator validator;
+	private final DataValidator<Cca3SectorAssociationVO> dataValidator;
 	private final SectorAssociationQueryService sectorAssociationQueryService;
 
 	public void validate(List<Cca3SectorAssociationVO> sectorAssociationInputs, List<String> errors) {
@@ -36,19 +35,13 @@ public class Cca3SectorAssociationMigrationValidationService {
 		this.validateSubsectorsSectorDefinitionUniqueness(sectorAssociationInputs, errors);
 
 		for(Cca3SectorAssociationVO vo : sectorAssociationInputs) {
-
 			// Generic data validation
-			Set<ConstraintViolation<Cca3SectorAssociationVO>> violations = validator.validate(vo);
-			if(!violations.isEmpty()) {
-				for (ConstraintViolation<Cca3SectorAssociationVO> violation : violations) {
-					errors.add(Cca3ErrorMessageUtil.constructErrorMessage(
-							vo.getRowNumber(), violation.getMessage(), violation.getPropertyPath().toString())
-					);
-				}
-			}
+			dataValidator.validate(vo)
+					.map(violation -> Arrays.stream(violation.getData()).map(d -> Cca3ErrorMessageUtil.constructErrorMessage(vo, d.toString())).toList())
+					.ifPresent(errors::addAll);
+
 			// Sector and subsector validation
 			this.validateSectorAndSubsectorExistence(vo, errors);
-
 		}
 	}
 
@@ -86,39 +79,24 @@ public class Cca3SectorAssociationMigrationValidationService {
 		}
 	}
 
-	private void validateSectorAndSubsectorExistence(Cca3SectorAssociationVO input, List<String> errors) {
-		Optional<SectorAssociation> sectorAssociation = sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme(input.getSectorAcronym(), SchemeVersion.CCA_3);
-		if(sectorAssociation.isEmpty()) {
-			errors.add(Cca3ErrorMessageUtil
-					.constructSectorSubsectorErrorMessage(input.getRowNumber(),
-							"Invalid sector/sector does not exist", input.getSectorAcronym()));
-			return;
-		}
-		Set<String> subsectorNames = sectorAssociation.get().getSubsectorAssociations().stream()
-				.map(SubsectorAssociation::getName)
-				.collect(Collectors.toSet());
+	private void validateSectorAndSubsectorExistence(Cca3SectorAssociationVO vo, List<String> errors) {
+		sectorAssociationQueryService.findSectorAssociationByAcronymAndScheme(vo.getSectorAcronym(), SchemeVersion.CCA_3)
+				.ifPresentOrElse(sectorAssociation -> {
+					Set<String> subsectorNames = sectorAssociation.getSubsectorAssociations().stream()
+							.map(SubsectorAssociation::getName)
+							.collect(Collectors.toSet());
 
-		if(subsectorNames.isEmpty()) {
-			if(!StringUtils.isBlank(input.getSubsectorName())) {
-				errors.add(Cca3ErrorMessageUtil.constructSectorSubsectorErrorMessage(
-						input.getRowNumber(),
-						String.format("Subsector \"%s\" not valid for sector", input.getSubsectorName()),
-						input.getSectorAcronym()
-				));
-			}
-		} else {
-			if(StringUtils.isBlank(input.getSubsectorName())) {
-				errors.add(Cca3ErrorMessageUtil.constructSectorSubsectorErrorMessage(
-						input.getRowNumber(),
-						"Subsector cannot be blank for this sector", input.getSectorAcronym()
-				));
-			} else if(!subsectorNames.contains(input.getSubsectorName())) {
-				errors.add(Cca3ErrorMessageUtil.constructSectorSubsectorErrorMessage(
-						input.getRowNumber(),
-						"Subsector does not exist", input.getSubsectorName()
-				));
-			}
-		}
+					if(subsectorNames.isEmpty()) {
+						if(!StringUtils.isBlank(vo.getSubsectorName())) {
+							errors.add(Cca3ErrorMessageUtil.constructErrorMessage(vo, "Subsector not valid for sector"));
+						}
+					} else {
+						if(StringUtils.isBlank(vo.getSubsectorName())) {
+							errors.add(Cca3ErrorMessageUtil.constructErrorMessage(vo, "Subsector cannot be blank for this sector"));
+						} else if(!subsectorNames.contains(vo.getSubsectorName())) {
+							errors.add(Cca3ErrorMessageUtil.constructErrorMessage(vo, "Subsector does not exist"));
+						}
+					}
+				}, () -> errors.add(Cca3ErrorMessageUtil.constructErrorMessage(vo, "Sector does not exist")));
 	}
-
 }

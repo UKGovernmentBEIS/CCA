@@ -1,0 +1,269 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CorrectiveActionsCheckYourAnswersComponent should display the correct content 1`] = `
+<cca-corrective-actions-check-your-answers
+  activatedRoute={[Function ActivatedRouteStub]}
+  correctiveActions={[Function Function]}
+  currentSectionsCompleted={[Function Function]}
+  isEditable={[Function Function]}
+  payload={[Function Function]}
+  requestTaskId={[Function Function]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  selectAuditDetailsAndCorrectiveActions={[Function Function]}
+  tasksApiService={[Function TasksApiService]}
+>
+  <div>
+    <netz-page-heading
+      caption="Corrective actions"
+    >
+      <span
+        class="govuk-caption-l"
+      >
+        Corrective actions
+      </span>
+      <h1
+        class="govuk-heading-l"
+      >
+        Summary
+      </h1>
+    </netz-page-heading>
+    <cca-corrective-actions-summary-details>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        data-testid="corrective-actions"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+             Did the final audit report identify any correcive actions the operator must complete? 
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              Yes
+            </span>
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/?change=true"
+              routerlink="../has-actions"
+            >
+              Change
+            </a>
+          </dd>
+        </div>
+      </dl>
+      <section
+        class="govuk-!-margin-bottom-9"
+      >
+        <div
+          class="utility-panel-container"
+        >
+          <div
+            class="govuk-grid-row govuk-!-margin-bottom-4 govuk-!-margin-top-0 utility-panel-header background"
+          >
+            <div
+              class="govuk-grid-column-three-quarters govuk-!-padding-left-0"
+            >
+              Corrective action 1
+            </div>
+            <div
+              class="govuk-grid-column-one-quarter govuk-!-text-align-right govuk-!-padding-right-0"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+                routerlink="../actions"
+              >
+                 Change 
+              </a>
+              <span>
+                 | 
+              </span>
+              <a
+                class="govuk-link"
+                role="button"
+                tabindex="0"
+              >
+                 Remove 
+              </a>
+            </div>
+          </div>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            data-testid="action-0"
+            govuk-summary-list=""
+            style="margin: 5px 5px 35px 5px !important;"
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Corrective action details
+              </dt>
+              <dd
+                class="pre-line govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <span>
+                  ca1
+                </span>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Corrective action deadline
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <span>
+                  01 Jan 2025
+                </span>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+      <section
+        class="govuk-!-margin-bottom-9"
+      >
+        <div
+          class="utility-panel-container"
+        >
+          <div
+            class="govuk-grid-row govuk-!-margin-bottom-4 govuk-!-margin-top-0 utility-panel-header background"
+          >
+            <div
+              class="govuk-grid-column-three-quarters govuk-!-padding-left-0"
+            >
+              Corrective action 2
+            </div>
+            <div
+              class="govuk-grid-column-one-quarter govuk-!-text-align-right govuk-!-padding-right-0"
+            >
+              <a
+                class="govuk-link"
+                href="/?change=true"
+                routerlink="../actions"
+              >
+                 Change 
+              </a>
+              <span>
+                 | 
+              </span>
+              <a
+                class="govuk-link"
+                role="button"
+                tabindex="0"
+              >
+                 Remove 
+              </a>
+            </div>
+          </div>
+          <dl
+            class="govuk-summary-list govuk-!-margin-bottom-9"
+            data-testid="action-1"
+            govuk-summary-list=""
+            style="margin: 5px 5px 35px 5px !important;"
+          >
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Corrective action details
+              </dt>
+              <dd
+                class="pre-line govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <span>
+                  ca2
+                </span>
+              </dd>
+            </div>
+            <div
+              class="govuk-summary-list__row"
+              govuksummarylistrow=""
+            >
+              <dt
+                class="govuk-summary-list__key"
+                govuksummarylistrowkey=""
+              >
+                Corrective action deadline
+              </dt>
+              <dd
+                class="govuk-summary-list__value"
+                govuksummarylistrowvalue=""
+              >
+                <span>
+                  02 Feb 2025
+                </span>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+      <div
+        class="govuk-grid-row"
+      >
+        <div
+          class="govuk-grid-column-full"
+        >
+          <button
+            class="govuk-button govuk-button--secondary govuk-!-margin-bottom-9"
+            type="button"
+          >
+             Add another corrective action 
+          </button>
+        </div>
+      </div>
+    </cca-corrective-actions-summary-details>
+    <button
+      class="govuk-button"
+      govukbutton=""
+      netzpendingbutton=""
+      type="button"
+    >
+      Confirm and complete
+    </button>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Dashboard 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-corrective-actions-check-your-answers>
+`;

@@ -47,7 +47,6 @@ class Cca3SectorSubsectorSchemeMigrationServiceTest {
 		improvementTargetsByPeriod.put("TP8 (2027-2028)", BigDecimal.valueOf(0.8));
 		improvementTargetsByPeriod.put("TP9 (2029-2030)", BigDecimal.valueOf(0.9));
 		UpdateSectorAssociationSchemeVO input = UpdateSectorAssociationSchemeVO.builder()
-				.rowNumber(1L)
 				.sectorAcronym("SEC")
 				.subsectorName("")
 				.measurementType(MeasurementType.ENERGY_KWH)
@@ -92,7 +91,6 @@ class Cca3SectorSubsectorSchemeMigrationServiceTest {
 		improvementTargetsByPeriod.put("TP8 (2027-2028)", BigDecimal.valueOf(0.8));
 		improvementTargetsByPeriod.put("TP9 (2029-2030)", BigDecimal.valueOf(0.9));
 		UpdateSectorAssociationSchemeVO input = UpdateSectorAssociationSchemeVO.builder()
-				.rowNumber(1L)
 				.sectorAcronym("SECTOR")
 				.subsectorName("SUBSECTOR")
 				.measurementType(MeasurementType.ENERGY_KWH)

@@ -181,6 +181,13 @@ export const TASKS_ROUTES: Routes = [
         loadChildren: () => import('./pre-audit-review/pre-audit-review.routes').then((r) => r.PRE_AUDIT_REVIEW_ROUTES),
       },
       {
+        path: 'audit-details-corrective-actions',
+        loadChildren: () =>
+          import('./audit-details-corrective-actions/audit-details-corrective-actions.routes').then(
+            (r) => r.AUDIT_DETAILS_CORRECTIVE_ACTIONS_ROUTES,
+          ),
+      },
+      {
         path: 'file-download/:uuid',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },

@@ -1,24 +1,12 @@
-import {
-  PreAuditReviewSubmitRequestTaskPayload,
-  PreAuditReviewSubmitSaveRequestTaskActionPayload,
-  RequestTaskActionProcessDTO,
-} from 'cca-api';
+import { PreAuditReviewSubmitRequestTaskPayload } from 'cca-api';
 
-type UnaRequestTaskActionProcessDTO = RequestTaskActionProcessDTO & {
-  requestTaskActionPayload: PreAuditReviewSubmitSaveRequestTaskActionPayload;
-};
-
-type PreAuditReviewSubmitDTO = RequestTaskActionProcessDTO & {
-  requestTaskActionPayload: {
-    payloadType: 'EMPTY_PAYLOAD';
-  };
-};
+import { PreAuditReviewRequestTaskActionProcessDTO, PreAuditReviewSubmitDTO } from './types';
 
 export function createRequestTaskActionProcessDTO(
   requestTaskId: number,
   payload: PreAuditReviewSubmitRequestTaskPayload,
   sectionsCompleted: Record<string, string>,
-): UnaRequestTaskActionProcessDTO {
+): PreAuditReviewRequestTaskActionProcessDTO {
   return {
     requestTaskId,
     requestTaskActionType: 'FACILITY_AUDIT_PRE_AUDIT_REVIEW_SAVE_APPLICATION',

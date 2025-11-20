@@ -221,7 +221,7 @@ exports[`UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent sh
           class="govuk-summary-list__key"
           govuksummarylistrowkey=""
         >
-          Official notice
+          Official notices
         </dt>
         <dd
           class="govuk-summary-list__value"

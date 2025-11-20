@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { TaskSection } from '@netz/common/model';
 import { RequestTaskStore } from '@netz/common/store';
 import { TaskItemStatus } from '@requests/common';
+import { produce } from 'immer';
 import { RequestTaskPageContentFactory } from 'projects/common/request-task';
 
 import { PreAuditReviewSubmitRequestTaskPayload } from 'cca-api';
@@ -33,7 +34,7 @@ function preAuditReviewSections(payload: PreAuditReviewSubmitRequestTaskPayload)
       title: 'Pre-audit review reason',
       tasks: [
         {
-          status: payload?.sectionsCompleted[PRE_AUDIT_REVIEW_AUDIT_REASON_SUBTASK] ?? TaskItemStatus.NOT_STARTED,
+          status: calculateReviewReasonStatus(payload),
           link: `${routePrefix}/reason`,
           linkText: 'Describe the reason for pre-audit review',
         },
@@ -61,4 +62,21 @@ function preAuditReviewSections(payload: PreAuditReviewSubmitRequestTaskPayload)
       ],
     },
   ];
+}
+
+function calculateReviewReasonStatus(payload: PreAuditReviewSubmitRequestTaskPayload): TaskItemStatus {
+  const auditReasonDetails = payload?.preAuditReviewDetails?.auditReasonDetails;
+  const completed = auditReasonDetails?.reasonsForAudit?.length > 0 && auditReasonDetails?.comment?.length > 0;
+
+  if (completed && payload?.sectionsCompleted[PRE_AUDIT_REVIEW_AUDIT_REASON_SUBTASK] === TaskItemStatus.NOT_STARTED) {
+    const sectionsCompleted = produce(payload?.sectionsCompleted, (draft) => {
+      draft[PRE_AUDIT_REVIEW_AUDIT_REASON_SUBTASK] = TaskItemStatus.COMPLETED;
+    });
+
+    return sectionsCompleted[PRE_AUDIT_REVIEW_AUDIT_REASON_SUBTASK] as TaskItemStatus;
+  }
+
+  return (
+    (payload?.sectionsCompleted[PRE_AUDIT_REVIEW_AUDIT_REASON_SUBTASK] as TaskItemStatus) ?? TaskItemStatus.NOT_STARTED
+  );
 }

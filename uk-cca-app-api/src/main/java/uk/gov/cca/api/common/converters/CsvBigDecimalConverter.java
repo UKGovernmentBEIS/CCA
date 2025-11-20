@@ -14,7 +14,7 @@ public class CsvBigDecimalConverter extends AbstractBeanField<BigDecimal, String
         try {
             return StringUtils.isBlank(value)
                     ? null
-                    : new BigDecimal(value.trim()).setScale(7, RoundingMode.HALF_DOWN);
+                    : new BigDecimal(value.replace("%", "").trim()).setScale(7, RoundingMode.HALF_DOWN);
         } catch (Exception e) {
             throw new CsvDataTypeMismatchException(e.getMessage());
         }

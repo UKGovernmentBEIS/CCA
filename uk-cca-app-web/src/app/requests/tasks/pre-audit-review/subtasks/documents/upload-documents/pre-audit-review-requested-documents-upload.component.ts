@@ -81,16 +81,16 @@ function update(
     draft.preAuditReviewDetails = {
       ...draft?.preAuditReviewDetails,
       requestedDocuments: {
-        auditMaterialReceivedDate: form.controls.auditMaterialReceivedDate.value?.toISOString(),
-        processFlowMapsFile: fileUtils.toUUIDs([form.controls.processFlowMapsFile.value])[0],
-        manufacturingProcessFile: fileUtils.toUUIDs([form.controls.manufacturingProcessFile.value])[0],
-        annotatedSitePlansFile: fileUtils.toUUIDs([form.controls.annotatedSitePlansFile.value])[0],
-        eligibleProcessFile: fileUtils.toUUIDs([form.controls.eligibleProcessFile.value])[0],
-        directlyAssociatedActivitiesFile: fileUtils.toUUIDs([form.controls.directlyAssociatedActivitiesFile.value])[0],
-        seventyPerCentRuleEvidenceFile: fileUtils.toUUIDs([form.controls.seventyPerCentRuleEvidenceFile.value])[0],
-        baseYearTargetPeriodEvidenceFiles: fileUtils.toUUIDs(form.controls.baseYearTargetPeriodEvidenceFiles.value),
-        additionalDocuments: fileUtils.toUUIDs(form.controls.additionalDocuments.value),
-        additionalInformation: form.controls.additionalInformation.value,
+        auditMaterialReceivedDate: form.value.auditMaterialReceivedDate?.toISOString(),
+        processFlowMapsFile: fileUtils.toUUIDs([form.value.processFlowMapsFile])[0],
+        manufacturingProcessFile: fileUtils.toUUIDs([form.value.manufacturingProcessFile])[0],
+        annotatedSitePlansFile: fileUtils.toUUIDs([form.value.annotatedSitePlansFile])[0],
+        eligibleProcessFile: fileUtils.toUUIDs([form.value.eligibleProcessFile])[0],
+        directlyAssociatedActivitiesFile: fileUtils.toUUIDs([form.value.directlyAssociatedActivitiesFile])[0],
+        seventyPerCentRuleEvidenceFile: fileUtils.toUUIDs([form.value.seventyPerCentRuleEvidenceFile])[0],
+        baseYearTargetPeriodEvidenceFiles: fileUtils.toUUIDs(form.value.baseYearTargetPeriodEvidenceFiles),
+        additionalDocuments: fileUtils.toUUIDs(form.value.additionalDocuments),
+        additionalInformation: form.value.additionalInformation,
       },
     };
   });

@@ -4,6 +4,7 @@ import { adminTerminationTaskContent } from './admin-termination/admin-terminati
 import { adminTerminationFinalDecisionTaskContent } from './admin-termination-final-decision/admin-termination-final-decision-task-content';
 import { adminTerminationPeerReviewTaskContent } from './admin-termination-peer-review/admin-termination-peer-review-task-content';
 import { adminTerminationWaitForPeerReviewTaskContent } from './admin-termination-wait-for-peer-review/admin-termination-wait-for-peer-review-task-content';
+import { auditDetailsCorrectiveActionsTaskContent } from './audit-details-corrective-actions/audit-details-corrective-actions-task-content';
 import { cca3MigrationAccountActivationTaskContent } from './cca3-migration-account-activation/cca3-migration-account-activation-task-content';
 import { patUploadTaskContent } from './performance-account-template-upload/pat-upload-task-content';
 import { performanceDataDownloadTaskContent } from './performance-data-download/performance-data-download-task-content';
@@ -55,4 +56,6 @@ export const tasksContent: RequestTaskPageContentFactoryMap = {
   CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION: cca3MigrationAccountActivationTaskContent,
 
   PRE_AUDIT_REVIEW_SUBMIT: preAuditReviewTaskContent,
+
+  AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT: auditDetailsCorrectiveActionsTaskContent,
 };

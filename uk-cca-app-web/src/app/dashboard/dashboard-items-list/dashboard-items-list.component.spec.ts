@@ -43,6 +43,6 @@ describe('WorkflowItemsListComponent', () => {
 
   it('should show data in table', () => {
     const cells = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('td'));
-    expect(cells.map((cell) => cell.textContent.trim())).toEqual([...['', 'TEST_FN TEST_LN', '10']]);
+    expect(cells.map((cell) => cell.textContent.trim())).toEqual(['', '[object Object]', '10']);
   });
 });

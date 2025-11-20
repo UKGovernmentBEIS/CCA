@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`AuditDetailsAndCorrectiveActionsConfirmationComponent should display the correct header and caption 1`] = `
+<cca-pre-audit-review-confirmation
+  auditDetailsAndCorrectiveActions={[Function Function]}
+  furtherActionsNeeded={[Function Function]}
+  outcome={[Function Function]}
+  requestTaskStore={[Function _RequestTaskStore]}
+>
+  <govuk-panel
+    title="Audit details and corrective actions complete"
+  >
+    <div
+      class="govuk-panel govuk-panel--confirmation"
+    >
+      <h1
+        class="govuk-panel__title"
+      >
+        Audit details and corrective actions complete
+      </h1>
+      <div
+        class="govuk-panel__body"
+      >
+         Outcome 
+        <br />
+        <span
+          style="font-weight: bold;"
+        >
+          Corrective actions needed
+        </span>
+      </div>
+    </div>
+  </govuk-panel><h3
+    class="govuk-heading-m"
+  >
+    What happens next
+  </h3><p>
+     A new task, 'Track corrective actions', has been assigned to you. You can review the corrective actions and upload any evidence that they have been completed when you start this task. 
+  </p><a
+    class="govuk-link"
+    href="/dashboard"
+  >
+     Return to: Dashboard 
+  </a>
+</cca-pre-audit-review-confirmation>
+`;

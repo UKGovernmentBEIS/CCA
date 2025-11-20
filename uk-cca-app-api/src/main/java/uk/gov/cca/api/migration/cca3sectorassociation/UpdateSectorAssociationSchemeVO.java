@@ -1,12 +1,12 @@
 package uk.gov.cca.api.migration.cca3sectorassociation;
 
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import uk.gov.cca.api.common.domain.MeasurementType;
 
 import java.math.BigDecimal;
@@ -15,12 +15,9 @@ import java.util.Map;
 
 @Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class UpdateSectorAssociationSchemeVO {
-
-
-	@NotNull
-	private Long rowNumber;
 
 	@NotBlank
 	private String sectorAcronym;
