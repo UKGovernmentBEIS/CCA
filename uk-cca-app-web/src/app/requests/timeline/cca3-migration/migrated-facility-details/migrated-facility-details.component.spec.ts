@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestActionStore } from '@netz/common/store';
 
-import { cca3MigrationCompletedActionStateMock } from '../tests/mock-data';
+import { cca3MigrationCompletedActionStateMock } from '../testing/mock-data';
 import { MigratedFacilityDetailsComponent } from './migrated-facility-details.component';
 
 describe('MigratedFacilityDetailsComponent', () => {

@@ -14,14 +14,13 @@ export function calculateEnergyConsumedEligible(energyConsumed: string, energyCo
     .toNumber();
 }
 
-// Normalises user entered numbers that may be stored as strings, empty values or undefined
-function normaliseNumber(value: string | number | null | undefined): number {
-  const parsed = Number(value ?? 0);
-  return Number.isFinite(parsed) ? parsed : 0;
+// Normalises user entered numbers that may be stored as strings (including scientific), empty values or undefined
+export function normaliseNumber(field: string | number | null | undefined): number | null {
+  return Number.isNaN(Number(field)) ? null : Number(field);
 }
 
 export function calculateFixedEnergy(totalFixedEnergy: string | number | null | undefined): string {
-  return normaliseNumber(totalFixedEnergy).toString();
+  return normaliseNumber(totalFixedEnergy)?.toString();
 }
 
 export function calculateVariableEnergy(

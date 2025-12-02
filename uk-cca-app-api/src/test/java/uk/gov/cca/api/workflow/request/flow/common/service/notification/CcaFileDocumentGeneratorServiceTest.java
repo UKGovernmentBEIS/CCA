@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.notification.template.constants.CcaDocumentTemplateType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.service.CcaDecisionNotificationUsersService;
@@ -161,6 +162,108 @@ class CcaFileDocumentGeneratorServiceTest {
                 .constructTemplateParams(params);
         verify(ccaDecisionNotificationUsersService, times(1))
                 .findCCUserEmails(decisionNotification);
+        verify(fileDocumentGenerateServiceDelegator, times(1))
+                .generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate);
+    }
+
+    @Test
+    void generateAsync_with_Scheme_version() {
+        final Request request = Request.builder().id("request-id").build();
+        final String signatory = "signatory";
+        final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
+                .sectorUsers(Set.of("sector"))
+                .decisionNotification(DecisionNotification.builder().signatory(signatory).build())
+                .build();
+        final String type = CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_ACCEPTED;
+        final String documentTemplateType = CcaDocumentTemplateType.UNDERLYING_AGREEMENT_ACCEPTED;
+        final String fileNameToGenerate = "una.pdf";
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
+
+        final List<String> recipients = List.of("sector@example.com");
+        final DocumentTemplateParamsSourceData params = DocumentTemplateParamsSourceData.builder()
+                .contextActionType(type)
+                .request(request)
+                .signatory(signatory)
+                .ccRecipientsEmails(recipients)
+                .build();
+        final TemplateParams templateParams = TemplateParams.builder()
+                .params(new HashMap<>(Map.of("param", "param")))
+                .build();
+
+        when(documentTemplateOfficialNoticeParamsProvider.constructTemplateParams(params))
+                .thenReturn(templateParams);
+        when(commonParamsProvider.getSectorTemplateParams(request, schemeVersion))
+                .thenReturn(Map.of());
+        when(ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification))
+                .thenReturn(recipients);
+        when(fileDocumentGenerateServiceDelegator.generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate))
+                .thenReturn(CompletableFuture.completedFuture(FileInfoDTO.builder().build()));
+
+        // Invoke
+        ccaOfficialNoticeGeneratorService.generateAsync(request, decisionNotification, type, documentTemplateType, fileNameToGenerate, schemeVersion);
+
+        // Verify
+        verify(documentTemplateOfficialNoticeParamsProvider, times(1))
+                .constructTemplateParams(params);
+        verify(ccaDecisionNotificationUsersService, times(1))
+                .findCCUserEmails(decisionNotification);
+        verify(fileDocumentGenerateServiceDelegator, times(1))
+                .generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate);
+    }
+
+    @Test
+    void generateAsync_with_sector() {
+        final String signatory = "signatory";
+        final Long sectorAssociationId = 1L;
+        final String documentTemplateType = CcaDocumentTemplateType.UNDERLYING_AGREEMENT_ACCEPTED;
+        TemplateParams documentTemplateParams = TemplateParams.builder().params(Map.of("param", "test")).build();
+        final String fileNameToGenerate = "una.pdf";
+
+        final TemplateParams templateParams = TemplateParams.builder().params(Map.of("sector", "test")).build();
+
+        when(commonParamsProvider.getSectorAndCaAndSignatoryTemplateParams(signatory, sectorAssociationId, documentTemplateParams))
+                .thenReturn(templateParams);
+
+
+        // Invoke
+        ccaOfficialNoticeGeneratorService.generateAsync(signatory, sectorAssociationId, documentTemplateType, documentTemplateParams, fileNameToGenerate);
+
+        // Verify
+        verify(commonParamsProvider, times(1))
+                .getSectorAndCaAndSignatoryTemplateParams(signatory, sectorAssociationId, documentTemplateParams);
+        verify(fileDocumentGenerateServiceDelegator, times(1))
+                .generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate);
+    }
+
+    @Test
+    void generateAsync_no_decision_no_scheme_version() {
+        final Request request = Request.builder().id("request-id").build();
+        final String signatory = "signatory";
+        final String documentTemplateType = CcaDocumentTemplateType.UNDERLYING_AGREEMENT_ACCEPTED;
+        TemplateParams documentTemplateParams = TemplateParams.builder().params(Map.of("param", "test")).build();
+        final String fileNameToGenerate = "una.pdf";
+
+        final DocumentTemplateParamsSourceData params = DocumentTemplateParamsSourceData.builder()
+                .request(request)
+                .signatory(signatory)
+                .build();
+        final TemplateParams templateParams = TemplateParams.builder()
+                .params(new HashMap<>(Map.of("param", "param")))
+                .build();
+
+        when(documentTemplateOfficialNoticeParamsProvider.constructTemplateParams(params))
+                .thenReturn(templateParams);
+        when(commonParamsProvider.getSectorTemplateParams(request, null))
+                .thenReturn(Map.of());
+
+        // Invoke
+        ccaOfficialNoticeGeneratorService.generateAsync(request, signatory, documentTemplateType, documentTemplateParams, fileNameToGenerate);
+
+        // Verify
+        verify(documentTemplateOfficialNoticeParamsProvider, times(1))
+                .constructTemplateParams(params);
+        verify(commonParamsProvider, times(1))
+                .getSectorTemplateParams(request, null);
         verify(fileDocumentGenerateServiceDelegator, times(1))
                 .generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate);
     }

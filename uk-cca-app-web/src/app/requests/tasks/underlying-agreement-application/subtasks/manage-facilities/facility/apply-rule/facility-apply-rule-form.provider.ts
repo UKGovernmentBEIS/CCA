@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { underlyingAgreementQuery, UPLOAD_SECTION_ATTACHMENT_TYPE } from '@requests/common';
+import { normaliseNumber, underlyingAgreementQuery, UPLOAD_SECTION_ATTACHMENT_TYPE } from '@requests/common';
 import { FileType, FileValidators, UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
 
@@ -48,19 +48,19 @@ export const FacilityApplyRuleFormProvider: Provider = {
     ]);
 
     const group = fb.group({
-      energyConsumed: fb.control(applyRule?.energyConsumed ?? null, [
+      energyConsumed: fb.control(normaliseNumber(applyRule?.energyConsumed), [
         GovukValidators.required('Enter the energy consumed in the installation'),
         GovukValidators.min(0, 'Percentage of energy consumed in the installation must be between 0 and 100'),
         GovukValidators.max(100, 'Percentage of energy consumed in the installation must be between 0 and 100'),
         GovukValidators.maxIntegerAndDecimalsValidator(3, 7),
       ]),
-      energyConsumedProvision: fb.control(applyRule?.energyConsumedProvision ?? null, [
+      energyConsumedProvision: fb.control(normaliseNumber(applyRule?.energyConsumedProvision), [
         GovukValidators.required('Enter the energy consumed in relation to the 3/7ths provision'),
         GovukValidators.min(0, 'Percentage of energy consumed in the installation must be between 0 and 42.9'),
         GovukValidators.max(42.9, 'Percentage of energy consumed in the installation must be between 0 and 42.9'),
         GovukValidators.maxIntegerAndDecimalsValidator(2, 7),
       ]),
-      startDate: fb.control(applyRule?.startDate ? (new Date(applyRule.startDate) as any) : null),
+      startDate: fb.control(applyRule?.startDate ? new Date(applyRule.startDate) : null),
       evidenceFile: buildFileFormControl,
     });
 

@@ -84,12 +84,33 @@ export const TIMELINE_ROUTES: Routes = [
         loadChildren: () => import('./cca3-migration/cca3-migration.routes').then((r) => r.CCA3_MIGRATION_ROUTES),
       },
       {
+        path: 'pre-audit-review',
+        loadChildren: () =>
+          import('./facility-audit/pre-audit-review-completed/pre-audit-review-completed.routes').then(
+            (r) => r.FACILITY_AUDIT_PRE_AUDIT_REVIEW_COMPLETED_ROUTES,
+          ),
+      },
+      {
+        path: 'audit-details-corrective-actions',
+        loadChildren: () =>
+          import(
+            './facility-audit/details-corrective-actions-completed/details-corrective-actions-completed.routes'
+          ).then((r) => r.FACILITY_AUDIT_DETAILS_CORRECTIVE_ACTIONS_COMPLETED_ROUTES),
+      },
+      {
+        path: 'track-corrective-actions',
+        loadChildren: () =>
+          import('./facility-audit/track-corrective-actions-completed/track-corrective-actions-completed.routes').then(
+            (r) => r.FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_COMPLETED_ROUTES,
+          ),
+      },
+      {
         path: 'file-download/:uuid',
-        loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
+        loadComponent: () => import('@shared/components').then((c) => c.FileDownloadComponent),
       },
       {
         path: 'file-download/:fileType/:uuid',
-        loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
+        loadComponent: () => import('@shared/components').then((c) => c.FileDownloadComponent),
       },
     ],
   },

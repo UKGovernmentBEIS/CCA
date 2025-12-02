@@ -159,7 +159,7 @@ export class AddBaselineDataComponent {
     const areIdentical = areEntitiesIdentical(currentTP5, originalTP5);
 
     const currentDecisions = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewGroupDecisions)();
-    const decisions = areIdentical ? deleteDecision(currentDecisions, 'TARGET_PERIOD5_DETAILS') : currentDecisions;
+    const decisions = areIdentical ? currentDecisions : deleteDecision(currentDecisions, 'TARGET_PERIOD5_DETAILS');
 
     const currentReviewSectionsCompleted = this.requestTaskStore.select(
       underlyingAgreementReviewQuery.selectReviewSectionsCompleted,

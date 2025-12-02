@@ -32,7 +32,7 @@ export class WorkflowTypePipe implements PipeTransform {
         return 'Buy-out and surplus';
 
       case 'FACILITY_AUDIT':
-        return 'Facility Audit';
+        return 'Facility audit';
 
       case 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING':
         return 'Performance Data';

@@ -588,7 +588,7 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Must the Special Reporting Methodology be applied for this facility?
+                Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -1534,7 +1534,7 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Must the Special Reporting Methodology be applied for this facility?
+                Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -2294,7 +2294,7 @@ exports[`TP6SummaryComponent should match snapshot for TP6, ABSOLUTE agreementMe
             <dt
               class="govuk-summary-list__key"
             >
-              Must the Special Reporting Methodology be applied for this facility?
+              Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
             </dt>
             <dd
               class="govuk-summary-list__value"

@@ -25,7 +25,6 @@ exports[`BaselineEnergyConsumptionComponent should render the form with the corr
   showTotalsOnlyFields={[Function Function]}
   showVariableEnergyType={[Function Function]}
   tasksApiService={[Function Object]}
-  throughputUnitValue={[Function Function]}
   totalFixedEnergyValue={[Function Function]}
   totalThroughputValue={[Function Function]}
   una={[Function Object]}
@@ -419,7 +418,7 @@ exports[`BaselineEnergyConsumptionComponent should render the form with the corr
             Fixed baseline energy for the facility
           </p>
           <p>
-            100 kWh
+            100.1234567 kWh
           </p>
           <p
             class="govuk-label--s"
@@ -438,7 +437,7 @@ exports[`BaselineEnergyConsumptionComponent should render the form with the corr
             Baseline total energy for the facility
           </p>
           <p>
-            300 kWh
+            300.1234567 kWh
           </p>
         </div>
         <div

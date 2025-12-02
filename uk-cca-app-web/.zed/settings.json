@@ -7,7 +7,7 @@
     "HTML": {
       "formatter": "prettier",
       "format_on_save": "on",
-      "language_servers": ["angular", "..."]
+      "language_servers": ["angular", "!typescript-language-server", "..."]
     },
     "JavaScript": {
       "formatter": "prettier",
@@ -19,7 +19,7 @@
     "TypeScript": {
       "formatter": "prettier",
       "format_on_save": "on",
-      "language_servers": ["...", "angular"],
+      "language_servers": ["angular", "!typescript-language-server", "..."],
       "code_actions_on_format": {
         "source.fixAll.eslint": true
       }

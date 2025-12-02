@@ -3,12 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { TasksApiService } from '@requests/common';
+import { TasksApiService, toAuditDetailsSummaryData } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
 
 import { auditDetailsCorrectiveActionsQuery } from '../../../audit-details-corrective-actions.selectors';
-import { toAuditDetailsSummaryData } from '../audit-details-summary-data';
 
 @Component({
   selector: 'cca-audit-details-summary',

@@ -19,6 +19,7 @@ import {
   isTargetUnitDetailsWizardCompleted,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   ReviewTargetUnitDetailsWizardStep,
+  sameCompanyRegistrationNumbers,
   TasksApiService,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
@@ -97,7 +98,13 @@ export class CompanyRegistrationNumberComponent {
     const payload = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskPayload)();
 
     const actionPayload = toUnderlyingAgreementSaveReviewPayload(payload);
-    const updatedPayload = updateTUDetails(actionPayload, companyNumberState, companyProfile);
+
+    const sameCRN = sameCompanyRegistrationNumbers(
+      companyProfile,
+      actionPayload?.underlyingAgreementTargetUnitDetails.companyRegistrationNumber,
+    );
+
+    const updatedPayload = sameCRN ? actionPayload : updateTUDetails(actionPayload, companyNumberState, companyProfile);
 
     const { determination, reviewSectionsCompleted, sectionsCompleted } = applySaveActionSideEffects(
       this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)(),

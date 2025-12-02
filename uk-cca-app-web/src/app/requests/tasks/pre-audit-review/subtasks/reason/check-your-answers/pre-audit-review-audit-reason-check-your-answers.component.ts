@@ -5,14 +5,13 @@ import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/c
 import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
-import { TaskItemStatus, TasksApiService } from '@requests/common';
+import { TaskItemStatus, TasksApiService, toPreAuditReviewAuditReasonSummaryData } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 import { produce } from 'immer';
 
 import { preAuditReviewQuery } from '../../../pre-audit-review.selectors';
 import { createRequestTaskActionProcessDTO } from '../../../transform';
 import { PRE_AUDIT_REVIEW_AUDIT_REASON_SUBTASK } from '../../../types';
-import { toPreAuditReviewAuditReasonSummaryData } from '../pre-audit-review-audit-reason-summary-data';
 
 @Component({
   selector: 'cca-pre-audit-review-audit-reason-check-your-answers',

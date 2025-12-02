@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 
-import { mockFacilityDetails } from '../../test/mock-data';
+import { mockFacilityDetails } from '../../testing/mock-data';
 import { FacilityAuditStore } from '../facility-audit.store';
 import { ReasonsComponent } from './reasons.component';
 

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { WORKFLOW_NOTES_ROUTES } from '../../../../workflow-history-tab/workflow-details/notes-tab/notes.routes';
 import { WorkflowDetailsResolver } from './workflow-details.resolver';
 
 export const WORKFLOW_DETAILS_ROUTES: Routes = [
@@ -21,6 +22,7 @@ export const WORKFLOW_DETAILS_ROUTES: Routes = [
             path: 'timeline',
             loadChildren: () => import('@requests/timeline').then((c) => c.TIMELINE_ROUTES),
           },
+          ...WORKFLOW_NOTES_ROUTES,
         ],
       },
     ],

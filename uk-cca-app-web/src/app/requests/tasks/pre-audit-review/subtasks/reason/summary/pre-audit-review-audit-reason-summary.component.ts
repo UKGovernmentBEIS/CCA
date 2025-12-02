@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { toPreAuditReviewAuditReasonSummaryData } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 
 import { preAuditReviewQuery } from '../../../pre-audit-review.selectors';
-import { toPreAuditReviewAuditReasonSummaryData } from '../pre-audit-review-audit-reason-summary-data';
 
 @Component({
   selector: 'cca-pre-audit-review-audit-review-summary',

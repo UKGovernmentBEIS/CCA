@@ -55,6 +55,7 @@ export const ACTIVE_TARGET_UNIT_ROUTES: Routes = [
       ...USERS_AND_CONTACTS_ROUTES,
       ...REPORTS_TAB_ROUTES,
       ...BUYOUT_AND_SURPLUS_ROUTES,
+      // ...NOTES_ROUTES,
     ],
   },
 ];

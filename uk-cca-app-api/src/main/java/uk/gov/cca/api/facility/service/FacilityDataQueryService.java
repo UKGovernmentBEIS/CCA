@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.cca.api.authorization.ccaauth.rules.services.authorityinfo.providers.FacilityAuthorityInfoProvider;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.FacilityData;
+import uk.gov.cca.api.facility.domain.FacilityValidationContext;
 import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataDetailsDTO;
 import uk.gov.cca.api.facility.repository.FacilityDataRepository;
@@ -15,7 +16,10 @@ import uk.gov.netz.api.common.exception.ErrorCode;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
@@ -63,6 +67,13 @@ public class FacilityDataQueryService implements FacilityAuthorityInfoProvider {
                 .map(FACILITY_DETAILS_MAPPER::toFacilityBaseInfo)
                 .toList();
     }
+    
+    public Map<String, FacilityValidationContext> getFacilityValidationContextByFacilityBusinessIds(Set<String> facilityBusinessIds) {
+        return facilityDataRepository.findAllByFacilityBusinessIdIn(facilityBusinessIds)
+                .stream()
+                .map(FACILITY_DETAILS_MAPPER::toFacilityValidationContext)
+                .collect(Collectors.toMap(FacilityValidationContext::getFacilityBusinessId, Function.identity()));
+    }
 
     public boolean isExistingFacilityBusinessId(String facilityBusinessId) {
         return facilityDataRepository.existsByFacilityBusinessId(facilityBusinessId);
@@ -96,12 +107,6 @@ public class FacilityDataQueryService implements FacilityAuthorityInfoProvider {
     public Long getIdByFacilityBusinessId(String facilityBusinessId) {
         return facilityDataRepository.findIdByFacilityBusinessId(facilityBusinessId)
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
-    }
-
-    public Set<SchemeVersion> getParticipatingFacilitySchemeVersions(String facilityBusinessId) {
-        return facilityDataRepository.findByFacilityBusinessId(facilityBusinessId)
-                .map(FacilityData::getParticipatingSchemeVersions)
-                .orElse(Collections.emptySet());
     }
 
 	public FacilityData exclusiveLockFacility(Long facilityId) {

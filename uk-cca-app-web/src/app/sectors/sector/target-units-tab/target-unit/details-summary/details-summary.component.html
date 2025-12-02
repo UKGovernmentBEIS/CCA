@@ -138,10 +138,11 @@
               </dd>
             </div>
           </dl>
-        } @else if (companiesHouseState().error === 404) {
-          <p>The company number was not found at the Companies House</p>
         } @else {
-          <p>The Companies House is currently unavailable</p>
+          <p>
+            Either the Companies House service is currently unavailable or the company number in the form doesn't
+            exactly match any companies listed on Companies House
+          </p>
         }
       </cca-utility-panel>
     </div>

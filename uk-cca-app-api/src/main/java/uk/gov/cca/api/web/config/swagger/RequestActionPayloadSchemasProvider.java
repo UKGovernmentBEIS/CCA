@@ -104,7 +104,7 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
 		// Facility Audit
 		addResolvedShemas(PreAuditReviewSubmittedRequestActionPayload.class.getSimpleName(), PreAuditReviewSubmittedRequestActionPayload.class);
 		addResolvedShemas(AuditDetailsCorrectiveActionsSubmittedRequestActionPayload.class.getSimpleName(), AuditDetailsCorrectiveActionsSubmittedRequestActionPayload.class);
-		addResolvedShemas(AuditTrackCorrectiveActionsSubmittedRequestActionPayload.class.getSimpleName(), AuditDetailsCorrectiveActionsSubmittedRequestActionPayload.class);
+		addResolvedShemas(AuditTrackCorrectiveActionsSubmittedRequestActionPayload.class.getSimpleName(), AuditTrackCorrectiveActionsSubmittedRequestActionPayload.class);
 
 		// CCA2 Extension Notice
 		addResolvedShemas(Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload.class.getSimpleName(), Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload.class);

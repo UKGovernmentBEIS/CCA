@@ -35,8 +35,8 @@ type ViewModel = {
   requestTask: RequestTaskDTO;
   header: string;
   sections: TaskSection[] | null;
-  contentComponent: Type<unknown> | null;
   preContentComponent: Type<unknown> | null;
+  contentComponent: Type<unknown> | null;
   postContentComponent: Type<unknown> | null;
   relatedTasks: ItemDTO[];
   hasRelatedTasks: boolean;
@@ -51,8 +51,6 @@ type ViewModel = {
 @Component({
   selector: 'netz-request-task-page',
   templateUrl: './request-task-page.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   imports: [
     PageHeadingComponent,
     TaskHeaderInfoComponent,
@@ -64,6 +62,8 @@ type ViewModel = {
     TaskListComponent,
     TimelineItemLinkPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class RequestTaskPageComponent {
   private readonly store = inject(RequestTaskStore);
@@ -72,15 +72,14 @@ export class RequestTaskPageComponent {
 
   vm: Signal<ViewModel> = computed(() => {
     const requestTask = this.store.select(requestTaskQuery.selectRequestTask)();
-    if (!requestTask) {
-      return null;
-    }
+    if (!requestTask) return null;
 
     const relatedTasks = this.store.select(requestTaskQuery.selectRelatedTasks)();
     const timeline = this.store.select(requestTaskQuery.selectTimeline)();
     const showAssignAction = this.store.select(requestTaskQuery.selectIsAssignActionVisible)();
     const relatedActions = this.store.select(requestTaskQuery.selectRelatedActions)();
-    const { header, sections, contentComponent, preContentComponent, postContentComponent } = runInInjectionContext(
+
+    const { header, sections, preContentComponent, contentComponent, postContentComponent } = runInInjectionContext(
       this.injector,
       () => this.contentFactoryMap[requestTask.type](),
     );
@@ -89,8 +88,8 @@ export class RequestTaskPageComponent {
       requestTask,
       header,
       sections,
-      contentComponent,
       preContentComponent,
+      contentComponent,
       postContentComponent,
       relatedTasks,
       timeline,

@@ -60,18 +60,14 @@ public class CcaFileDocumentGeneratorService {
     }
 
     public CompletableFuture<FileInfoDTO> generateAsync(final Request request, String signatory, final String documentTemplateType, TemplateParams documentTemplateParams, String fileNameToGenerate) {
-        final TemplateParams commonTemplateParams = constructTemplateParams(request, signatory, null, null);
+        return generateAsync(request, signatory, documentTemplateType, documentTemplateParams, null, fileNameToGenerate);
+    }
 
+    public CompletableFuture<FileInfoDTO> generateAsync(final Request request, String signatory, final String documentTemplateType, TemplateParams documentTemplateParams, SchemeVersion schemeVersion, String fileNameToGenerate) {
+        TemplateParams commonTemplateParams = constructTemplateParams(request, signatory, null, schemeVersion);
         commonTemplateParams.getParams().putAll(documentTemplateParams.getParams());
 
-        final TemplateParams templateParams = TemplateParams.builder()
-                .workflowParams(commonTemplateParams.getWorkflowParams())
-                .competentAuthorityParams(commonTemplateParams.getCompetentAuthorityParams())
-                .signatoryParams(commonTemplateParams.getSignatoryParams())
-                .accountParams(commonTemplateParams.getAccountParams())
-                .params(commonTemplateParams.getParams())
-                .build();
-        return fileDocumentGenerateServiceDelegator.generateAndSaveFileDocumentAsync(documentTemplateType, templateParams, fileNameToGenerate);
+        return fileDocumentGenerateServiceDelegator.generateAndSaveFileDocumentAsync(documentTemplateType, commonTemplateParams, fileNameToGenerate);
     }
 
     private TemplateParams constructTemplateParams(final Request request, final CcaDecisionNotification decisionNotification, String type, SchemeVersion schemeVersion) {

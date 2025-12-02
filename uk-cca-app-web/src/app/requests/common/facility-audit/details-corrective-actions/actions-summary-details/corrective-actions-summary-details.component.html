@@ -1,0 +1,77 @@
+<dl govuk-summary-list [attr.data-testid]="'corrective-actions'">
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>
+      Did the final audit report identify any correcive actions the operator must complete?
+    </dt>
+    <dd govukSummaryListRowValue>
+      <span>{{ correctiveActions()?.hasActions ? 'Yes' : 'No' }}</span>
+    </dd>
+
+    @if (isEditable()) {
+      <dd govukSummaryListRowActions>
+        <a class="govuk-link" routerLink="../has-actions" [queryParams]="{ change: true }">Change</a>
+      </dd>
+    }
+  </div>
+</dl>
+
+@if (correctiveActions()?.hasActions) {
+  @for (action of correctiveActions()?.actions; let i = $index; track action) {
+    <section class="govuk-!-margin-bottom-9">
+      <div class="utility-panel-container">
+        <div class="govuk-grid-row govuk-!-margin-bottom-4 govuk-!-margin-top-0 utility-panel-header background">
+          <div class="govuk-grid-column-three-quarters govuk-!-padding-left-0">Corrective action {{ i + 1 }}</div>
+
+          <div class="govuk-grid-column-one-quarter govuk-!-text-align-right govuk-!-padding-right-0">
+            @if (isEditable()) {
+              <a class="govuk-link" routerLink="../actions" [queryParams]="{ change: true }"> Change </a>
+            }
+
+            @if (correctiveActions()?.actions.length > 1 && isEditable()) {
+              <span> | </span>
+              <a
+                class="govuk-link"
+                (click)="onRemoveAction(i)"
+                (keydown)="onRemoveAction(i)"
+                role="button"
+                tabindex="0"
+              >
+                Remove
+              </a>
+            }
+          </div>
+        </div>
+
+        <dl govuk-summary-list [attr.data-testid]="'action-' + i" style="margin: 5px 5px 35px 5px !important">
+          <div govukSummaryListRow>
+            <dt govukSummaryListRowKey>Corrective action details</dt>
+            <dd govukSummaryListRowValue class="pre-line">
+              <span>{{ action?.details }}</span>
+            </dd>
+          </div>
+
+          <div govukSummaryListRow>
+            <dt govukSummaryListRowKey>Corrective action deadline</dt>
+            <dd govukSummaryListRowValue>
+              <span>{{ action?.deadline | date: 'dd MMM yyyy' }}</span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+  }
+}
+
+@if (correctiveActions()?.hasActions && correctiveActions()?.actions.length < 10 && isEditable()) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <button
+        type="button"
+        class="govuk-button govuk-button--secondary govuk-!-margin-bottom-9"
+        (click)="onAddAction()"
+      >
+        Add another corrective action
+      </button>
+    </div>
+  </div>
+}

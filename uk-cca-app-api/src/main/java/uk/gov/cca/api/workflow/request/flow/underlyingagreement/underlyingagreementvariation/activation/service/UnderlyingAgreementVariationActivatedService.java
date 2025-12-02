@@ -79,7 +79,7 @@ public class UnderlyingAgreementVariationActivatedService {
         saveFacilityData(accountId, requestPayload.getFacilitiesReviewGroupDecisions(), proposedUnderlyingAgreement.getFacilities());
 
         // Save search keywords
-        saveKeywords(accountId, requestPayload.getUnderlyingAgreement().getUnderlyingAgreementTargetUnitDetails(), unaContainerFinal);
+        saveKeywords(accountId, requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails(), unaContainerFinal);
 
         final TargetUnitAccountUpdateDTO targetUnitAccountUpdateDTO = ACCOUNT_MAPPER
                 .toTargetUnitAccountUpdateDTO(requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails());

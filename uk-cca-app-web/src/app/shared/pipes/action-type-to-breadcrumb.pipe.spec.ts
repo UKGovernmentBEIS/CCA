@@ -60,6 +60,27 @@ describe('ActionTypeToBreadcrumbPipe', () => {
       }),
     ).toEqual('submitted by John Bolt');
 
+    expect(
+      pipe.transform({
+        submitter: 'John Bolt',
+        type: 'FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED',
+      }),
+    ).toEqual('submitted by John Bolt');
+
+    expect(
+      pipe.transform({
+        submitter: 'John Bolt',
+        type: 'FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED',
+      }),
+    ).toEqual('submitted by John Bolt');
+
+    expect(
+      pipe.transform({
+        submitter: 'John Bolt',
+        type: 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED',
+      }),
+    ).toEqual('submitted by John Bolt');
+
     // Accepted
     expect(
       pipe.transform({

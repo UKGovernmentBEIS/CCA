@@ -136,34 +136,6 @@ class FacilityDataQueryServiceTest {
         verify(repository, times(1))
                 .findByFacilityBusinessIdAndClosedDateIsNull(facilityBusinessId);
     }
-
-    @Test
-    void getParticipatingFacilitySchemeVersions() {
-        final String facilityBusinessId =  "facilityId";
-        final Set<SchemeVersion> schemeVersions = Set.of(SchemeVersion.CCA_2);
-
-        when(repository.findByFacilityBusinessId(facilityBusinessId))
-                .thenReturn(Optional.of(FacilityData.builder().participatingSchemeVersions(schemeVersions).build()));
-
-        final Set<SchemeVersion> result = service.getParticipatingFacilitySchemeVersions(facilityBusinessId);
-
-        assertThat(result).isEqualTo(schemeVersions);
-        verify(repository, times(1)).findByFacilityBusinessId(facilityBusinessId);
-
-    }
-
-    @Test
-    void getParticipatingFacilitySchemeVersions_empty() {
-        final String facilityBusinessId =  "facilityId";
-
-        when(repository.findByFacilityBusinessId(facilityBusinessId)).thenReturn(Optional.empty());
-
-        final Set<SchemeVersion> result = service.getParticipatingFacilitySchemeVersions(facilityBusinessId);
-
-        assertThat(result).isEmpty();
-        verify(repository, times(1)).findByFacilityBusinessId(facilityBusinessId);
-
-    }
     
     @Test
     void getFacilityIdById() {

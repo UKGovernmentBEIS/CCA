@@ -90,6 +90,6 @@ class Cca2ExtensionNoticeAccountProcessingCreateDocumentServiceTest {
         verify(ccaDocumentTemplateCommonParamsProvider, times(1))
                 .constructTargetUnitDetailsParams(accountDetails);
         verify(ccaFileDocumentGeneratorService, times(1))
-                .generateAsync(request, signatory, CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA2, params, fileName);
+                .generateAsync(request, signatory, CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA2, params, SchemeVersion.CCA_2, fileName);
     }
 }

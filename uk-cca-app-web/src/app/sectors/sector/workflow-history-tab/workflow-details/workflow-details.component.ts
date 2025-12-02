@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { AuthStore, selectUserRoleType } from '@netz/common/auth';
 import { TimelineComponent } from '@netz/common/components';
 import { TimelineItemComponent } from '@netz/common/components';
 import { PageHeadingComponent } from '@netz/common/components';
@@ -30,12 +31,15 @@ type WorkflowDetailsViewModel = {
     StatusColorPipe,
     TimelineComponent,
     TimelineItemComponent,
+    // WorkflowNotesComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly authStore = inject(AuthStore);
+  private readonly roleType = this.authStore.select(selectUserRoleType);
 
   private readonly data = this.activatedRoute.snapshot.data['workflowDetailsItemsAndActions'];
   protected readonly navigationState = { returnUrl: this.router.url };
@@ -45,4 +49,6 @@ export class WorkflowDetailsComponent {
     requestItems: this.data.requestItems,
     requestActions: this.data.requestActions,
   };
+
+  protected readonly userIsRegulator = computed(() => this.roleType() === 'REGULATOR');
 }

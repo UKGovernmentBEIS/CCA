@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountUpdateDTO;
 import uk.gov.cca.api.account.service.TargetUnitAccountUpdateService;
 import uk.gov.cca.api.common.domain.MeasurementType;
@@ -133,10 +132,6 @@ class UnderlyingAgreementVariationActivatedServiceTest {
         final UnderlyingAgreementVariationRequestPayload unaRequestPayload = UnderlyingAgreementVariationRequestPayload.builder()
                 .payloadType(CcaRequestPayloadType.UNDERLYING_AGREEMENT_VARIATION_REQUEST_PAYLOAD)
                 .workflowSchemeVersion(workflowSchemeVersion)
-                .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
-                        .underlyingAgreement(UnderlyingAgreement.builder().facilities(Set.of(facility1, facility2, facility3)).build())
-                        .underlyingAgreementTargetUnitDetails(unaDetails)
-                        .build())
                 .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                         .underlyingAgreement(UnderlyingAgreement.builder().facilities(Set.of(facility1, facility2, facility3)).build())
                         .underlyingAgreementTargetUnitDetails(unaDetails)

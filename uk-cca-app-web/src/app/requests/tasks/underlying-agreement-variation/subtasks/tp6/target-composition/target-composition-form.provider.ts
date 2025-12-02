@@ -6,6 +6,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
 import {
   measurementTypeValidator,
+  normaliseNumber,
   targetCompositionConditionallyRequiredFieldsValidator,
   underlyingAgreementQuery,
   UPLOAD_SECTION_ATTACHMENT_TYPE,
@@ -86,7 +87,7 @@ export const TargetCompositionFormProvider: Provider = {
           updateOn: 'change',
         }),
         throughputUnit: fb.control(targetComposition?.throughputUnit),
-        conversionFactor: fb.control(targetComposition?.conversionFactor ?? null, {
+        conversionFactor: fb.control(normaliseNumber(targetComposition?.conversionFactor), {
           validators: [GovukValidators.maxDecimalsValidator(7)],
           updateOn: 'change',
         }),

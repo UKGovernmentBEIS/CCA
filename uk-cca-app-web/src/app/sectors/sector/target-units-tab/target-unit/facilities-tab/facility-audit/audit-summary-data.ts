@@ -14,11 +14,11 @@ export function toFacilityAuditSummaryData(audit: FacilityAuditViewDTO): Summary
 
   if (audit?.auditRequired) {
     factory
-      .addTextAreaRow('Reason for audit', audit.reasons.map(transformFacilityAuditReason), {
+      .addTextAreaRow('Reason for audit', audit?.reasons?.map(transformFacilityAuditReason), {
         change: audit?.editable,
         changeLink: './audit/reasons',
       })
-      .addTextAreaRow('Comments', audit.comments, {
+      .addTextAreaRow('Comments', audit?.comments, {
         change: audit?.editable,
         changeLink: './audit/reasons',
       });

@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`PreAuditReasonCompletedDeterminationComponent should show proper view 1`] = `
+<cca-pre-audit-reason-completed-determination
+  auditReasonDetails={[Function Function]}
+  data={[Function Function]}
+  requestTaskActionStore={[Function _RequestActionStore]}
+>
+  <netz-page-heading
+    caption="Pre-audit review determination"
+  >
+    <span
+      class="govuk-caption-l"
+    >
+      Pre-audit review determination
+    </span>
+    <h1
+      class="govuk-heading-l"
+    >
+      Summary
+    </h1>
+  </netz-page-heading><cca-summary>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Review completion date
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            05 May 2025
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Is a more detailed audit of this facility needed?
+        </dt>
+        <dd
+          class="pre-line govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Yes
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Review comments
+        </dt>
+        <dd
+          class="pre-line govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            asdsadsadad
+          </span>
+        </dd>
+      </div>
+    </dl>
+  </cca-summary>
+</cca-pre-audit-reason-completed-determination>
+`;

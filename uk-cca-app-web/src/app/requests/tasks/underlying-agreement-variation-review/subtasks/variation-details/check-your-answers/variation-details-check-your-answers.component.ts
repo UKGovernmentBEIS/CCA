@@ -92,6 +92,8 @@ export default class VariationDetailsCheckYourAnswersComponent {
       sectionsCompleted,
       reviewSectionsCompleted,
       determination,
+      reviewGroupDecisions: payload.reviewGroupDecisions,
+      facilitiesReviewGroupDecisions: payload.facilitiesReviewGroupDecisions,
     });
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {

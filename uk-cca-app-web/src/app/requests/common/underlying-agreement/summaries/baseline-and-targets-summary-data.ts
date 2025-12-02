@@ -311,7 +311,7 @@ function addBaselineDataSection(
       },
     )
     .addRow(
-      'Must the Special Reporting Methodology be applied for this facility?',
+      'Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?',
       boolToString(baselineData?.usedReportingMechanism),
       {
         change: isEditable,

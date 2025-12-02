@@ -2,7 +2,7 @@
   <div class="govuk-!-margin-bottom-9">
     <h2 class="govuk-heading-m govuk-!-margin-bottom-2">{{ heading() }}</h2>
 
-    @if (!noBorders) {
+    @if (!noBorders()) {
       <hr class="govuk-!-margin-bottom-3" />
     }
 
@@ -31,7 +31,7 @@
           </a>
         </div>
 
-        @if (!noBorders) {
+        @if (!noBorders()) {
           <hr class="govuk-!-margin-bottom-3" />
         }
       </div>

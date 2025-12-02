@@ -1,11 +1,20 @@
 import { RequestCreateActionProcessDTO, RequestDetailsDTO, UserStateDTO } from 'cca-api';
 
+export interface WorkflowDisplayContent {
+  title: string;
+  button: string;
+  hint?: string;
+  type: RequestCreateActionProcessDTO['requestType'];
+  errors: string[];
+}
+
 export const processActionsDetailsTypesMap: Partial<Record<RequestDetailsDTO['requestType'], string>> = {
   ADMIN_TERMINATION: 'admin Termination',
   UNDERLYING_AGREEMENT_VARIATION: 'variation',
   PERFORMANCE_DATA_DOWNLOAD: 'download performance data',
   PERFORMANCE_DATA_UPLOAD: 'upload performance data',
   PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD: 'upload PAT spreadsheets',
+  CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING: 'CCA3 Migration',
 };
 
 export const userRoleWorkflowAccessMap: Record<UserStateDTO['roleType'], string[]> = {
@@ -20,7 +29,7 @@ export const userRoleWorkflowAccessMap: Record<UserStateDTO['roleType'], string[
   VERIFIER: [],
 };
 
-export const taskWorkflowContentDisplayMap = {
+export const taskWorkflowContentDisplayMap: Record<RequestDetailsDTO['requestType'], WorkflowDisplayContent> = {
   ADMIN_TERMINATION: {
     title: 'Admin termination',
     button: 'Start admin termination',
@@ -54,11 +63,3 @@ export const taskWorkflowContentDisplayMap = {
     errors: [],
   },
 };
-
-export interface WorkflowDisplayContent {
-  title: string;
-  button: string;
-  hint?: string;
-  type: RequestCreateActionProcessDTO['requestType'];
-  errors: string[];
-}

@@ -12,6 +12,8 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestPayload;
 import uk.gov.netz.api.workflow.request.flow.common.service.notification.DocumentTemplateWorkflowParamsProvider;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,16 +43,17 @@ public class UnderlyingAgreementAcceptedDocumentTemplateWorkflowParamsProvider i
         		.stream()
         		.map(SchemeVersion::getDescription)
         		.collect(Collectors.toSet());
-        
-        params.putAll(Map.of(
-        		"rejectedFacilities", payload.getFacilitiesReviewGroupDecisions().entrySet()
-                .stream()
+
+        List<String> rejectedFacilities = payload.getFacilitiesReviewGroupDecisions().entrySet().stream()
                 .filter(entry -> CcaReviewDecisionType.REJECTED.equals(entry.getValue().getType()))
                 .map(Map.Entry::getKey)
-                .toList(),
+                .sorted(Comparator.comparing(id -> id))
+                .toList();
+
+        params.putAll(Map.of(
+                "rejectedFacilities", rejectedFacilities,
                 "versionMap", schemeVersions.stream().collect(Collectors.toMap(v -> v, v -> "v1"))
-                )      
-        );
+        ));
 
         return params;
     }

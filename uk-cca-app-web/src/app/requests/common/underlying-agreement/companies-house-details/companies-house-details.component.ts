@@ -9,7 +9,6 @@ import { CompanyProfileDTO, UnderlyingAgreementTargetUnitDetails } from 'cca-api
 
 export type CompaniesHouseState = {
   details: CompanyProfileDTO;
-  error: any;
   address: string;
 };
 

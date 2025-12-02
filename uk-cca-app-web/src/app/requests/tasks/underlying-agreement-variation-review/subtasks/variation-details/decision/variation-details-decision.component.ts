@@ -81,7 +81,7 @@ export class VariationDetailsDecisionComponent {
     const determination = resetDetermination(this.store.select(underlyingAgreementReviewQuery.selectDetermination)());
 
     const decision = {
-      type: this.form.value.type!,
+      type: this.form.value.type,
       details: {
         notes: this.form.value.notes,
         files: this.form.value.files?.map((f) => f.uuid) || [],

@@ -80,7 +80,7 @@ export class AddTargetsComponent {
     const areIdentical = areEntitiesIdentical(currentTP5, originalTP5);
 
     const currentDecisions = this.store.select(underlyingAgreementReviewQuery.selectReviewGroupDecisions)();
-    const decisions = areIdentical ? deleteDecision(currentDecisions, 'TARGET_PERIOD5_DETAILS') : currentDecisions;
+    const decisions = areIdentical ? currentDecisions : deleteDecision(currentDecisions, 'TARGET_PERIOD5_DETAILS');
 
     const currentReviewSectionsCompleted = this.store.select(
       underlyingAgreementReviewQuery.selectReviewSectionsCompleted,

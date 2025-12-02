@@ -98,6 +98,24 @@ class CcaDocumentTemplateCommonUnderlyingAgreementParamsProviderTest {
                                 .status(FacilityStatus.NEW)
                                 .facilityItem(FacilityItem
                                         .builder()
+                                        .facilityId("facilityId3")
+                                        .facilityDetails(FacilityDetails.builder()
+                                                .name("name3")
+                                                .uketsId("uketsId3")
+                                                .facilityAddress(facilityAddress)
+                                                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_3))
+                                                .build())
+                                        .cca3BaselineAndTargets(Cca3FacilityBaselineAndTargets.builder()
+                                                .facilityTargets(FacilityTargets.builder()
+                                                        .improvements(Map.of())
+                                                        .build())
+                                                .build())
+                                        .build())
+                                .build(),
+                        Facility.builder()
+                                .status(FacilityStatus.NEW)
+                                .facilityItem(FacilityItem
+                                        .builder()
                                         .facilityId("facilityId2")
                                         .facilityDetails(FacilityDetails.builder()
                                                 .name("name2")
@@ -125,12 +143,20 @@ class CcaDocumentTemplateCommonUnderlyingAgreementParamsProviderTest {
                 .usedReportingMechanism(Boolean.TRUE)
                 .build();
 
-        final List<FacilityTemplateData> facilities = List.of(FacilityTemplateData.builder()
-                .id("facilityId2")
-                .name("name2")
-                .uketsId("uketsId2")
-                .address("line\ncity\npostcode\ncounty\n")
-                .build());
+        final List<FacilityTemplateData> facilities = List.of(
+                FacilityTemplateData.builder()
+                        .id("facilityId2")
+                        .name("name2")
+                        .uketsId("uketsId2")
+                        .address("line\ncity\npostcode\ncounty\n")
+                        .build(),
+                FacilityTemplateData.builder()
+                        .id("facilityId3")
+                        .name("name3")
+                        .uketsId("uketsId3")
+                        .address("line\ncity\npostcode\ncounty\n")
+                        .build()
+        );
 
         when(documentTemplateTransformationMapper.constructFacilityAddressDTO(facilityAddress))
                 .thenReturn("line\ncity\npostcode\ncounty\n");
@@ -148,7 +174,7 @@ class CcaDocumentTemplateCommonUnderlyingAgreementParamsProviderTest {
         paramMap.put("activationDate", null);
         assertThat(result).isEqualTo(paramMap);
 
-        verify(documentTemplateTransformationMapper, times(1))
+        verify(documentTemplateTransformationMapper, times(2))
                 .constructFacilityAddressDTO(facilityAddress);
     }
 

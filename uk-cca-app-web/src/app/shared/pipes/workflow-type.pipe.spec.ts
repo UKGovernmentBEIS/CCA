@@ -44,7 +44,7 @@ describe('WorkflowTypePipe', () => {
   });
 
   it('should transform "FACILITY_AUDIT" to "Facility Audit"', () => {
-    expect(pipe.transform('FACILITY_AUDIT')).toBe('Facility Audit');
+    expect(pipe.transform('FACILITY_AUDIT')).toBe('Facility audit');
   });
 
   it('should transform "PERFORMANCE_DATA_SPREADSHEET_PROCESSING" to "Performance Data"', () => {

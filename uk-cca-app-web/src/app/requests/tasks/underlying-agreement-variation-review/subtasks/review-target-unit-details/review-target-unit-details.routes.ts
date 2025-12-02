@@ -43,7 +43,7 @@ export const REVIEW_TARGET_UNIT_DETAILS_ROUTES: Routes = [
       {
         path: ReviewTargetUnitDetailsWizardStep.COMPANY_REGISTRATION_NUMBER,
         title: 'Edit company registration number',
-        data: { backlink: '../', breadcrumb: false },
+        data: { backlink: '../../../', breadcrumb: false },
         loadComponent: () =>
           import('./company-registration-number/company-registration-number.component').then(
             (c) => c.CompanyRegistrationNumberComponent,

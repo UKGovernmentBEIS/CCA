@@ -118,6 +118,7 @@ describe('ItemActionHeaderPipe', () => {
         type: 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_CANCELLED',
       }),
     ).toEqual('Underlying agreement variation application cancelled by John Bolt');
+
     expect(
       pipe.transform({
         ...baseRequestAction,
@@ -130,6 +131,7 @@ describe('ItemActionHeaderPipe', () => {
         type: 'PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED',
       }),
     ).toEqual('PAT report submitted by John Bolt');
+
     expect(
       pipe.transform({
         ...baseRequestAction,
@@ -148,6 +150,7 @@ describe('ItemActionHeaderPipe', () => {
         type: 'SUBSISTENCE_FEES_RUN_COMPLETED_WITH_FAILURES',
       }),
     ).toEqual('Subsistence fees payment request run completed with failures');
+
     expect(
       pipe.transform({
         ...baseRequestAction,
@@ -185,12 +188,14 @@ describe('ItemActionHeaderPipe', () => {
         type: 'TP6_BUY_OUT_ACCOUNT_PROCESSING_SUBMITTED',
       }),
     ).toEqual('Buy-out fee calculated');
+
     expect(
       pipe.transform({
         ...baseRequestAction,
         type: 'TP6_SURPLUS_ACCOUNT_PROCESSING_SUBMITTED',
       }),
     ).toEqual('Surplus calculated');
+
     expect(
       pipe.transform({
         ...baseRequestAction,
@@ -209,12 +214,38 @@ describe('ItemActionHeaderPipe', () => {
         type: 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED',
       }),
     ).toEqual('CCA3 agreement activated by John Bolt');
+
     expect(
       pipe.transform({
         ...baseRequestAction,
         type: 'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED',
       }),
     ).toEqual('CCA2 agreement extended by System user');
+
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED',
+      }),
+    ).toEqual('Pre-audit review completed by System user');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED',
+      }),
+    ).toEqual('Audit details and corrective actions by System user');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED',
+      }),
+    ).toEqual('Track corrective actions completed by System user');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'FACILITY_AUDIT_CANCELLED',
+      }),
+    ).toEqual('Audit facility cancelled by System user');
   });
 
   it('should display the approved application title', () => {

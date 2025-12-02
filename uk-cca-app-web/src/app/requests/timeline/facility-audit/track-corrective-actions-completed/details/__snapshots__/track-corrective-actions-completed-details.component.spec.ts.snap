@@ -1,0 +1,116 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TrackCorrectiveActionsCompletedDetailsComponent should show proper view 1`] = `
+<cca-track-corrective-actions-completed-details
+  actionId={[Function String]}
+  activatedRoute={[Function Object]}
+  correctiveActionResponse={[Function Object]}
+  data={[Function Array]}
+  requestActionStore={[Function _RequestActionStore]}
+>
+  <netz-page-heading>
+    <span
+      class="govuk-caption-l"
+    >
+      Corrective action 1
+    </span>
+    <h1
+      class="govuk-heading-l"
+    >
+      Summary
+    </h1>
+  </netz-page-heading><cca-summary>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Corrective action details
+        </dt>
+        <dd
+          class="pre-line govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            sd fdsf sdf
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Corrective action deadline
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            01 Jan 2025
+          </span>
+        </dd>
+      </div>
+    </dl>
+    <h2
+      class="govuk-heading-m"
+    >
+      Corrective action carried out details
+    </h2>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Are you satisfied the operator carried out this corrective action?
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            No
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Comments
+        </dt>
+        <dd
+          class="pre-line govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            dsc,mknds ,cnds kcjn dksjlcds
+          </span>
+        </dd>
+      </div>
+    </dl>
+  </cca-summary>
+</cca-track-corrective-actions-completed-details>
+`;

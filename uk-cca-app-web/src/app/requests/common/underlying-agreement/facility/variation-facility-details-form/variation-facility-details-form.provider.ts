@@ -107,7 +107,10 @@ export const VariationFacilityDetailsFormProvider: Provider = {
 
     handleSchemeParticipationLogic(group, facility?.facilityDetails?.participatingSchemeVersions, isAfterCutOffDate);
 
-    if (group.controls.applicationReason.value === 'CHANGE_OF_OWNERSHIP') {
+    if (
+      group.controls.applicationReason.value === 'CHANGE_OF_OWNERSHIP' &&
+      !group.controls.previousFacilityId.disabled
+    ) {
       setupChangeOfOwnershipValidators(group, facilityService);
     }
 

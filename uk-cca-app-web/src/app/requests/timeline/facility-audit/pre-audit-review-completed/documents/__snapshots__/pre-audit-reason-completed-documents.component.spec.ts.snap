@@ -1,0 +1,221 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`PreAuditReasonCompletedDocumentsComponent should show proper view 1`] = `
+<cca-pre-audit-reason-completed-documents
+  attachments={[Function Function]}
+  auditReasonDetails={[Function Function]}
+  data={[Function Function]}
+  requestTaskActionStore={[Function _RequestActionStore]}
+>
+  <netz-page-heading
+    caption="Requested documents"
+  >
+    <span
+      class="govuk-caption-l"
+    >
+      Requested documents
+    </span>
+    <h1
+      class="govuk-heading-l"
+    >
+      Summary
+    </h1>
+  </netz-page-heading><cca-summary>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Date pre-audit reviewmaterial received
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            05 May 2025
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Process flow maps document
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            No files provided
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Manufacturing process description document
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            No files provided
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Annotated site plan
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            No files provided
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Elligible process description document
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            No files provided
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Directly associated activities document
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            No files provided
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          The 70% rule evidence document
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            No files provided
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Base year/target period evidence document
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            No files provided
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Additional documents
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            No files provided
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Additional information
+        </dt>
+        <dd
+          class="pre-line govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            asdsadsadad
+          </span>
+        </dd>
+      </div>
+    </dl>
+  </cca-summary>
+</cca-pre-audit-reason-completed-documents>
+`;

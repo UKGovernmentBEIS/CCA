@@ -1,0 +1,40 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    heading="Has the corrective action been carried out?"
+    [caption]="'Corrective action ' + actionId"
+  >
+    <dl govuk-summary-list>
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Corrective action required</dt>
+        <dd govukSummaryListRowValue class="pre-line">{{ correctiveActionResponse?.details }}</dd>
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Corrective action deadline</dt>
+        <dd govukSummaryListRowValue>{{ correctiveActionResponse?.deadline | date: 'dd MMM yyyy' }}</dd>
+      </div>
+    </dl>
+
+    <p class="govuk-label govuk-label--m">Are you satisfied the operator has carried out this corrective action?</p>
+    <div class="govuk-!-margin-bottom-9" formControlName="isActionCarriedOut" govuk-radio>
+      <govuk-radio-option [value]="true" [label]="'Yes'" />
+      <govuk-radio-option [value]="false" [label]="'No'">
+        <ng-container govukConditionalContent>
+          <div
+            formControlName="comments"
+            govuk-textarea
+            label="Comments (optional)"
+            hint="Enter comments about action we may consider where the operator has failed to carry out the corrective action required by the deadline"
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+    </div>
+  </cca-wizard-step>
+
+  <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+  <a class="govuk-link" routerLink="../../..">
+    Return to: Track corrective actions {{ targetUnitAccountDetails()?.targetUnitAccountDetails?.businessId }}
+  </a>
+</div>

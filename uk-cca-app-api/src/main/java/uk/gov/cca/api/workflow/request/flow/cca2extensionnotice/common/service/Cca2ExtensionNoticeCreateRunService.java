@@ -22,9 +22,11 @@ import uk.gov.netz.api.authorization.rules.services.resource.RegulatorAuthorityR
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.workflow.request.StartProcessRequestService;
+import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.flow.common.domain.RequestCreateActionEmptyPayload;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestCreateValidationResult;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -90,7 +92,11 @@ public class Cca2ExtensionNoticeCreateRunService {
                 .build();
 
         // Start process
-        startProcessRequestService.startProcess(requestParams);
+        Request request = startProcessRequestService.startProcess(requestParams);
+
+        // Set submission date
+        LocalDateTime now = LocalDateTime.now();
+        request.setSubmissionDate(now);
     }
 
     private Cca2ExtensionNoticeAccountState transformToAccountState(TargetUnitAccountBusinessInfoDTO account) {

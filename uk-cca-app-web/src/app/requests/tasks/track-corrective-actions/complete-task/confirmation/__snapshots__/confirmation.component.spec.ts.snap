@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TrackCorrectiveActionsConfirmationComponent should display the correct content 1`] = `
+<cca-track-corrective-actions-confirmation>
+  <govuk-panel
+    title="Track corrective actions complete"
+  >
+    <div
+      class="govuk-panel govuk-panel--confirmation"
+    >
+      <h1
+        class="govuk-panel__title"
+      >
+        Track corrective actions complete
+      </h1>
+      <div
+        class="govuk-panel__body"
+      >
+         Outcome 
+        <br />
+        <span
+          style="font-weight: bold;"
+        >
+          All actions finalised
+        </span>
+      </div>
+    </div>
+  </govuk-panel><a
+    class="govuk-link"
+    href="/dashboard"
+  >
+     Return to: Dashboard 
+  </a>
+</cca-track-corrective-actions-confirmation>
+`;

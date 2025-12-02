@@ -96,6 +96,15 @@ describe('ItemActionTypePipe', () => {
       'CCA3 agreement activated',
     );
 
+    expect(pipe.transform('FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED')).toEqual('Pre-audit review completed');
+    expect(pipe.transform('FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED')).toEqual(
+      'Audit details and corrective actions completed',
+    );
+    expect(pipe.transform('FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED')).toEqual(
+      'Track corrective actions completed',
+    );
+    expect(pipe.transform('FACILITY_AUDIT_CANCELLED')).toEqual('Audit facility cancelled');
+
     expect(pipe.transform(undefined)).toEqual('Approved Application');
   });
 });

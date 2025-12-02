@@ -11,6 +11,7 @@ import {
 import { Observable, of } from 'rxjs';
 
 import { GovukValidators } from '@netz/govuk-components';
+import { normaliseNumber } from '@requests/common';
 import { UuidFilePair } from '@shared/components';
 import { FileEvidenceUploadService } from '@shared/services';
 import BigNumber from 'bignumber.js';
@@ -70,7 +71,7 @@ export const ReceivedAmountFormProvider: Provider = {
     return fb.group(
       {
         changeType: fb.control<'add' | 'subtract'>(state()?.changeType),
-        transactionAmount: fb.control<string>(transactionAmount, {
+        transactionAmount: fb.control(normaliseNumber(transactionAmount), {
           validators: [
             GovukValidators.required('Enter a numerical value, without alpha or special characters'),
             GovukValidators.maxIntegerAndDecimalsValidator(10, 2),

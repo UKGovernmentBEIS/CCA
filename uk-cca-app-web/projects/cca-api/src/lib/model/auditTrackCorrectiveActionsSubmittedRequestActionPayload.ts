@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AuditDetailsAndCorrectiveActions } from './auditDetailsAndCorrectiveActions';
+import { AuditTrackCorrectiveActions } from './auditTrackCorrectiveActions';
 
 export interface AuditTrackCorrectiveActionsSubmittedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
-  auditDetailsAndCorrectiveActions: AuditDetailsAndCorrectiveActions;
+  auditTrackCorrectiveActions: AuditTrackCorrectiveActions;
   facilityAuditAttachments?: Record<string, string>;
 }

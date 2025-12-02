@@ -43,6 +43,7 @@ describe('TimelineItemLinkPipe', () => {
 
       'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED',
       'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED',
+      'FACILITY_AUDIT_CANCELLED',
     ];
 
     noLinkActionTypes.forEach((type) => {
@@ -147,8 +148,14 @@ describe('TimelineItemLinkPipe', () => {
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 
-  it('should return link for Facility pre-audit review', () => {
+  it('should return link for Facility audit tasks', () => {
     requestAction.type = 'FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED';
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 

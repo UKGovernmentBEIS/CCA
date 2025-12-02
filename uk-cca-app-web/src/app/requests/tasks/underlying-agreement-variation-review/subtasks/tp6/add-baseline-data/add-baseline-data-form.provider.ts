@@ -3,7 +3,11 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { addBaselineDataConditionallyRequiredFieldsValidator, underlyingAgreementQuery } from '@requests/common';
+import {
+  addBaselineDataConditionallyRequiredFieldsValidator,
+  normaliseNumber,
+  underlyingAgreementQuery,
+} from '@requests/common';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
 
@@ -57,16 +61,16 @@ export const AddBaselineDataFormProvider: Provider = {
         }),
         explanation: fb.control(baselineData?.explanation ?? null),
         greenfieldEvidences: greenfieldEvidencesFilesControl,
-        energy: fb.control(baselineData?.energy ?? null, {
+        energy: fb.control(normaliseNumber(baselineData?.energy), {
           validators: [GovukValidators.maxDecimalsValidator(7)],
           updateOn: 'change',
         }),
         usedReportingMechanism: fb.control(baselineData?.usedReportingMechanism ?? null),
-        throughput: fb.control(baselineData?.throughput ?? null, {
+        throughput: fb.control(normaliseNumber(baselineData?.throughput), {
           validators: [GovukValidators.maxDecimalsValidator(7)],
           updateOn: 'change',
         }),
-        energyCarbonFactor: fb.control(baselineData?.energyCarbonFactor ?? null, {
+        energyCarbonFactor: fb.control(normaliseNumber(baselineData?.energyCarbonFactor), {
           validators: [GovukValidators.maxDecimalsValidator(7)],
           updateOn: 'change',
         }),

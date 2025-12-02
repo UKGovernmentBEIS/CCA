@@ -13,7 +13,7 @@ export const mockProductVariableEnergyData: ProductVariableEnergyConsumptionData
 };
 
 export const mockBaselineEnergyConsumption: FacilityBaselineEnergyConsumption = {
-  totalFixedEnergy: '100',
+  totalFixedEnergy: '100.1234567',
   hasVariableEnergy: true,
   variableEnergyType: 'TOTALS',
   baselineVariableEnergy: '200',
@@ -29,7 +29,7 @@ export const mockBaselineEnergyConsumptionWithProducts: FacilityBaselineEnergyCo
 };
 
 export const mockBaselineEnergyConsumptionNoVariable: FacilityBaselineEnergyConsumption = {
-  totalFixedEnergy: '100',
+  totalFixedEnergy: '100.1234567',
   hasVariableEnergy: false,
   totalThroughput: '50',
   throughputUnit: 'tonnes',

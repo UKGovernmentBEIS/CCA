@@ -8999,4 +8999,34 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_associate_services_with_request_action_types_of_FACILITY_AUDIT_workflow" author="P70311">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('generateRequestActionGetFileAttachmentToken')
+              and r.resource_type = 'REQUEST_ACTION'
+              and r.resource_sub_type in ('FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED', 'FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED', 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED')
+              and r.handler = 'requestActionViewHandler'
+              and r.role_type in ('REGULATOR', 'OPERATOR')
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('generateRequestActionGetFileAttachmentToken')
+                and r.resource_type = 'REQUEST_ACTION'
+                and r.resource_sub_type in ('FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED', 'FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED', 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED')
+                and r.handler = 'requestActionViewHandler'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

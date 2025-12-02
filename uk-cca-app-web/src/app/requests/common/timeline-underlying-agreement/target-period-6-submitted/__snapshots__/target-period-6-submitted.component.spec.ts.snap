@@ -243,7 +243,7 @@ exports[`TargetPeriod6Component should show summary values 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Must the Special Reporting Methodology be applied for this facility?
+            Have you used the special reporting mechanism to adjust the baseline throughput for any of the facilities in the target unit using combined heat and power (CHP)?
           </dt>
           <dd
             class="govuk-summary-list__value"

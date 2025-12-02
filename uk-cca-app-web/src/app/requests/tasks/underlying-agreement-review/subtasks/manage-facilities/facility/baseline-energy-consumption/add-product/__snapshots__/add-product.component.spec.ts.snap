@@ -83,24 +83,24 @@ exports[`AddProductComponent should render the form with the correct initial val
               name="products.0.baselineYear"
             >
               <option
-                value="0: 2030"
+                value="0: 2022"
               >
-                 2030 
+                 2022 
               </option>
               <option
-                value="1: 2029"
+                value="1: 2023"
               >
-                 2029 
+                 2023 
               </option>
               <option
-                value="2: 2028"
+                value="2: 2024"
               >
-                 2028 
+                 2024 
               </option>
               <option
-                value="3: 2027"
+                value="3: 2025"
               >
-                 2027 
+                 2025 
               </option>
               <option
                 value="4: 2026"
@@ -108,24 +108,24 @@ exports[`AddProductComponent should render the form with the correct initial val
                  2026 
               </option>
               <option
-                value="5: 2025"
+                value="5: 2027"
               >
-                 2025 
+                 2027 
               </option>
               <option
-                value="6: 2024"
+                value="6: 2028"
               >
-                 2024 
+                 2028 
               </option>
               <option
-                value="7: 2023"
+                value="7: 2029"
               >
-                 2023 
+                 2029 
               </option>
               <option
-                value="8: 2022"
+                value="8: 2030"
               >
-                 2022 
+                 2030 
               </option>
             </select>
           </div>
@@ -252,7 +252,7 @@ exports[`AddProductComponent should render the form with the correct initial val
           class="govuk-button govuk-button--secondary govuk-!-margin-bottom-5"
           type="button"
         >
-           Add product 
+           Add another product 
         </button>
       </div>
       <div

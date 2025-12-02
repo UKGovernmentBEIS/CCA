@@ -15,6 +15,9 @@ import { BuyOutSurplusBatchRunCompletedComponent } from './buy-out-surplus-batch
 import { Cca2ExtensionComponent } from './cca2-extension/cca2-extension.component';
 import { Cca3MigrationActivatedComponent } from './cca3-migration/activated/cca3-migration-activated.component';
 import { Cca3MigrationCompletedComponent } from './cca3-migration/completed/cca3-migration-completed.component';
+import { DetailsCorrectiveActionsCompletedComponent } from './facility-audit/details-corrective-actions-completed/details-corrective-actions-completed.component';
+import { PreAuditReviewCompletedComponent } from './facility-audit/pre-audit-review-completed/pre-audit-review-completed.component';
+import { TrackCorrectiveActionsCompletedComponent } from './facility-audit/track-corrective-actions-completed/track-corrective-actions-completed.component';
 import { PATUploadSubmittedComponent } from './performance-account-template-upload-submitted/pat-upload-submitted.component';
 import { PerformanceDataUploadSubmittedComponent } from './performance-data-upload-submitted/performance-data-upload-submitted.component';
 import { SectorMoaGeneratedComponent } from './sector-moa-generated/sector-moa-generated.component';
@@ -357,6 +360,36 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     return {
       header: getItemActionHeader(action),
       component: Cca2ExtensionComponent,
+    };
+  },
+
+  FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: PreAuditReviewCompletedComponent,
+    };
+  },
+
+  FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: DetailsCorrectiveActionsCompletedComponent,
+    };
+  },
+
+  FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: TrackCorrectiveActionsCompletedComponent,
     };
   },
 };

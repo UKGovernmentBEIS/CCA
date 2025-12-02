@@ -83,6 +83,9 @@ class UnderlyingAgreementAcceptedDocumentTemplateWorkflowParamsProviderTest {
                         "ADS_1-F01245", UnderlyingAgreementFacilityReviewDecision.builder()
                                 .type(CcaReviewDecisionType.ACCEPTED)
                                 .details(UnderlyingAgreementReviewDecisionDetails.builder().build()).build(),
+                        "ADS_1-F01249", UnderlyingAgreementFacilityReviewDecision.builder()
+                                .type(CcaReviewDecisionType.REJECTED)
+                                .details(UnderlyingAgreementReviewDecisionDetails.builder().build()).build(),
                         "ADS_1-F01246", UnderlyingAgreementFacilityReviewDecision.builder()
                                 .type(CcaReviewDecisionType.REJECTED)
                                 .details(UnderlyingAgreementReviewDecisionDetails.builder().build()).build()
@@ -97,7 +100,7 @@ class UnderlyingAgreementAcceptedDocumentTemplateWorkflowParamsProviderTest {
         // Verify
         assertThat(result).containsExactlyInAnyOrderEntriesOf(Map.of(
                 "targetUnitDetails", "test1",
-                "rejectedFacilities", List.of("ADS_1-F01246"),
+                "rejectedFacilities", List.of("ADS_1-F01246", "ADS_1-F01249"),
                 "versionMap", Map.of("CCA2", "v1", "CCA3", "v1")
         ));
         verify(documentTemplateUnderlyingAgreementParamsProvider, times(1))

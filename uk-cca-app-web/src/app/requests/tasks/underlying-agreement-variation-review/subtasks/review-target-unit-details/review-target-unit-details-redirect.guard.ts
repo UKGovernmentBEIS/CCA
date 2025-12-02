@@ -1,8 +1,15 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot, UrlTree } from '@angular/router';
 
-import { RequestTaskStore } from '@netz/common/store';
-import { REVIEW_TARGET_UNIT_DETAILS_SUBTASK, underlyingAgreementReviewQuery } from '@requests/common';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import {
+  isTargetUnitDetailsWizardCompleted,
+  REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
+  ReviewTargetUnitDetailsWizardStep,
+  underlyingAgreementReviewQuery,
+} from '@requests/common';
+
+import { UnderlyingAgreementVariationReviewRequestTaskPayload } from 'cca-api';
 
 export const reviewTargetUnitDetailsRedirectGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
@@ -14,6 +21,14 @@ export const reviewTargetUnitDetailsRedirectGuard: CanActivateFn = (
   )();
 
   if (reviewSectionCompleted) return createUrlTreeFromSnapshot(route, ['summary']);
+
+  const payload = store.select(
+    requestTaskQuery.selectRequestTaskPayload,
+  )() as UnderlyingAgreementVariationReviewRequestTaskPayload;
+
+  if (!isTargetUnitDetailsWizardCompleted(payload.underlyingAgreement?.underlyingAgreementTargetUnitDetails)) {
+    return createUrlTreeFromSnapshot(route, [ReviewTargetUnitDetailsWizardStep.COMPANY_REGISTRATION_NUMBER]);
+  }
 
   const decision = store.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))();
 

@@ -53,7 +53,6 @@ export default class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
     const response = this.companiesHouseDetailsResponse();
     return {
       details: typeof response === 'object' ? response : null,
-      error: typeof response === 'number' ? response : null,
       address: typeof response === 'object' ? transformAddress(response?.address).join('\n') : null,
     };
   });
@@ -88,7 +87,7 @@ export default class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
         .getCompanyProfileByRegistrationNumber(this.tuDetails().companyRegistrationNumber)
         .pipe(
           take(1),
-          catchError((err) => of(err.status)),
+          catchError(() => of(null)),
         )
         .subscribe((res) => {
           if (typeof res === 'object') {

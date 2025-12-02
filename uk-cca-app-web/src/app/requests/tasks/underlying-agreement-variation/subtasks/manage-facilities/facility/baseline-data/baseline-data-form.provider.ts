@@ -8,6 +8,7 @@ import {
   facilityBaselineDataConditionallyRequiredFieldsValidator,
   FacilityBaselineDataFormModel,
   isCCA3Scheme,
+  normaliseNumber,
   underlyingAgreementQuery,
   UPLOAD_SECTION_ATTACHMENT_TYPE,
 } from '@requests/common';
@@ -66,7 +67,7 @@ export const FacilityBaselineDataFormProvider: Provider = {
         explanation: fb.control(baselineData?.explanation ?? null),
         greenfieldEvidences: greenfieldEvidencesFilesControl,
         usedReportingMechanism: fb.control(baselineData?.usedReportingMechanism ?? null, { updateOn: 'change' }),
-        energyCarbonFactor: fb.control(baselineData?.energyCarbonFactor ?? null, {
+        energyCarbonFactor: fb.control(normaliseNumber(baselineData?.energyCarbonFactor), {
           validators: [GovukValidators.maxDecimalsValidator(7)],
           updateOn: 'change',
         }),

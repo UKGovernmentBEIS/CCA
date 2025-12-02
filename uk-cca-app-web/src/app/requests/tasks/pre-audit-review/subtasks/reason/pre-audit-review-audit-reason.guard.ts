@@ -19,7 +19,10 @@ export const preAuditReviewAuditReasonRedirectGuard: CanActivateFn = (route: Act
   const auditReasonDetails = store.select(preAuditReviewQuery.selectPreAuditReviewDetails)()?.auditReasonDetails;
   const completed = auditReasonDetails?.reasonsForAudit?.length > 0 && auditReasonDetails?.comment?.length > 0;
 
-  if (!completed) return createUrlTreeFromSnapshot(route, ['audit-reason']);
+  if (!completed || !sectionStatus || sectionStatus === TaskItemStatus.NOT_STARTED) {
+    return createUrlTreeFromSnapshot(route, ['audit-reason']);
+  }
+
   if (sectionStatus === TaskItemStatus.IN_PROGRESS) return createUrlTreeFromSnapshot(route, ['check-your-answers']);
   if (sectionStatus === TaskItemStatus.COMPLETED) return createUrlTreeFromSnapshot(route, ['summary']);
 

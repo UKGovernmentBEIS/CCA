@@ -1,12 +1,34 @@
 package uk.gov.cca.api.underlyingagreement.validation;
 
-import lombok.RequiredArgsConstructor;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_AGREEMENT_COMPOSITION_TYPE;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT_STATUS;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ID;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_ON_OWNERSHIP_CHANGE;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_TARGETS;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_PREVIOUS_FACILITY_ID;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_UNIT_TYPE;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_UNIQUE_PRODUCT_NAME;
+
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.apache.commons.collections4.SetUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.facility.domain.FacilityValidationContext;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.underlyingagreement.config.UnderlyingAgreementConfig;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
@@ -18,28 +40,6 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityTargets;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductStatus;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductVariableEnergyConsumptionData;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.TargetImprovementType;
-import uk.gov.netz.api.files.attachments.service.FileAttachmentService;
-import uk.gov.netz.api.files.common.FileType;
-import uk.gov.netz.api.files.common.domain.dto.FileDTO;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_AGREEMENT_COMPOSITION_TYPE;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_EVIDENCE_ATTACHMENT_TYPE;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT_STATUS;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ID;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_ON_OWNERSHIP_CHANGE;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_TARGETS;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_PREVIOUS_FACILITY_ID;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_CALCULATOR_ATTACHMENT_TYPE;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_UNIT_TYPE;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_UNIQUE_PRODUCT_NAME;
 
 @Service
 @RequiredArgsConstructor
@@ -47,44 +47,45 @@ public class UnderlyingAgreementFacilityValidatorService {
 
     private static final String SECTION_NAME = Facility.class.getName();
 
-    private final FileAttachmentService fileAttachmentService;
     private final FacilityDataQueryService facilityDataQueryService;
     private final UnderlyingAgreementConfig underlyingAgreementConfig;
 
     public void validate(final Facility facility, final UnderlyingAgreementContainer container, UnderlyingAgreementValidationContext underlyingAgreementValidationContext, List<UnderlyingAgreementViolation> violations) {
-        validateStatus(facility, violations);
-        validateEvidenceFile(facility, violations);
-        validateExistingFacilityIds(facility, violations);
+    	Map<String, FacilityValidationContext> facilityValidationContextMap = getFacilityValidationContextMap(facility);
+    	
+        validateStatus(facility, facilityValidationContextMap.get(facility.getFacilityItem().getFacilityId()), violations);
+        validateExistingFacilityIds(facility, facilityValidationContextMap, violations);
         validateCca3BaselineAndTargets(facility, container, violations);
-        validateFacilityParticipatingSchemeVersions(facility, underlyingAgreementValidationContext, violations);
+        validateFacilityParticipatingSchemeVersions(facility, facilityValidationContextMap, underlyingAgreementValidationContext, violations);
     }
+    
+	private Map<String, FacilityValidationContext> getFacilityValidationContextMap(final Facility facility) {
+		Set<String> facilityBusinessIds = new HashSet<>();
 
-    private void validateStatus(final Facility facility, List<UnderlyingAgreementViolation> violations) {
+		facilityBusinessIds.add(facility.getFacilityItem().getFacilityId());
+		if (facility.getFacilityItem().getFacilityDetails().getPreviousFacilityId() != null) {
+			facilityBusinessIds.add(facility.getFacilityItem().getFacilityDetails().getPreviousFacilityId());
+		}
+
+		return facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds);
+	}
+
+    private void validateStatus(final Facility facility, FacilityValidationContext facilityValidationContext, List<UnderlyingAgreementViolation> violations) {
         String facilityBusinessId = facility.getFacilityItem().getFacilityId();
-        if ((facility.getStatus().equals(FacilityStatus.NEW) && facilityDataQueryService.isExistingFacilityBusinessId(facilityBusinessId))
-                || (List.of(FacilityStatus.LIVE, FacilityStatus.EXCLUDED).contains(facility.getStatus())
-                && !facilityDataQueryService.isActiveFacility(facilityBusinessId))) {
+        final boolean exists = facilityValidationContext != null;
+        final boolean active = exists && facilityValidationContext.getClosedDate() == null;
+        if ((facility.getStatus().equals(FacilityStatus.NEW) && exists)
+                || (List.of(FacilityStatus.LIVE, FacilityStatus.EXCLUDED).contains(facility.getStatus()) && !active)) {
             violations.add(new UnderlyingAgreementViolation(SECTION_NAME, INVALID_FACILITY_ID, facilityBusinessId));
         }
     }
 
-    private void validateEvidenceFile(final Facility facility, List<UnderlyingAgreementViolation> violations) {
-        // Evidence file should be XLSX or XLS
-        Optional.ofNullable(facility.getFacilityItem().getApply70Rule().getEvidenceFile())
-                .ifPresent(uuid -> {
-                    FileDTO evidenceFile = fileAttachmentService.getFileDTO(uuid.toString());
-                    if (!FileType.XLSX.getMimeTypes().contains(evidenceFile.getFileType())
-                            && !FileType.XLS.getMimeTypes().contains(evidenceFile.getFileType())) {
-                        violations.add(new UnderlyingAgreementViolation(SECTION_NAME, INVALID_EVIDENCE_ATTACHMENT_TYPE));
-                    }
-                });
-    }
-
-    private void validateExistingFacilityIds(final Facility facility, List<UnderlyingAgreementViolation> violations) {
+    private void validateExistingFacilityIds(final Facility facility, Map<String, FacilityValidationContext> facilityValidationContextMap, List<UnderlyingAgreementViolation> violations) {
         // Validate previousFacilityId
         Optional.ofNullable(facility.getFacilityItem().getFacilityDetails().getPreviousFacilityId())
                 .ifPresent(id -> {
-                    if (FacilityStatus.NEW.equals(facility.getStatus()) && !facilityDataQueryService.isActiveFacility(id)) {
+                	boolean previousFacilityActive = (facilityValidationContextMap.get(id) != null && facilityValidationContextMap.get(id).getClosedDate() == null);
+                    if (FacilityStatus.NEW.equals(facility.getStatus()) && !previousFacilityActive) {
                         violations.add(new UnderlyingAgreementViolation(SECTION_NAME, INVALID_PREVIOUS_FACILITY_ID, id));
                     }
                 });
@@ -123,16 +124,6 @@ public class UnderlyingAgreementFacilityValidatorService {
             if (!AgreementCompositionType.NOVEM.equals(targetComposition.getAgreementCompositionType())) {
                 violations.add(new UnderlyingAgreementViolation(SECTION_NAME, INVALID_AGREEMENT_COMPOSITION_TYPE, targetComposition.getAgreementCompositionType()));
             }
-
-            // Calculator file should be XLSX or XLS
-            Optional.ofNullable(targetComposition.getCalculatorFile())
-                    .ifPresent(uuid -> {
-                        FileDTO file = fileAttachmentService.getFileDTO(uuid.toString());
-                        if (!FileType.XLSX.getMimeTypes().contains(file.getFileType())
-                                && !FileType.XLS.getMimeTypes().contains(file.getFileType())) {
-                            violations.add(new UnderlyingAgreementViolation(SECTION_NAME, INVALID_TARGET_CALCULATOR_ATTACHMENT_TYPE));
-                        }
-                    });
         }
     }
 
@@ -147,7 +138,7 @@ public class UnderlyingAgreementFacilityValidatorService {
         }
     }
 
-    public void validateFacilityParticipatingSchemeVersions(final Facility facility, UnderlyingAgreementValidationContext underlyingAgreementValidationContext, List<UnderlyingAgreementViolation> violations) {
+    public void validateFacilityParticipatingSchemeVersions(final Facility facility, Map<String, FacilityValidationContext> facilityValidationContextMap, UnderlyingAgreementValidationContext underlyingAgreementValidationContext, List<UnderlyingAgreementViolation> violations) {
         final Set<SchemeVersion> schemeVersions = facility.getFacilityItem().getFacilityDetails().getParticipatingSchemeVersions();
         final ApplicationReasonType applicationReason = facility.getFacilityItem().getFacilityDetails().getApplicationReason();
         final FacilityStatus status = facility.getStatus();
@@ -170,8 +161,10 @@ public class UnderlyingAgreementFacilityValidatorService {
         if (ApplicationReasonType.CHANGE_OF_OWNERSHIP.equals(applicationReason)) {
             Optional.ofNullable(facility.getFacilityItem().getFacilityDetails().getPreviousFacilityId())
                     .ifPresent(previousFacilityId -> {
-                        Set<SchemeVersion> previousSchemeVersions = facilityDataQueryService
-                                .getParticipatingFacilitySchemeVersions(previousFacilityId);
+                    	
+						Set<SchemeVersion> previousSchemeVersions = facilityValidationContextMap.get(previousFacilityId) == null
+								? Collections.emptySet()
+								: facilityValidationContextMap.get(previousFacilityId).getParticipatingSchemeVersions();
 
                         if (!requestCreationDate.isBefore(underlyingAgreementConfig.getSchemeParticipationFlagCutOffDate())) {
                             if (!previousSchemeVersions.equals(schemeVersions)) {

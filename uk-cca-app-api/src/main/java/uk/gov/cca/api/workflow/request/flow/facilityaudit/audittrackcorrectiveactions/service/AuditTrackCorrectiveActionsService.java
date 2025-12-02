@@ -34,6 +34,8 @@ public class AuditTrackCorrectiveActionsService {
     public void applySubmitAction(final AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload payload, RequestTask requestTask) {
         AuditTrackCorrectiveActionsRequestTaskPayload taskPayload =
                 (AuditTrackCorrectiveActionsRequestTaskPayload) requestTask.getPayload();
+        taskPayload.setSectionsCompleted(payload.getSectionsCompleted());
+        // add action to responded actions
         taskPayload.getRespondedActions().add(payload.getActionTitle());
     }
 

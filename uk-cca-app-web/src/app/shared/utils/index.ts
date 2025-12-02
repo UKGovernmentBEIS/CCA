@@ -1,3 +1,4 @@
+export * from './address';
 export * from './crypto';
 export * from './download-url-generator';
 export * from './files';

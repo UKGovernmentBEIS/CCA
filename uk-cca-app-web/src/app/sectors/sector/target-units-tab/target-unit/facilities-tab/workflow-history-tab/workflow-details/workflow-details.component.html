@@ -1,0 +1,41 @@
+@if (details) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <netz-page-heading
+        size="xl"
+        [caption]="details?.workflowDetails.id + ' ' + (details?.workflowDetails.requestType | workflowType)"
+        data-testid="page-heading"
+      >
+        Facility audit
+        <govuk-tag style="float: right" [color]="details?.workflowDetails.requestStatus | statusColor">
+          {{ details?.workflowDetails.requestStatus | status }}
+        </govuk-tag>
+      </netz-page-heading>
+    </div>
+  </div>
+
+  <govuk-tabs queryParamsHandling="replace">
+    <ng-template govukTabLazy id="timeline-events" label="Timeline">
+      <div class="govuk-grid-row">
+        <netz-timeline class="govuk-grid-column-full">
+          @for (action of details?.requestActions; track action.id) {
+            <netz-timeline-item
+              [action]="action"
+              [link]="action | timelineItemLink: true"
+              [state]="navigationState"
+              data-testid="timeline-item"
+            />
+          } @empty {
+            <p data-testid="no-timeline-events">No timeline events</p>
+          }
+        </netz-timeline>
+      </div>
+    </ng-template>
+
+    <!-- @if (userIsRegulator()) {
+      <ng-template govukTabLazy id="notes" label="Notes">
+        <cca-workflow-notes />
+      </ng-template>
+    } -->
+  </govuk-tabs>
+}

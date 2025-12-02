@@ -5,7 +5,7 @@ import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/c
 import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
-import { TaskItemStatus, TasksApiService } from '@requests/common';
+import { TaskItemStatus, TasksApiService, toAuditDetailsSummaryData } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
@@ -13,7 +13,6 @@ import { produce } from 'immer';
 import { auditDetailsCorrectiveActionsQuery } from '../../../audit-details-corrective-actions.selectors';
 import { createRequestTaskActionProcessDTO } from '../../../transform';
 import { AUDIT_DETAILS_SUBTASK } from '../../../types';
-import { toAuditDetailsSummaryData } from '../audit-details-summary-data';
 
 @Component({
   selector: 'cca-audit-details-check-your-answers',

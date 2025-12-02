@@ -126,7 +126,7 @@ export class StartNewTaskComponent {
         switchMap(({ requestId }) => this.requestItemsService.getItemsByRequest(requestId)),
       )
       .subscribe(({ items }) => {
-        const link = items?.length == 1 ? new ItemLinkPipe().transform(items[0]) : ['/dashboard'];
+        const link = items?.length === 1 ? new ItemLinkPipe().transform(items[0]) : ['/dashboard'];
 
         this.router.navigate(link, { relativeTo: this.activatedRoute, replaceUrl: true });
       });

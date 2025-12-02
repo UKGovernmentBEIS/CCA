@@ -7,7 +7,7 @@ import { underlyingAgreementMigratedQuery } from '../../underlying-agreement-mig
 import { getAllUnderlyingAgreementSections } from '../underlying-agreement-submitted-task-content';
 
 @Component({
-  selector: 'cca-unde',
+  selector: 'cca-underlying-agreement-submitted-task-list',
   template: `<netz-task-list [sections]="sections()" />`,
   imports: [TaskListComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

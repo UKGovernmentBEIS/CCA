@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { underlyingAgreementQuery } from '@requests/common';
+import { normaliseNumber, underlyingAgreementQuery } from '@requests/common';
 import { RequestTaskFileService } from '@shared/services';
 import { Improvement } from '@shared/types';
 
@@ -28,21 +28,21 @@ export const FacilityTargetsFormProvider: Provider = {
       ?.improvements;
 
     return fb.group({
-      tp7: fb.control(improvements?.[Improvement.TP7] ?? null, {
+      tp7: fb.control(normaliseNumber(improvements?.[Improvement.TP7]), {
         validators: [
           GovukValidators.required('Enter a numerical value, without alpha or special characters'),
           GovukValidators.max(100, 'Enter a number less than 100'),
           GovukValidators.maxIntegerAndDecimalsValidator(3, 7),
         ],
       }),
-      tp8: fb.control(improvements?.[Improvement.TP8] ?? null, {
+      tp8: fb.control(normaliseNumber(improvements?.[Improvement.TP8]), {
         validators: [
           GovukValidators.required('Enter a numerical value, without alpha or special characters'),
           GovukValidators.max(100, 'Enter a number less than 100'),
           GovukValidators.maxIntegerAndDecimalsValidator(3, 7),
         ],
       }),
-      tp9: fb.control(improvements?.[Improvement.TP9] ?? null, {
+      tp9: fb.control(normaliseNumber(improvements?.[Improvement.TP9]), {
         validators: [
           GovukValidators.required('Enter a numerical value, without alpha or special characters'),
           GovukValidators.max(100, 'Enter a number less than 100'),

@@ -101,8 +101,8 @@ export class ProvideEvidenceComponent {
 
     const currentDecisions = this.store.select(underlyingAgreementReviewQuery.selectReviewGroupDecisions)();
     const decisions = areIdentical
-      ? deleteDecision(currentDecisions, 'AUTHORISATION_AND_ADDITIONAL_EVIDENCE')
-      : currentDecisions;
+      ? currentDecisions
+      : deleteDecision(currentDecisions, 'AUTHORISATION_AND_ADDITIONAL_EVIDENCE');
 
     const { determination, reviewSectionsCompleted, sectionsCompleted } = applySaveActionSideEffects(
       this.store.select(underlyingAgreementReviewQuery.selectDetermination)(),

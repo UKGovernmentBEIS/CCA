@@ -188,6 +188,13 @@ export const TASKS_ROUTES: Routes = [
           ),
       },
       {
+        path: 'track-corrective-actions',
+        loadChildren: () =>
+          import('./track-corrective-actions/track-corrective-actions.routes').then(
+            (r) => r.TRACK_CORRECTIVE_ACTIONS_ROUTES,
+          ),
+      },
+      {
         path: 'file-download/:uuid',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },

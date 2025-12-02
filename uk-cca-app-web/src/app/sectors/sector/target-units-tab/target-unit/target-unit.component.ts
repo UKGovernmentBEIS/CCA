@@ -32,6 +32,7 @@ import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-his
     TuReportsTabComponent,
     BuyoutAndSurplusTabComponent,
     DetailsSummaryComponent,
+    // NotesComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -49,7 +50,7 @@ export class TargetUnitComponent {
   );
 
   private readonly accountStatusIsTerminated = this.accountDetails?.targetUnitAccountDetails?.status === 'TERMINATED';
-  private readonly userIsRegulator = this.roleType() === 'REGULATOR';
+  protected readonly userIsRegulator = this.roleType() === 'REGULATOR';
 
   private readonly isEditable = this.userHasSectorOrRegulatorRole && this.accountStatusIsNewOrLive;
 

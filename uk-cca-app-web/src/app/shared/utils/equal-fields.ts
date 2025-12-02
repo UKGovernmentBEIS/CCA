@@ -10,8 +10,8 @@ export function equalArrayFields(
   tuDetailsField: string[] | null,
   companiesHouseDetailsField: string[] | null,
 ): boolean {
-  if (!tuDetailsField.length || !companiesHouseDetailsField.length) return;
-  if (tuDetailsField.length !== companiesHouseDetailsField.length) return false;
+  if (!tuDetailsField?.length || !companiesHouseDetailsField?.length) return;
+  if (tuDetailsField?.length !== companiesHouseDetailsField?.length) return false;
 
   return tuDetailsField.every(
     (item, index) => item.trim().toLowerCase() === companiesHouseDetailsField[index]?.trim().toLowerCase(),
@@ -19,7 +19,7 @@ export function equalArrayFields(
 }
 
 export function equalAddressFields(targetUnitAddress: string[], companiesHouseAddress: string[]): boolean {
-  if (!targetUnitAddress.length || !companiesHouseAddress.length) return;
+  if (!targetUnitAddress?.length || !companiesHouseAddress?.length) return;
 
   const str1 = targetUnitAddress.join('').replace(/\s+/g, ' ').trim().toLowerCase();
   const str2 = companiesHouseAddress.join('').replace(/\s+/g, ' ').trim().toLowerCase();

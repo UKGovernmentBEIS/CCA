@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`DetailsCorrectiveActionsActionsComponent should show proper view 1`] = `
+<cca-details-corrective-actions-actions
+  correctiveActions={[Function Function]}
+  requestTaskActionStore={[Function _RequestActionStore]}
+  selectAuditDetailsAndCorrectiveActions={[Function Function]}
+>
+  <netz-page-heading
+    caption="Corrective actions"
+  >
+    <span
+      class="govuk-caption-l"
+    >
+      Corrective actions
+    </span>
+    <h1
+      class="govuk-heading-l"
+    >
+      Summary
+    </h1>
+  </netz-page-heading><cca-corrective-actions-summary-details>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      data-testid="corrective-actions"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+           Did the final audit report identify any correcive actions the operator must complete? 
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Yes
+          </span>
+        </dd>
+      </div>
+    </dl>
+    <section
+      class="govuk-!-margin-bottom-9"
+    >
+      <div
+        class="utility-panel-container"
+      >
+        <div
+          class="govuk-grid-row govuk-!-margin-bottom-4 govuk-!-margin-top-0 utility-panel-header background"
+        >
+          <div
+            class="govuk-grid-column-three-quarters govuk-!-padding-left-0"
+          >
+            Corrective action 1
+          </div>
+          <div
+            class="govuk-grid-column-one-quarter govuk-!-text-align-right govuk-!-padding-right-0"
+          >
+          </div>
+        </div>
+        <dl
+          class="govuk-summary-list govuk-!-margin-bottom-9"
+          data-testid="action-0"
+          govuk-summary-list=""
+          style="margin: 5px 5px 35px 5px !important;"
+        >
+          <div
+            class="govuk-summary-list__row"
+            govuksummarylistrow=""
+          >
+            <dt
+              class="govuk-summary-list__key"
+              govuksummarylistrowkey=""
+            >
+              Corrective action details
+            </dt>
+            <dd
+              class="pre-line govuk-summary-list__value"
+              govuksummarylistrowvalue=""
+            >
+              <span>
+                mkmknuhyn
+  7
+              </span>
+            </dd>
+          </div>
+          <div
+            class="govuk-summary-list__row"
+            govuksummarylistrow=""
+          >
+            <dt
+              class="govuk-summary-list__key"
+              govuksummarylistrowkey=""
+            >
+              Corrective action deadline
+            </dt>
+            <dd
+              class="govuk-summary-list__value"
+              govuksummarylistrowvalue=""
+            >
+              <span>
+                01 Jan 2025
+              </span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+  </cca-corrective-actions-summary-details>
+</cca-details-corrective-actions-actions>
+`;

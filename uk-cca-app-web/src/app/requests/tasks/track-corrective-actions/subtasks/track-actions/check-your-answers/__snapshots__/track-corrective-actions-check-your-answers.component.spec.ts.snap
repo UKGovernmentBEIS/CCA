@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TrackCorrectiveActionsCheckYourAnswersComponent should display the correct content 1`] = `
+<cca-track-corrective-actions-check-your-answers
+  actionId={[Function String]}
+  activatedRoute={[Function Object]}
+  correctiveActionResponse="undefined"
+  data={[Function Array]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  targetUnitAccountDetails={[Function Function]}
+  targetUnitAccountInfoViewService={[Function Object]}
+  tasksApiService={[Function TasksApiService]}
+>
+  <div>
+    <netz-page-heading>
+      <span
+        class="govuk-caption-l"
+      >
+        Corrective action 1
+      </span>
+      <h1
+        class="govuk-heading-l"
+      >
+        Check your answers
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      <h2
+        class="govuk-heading-m"
+      >
+        Corrective action carried out details
+      </h2>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Are you satisfied the operator carried out this corrective action?
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+            </span>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Comments
+          </dt>
+          <dd
+            class="pre-line govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              Not provided
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </cca-summary>
+    <button
+      class="govuk-button"
+      govukbutton=""
+      netzpendingbutton=""
+      type="button"
+    >
+      Confirm and complete
+    </button>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><a
+    class="govuk-link"
+    href="/"
+    routerlink="../../.."
+  >
+     Return to: Track corrective actions  
+  </a>
+</cca-track-corrective-actions-check-your-answers>
+`;

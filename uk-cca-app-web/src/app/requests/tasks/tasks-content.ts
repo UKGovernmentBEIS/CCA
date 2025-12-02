@@ -10,6 +10,7 @@ import { patUploadTaskContent } from './performance-account-template-upload/pat-
 import { performanceDataDownloadTaskContent } from './performance-data-download/performance-data-download-task-content';
 import { performanceDataUploadTaskContent } from './performance-data-upload/performance-data-upload-task-content';
 import { preAuditReviewTaskContent } from './pre-audit-review/pre-audit-review-task-content';
+import { trackCorrectiveActionsTaskContent } from './track-corrective-actions/track-corrective-actions-task-content';
 import { underlyingAgreementActivationTaskContent } from './underlying-agreement-activation/underlying-agreement-activation-task-content';
 import { underlyingAgreementApplicationTaskContent } from './underlying-agreement-application/underlying-agreement-application-task-content';
 import { underlyingAgreementPeerReviewTaskContent } from './underlying-agreement-peer-review/underlying-agreement-peer-review-task-content';
@@ -56,6 +57,6 @@ export const tasksContent: RequestTaskPageContentFactoryMap = {
   CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION: cca3MigrationAccountActivationTaskContent,
 
   PRE_AUDIT_REVIEW_SUBMIT: preAuditReviewTaskContent,
-
   AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT: auditDetailsCorrectiveActionsTaskContent,
+  AUDIT_TRACK_CORRECTIVE_ACTIONS: trackCorrectiveActionsTaskContent,
 };

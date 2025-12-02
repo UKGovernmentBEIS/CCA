@@ -597,5 +597,12 @@
 				drop column sector_id;
             </sql>
     </changeSet>
+    
+    <changeSet id="0_1_0_sector_association_scheme_UPDATE_CCA2_uma_date" author="vourdoukasd">
+        <update tableName="sector_association_scheme">
+            <column name="uma_date" value="2025-11-26"/>
+            <where>scheme_version = 'CCA_2'</where>
+        </update>
+    </changeSet>
 
 </databaseChangeLog>

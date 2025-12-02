@@ -35,8 +35,8 @@ public class Cca2ExtensionNoticeAccountProcessingCreateDocumentService {
         final TemplateParams documentTemplateParams = constructDocumentTemplateParams(requestPayload, version);
 
         return ccaFileDocumentGeneratorService.generateAsync(request, signatory,
-                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA2,
-                documentTemplateParams, constructFileName(accountState.getAccountBusinessId(), version));
+                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA2, documentTemplateParams,
+                SchemeVersion.CCA_2, constructFileName(accountState.getAccountBusinessId(), version));
     }
 
     private TemplateParams constructDocumentTemplateParams(final Cca2ExtensionNoticeAccountProcessingRequestPayload requestPayload, final int version) {

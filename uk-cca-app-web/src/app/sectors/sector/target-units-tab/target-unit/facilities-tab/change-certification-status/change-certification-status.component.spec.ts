@@ -5,7 +5,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { mockFacilityDetails } from '../test/mock-data';
+import { mockFacilityDetails } from '../testing/mock-data';
 import { ChangeCertificationStatusComponent } from './change-certification-status.component';
 
 describe('ChangeCertificationStatusComponent', () => {

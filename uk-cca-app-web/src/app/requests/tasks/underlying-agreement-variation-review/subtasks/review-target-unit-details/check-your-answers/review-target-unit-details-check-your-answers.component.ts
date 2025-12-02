@@ -134,7 +134,7 @@ export class ReviewTargetUnitDetailsCheckYourAnswersComponent {
     const dto = createSaveActionDTO(requestTaskId, actionPayload, {
       sectionsCompleted,
       reviewSectionsCompleted,
-      determination: determination,
+      determination,
       reviewGroupDecisions: payload.reviewGroupDecisions,
       facilitiesReviewGroupDecisions: payload.facilitiesReviewGroupDecisions,
     });

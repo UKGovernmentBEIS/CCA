@@ -9,9 +9,7 @@ export type WorkflowHistoryTabState = {
   pageSize: number;
 };
 
-export enum RequestWorkflowHistoryType {
-  SECTOR_MOA = 'Subsistence fees',
-}
+export enum RequestWorkflowHistoryType {}
 
 export enum RequestWorkflowHistoryStatus {
   CANCELLED = 'Cancelled',
@@ -19,9 +17,7 @@ export enum RequestWorkflowHistoryStatus {
   IN_PROGRESS = 'In progress',
 }
 
-export const workflowTypesMap: Record<string, string> = {
-  'Subsistence fees': 'SECTOR_MOA',
-};
+export const workflowTypesMap: Record<string, string> = {};
 
 export const workflowStatusesMap: Record<string, string> = {
   Cancelled: 'CANCELLED',

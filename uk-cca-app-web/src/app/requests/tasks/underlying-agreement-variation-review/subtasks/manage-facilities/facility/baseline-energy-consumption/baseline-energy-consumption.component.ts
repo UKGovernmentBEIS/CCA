@@ -116,10 +116,6 @@ export class BaselineEnergyConsumptionComponent {
     initialValue: this.form.value.totalThroughput,
   });
 
-  private readonly throughputUnitValue = toSignal(this.form.controls.throughputUnit.valueChanges, {
-    initialValue: this.form.value.throughputUnit,
-  });
-
   protected readonly showVariableEnergyType = computed(() => this.hasVariableEnergyValue() === true);
 
   protected readonly showTotalsOnlyFields = computed(

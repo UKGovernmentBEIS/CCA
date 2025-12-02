@@ -40,20 +40,20 @@ public class Cca3ExistingFacilitiesMigrationAccountProcessingCreateDocumentServi
                 ? requestPayload.getDecisionNotification().getDecisionNotification().getSignatory()
                 : requestPayload.getDefaultSignatory();
         final TargetUnitAccountDetails accountDetails = requestPayload.getAccountReferenceData().getTargetUnitAccountDetails();
-        final TemplateParams documentTemplateParams = constructDocumentTemplateParams(requestPayload, accountDetails);
+        final TemplateParams documentTemplateParams = constructDocumentTemplateParams(requestPayload, accountDetails, isFinal);
 
         return ccaFileDocumentGeneratorService.generateAsync(request, signatory,
-                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA3,
-                documentTemplateParams, constructFileName(requestMetadata.getAccountBusinessId(), isFinal));
+                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA3, documentTemplateParams,
+                SchemeVersion.CCA_3, constructFileName(requestMetadata.getAccountBusinessId(), isFinal));
     }
 
     private TemplateParams constructDocumentTemplateParams(final Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload requestPayload,
-                                                           TargetUnitAccountDetails accountDetails) {
+                                                           TargetUnitAccountDetails accountDetails, boolean isFinalDocument) {
         TemplateParams documentTemplateParams = new TemplateParams();
         documentTemplateParams.getParams().putAll(ccaDocumentTemplateCommonUnderlyingAgreementParamsProvider
                 .constructTemplateParams(
                         requestPayload.getUnderlyingAgreement(),
-                        documentTemplateTransformationMapper.formatCurrentDate(),
+                        isFinalDocument? documentTemplateTransformationMapper.formatCurrentDate() : null,
                         SchemeVersion.CCA_3,
                         1));
         documentTemplateParams.getParams().putAll(ccaDocumentTemplateCommonParamsProvider

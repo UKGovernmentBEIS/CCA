@@ -7,7 +7,7 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { screen } from '@testing-library/dom';
 import UserEvent from '@testing-library/user-event';
 
-import { mockFacilityDetails } from '../test/mock-data';
+import { mockFacilityDetails } from '../testing/mock-data';
 import EditFacilityDetailsComponent from './edit-facility-details.component';
 
 describe('EditFacilityDetailsComponent', () => {

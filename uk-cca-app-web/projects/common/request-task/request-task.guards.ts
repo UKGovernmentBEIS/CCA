@@ -1,7 +1,7 @@
 import { inject, Injector, runInInjectionContext } from '@angular/core';
 import { CanActivateFn, CanDeactivateFn, Router } from '@angular/router';
 
-import { catchError, concatMap, map, of } from 'rxjs';
+import { catchError, concatMap, forkJoin, map, of, switchMap, tap } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
 
@@ -20,30 +20,31 @@ export function getRequestTaskPageDefaultCanActivateGuard(taskIdParam = 'taskId'
     const requestItemsService = inject(RequestItemsService);
     const editableResolver: RequestTaskIsEditableResolver = inject(REQUEST_TASK_IS_EDITABLE_RESOLVER);
 
-    const id = +route.paramMap.get(taskIdParam);
-    if (!route.paramMap.has(taskIdParam) || Number.isNaN(id)) {
+    if (!route.paramMap.has(taskIdParam)) {
       console.warn(`No :${taskIdParam} param in route`);
       return true;
     }
 
-    return tasksService.getTaskItemInfoById(id).pipe(
-      concatMap((requestTaskItem) => {
-        return requestActionsService
-          .getRequestActionsByRequestId(requestTaskItem.requestInfo.id)
-          .pipe(map((timeline) => ({ requestTaskItem, timeline })));
-      }),
-      concatMap(({ requestTaskItem, timeline }) => {
-        return requestItemsService.getItemsByRequest(requestTaskItem.requestInfo.id).pipe(
-          map(({ items: relatedTasks }) => {
-            store.setRequestTaskItem(requestTaskItem);
-            store.setTimeline(timeline);
-            store.setRelatedTasks(relatedTasks);
-            store.setIsEditable(runInInjectionContext(injector, editableResolver));
+    const id = Number(route.paramMap.get(taskIdParam));
+    if (Number.isNaN(id)) {
+      console.warn(`Invalid :${taskIdParam} param in route`);
+      return true;
+    }
 
-            return true;
-          }),
-        );
+    return tasksService.getTaskItemInfoById(id).pipe(
+      switchMap((requestTaskItem) =>
+        forkJoin({
+          timeline: requestActionsService.getRequestActionsByRequestId(requestTaskItem.requestInfo.id),
+          related: requestItemsService.getItemsByRequest(requestTaskItem.requestInfo.id),
+        }).pipe(map(({ timeline, related }) => ({ requestTaskItem, timeline, related }))),
+      ),
+      tap(({ requestTaskItem, timeline, related }) => {
+        store.setRequestTaskItem(requestTaskItem);
+        store.setTimeline(timeline);
+        store.setRelatedTasks(related.items);
+        store.setIsEditable(runInInjectionContext(injector, editableResolver));
       }),
+      map(() => true),
       catchError((e) => {
         console.error(e);
         return of(router.createUrlTree(['dashboard']));

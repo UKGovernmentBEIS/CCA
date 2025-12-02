@@ -5,14 +5,13 @@ import { catchError } from 'rxjs';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { TasksApiService } from '@requests/common';
+import { CorrectiveActionsSummaryDetailsComponent, TasksApiService } from '@requests/common';
 import { produce } from 'immer';
 
 import { AuditDetailsCorrectiveActionsSubmitRequestTaskPayload, CorrectiveAction } from 'cca-api';
 
 import { auditDetailsCorrectiveActionsQuery } from '../../../audit-details-corrective-actions.selectors';
 import { createRequestTaskActionProcessDTO } from '../../../transform';
-import { CorrectiveActionsSummaryDetailsComponent } from '../summary-details/corrective-actions-summary-details.component';
 
 @Component({
   selector: 'cca-corrective-actions-summary',

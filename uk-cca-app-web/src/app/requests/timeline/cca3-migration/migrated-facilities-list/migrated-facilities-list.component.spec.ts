@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 
-import { cca3MigrationCompletedPayload } from '../tests/mock-data';
+import { cca3MigrationCompletedPayload } from '../testing/mock-data';
 import { MigratedFacilitiesListComponent } from './migrated-facilities-list.component';
 
 describe('MigratedFacilitiesListComponent', () => {

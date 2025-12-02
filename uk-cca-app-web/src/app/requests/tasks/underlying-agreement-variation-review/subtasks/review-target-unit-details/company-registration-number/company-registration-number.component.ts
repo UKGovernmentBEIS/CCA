@@ -21,6 +21,7 @@ import {
   isTargetUnitDetailsWizardCompleted,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   ReviewTargetUnitDetailsWizardStep,
+  sameCompanyRegistrationNumbers,
   TasksApiService,
   transformAccountReferenceData,
   UNAVariationReviewRequestTaskPayload,
@@ -107,7 +108,13 @@ export class CompanyRegistrationNumberComponent {
     )?.accountReferenceData;
 
     const actionPayload = toUnderlyingAgreementVariationReviewSavePayload(payload);
-    const updatedPayload = updateTUDetails(actionPayload, companyNumberState, companyProfile);
+
+    const sameCRN = sameCompanyRegistrationNumbers(
+      companyProfile,
+      actionPayload?.underlyingAgreementTargetUnitDetails.companyRegistrationNumber,
+    );
+
+    const updatedPayload = sameCRN ? actionPayload : updateTUDetails(actionPayload, companyNumberState, companyProfile);
 
     const originalTUDetails = transformAccountReferenceData(originalAccountReferenceData);
     const currentTUDetails = updatedPayload.underlyingAgreementTargetUnitDetails;
@@ -118,7 +125,7 @@ export class CompanyRegistrationNumberComponent {
     );
 
     const currentDecisions = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewGroupDecisions)();
-    const decisions = areIdentical ? deleteDecision(currentDecisions, 'TARGET_UNIT_DETAILS') : currentDecisions;
+    const decisions = areIdentical ? currentDecisions : deleteDecision(currentDecisions, 'TARGET_UNIT_DETAILS');
 
     const { determination, reviewSectionsCompleted, sectionsCompleted } = applySaveActionSideEffects(
       this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)(),

@@ -1,3 +1,5 @@
+import { DatePipe } from '@angular/common';
+
 import { SummaryFactory } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 
@@ -36,6 +38,8 @@ export function addFacilityDecisionSummaryData(
   isEditable: boolean,
   downloadUrl: string,
 ): SummaryFactory {
+  const datePipe = new DatePipe('en-GB');
+
   const f = factory.addSection('Decision Summary', '../decision');
 
   f.addRow(
@@ -47,7 +51,7 @@ export function addFacilityDecisionSummaryData(
   );
 
   if (decision?.changeStartDate) {
-    f.addRow('Start date of paying the subsistence charge fee', decision?.startDate, {
+    f.addRow('Start date of paying the subsistence charge fee', datePipe.transform(decision?.startDate, 'dd/MM/yyyy'), {
       change: isEditable,
     });
   }

@@ -28,6 +28,7 @@ import java.util.Map;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -97,7 +98,7 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingCreateDocumentServiceTest 
         verify(ccaDocumentTemplateCommonParamsProvider, times(1))
                 .constructTargetUnitDetailsParams(accountDetails);
         verify(ccaFileDocumentGeneratorService, times(1)).generateAsync(request, signatory,
-                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA3, params,
+                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA3, params, SchemeVersion.CCA_3,
                 "accountBusinessId CCA3 Underlying Agreement v1.pdf");
     }
 
@@ -107,7 +108,6 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingCreateDocumentServiceTest 
         final String signatory = "signatory";
         final TargetUnitAccountDetails accountDetails = TargetUnitAccountDetails.builder().operatorName("name").build();
         final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder().build();
-        final String currentDate = "currentDate";
 
         final Request request = Request.builder()
                 .metadata(Cca3ExistingFacilitiesMigrationAccountProcessingRequestMetadata.builder()
@@ -126,9 +126,8 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingCreateDocumentServiceTest 
                 .build();
 
         when(requestService.findRequestById(requestId)).thenReturn(request);
-        when(documentTemplateTransformationMapper.formatCurrentDate()).thenReturn(currentDate);
         when(ccaDocumentTemplateCommonUnderlyingAgreementParamsProvider
-                .constructTemplateParams(underlyingAgreement, currentDate, SchemeVersion.CCA_3, 1))
+                .constructTemplateParams(underlyingAgreement, null, SchemeVersion.CCA_3, 1))
                 .thenReturn(Map.of("una", "una"));
         when(ccaDocumentTemplateCommonParamsProvider.constructTargetUnitDetailsParams(accountDetails))
                 .thenReturn(Map.of("accountDetails", "accountDetails"));
@@ -138,13 +137,13 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingCreateDocumentServiceTest 
 
         // Verify
         verify(requestService, times(1)).findRequestById(requestId);
-        verify(documentTemplateTransformationMapper, times(1)).formatCurrentDate();
         verify(ccaDocumentTemplateCommonUnderlyingAgreementParamsProvider, times(1))
-                .constructTemplateParams(underlyingAgreement, currentDate, SchemeVersion.CCA_3, 1);
+                .constructTemplateParams(underlyingAgreement, null, SchemeVersion.CCA_3, 1);
         verify(ccaDocumentTemplateCommonParamsProvider, times(1))
                 .constructTargetUnitDetailsParams(accountDetails);
         verify(ccaFileDocumentGeneratorService, times(1)).generateAsync(request, signatory,
-                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA3, params,
+                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_CCA3, params, SchemeVersion.CCA_3,
                 "accountBusinessId CCA3 Underlying Agreement v1 [proposed].pdf");
+        verifyNoInteractions(documentTemplateTransformationMapper);
     }
 }

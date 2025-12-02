@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { screen } from '@testing-library/dom';
 
-import { mockFacilityDetails } from '../test/mock-data';
+import { mockFacilityDetails } from '../testing/mock-data';
 import { FacilityDetailsComponent } from './facility-details.component';
 
 describe('FacilityDetailsComponent', () => {

@@ -4,6 +4,7 @@ import { produce } from 'immer';
 
 import {
   AccountReferenceData,
+  CompanyProfileDTO,
   Facility,
   TargetUnitAccountContactDTO,
   UnderlyingAgreementReviewRequestTaskPayload,
@@ -127,6 +128,11 @@ export function calcManageFacilitiesStatus(
   const allFacilitiesRejected = facilitySections.every((s) => reviewSectionsCompleted?.[s] === TaskItemStatus.REJECTED);
   if (allFacilitiesRejected) return TaskItemStatus.REJECTED;
 
+  const allFacilitiesUnchanged = facilitySections.every(
+    (s) => reviewSectionsCompleted?.[s] === TaskItemStatus.UNCHANGED,
+  );
+  if (allFacilitiesUnchanged) return TaskItemStatus.UNCHANGED;
+
   return facilitySections.some((s) => reviewSectionsCompleted?.[s] === TaskItemStatus.ACCEPTED)
     ? TaskItemStatus.ACCEPTED
     : TaskItemStatus.REJECTED;
@@ -144,6 +150,13 @@ export function filterFieldsWithFalsyValues(obj: unknown): unknown {
 
     return acc;
   }, {});
+}
+
+export function sameCompanyRegistrationNumbers(
+  companyProfile: CompanyProfileDTO,
+  existingCompanyRegistrationNumber: string,
+): boolean {
+  return companyProfile?.registrationNumber === existingCompanyRegistrationNumber;
 }
 
 export function areEntitiesIdentical(current: unknown, original: unknown): boolean {

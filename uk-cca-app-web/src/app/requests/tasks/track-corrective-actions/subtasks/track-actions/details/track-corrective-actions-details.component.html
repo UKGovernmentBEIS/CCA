@@ -1,0 +1,47 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    heading="Corrective actions carried out details"
+    [caption]="'Corrective action ' + actionId"
+  >
+    <dl govuk-summary-list>
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Corrective action required</dt>
+        <dd govukSummaryListRowValue class="pre-line">{{ correctiveActionResponse?.details }}</dd>
+      </div>
+
+      <div govukSummaryListRow>
+        <dt govukSummaryListRowKey>Corrective action deadline</dt>
+        <dd govukSummaryListRowValue>{{ correctiveActionResponse?.deadline | date: 'dd MMM yyyy' }}</dd>
+      </div>
+    </dl>
+
+    <div
+      formControlName="actionCarriedOutDate"
+      govuk-date-input
+      label="When did the operator carry out the corrective action?"
+      size="normal"
+      [max]="today"
+      class="govuk-!-margin-bottom-9 govuk-!-margin-top-9"
+    ></div>
+
+    <div
+      govuk-textarea
+      label="Summarise how the operator carried out the corrective action"
+      labelSize="medium"
+      formControlName="comments"
+    ></div>
+
+    <cca-multiple-file-input
+      [baseDownloadUrl]="downloadUrl"
+      formControlName="evidenceFiles"
+      label="Upload evidence (optional)"
+    />
+  </cca-wizard-step>
+
+  <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+  <a class="govuk-link" routerLink="../../..">
+    Return to: Track corrective actions {{ targetUnitAccountDetails()?.targetUnitAccountDetails?.businessId }}
+  </a>
+</div>

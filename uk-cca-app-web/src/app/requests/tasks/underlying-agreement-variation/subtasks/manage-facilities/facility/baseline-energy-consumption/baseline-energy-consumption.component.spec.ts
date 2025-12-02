@@ -131,7 +131,7 @@ describe('BaselineEnergyConsumptionComponent', () => {
   });
 
   it('should have fixed energy value in form', () => {
-    expect(component['form'].get('totalFixedEnergy')?.value).toBe('100');
+    expect(component['form'].get('totalFixedEnergy')?.value).toBe(100.1234567);
   });
 
   it('should have variable energy flag set to true', () => {
@@ -149,7 +149,7 @@ describe('BaselineEnergyConsumptionComponent', () => {
   });
 
   it('should calculate fixed energy correctly', () => {
-    expect(component['calculatedFixedEnergy']()).toBe('100');
+    expect(component['calculatedFixedEnergy']()).toBe('100.1234567');
   });
 
   it('should show variable energy type field when hasVariableEnergy is true', () => {

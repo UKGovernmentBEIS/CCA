@@ -11,7 +11,10 @@ import uk.gov.netz.api.common.exception.BusinessException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
@@ -25,11 +28,13 @@ public abstract class UnderlyingAgreementVariationApplicationReasonDataValidator
     public BusinessValidationResult validate(final T taskPayload) {
         List<UnderlyingAgreementVariationViolation> violations = new ArrayList<>();
         Set<Facility> originalFacilities = taskPayload.getOriginalUnderlyingAgreementContainer().getUnderlyingAgreement().getFacilities();
-        Set<Facility> facilities = this.getUnderlyingAgreementPayload(taskPayload).getUnderlyingAgreement().getFacilities();
+        Map<String, Facility> facilityByBusinessId = this.getUnderlyingAgreementPayload(taskPayload).getUnderlyingAgreement().getFacilities()
+        		.stream()
+        		.collect(Collectors.toMap(f -> f.getFacilityItem().getFacilityId(), Function.identity()));
 
         originalFacilities
                 .forEach(originalFacility -> {
-                    boolean valid = validate(facilities, originalFacility);
+                    boolean valid = validate(facilityByBusinessId, originalFacility);
 
                     if (!valid) {
                         violations.add(new UnderlyingAgreementVariationViolation(this.getPayloadType() + Facility.class.getName(),
@@ -44,11 +49,13 @@ public abstract class UnderlyingAgreementVariationApplicationReasonDataValidator
                 .build();
     }
 
-    private boolean validate(Set<Facility> facilities, Facility originalFacility) {
-        final Facility facilityFound = facilities.stream()
-                .filter(facility -> originalFacility.getFacilityItem().getFacilityId().equals(facility.getFacilityItem().getFacilityId()))
-                .findFirst()
-                .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
+    private boolean validate(Map<String, Facility> facilityByBusinessId, Facility originalFacility) {
+    	final String originalFacilityId = originalFacility.getFacilityItem().getFacilityId();
+    	final Facility facilityFound = facilityByBusinessId.get(originalFacilityId);
+    	
+		if (facilityFound == null) {
+			throw new BusinessException(RESOURCE_NOT_FOUND, originalFacilityId);
+		}
 
         final FacilityDetails originalFacilityDetails = originalFacility.getFacilityItem().getFacilityDetails();
         final FacilityDetails facilityDetails = facilityFound.getFacilityItem().getFacilityDetails();

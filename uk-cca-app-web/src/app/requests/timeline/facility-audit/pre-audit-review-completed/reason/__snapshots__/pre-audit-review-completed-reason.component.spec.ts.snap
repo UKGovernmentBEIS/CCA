@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`PreAuditReviewCompletedReasonComponent should show proper view 1`] = `
+<cca-pre-audit-review-completed-reason
+  auditReasonDetails={[Function Function]}
+  data={[Function Function]}
+  requestTaskActionStore={[Function _RequestActionStore]}
+>
+  <netz-page-heading
+    caption="Pre-audit review reason"
+  >
+    <span
+      class="govuk-caption-l"
+    >
+      Pre-audit review reason
+    </span>
+    <h1
+      class="govuk-heading-l"
+    >
+      Summary
+    </h1>
+  </netz-page-heading><cca-summary>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Reason for audit
+        </dt>
+        <dd
+          class="pre-line govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Base year data
+          </span>
+          <br />
+          <span>
+            Eligibility
+          </span>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Comments
+        </dt>
+        <dd
+          class="pre-line govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            blah blah
+          </span>
+        </dd>
+      </div>
+    </dl>
+  </cca-summary>
+</cca-pre-audit-review-completed-reason>
+`;

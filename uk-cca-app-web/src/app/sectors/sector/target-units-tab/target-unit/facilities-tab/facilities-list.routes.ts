@@ -6,6 +6,7 @@ import { resetCurrentFacility, setCurrentFacility } from '@requests/common';
 
 import { FacilityAuditStore } from './facility-audit/facility-audit.store';
 import { FacilityDetailsResolver } from './facility-details.resolver';
+import { WORKFLOW_DETAILS_ROUTES } from './workflow-history-tab/workflow-details/workflow-details.routes';
 
 export const FACILITIES_LIST_ROUTES: Routes = [
   {
@@ -49,6 +50,10 @@ export const FACILITIES_LIST_ROUTES: Routes = [
         path: 'audit',
         providers: [FacilityAuditStore],
         loadChildren: () => import('./facility-audit/audit.routes').then((r) => r.FACILITY_AUDIT_ROUTES),
+      },
+      {
+        path: 'workflow-details',
+        children: WORKFLOW_DETAILS_ROUTES,
       },
     ],
   },

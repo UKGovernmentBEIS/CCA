@@ -5629,33 +5629,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  $ref: '#/components/schemas/RequestCreateValidationResult'
   /v1.0/request-notes/{requestId}/files:
     get:
       tags:
@@ -6003,34 +5988,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-                    enum:
-                      - NONE
-                      - VIEW_ONLY
-                      - EXECUTE
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-                    enum:
-                      - NONE
-                      - VIEW_ONLY
-                      - EXECUTE
   /v1.0/notification-templates:
     get:
       tags:
@@ -6823,13 +6786,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/ReferenceDataDTO'
       security: []
   /v1.0/company-information/{registrationNumber}:
     get:
@@ -14033,15 +13989,15 @@ components:
       description: The note request
     AuditTrackCorrectiveActionsSubmittedRequestActionPayload:
       required:
-        - auditDetailsAndCorrectiveActions
+        - auditTrackCorrectiveActions
       type: object
       properties:
         payloadType:
           type: string
         businessId:
           type: string
-        auditDetailsAndCorrectiveActions:
-          $ref: '#/components/schemas/AuditDetailsAndCorrectiveActions'
+        auditTrackCorrectiveActions:
+          $ref: '#/components/schemas/AuditTrackCorrectiveActions'
         facilityAuditAttachments:
           type: object
           additionalProperties:

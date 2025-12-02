@@ -8,6 +8,7 @@ import { GovukValidators } from '@netz/govuk-components';
 import {
   FacilityBaselineEnergyConsumptionFormModel,
   facilityBaselineEnergyProductsValidator,
+  normaliseNumber,
   underlyingAgreementQuery,
 } from '@requests/common';
 
@@ -41,7 +42,7 @@ export const FacilityBaselineEnergyConsumptionFormProvider: Provider = {
 
     const form = fb.group(
       {
-        totalFixedEnergy: fb.control(baselineEnergyConsumption?.totalFixedEnergy ?? null, {
+        totalFixedEnergy: fb.control(normaliseNumber(baselineEnergyConsumption?.totalFixedEnergy), {
           validators: [
             GovukValidators.required('Enter the total fixed energy consumption'),
             GovukValidators.maxDecimalsValidator(7),
@@ -52,11 +53,11 @@ export const FacilityBaselineEnergyConsumptionFormProvider: Provider = {
           validators: [GovukValidators.required('Select yes if the facility has variable energy consumption')],
           updateOn: 'change',
         }),
-        baselineVariableEnergy: fb.control(baselineEnergyConsumption?.baselineVariableEnergy ?? null, {
+        baselineVariableEnergy: fb.control(normaliseNumber(baselineEnergyConsumption?.baselineVariableEnergy), {
           validators: [GovukValidators.maxDecimalsValidator(7)],
           updateOn: 'change',
         }),
-        totalThroughput: fb.control(baselineEnergyConsumption?.totalThroughput ?? null, {
+        totalThroughput: fb.control(normaliseNumber(baselineEnergyConsumption?.totalThroughput), {
           validators: [
             GovukValidators.maxDecimalsValidator(7),
             GovukValidators.positiveNumber('Enter a number greater than zero'),

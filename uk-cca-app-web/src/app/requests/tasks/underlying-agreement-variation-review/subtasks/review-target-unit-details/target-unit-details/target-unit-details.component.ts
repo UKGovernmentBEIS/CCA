@@ -111,7 +111,7 @@ export class TargetUnitDetailsComponent implements OnInit {
     );
 
     const currentDecisions = this.store.select(underlyingAgreementReviewQuery.selectReviewGroupDecisions)();
-    const decisions = areIdentical ? deleteDecision(currentDecisions, 'TARGET_UNIT_DETAILS') : currentDecisions;
+    const decisions = areIdentical ? currentDecisions : deleteDecision(currentDecisions, 'TARGET_UNIT_DETAILS');
 
     const { determination, reviewSectionsCompleted, sectionsCompleted } = applySaveActionSideEffects(
       this.store.select(underlyingAgreementReviewQuery.selectDetermination)(),

@@ -24,6 +24,7 @@ import uk.gov.netz.api.authorization.rules.services.resource.RegulatorAuthorityR
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.workflow.request.StartProcessRequestService;
+import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.flow.common.domain.RequestCreateActionEmptyPayload;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestCreateValidationResult;
 
@@ -91,6 +92,7 @@ class Cca2ExtensionNoticeCreateRunServiceTest {
                         CcaBpmnProcessConstants.ACCOUNT_IDS, Set.of(1L),
                         CcaBpmnProcessConstants.NUMBER_OF_ACCOUNTS_COMPLETED, 0))
                 .build();
+        Request request = Request.builder().build();
 
         when(cca2ExtensionNoticeCreateValidator.validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload))
                 .thenReturn(RequestCreateValidationResult.builder().valid(true).build());
@@ -105,11 +107,13 @@ class Cca2ExtensionNoticeCreateRunServiceTest {
                 .thenReturn(RequestCreateValidationResult.builder().valid(false).reportedRequestTypes(Set.of("request")).build());
         when(regulatorAuthorityResourceService.findUsersByCompetentAuthority(CompetentAuthorityEnum.ENGLAND))
                 .thenReturn(List.of("regulator1", "regulator2"));
+        when(startProcessRequestService.startProcess(requestParams)).thenReturn(request);
 
         // Invoke
         cca2ExtensionNoticeCreateRunService.createRun(providedAccounts);
 
         // Verify
+        assertThat(request.getSubmissionDate()).isNotNull();
         verify(cca2ExtensionNoticeCreateValidator, times(1))
                 .validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload);
         verify(targetUnitAccountQueryService, times(1)).getActiveAccounts();
@@ -144,6 +148,7 @@ class Cca2ExtensionNoticeCreateRunServiceTest {
                         CcaBpmnProcessConstants.ACCOUNT_IDS, Set.of(1L, 2L),
                         CcaBpmnProcessConstants.NUMBER_OF_ACCOUNTS_COMPLETED, 0))
                 .build();
+        Request request = Request.builder().build();
 
         when(cca2ExtensionNoticeCreateValidator.validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload))
                 .thenReturn(RequestCreateValidationResult.builder().valid(true).build());
@@ -158,11 +163,13 @@ class Cca2ExtensionNoticeCreateRunServiceTest {
                 ));
         when(regulatorAuthorityResourceService.findUsersByCompetentAuthority(CompetentAuthorityEnum.ENGLAND))
                 .thenReturn(List.of("regulator1", "regulator2"));
+        when(startProcessRequestService.startProcess(requestParams)).thenReturn(request);
 
         // Invoke
         cca2ExtensionNoticeCreateRunService.createRun(providedAccounts);
 
         // Verify
+        assertThat(request.getSubmissionDate()).isNotNull();
         verify(cca2ExtensionNoticeCreateValidator, times(1))
                 .validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload);
         verify(targetUnitAccountQueryService, times(1)).getActiveAccountsByBusinessIds(providedAccounts);

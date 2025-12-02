@@ -83,7 +83,7 @@ export class FacilitiesListComponent {
     ];
 
     if (this.isAllowedUser()) {
-      fields.push({ field: 'markedForAudit', header: 'Marked for audit' });
+      fields.push({ field: 'auditRequired', header: 'Marked for audit' });
     }
 
     fields.push(

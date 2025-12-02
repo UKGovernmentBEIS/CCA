@@ -1,3 +1,5 @@
+import { isAddressCompleted } from '@shared/utils';
+
 import {
   AuthorisationAndAdditionalEvidence,
   BaselineData,
@@ -11,15 +13,16 @@ import { hasBothCCASchemes, isCCA2Scheme } from '../utils';
 
 export const isTargetUnitDetailsWizardCompleted = (tuDetails: UnderlyingAgreementTargetUnitDetails) => {
   const registrationNumberCompleted =
-    !!tuDetails?.companyRegistrationNumber || !tuDetails?.registrationNumberMissingReason;
+    !!tuDetails?.companyRegistrationNumber || !!tuDetails?.registrationNumberMissingReason;
 
   const detailsCompleted = !!tuDetails?.operatorName && !!tuDetails?.operatorType;
-  const operatorAddressCompleted = !!tuDetails?.operatorAddress;
+  const operatorAddressCompleted = isAddressCompleted(tuDetails?.operatorAddress);
+
   const responsiblePersonCompleted =
     tuDetails?.responsiblePersonDetails.email &&
     tuDetails?.responsiblePersonDetails.firstName &&
     tuDetails?.responsiblePersonDetails.lastName &&
-    !!tuDetails?.responsiblePersonDetails.address;
+    isAddressCompleted(tuDetails?.responsiblePersonDetails.address);
 
   return registrationNumberCompleted && detailsCompleted && operatorAddressCompleted && responsiblePersonCompleted;
 };

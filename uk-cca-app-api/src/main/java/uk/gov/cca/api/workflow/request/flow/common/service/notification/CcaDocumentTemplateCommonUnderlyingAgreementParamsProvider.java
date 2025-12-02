@@ -2,6 +2,7 @@ package uk.gov.cca.api.workflow.request.flow.common.service.notification;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ public class CcaDocumentTemplateCommonUnderlyingAgreementParamsProvider {
                 .filter(facility -> !facility.getStatus().equals(FacilityStatus.EXCLUDED))
                 .filter(facility -> facility.getFacilityItem().getFacilityDetails().getParticipatingSchemeVersions().contains(schemeVersion))
                 .map(this::getFacilityTemplateData)
+                .sorted(Comparator.comparing(FacilityTemplateData::getId))
                 .toList();
 
         Map<String, Object> paramMap = new HashMap<>(Map.of(

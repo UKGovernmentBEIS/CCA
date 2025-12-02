@@ -7,7 +7,7 @@ import { combineLatest, startWith } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { underlyingAgreementQuery } from '@requests/common';
+import { normaliseNumber, underlyingAgreementQuery } from '@requests/common';
 import { requireProductsValidator, uniqueFieldValidator } from '@shared/validators';
 
 import { ProductVariableEnergyConsumptionData } from 'cca-api';
@@ -73,11 +73,11 @@ export function createProductFormGroup(
   const productGroup = fb.group({
     productName: fb.control(value?.productName ?? null, [GovukValidators.required('Enter a product name')]),
     baselineYear: fb.control(baselineYearValue, [GovukValidators.required('Select baseline year')]),
-    baselineVariableEnergy: fb.control(value?.energy ?? null, [
+    baselineVariableEnergy: fb.control(normaliseNumber(value?.energy)?.toString(), [
       GovukValidators.required('Enter the baseline variable energy'),
       GovukValidators.maxDecimalsValidator(7),
     ]),
-    baselineThroughput: fb.control(value?.throughput ?? null, [
+    baselineThroughput: fb.control(normaliseNumber(value?.throughput)?.toString(), [
       GovukValidators.required('Enter the baseline throughput'),
       GovukValidators.maxDecimalsValidator(7),
       GovukValidators.positiveNumber('Enter a number greater than zero'),

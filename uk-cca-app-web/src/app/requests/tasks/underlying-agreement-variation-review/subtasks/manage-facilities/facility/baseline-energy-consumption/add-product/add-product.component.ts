@@ -70,7 +70,7 @@ export class AddProductComponent implements OnInit {
   }
 
   protected readonly baselineYearOptions: GovukSelectOption<number>[] = Array.from({ length: 9 }, (_, index) => {
-    const year = 2030 - index;
+    const year = 2022 + index;
     return { value: year, text: String(year) };
   });
 

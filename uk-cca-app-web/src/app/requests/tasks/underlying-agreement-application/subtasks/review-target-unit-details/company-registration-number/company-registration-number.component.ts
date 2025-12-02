@@ -19,6 +19,7 @@ import {
   isTargetUnitDetailsWizardCompleted,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   ReviewTargetUnitDetailsWizardStep,
+  sameCompanyRegistrationNumbers,
   TaskItemStatus,
   TasksApiService,
   underlyingAgreementQuery,
@@ -98,7 +99,13 @@ export class CompanyRegistrationNumberComponent {
     )() as UnderlyingAgreementSubmitRequestTaskPayload;
 
     const actionPayload = toUnderlyingAgreementSavePayload(payload);
-    const updatedPayload = updateTUDetails(actionPayload, companyNumberState, companyProfile);
+
+    const sameCRN = sameCompanyRegistrationNumbers(
+      companyProfile,
+      actionPayload?.underlyingAgreementTargetUnitDetails.companyRegistrationNumber,
+    );
+
+    const updatedPayload = sameCRN ? actionPayload : updateTUDetails(actionPayload, companyNumberState, companyProfile);
 
     const currentSectionsCompleted = this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)();
 

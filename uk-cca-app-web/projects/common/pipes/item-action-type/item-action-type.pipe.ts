@@ -40,7 +40,10 @@ export enum ItemActionEnum {
   UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEWER_REJECTED = 'Peer review disagreement',
   CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_CANCELLED = 'CCA3 agreement cancelled',
   CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED = 'CCA3 agreement activated',
-  FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED = 'Audit material review submitted',
+  FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED = 'Pre-audit review completed',
+  FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED = 'Audit details and corrective actions completed',
+  FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED = 'Track corrective actions completed',
+  FACILITY_AUDIT_CANCELLED = 'Audit facility cancelled',
 }
 
 @Pipe({ name: 'itemActionType', pure: true })

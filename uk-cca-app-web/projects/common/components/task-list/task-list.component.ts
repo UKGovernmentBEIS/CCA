@@ -26,7 +26,7 @@ import { StatusTagColorPipe, StatusTagTextPipe } from '@netz/common/pipes';
 
               @if (task.hint) {
                 <div class="govuk-task-list__hint">
-                  {{ task.hint }}
+                  <span [innerHTML]="truncateText(task.hint)"></span>
                 </div>
               }
             </div>
@@ -56,4 +56,9 @@ import { StatusTagColorPipe, StatusTagTextPipe } from '@netz/common/pipes';
 })
 export class TaskListComponent {
   protected readonly sections = input<TaskSection[]>([]);
+
+  truncateText(text: string): string {
+    if (text.length > 250) return text.substring(0, 250) + '...';
+    return text;
+  }
 }

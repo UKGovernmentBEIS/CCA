@@ -7,7 +7,7 @@ import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/c
 import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
-import { TaskItemStatus, TasksApiService } from '@requests/common';
+import { CorrectiveActionsSummaryDetailsComponent, TaskItemStatus, TasksApiService } from '@requests/common';
 import { produce } from 'immer';
 
 import { AuditDetailsCorrectiveActionsSubmitRequestTaskPayload, CorrectiveAction } from 'cca-api';
@@ -15,7 +15,6 @@ import { AuditDetailsCorrectiveActionsSubmitRequestTaskPayload, CorrectiveAction
 import { auditDetailsCorrectiveActionsQuery } from '../../../audit-details-corrective-actions.selectors';
 import { createRequestTaskActionProcessDTO } from '../../../transform';
 import { CORRECTIVE_ACTIONS_SUBTASK } from '../../../types';
-import { CorrectiveActionsSummaryDetailsComponent } from '../summary-details/corrective-actions-summary-details.component';
 
 @Component({
   selector: 'cca-corrective-actions-check-your-answers',

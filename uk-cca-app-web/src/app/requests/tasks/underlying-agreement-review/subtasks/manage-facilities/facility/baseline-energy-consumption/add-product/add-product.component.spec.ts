@@ -167,7 +167,7 @@ describe('AddProductComponent', () => {
 
   it('should display add product button', () => {
     const compiled = fixture.nativeElement;
-    expect(compiled.textContent).toContain('Add product');
+    expect(compiled.textContent).toContain('Add another product');
   });
 
   it('should display save and continue button', () => {

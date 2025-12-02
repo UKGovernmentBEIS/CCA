@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RequestActionStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 
-import { cca3MigrationCompletedActionStateMock } from '../tests/mock-data';
+import { cca3MigrationCompletedActionStateMock } from '../testing/mock-data';
 import { Cca3MigrationCompletedComponent } from './cca3-migration-completed.component';
 
 describe('Cca3MigrationCompletedComponent', () => {

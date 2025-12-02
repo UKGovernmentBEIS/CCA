@@ -74,8 +74,8 @@ describe('ItemNamePipe', () => {
     );
 
     expect(pipe.transform('PRE_AUDIT_REVIEW_SUBMIT')).toEqual('Pre-audit review');
-
     expect(pipe.transform('AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT')).toEqual('Audit details and corrective actions');
+    expect(pipe.transform('AUDIT_TRACK_CORRECTIVE_ACTIONS')).toEqual('Track corrective actions');
 
     expect(pipe.transform(null)).toBeNull();
   });
