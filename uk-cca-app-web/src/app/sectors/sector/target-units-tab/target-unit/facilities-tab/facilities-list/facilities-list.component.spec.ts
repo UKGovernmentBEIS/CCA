@@ -19,14 +19,16 @@ describe('FacilitiesListComponent', () => {
   const mockFacilities: FacilitySearchResults = {
     facilities: [
       {
-        id: 'ADS_1-F00001',
+        id: 1,
+        facilityBusinessId: 'ADS_1-F00001',
         siteName: 'fac1-1',
         schemeExitDate: new Date().toISOString(),
         status: 'LIVE',
         certificationStatus: 'CERTIFIED',
       },
       {
-        id: 'ADS_1-F00002',
+        id: 2,
+        facilityBusinessId: 'ADS_1-F00002',
         siteName: 'fac1-2',
         schemeExitDate: new Date().toISOString(),
         status: 'INACTIVE',
@@ -231,30 +233,6 @@ describe('FacilitiesListComponent', () => {
       tick();
 
       expect(facilityInfoViewService.searchFacilities).toHaveBeenCalledWith(123, 1, 25, 'test');
-    }));
-  });
-
-  describe('sorting', () => {
-    it('should sort facilities correctly', fakeAsync(() => {
-      setupComponent();
-
-      fixture.detectChanges();
-      tick();
-
-      const sortedFacilities = component.facilities();
-      expect(sortedFacilities).toBeDefined();
-      expect(sortedFacilities.length).toBe(2);
-      expect(sortedFacilities[0].id).toBe('ADS_1-F00001');
-      expect(sortedFacilities[1].id).toBe('ADS_1-F00002');
-    }));
-
-    it('should handle empty facilities array', fakeAsync(() => {
-      setupComponent({ facilities: [], total: 0 });
-
-      fixture.detectChanges();
-      tick();
-
-      expect(component.facilities()).toEqual([]);
     }));
   });
 });

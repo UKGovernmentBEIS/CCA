@@ -2052,4 +2052,28 @@ This is an automatic email - please do not reply to this address.')
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_update_MIGRATION_UNDERLYING_AGREEMENT_ACCEPTED_CCA3_template_content" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="MIGRATION_UNDERLYING_AGREEMENT_ACCEPTED_CCA3"/>
+            <param name="fileDocumentName" value="CCA3 migration proposed agreement cover letter.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_EXTENSION_NOTICE_CCA2_template_content" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="EXTENSION_NOTICE_CCA2"/>
+            <param name="fileDocumentName" value="CCA2 extension cover letter.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_CCA3_template_content" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_CCA3"/>
+            <param name="fileDocumentName" value="CCA3 agreement.docx"/>
+        </customChange>
+    </changeSet>
+
 </databaseChangeLog>

@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
+import { isFeatureEnabled } from '@shared/config';
 import { PendingRequestGuard } from '@shared/guards';
 
 import { ActiveTargetUnitStore } from './active-target-unit.store';
@@ -10,6 +11,7 @@ import { BUYOUT_AND_SURPLUS_ROUTES } from './target-unit/buyout-and-surplus-tab/
 import { BuyoutAndSurplusTabStore } from './target-unit/buyout-and-surplus-tab/buyout-and-surplus-tab.store';
 import { EDIT_TARGET_UNIT_ROUTES } from './target-unit/edit-target-unit/edit-target-unit.routes';
 import { FACILITIES_LIST_ROUTES } from './target-unit/facilities-tab/facilities-list.routes';
+import { NOTES_ROUTES } from './target-unit/notes-tab/notes.routes';
 import { PatReportStore } from './target-unit/pat-report-store';
 import { PerformanceReportStore } from './target-unit/performance-report-store';
 import { REPORTS_TAB_ROUTES } from './target-unit/reports-tab/reports-tab.routes';
@@ -55,7 +57,11 @@ export const ACTIVE_TARGET_UNIT_ROUTES: Routes = [
       ...USERS_AND_CONTACTS_ROUTES,
       ...REPORTS_TAB_ROUTES,
       ...BUYOUT_AND_SURPLUS_ROUTES,
-      // ...NOTES_ROUTES,
+      {
+        path: 'notes',
+        canActivate: [() => !isFeatureEnabled('hideNotes')()],
+        children: NOTES_ROUTES,
+      },
     ],
   },
 ];

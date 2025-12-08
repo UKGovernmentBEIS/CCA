@@ -598,7 +598,7 @@ exports[`TP5DecisionComponent should match snapshot 1`] = `
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Baseline kWh for the target facility
+                Baseline kWh for the target unit
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -1463,7 +1463,7 @@ exports[`TP5DecisionComponent should match snapshot 1`] = `
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Baseline kWh for the target facility
+                Baseline kWh for the target unit
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -2136,7 +2136,7 @@ exports[`TP5DecisionComponent should match snapshot 1`] = `
             <dt
               class="govuk-summary-list__key"
             >
-              Baseline kWh for the target facility
+              Baseline kWh for the target unit
             </dt>
             <dd
               class="govuk-summary-list__value"

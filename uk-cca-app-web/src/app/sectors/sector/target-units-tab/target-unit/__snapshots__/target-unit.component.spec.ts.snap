@@ -7,10 +7,12 @@ exports[`TargetUnitComponent should display correct view 1`] = `
   accountStatusIsTerminated="false"
   activeTargetUnitStore={[Function ActiveTargetUnitStore]}
   authStore={[Function _AuthStore]}
+  configService={[Function ConfigService]}
   isEditable="false"
   isEditableData={[Function Object]}
   isFinancialIndependenceEditable="false"
   roleType={[Function Function]}
+  showNotes={[Function Boolean]}
   userHasSectorOrRegulatorRole="false"
   userIsRegulator="false"
 >

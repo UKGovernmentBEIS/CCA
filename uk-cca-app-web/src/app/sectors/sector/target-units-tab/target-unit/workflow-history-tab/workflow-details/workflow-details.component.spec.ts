@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -11,6 +12,7 @@ describe('WorkflowDetailsComponent', () => {
   describe('with timeline events', () => {
     beforeEach(async () => {
       const { fixture } = await render(WorkflowDetailsComponent, {
+        providers: [provideHttpClient()],
         componentProviders: [
           {
             provide: ActivatedRoute,
@@ -42,6 +44,7 @@ describe('WorkflowDetailsComponent', () => {
   describe('without timeline events and with request items', () => {
     beforeEach(async () => {
       const { fixture } = await render(WorkflowDetailsComponent, {
+        providers: [provideHttpClient()],
         componentProviders: [
           {
             provide: ActivatedRoute,

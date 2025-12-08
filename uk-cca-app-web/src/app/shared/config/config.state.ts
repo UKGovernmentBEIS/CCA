@@ -1,4 +1,11 @@
-export const FEATURES = ['terms', 'unaHideNotifyOperator', 'subsistenceFeesHideMenu'] as const;
+export const FEATURES = [
+  'terms',
+  'unaHideNotifyOperator',
+  'subsistenceFeesHideMenu',
+  'hideNotes',
+  'hideFacilityAudit',
+] as const;
+
 export type FeatureName = (typeof FEATURES)[number];
 export type FeaturesConfig = Partial<Record<FeatureName, boolean>>;
 
@@ -16,6 +23,8 @@ export const initialState: ConfigState = {
   features: {
     unaHideNotifyOperator: false,
     subsistenceFeesHideMenu: false,
+    hideNotes: false,
+    hideFacilityAudit: false,
   },
   analytics: {
     gtmContainerId: '',

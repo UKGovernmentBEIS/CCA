@@ -64,3 +64,4 @@ export * from './sector-moa-details/sector-moa-details.routes';
 export * from './sector-moa-details/sector-moa-details.store';
 export * from './sector-moa-details/testing/mock-data';
 export * from './teriminated-transaction/terminated-transaction.component';
+export * from './workflow-notes/workflow-notes.component';

@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { waitForAsync } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -10,6 +11,7 @@ import { WorkflowDetailsComponent } from './workflow-details.component';
 describe('WorkflowDetailsComponent', () => {
   beforeEach(async () => {
     const { fixture } = await render(WorkflowDetailsComponent, {
+      providers: [provideHttpClient()],
       componentProviders: [
         {
           provide: ActivatedRoute,

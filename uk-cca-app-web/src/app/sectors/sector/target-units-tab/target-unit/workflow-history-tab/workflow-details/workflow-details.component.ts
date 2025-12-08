@@ -7,6 +7,8 @@ import { RelatedTasksComponent, TimelineItemComponent } from '@netz/common/compo
 import { PageHeadingComponent } from '@netz/common/components';
 import { TimelineItemLinkPipe } from '@netz/common/pipes';
 import { TabLazyDirective, TabsComponent, TagComponent } from '@netz/govuk-components';
+import { WorkflowNotesComponent } from '@shared/components';
+import { ConfigService } from '@shared/config';
 import { StatusColorPipe } from '@shared/pipes';
 import { RequestTypeToHeadingPipe } from '@shared/pipes';
 import { StatusPipe } from '@shared/pipes';
@@ -34,7 +36,7 @@ type WorkflowDetailsViewModel = {
     RelatedTasksComponent,
     TimelineComponent,
     TimelineItemComponent,
-    // WorkflowNotesComponent,
+    WorkflowNotesComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -42,10 +44,13 @@ export class WorkflowDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly authStore = inject(AuthStore);
+  private readonly configService = inject(ConfigService);
+
   private readonly roleType = this.authStore.select(selectUserRoleType);
 
   private readonly data = this.activatedRoute.snapshot.data['workflowDetailsItemsAndActions'];
   protected readonly navigationState = { returnUrl: this.router.url };
+  protected readonly showNotes = !this.configService.isFeatureEnabled('hideNotes');
 
   protected readonly details: WorkflowDetailsViewModel = {
     workflowDetails: this.data.workflowDetails,

@@ -2,16 +2,19 @@
   <div class="govuk-grid-column-three-quarters">
     <netz-page-heading [caption]="facility()?.facilityDetails?.name">Split by product</netz-page-heading>
   </div>
-  <div class="govuk-grid-column-one-quarter" style="text-align: end">
-    <button
-      type="button"
-      class="govuk-button govuk-button--secondary govuk-!-margin-top-5"
-      [routerLink]="[`../${FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION}`]"
-      [relativeTo]="activatedRoute"
-    >
-      Change
-    </button>
-  </div>
+
+  @if (canChangeProducts()) {
+    <div class="govuk-grid-column-one-quarter" style="text-align: end">
+      <button
+        type="button"
+        class="govuk-button govuk-button--secondary govuk-!-margin-top-5"
+        [routerLink]="[`../${FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION}`]"
+        [relativeTo]="activatedRoute"
+      >
+        Change
+      </button>
+    </div>
+  }
 </div>
 
 <cca-split-by-product-table

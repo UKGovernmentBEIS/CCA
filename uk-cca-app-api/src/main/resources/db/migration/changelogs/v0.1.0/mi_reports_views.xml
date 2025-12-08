@@ -44,6 +44,7 @@
             drop view if exists sch_report_ea.target_commitment cascade;
             drop view if exists sch_report_ea.target_set cascade;
             drop view if exists sch_report_ea.underlying_agreement cascade;
+            drop view if exists sch_report_ea.underlying_agreement_document cascade;
 
             drop view if exists sch_report_ea.tpr_target_period cascade;
             drop view if exists sch_report_ea.tpr_performance_account_template_data cascade;
@@ -101,6 +102,7 @@
 			create or replace view sch_report_ea.target_set as select s.* from target_set s where exists (select null from sector_association a inner join sector_association_scheme sas on a.id = sas.sector_association_id where sas.target_set_id = s.id and a.competent_authority = 'ENGLAND') or exists (select null from sector_association sa join subsector_association ssa on sa.id = ssa.sector_association_id join subsector_association_scheme sas on ssa.id = sas.subsector_association_id where sa.competent_authority = 'ENGLAND' and s.id = sas.target_set_id);
 			create or replace view sch_report_ea.target_commitment as select s.* from target_commitment s where exists (select null from sector_association a inner join sector_association_scheme sas on a.id = sas.sector_association_id inner join target_set ts on sas.target_set_id = ts.id where sas.target_set_id = s.target_set_id and a.competent_authority = 'ENGLAND') or exists (select null from sector_association sa join subsector_association ssa on sa.id = ssa.sector_association_id join subsector_association_scheme sas on ssa.id = sas.subsector_association_id join target_set ts on sas.target_set_id = ts.id where sa.competent_authority = 'ENGLAND' and s.target_set_id = ts.id);
 			create or replace view sch_report_ea.underlying_agreement as select s.* from underlying_agreement s where exists (select null from account a where a.id = s.account_id and a.competent_authority = 'ENGLAND');
+            create or replace view sch_report_ea.underlying_agreement_document as select unad.* from underlying_agreement_document unad where exists (select null from underlying_agreement una inner join account a on a.id = una.account_id where una.id = unad.underlying_agreement_id and a.competent_authority = 'ENGLAND');
 
         	create or replace view sch_report_ea.tpr_target_period as select tpr.* from tpr_target_period tpr;
             create or replace view sch_report_ea.tpr_performance_account_template_data as select tpatd.* from tpr_performance_account_template_data tpatd where exists (select null from account a where a.id = tpatd.account_id and a.competent_authority = 'ENGLAND');

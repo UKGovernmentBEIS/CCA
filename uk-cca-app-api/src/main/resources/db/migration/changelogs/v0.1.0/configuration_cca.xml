@@ -67,5 +67,16 @@
             where key = 'ui.features.unaHideNotifyOperator';
         </rollback>
     </changeSet>
+    
+    <changeSet id="0_1_0_hide_notes_and_facility_audit" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into configuration(key, value, type) values 
+            ('ui.features.hideNotes', true, 'BOOLEAN'),
+            ('ui.features.hideFacilityAudit', true, 'BOOLEAN');
+        </sql>
+        <rollback>
+            delete from configuration where key IN ('ui.features.hideNotes', 'ui.features.hideFacilityAudit');
+        </rollback>
+    </changeSet>
         
 </databaseChangeLog>

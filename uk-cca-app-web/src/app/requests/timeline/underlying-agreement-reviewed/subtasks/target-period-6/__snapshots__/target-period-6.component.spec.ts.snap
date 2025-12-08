@@ -200,7 +200,7 @@ exports[`TargetPeriod6Component should match snapshot 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Baseline MWh for the target facility
+            Baseline MWh for the target unit
           </dt>
           <dd
             class="govuk-summary-list__value"

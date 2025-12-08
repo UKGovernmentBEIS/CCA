@@ -21,7 +21,7 @@ export const userRoleWorkflowAccessMap: Record<UserStateDTO['roleType'], string[
   REGULATOR: ['ADMIN_TERMINATION'],
   OPERATOR: [],
   SECTOR_USER: [
-    'UNDERLYING_AGREEMENT_VARIATION',
+    // 'UNDERLYING_AGREEMENT_VARIATION',
     'PERFORMANCE_DATA_DOWNLOAD',
     'PERFORMANCE_DATA_UPLOAD',
     'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
@@ -37,12 +37,12 @@ export const taskWorkflowContentDisplayMap: Record<RequestDetailsDTO['requestTyp
     type: 'ADMIN_TERMINATION',
     errors: [],
   },
-  UNDERLYING_AGREEMENT_VARIATION: {
-    title: 'Make a permanent change to your underlying agreement',
-    button: 'Start a variation',
-    type: 'UNDERLYING_AGREEMENT_VARIATION',
-    errors: [],
-  },
+  // UNDERLYING_AGREEMENT_VARIATION: {
+  //   title: 'Make a permanent change to your underlying agreement',
+  //   button: 'Start a variation',
+  //   type: 'UNDERLYING_AGREEMENT_VARIATION',
+  //   errors: [],
+  // },
   PERFORMANCE_DATA_DOWNLOAD: {
     title: 'Download target period reporting (TPR) spreadsheets',
     hint: 'Generate a zip file that contains the TPR spreadsheets. You will be able to edit the data in the spreadsheets.',

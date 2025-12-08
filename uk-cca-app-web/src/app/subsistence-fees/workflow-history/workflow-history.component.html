@@ -32,8 +32,9 @@
         </div>
       </ng-template>
 
-      <!-- <ng-template govukTabLazy id="notes" label="Notes">
-      </ng-template> -->
+      @if (showNotes) {
+        <ng-template govukTabLazy id="notes" label="Notes"> </ng-template>
+      }
     </govuk-tabs>
   </div>
 }

@@ -24,6 +24,7 @@ import uk.gov.netz.api.workflow.request.core.service.RequestService;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestParams;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -48,7 +49,7 @@ public class Cca3ExistingFacilitiesMigrationAccountProcessingCreateRequestServic
         // Get UNA
         final UnderlyingAgreementContainer underlyingAgreementContainer = underlyingAgreementQueryService
                 .getUnderlyingAgreementContainerByAccountId(accountId);
-        Map<UUID, String> attachments = underlyingAgreementContainer.getUnderlyingAgreementAttachments();
+        Map<UUID, String> attachments = new HashMap<>(underlyingAgreementContainer.getUnderlyingAgreementAttachments());
 
         // Add facilities calculator file to attachments
         accountState.getFacilityMigrationDataList().stream()

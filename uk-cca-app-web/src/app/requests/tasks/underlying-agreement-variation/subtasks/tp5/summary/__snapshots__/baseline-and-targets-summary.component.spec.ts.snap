@@ -473,7 +473,7 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Baseline kWh for the target facility
+                Baseline kWh for the target unit
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -952,7 +952,7 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
                 class="govuk-summary-list__key"
                 govuksummarylistrowkey=""
               >
-                Baseline kWh for the target facility
+                Baseline kWh for the target unit
               </dt>
               <dd
                 class="govuk-summary-list__value"
@@ -1531,7 +1531,7 @@ exports[`SummaryComponent should match snapshot for TP6 - RELATIVE agreementMeas
             <dt
               class="govuk-summary-list__key"
             >
-              Baseline kWh for the target facility
+              Baseline kWh for the target unit
             </dt>
             <dd
               class="govuk-summary-list__value"

@@ -7,7 +7,7 @@ import { AccountNotesService } from 'cca-api';
 
 export const NOTES_ROUTES: Routes = [
   {
-    path: 'notes',
+    path: '',
     canActivate: [userIsRegulatorGuard],
     children: [
       {

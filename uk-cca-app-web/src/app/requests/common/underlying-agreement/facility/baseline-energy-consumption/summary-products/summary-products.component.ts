@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
+import { AuthStore, selectUserId } from '@netz/common/auth';
 import { PageHeadingComponent } from '@netz/common/components';
-import { RequestTaskStore } from '@netz/common/store';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { FacilityWizardStep, underlyingAgreementQuery } from '@requests/common';
 
 import { SplitByProductTableComponent } from '../../../split-by-product-table';
@@ -15,6 +16,7 @@ import { SplitByProductTableComponent } from '../../../split-by-product-table';
 })
 export class SummaryProductsComponent {
   protected readonly activatedRoute = inject(ActivatedRoute);
+  private readonly authStore = inject(AuthStore);
   private readonly requestTaskStore = inject(RequestTaskStore);
 
   private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
@@ -44,6 +46,11 @@ export class SummaryProductsComponent {
     return this.requestTaskStore.select(underlyingAgreementQuery.selectFacilityTargetComposition(this.facilityIndex))()
       ?.measurementType;
   });
+
+  protected readonly canChangeProducts = computed(
+    () =>
+      this.authStore.select(selectUserId)() === this.requestTaskStore.select(requestTaskQuery.selectAssigneeUserId)(),
+  );
 
   protected readonly FacilityWizardStep = FacilityWizardStep;
 }

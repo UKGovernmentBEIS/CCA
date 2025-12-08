@@ -1,5 +1,5 @@
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -12,7 +12,6 @@ import {
   ButtonDirective,
   GovukTableColumn,
   GovukValidators,
-  type SortEvent,
   TableComponent,
   TagComponent,
   TextInputComponent,
@@ -57,7 +56,6 @@ export class FacilitiesListComponent {
     this.certificationPeriodViewInfoService.getCurrentCertificationPeriod(),
   );
 
-  private readonly sorting = signal<SortEvent>({ column: 'id', direction: 'ascending' });
   private readonly targetUnitId = +this.activatedRoute.snapshot.paramMap.get('targetUnitId');
 
   private readonly queryParams = toSignal(this.activatedRoute.queryParamMap);
@@ -139,29 +137,6 @@ export class FacilitiesListComponent {
     facilities: this.facilitiesData()?.facilities || [],
     totalItems: this.facilitiesData()?.total || 0,
   }));
-
-  readonly facilities = computed(() => {
-    const facs = this.state().facilities;
-    const sorting = this.sorting();
-
-    if (!sorting || !facs?.length) return facs;
-
-    return [...facs].sort((a, b) => {
-      const aValue = a[sorting.column];
-      const bValue = b[sorting.column];
-
-      if (aValue == null && bValue == null) return 0;
-      if (aValue == null) return sorting.direction === 'ascending' ? 1 : -1;
-      if (bValue == null) return sorting.direction === 'ascending' ? -1 : 1;
-
-      const diff = String(aValue).localeCompare(String(bValue), 'en-GB', {
-        numeric: true,
-        sensitivity: 'base',
-      });
-
-      return sorting.direction === 'ascending' ? diff : -diff;
-    });
-  });
 
   onSearch() {
     if (this.form.invalid) return;

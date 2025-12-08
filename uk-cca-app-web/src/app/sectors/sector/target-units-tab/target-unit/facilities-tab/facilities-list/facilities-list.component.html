@@ -27,7 +27,7 @@
     <!-- TODO: This style is a temp solution, due to the headings wrong styling -->
     <div style="min-width: 110%">
       <div class="overflow-auto overflow-auto-table">
-        <govuk-table [columns]="tableColumns()" [data]="facilities()" data-testid="facilities-list-table">
+        <govuk-table [columns]="tableColumns()" [data]="state().facilities" data-testid="facilities-list-table">
           <ng-template let-column="column" let-index="index" let-row="row">
             @switch (column.field) {
               @case ('facilityBusinessId') {

@@ -12,9 +12,9 @@
       </netz-page-heading>
     </div>
 
-    @if (isAllowedToTriggerFacilityAudit()) {
+    @if (isAllowedToTriggerFacilityAudit() && showAudit) {
       <div class="govuk-grid-column-one-quarter" style="text-align: end">
-        <!-- <button
+        <button
           class="govuk-!-margin-top-3"
           govukSecondaryButton
           netzPendingButton
@@ -22,7 +22,7 @@
           (click)="onAuditTaskStart()"
         >
           Start an audit task
-        </button> -->
+        </button>
       </div>
     }
   </div>
@@ -33,15 +33,17 @@
         <cca-summary [data]="summaryData()" />
       </ng-template>
 
-      <!-- @if (roleType() !== 'SECTOR_USER') {
-        <ng-template govukTabLazy id="audit" label="Audit">
-          <cca-audit-summary />
+      @if (showAudit) {
+        @if (roleType() !== 'SECTOR_USER') {
+          <ng-template govukTabLazy id="audit" label="Audit">
+            <cca-audit-summary />
+          </ng-template>
+        }
+
+        <ng-template govukTabLazy id="workflow-history" label="Workflow history">
+          <cca-workflow-history-tab />
         </ng-template>
       }
-
-      <ng-template govukTabLazy id="workflow-history" label="Workflow history">
-        <cca-workflow-history-tab />
-      </ng-template> -->
     </govuk-tabs>
   </section>
 }

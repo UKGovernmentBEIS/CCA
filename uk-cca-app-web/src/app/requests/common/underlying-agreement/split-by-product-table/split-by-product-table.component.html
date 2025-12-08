@@ -8,6 +8,7 @@
           <a class="govuk-link" [routerLink]="['add-product']">{{ row[column.field] }}</a>
         }
       }
+
       @case ('productStatus') {
         <div class="govuk-!-width-full">
           <govuk-tag [color]="row[column.field] | productStatusColor">
@@ -15,29 +16,35 @@
           </govuk-tag>
         </div>
       }
+
       @case ('energyIntensity') {
         {{ calculateEnergyIntensity(row) }} {{ facilityThroughputUnit() | measurementTypeToUnit }}/{{
           row['throughputUnit']
         }}
       }
+
       @case ('actions') {
-        @switch (row['productStatus']) {
-          @case ('LIVE') {
-            <a class="govuk-link" [routerLink]="['exclude-product', row.productName]">Exclude</a>
-          }
+        @if (canAlterProducts()) {
+          @switch (row['productStatus']) {
+            @case ('LIVE') {
+              <a class="govuk-link" [routerLink]="['exclude-product', row.productName]">Exclude</a>
+            }
 
-          @case ('EXCLUDED') {
-            <a class="govuk-link" [routerLink]="['undo-product', row.productName]">Undo</a>
-          }
+            @case ('EXCLUDED') {
+              <a class="govuk-link" [routerLink]="['undo-product', row.productName]">Undo</a>
+            }
 
-          @default {
-            <a class="govuk-link" [routerLink]="['delete-product', row.productName]">Delete</a>
+            @default {
+              <a class="govuk-link" [routerLink]="['delete-product', row.productName]">Delete</a>
+            }
           }
         }
       }
+
       @case ('baselineYear') {
         {{ row[column.field] }}
       }
+
       @default {
         {{ row[column.field] | number }}
       }

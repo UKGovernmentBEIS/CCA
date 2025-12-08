@@ -28,10 +28,12 @@
       </div>
     </ng-template>
 
-    <!-- @if (userIsRegulator()) {
-      <ng-template govukTabLazy id="notes" label="Notes">
-        <cca-workflow-notes />
-      </ng-template>
-    } -->
+    @if (showNotes) {
+      @if (userIsRegulator()) {
+        <ng-template govukTabLazy id="notes" label="Notes">
+          <cca-workflow-notes />
+        </ng-template>
+      }
+    }
   </govuk-tabs>
 }

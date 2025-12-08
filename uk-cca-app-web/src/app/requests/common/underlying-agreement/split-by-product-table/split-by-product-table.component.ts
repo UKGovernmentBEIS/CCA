@@ -1,7 +1,9 @@
 import { DecimalPipe, TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { AuthStore, selectUserId } from '@netz/common/auth';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { GovukTableColumn, TableComponent, TagComponent } from '@netz/govuk-components';
 
 import { ProductVariableEnergyConsumptionData } from 'cca-api';
@@ -24,6 +26,9 @@ import { MeasurementTypeToUnitPipe } from '../pipes';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SplitByProductTableComponent {
+  private readonly authStore = inject(AuthStore);
+  private readonly requestTaskStore = inject(RequestTaskStore);
+
   protected readonly products = input<ProductVariableEnergyConsumptionData[]>([]);
 
   private readonly decimalPipe = new DecimalPipe('en-GB');
@@ -46,6 +51,11 @@ export class SplitByProductTableComponent {
 
   protected readonly tableColumns = computed(() =>
     this.readOnly() ? this.baseColumns.filter((column) => column.field !== 'actions') : this.baseColumns,
+  );
+
+  protected readonly canAlterProducts = computed(
+    () =>
+      this.authStore.select(selectUserId)() === this.requestTaskStore.select(requestTaskQuery.selectAssigneeUserId)(),
   );
 
   protected calculateEnergyIntensity(product: ProductVariableEnergyConsumptionData): string {

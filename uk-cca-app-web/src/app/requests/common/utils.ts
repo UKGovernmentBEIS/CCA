@@ -156,6 +156,7 @@ export function sameCompanyRegistrationNumbers(
   companyProfile: CompanyProfileDTO,
   existingCompanyRegistrationNumber: string,
 ): boolean {
+  if (!companyProfile?.registrationNumber || !existingCompanyRegistrationNumber) return false;
   return companyProfile?.registrationNumber === existingCompanyRegistrationNumber;
 }
 

@@ -224,7 +224,7 @@ exports[`TargetPeriod6Component should show summary values 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Baseline kWh for the target facility
+            Baseline kWh for the target unit
           </dt>
           <dd
             class="govuk-summary-list__value"

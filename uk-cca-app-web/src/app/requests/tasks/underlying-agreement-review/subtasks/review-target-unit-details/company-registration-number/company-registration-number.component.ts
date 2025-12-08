@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { catchError, of, take } from 'rxjs';
 
+import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   ConditionalContentDirective,
@@ -49,7 +50,7 @@ type CompanyNumberState = {
   templateUrl: './company-registration-number.component.html',
   imports: [
     ReactiveFormsModule,
-    RouterLink,
+    ReturnToTaskOrActionPageComponent,
     WizardStepComponent,
     RadioComponent,
     RadioOptionComponent,

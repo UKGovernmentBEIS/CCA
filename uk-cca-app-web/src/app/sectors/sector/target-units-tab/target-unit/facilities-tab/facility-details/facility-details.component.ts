@@ -6,13 +6,17 @@ import { switchMap, take } from 'rxjs';
 
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
 import { PageHeadingComponent } from '@netz/common/components';
+import { PendingButtonDirective } from '@netz/common/directives';
 import { ItemLinkPipe } from '@netz/common/pipes';
-import { TabLazyDirective, TabsComponent, TagComponent } from '@netz/govuk-components';
+import { ButtonDirective, TabLazyDirective, TabsComponent, TagComponent } from '@netz/govuk-components';
 import { SummaryComponent } from '@shared/components';
+import { ConfigService } from '@shared/config';
 import { StatusPipe } from '@shared/pipes';
 
 import { FacilityInfoDTO, RequestItemsService, RequestsService } from 'cca-api';
 
+import { AuditSummaryComponent } from '../facility-audit/audit-summary.component';
+import { WorkflowHistoryTabComponent } from '../workflow-history-tab/workflow-history-tab.component';
 import { toFacilityDetailsSummaryData } from './facility-details-summary-data';
 
 @Component({
@@ -25,10 +29,10 @@ import { toFacilityDetailsSummaryData } from './facility-details-summary-data';
     StatusPipe,
     TabsComponent,
     TabLazyDirective,
-    // AuditSummaryComponent,
-    // ButtonDirective,
-    // PendingButtonDirective,
-    // WorkflowHistoryTabComponent,
+    AuditSummaryComponent,
+    ButtonDirective,
+    PendingButtonDirective,
+    WorkflowHistoryTabComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -38,10 +42,12 @@ export class FacilityDetailsComponent {
   private readonly authStore = inject(AuthStore);
   private readonly requestsService = inject(RequestsService);
   private readonly requestItemsService = inject(RequestItemsService);
+  private readonly configService = inject(ConfigService);
 
   protected readonly roleType = this.authStore.select(selectUserRoleType);
   protected readonly queryParams: Params = { change: true };
   protected readonly facilityInfoDTO = this.activatedRoute.snapshot.data.facilityDetails as FacilityInfoDTO;
+  protected readonly showAudit = !this.configService.isFeatureEnabled('hideFacilityAudit');
 
   private readonly availableWorkflows = toSignal(
     this.requestsService.getAvailableWorkflows('FACILITY', String(this.facilityInfoDTO.facilityId)),

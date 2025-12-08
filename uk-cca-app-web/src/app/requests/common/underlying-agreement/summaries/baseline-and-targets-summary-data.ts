@@ -303,7 +303,7 @@ function addBaselineDataSection(
 
   factory
     .addRow(
-      `Baseline ${measurementTypeToUnit.transform(targetComposition.measurementType)} for the target facility`,
+      `Baseline ${measurementTypeToUnit.transform(targetComposition.measurementType)} for the target unit`,
       decimalPipe.transform(baselineData?.energy, '1.0-7'),
       {
         change: isEditable,

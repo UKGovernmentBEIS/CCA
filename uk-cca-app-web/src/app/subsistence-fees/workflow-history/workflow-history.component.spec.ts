@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -15,6 +16,7 @@ describe('WorkflowHistoryComponent', () => {
     await TestBed.configureTestingModule({
       imports: [WorkflowHistoryComponent],
       providers: [
+        provideHttpClient(),
         {
           provide: ActivatedRoute,
           useValue: new ActivatedRouteStub(null, null, {
