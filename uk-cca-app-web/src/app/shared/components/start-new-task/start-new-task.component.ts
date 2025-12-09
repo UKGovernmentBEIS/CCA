@@ -9,6 +9,7 @@ import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { ItemLinkPipe } from '@netz/common/pipes';
 import { ButtonDirective } from '@netz/govuk-components';
+import { ConfigService } from '@shared/config';
 import { StatusPipe } from '@shared/pipes';
 
 import {
@@ -38,6 +39,7 @@ export class StartNewTaskComponent {
   private readonly requestsService = inject(RequestsService);
   private readonly requestItemsService = inject(RequestItemsService);
   private readonly authStore = inject(AuthStore);
+  private readonly configService = inject(ConfigService);
 
   private readonly id =
     this.activatedRoute.snapshot.paramMap.get('targetUnitId') ?? this.activatedRoute.snapshot.paramMap.get('sectorId');
@@ -70,12 +72,19 @@ export class StartNewTaskComponent {
 
     return Object.entries(validationResults)
       .filter(([type]) => this.isWorkflowAvailableForRole(type, userRole))
+      .filter(([type]) => !this.isFeatureDisabled(type))
       .map(([type, result]) => this.createWorkflowDisplayContent(type, result))
       .sort((a, b) => workflowOrder.indexOf(a.type) - workflowOrder.indexOf(b.type));
   }
 
   isWorkflowAvailableForRole(type: string, userRole: UserStateDTO['roleType']): boolean {
     return userRoleWorkflowAccessMap[userRole]?.includes(type) ?? false;
+  }
+
+  isFeatureDisabled(type: string): boolean {
+    return (
+      this.configService.isFeatureEnabled('unaVariationHideStartTask') && type === 'UNDERLYING_AGREEMENT_VARIATION'
+    );
   }
 
   createWorkflowDisplayContent(type: string, result: RequestCreateValidationResult): WorkflowDisplayContent {

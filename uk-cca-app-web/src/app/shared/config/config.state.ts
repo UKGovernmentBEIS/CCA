@@ -4,6 +4,7 @@ export const FEATURES = [
   'subsistenceFeesHideMenu',
   'hideNotes',
   'hideFacilityAudit',
+  'unaVariationHideStartTask',
 ] as const;
 
 export type FeatureName = (typeof FEATURES)[number];
@@ -25,6 +26,7 @@ export const initialState: ConfigState = {
     subsistenceFeesHideMenu: false,
     hideNotes: false,
     hideFacilityAudit: false,
+    unaVariationHideStartTask: false,
   },
   analytics: {
     gtmContainerId: '',
