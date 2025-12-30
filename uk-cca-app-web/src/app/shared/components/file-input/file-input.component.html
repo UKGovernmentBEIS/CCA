@@ -1,5 +1,5 @@
 <div class="cca-multi-file-upload cca-multi-file-upload--enhanced">
-  <label [for]="id" [class]="currentLabelSize" id="{{ 'l.' + id }}">{{ label() }}</label>
+  <label [for]="id" [class]="currentLabelSize()" id="{{ 'l.' + id }}">{{ label() }}</label>
 
   @if (text()) {
     <span>{{ text() }}</span>

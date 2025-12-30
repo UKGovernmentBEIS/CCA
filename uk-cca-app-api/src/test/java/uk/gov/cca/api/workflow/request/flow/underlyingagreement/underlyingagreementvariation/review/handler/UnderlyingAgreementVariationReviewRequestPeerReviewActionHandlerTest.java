@@ -12,6 +12,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.DeterminationType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.VariationDetermination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.service.UnderlyingAgreementVariationReviewService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.validation.UnderlyingAgreementVariationReviewRequestPeerReviewValidator;
@@ -71,7 +72,9 @@ class UnderlyingAgreementVariationReviewRequestPeerReviewActionHandlerTest {
                         .builder()
                         .payloadType(CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW_PAYLOAD)
                         .reviewSectionsCompleted(Map.of(UnderlyingAgreementTargetUnitDetails.class.getName(), "COMPLETED"))
-                        .determination(Determination.builder().type(DeterminationType.ACCEPTED).additionalInformation("text").build())
+                        .determination(VariationDetermination.builder()
+                                .determination(Determination.builder().type(DeterminationType.ACCEPTED).additionalInformation("text").build())
+                                .build())
                         .build();
         final String processTaskId = "processTaskId";
         final Request request = Request.builder().id("1").build();

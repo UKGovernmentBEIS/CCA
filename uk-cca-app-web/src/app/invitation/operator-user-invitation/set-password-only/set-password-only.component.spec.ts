@@ -6,7 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { screen } from '@testing-library/dom';
 import UserEvent from '@testing-library/user-event';
-import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { InvitedOperatorUserExtended, OperatorUserInvitationStore } from '../store';
 import { SetPasswordOnlyComponent } from './set-password-only.component';
@@ -38,7 +37,6 @@ describe('SetPasswordOnlyComponent', () => {
       imports: [SetPasswordOnlyComponent],
       providers: [
         OperatorUserInvitationStore,
-        provideZxvbnServiceForPSM(),
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: route },

@@ -4,6 +4,7 @@
 @import 'styles/multiple-file-input.css';
 @import 'styles/side-navigation.css';
 @import 'styles/flex.css';
+@import 'styles/password-stength-meter.css';
 
 .govuk-width-container {
   min-width: 1200px;

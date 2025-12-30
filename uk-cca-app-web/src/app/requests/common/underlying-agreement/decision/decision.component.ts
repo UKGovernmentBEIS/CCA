@@ -17,8 +17,11 @@ import { generateDownloadUrl } from '@shared/utils';
       <govuk-radio-option label="Rejected" value="REJECTED" />
     </div>
     <div govuk-textarea label="Notes (optional)" formControlName="notes"></div>
-    <cca-multiple-file-input formControlName="files" [baseDownloadUrl]="downloadUrl" label="Upload evidence (optional)">
-    </cca-multiple-file-input>
+    <cca-multiple-file-input
+      formControlName="files"
+      [baseDownloadUrl]="downloadUrl"
+      label="Upload evidence (optional)"
+    />
   `,
   imports: [
     RadioComponent,

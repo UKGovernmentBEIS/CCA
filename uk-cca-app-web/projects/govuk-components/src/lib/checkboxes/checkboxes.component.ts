@@ -1,10 +1,9 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterContentInit, Component, input, contentChildren, inject } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, NgControl } from '@angular/forms';
+import { AfterContentInit, Component, input, contentChildren } from '@angular/core';
+import { ControlValueAccessor } from '@angular/forms';
 
 import { ErrorMessageComponent } from '../error-message';
 import { FieldsetDirective, FieldsetHintDirective, LegendDirective, LegendSizeType } from '../fieldset';
-import { FormService } from '../form';
 import { FormInput } from '../form/form-input';
 import { CheckboxComponent } from './checkbox/checkbox.component';
 
@@ -30,11 +29,7 @@ export class CheckboxesComponent<T> extends FormInput implements AfterContentIni
   private currentValue: T[] = [];
 
   constructor() {
-    const ngControl = inject(NgControl, { self: true, optional: true });
-    const formService = inject(FormService);
-    const container = inject(ControlContainer, { optional: true });
-
-    super(ngControl, formService, container);
+    super();
   }
 
   ngAfterContentInit(): void {

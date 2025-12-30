@@ -1,6 +1,6 @@
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ControlContainer, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { DateInputComponent } from './date-input.component';
@@ -39,10 +39,9 @@ describe('DateInputComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, TestComponent, Test2Component],
+      providers: [ControlContainer],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     fixture2 = TestBed.createComponent(Test2Component);
     hostComponent = fixture.componentInstance;

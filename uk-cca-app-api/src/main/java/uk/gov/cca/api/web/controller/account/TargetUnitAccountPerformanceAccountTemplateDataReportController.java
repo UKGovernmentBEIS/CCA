@@ -19,12 +19,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.service.PerformanceAccountTemplateDataAttachmentService;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.service.PerformanceAccountTemplateDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.dto.AccountPerformanceAccountTemplateDataReportInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.dto.AccountPerformanceAccountTemplateDataReportDetailsDTO;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.web.orchestrator.account.service.TargetUnitAccountPerformanceAccountTemplateDataReportServiceOrchestrator;
 import uk.gov.netz.api.security.Authorized;
 import uk.gov.netz.api.token.FileToken;
 
@@ -34,7 +35,8 @@ import uk.gov.netz.api.token.FileToken;
 @Tag(name = "Target Period Performance Account Template Data Report of the Account")
 public class TargetUnitAccountPerformanceAccountTemplateDataReportController {
 
-	private final TargetUnitAccountPerformanceAccountTemplateDataReportServiceOrchestrator orchestrator;
+	private final PerformanceAccountTemplateDataQueryService performanceAccountTemplateDataQueryService;
+	private final PerformanceAccountTemplateDataAttachmentService performanceAccountTemplateDataAttachmentService;
 	
 	@GetMapping(path = "/info")
     @Operation(summary = "Retrieves the performance account template report info if exist")
@@ -49,7 +51,9 @@ public class TargetUnitAccountPerformanceAccountTemplateDataReportController {
             @PathVariable @Parameter(description = "The account id") Long accountId,
             @RequestParam @Parameter(name = "targetPeriodType", description = "The target period business id") @NotNull TargetPeriodType targetPeriodType) {
 		return new ResponseEntity<>(
-				orchestrator.getReportInfoDTO(accountId, targetPeriodType),
+				performanceAccountTemplateDataQueryService
+						.findReportInfoByAccountIdAndTargetPeriod(accountId, targetPeriodType)
+						.orElse(null),
 				HttpStatus.OK);
     }
 	
@@ -68,7 +72,8 @@ public class TargetUnitAccountPerformanceAccountTemplateDataReportController {
             @PathVariable @Parameter(description = "The account id") Long accountId,
             @RequestParam @Parameter(name = "targetPeriodType", description = "The target period business id") @NotNull TargetPeriodType targetPeriodType) {
 		return new ResponseEntity<>(
-				orchestrator.getReportDetailsDTO(accountId, targetPeriodType),
+				performanceAccountTemplateDataQueryService
+						.getReportDetailsByAccountIdAndTargetPeriod(accountId, targetPeriodType),
 				HttpStatus.OK);
     }
 	
@@ -89,7 +94,8 @@ public class TargetUnitAccountPerformanceAccountTemplateDataReportController {
             @RequestParam @Parameter(name = "fileAttachmentUuid", description = "The attachment uuid") @NotNull UUID fileAttachmentUuid
     ) {
 		return new ResponseEntity<>(
-				orchestrator.generateGetReportAttachmentToken(accountId, targetPeriodType, fileAttachmentUuid),
+				performanceAccountTemplateDataAttachmentService
+						.generateGetAttachmentToken(accountId, targetPeriodType, fileAttachmentUuid),
 				HttpStatus.OK);
     }
 }

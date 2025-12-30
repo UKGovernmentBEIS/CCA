@@ -11,7 +11,7 @@
 
   <div [formGroup]="formGroup" class="govuk-date-input">
     @if (shouldDisplayErrors) {
-      <govuk-error-message [errors]="control.errors" [identifier]="identifier"></govuk-error-message>
+      <govuk-error-message [errors]="control.errors" [identifier]="identifier" />
     }
 
     <div class="govuk-date-input__item">

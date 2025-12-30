@@ -3,8 +3,6 @@ import { fileUtils } from '@shared/utils';
 
 import { AdminTerminationWithdrawReasonDetails } from 'cca-api';
 
-import { ReasonForWithdrawAdminTerminationWizardStep } from './withdraw-admin-termination.types';
-
 export function toWithdrawAdminTerminationReasonSummaryData(
   adminTerminationWithdrawReasonDetails: AdminTerminationWithdrawReasonDetails,
   adminTerminationWithdrawAttachments: Record<string, string>,
@@ -12,7 +10,7 @@ export function toWithdrawAdminTerminationReasonSummaryData(
   downloadUrl: string,
 ): SummaryData {
   return new SummaryFactory()
-    .addSection('', `../${ReasonForWithdrawAdminTerminationWizardStep.REASON_DETAILS}`)
+    .addSection('', '../reason-details')
     .addTextAreaRow(
       'Explain why you are withdrawing the admin termination',
       adminTerminationWithdrawReasonDetails.explanation,

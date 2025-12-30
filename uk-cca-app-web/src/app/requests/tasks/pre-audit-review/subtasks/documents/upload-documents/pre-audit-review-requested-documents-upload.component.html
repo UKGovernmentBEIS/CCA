@@ -15,6 +15,11 @@
       hint="For example 25 7 2024"
     ></div>
 
+    <p class="govuk-label--m">Upload received documents for pre-audit review</p>
+    <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-6">
+      You must upload at least 1 document in order to proceed
+    </p>
+
     <cca-file-input
       [downloadUrl]="getDownloadUrl"
       formControlName="processFlowMapsFile"
@@ -69,12 +74,15 @@
       label="Base year/target period evidence"
     />
 
-    <cca-multiple-file-input
-      [baseDownloadUrl]="downloadUrl"
-      formControlName="additionalDocuments"
-      label="Additional documents"
-      hint="Upload any additional documents that do not fit the previous categories, like correspondence with the operator requesting information or the audit checklist documenting your initial review of the information. Do not upload documents that already exist in the service, like TPR or PAT spreadsheets."
-    />
+    <p class="govuk-label--m">Additional documents</p>
+    <govuk-details summary="What additional documents should I upload?">
+      <p>
+        Upload any additional documents that do not fit the previous categories, like correspondence with the operator
+        requesting information or the audit checklist documenting your initial review of the information. Do not upload
+        documents that already exist in the service, like TPR or PAT spreadsheets.
+      </p>
+    </govuk-details>
+    <cca-multiple-file-input [baseDownloadUrl]="downloadUrl" formControlName="additionalDocuments" />
 
     <div
       govuk-textarea

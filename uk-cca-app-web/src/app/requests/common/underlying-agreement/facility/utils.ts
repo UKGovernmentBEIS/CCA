@@ -30,9 +30,7 @@ export function calculateVariableEnergy(
   products?: ProductVariableEnergyConsumptionData[] | null | undefined,
   facilityBaselineYear?: number | null | undefined,
 ): string {
-  if (!hasVariableEnergy) {
-    return '0';
-  }
+  if (!hasVariableEnergy) return '0';
 
   if (variableEnergyType === 'TOTALS') {
     return normaliseNumber(baselineVariableEnergy).toString();

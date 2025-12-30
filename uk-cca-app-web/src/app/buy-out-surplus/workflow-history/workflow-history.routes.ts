@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
 
+import { WORKFLOW_NOTES_ROUTES } from '../../sectors/sector/workflow-history-tab/workflow-details/notes-tab/notes.routes';
 import { WorkflowHistoryDetailsResolver } from './workflow-history.resolver';
 
 export const BUY_OUT_SURPLUS_WORKFLOW_HISTORY_ROUTES: Routes = [
   {
-    path: ':id',
+    path: ':workflowId',
     resolve: { details: WorkflowHistoryDetailsResolver },
     data: {
       breadcrumb: ({ details }) => ({
@@ -21,6 +22,7 @@ export const BUY_OUT_SURPLUS_WORKFLOW_HISTORY_ROUTES: Routes = [
         path: 'timeline',
         loadChildren: () => import('@requests/timeline').then((c) => c.TIMELINE_ROUTES),
       },
+      ...WORKFLOW_NOTES_ROUTES,
     ],
   },
 ];

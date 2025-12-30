@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, ElementRef, HostBinding, inject, Input, input, OnInit, viewChild } from '@angular/core';
+import { Component, computed, ElementRef, HostBinding, inject, input, OnInit, viewChild } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 
 import { BehaviorSubject, combineLatest, filter, map, merge, Observable, startWith, tap, withLatestFrom } from 'rxjs';
@@ -37,7 +37,8 @@ export class FileInputComponent implements OnInit, ControlValueAccessor {
   protected readonly hint = input<string>();
   protected readonly accepted = input<string>('*/*');
   protected readonly downloadUrl = input<(uuid: string) => string | string[]>();
-  protected currentLabelSize = 'govuk-label';
+  protected readonly labelSize = input<LabelSizeType>();
+
   protected readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('input');
 
   uploadedFiles$: Observable<FileUploadEvent[]>;
@@ -51,25 +52,18 @@ export class FileInputComponent implements OnInit, ControlValueAccessor {
     this.ngControl.valueAccessor = this;
   }
 
-  @Input() set labelSize(size: LabelSizeType) {
-    switch (size) {
+  protected readonly currentLabelSize = computed(() => {
+    switch (this.labelSize()) {
       case 'small':
-        this.currentLabelSize = 'govuk-label govuk-label--s';
-        break;
-
+        return 'govuk-label govuk-label--s';
       case 'medium':
-        this.currentLabelSize = 'govuk-label govuk-label--m';
-        break;
-
+        return 'govuk-label govuk-label--m';
       case 'large':
-        this.currentLabelSize = 'govuk-label govuk-label--l';
-        break;
-
+        return 'govuk-label govuk-label--l';
       default:
-        this.currentLabelSize = 'govuk-label';
-        break;
+        return 'govuk-label';
     }
-  }
+  });
 
   get control(): UntypedFormControl {
     return this.ngControl.control as UntypedFormControl;

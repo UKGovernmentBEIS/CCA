@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { catchError, map, tap } from 'rxjs';
 
@@ -10,7 +10,9 @@ export let COUNTIES: County[] = [];
 
 @Injectable({ providedIn: 'root' })
 export class CountyService {
-  constructor(private readonly referenceDataService: ReferenceDataService) {
+  private readonly referenceDataService = inject(ReferenceDataService);
+
+  constructor() {
     this.referenceDataService
       .getReferenceData(['COUNTIES'])
       .pipe(

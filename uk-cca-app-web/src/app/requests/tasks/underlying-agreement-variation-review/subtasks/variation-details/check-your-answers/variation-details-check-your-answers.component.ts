@@ -15,6 +15,7 @@ import {
   underlyingAgreementVariationQuery,
   VARIATION_DETAILS_SUBTASK,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
@@ -86,7 +87,9 @@ export default class VariationDetailsCheckYourAnswersComponent {
       },
     );
 
-    const determination = resetDetermination(this.store.select(underlyingAgreementReviewQuery.selectDetermination)());
+    const determination = resetDetermination(
+      this.store.select(underlyingAgreementVariationReviewQuery.selectDetermination)(),
+    );
 
     const dto = createSaveActionDTO(requestTaskId, actionPayload, {
       sectionsCompleted,

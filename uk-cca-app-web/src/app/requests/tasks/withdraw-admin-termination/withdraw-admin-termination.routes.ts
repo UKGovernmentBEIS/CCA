@@ -1,26 +1,10 @@
 import { Routes } from '@angular/router';
 
-import { PayloadMutatorsHandler, SideEffectsHandler } from '@netz/common/forms';
 import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/common';
-
-import {
-  provideWithdrawAdminTerminationPayloadMutators,
-  provideWithdrawAdminTerminationSideEffects,
-  provideWithdrawAdminTerminationStepFlowManagers,
-  provideWithdrawAdminTerminationTaskServices,
-} from './withdraw-admin-termination.providers';
 
 export const WITHDRAW_ADMIN_TERMINATION_ROUTES: Routes = [
   {
     path: '',
-    providers: [
-      SideEffectsHandler,
-      PayloadMutatorsHandler,
-      provideWithdrawAdminTerminationTaskServices(),
-      provideWithdrawAdminTerminationPayloadMutators(),
-      provideWithdrawAdminTerminationStepFlowManagers(),
-      provideWithdrawAdminTerminationSideEffects(),
-    ],
     children: [
       {
         path: 'reason-for-withdraw-admin-termination',

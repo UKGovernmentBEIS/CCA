@@ -37,9 +37,9 @@ import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountInfoDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountInfoResponseDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountSiteContactDTO;
+import uk.gov.cca.api.account.service.TargetUnitAccountSiteContactService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.orchestrator.sectorassociation.service.SectorAssociationTargetUnitAccountsServiceOrchestrator;
 import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria;
 import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria.SortBy;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -64,7 +64,7 @@ class SectorAssociationTargetUnitAccountsControllerTest {
     private SectorAssociationTargetUnitAccountsController controller;
 
     @Mock
-    private SectorAssociationTargetUnitAccountsServiceOrchestrator sectorAssociationTargetUnitsServiceOrchestrator;
+    private TargetUnitAccountSiteContactService targetUnitAccountSiteContactService;
 
     @Mock
     private AppSecurityComponent appSecurityComponent;
@@ -114,7 +114,7 @@ class SectorAssociationTargetUnitAccountsControllerTest {
         TargetUnitAccountInfoResponseDTO targetUnitAccountInfoResponseDTO = TargetUnitAccountInfoResponseDTO.builder().accountsWithSiteContact(contacts).editable(true).totalItems(1L).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-        when(sectorAssociationTargetUnitsServiceOrchestrator.getTargetUnitAccountsWithSiteContact(user, sectorAssociationId, accountSearchCriteria))
+        when(targetUnitAccountSiteContactService.getTargetUnitAccountsWithSiteContact(user, sectorAssociationId, accountSearchCriteria))
             .thenReturn(targetUnitAccountInfoResponseDTO);
 
         mockMvc.perform(get(BASE_PATH + sectorAssociationId + "/target-unit-accounts/" + "?page=0&size=2")
@@ -127,7 +127,7 @@ class SectorAssociationTargetUnitAccountsControllerTest {
             .andExpect(jsonPath("$.accountsWithSiteContact[1].siteContactUserId").value("userId2"));
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(sectorAssociationTargetUnitsServiceOrchestrator, times(1))
+        verify(targetUnitAccountSiteContactService, times(1))
             .getTargetUnitAccountsWithSiteContact(user, sectorAssociationId, accountSearchCriteria);
     }
 
@@ -146,7 +146,7 @@ class SectorAssociationTargetUnitAccountsControllerTest {
             .andExpect(status().isForbidden());
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(sectorAssociationTargetUnitsServiceOrchestrator, never()).getTargetUnitAccountsWithSiteContact(any(), any(), any());
+        verify(targetUnitAccountSiteContactService, never()).getTargetUnitAccountsWithSiteContact(any(), any(), any());
     }
     
     @Test
@@ -166,7 +166,7 @@ class SectorAssociationTargetUnitAccountsControllerTest {
             .andExpect(status().isNoContent());
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(sectorAssociationTargetUnitsServiceOrchestrator, times(1)).updateTargetUnitAccountSiteContacts(user, sectorAssociationId, siteContacts);
+        verify(targetUnitAccountSiteContactService, times(1)).updateTargetUnitAccountSiteContacts(user, sectorAssociationId, siteContacts);
     }
 
     @Test
@@ -189,6 +189,6 @@ class SectorAssociationTargetUnitAccountsControllerTest {
             .andExpect(status().isForbidden());
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(sectorAssociationTargetUnitsServiceOrchestrator, never()).updateTargetUnitAccountSiteContacts(any(), any(), anyList());
+        verify(targetUnitAccountSiteContactService, never()).updateTargetUnitAccountSiteContacts(any(), any(), anyList());
     }
 }

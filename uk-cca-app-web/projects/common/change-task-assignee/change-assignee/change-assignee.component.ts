@@ -1,5 +1,5 @@
-import { AsyncPipe, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -34,7 +34,6 @@ interface ViewModel {
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UserFullNamePipe],
   imports: [
-    NgIf,
     AsyncPipe,
     ReactiveFormsModule,
     PageHeadingComponent,
@@ -45,6 +44,16 @@ interface ViewModel {
   ],
 })
 export class ChangeAssigneeComponent {
+  private readonly fb = inject(UntypedFormBuilder);
+  private readonly authStore = inject(AuthStore);
+  private readonly store = inject(RequestTaskStore);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly userFullNamePipe = inject(UserFullNamePipe);
+  private readonly tasksAssignmentService = inject(TasksAssignmentService);
+  private readonly tasksReleaseService = inject(TasksReleaseService);
+  private readonly pendingRequestService = inject(PendingRequestService);
+
   private readonly UNASSIGNED_VALUE = 'unassigned_dummy_value'; // shouldn't be a uuid (uuid represent user ids)
   private readonly showErrorSummary$ = new BehaviorSubject(false);
   private form = this.fb.group({
@@ -84,18 +93,6 @@ export class ChangeAssigneeComponent {
       };
     }),
   );
-
-  constructor(
-    private readonly fb: UntypedFormBuilder,
-    private readonly authStore: AuthStore,
-    private readonly store: RequestTaskStore,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly userFullNamePipe: UserFullNamePipe,
-    private readonly tasksAssignmentService: TasksAssignmentService,
-    private readonly tasksReleaseService: TasksReleaseService,
-    private readonly pendingRequestService: PendingRequestService,
-  ) {}
 
   submit(taskId: number, userId: string): void {
     if (!this.form.valid) {

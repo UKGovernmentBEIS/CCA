@@ -9,8 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { VariationDetermination } from './variationDetermination';
 import { UnderlyingAgreementReviewDecision } from './underlyingAgreementReviewDecision';
-import { Determination } from './determination';
 
 export interface UnderlyingAgreementVariationSaveReviewGroupDecisionRequestTaskActionPayload {
   payloadType?: string;
@@ -20,7 +20,7 @@ export interface UnderlyingAgreementVariationSaveReviewGroupDecisionRequestTaskA
     | 'TARGET_PERIOD6_DETAILS'
     | 'AUTHORISATION_AND_ADDITIONAL_EVIDENCE'
     | 'VARIATION_DETAILS';
-  determination?: Determination;
+  determination?: VariationDetermination;
   decision: UnderlyingAgreementReviewDecision;
   reviewSectionsCompleted?: Record<string, string>;
 }

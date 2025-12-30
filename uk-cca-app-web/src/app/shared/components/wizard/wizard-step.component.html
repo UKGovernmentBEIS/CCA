@@ -1,19 +1,19 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup()">
   @if (isSummaryDisplayedSubject | async) {
-    <govuk-error-summary [form]="formGroup" />
+    <govuk-error-summary [form]="formGroup()" />
   }
 
-  <netz-page-heading [caption]="caption">{{ heading }}</netz-page-heading>
+  <netz-page-heading [caption]="caption()">{{ heading() }}</netz-page-heading>
 
   <ng-content />
 
-  @if (!hideSubmit) {
-    <button netzPendingButton govukButton type="submit">{{ submitText }}</button>
+  @if (!hideSubmit()) {
+    <button netzPendingButton govukButton type="submit">{{ submitText() }}</button>
   }
 
-  @if (showCancelLink) {
+  @if (showCancelLink()) {
     <div>
-      <a class="govuk-link" [routerLink]="cancelLinkPath">Cancel</a>
+      <a class="govuk-link" [routerLink]="cancelLinkPath()">Cancel</a>
     </div>
   }
 </form>

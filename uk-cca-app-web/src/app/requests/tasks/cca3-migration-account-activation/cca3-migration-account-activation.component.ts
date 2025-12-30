@@ -6,7 +6,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import { CCA3_MIGRATION_PROVIDE_EVIDENCE_SUBTASK, TaskItemStatus } from '@requests/common';
 
-import { underlyingAgreementActivationQuery } from '../underlying-agreement-activation/+state/una-activation.selectors';
+import { underlyingAgreementActivationQuery } from '../underlying-agreement-activation/una-activation.selectors';
 
 @Component({
   selector: 'cca-cca3-migration-account-activation',

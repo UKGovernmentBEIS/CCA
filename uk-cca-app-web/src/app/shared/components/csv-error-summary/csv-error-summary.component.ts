@@ -4,9 +4,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Input,
+  inject,
+  input,
   OnChanges,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
 import { AbstractControl, FormControlStatus, NgForm, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
@@ -24,25 +25,24 @@ import { NestedMessageValidationError } from './nested-message-validation-error.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CsvErrorSummaryComponent implements OnChanges, AfterViewInit {
-  @Input() form: UntypedFormGroup | NgForm;
+  private readonly formService = inject(FormService);
+  private readonly title = inject(Title);
 
-  @ViewChild('container', { read: ElementRef }) container: ElementRef<HTMLDivElement>;
+  protected readonly form = input<UntypedFormGroup | NgForm>(undefined);
 
-  errorList$: Observable<NestedMessageValidationError[]>;
+  protected readonly container = viewChild('container', { read: ElementRef });
+
+  protected errorList$: Observable<NestedMessageValidationError[]>;
 
   private formControl: UntypedFormGroup;
 
-  constructor(
-    private readonly formService: FormService,
-    private readonly title: Title,
-  ) {}
-
   ngOnChanges(): void {
-    this.formControl = this.form instanceof UntypedFormGroup ? this.form : this.form.control;
+    const form = this.form();
+    this.formControl = form instanceof UntypedFormGroup ? form : form.control;
 
-    const statusChanges: Observable<FormControlStatus> = this.form.statusChanges;
+    const statusChanges: Observable<FormControlStatus> = this.form().statusChanges;
     this.errorList$ = statusChanges.pipe(
-      startWith(this.form.status),
+      startWith(this.form().status),
       map((status) => (status === 'INVALID' ? this.getAbstractControlErrors(this.formControl) : null)),
       tap((errors) => {
         const currentTitle = this.title.getTitle();
@@ -58,8 +58,9 @@ export class CsvErrorSummaryComponent implements OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.container?.nativeElement?.scrollIntoView) this.container.nativeElement.scrollIntoView();
-    if (this.container?.nativeElement?.focus) this.container.nativeElement.focus();
+    const container = this.container();
+    if (container?.nativeElement?.scrollIntoView) container.nativeElement.scrollIntoView();
+    if (container?.nativeElement?.focus) container.nativeElement.focus();
   }
 
   private getAbstractControlErrors(control: AbstractControl, path: string[] = []): NestedMessageValidationError[] {

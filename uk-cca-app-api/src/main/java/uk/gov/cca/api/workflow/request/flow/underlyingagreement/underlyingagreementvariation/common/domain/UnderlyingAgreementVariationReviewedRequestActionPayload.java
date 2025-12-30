@@ -13,7 +13,6 @@ import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.ObjectUtils;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
-import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.review.UnderlyingAgreementReviewDecision;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestActionUserInfo;
@@ -51,7 +50,7 @@ public class UnderlyingAgreementVariationReviewedRequestActionPayload extends Un
 
     @Valid
     @NotNull
-    private Determination determination;
+    private VariationDetermination determination;
 
     @Builder.Default
     private Map<String, String> reviewSectionsCompleted = new HashMap<>();

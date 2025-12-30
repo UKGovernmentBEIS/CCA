@@ -59,32 +59,36 @@ export class FacilityApplyRuleComponent {
   );
 
   private readonly energyConsumedValue: Signal<Apply70Rule['energyConsumed']> = toSignal(
-    this.form.get('energyConsumed').valueChanges,
+    this.form.controls.energyConsumed.valueChanges,
     {
-      initialValue: this.form.get('energyConsumed').value,
+      initialValue: this.form.controls.energyConsumed.value,
     },
   );
 
   private readonly energyConsumedProvisionValue: Signal<Apply70Rule['energyConsumedProvision']> = toSignal(
-    this.form.get('energyConsumedProvision').valueChanges,
+    this.form.controls.energyConsumedProvision.valueChanges,
     {
-      initialValue: this.form.get('energyConsumedProvision').value,
+      initialValue: this.form.controls.energyConsumedProvision.value,
     },
   );
 
-  protected readonly isLessThan70 = computed(() => {
-    return this.energyConsumedValue() && Number(this.energyConsumedValue()) < 70;
-  });
+  protected readonly isLessThan70 = computed(
+    () =>
+      this.energyConsumedValue() !== null &&
+      this.energyConsumedValue() !== '' &&
+      Number(this.energyConsumedValue()) < 70,
+  );
 
-  protected readonly energyConsumedEligible: Signal<number | null> = computed(() => {
+  protected readonly energyConsumedEligible = computed(() => {
     const energyConsumed = this.energyConsumedValue();
     const energyConsumedProvision = this.energyConsumedProvisionValue();
 
     if (Number(energyConsumed) >= 70) return 100;
     if (Number(energyConsumed) === 0) return 0;
 
-    if (energyConsumedProvision && Number(energyConsumed) > 0)
+    if (Number(energyConsumedProvision) >= 0 && Number(energyConsumed) > 0) {
       return calculateEnergyConsumedEligible(energyConsumed, energyConsumedProvision);
+    }
 
     return null;
   });
@@ -151,7 +155,7 @@ function update(
       energyConsumed: form.value.energyConsumed,
       energyConsumedProvision: form.value.energyConsumedProvision,
       startDate: form.value.startDate,
-      energyConsumedEligible: String(energyConsumedEligible),
+      energyConsumedEligible: energyConsumedEligible !== null ? String(energyConsumedEligible) : null,
       evidenceFile: form.value.evidenceFile?.uuid ?? null,
     };
   });

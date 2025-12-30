@@ -3,14 +3,22 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
-import { TaskService } from '@netz/common/forms';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
-import { PROVIDE_EVIDENCE_SUBTASK, toProvideEvidenceSummaryData } from '@requests/common';
+import {
+  PROVIDE_EVIDENCE_SUBTASK,
+  TaskItemStatus,
+  TasksApiService,
+  toProvideEvidenceSummaryData,
+} from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
+import { produce } from 'immer';
 
-import { underlyingAgreementVariationActivationQuery } from '../../../+state/una-variation-activation.selectors';
+import { UnderlyingAgreementVariationActivationRequestTaskPayload } from 'cca-api';
+
+import { createRequestTaskActionProcessDTO } from '../../../transform';
+import { underlyingAgreementVariationActivationQuery } from '../../../una-variation-activation.selectors';
 
 @Component({
   selector: 'cca-provide-evidence-check-answers',
@@ -35,7 +43,7 @@ import { underlyingAgreementVariationActivationQuery } from '../../../+state/una
 })
 export default class ProvideEvidenceCheckAnswersComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
-  private readonly taskService = inject(TaskService);
+  private readonly tasksApiService = inject(TasksApiService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
 
@@ -44,20 +52,31 @@ export default class ProvideEvidenceCheckAnswersComponent {
 
   protected readonly summaryData = computed(() =>
     toProvideEvidenceSummaryData(
-      this.requestTaskStore.select(
-        underlyingAgreementVariationActivationQuery.selectUnderlyingAgreementActivationDetails,
-      )(),
-      this.requestTaskStore.select(
-        underlyingAgreementVariationActivationQuery.selectUnderlyingAgreementActivationAttachments,
-      )(),
+      this.requestTaskStore.select(underlyingAgreementVariationActivationQuery.selectDetails)(),
+      this.requestTaskStore.select(underlyingAgreementVariationActivationQuery.selectAttachments)(),
       this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
       this.downloadUrl,
     ),
   );
 
   onSubmit() {
-    this.taskService
-      .submitSubtask(PROVIDE_EVIDENCE_SUBTASK)
-      .subscribe(() => this.router.navigate(['../../..'], { relativeTo: this.activatedRoute }));
+    const payload = this.requestTaskStore.select(
+      requestTaskQuery.selectRequestTaskPayload,
+    )() as UnderlyingAgreementVariationActivationRequestTaskPayload;
+
+    const currentSectionsCompleted = this.requestTaskStore.select(
+      underlyingAgreementVariationActivationQuery.selectSectionsCompleted,
+    )();
+
+    const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
+      draft[PROVIDE_EVIDENCE_SUBTASK] = TaskItemStatus.COMPLETED;
+    });
+
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+    const dto = createRequestTaskActionProcessDTO(requestTaskId, payload, sectionsCompleted);
+
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
+      this.router.navigate(['../../..'], { relativeTo: this.activatedRoute, replaceUrl: true });
+    });
   }
 }

@@ -14,6 +14,7 @@ import {
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
 import { fileUtils, generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
@@ -105,7 +106,7 @@ export class ProvideEvidenceComponent {
       : deleteDecision(currentDecisions, 'AUTHORISATION_AND_ADDITIONAL_EVIDENCE');
 
     const { determination, reviewSectionsCompleted, sectionsCompleted } = applySaveActionSideEffects(
-      this.store.select(underlyingAgreementReviewQuery.selectDetermination)(),
+      this.store.select(underlyingAgreementVariationReviewQuery.selectDetermination)(),
       this.store.select(underlyingAgreementReviewQuery.selectReviewSectionsCompleted)(),
       this.store.select(underlyingAgreementQuery.selectSectionsCompleted)(),
       AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,

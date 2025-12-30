@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -19,6 +19,11 @@ import { WizardStepComponent } from '../../shared/components/wizard/wizard-step.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Change2faComponent {
+  readonly pendingRequest = inject(PendingRequestService);
+  private readonly router = inject(Router);
+  private readonly usersSecuritySetupService = inject(UsersSecuritySetupService);
+  private readonly fb = inject(UntypedFormBuilder);
+
   protected readonly is2FaChanged = signal(false);
 
   protected readonly form = this.fb.group({
@@ -32,13 +37,6 @@ export class Change2faComponent {
       ],
     ],
   });
-
-  constructor(
-    readonly pendingRequest: PendingRequestService,
-    private readonly router: Router,
-    private readonly usersSecuritySetupService: UsersSecuritySetupService,
-    private readonly fb: UntypedFormBuilder,
-  ) {}
 
   onSubmit() {
     this.usersSecuritySetupService

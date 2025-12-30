@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { TextInputComponent } from '@netz/govuk-components';
@@ -14,6 +14,6 @@ import { PhoneInputComponent } from '../phone-input/phone-input.component';
   viewProviders: [existingControlContainer],
 })
 export class UserInputComponent {
-  @Input() phoneType: 'full' | 'national';
-  @Input() isNotification = false;
+  protected readonly phoneType = input<'full' | 'national'>(undefined);
+  protected readonly isNotification = input(false);
 }

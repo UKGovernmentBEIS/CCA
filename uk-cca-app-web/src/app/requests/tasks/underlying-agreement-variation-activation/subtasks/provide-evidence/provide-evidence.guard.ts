@@ -1,81 +1,25 @@
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot } from '@angular/router';
 
-import { RequestTaskStore } from '@netz/common/store';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { PROVIDE_EVIDENCE_SUBTASK, TaskItemStatus } from '@requests/common';
 
-import { underlyingAgreementVariationActivationQuery } from '../../+state/una-variation-activation.selectors';
-import { isWizardCompleted } from './provide-evidence.wizard';
+import { underlyingAgreementVariationActivationQuery } from '../../una-variation-activation.selectors';
 
-export const CanActivateProvideEvidence: CanActivateFn = (route: ActivatedRouteSnapshot): boolean | UrlTree => {
-  const requestTaskStore = inject(RequestTaskStore);
+export const unaVariationActivationRedirectGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+  const store = inject(RequestTaskStore);
 
-  const change = route.queryParamMap.get('change') === 'true';
+  const isEditable = store.select(requestTaskQuery.selectIsEditable)();
+  if (!isEditable) return createUrlTreeFromSnapshot(route, ['summary']);
 
-  const details = requestTaskStore.select(
-    underlyingAgreementVariationActivationQuery.selectUnderlyingAgreementActivationDetails,
-  )();
+  const sectionsCompleted = store.select(underlyingAgreementVariationActivationQuery.selectSectionsCompleted)();
+  const sectionStatus = sectionsCompleted[PROVIDE_EVIDENCE_SUBTASK];
 
-  if (!change && !isWizardCompleted(details)) return true;
-  if (change && isWizardCompleted(details)) return true;
+  const details = store.select(underlyingAgreementVariationActivationQuery.selectDetails)();
+  if (!details) return createUrlTreeFromSnapshot(route, ['details']);
 
-  if (!change && isWizardCompleted(details)) {
-    const sectionCompleted = requestTaskStore.select(
-      underlyingAgreementVariationActivationQuery.selectSectionsCompleted,
-    )()[PROVIDE_EVIDENCE_SUBTASK];
+  if (sectionStatus === TaskItemStatus.IN_PROGRESS) return createUrlTreeFromSnapshot(route, ['check-your-answers']);
+  if (sectionStatus === TaskItemStatus.COMPLETED) return createUrlTreeFromSnapshot(route, ['summary']);
 
-    if (sectionCompleted === TaskItemStatus.COMPLETED) {
-      return createUrlTreeFromSnapshot(route, ['../', 'summary']);
-    } else if (sectionCompleted === TaskItemStatus.IN_PROGRESS) {
-      return createUrlTreeFromSnapshot(route, ['../', 'check-your-answers']);
-    }
-  }
-
-  return true;
-};
-
-export const CanActivateProvideEvidenceCheckYourAnswers: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-): boolean | UrlTree => {
-  const requestTaskStore = inject(RequestTaskStore);
-
-  const details = requestTaskStore.select(
-    underlyingAgreementVariationActivationQuery.selectUnderlyingAgreementActivationDetails,
-  )();
-
-  if (!isWizardCompleted(details)) {
-    return createUrlTreeFromSnapshot(route, ['../', 'details']);
-  }
-
-  const sectionCompleted = requestTaskStore.select(
-    underlyingAgreementVariationActivationQuery.selectSectionsCompleted,
-  )()[PROVIDE_EVIDENCE_SUBTASK];
-
-  if (sectionCompleted === TaskItemStatus.COMPLETED) {
-    return createUrlTreeFromSnapshot(route, ['../', 'summary']);
-  }
-
-  return true;
-};
-
-export const CanActivateProvideEvidenceSummary: CanActivateFn = (route) => {
-  const requestTaskStore = inject(RequestTaskStore);
-
-  const details = requestTaskStore.select(
-    underlyingAgreementVariationActivationQuery.selectUnderlyingAgreementActivationDetails,
-  )();
-
-  if (!isWizardCompleted(details)) {
-    return createUrlTreeFromSnapshot(route, ['../', 'details']);
-  }
-
-  const sectionCompleted = requestTaskStore.select(
-    underlyingAgreementVariationActivationQuery.selectSectionsCompleted,
-  )()[PROVIDE_EVIDENCE_SUBTASK];
-
-  if (sectionCompleted === TaskItemStatus.IN_PROGRESS) {
-    return createUrlTreeFromSnapshot(route, ['../', 'check-your-answers']);
-  }
-
-  return true;
+  return false;
 };

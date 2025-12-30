@@ -4,7 +4,7 @@
       @if (legend()) {
         {{ legend() }}
       } @else {
-        <ng-content select="[govukLegend]"></ng-content>
+        <ng-content select="[govukLegend]" />
       }
     </legend>
 
@@ -13,7 +13,7 @@
     }
 
     @if (shouldDisplayErrors) {
-      <govuk-error-message [errors]="control.errors" [identifier]="identifier"></govuk-error-message>
+      <govuk-error-message [errors]="control.errors" [identifier]="identifier" />
     }
 
     <div
@@ -25,8 +25,8 @@
         @if (option.divider()) {
           <div class="govuk-radios__divider">or</div>
         }
-        <ng-container [ngTemplateOutlet]="option.optionTemplate()"></ng-container>
-        <ng-container [ngTemplateOutlet]="option.conditionalTemplate()"></ng-container>
+        <ng-container [ngTemplateOutlet]="option.optionTemplate()" />
+        <ng-container [ngTemplateOutlet]="option.conditionalTemplate()" />
       }
     </div>
   </fieldset>

@@ -89,7 +89,7 @@ public class PerformanceDataSpreadsheetProcessingService {
 
     @Transactional
     public void cleanupFailed(final TargetUnitAccountUploadReport accountReport) {
-        fileAttachmentService.deleteFileAttachmentsInBatches(Set.of(accountReport.getFile().getUuid()));
+        fileAttachmentService.deleteFileAttachments(Set.of(accountReport.getFile().getUuid()));
     }
 
     @SuppressWarnings("unchecked")

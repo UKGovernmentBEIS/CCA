@@ -8,7 +8,7 @@ import { PanelComponent } from '@netz/govuk-components';
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <govuk-panel title="Task cancelled"></govuk-panel>
+        <govuk-panel title="Task cancelled" />
       </div>
     </div>
     <ng-content />

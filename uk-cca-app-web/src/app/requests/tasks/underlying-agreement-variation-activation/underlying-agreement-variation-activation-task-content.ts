@@ -7,7 +7,7 @@ import { PROVIDE_EVIDENCE_SUBTASK, TaskItemStatus } from '@requests/common';
 
 import { UnderlyingAgreementVariationActivationRequestTaskPayload } from 'cca-api';
 
-import UnderlyingAgreementVariationActivationPreContentComponent from './underlying-agreement-variation-activation-pre-content.component';
+import UnderlyingAgreementVariationActivationPreContentComponent from './precontent/underlying-agreement-variation-activation-pre-content.component';
 
 const routePrefix = 'underlying-agreement-variation-activation';
 
@@ -29,9 +29,9 @@ function getAllUnderlyingAgreementVariationActivationSections(
       title: 'Evidence',
       tasks: [
         {
+          linkText: 'Provide evidence',
           status: payload?.sectionsCompleted[PROVIDE_EVIDENCE_SUBTASK] ?? TaskItemStatus.NOT_STARTED,
           link: `${routePrefix}/provide-evidence`,
-          linkText: 'Provide evidence',
         },
       ],
     },

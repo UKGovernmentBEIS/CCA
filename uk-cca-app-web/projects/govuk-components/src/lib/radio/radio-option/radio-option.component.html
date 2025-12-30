@@ -17,7 +17,7 @@
       @if (label()) {
         {{ label() }}
       } @else {
-        <ng-content select="[govukLabel]"></ng-content>
+        <ng-content select="[govukLabel]" />
       }
     </label>
 
@@ -34,7 +34,7 @@
       [id]="identifier + '-conditional'"
       class="govuk-radios__conditional"
     >
-      <ng-content select="[govukConditionalContent]"></ng-content>
+      <ng-content select="[govukConditionalContent]" />
     </div>
   }
 </ng-template>

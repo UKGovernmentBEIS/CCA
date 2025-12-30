@@ -156,10 +156,6 @@ function updateTUDetails(
       operatorAddress: address ?? null,
       subsectorAssociationId: null,
       subsectorAssociationName: null,
-      responsiblePersonDetails: {
-        ...draft.underlyingAgreementTargetUnitDetails.responsiblePersonDetails,
-        address: null,
-      },
     };
   });
 }

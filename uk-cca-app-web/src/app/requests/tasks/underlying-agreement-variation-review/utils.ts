@@ -13,12 +13,12 @@ import {
 import { produce } from 'immer';
 
 import {
-  Determination,
   Facility,
   UnderlyingAgreementContainer,
   UnderlyingAgreementReviewDecision,
   UnderlyingAgreementVariationFacilityReviewDecision,
   UnderlyingAgreementVariationPayload,
+  VariationDetermination,
 } from 'cca-api';
 
 type DecisionType = UnderlyingAgreementVariationFacilityReviewDecision['type'];
@@ -201,7 +201,7 @@ export function deleteFacilityDecision(
   });
 }
 
-export function resetDetermination(determination: Determination): Determination {
+export function resetDetermination(determination: VariationDetermination | undefined): VariationDetermination {
   return produce(determination, (draft) => {
     if (draft?.type) {
       draft.type = null;
@@ -213,12 +213,12 @@ export function resetDetermination(determination: Determination): Determination 
  * When the user edits a payload, we need to reset the determination and the sections completed
  */
 export function applySaveActionSideEffects(
-  determination: Determination,
+  determination: VariationDetermination,
   reviewSectionsCompleted: Record<string, string>,
   sectionsCompleted: Record<string, string>,
   subtask: string,
 ): {
-  determination: Determination;
+  determination: VariationDetermination;
   reviewSectionsCompleted: Record<string, string>;
   sectionsCompleted: Record<string, string>;
 } {

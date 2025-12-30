@@ -2,6 +2,7 @@ package uk.gov.cca.api.web.controller.workflow;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -205,6 +206,7 @@ class RequestControllerTest {
         Long accountId = 1L;
         final String requestId = "1";
         String requestType = "DUMMY_REQUEST_TYPE";
+        AppUser user = AppUser.builder().roleType("REGULATOR").build();
         
         RequestSearchCriteria criteria = RequestSearchCriteria.builder()
         		.resourceId(String.valueOf(accountId))
@@ -219,7 +221,8 @@ class RequestControllerTest {
                 .total(10L)
                 .build();
 
-        when(requestQueryService.findRequestDetailsBySearchCriteria(criteria)).thenReturn(results);
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+        when(requestQueryService.findRequestDetailsBySearchCriteria(criteria, user)).thenReturn(results);
 
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH + "/workflows")
                 .content(mapper.writeValueAsString(criteria))
@@ -229,7 +232,8 @@ class RequestControllerTest {
                 .andExpect(jsonPath("$.requestDetails[0].id").value(workflowResult1.getId()))
         ;
 
-        verify(requestQueryService, times(1)).findRequestDetailsBySearchCriteria(criteria);
+        verify(appSecurityComponent, times(1)).getAuthenticatedUser();
+        verify(requestQueryService, times(1)).findRequestDetailsBySearchCriteria(criteria, user);
     }
 
     @Test
@@ -254,7 +258,7 @@ class RequestControllerTest {
                 .andExpect(status().isForbidden());
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(requestQueryService, never()).findRequestDetailsBySearchCriteria(any());
+        verify(requestQueryService, never()).findRequestDetailsBySearchCriteria(any(), eq(user));
     }
     
     private LocalValidatorFactoryBean mockValidatorFactoryBean() {

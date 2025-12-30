@@ -7,6 +7,7 @@ import uk.gov.cca.api.authorization.ccaauth.core.domain.CcaAuthorityDetails;
 import uk.gov.cca.api.authorization.ccaauth.core.repository.CcaAuthorityDetailsRepository;
 import uk.gov.cca.api.user.operator.domain.CcaOperatorInvitedUserInfoDTO;
 import uk.gov.cca.api.user.operator.transform.CcaOperatorUserAcceptInvitationMapper;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.core.domain.dto.AuthorityInfoDTO;
 import uk.gov.netz.api.user.core.domain.enumeration.UserInvitationStatus;
 import uk.gov.netz.api.user.operator.domain.OperatorUserDTO;
@@ -49,8 +50,8 @@ public class CcaOperatorUserAcceptInvitationService {
     }
 
     @Transactional
-    public CcaOperatorInvitedUserInfoDTO acceptInvitation(String invitationToken) {
-        AuthorityInfoDTO authority = this.operatorUserTokenVerificationService.verifyInvitationTokenForPendingAuthority(invitationToken);
+    public CcaOperatorInvitedUserInfoDTO acceptInvitation(String invitationToken, AppUser appUser) {
+        AuthorityInfoDTO authority = this.operatorUserTokenVerificationService.verifyInvitationToken(invitationToken, appUser);
 
         final Long accountId = authority.getAccountId();
 

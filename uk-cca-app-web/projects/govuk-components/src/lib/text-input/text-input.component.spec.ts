@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ControlContainer, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { LabelDirective } from '../directives';
@@ -48,10 +48,8 @@ describe('TextInputComponent', () => {
   }
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({}).compileComponents();
-  });
+    await TestBed.configureTestingModule({ providers: [ControlContainer] }).compileComponents();
 
-  beforeEach(() => {
     fixtureTestComponent = TestBed.createComponent(TestComponent);
     fixtureNumericComponent = TestBed.createComponent(TestNumericComponent);
     hostTestComponent = fixtureTestComponent.componentInstance;

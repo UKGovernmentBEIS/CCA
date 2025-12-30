@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.cca.api.authorization.ccaauth.core.service.CcaAuthorityService;
 import uk.gov.cca.api.user.operator.domain.CcaOperatorUserDTO;
 import uk.gov.cca.api.user.operator.domain.CcaOperatorUserRegistrationWithCredentialsDTO;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.core.domain.dto.AuthorityInfoDTO;
 import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
 import uk.gov.netz.api.user.operator.service.OperatorUserRegisterValidationService;
@@ -22,10 +23,10 @@ public class CcaOperatorUserActivationService {
     private final CcaAuthorityService ccaAuthorityService;
 
     public CcaOperatorUserDTO acceptAuthorityAndEnableInvitedUserWithCredentials
-            (CcaOperatorUserRegistrationWithCredentialsDTO ccaOperatorUserRegistrationWithCredentialsDTO) {
+            (CcaOperatorUserRegistrationWithCredentialsDTO ccaOperatorUserRegistrationWithCredentialsDTO, AppUser user) {
 
         AuthorityInfoDTO authorityInfo = operatorUserTokenVerificationService
-                .verifyInvitationTokenForPendingAuthority(ccaOperatorUserRegistrationWithCredentialsDTO.getEmailToken());
+                .verifyInvitationToken(ccaOperatorUserRegistrationWithCredentialsDTO.getEmailToken(), user);
         operatorUserRegisterValidationService.validateRegisterForAccount(authorityInfo.getUserId(), authorityInfo.getAccountId());
 
         CcaOperatorUserDTO operatorUserDTO = ccaOperatorUserAuthService
@@ -40,9 +41,9 @@ public class CcaOperatorUserActivationService {
         return operatorUserDTO;
     }
 
-    public void acceptAuthorityAndSetCredentialsToUser(InvitedUserCredentialsDTO invitedUserCredentialsDTO) {
+    public void acceptAuthorityAndSetCredentialsToUser(InvitedUserCredentialsDTO invitedUserCredentialsDTO, AppUser user) {
         AuthorityInfoDTO authorityInfo = operatorUserTokenVerificationService
-                .verifyInvitationTokenForPendingAuthority(invitedUserCredentialsDTO.getInvitationToken());
+                .verifyInvitationToken(invitedUserCredentialsDTO.getInvitationToken(), user);
         operatorUserRegisterValidationService.validateRegisterForAccount(authorityInfo.getUserId(), authorityInfo.getAccountId());
         ccaOperatorUserAuthService.setUserPassword(authorityInfo.getUserId(), invitedUserCredentialsDTO.getPassword());
         operatorUserRegisteredAcceptInvitationService.acceptAuthorityAndNotify(authorityInfo.getId());

@@ -30,6 +30,7 @@ import uk.gov.netz.api.authorization.core.domain.AppAuthority;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
@@ -115,6 +116,11 @@ class SubsistenceFeesMoaTargetUnitControllerTest {
 
         SubsistenceFeesMoaTargetUnitDetailsDTO sfrMoaTargetUnitDetailsDTO = new SubsistenceFeesMoaTargetUnitDetailsDTO(1L,
                 "businessId", "name", BigDecimal.valueOf(1000L), date, BigDecimal.valueOf(185L), BigDecimal.valueOf(1000L), 10L, 10L);
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(subsistenceFeesMoaTargetUnitQueryService.getSubsistenceFeesMoaTargetUnitDetailsById(moaTargetUnitId)).thenReturn(sfrMoaTargetUnitDetailsDTO);
 
         mockMvc.perform(MockMvcRequestBuilders

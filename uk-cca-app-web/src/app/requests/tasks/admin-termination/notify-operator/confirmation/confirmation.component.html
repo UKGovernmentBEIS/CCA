@@ -2,7 +2,7 @@
   <div class="govuk-grid-column-two-thirds">
     <govuk-panel>Admin termination notice sent to operator</govuk-panel>
 
-    @if (isRegulatoryReasonSelected) {
+    @if (isRegulatoryReasonSelected()) {
       <p id="regulatory-reason-content">
         You must allow at least 28 days for the operator to appeal before you can start the final decision for the
         termination workflow.

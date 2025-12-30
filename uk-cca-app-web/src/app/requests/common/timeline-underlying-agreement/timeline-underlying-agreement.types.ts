@@ -26,3 +26,7 @@ export type UnderlyingAgreementRequestActionPayload =
   | UnderlyingAgreementMigratedRequestActionPayload;
 
 export type UnaPayload = UnderlyingAgreementPayload | UnderlyingAgreementVariationPayload;
+
+export type UnATimelineDecisionActionPayload =
+  | UnderlyingAgreementDecisionRequestActionPayload
+  | UnderlyingAgreementVariationDecisionRequestActionPayload;

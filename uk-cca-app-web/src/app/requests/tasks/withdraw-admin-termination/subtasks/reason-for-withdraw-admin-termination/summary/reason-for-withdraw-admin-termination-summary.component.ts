@@ -6,7 +6,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
 
-import { AdminTerminationWithdrawQuery } from '../../../+state/withdraw-admin-termination.selectors';
+import { adminTerminationWithdrawQuery } from '../../../withdraw-admin-termination.selectors';
 import { toWithdrawAdminTerminationReasonSummaryData } from '../../../withdraw-admin-termination-summary-data';
 
 @Component({
@@ -31,8 +31,8 @@ export default class ReasonForWithdrawAdminTerminationSummaryComponent {
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 
   protected readonly summaryData = toWithdrawAdminTerminationReasonSummaryData(
-    this.requestTaskStore.select(AdminTerminationWithdrawQuery.selectWithdrawAdminTerminationReasonDetails)(),
-    this.requestTaskStore.select(AdminTerminationWithdrawQuery.selectWithdrawAdminTerminationAttachments)(),
+    this.requestTaskStore.select(adminTerminationWithdrawQuery.selectReasonDetails)(),
+    this.requestTaskStore.select(adminTerminationWithdrawQuery.selectAttachments)(),
     this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     this.downloadUrl,
   );

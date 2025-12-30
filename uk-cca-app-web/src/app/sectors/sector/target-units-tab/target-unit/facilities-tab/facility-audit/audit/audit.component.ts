@@ -35,7 +35,7 @@ export class AuditComponent {
 
     this.facilityAuditStore.updateAudit(state, this.facilityInfoDTO.facilityId).subscribe((audit) => {
       const path = !audit?.auditRequired || (audit?.reasons?.length && audit?.comments?.length) ? '..' : 'reasons';
-      this.router.navigate([path], { relativeTo: this.activatedRoute });
+      this.router.navigate([path], { relativeTo: this.activatedRoute, fragment: 'audit' });
     });
   }
 }

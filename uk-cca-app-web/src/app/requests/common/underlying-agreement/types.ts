@@ -185,6 +185,13 @@ export type FacilityItemViewModel = {
   workflowStatus?: TaskItemStatus | null;
 };
 
+export type FacilityTimelineItemViewModel = {
+  name?: string;
+  facilityId: string;
+  status?: Facility['status'];
+  decisionStatus?: TaskItemStatus | null;
+};
+
 export function toFacilityItemViewModel(facility: Facility): FacilityItemViewModel {
   return { facilityId: facility.facilityId, name: facility.facilityDetails.name, status: facility.status };
 }

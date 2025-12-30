@@ -19,6 +19,7 @@ import {
   underlyingAgreementReviewQuery,
   underlyingAgreementVariationQuery,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
 import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
@@ -112,7 +113,9 @@ export class TP5DecisionComponent {
       },
     };
 
-    const determination = resetDetermination(this.store.select(underlyingAgreementReviewQuery.selectDetermination)());
+    const determination = resetDetermination(
+      this.store.select(underlyingAgreementVariationReviewQuery.selectDetermination)(),
+    );
 
     const reviewSectionsCompleted = produce(
       this.store.select(underlyingAgreementReviewQuery.selectReviewSectionsCompleted)(),

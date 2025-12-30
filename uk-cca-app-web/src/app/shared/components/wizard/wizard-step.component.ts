@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, viewChild } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -24,36 +24,36 @@ import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WizardStepComponent {
-  @Input() showBackLink = false;
-  @Input() showCancelLink = false;
-  @Input() cancelLinkPath: string;
-  @Input() formGroup: UntypedFormGroup;
-  @Input() heading: string;
-  @Input() caption: string;
-  @Input() submitText = 'Continue';
-  @Input() hideSubmit: boolean;
+  protected readonly showBackLink = input(false);
+  protected readonly showCancelLink = input(false);
+  protected readonly cancelLinkPath = input<string>(undefined);
+  protected readonly formGroup = input<UntypedFormGroup>(undefined);
+  protected readonly heading = input<string>(undefined);
+  protected readonly caption = input<string>(undefined);
+  protected readonly submitText = input('Continue');
+  protected readonly hideSubmit = input<boolean>(undefined);
 
-  @Output() readonly formSubmit = new EventEmitter<UntypedFormGroup>();
+  protected readonly formSubmit = output<UntypedFormGroup>();
 
   protected readonly errorSummaryEl = viewChild(ErrorSummaryComponent);
 
   protected readonly isSummaryDisplayedSubject = new BehaviorSubject(false);
 
   onSubmit(): void {
-    this.formGroup.statusChanges
-      .pipe(
-        startWith(this.formGroup.status),
+    this.formGroup()
+      .statusChanges.pipe(
+        startWith(this.formGroup().status),
         filter((status) => status !== 'PENDING'),
         take(1),
       )
       .subscribe((status) => {
         switch (status) {
           case 'VALID':
-            this.formSubmit.emit(this.formGroup);
+            this.formSubmit.emit(this.formGroup());
             break;
 
           case 'INVALID':
-            this.formGroup.markAllAsTouched();
+            this.formGroup().markAllAsTouched();
             this.isSummaryDisplayedSubject.next(true);
             this.errorSummaryEl()?.container()?.nativeElement.focus();
             break;

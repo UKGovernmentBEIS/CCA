@@ -35,7 +35,7 @@ export class EmailViewComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly notificationTemplatesService = inject(NotificationTemplatesService);
 
-  protected readonly notification = signal(this.router.getCurrentNavigation()?.extras.state?.notification);
+  protected readonly notification = signal(this.router.currentNavigation()?.extras.state?.notification);
 
   protected readonly emailTemplate = toSignal(
     this.notificationTemplatesService.getNotificationTemplateById(this.activatedRoute.snapshot.params.templateId).pipe(

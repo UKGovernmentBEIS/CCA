@@ -15,6 +15,7 @@ import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocum
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaFileDocumentGeneratorService;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaOfficialNoticeSendService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.VariationDetermination;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
@@ -51,9 +52,11 @@ class UnderlyingAgreementVariationOfficialNoticeServiceTest {
                 .sectorUsers(Set.of("sector1", "sector2"))
                 .build();
         final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
-                .determination(Determination.builder()
-                        .reason("Reason")
-                        .additionalInformation("EXPLANATION")
+                .determination(VariationDetermination.builder()
+                        .determination(Determination.builder()
+                                .reason("Reason")
+                                .additionalInformation("EXPLANATION")
+                                .build())
                         .build())
                 .decisionNotification(decisionNotification)
                 .build();
@@ -92,9 +95,11 @@ class UnderlyingAgreementVariationOfficialNoticeServiceTest {
                 .sectorUsers(Set.of("sector1", "sector2"))
                 .build();
         final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
-                .determination(Determination.builder()
-                        .reason("Reason")
-                        .additionalInformation("EXPLANATION")
+                .determination(VariationDetermination.builder()
+                        .determination(Determination.builder()
+                                .reason("Reason")
+                                .additionalInformation("EXPLANATION")
+                                .build())
                         .build())
                 .decisionNotification(decisionNotification)
                 .build();
@@ -129,15 +134,62 @@ class UnderlyingAgreementVariationOfficialNoticeServiceTest {
     }
 
     @Test
+    void generateAndSaveCompletedOfficialNotice() {
+        final String requestId = "1";
+        final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
+                .sectorUsers(Set.of("sector1", "sector2"))
+                .build();
+        final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
+                .determination(VariationDetermination.builder()
+                        .determination(Determination.builder()
+                                .reason("Reason")
+                                .additionalInformation("EXPLANATION")
+                                .build())
+                        .build())
+                .decisionNotification(decisionNotification)
+                .build();
+        final Request request = Request.builder()
+                .id(requestId)
+                .payload(requestPayload)
+                .build();
+
+        when(requestService.findRequestById(requestId)).thenReturn(request);
+
+        when(ccaOfficialNoticeGeneratorService.generate(request,
+                decisionNotification,
+                CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_COMPLETED,
+                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_VARIATION_COMPLETED,
+                "Variation acknowledgement letter.pdf"))
+                .thenReturn(FileInfoDTO.builder().build());
+
+        requestPayload.setOfficialNotices(List.of(FileInfoDTO.builder().build()));
+
+        // Invoke
+        service.generateAndSaveCompletedOfficialNotice(request.getId());
+
+        // Verify
+        verify(ccaOfficialNoticeGeneratorService, times(1))
+                .generate(
+                        request,
+                        decisionNotification,
+                        CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_COMPLETED,
+                        CcaDocumentTemplateType.UNDERLYING_AGREEMENT_VARIATION_COMPLETED,
+                        "Variation acknowledgement letter.pdf"
+                );
+    }
+
+    @Test
     void generateActivatedOfficialNotice() {
         final String requestId = "1";
         final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
                 .sectorUsers(Set.of("sector1", "sector2"))
                 .build();
         final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
-                .determination(Determination.builder()
-                        .reason("Reason")
-                        .additionalInformation("EXPLANATION")
+                .determination(VariationDetermination.builder()
+                        .determination(Determination.builder()
+                                .reason("Reason")
+                                .additionalInformation("EXPLANATION")
+                                .build())
                         .build())
                 .decisionNotification(decisionNotification)
                 .build();
@@ -179,9 +231,11 @@ class UnderlyingAgreementVariationOfficialNoticeServiceTest {
         final Request request = Request.builder()
                 .id(requestId)
                 .payload(UnderlyingAgreementVariationRequestPayload.builder()
-                        .determination(Determination.builder()
-                                .reason("Reason")
-                                .additionalInformation("EXPLANATION")
+                        .determination(VariationDetermination.builder()
+                                .determination(Determination.builder()
+                                        .reason("Reason")
+                                        .additionalInformation("EXPLANATION")
+                                        .build())
                                 .build())
                         .decisionNotification(decisionNotification)
                         .build())
@@ -212,9 +266,11 @@ class UnderlyingAgreementVariationOfficialNoticeServiceTest {
         final Request request = Request.builder()
                 .id(requestId)
                 .payload(UnderlyingAgreementVariationRequestPayload.builder()
-                        .determination(Determination.builder()
-                                .reason("Reason")
-                                .additionalInformation("EXPLANATION")
+                        .determination(VariationDetermination.builder()
+                                .determination(Determination.builder()
+                                        .reason("Reason")
+                                        .additionalInformation("EXPLANATION")
+                                        .build())
                                 .build())
                         .decisionNotification(decisionNotification)
                         .build())
@@ -247,9 +303,11 @@ class UnderlyingAgreementVariationOfficialNoticeServiceTest {
                 .uuid("uuid")
                 .build();
         final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
-                .determination(Determination.builder()
-                        .reason("Reason")
-                        .additionalInformation("EXPLANATION")
+                .determination(VariationDetermination.builder()
+                        .determination(Determination.builder()
+                                .reason("Reason")
+                                .additionalInformation("EXPLANATION")
+                                .build())
                         .build())
                 .decisionNotification(decisionNotification)
                 .officialNotices(List.of(officialNotice))

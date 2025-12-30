@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -35,19 +35,17 @@ import { ResetPasswordStore } from '../+store/reset-password.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResetPasswordComponent implements OnInit {
+  readonly form = inject<UntypedFormGroup>(PASSWORD_FORM);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly resetPasswordStore = inject(ResetPasswordStore);
+  private readonly forgotPasswordService = inject(ForgotPasswordService);
+
   protected isSummaryDisplayed = false;
   protected readonly passwordLabel = 'New password';
   protected readonly newPasswordLabel = 'Confirm new password';
   protected token: string;
   protected readonly email: string;
-
-  constructor(
-    @Inject(PASSWORD_FORM) readonly form: UntypedFormGroup,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly resetPasswordStore: ResetPasswordStore,
-    private readonly forgotPasswordService: ForgotPasswordService,
-  ) {}
 
   ngOnInit() {
     this.token = this.route.snapshot.queryParamMap.get('token');

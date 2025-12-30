@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, Optional, Self } from '@angular/core';
+import { Component, HostBinding, inject, input } from '@angular/core';
 import { ControlValueAccessor, NgControl, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 
 import { FormService } from '@netz/govuk-components';
@@ -13,17 +13,19 @@ import { FormService } from '@netz/govuk-components';
   imports: [ReactiveFormsModule],
 })
 export class RadioOptionComponent implements ControlValueAccessor {
-  @Input() index: string;
-  @Input() value: string;
-  @Input() label: string;
-  @Input() isDisabled: boolean;
+  protected readonly ngControl = inject(NgControl, { self: true, optional: true });
+  private readonly formService = inject(FormService);
+
+  protected readonly index = input<string>(undefined);
+  protected readonly value = input<string>(undefined);
+  protected readonly label = input<string>(undefined);
+  protected readonly isDisabled = input<boolean>(undefined);
 
   @HostBinding('class.govuk-radios__item') readonly govukRadiosItem = true;
 
-  constructor(
-    @Self() @Optional() readonly ngControl: NgControl,
-    private readonly formService: FormService,
-  ) {
+  constructor() {
+    const ngControl = this.ngControl;
+
     ngControl.valueAccessor = this;
   }
 

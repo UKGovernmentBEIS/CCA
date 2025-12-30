@@ -1,25 +1,25 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup()">
   @if (isSummaryDisplayedSubject | async) {
-    <cca-csv-error-summary [form]="formGroup" />
+    <cca-csv-error-summary [form]="formGroup()" />
   }
 
-  <netz-page-heading [caption]="caption">{{ heading }}</netz-page-heading>
+  <netz-page-heading [caption]="caption()">{{ heading() }}</netz-page-heading>
 
   <ng-content />
 
-  @if (!hideSubmit) {
-    <button netzPendingButton govukButton type="submit">{{ submitText }}</button>
+  @if (!hideSubmit()) {
+    <button netzPendingButton govukButton type="submit">{{ submitText() }}</button>
   }
 
-  @if (showReturnLink) {
+  @if (showReturnLink()) {
     <div>
       <netz-return-to-task-or-action-page />
     </div>
   }
 
-  @if (showCancelLink) {
+  @if (showCancelLink()) {
     <div>
-      <a class="govuk-link" [routerLink]="cancelLinkPath">Cancel</a>
+      <a class="govuk-link" [routerLink]="cancelLinkPath()">Cancel</a>
     </div>
   }
 </form>

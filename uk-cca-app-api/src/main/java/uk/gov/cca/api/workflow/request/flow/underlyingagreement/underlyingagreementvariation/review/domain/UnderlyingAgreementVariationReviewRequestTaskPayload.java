@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.util.CollectionUtils;
-import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
+
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.review.UnderlyingAgreementProposedPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.VariationDetermination;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -37,7 +38,7 @@ public class UnderlyingAgreementVariationReviewRequestTaskPayload extends Underl
 
     private UnderlyingAgreementVariationPayload underlyingAgreementProposed;
 
-    private Determination determination;
+    private VariationDetermination determination;
 
     @Override
     public Map<UUID, String> getAttachments() {
@@ -62,7 +63,7 @@ public class UnderlyingAgreementVariationReviewRequestTaskPayload extends Underl
 
         Set<UUID> determinationFileIds = new HashSet<>();
         Optional.ofNullable(getDetermination())
-                .ifPresent(d -> determinationFileIds.addAll(d.getFiles()));
+                .ifPresent(d -> determinationFileIds.addAll(d.getDetermination().getFiles()));
 
         Set<UUID> proposedReferencedAttachmentIds = getUnderlyingAgreementProposed() != null ?
                 getUnderlyingAgreementProposed().getUnderlyingAgreement().getUnderlyingAgreementSectionAttachmentIds() :

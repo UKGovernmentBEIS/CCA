@@ -11,6 +11,7 @@ import uk.gov.cca.api.authorization.ccaauth.core.domain.ContactType;
 import uk.gov.cca.api.authorization.ccaauth.core.repository.CcaAuthorityDetailsRepository;
 import uk.gov.cca.api.user.operator.domain.CcaOperatorInvitedUserInfoDTO;
 import uk.gov.cca.api.user.operator.transform.CcaOperatorUserAcceptInvitationMapper;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.core.domain.dto.AuthorityInfoDTO;
 import uk.gov.netz.api.user.core.domain.enumeration.UserInvitationStatus;
 import uk.gov.netz.api.user.operator.domain.OperatorUserDTO;
@@ -53,6 +54,7 @@ class CcaOperatorUserAcceptInvitationServiceTest {
 
     @Test
     void acceptInvitation() {
+    	AppUser user = AppUser.builder().build();
         String invitationToken = "token";
         String userId = "userId";
         Long accountId = 1L;
@@ -76,7 +78,7 @@ class CcaOperatorUserAcceptInvitationServiceTest {
                 .contactType(ContactType.OPERATOR.getName())
                 .build();
 
-        when(operatorUserTokenVerificationService.verifyInvitationTokenForPendingAuthority(invitationToken)).thenReturn(authorityInfo);
+        when(operatorUserTokenVerificationService.verifyInvitationToken(invitationToken, user)).thenReturn(authorityInfo);
         when(operatorUserAuthService.getUserById(authorityInfo.getUserId())).thenReturn(operatorUser);
         when(targetUnitAccountQueryService.getAccountBusinessIdAndName(authorityInfo.getAccountId())).thenReturn(accountInstallationName);
         when(operatorUserAcceptInvitationMapper.toOperatorUserWithAuthorityDTO(operatorUser, authorityInfo, accountInstallationName))
@@ -88,10 +90,10 @@ class CcaOperatorUserAcceptInvitationServiceTest {
         when(ccaAuthorityDetailsRepository.findCcaAuthorityDetailsByAuthorityId(authorityInfo.getId()))
                 .thenReturn(authorityDetails);
 
-        service.acceptInvitation(invitationToken);
+        service.acceptInvitation(invitationToken, user);
 
         verify(operatorUserTokenVerificationService, times(1))
-                .verifyInvitationTokenForPendingAuthority(invitationToken);
+                .verifyInvitationToken(invitationToken, user);
         verify(operatorUserAuthService, times(1)).getUserById(userId);
         verify(targetUnitAccountQueryService, times(1)).getAccountBusinessIdAndName(accountId);
         verify(operatorUserAcceptInvitationMapper, times(1)).

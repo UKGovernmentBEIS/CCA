@@ -14,6 +14,10 @@
     </div>
   </div>
 
+  @if (details.requestItems.items.length > 0) {
+    <netz-related-tasks [items]="details.requestItems.items" heading="Tasks to complete" data-testid="related-tasks" />
+  }
+
   <govuk-tabs queryParamsHandling="replace">
     <ng-template govukTabLazy id="timeline-events" label="Timeline">
       <div class="govuk-grid-row">
@@ -32,12 +36,10 @@
       </div>
     </ng-template>
 
-    @if (showNotes) {
-      @if (userIsRegulator()) {
-        <ng-template govukTabLazy id="notes" label="Notes">
-          <cca-workflow-notes />
-        </ng-template>
-      }
+    @if (userIsRegulator()) {
+      <ng-template govukTabLazy id="notes" label="Notes">
+        <cca-workflow-notes />
+      </ng-template>
     }
   </govuk-tabs>
 }

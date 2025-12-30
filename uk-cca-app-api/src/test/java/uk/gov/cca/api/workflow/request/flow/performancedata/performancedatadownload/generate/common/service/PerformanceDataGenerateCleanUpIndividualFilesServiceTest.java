@@ -56,7 +56,7 @@ class PerformanceDataGenerateCleanUpIndividualFilesServiceTest {
         // Verify
         verify(requestService, times(1)).findRequestById(requestId);
         verify(fileAttachmentService, times(1))
-                .deleteFileAttachmentsInBatches(Set.of(file));
+                .deleteFileAttachments(Set.of(file));
     }
 
     @Test

@@ -147,7 +147,11 @@ class FacilityUpdateControllerTest {
                 .certificationStatus(FacilityCertificationStatus.CERTIFIED)
                 .certificationPeriodId(2L)
                 .build();
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
 
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         ResponseEntity<Void> result = controller.updateFacilityCertificationStatus(1L, facilityCertificationStatusUpdateDTO);
 
         assertEquals(new ResponseEntity<Void>(HttpStatus.NO_CONTENT), result);

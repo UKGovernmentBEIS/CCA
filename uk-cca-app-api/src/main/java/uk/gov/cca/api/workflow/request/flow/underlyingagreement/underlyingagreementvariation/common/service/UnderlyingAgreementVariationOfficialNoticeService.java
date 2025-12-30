@@ -60,6 +60,23 @@ public class UnderlyingAgreementVariationOfficialNoticeService {
         requestPayload.setOfficialNotices(List.of(officialNotice));
     }
 
+    @Transactional
+    public void generateAndSaveCompletedOfficialNotice(final String requestId) {
+        final Request request = requestService.findRequestById(requestId);
+        final UnderlyingAgreementVariationRequestPayload requestPayload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();
+        final CcaDecisionNotification decisionNotification = requestPayload.getDecisionNotification();
+
+        final FileInfoDTO officialNotice = ccaFileDocumentGeneratorService.generate(
+                request,
+                decisionNotification,
+                CcaDocumentTemplateGenerationContextActionType.UNDERLYING_AGREEMENT_VARIATION_COMPLETED,
+                CcaDocumentTemplateType.UNDERLYING_AGREEMENT_VARIATION_COMPLETED,
+                "Variation acknowledgement letter.pdf"
+        );
+
+        requestPayload.setOfficialNotices(List.of(officialNotice));
+    }
+
     public CompletableFuture<FileInfoDTO> generateActivatedOfficialNotice(final String requestId) {
         final Request request = requestService.findRequestById(requestId);
         final UnderlyingAgreementVariationRequestPayload requestPayload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();

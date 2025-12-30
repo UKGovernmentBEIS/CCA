@@ -34,7 +34,7 @@ public class PerformanceDataGenerateCleanUpIndividualFilesService {
 	            .collect(Collectors.toSet());
 
 		if(!accountReportsUUIDs.isEmpty()) {
-			fileAttachmentService.deleteFileAttachmentsInBatches(accountReportsUUIDs);
+			fileAttachmentService.deleteFileAttachments(accountReportsUUIDs);
 		}
 	}
 }

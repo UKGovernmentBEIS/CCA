@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, Input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRouteSnapshot, Data, NavigationEnd, Router } from '@angular/router';
@@ -11,9 +11,11 @@ import { RouteBacklink } from './backlink.interface';
 
 @Component({
   selector: 'netz-back-link',
-  template: ` @if (backlink$ | async; as backlink) {
-    <govuk-back-link [link]="backlink.link" [route]="backlink.route" [inverse]="inverse()" />
-  }`,
+  template: `
+    @if (backlink$ | async; as backlink) {
+      <govuk-back-link [link]="backlink.link" [route]="backlink.route" [inverse]="inverse()" />
+    }
+  `,
   imports: [GovukBackLinkComponent, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

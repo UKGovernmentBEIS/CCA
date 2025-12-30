@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
@@ -11,7 +11,7 @@ import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agree
   template: `
     <div>
       <netz-page-heading>Manage facilities</netz-page-heading>
-      <cca-facility-item-list [facilityItems]="facilities()" baseUrl="../facility" />
+      <cca-facility-item-list [facilityItems]="facilities()" />
     </div>
   `,
   imports: [PageHeadingComponent, FacilityItemListComponent],
@@ -20,7 +20,7 @@ import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agree
 export class ManageFacilitiesComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
-  protected readonly facilities = computed(() =>
-    this.requestTaskStore.select(underlyingAgreementVariationPeerReviewQuery.selectManageFacilities)(),
+  protected readonly facilities = this.requestTaskStore.select(
+    underlyingAgreementVariationPeerReviewQuery.selectManageFacilities,
   );
 }

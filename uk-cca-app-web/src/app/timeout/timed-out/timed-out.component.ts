@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { map } from 'rxjs';
@@ -32,14 +32,12 @@ import { AuthService } from '@shared/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimedOutComponent {
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly authService = inject(AuthService);
+
   protected readonly idle$ = this.activatedRoute.queryParamMap.pipe(
     map((queryParamMap) => Number(queryParamMap.get('idle'))),
   );
-
-  constructor(
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly authService: AuthService,
-  ) {}
 
   onSignInAgain(): void {
     this.authService.login({ redirectUri: location.origin });

@@ -3,8 +3,8 @@ package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagree
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
-import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.review.UnderlyingAgreementReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationFacilityReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload;
@@ -17,6 +17,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationSaveReviewDeterminationRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationSaveReviewGroupDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationSaveReviewRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.VariationDetermination;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
@@ -69,7 +70,7 @@ public class UnderlyingAgreementVariationReviewService {
         final Map<String, String> reviewSectionsCompleted = payload.getReviewSectionsCompleted();
         taskPayload.setReviewSectionsCompleted(reviewSectionsCompleted);
 
-        final Determination determination = payload.getDetermination();
+        final VariationDetermination determination = payload.getDetermination();
         taskPayload.setDetermination(determination);
     }
 
@@ -91,7 +92,7 @@ public class UnderlyingAgreementVariationReviewService {
         final Map<String, String> reviewSectionsCompleted = payload.getReviewSectionsCompleted();
         taskPayload.setReviewSectionsCompleted(reviewSectionsCompleted);
 
-        final Determination determination = payload.getDetermination();
+        final VariationDetermination determination = payload.getDetermination();
         taskPayload.setDetermination(determination);
     }
 

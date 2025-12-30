@@ -435,6 +435,6 @@ class PerformanceDataSpreadsheetProcessingServiceTest {
 
         // Verify
         verify(fileAttachmentService, times(1))
-                .deleteFileAttachmentsInBatches(Set.of(file));
+                .deleteFileAttachments(Set.of(file));
     }
 }

@@ -25,8 +25,8 @@ import uk.gov.cca.api.subsistencefees.domain.MoaType;
 import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaSearchCriteria;
 import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaSearchResultInfoDTO;
 import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaSearchResults;
+import uk.gov.cca.api.subsistencefees.service.SubsistenceFeesMoaQueryService;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.orchestrator.sectorassociation.service.SectorAssociationSubsistenceFeesServiceOrchestrator;
 import uk.gov.netz.api.common.domain.PagingRequest;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,7 +40,7 @@ class SectorAssociationSubsistenceFeesControllerTest {
     private SectorAssociationSubsistenceFeesController controller;
 
     @Mock
-    private SectorAssociationSubsistenceFeesServiceOrchestrator orchestrator;
+    private SubsistenceFeesMoaQueryService subsistenceFeesMoaQueryService;
     
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -68,7 +68,7 @@ class SectorAssociationSubsistenceFeesControllerTest {
         		.total(1L)
         		.build();
         
-        when(orchestrator.getSectorSubsistenceFeesMoas(sectorAssociationId, criteria)).thenReturn(results);
+        when(subsistenceFeesMoaQueryService.getSectorSubsistenceFeesMoas(sectorAssociationId, criteria)).thenReturn(results);
         
         mockMvc.perform(MockMvcRequestBuilders.post(CONTROLLER_PATH + sectorAssociationId + "/subsistence-fees/moas")
         		.content(mapper.writeValueAsString(criteria))
@@ -78,6 +78,6 @@ class SectorAssociationSubsistenceFeesControllerTest {
                 .andExpect(jsonPath("$.subsistenceFeesMoas[0].moaId").value(1L))
                 .andExpect(jsonPath("$.subsistenceFeesMoas[0].transactionId").value("CCACM1200"));
 
-        verify(orchestrator, times(1)).getSectorSubsistenceFeesMoas(sectorAssociationId, criteria);
+        verify(subsistenceFeesMoaQueryService, times(1)).getSectorSubsistenceFeesMoas(sectorAssociationId, criteria);
     }
 }

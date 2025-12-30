@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -28,6 +28,12 @@ import { ResetPasswordStore } from '../+store/reset-password.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubmitOtpComponent {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly forgotPasswordService = inject(ForgotPasswordService);
+  private readonly fb = inject(UntypedFormBuilder);
+  private readonly store = inject(ResetPasswordStore);
+
   protected readonly isSummaryDisplayed = signal<boolean>(false);
   protected readonly email = this.store.state.email;
   protected isPasswordReset = false;
@@ -43,14 +49,6 @@ export class SubmitOtpComponent {
       ],
     ],
   });
-
-  constructor(
-    private readonly authService: AuthService,
-    private readonly router: Router,
-    private readonly forgotPasswordService: ForgotPasswordService,
-    private readonly fb: UntypedFormBuilder,
-    private readonly store: ResetPasswordStore,
-  ) {}
 
   onSubmit(): void {
     this.forgotPasswordService

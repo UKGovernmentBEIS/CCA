@@ -1,26 +1,10 @@
 import { Routes } from '@angular/router';
 
-import { PayloadMutatorsHandler, SideEffectsHandler } from '@netz/common/forms';
 import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/common';
-
-import {
-  provideUNAActivationPayloadMutators,
-  provideUNAActivationSideEffects,
-  provideUNAActivationStepFlowManagers,
-  provideUNAActivationTaskServices,
-} from './underlying-agreement-activation.providers';
 
 export const UNDERLYING_AGREEMENT_ACTIVATION_ROUTES: Routes = [
   {
     path: '',
-    providers: [
-      SideEffectsHandler,
-      PayloadMutatorsHandler,
-      provideUNAActivationTaskServices(),
-      provideUNAActivationPayloadMutators(),
-      provideUNAActivationSideEffects(),
-      provideUNAActivationStepFlowManagers(),
-    ],
     children: [
       {
         path: 'provide-evidence',

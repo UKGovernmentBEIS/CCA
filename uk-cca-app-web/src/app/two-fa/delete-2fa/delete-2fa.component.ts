@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { first, map, of, switchMap } from 'rxjs';
@@ -14,12 +14,10 @@ import { UsersSecuritySetupService } from 'cca-api';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Delete2faComponent implements OnInit {
-  constructor(
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
-    private readonly usersSecuritySetupService: UsersSecuritySetupService,
-    private readonly authService: AuthService,
-  ) {}
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly usersSecuritySetupService = inject(UsersSecuritySetupService);
+  private readonly authService = inject(AuthService);
 
   ngOnInit() {
     this.route.queryParamMap

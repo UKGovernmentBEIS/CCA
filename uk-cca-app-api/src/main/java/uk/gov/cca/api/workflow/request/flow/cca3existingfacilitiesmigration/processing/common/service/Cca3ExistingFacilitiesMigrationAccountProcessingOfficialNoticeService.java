@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.cca.api.notification.template.constants.CcaDocumentTemplateType;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
+import uk.gov.cca.api.workflow.request.flow.common.service.CcaDecisionNotificationUsersService;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaFileDocumentGeneratorService;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaOfficialNoticeSendService;
@@ -16,6 +17,7 @@ import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -25,6 +27,7 @@ public class Cca3ExistingFacilitiesMigrationAccountProcessingOfficialNoticeServi
     private final RequestService requestService;
     private final CcaFileDocumentGeneratorService ccaFileDocumentGeneratorService;
     private final CcaOfficialNoticeSendService ccaOfficialNoticeSendService;
+    private final CcaDecisionNotificationUsersService ccaDecisionNotificationUsersService;
 
     public CompletableFuture<FileInfoDTO> generateAcceptedOfficialNotice(String requestId) {
         final Request request = requestService.findRequestById(requestId);
@@ -60,11 +63,15 @@ public class Cca3ExistingFacilitiesMigrationAccountProcessingOfficialNoticeServi
         final Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload requestPayload =
                 (Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload) request.getPayload();
 
+        List<String> ccRecipientsEmails = Optional.ofNullable(requestPayload.getDecisionNotification())
+                .map(ccaDecisionNotificationUsersService::findCCUserEmails)
+                .orElse(new ArrayList<>());
+
         List<FileInfoDTO> attachments = List.of(
                 requestPayload.getUnderlyingAgreementDocument(),
                 requestPayload.getOfficialNotice()
         );
 
-        ccaOfficialNoticeSendService.sendOfficialNotice(attachments, request, new ArrayList<>());
+        ccaOfficialNoticeSendService.sendOfficialNotice(attachments, request, ccRecipientsEmails);
     }
 }

@@ -1,6 +1,9 @@
 package uk.gov.cca.api.authorization.ccaauth.rules.services.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -16,8 +19,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.domain.AuthorizationRuleScopePermission;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.authorization.rules.domain.Scope;
 import uk.gov.netz.api.authorization.rules.repository.AuthorizationRuleRepository;
+import uk.gov.netz.api.authorization.rules.services.AuthorizationRulesQueryService;
 import uk.gov.netz.api.authorization.rules.services.authorization.AuthorizationCriteria;
 import uk.gov.netz.api.authorization.rules.services.authorization.RoleTypeAuthorizationServiceDelegator;
 import uk.gov.netz.api.common.constants.RoleTypeConstants;
@@ -33,27 +38,44 @@ class SectorAssociationRequestAuthorizationResourceServiceTest {
     
     @Mock
     private RoleTypeAuthorizationServiceDelegator roleTypeAuthorizationServiceDelegator;
+
+    @Mock
+    private AuthorizationRulesQueryService authorizationRulesQueryService;
     
     @Test
     void findRequestCreateActionsBySectorAssociationId() {
-        AppUser user = AppUser.builder().roleType(RoleTypeConstants.OPERATOR).build();
-        Long sectorId = 1L;
-        
-        List<AuthorizationRuleScopePermission> rules = List.of(
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.OPERATOR).build();
+        final Long sectorId = 1L;
+
+        final Set<String> userAllowedRequestTypes = Set.of("requestType");
+        final List<AuthorizationRuleScopePermission> rules = List.of(
                 AuthorizationRuleScopePermission.builder().resourceSubType("requestType").handler("handler").permission(null).build());
-        
+        final AuthorizationCriteria authorizationCriteria = AuthorizationCriteria.builder()
+                .requestResources(Map.of(CcaResourceType.SECTOR_ASSOCIATION, sectorId.toString()))
+                .permission(null)
+                .build();
+
+        when(authorizationRulesQueryService.findResourceSubTypesByResourceTypeAndRoleType(ResourceType.REQUEST, RoleTypeConstants.OPERATOR))
+                .thenReturn(userAllowedRequestTypes);
         when(authorizationRuleRepository.findRulePermissionsByResourceTypeScopeAndRoleType(
-        		CcaResourceType.SECTOR_ASSOCIATION, Scope.REQUEST_CREATE, RoleTypeConstants.OPERATOR)).thenReturn(rules);
-        
-        when(roleTypeAuthorizationServiceDelegator.isAuthorized(user, AuthorizationCriteria.builder()
-        		.requestResources(Map.of(CcaResourceType.SECTOR_ASSOCIATION, sectorId.toString()))
-        		.permission(null).build()))
-        .thenReturn(true);
-        
+        		CcaResourceType.SECTOR_ASSOCIATION, Scope.REQUEST_CREATE, RoleTypeConstants.OPERATOR))
+                .thenReturn(rules);
+        when(roleTypeAuthorizationServiceDelegator.isAuthorized(user, authorizationCriteria))
+                .thenReturn(true);
+
+        // Invoke
         Set<String> results = service.findRequestCreateActionsBySectorAssociationId(user, sectorId);
-        
+
+        // Verify
         assertThat(results)
             .hasSize(1)
             .containsOnly("requestType");
+        verify(authorizationRulesQueryService, times(1))
+                .findResourceSubTypesByResourceTypeAndRoleType(ResourceType.REQUEST, RoleTypeConstants.OPERATOR);
+        verify(authorizationRuleRepository, times(1))
+                .findRulePermissionsByResourceTypeScopeAndRoleType(CcaResourceType.SECTOR_ASSOCIATION, Scope.REQUEST_CREATE, RoleTypeConstants.OPERATOR);
+        verify(roleTypeAuthorizationServiceDelegator, times(1))
+                .isAuthorized(user, authorizationCriteria);
+        verifyNoMoreInteractions(roleTypeAuthorizationServiceDelegator);
     }
 }

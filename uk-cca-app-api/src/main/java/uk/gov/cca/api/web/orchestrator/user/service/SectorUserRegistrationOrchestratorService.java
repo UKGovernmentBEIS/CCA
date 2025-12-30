@@ -8,6 +8,7 @@ import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
 import uk.gov.cca.api.user.sectoruser.domain.SectorInvitedUserInfoDTO;
 import uk.gov.cca.api.user.sectoruser.service.SectorUserAcceptInvitationService;
 import uk.gov.cca.api.user.sectoruser.transform.SectorUserAcceptInvitationMapper;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 
 @Service
 @RequiredArgsConstructor
@@ -20,14 +21,15 @@ public class SectorUserRegistrationOrchestratorService {
 
     /**
      * Invites a new user to join a sector with a specified role.
+     * @param appUser 
      *
      * @paraminvitationToken	the invitation token
      * @return	{@link SectorInvitedUserInfoDTO}
      * 
      */
-    public SectorInvitedUserInfoDTO acceptInvitation(String invitationToken) {
+    public SectorInvitedUserInfoDTO acceptInvitation(String invitationToken, AppUser appUser) {
     	
-    	SectorInvitedUserInfoDTO sectorInvitedUserInfoDTO = sectorUserAcceptInvitationService.acceptInvitation(invitationToken);
+    	SectorInvitedUserInfoDTO sectorInvitedUserInfoDTO = sectorUserAcceptInvitationService.acceptInvitation(invitationToken, appUser);
     	
     	String sector = sectorAssociationQueryService.getSectorAssociationAcronymAndName(sectorInvitedUserInfoDTO.getSectorAssociationId());
     	

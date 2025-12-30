@@ -8,7 +8,6 @@ import { throwError } from 'rxjs';
 import { PageHeadingComponent } from '@netz/common/components';
 import { ActivatedRouteStub, BasePage, mockClass } from '@netz/common/testing';
 import { PasswordComponent } from '@shared/components';
-import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { RegulatorUsersRegistrationService } from 'cca-api';
 
@@ -52,7 +51,6 @@ describe('RegulatorInvitationComponent', () => {
         { provide: RegulatorUsersRegistrationService, useValue: regulatorUsersRegistrationService },
         { provide: ActivatedRoute, useValue: activatedRoute },
         InvitedRegulatorUserStore,
-        provideZxvbnServiceForPSM(),
       ],
     }).compileComponents();
 

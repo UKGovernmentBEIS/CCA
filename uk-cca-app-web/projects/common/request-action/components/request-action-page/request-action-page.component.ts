@@ -1,13 +1,13 @@
-import { NgComponentOutlet, NgForOf, NgIf } from '@angular/common';
+import { NgComponentOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  Inject,
   Injector,
   runInInjectionContext,
   Signal,
   Type,
+  inject,
 } from '@angular/core';
 
 import { PageHeadingComponent, TaskListComponent } from '@netz/common/components';
@@ -29,11 +29,15 @@ type ViewModel = {
 
 @Component({
   selector: 'netz-request-action-page',
-  imports: [NgIf, NgComponentOutlet, PageHeadingComponent, TaskListComponent, GovukDatePipe],
+  imports: [NgComponentOutlet, PageHeadingComponent, TaskListComponent, GovukDatePipe],
   templateUrl: './request-action-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestActionPageComponent {
+  private readonly contentFactoryMap = inject<RequestActionPageContentFactoryMap>(REQUEST_ACTION_PAGE_CONTENT);
+  private readonly store = inject(RequestActionStore);
+  private readonly injector = inject(Injector);
+
   vm: Signal<ViewModel> = computed(() => {
     const requestAction = this.store.select(requestActionQuery.selectAction)();
     if (!requestAction) {
@@ -51,10 +55,4 @@ export class RequestActionPageComponent {
       component,
     };
   });
-
-  constructor(
-    @Inject(REQUEST_ACTION_PAGE_CONTENT) private readonly contentFactoryMap: RequestActionPageContentFactoryMap,
-    private readonly store: RequestActionStore,
-    private readonly injector: Injector,
-  ) {}
 }

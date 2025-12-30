@@ -20,6 +20,7 @@ import uk.gov.cca.api.user.operator.service.CcaOperatorUserAcceptInvitationServi
 import uk.gov.cca.api.user.operator.service.CcaOperatorUserActivationService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.security.AppSecurityComponent;
 import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
 import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
@@ -70,6 +71,7 @@ class OperatorUserRegistrationControllerTest {
 
     @Test
     void acceptInvitation() throws Exception {
+    	AppUser currentUser = AppUser.builder().userId("currentuser").build();
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setToken("token");
 
@@ -81,7 +83,8 @@ class OperatorUserRegistrationControllerTest {
                 .contactType(ContactType.OPERATOR.getName())
                 .build();
 
-        when(operatorUserAcceptInvitationService.acceptInvitation(tokenDTO.getToken()))
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
+        when(operatorUserAcceptInvitationService.acceptInvitation(tokenDTO.getToken(), currentUser))
                 .thenReturn(operatorInvitedUserInfo);
 
         mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_PATH + ACCEPT_INVITATION_PATH)
@@ -94,11 +97,12 @@ class OperatorUserRegistrationControllerTest {
                 .andExpect(jsonPath("$.contactType").value(operatorInvitedUserInfo.getContactType()))
                 .andExpect(jsonPath("$.invitationStatus").value(operatorInvitedUserInfo.getInvitationStatus().name()));
 
-        verify(operatorUserAcceptInvitationService, times(1)).acceptInvitation(tokenDTO.getToken());
+        verify(operatorUserAcceptInvitationService, times(1)).acceptInvitation(tokenDTO.getToken(), currentUser);
     }
 
     @Test
     void acceptAuthorityAndEnableInvitedUserWithCredentials() throws Exception {
+    	AppUser currentUser = AppUser.builder().userId("currentuser").build();
         CcaOperatorUserRegistrationWithCredentialsDTO user = CcaOperatorUserRegistrationWithCredentialsDTO.builder()
                 .emailToken("token")
                 .firstName("fn")
@@ -113,7 +117,9 @@ class OperatorUserRegistrationControllerTest {
                 .jobTitle("Engineer")
                 .lastName("ln").build();
 
-        when(ccaOperatorUserActivationService.acceptAuthorityAndEnableInvitedUserWithCredentials(user)).thenReturn(userDTO);
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
+        when(ccaOperatorUserActivationService.acceptAuthorityAndEnableInvitedUserWithCredentials(user, currentUser))
+        		.thenReturn(userDTO);
 
         mockMvc.perform(
                         MockMvcRequestBuilders.put(USER_CONTROLLER_PATH + ENABLE_WITH_CREDENTIALS_FROM_INVITATION)
@@ -125,22 +131,25 @@ class OperatorUserRegistrationControllerTest {
                 .andExpect(jsonPath("$.jobTitle").value("Engineer"))
                 .andExpect(jsonPath("$.email").value("email"));
 
-        verify(ccaOperatorUserActivationService, times(1)).acceptAuthorityAndEnableInvitedUserWithCredentials(user);
+        verify(ccaOperatorUserActivationService, times(1)).acceptAuthorityAndEnableInvitedUserWithCredentials(user, currentUser);
     }
 
     @Test
     void acceptAuthorityAndSetCredentialsToUser() throws Exception {
+    	AppUser currentUser = AppUser.builder().userId("currentuser").build();
         InvitedUserCredentialsDTO operatorUser = InvitedUserCredentialsDTO.builder()
                 .invitationToken("token")
                 .password("password")
                 .build();
 
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
+        
         mockMvc.perform(
                         MockMvcRequestBuilders.put(USER_CONTROLLER_PATH + ACCEPT_AUTHORITY_AND_SET_CREDENTIALS_TO_USER)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(operatorUser)))
                 .andExpect(status().isNoContent());
 
-        verify(ccaOperatorUserActivationService, times(1)).acceptAuthorityAndSetCredentialsToUser(operatorUser);
+        verify(ccaOperatorUserActivationService, times(1)).acceptAuthorityAndSetCredentialsToUser(operatorUser, currentUser);
     }
 }

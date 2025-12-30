@@ -31,7 +31,7 @@
 
         @if (accordionItemSummaryDirective()) {
           <span [id]="accordion.id + '-summary-' + itemIndex" class="govuk-accordion__section-summary">
-            <ng-content select="[govukAccordionItemSummary]"></ng-content>
+            <ng-content select="[govukAccordionItemSummary]" />
             <span class="govuk-visually-hidden govuk-accordion__section-heading-divider">, </span>
           </span>
         }

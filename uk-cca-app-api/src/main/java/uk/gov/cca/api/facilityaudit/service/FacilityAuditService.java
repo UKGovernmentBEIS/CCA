@@ -3,6 +3,7 @@ package uk.gov.cca.api.facilityaudit.service;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaScope;
 import uk.gov.cca.api.authorization.ccaauth.rules.services.resource.FacilityAuthorizationResourceService;
 import uk.gov.cca.api.facilityaudit.domain.FacilityAudit;
@@ -45,6 +46,7 @@ public class FacilityAuditService {
 		return FACILITY_AUDIT_MAPPER.toFacilityAuditDTO(facilityAudit);
 	}
 
+	@Transactional
 	public void createOrUpdateFacilityAudit(Long facilityId, FacilityAuditUpdateDTO dto, String userId) {
 		final FacilityAudit facilityAudit = this.getOrInitializeFacilityAuditByFacilityId(facilityId);
 		facilityAudit.setAuditRequired(dto.getAuditRequired());

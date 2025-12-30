@@ -351,7 +351,7 @@ class PerformanceDataUploadServiceTest {
         verify(performanceDataUploadExcelFileNameValidator, times(1))
                 .validate(fileName2, sectorAssociationInfo, performanceDataUpload, accountsMap);
         verify(fileAttachmentService, times(1))
-                .deleteFileAttachmentsInBatches(Set.of(excel2.toString()));
+                .deleteFileAttachments(Set.of(excel2.toString()));
     }
 
     @Test

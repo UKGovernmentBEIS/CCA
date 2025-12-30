@@ -14,7 +14,7 @@ export function PendingRequestGuard(component: PendingRequest | any) {
   const pendingRequest = inject(PendingRequestService);
 
   return (
-    router.getCurrentNavigation()?.extras?.state?.forceNavigation ||
+    router.currentNavigation()?.extras?.state?.forceNavigation ||
     combineLatest([
       pendingRequest.isRequestPending$,
       ...(isPendingRequest(component) ? [component.pendingRequest.isRequestPending$] : []),

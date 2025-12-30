@@ -30,6 +30,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetPeriodResultType;
@@ -38,9 +39,9 @@ import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAcc
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountPerformanceDataReportSearchCriteria;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.orchestrator.sectorassociation.service.SectorAssociationAccountPerformanceDataReportServiceOrchestrator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
@@ -65,7 +66,7 @@ class SectorAssociationAccountPerformanceDataReportControllerTest {
     private AppUserAuthorizationService appUserAuthorizationService;
 
     @Mock
-    private SectorAssociationAccountPerformanceDataReportServiceOrchestrator orchestrator;
+    private AccountPerformanceDataStatusQueryService accountPerformanceDataStatusQueryService;
 
     private ObjectMapper mapper;
     
@@ -109,8 +110,12 @@ class SectorAssociationAccountPerformanceDataReportControllerTest {
                 .performanceDataReportItems(List.of(item))
                 .total(1L)
                 .build();
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
 
-        when(orchestrator.getSectorAccountPerformanceDataReportList(sectorAssociationId, criteria)).thenReturn(results);
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+        when(accountPerformanceDataStatusQueryService.getSectorAccountPerformanceDataReportList(sectorAssociationId, criteria)).thenReturn(results);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(CONTROLLER_PATH.replace("{sectorAssociationId}", sectorAssociationId.toString()))
@@ -123,7 +128,7 @@ class SectorAssociationAccountPerformanceDataReportControllerTest {
                         .andExpect(jsonPath("$.performanceDataReportItems[0].operatorName").value(item.getOperatorName()))
                         .andExpect(jsonPath("$.performanceDataReportItems[0].reportVersion").value(item.getReportVersion()));
 
-        verify(orchestrator, times(1)).getSectorAccountPerformanceDataReportList(sectorAssociationId, criteria);
+        verify(accountPerformanceDataStatusQueryService, times(1)).getSectorAccountPerformanceDataReportList(sectorAssociationId, criteria);
     }
     
     @Test
@@ -146,7 +151,7 @@ class SectorAssociationAccountPerformanceDataReportControllerTest {
         				.andExpect(status().isForbidden());
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verify(orchestrator, never()).getSectorAccountPerformanceDataReportList(any(), any());
+        verify(accountPerformanceDataStatusQueryService, never()).getSectorAccountPerformanceDataReportList(any(), any());
     }
     
     @Test
@@ -162,7 +167,7 @@ class SectorAssociationAccountPerformanceDataReportControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
         				.andExpect(status().isBadRequest());
 
-        verify(orchestrator, never()).getSectorAccountPerformanceDataReportList(any(), any());
+        verify(accountPerformanceDataStatusQueryService, never()).getSectorAccountPerformanceDataReportList(any(), any());
     }
     
     @Test
@@ -180,7 +185,7 @@ class SectorAssociationAccountPerformanceDataReportControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
         				.andExpect(status().isBadRequest());
 
-        verify(orchestrator, never()).getSectorAccountPerformanceDataReportList(any(), any());
+        verify(accountPerformanceDataStatusQueryService, never()).getSectorAccountPerformanceDataReportList(any(), any());
     }
 
 }

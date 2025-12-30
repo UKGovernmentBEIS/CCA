@@ -24,6 +24,7 @@ import uk.gov.cca.api.user.sectoruser.service.SectorUserActivationService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.cca.api.web.orchestrator.user.service.SectorUserRegistrationOrchestratorService;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
 import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
 
@@ -47,10 +48,11 @@ public class SectorUserRegistrationController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     public ResponseEntity<SectorInvitedUserInfoDTO> acceptSectorUserInvitation(
+    		@Parameter(hidden = true) AppUser appUser,
             @RequestBody @Valid @Parameter(description = "The invitation token", required = true)
             TokenDTO invitationTokenDTO) {
         SectorInvitedUserInfoDTO sectorInvitedUserInfo =
-                sectorUserRegistrationOrchestratorService.acceptInvitation(invitationTokenDTO.getToken());
+                sectorUserRegistrationOrchestratorService.acceptInvitation(invitationTokenDTO.getToken(), appUser);
         return new ResponseEntity<>(sectorInvitedUserInfo, HttpStatus.OK);
     }
 
@@ -65,10 +67,11 @@ public class SectorUserRegistrationController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     public ResponseEntity<SectorUserDTO> acceptAuthorityAndEnableInvitedUserWithCredentials(
+    		@Parameter(hidden = true) AppUser appUser,
             @RequestBody @Valid @Parameter(description = "The sector user", required = true)
             SectorUserRegistrationWithCredentialsDTO sectorUserRegistrationWithCredentialsDTO) {
         return new ResponseEntity<>(sectorUserActivationService.acceptAuthorityAndEnableInvitedUserWithCredentials(
-                sectorUserRegistrationWithCredentialsDTO), HttpStatus.OK);
+                sectorUserRegistrationWithCredentialsDTO, appUser), HttpStatus.OK);
     }
 
     @PutMapping(path = "/accept-authority-and-set-credentials-to-sector-user")
@@ -82,9 +85,10 @@ public class SectorUserRegistrationController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     public ResponseEntity<Void> acceptAuthorityAndSetCredentialsToSectorUser(
+    		@Parameter(hidden = true) AppUser appUser,
             @RequestBody @Valid @Parameter(description = "The sector user credentials", required = true)
             InvitedUserCredentialsDTO invitedUserCredentialsDTO) {
-        sectorUserActivationService.acceptAuthorityAndSetCredentialsToUser(invitedUserCredentialsDTO);
+        sectorUserActivationService.acceptAuthorityAndSetCredentialsToUser(invitedUserCredentialsDTO, appUser);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

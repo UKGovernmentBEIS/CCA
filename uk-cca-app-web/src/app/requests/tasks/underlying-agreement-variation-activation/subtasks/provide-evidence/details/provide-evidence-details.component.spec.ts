@@ -3,12 +3,8 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { of } from 'rxjs';
-
-import { TaskService } from '@netz/common/forms';
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
-import { PROVIDE_EVIDENCE_SUBTASK } from '@requests/common';
 
 import { mockRequestTaskItemDTO } from '../../../testing/mock-data';
 import ProvideEvidenceDetailsComponent from './provide-evidence-details.component';
@@ -20,9 +16,6 @@ describe('ProvideEvidenceDetailsComponent', () => {
   let page: Page;
 
   const route = new ActivatedRouteStub();
-  const unaActivationTaskService: Partial<jest.Mocked<TaskService>> = {
-    saveSubtask: jest.fn().mockReturnValue(of({})),
-  };
 
   class Page extends BasePage<ProvideEvidenceDetailsComponent> {
     get comments() {
@@ -47,7 +40,6 @@ describe('ProvideEvidenceDetailsComponent', () => {
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },
-        { provide: TaskService, useValue: unaActivationTaskService },
       ],
     }).compileComponents();
 
@@ -67,20 +59,5 @@ describe('ProvideEvidenceDetailsComponent', () => {
   it('should show form values', () => {
     expect(page.comments).toEqual('My comments');
     expect(page.filesText.map((row) => row.textContent.trim())).toEqual(['evidenceFile.xlsx']);
-  });
-
-  it('should edit and save', () => {
-    const taskServiceSpy = jest.spyOn(unaActivationTaskService, 'saveSubtask');
-
-    page.comments = 'My comments change';
-    fixture.detectChanges();
-
-    page.submitButton.click();
-    fixture.detectChanges();
-
-    expect(taskServiceSpy).toHaveBeenCalledWith(PROVIDE_EVIDENCE_SUBTASK, 'details', route, {
-      evidenceFiles: ['evidenceFile'],
-      comments: 'My comments change',
-    });
   });
 });

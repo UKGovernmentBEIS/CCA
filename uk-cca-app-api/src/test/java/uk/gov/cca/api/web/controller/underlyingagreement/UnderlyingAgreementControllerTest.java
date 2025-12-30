@@ -30,6 +30,7 @@ import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.security.AppSecurityComponent;
@@ -82,7 +83,11 @@ class UnderlyingAgreementControllerTest {
         Long underlyingAgreementId = 1L;
         UUID fileDocumentUuid = UUID.randomUUID();
         FileToken expectedToken = FileToken.builder().token("token").build();
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
 
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(underlyingAgreementDocumentService.generateGetFileDocumentToken(underlyingAgreementId, fileDocumentUuid))
             .thenReturn(expectedToken);
 

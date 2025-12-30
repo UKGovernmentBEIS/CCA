@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.AccountBuyOutSurplusInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.SurplusHistoryDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.SurplusUpdateDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusExclusionService;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.SurplusQueryService;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.SurplusService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.web.orchestrator.account.service.TargetUnitAccountBuyOutSurplusServiceOrchestrator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.security.Authorized;
 
@@ -41,7 +43,9 @@ import static uk.gov.cca.api.web.constants.SwaggerApiInfo.OK;
 @Tag(name = "Buy-out and surplus info")
 public class TargetUnitAccountBuyOutSurplusController {
 
-	private final TargetUnitAccountBuyOutSurplusServiceOrchestrator targetUnitAccountBuyOutSurplusServiceOrchestrator;
+	private final BuyOutSurplusExclusionService buyOutSurplusExclusionService;
+	private final SurplusService surplusService;
+	private final SurplusQueryService surplusQueryService;
 
 	@GetMapping
 	@Operation(summary = "Retrieves the buy-out and surplus details for a specific account")
@@ -56,7 +60,7 @@ public class TargetUnitAccountBuyOutSurplusController {
 			@PathVariable("accountId") @Parameter(description = "The account id") Long accountId
 			) {
 
-		return new ResponseEntity<>(targetUnitAccountBuyOutSurplusServiceOrchestrator
+		return new ResponseEntity<>(buyOutSurplusExclusionService
 				.getBuyOutSurplusInfoByAccountId(accountId),
 				HttpStatus.OK);
 	}
@@ -76,8 +80,8 @@ public class TargetUnitAccountBuyOutSurplusController {
 			@RequestParam(name = "targetPeriod") @Parameter(required = true, description = "The target period business id") TargetPeriodType targetPeriod
 			) {
 
-		return new ResponseEntity<>(targetUnitAccountBuyOutSurplusServiceOrchestrator
-				.getAllSurplusHistoryByTargetPeriodAndAccountId(targetPeriod, accountId),
+		return new ResponseEntity<>(surplusQueryService
+				.getAllSurplusHistoryByAccountIdAndTargetPeriod(targetPeriod, accountId),
 				HttpStatus.OK);
 	}
 
@@ -100,7 +104,7 @@ public class TargetUnitAccountBuyOutSurplusController {
 			@RequestBody @Valid @Parameter(description = "Updates Surplus info") SurplusUpdateDTO surplusUpdateDTO
 			) {
 
-		targetUnitAccountBuyOutSurplusServiceOrchestrator.updateSurplusGained(surplusUpdateDTO, accountId, appUser);
+		surplusService.updateSurplusGained(surplusUpdateDTO, accountId, appUser);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
@@ -116,7 +120,7 @@ public class TargetUnitAccountBuyOutSurplusController {
 	@Authorized(resourceId = "#accountId")
 	public ResponseEntity<Void> excludeAccountFromBuyOutSurplus(
 			@PathVariable(name = "accountId") @Parameter(description = "The account id") Long accountId) {
-		targetUnitAccountBuyOutSurplusServiceOrchestrator.excludeAccountFromBuyOutSurplus(accountId);
+		buyOutSurplusExclusionService.excludeAccountFromBuyOutSurplus(accountId);
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
@@ -133,7 +137,7 @@ public class TargetUnitAccountBuyOutSurplusController {
 			@PathVariable(name = "accountId") @Parameter(description = "The account id") Long accountId
 	) {
 
-		targetUnitAccountBuyOutSurplusServiceOrchestrator.removeAccountExclusionFromBuyOutSurplus(accountId);
+		buyOutSurplusExclusionService.removeAccountExclusionFromBuyOutSurplus(accountId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

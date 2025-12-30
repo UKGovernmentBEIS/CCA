@@ -144,6 +144,11 @@ class RoleControllerTest {
         RegulatorRolePermissionsDTO regulatorRolePermissionsDTO =
             buildRolePermissionsDTO("code1", Map.of(MANAGE_USERS_AND_CONTACTS, NONE));
 
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(regulatorRoleService.getRegulatorRoles()).thenReturn(List.of(regulatorRolePermissionsDTO));
 
         // Invoke

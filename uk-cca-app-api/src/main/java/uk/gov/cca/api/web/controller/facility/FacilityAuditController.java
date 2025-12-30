@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditUpdateDTO;
 import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditViewDTO;
+import uk.gov.cca.api.facilityaudit.service.FacilityAuditService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.web.orchestrator.facility.service.FacilityAuditServiceOrchestrator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.security.Authorized;
 
@@ -34,7 +34,7 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 @Tag(name = "Facility Audit Controller")
 public class FacilityAuditController {
 
-	private final FacilityAuditServiceOrchestrator facilityAuditServiceOrchestrator;
+	private final FacilityAuditService facilityAuditService;
 
 	@GetMapping
 	@Operation(summary = "Retrieves the Facility Audit View by Facility Id")
@@ -50,7 +50,7 @@ public class FacilityAuditController {
 	public ResponseEntity<FacilityAuditViewDTO> getFacilityAuditViewByFacilityId(@PathVariable @NotNull Long facilityId,
 	                                                                             @Parameter(hidden = true) AppUser appUser) {
 
-		return ResponseEntity.ok(facilityAuditServiceOrchestrator.getFacilityAuditViewByFacilityId(facilityId, appUser));
+		return ResponseEntity.ok(facilityAuditService.getFacilityAuditViewByFacilityId(facilityId, appUser));
 	}
 
 	@PutMapping
@@ -65,8 +65,8 @@ public class FacilityAuditController {
 	                                                                 @Parameter(hidden = true) AppUser appUser,
 	                                                                 @RequestBody @Valid FacilityAuditUpdateDTO facilityAuditUpdateDTO) {
 
-		facilityAuditServiceOrchestrator
-				.createOrUpdateFacilityAuditByFacilityId(facilityId, facilityAuditUpdateDTO, appUser.getUserId());
+		facilityAuditService
+				.createOrUpdateFacilityAudit(facilityId, facilityAuditUpdateDTO, appUser.getUserId());
 		return ResponseEntity.noContent().build();
 	}
 }

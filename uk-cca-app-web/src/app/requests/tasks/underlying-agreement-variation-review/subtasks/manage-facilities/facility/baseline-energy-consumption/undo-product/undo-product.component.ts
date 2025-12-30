@@ -15,6 +15,7 @@ import {
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { produce } from 'immer';
 
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../../../transform';
@@ -99,7 +100,7 @@ export class UndoProductComponent {
     });
 
     const determination = resetDetermination(
-      this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)(),
+      this.requestTaskStore.select(underlyingAgreementVariationReviewQuery.selectDetermination)(),
     );
 
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();

@@ -1,0 +1,17 @@
+<h2 class="govuk-heading-m">Assigned to me</h2>
+
+@if (!state().isLoading) {
+  <div class="x-scroll">
+    <div class="max-content-width">
+      <cca-dashboard-items-list [items]="state().items" [tableColumns]="tableColumns()" />
+    </div>
+  </div>
+
+  <cca-pagination
+    [count]="state().totalItems"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  />
+}

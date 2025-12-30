@@ -7,17 +7,17 @@ import { of } from 'rxjs';
 
 import { mockClass } from '@netz/common/testing';
 
-import { AccountNoteDto, AccountNotesService } from 'cca-api';
+import { RequestNoteDto, RequestNotesService } from 'cca-api';
 
 import { WorkflowNotesComponent } from './workflow-notes.component';
 
 describe('WorkflowNotesComponent', () => {
   let component: WorkflowNotesComponent;
   let fixture: ComponentFixture<WorkflowNotesComponent>;
-  let accountNotesService: jest.Mocked<AccountNotesService>;
+  let requestNotesService: jest.Mocked<RequestNotesService>;
   let router: Router;
 
-  const mockNotes: AccountNoteDto[] = [
+  const mockNotes: RequestNoteDto[] = [
     {
       id: 1,
       submitter: 'John Doe',
@@ -41,10 +41,10 @@ describe('WorkflowNotesComponent', () => {
     },
   ];
 
-  const mockAccountNotesService = mockClass(AccountNotesService);
-  mockAccountNotesService.getNotesByAccountId = jest.fn().mockReturnValue(
+  const mockRequestNotesService = mockClass(RequestNotesService);
+  mockRequestNotesService.getNotesByRequestId = jest.fn().mockReturnValue(
     of({
-      accountNotes: mockNotes,
+      requestNotes: mockNotes,
       totalItems: 2,
     }),
   );
@@ -56,12 +56,12 @@ describe('WorkflowNotesComponent', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         provideRouter([]),
-        { provide: AccountNotesService, useValue: mockAccountNotesService },
+        { provide: RequestNotesService, useValue: mockRequestNotesService },
         {
           provide: ActivatedRoute,
           useValue: {
             snapshot: {
-              paramMap: convertToParamMap({ targetUnitId: '123' }),
+              paramMap: convertToParamMap({ workflowId: 'req-123' }),
             },
             queryParamMap: of(convertToParamMap({})),
           },
@@ -69,7 +69,7 @@ describe('WorkflowNotesComponent', () => {
       ],
     }).compileComponents();
 
-    accountNotesService = TestBed.inject(AccountNotesService) as jest.Mocked<AccountNotesService>;
+    requestNotesService = TestBed.inject(RequestNotesService) as jest.Mocked<RequestNotesService>;
     router = TestBed.inject(Router);
     jest.spyOn(router, 'navigate');
 
@@ -83,7 +83,7 @@ describe('WorkflowNotesComponent', () => {
   });
 
   it('should fetch notes on init with default pagination', () => {
-    expect(accountNotesService.getNotesByAccountId).toHaveBeenCalledWith(123, 0, 10);
+    expect(requestNotesService.getNotesByRequestId).toHaveBeenCalledWith('req-123', 0, 10);
   });
 
   it('should display notes', () => {
@@ -92,9 +92,9 @@ describe('WorkflowNotesComponent', () => {
   });
 
   it('should handle empty notes', async () => {
-    accountNotesService.getNotesByAccountId.mockReturnValue(
+    requestNotesService.getNotesByRequestId.mockReturnValue(
       of({
-        accountNotes: [],
+        requestNotes: [],
         totalItems: 0,
       }),
     );
@@ -144,7 +144,7 @@ describe('WorkflowNotesComponent', () => {
     expect(router.navigate).not.toHaveBeenCalled();
   });
 
-  it('should have correct targetUnitId from route', () => {
-    expect(component['targetUnitId']).toBe(123);
+  it('should have correct requestId from route', () => {
+    expect(component['requestId']).toBe('req-123');
   });
 });

@@ -8,8 +8,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
+
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationFacilityReviewDecision;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.VariationDetermination;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskActionPayload;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class UnderlyingAgreementVariationSaveFacilityReviewGroupDecisionRequestT
     @NotNull
     private String group;
 
-    private Determination determination;
+    private VariationDetermination determination;
 
     @NotNull
     @Valid

@@ -205,6 +205,11 @@ class NotificationTemplateControllerTest {
                 .documentTemplates(Set.of(documentTemplateInfoDTO))
                 .build();
 
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(notificationTemplateQueryServiceOrchestrator.getManagedNotificationTemplateById(notificationTemplateId)).thenReturn(notificationTemplateViewDTO);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -245,6 +250,11 @@ class NotificationTemplateControllerTest {
             .subject("subject")
             .text("text")
             .build();
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
 
         mockMvc.perform(
             MockMvcRequestBuilders

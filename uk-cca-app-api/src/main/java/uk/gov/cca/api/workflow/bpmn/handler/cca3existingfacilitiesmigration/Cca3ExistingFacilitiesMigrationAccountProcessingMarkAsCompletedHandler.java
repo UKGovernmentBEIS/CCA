@@ -41,7 +41,7 @@ public class Cca3ExistingFacilitiesMigrationAccountProcessingMarkAsCompletedHand
                     .filter(Objects::nonNull)
                     .collect(Collectors.toSet());
             if(!attachments.isEmpty()) {
-                fileAttachmentService.deleteFileAttachmentsInBatches(attachments);
+                fileAttachmentService.deleteFileAttachments(attachments);
             }
         }
     }

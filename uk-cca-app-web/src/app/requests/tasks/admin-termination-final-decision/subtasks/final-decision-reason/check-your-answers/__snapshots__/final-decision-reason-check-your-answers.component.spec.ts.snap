@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`FinalDecisionReasonCheckYourAnswersComponent should show proper summary values 1`] = `
+<cca-final-decision-reason-check-your-answers
+  activatedRoute={[Function ActivatedRouteStub]}
+  downloadUrl={[Function String]}
+  finalDecisionType={[Function String]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  summaryData={[Function Array]}
+  taskId="null"
+  tasksApiService={[Function TasksApiService]}
+>
+  <div>
+    <netz-page-heading
+      data-testid="heading"
+    >
+      <span
+        class="govuk-caption-l"
+      >
+        Terminate agreement
+      </span>
+      <h1
+        class="govuk-heading-l"
+      >
+         Check your answers 
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Decision
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              Terminate agreement
+            </span>
+          </dd>
+        </div>
+      </dl>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Explain reason
+          </dt>
+          <dd
+            class="pre-line govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              blah blah
+            </span>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Uploaded files
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              No files provided
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </cca-summary>
+    <button
+      class="govuk-button"
+      govukbutton=""
+      netzpendingbutton=""
+      type="button"
+    >
+      Confirm and complete
+    </button>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Admin termination final decision 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-final-decision-reason-check-your-answers>
+`;

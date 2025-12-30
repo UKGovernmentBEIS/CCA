@@ -1,102 +1,28 @@
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { TaskItemStatus } from '@requests/common';
 
-import { AdminTerminationFinalDecisionQuery } from '../../+state/admin-termination-final-decision.selectors';
-import {
-  ADMIN_TERMINATION_FINAL_DECISION_SUBTASK,
-  AdminTerminationFinalDecisionTerminateAgreementWizardStep,
-} from '../../admin-termination-final-decision.helper';
-import { isWizardCompleted } from './final-decision-reason.wizard';
+import { adminTerminationFinalDecisionQuery } from '../../admin-termination-final-decision.selectors';
+import { isWizardCompleted } from '../../completed';
+import { ADMIN_TERMINATION_FINAL_DECISION_SUBTASK } from '../../types';
 
-export const CanActivateFinalDecisionReasonStep: CanActivateFn = (route: ActivatedRouteSnapshot): boolean | UrlTree => {
-  const requestTaskStore = inject(RequestTaskStore);
+export const adminTerminationFinalDecisionRedirectGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+  const store = inject(RequestTaskStore);
 
-  const change = route.queryParamMap.get('change') === 'true';
+  const isEditable = store.select(requestTaskQuery.selectIsEditable)();
+  if (!isEditable) return createUrlTreeFromSnapshot(route, ['summary']);
 
-  const finalDecisionReasonDetails = requestTaskStore.select(
-    AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionReasonDetails,
-  )();
+  const reasonDetails = store.select(adminTerminationFinalDecisionQuery.selectReasonDetails)();
+  const completed = isWizardCompleted(reasonDetails);
+  if (!completed) return createUrlTreeFromSnapshot(route, ['actions']);
 
-  const finalDecisionSectionsCompleted = requestTaskStore.select(
-    AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionSectionsCompleted,
-  )();
+  const sectionsCompleted = store.select(adminTerminationFinalDecisionQuery.selectSectionsCompleted)();
+  const sectionStatus = sectionsCompleted[ADMIN_TERMINATION_FINAL_DECISION_SUBTASK];
 
-  const isEditable = requestTaskStore.select(requestTaskQuery.selectIsEditable)();
+  if (sectionStatus === TaskItemStatus.IN_PROGRESS) return createUrlTreeFromSnapshot(route, ['check-your-answers']);
+  if (sectionStatus === TaskItemStatus.COMPLETED) return createUrlTreeFromSnapshot(route, ['summary']);
 
-  if (!change && !isWizardCompleted(finalDecisionReasonDetails)) return true;
-  if (change && isWizardCompleted(finalDecisionReasonDetails)) return true;
-
-  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', 'summary']);
-
-  if (!change && isWizardCompleted(finalDecisionReasonDetails)) {
-    if (finalDecisionSectionsCompleted[ADMIN_TERMINATION_FINAL_DECISION_SUBTASK] === TaskItemStatus.COMPLETED)
-      return createUrlTreeFromSnapshot(route, ['../', 'summary']);
-
-    if (finalDecisionSectionsCompleted[ADMIN_TERMINATION_FINAL_DECISION_SUBTASK] === TaskItemStatus.IN_PROGRESS)
-      return createUrlTreeFromSnapshot(route, ['../', 'check-your-answers']);
-  }
-
-  return true;
-};
-
-export const CanActivateFinalDecisionReasonCheckYourAnswers: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-): boolean | UrlTree => {
-  const requestTaskStore = inject(RequestTaskStore);
-
-  const finalDecisionReasonDetails = requestTaskStore.select(
-    AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionReasonDetails,
-  )();
-
-  const finalDecisionSectionsCompleted = requestTaskStore.select(
-    AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionSectionsCompleted,
-  )();
-
-  const isEditable = requestTaskStore.select(requestTaskQuery.selectIsEditable)();
-
-  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', 'summary']);
-
-  if (!isWizardCompleted(finalDecisionReasonDetails)) {
-    return createUrlTreeFromSnapshot(route, [
-      '../',
-      AdminTerminationFinalDecisionTerminateAgreementWizardStep.REASON_DETAILS,
-    ]);
-  }
-
-  if (finalDecisionSectionsCompleted[ADMIN_TERMINATION_FINAL_DECISION_SUBTASK] === TaskItemStatus.COMPLETED) {
-    return createUrlTreeFromSnapshot(route, ['../', 'summary']);
-  }
-
-  return true;
-};
-
-export const CanActivateFinalDecisionReasonSummary: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-): boolean | UrlTree => {
-  const requestTaskStore = inject(RequestTaskStore);
-
-  const finalDecisionReasonDetails = requestTaskStore.select(
-    AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionReasonDetails,
-  )();
-
-  const finalDecisionSectionsCompleted = requestTaskStore.select(
-    AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionSectionsCompleted,
-  )();
-
-  const isEditable = requestTaskStore.select(requestTaskQuery.selectIsEditable)();
-
-  if (!isEditable) return true;
-
-  if (!isWizardCompleted(finalDecisionReasonDetails)) {
-    return createUrlTreeFromSnapshot(route, [AdminTerminationFinalDecisionTerminateAgreementWizardStep.REASON_DETAILS]);
-  }
-
-  if (finalDecisionSectionsCompleted[ADMIN_TERMINATION_FINAL_DECISION_SUBTASK] === TaskItemStatus.IN_PROGRESS) {
-    return createUrlTreeFromSnapshot(route, ['check-your-answers']);
-  }
-
-  return true;
+  return false;
 };

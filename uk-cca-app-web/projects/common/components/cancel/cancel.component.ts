@@ -20,8 +20,9 @@ import { PageHeadingComponent } from '../page-heading';
   imports: [PendingButtonDirective, PageHeadingComponent, ButtonDirective],
 })
 export class CancelComponent {
-  heading = input('Are you sure you want to cancel this task?');
-  cancelled = output();
+  protected readonly heading = input('Are you sure you want to cancel this task?');
+
+  protected readonly cancelled = output();
 
   cancel(): void {
     this.cancelled.emit();

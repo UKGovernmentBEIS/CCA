@@ -15,5 +15,4 @@ import { ItemDTO } from 'cca-api';
 export class DashboardItemsListComponent {
   protected readonly items = input.required<ItemDTO[]>();
   protected readonly tableColumns = input.required<GovukTableColumn<ItemDTO>[]>();
-  protected readonly unassignedLabel = input.required<string>();
 }

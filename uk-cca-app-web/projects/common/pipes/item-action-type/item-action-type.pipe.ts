@@ -19,6 +19,7 @@ export enum ItemActionEnum {
   UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACCEPTED = 'Underlying agreement variation application accepted',
   UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACTIVATED = 'Underlying agreement variation activated',
   UNDERLYING_AGREEMENT_VARIATION_APPLICATION_CANCELLED = 'Underlying agreement variation application cancelled',
+  UNDERLYING_AGREEMENT_VARIATION_APPLICATION_COMPLETED = 'Underlying agreement variation application completed',
   PERFORMANCE_DATA_SPREADSHEET_PROCESSING_SUBMITTED = 'Performance report submitted',
   PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED = 'PAT report submitted',
   SUBSISTENCE_FEES_RUN_SUBMITTED = 'Subsistence fees payment request run submitted',

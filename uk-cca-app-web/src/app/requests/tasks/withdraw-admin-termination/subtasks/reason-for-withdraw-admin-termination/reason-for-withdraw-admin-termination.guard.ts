@@ -1,115 +1,26 @@
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { TaskItemStatus } from '@requests/common';
 
-import { AdminTerminationWithdrawQuery } from '../../+state/withdraw-admin-termination.selectors';
-import {
-  REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK,
-  ReasonForWithdrawAdminTerminationWizardStep,
-} from '../../withdraw-admin-termination.types';
-import { isWizardCompleted } from './reason-for-withdraw-admin-termination.wizard';
+import { REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK } from '../../types';
+import { adminTerminationWithdrawQuery } from '../../withdraw-admin-termination.selectors';
 
-export const CanActivateReasonForWithdrawAdminTerminationDetails: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-): boolean | UrlTree => {
-  const requestTaskStore = inject(RequestTaskStore);
+export const reasonForWithdrawAdminTerminationRedirectGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+  const store = inject(RequestTaskStore);
 
-  const change = route.queryParamMap.get('change') === 'true';
+  const isEditable = store.select(requestTaskQuery.selectIsEditable)();
+  if (!isEditable) return createUrlTreeFromSnapshot(route, ['summary']);
 
-  const withdrawAdminTerminationReasonDetails = requestTaskStore.select(
-    AdminTerminationWithdrawQuery.selectWithdrawAdminTerminationReasonDetails,
-  )();
+  const reasonDetails = store.select(adminTerminationWithdrawQuery.selectReasonDetails)();
+  if (!reasonDetails?.explanation) return createUrlTreeFromSnapshot(route, ['reason-details']);
 
-  const withdrawAdminTerminationSectionsCompleted = requestTaskStore.select(
-    AdminTerminationWithdrawQuery.selectWithdrawAdminTerminationSectionsCompleted,
-  )();
+  const sectionsCompleted = store.select(adminTerminationWithdrawQuery.selectSectionsCompleted)();
+  const sectionStatus = sectionsCompleted[REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK];
 
-  const isEditable = requestTaskStore.select(requestTaskQuery.selectIsEditable)();
+  if (sectionStatus === TaskItemStatus.IN_PROGRESS) return createUrlTreeFromSnapshot(route, ['check-your-answers']);
+  if (sectionStatus === TaskItemStatus.COMPLETED) return createUrlTreeFromSnapshot(route, ['summary']);
 
-  if (!change && !isWizardCompleted(withdrawAdminTerminationReasonDetails)) return true;
-  if (change && isWizardCompleted(withdrawAdminTerminationReasonDetails)) return true;
-
-  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', 'summary']);
-
-  if (!change && isWizardCompleted(withdrawAdminTerminationReasonDetails)) {
-    if (
-      withdrawAdminTerminationSectionsCompleted[REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK] ===
-      TaskItemStatus.COMPLETED
-    ) {
-      return createUrlTreeFromSnapshot(route, ['../', 'summary']);
-    }
-
-    if (
-      withdrawAdminTerminationSectionsCompleted[REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK] ===
-      TaskItemStatus.IN_PROGRESS
-    ) {
-      return createUrlTreeFromSnapshot(route, ['../', 'check-your-answers']);
-    }
-  }
-
-  return true;
-};
-
-export const CanActivateReasonForWithdrawAdminTerminationCheckYourAnswers: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-): boolean | UrlTree => {
-  const requestTaskStore = inject(RequestTaskStore);
-
-  const withdrawAdminTerminationReasonDetails = requestTaskStore.select(
-    AdminTerminationWithdrawQuery.selectWithdrawAdminTerminationReasonDetails,
-  )();
-
-  const withdrawAdminTerminationSectionsCompleted = requestTaskStore.select(
-    AdminTerminationWithdrawQuery.selectWithdrawAdminTerminationSectionsCompleted,
-  )();
-
-  const isEditable = requestTaskStore.select(requestTaskQuery.selectIsEditable)();
-
-  if (!isEditable) return createUrlTreeFromSnapshot(route, ['../', 'summary']);
-
-  if (!isWizardCompleted(withdrawAdminTerminationReasonDetails)) {
-    return createUrlTreeFromSnapshot(route, ['../', ReasonForWithdrawAdminTerminationWizardStep.REASON_DETAILS]);
-  }
-
-  if (
-    withdrawAdminTerminationSectionsCompleted[REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK] ===
-    TaskItemStatus.COMPLETED
-  ) {
-    return createUrlTreeFromSnapshot(route, ['../', 'summary']);
-  }
-
-  return true;
-};
-
-export const CanActivateReasonForWithdrawAdminTerminationSummary: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-): boolean | UrlTree => {
-  const requestTaskStore = inject(RequestTaskStore);
-
-  const withdrawAdminTerminationReasonDetails = requestTaskStore.select(
-    AdminTerminationWithdrawQuery.selectWithdrawAdminTerminationReasonDetails,
-  )();
-
-  const withdrawAdminTerminationSectionsCompleted = requestTaskStore.select(
-    AdminTerminationWithdrawQuery.selectWithdrawAdminTerminationSectionsCompleted,
-  )();
-
-  const isEditable = requestTaskStore.select(requestTaskQuery.selectIsEditable)();
-
-  if (!isEditable) return true;
-
-  if (!isWizardCompleted(withdrawAdminTerminationReasonDetails)) {
-    return createUrlTreeFromSnapshot(route, [ReasonForWithdrawAdminTerminationWizardStep.REASON_DETAILS]);
-  }
-
-  if (
-    withdrawAdminTerminationSectionsCompleted[REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK] ===
-    TaskItemStatus.IN_PROGRESS
-  ) {
-    return createUrlTreeFromSnapshot(route, ['check-your-answers']);
-  }
-
-  return true;
+  return false;
 };

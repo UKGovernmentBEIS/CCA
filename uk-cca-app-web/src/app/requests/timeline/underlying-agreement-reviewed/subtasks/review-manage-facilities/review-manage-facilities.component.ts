@@ -10,7 +10,7 @@ import { FacilityItemListComponent, underlyingAgreementRequestActionQuery } from
     <div>
       <netz-page-heading>Manage facilities list</netz-page-heading>
       <h2 class="govuk-heading-m">Facilities</h2>
-      <cca-facility-item-list [facilityItems]="manageFacilities()" />
+      <cca-facility-item-list [facilityItems]="facilities()" />
     </div>
   `,
   imports: [PageHeadingComponent, FacilityItemListComponent],
@@ -19,7 +19,7 @@ import { FacilityItemListComponent, underlyingAgreementRequestActionQuery } from
 export class ReviewManageFacilitiesComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
-  protected readonly manageFacilities = this.requestActionStore.select(
-    underlyingAgreementRequestActionQuery.selectManageFacilities,
+  protected readonly facilities = this.requestActionStore.select(
+    underlyingAgreementRequestActionQuery.selectTimelineFacilityItems,
   );
 }

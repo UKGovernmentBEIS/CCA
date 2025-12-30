@@ -348,7 +348,7 @@ function toFacilityWizardSummaryFactory(
         },
       )
       .addRow(
-        `Baseline energy to carbon factor (kgC/${measurementTypeToUnitPipe.transform(targetComposition.measurementType)})`,
+        'Baseline energy to carbon factor (kgC/kWh)',
         decimalPipe.transform(baselineData?.energyCarbonFactor, '1.0-7'),
         {
           change: isEditable,

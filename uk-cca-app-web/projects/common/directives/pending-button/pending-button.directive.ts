@@ -1,17 +1,15 @@
-import { ChangeDetectorRef, DestroyRef, Directive, ElementRef, OnInit, Optional, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, Directive, ElementRef, OnInit, Renderer2, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { PendingRequestService } from '@netz/common/services';
 
 @Directive({ selector: 'button[netzPendingButton]' })
 export class PendingButtonDirective implements OnInit {
-  constructor(
-    @Optional() private readonly pendingRequest: PendingRequestService,
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly renderer: Renderer2,
-    private readonly elementRef: ElementRef,
-    private readonly destroy$: DestroyRef,
-  ) {}
+  private readonly pendingRequest = inject(PendingRequestService, { optional: true });
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly renderer = inject(Renderer2);
+  private readonly elementRef = inject(ElementRef);
+  private readonly destroy$ = inject(DestroyRef);
 
   ngOnInit(): void {
     if (this.pendingRequest) {

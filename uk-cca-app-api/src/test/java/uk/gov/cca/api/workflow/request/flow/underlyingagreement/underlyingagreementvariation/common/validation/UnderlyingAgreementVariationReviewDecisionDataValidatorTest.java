@@ -25,6 +25,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationModificationType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationReviewGroup;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.VariationDetermination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
@@ -80,7 +81,12 @@ class UnderlyingAgreementVariationReviewDecisionDataValidatorTest {
                         .notes("notes")
                         .build())
                 .build();
-        final Determination determination = Determination.builder().type(DeterminationType.ACCEPTED).additionalInformation("text").build();
+        final VariationDetermination determination = VariationDetermination.builder()
+                .determination(Determination.builder()
+                        .type(DeterminationType.ACCEPTED)
+                        .additionalInformation("text")
+                        .build())
+                .build();
         final UnderlyingAgreementVariationReviewRequestTaskPayload taskPayload =
                 UnderlyingAgreementVariationReviewRequestTaskPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
@@ -134,7 +140,12 @@ class UnderlyingAgreementVariationReviewDecisionDataValidatorTest {
                         .notes("notes")
                         .build())
                 .build();
-        final Determination determination = Determination.builder().type(DeterminationType.ACCEPTED).additionalInformation("text").build();
+        final VariationDetermination determination = VariationDetermination.builder()
+                .determination(Determination.builder()
+                        .type(DeterminationType.ACCEPTED)
+                        .additionalInformation("text")
+                        .build())
+                .build();
         final UnderlyingAgreementVariationReviewRequestTaskPayload taskPayload =
                 UnderlyingAgreementVariationReviewRequestTaskPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()

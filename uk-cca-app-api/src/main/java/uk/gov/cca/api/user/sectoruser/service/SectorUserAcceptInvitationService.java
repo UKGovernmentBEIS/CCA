@@ -11,6 +11,7 @@ import uk.gov.cca.api.user.sectoruser.domain.SectorInvitedUserInfoDTO;
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserDTO;
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserWithAuthorityDTO;
 import uk.gov.cca.api.user.sectoruser.transform.SectorUserAcceptInvitationMapper;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.user.core.domain.enumeration.UserInvitationStatus;
 
 @Service
@@ -24,9 +25,9 @@ public class SectorUserAcceptInvitationService {
     private final SectorUserRegisterValidationService sectorUserRegisterValidationService;
 
     @Transactional
-    public SectorInvitedUserInfoDTO acceptInvitation(String invitationToken) {
+    public SectorInvitedUserInfoDTO acceptInvitation(String invitationToken, AppUser appUser) {
         CcaAuthorityInfoDTO authority =
-                sectorUserTokenVerificationService.verifyInvitationTokenForPendingAuthority(invitationToken);
+                sectorUserTokenVerificationService.verifyInvitationToken(invitationToken, appUser);
 
         sectorUserRegisterValidationService.validateRegisterForSectorAssociation(authority.getUserId(), authority.getSectorAssociationId());
 

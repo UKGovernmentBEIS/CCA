@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, DestroyRef, DoCheck, HostBinding, Input, OnInit, Optional, Self } from '@angular/core';
+import { Component, DestroyRef, DoCheck, HostBinding, inject, input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   ControlContainer,
@@ -30,10 +30,18 @@ type CountryOption = { text: string; value: string };
   imports: [ReactiveFormsModule, ErrorMessageComponent, AsyncPipe, FieldsetDirective],
 })
 export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccessor {
-  @Input() label: string;
-  @Input() hint?: string;
+  private readonly ngControl = inject(NgControl, { self: true, optional: true });
+  private readonly formService = inject(FormService);
+  private readonly destroy$ = inject(DestroyRef);
+  private readonly container = inject(ControlContainer, { optional: true });
+  private readonly countryCallingCodeService = inject(CountryCallingCodeService);
+
+  protected readonly label = input<string>(undefined);
+  protected readonly hint = input<string>(undefined);
+
   @HostBinding('class.govuk-!-display-block') readonly govukDisplayBlock = true;
   @HostBinding('class.govuk-form-group') readonly govukFormGroupClass = true;
+
   disabled: boolean;
   valueTransform = transformPhoneInput;
 
@@ -71,13 +79,9 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
   onBlur: () => void;
   private touch$ = new BehaviorSubject(false);
 
-  constructor(
-    @Self() @Optional() private readonly ngControl: NgControl,
-    private readonly formService: FormService,
-    private readonly destroy$: DestroyRef,
-    @Optional() private readonly container: ControlContainer,
-    private readonly countryCallingCodeService: CountryCallingCodeService,
-  ) {
+  constructor() {
+    const ngControl = this.ngControl;
+
     ngControl.valueAccessor = this;
   }
 

@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ReasonForWithdrawAdminTerminationSummaryComponent should show proper summary values 1`] = `
+<cca-reason-for-withdraw-admin-termination-summary
+  activatedRoute={[Function ActivatedRouteStub]}
+  downloadUrl={[Function String]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  summaryData={[Function Array]}
+  taskId="null"
+>
+  <div>
+    <netz-page-heading
+      caption="Withdraw admin termination"
+    >
+      <span
+        class="govuk-caption-l"
+      >
+        Withdraw admin termination
+      </span>
+      <h1
+        class="govuk-heading-l"
+      >
+        Summary
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Explain why you are withdrawing the admin termination
+          </dt>
+          <dd
+            class="pre-line govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              mplah mplah
+            </span>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Uploaded files
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              No files provided
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </cca-summary>
+  </div><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Dashboard 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-reason-for-withdraw-admin-termination-summary>
+`;

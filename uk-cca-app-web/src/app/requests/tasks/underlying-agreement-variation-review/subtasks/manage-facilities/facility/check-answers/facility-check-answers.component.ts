@@ -17,6 +17,7 @@ import {
   underlyingAgreementReviewQuery,
   underlyingAgreementVariationQuery,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
 import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
@@ -131,7 +132,9 @@ export default class FacilityCheckAnswersComponent {
     });
 
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
-    const determination = resetDetermination(this.store.select(underlyingAgreementReviewQuery.selectDetermination)());
+    const determination = resetDetermination(
+      this.store.select(underlyingAgreementVariationReviewQuery.selectDetermination)(),
+    );
 
     const dto = createSaveActionDTO(requestTaskId, actionPayload, {
       sectionsCompleted,

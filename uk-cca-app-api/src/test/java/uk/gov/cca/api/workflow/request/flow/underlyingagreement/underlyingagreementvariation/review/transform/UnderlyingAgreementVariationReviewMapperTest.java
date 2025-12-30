@@ -17,6 +17,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationAcceptedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationRejectedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
@@ -182,6 +183,60 @@ class UnderlyingAgreementVariationReviewMapperTest {
             requestPayload, usersInfo, defaultContacts);
 
         assertThat(actionPayload.getPayloadType()).isEqualTo(CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_REJECTED_PAYLOAD);
+        assertThat(actionPayload.getUnderlyingAgreement()).isEqualTo(una);
+        assertThat(actionPayload.getBusinessId()).isEqualTo("ASD123");
+        assertThat(actionPayload.getUsersInfo()).isEqualTo(usersInfo);
+        assertThat(actionPayload.getDefaultContacts()).isEqualTo(defaultContacts);
+        assertThat(actionPayload.getUnderlyingAgreementAttachments()).containsExactlyInAnyOrderEntriesOf(attachments);
+        assertThat(actionPayload.getReviewSectionsCompleted()).isEmpty();
+        assertThat(actionPayload.getReviewGroupDecisions()).isEmpty();
+        assertThat(actionPayload.getReviewAttachments()).isEmpty();
+    }
+
+    @Test
+    void toUnderlyingAgreementVariationCompletedRequestActionPayload() {
+        UnderlyingAgreementVariationPayload una = UnderlyingAgreementVariationPayload.builder()
+                .underlyingAgreement(UnderlyingAgreement.builder()
+                        .targetPeriod5Details(TargetPeriod5Details.builder().exist(Boolean.FALSE).build())
+                        .build())
+                .underlyingAgreementTargetUnitDetails(UnderlyingAgreementTargetUnitDetails.builder().operatorName("name").build())
+                .underlyingAgreementVariationDetails(UnderlyingAgreementVariationDetails.builder().reason("reason").build())
+                .build();
+
+        Map<UUID, String> attachments = Map.of(
+                UUID.randomUUID(), "attachment1",
+                UUID.randomUUID(), "attachment2"
+        );
+
+        Map<String, String> sectionsCompleted = Map.of(
+                "targetPeriod5Details", "COMPLETED",
+                "underlyingAgreementTargetUnitDetails", "IN PROGRESS",
+                "underlyingAgreementVariationDetails", "IN PROGRESS"
+        );
+
+        Map<String, RequestActionUserInfo> usersInfo = Map.of(
+                "sector", RequestActionUserInfo.builder().name("Sector").roleCode("sector_user_administrator").build()
+        );
+        List<DefaultNoticeRecipient> defaultContacts = List.of(
+                DefaultNoticeRecipient.builder().
+                        name("Responsible")
+                        .email("responsiblePerson@test.com")
+                        .recipientType(NoticeRecipientType.RESPONSIBLE_PERSON)
+                        .build()
+        );
+
+        UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
+                .payloadType(CcaRequestPayloadType.UNDERLYING_AGREEMENT_VARIATION_REQUEST_PAYLOAD)
+                .underlyingAgreement(una)
+                .businessId("ASD123")
+                .underlyingAgreementAttachments(attachments)
+                .sectionsCompleted(sectionsCompleted)
+                .build();
+
+        UnderlyingAgreementVariationCompletedRequestActionPayload actionPayload = mapper.toUnderlyingAgreementVariationCompletedRequestActionPayload(
+                requestPayload, usersInfo, defaultContacts);
+
+        assertThat(actionPayload.getPayloadType()).isEqualTo(CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_COMPLETED_PAYLOAD);
         assertThat(actionPayload.getUnderlyingAgreement()).isEqualTo(una);
         assertThat(actionPayload.getBusinessId()).isEqualTo("ASD123");
         assertThat(actionPayload.getUsersInfo()).isEqualTo(usersInfo);

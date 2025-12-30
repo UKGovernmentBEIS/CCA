@@ -13,13 +13,12 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor } from '@angular/forms';
 
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs';
 
 import { LabelDirective } from '../directives';
 import { ErrorMessageComponent, GovukValidators } from '../error-message';
-import { FormService } from '../form';
 import { FormInput } from '../form/form-input';
 import { LabelSizeType } from './label-size.type';
 import { GovukTextWidthClass, HTMLInputType } from './text-input.type';
@@ -72,10 +71,7 @@ export class TextInputComponent extends FormInput implements ControlValueAccesso
   onBlur: (_: any) => any;
 
   constructor() {
-    const ngControl = inject(NgControl, { self: true, optional: true });
-    const formService = inject(FormService);
-    const container = inject(ControlContainer, { optional: true });
-    super(ngControl, formService, container);
+    super();
   }
 
   override ngOnInit(): void {

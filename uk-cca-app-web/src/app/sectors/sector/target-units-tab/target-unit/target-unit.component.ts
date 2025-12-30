@@ -4,8 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
 import { PageHeadingComponent } from '@netz/common/components';
 import { ButtonDirective, TabLazyDirective, TabsComponent, TagComponent } from '@netz/govuk-components';
-import { WorkflowNotesComponent } from '@shared/components';
-import { ConfigService } from '@shared/config';
+import { TargetUnitNotesComponent } from '@shared/components';
 import { StatusColorPipe, StatusPipe } from '@shared/pipes';
 
 import { ActiveTargetUnitStore } from '../active-target-unit.store';
@@ -34,19 +33,17 @@ import { WorkflowHistoryTabComponent } from './workflow-history-tab/workflow-his
     TuReportsTabComponent,
     BuyoutAndSurplusTabComponent,
     DetailsSummaryComponent,
-    WorkflowNotesComponent,
+    TargetUnitNotesComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TargetUnitComponent {
   private readonly authStore = inject(AuthStore);
   private readonly activeTargetUnitStore = inject(ActiveTargetUnitStore);
-  private readonly configService = inject(ConfigService);
 
   private readonly roleType = this.authStore.select(selectUserRoleType);
 
   protected readonly accountDetails = this.activeTargetUnitStore.state;
-  protected readonly showNotes = !this.configService.isFeatureEnabled('hideNotes');
 
   private readonly userHasSectorOrRegulatorRole = ['SECTOR_USER', 'REGULATOR'].includes(this.roleType());
   private readonly accountStatusIsNewOrLive = ['NEW', 'LIVE'].includes(

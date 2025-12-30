@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ProvideEvidenceSummaryComponent should show proper summary values 1`] = `
+<cca-provide-evidence-summary
+  activatedRoute={[Function ActivatedRouteStub]}
+  downloadUrl={[Function String]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  summaryData={[Function Function]}
+  taskId="null"
+>
+  <div>
+    <netz-page-heading>
+      <h1
+        class="govuk-heading-l"
+      >
+        Provide evidence
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Uploaded files
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <cca-summary-download-files>
+              <a
+                class="govuk-link"
+                href="/tasks/null/file-download/evidenceFile"
+                target="_blank"
+              >
+                evidenceFile.xlsx
+              </a>
+            </cca-summary-download-files>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Comments
+          </dt>
+          <dd
+            class="pre-line govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              My comments
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </cca-summary>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Dashboard 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-provide-evidence-summary>
+`;

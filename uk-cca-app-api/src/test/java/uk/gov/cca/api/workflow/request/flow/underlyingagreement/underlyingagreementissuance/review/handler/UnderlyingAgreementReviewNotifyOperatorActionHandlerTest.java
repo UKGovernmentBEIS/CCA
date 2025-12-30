@@ -10,6 +10,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaReviewOutcome;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.DeterminationOutcome;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.DeterminationType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementNotifyOperatorForDecisionRequestTaskActionPayload;
@@ -86,7 +87,7 @@ class UnderlyingAgreementReviewNotifyOperatorActionHandlerTest {
         verify(underlyingAgreementReviewService, times(1)).notifyOperator(requestTask, decisionNotification, appUser);
         verify(workflowService, times(1)).completeTask(processTaskId,
                 Map.of(BpmnProcessConstants.REQUEST_ID, requestTask.getRequest().getId(),
-                        BpmnProcessConstants.REVIEW_DETERMINATION, DeterminationType.ACCEPTED,
+                        BpmnProcessConstants.REVIEW_DETERMINATION, DeterminationOutcome.ACCEPTED,
                         BpmnProcessConstants.REVIEW_OUTCOME, CcaReviewOutcome.NOTIFY_OPERATOR));
     }
 

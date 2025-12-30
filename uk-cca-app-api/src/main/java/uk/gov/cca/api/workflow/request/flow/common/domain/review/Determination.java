@@ -16,8 +16,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@SpELExpression(expression = "{(#type eq 'REJECTED') == (#reason != null)}", message = "underlyingagreement.review.determination.rejected.reason.empty")
-@SpELExpression(expression = "{(#type eq 'ACCEPTED') == (#reason == null)}", message = "underlyingagreement.review.determination.accepted.reason.empty")
+@SpELExpression(expression = "{(#type == null) || ( ((#type eq 'REJECTED') == (#reason != null)) && ((#type eq 'ACCEPTED') == (#reason == null)) )}",
+        message = "underlyingagreement.review.determination.reason.typeMismatch")
 public class Determination {
 
     @NotNull

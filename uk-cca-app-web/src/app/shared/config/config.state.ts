@@ -2,8 +2,6 @@ export const FEATURES = [
   'terms',
   'unaHideNotifyOperator',
   'subsistenceFeesHideMenu',
-  'hideNotes',
-  'hideFacilityAudit',
   'unaVariationHideStartTask',
 ] as const;
 
@@ -24,8 +22,6 @@ export const initialState: ConfigState = {
   features: {
     unaHideNotifyOperator: false,
     subsistenceFeesHideMenu: false,
-    hideNotes: false,
-    hideFacilityAudit: false,
     unaVariationHideStartTask: false,
   },
   analytics: {

@@ -19,6 +19,7 @@ import {
   underlyingAgreementQuery,
   underlyingAgreementVariationQuery,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
 import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
@@ -26,9 +27,8 @@ import { produce } from 'immer';
 
 import { UnderlyingAgreementVariationFacilityReviewDecision } from 'cca-api';
 
-import { resetDetermination } from 'src/app/requests/tasks/underlying-agreement-review/utils';
-
 import { createSaveFacilityDecisionActionDTO } from '../../../../transform';
+import { resetDetermination } from '../../../../utils';
 
 @Component({
   selector: 'cca-facility-decision',
@@ -141,7 +141,9 @@ export class FacilityDecisionComponent {
     });
 
     // Clear determination type
-    const determination = resetDetermination(payload.determination);
+    const determination = resetDetermination(
+      this.requestTaskStore.select(underlyingAgreementVariationReviewQuery.selectDetermination)(),
+    );
 
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
 

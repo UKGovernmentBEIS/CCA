@@ -3,9 +3,9 @@
     <dt govukSummaryListRowKey>First name</dt>
     <dd govukSummaryListRowValue>{{ modifiedUserInfo.firstName }}</dd>
 
-    @if (changeLink) {
+    @if (changeLink()) {
       <dd govukSummaryListRowActions>
-        <a class="govuk-link" [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams"
+        <a class="govuk-link" [routerLink]="changeLink()" [relativeTo]="route" [queryParams]="changeQueryParams"
           >Change</a
         >
       </dd>
@@ -16,9 +16,9 @@
     <dt govukSummaryListRowKey>Last name</dt>
     <dd govukSummaryListRowValue>{{ modifiedUserInfo.lastName }}</dd>
 
-    @if (changeLink) {
+    @if (changeLink()) {
       <dd govukSummaryListRowActions>
-        <a class="govuk-link" [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams"
+        <a class="govuk-link" [routerLink]="changeLink()" [relativeTo]="route" [queryParams]="changeQueryParams"
           >Change</a
         >
       </dd>
@@ -30,9 +30,9 @@
       <dt govukSummaryListRowKey>Email address</dt>
       <dd govukSummaryListRowValue>{{ $any(modifiedUserInfo).email }}</dd>
 
-      @if (changeLink) {
+      @if (changeLink()) {
         <dd govukSummaryListRowActions>
-          <a class="govuk-link" [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams"
+          <a class="govuk-link" [routerLink]="changeLink()" [relativeTo]="route" [queryParams]="changeQueryParams"
             >Change</a
           >
         </dd>
@@ -46,9 +46,9 @@
       {{ modifiedUserInfo.phoneNumber.countryCode | phoneNumber }} {{ modifiedUserInfo.phoneNumber.number }}
     </dd>
 
-    @if (changeLink) {
+    @if (changeLink()) {
       <dd govukSummaryListRowActions>
-        <a class="govuk-link" [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams"
+        <a class="govuk-link" [routerLink]="changeLink()" [relativeTo]="route" [queryParams]="changeQueryParams"
           >Change</a
         >
       </dd>
@@ -61,9 +61,9 @@
       {{ modifiedUserInfo.mobileNumber?.countryCode | phoneNumber }} {{ modifiedUserInfo.mobileNumber?.number }}
     </dd>
 
-    @if (changeLink) {
+    @if (changeLink()) {
       <dd govukSummaryListRowActions>
-        <a class="govuk-link" [routerLink]="changeLink" [relativeTo]="route" [queryParams]="changeQueryParams"
+        <a class="govuk-link" [routerLink]="changeLink()" [relativeTo]="route" [queryParams]="changeQueryParams"
           >Change</a
         >
       </dd>

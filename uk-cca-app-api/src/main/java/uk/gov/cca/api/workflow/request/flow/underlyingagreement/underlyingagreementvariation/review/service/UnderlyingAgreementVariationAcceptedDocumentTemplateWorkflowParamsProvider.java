@@ -42,6 +42,7 @@ public class UnderlyingAgreementVariationAcceptedDocumentTemplateWorkflowParamsP
 		// Add target unit details from final workflow data
 		Map<String, Object> params = documentTemplateUnderlyingAgreementParamsProvider
 				.constructTargetUnitDetailsTemplateParams(payload.getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails());
+		params.put("additionalInformation", payload.getDetermination().getDetermination().getAdditionalInformation());
 		
 		params.putAll(Map.of(
 				"versionMap", documentTemplateTransformationMapper.constructVersionMap(payload.getUnderlyingAgreementVersionMap()),

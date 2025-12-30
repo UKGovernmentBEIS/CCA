@@ -11,6 +11,7 @@ import {
   TasksApiService,
   toOverallDecisionSummaryData,
   underlyingAgreementReviewQuery,
+  underlyingAgreementVariationReviewQuery,
 } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
@@ -45,7 +46,9 @@ export class OverallDecisionCheckYourAnswersComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
-  private readonly determination = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)();
+  private readonly determination = this.requestTaskStore.select(
+    underlyingAgreementVariationReviewQuery.selectDetermination,
+  )();
   private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable)();
   private readonly attachments = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)();
 

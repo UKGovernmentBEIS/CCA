@@ -11,8 +11,7 @@
  */
 import { BuyOutSurplusTransactionHistoryPayload } from './buyOutSurplusTransactionHistoryPayload';
 
-export interface BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload
-  extends BuyOutSurplusTransactionHistoryPayload {
+export interface BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload extends BuyOutSurplusTransactionHistoryPayload {
   paymentStatus:
     | 'AWAITING_PAYMENT'
     | 'AWAITING_REFUND'

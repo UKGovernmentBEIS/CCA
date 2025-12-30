@@ -1,10 +1,9 @@
-import { AfterViewInit, Component, input, inject, computed } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, NgControl, ReactiveFormsModule } from '@angular/forms';
+import { AfterViewInit, Component, input, computed } from '@angular/core';
+import { ControlValueAccessor, ReactiveFormsModule } from '@angular/forms';
 
 import { distinctUntilChanged, takeUntil, tap } from 'rxjs';
 
 import { ErrorMessageComponent } from '../error-message';
-import { FormService } from '../form';
 import { FormInput } from '../form/form-input';
 import { LabelSizeType } from './label-size.type';
 
@@ -43,11 +42,7 @@ export class TextareaComponent extends FormInput implements ControlValueAccessor
   });
 
   constructor() {
-    const ngControl = inject(NgControl, { self: true, optional: true });
-    const formService = inject(FormService);
-    const container = inject(ControlContainer, { optional: true });
-
-    super(ngControl, formService, container);
+    super();
   }
 
   writeValue(): void {}

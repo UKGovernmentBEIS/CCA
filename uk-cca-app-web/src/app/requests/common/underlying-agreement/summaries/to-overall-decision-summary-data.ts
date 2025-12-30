@@ -2,10 +2,10 @@ import { OverallDecisionWizardStep } from '@requests/common';
 import { SummaryFactory } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 
-import { Determination } from 'cca-api';
+import { VariationDetermination } from 'cca-api';
 
 export function toOverallDecisionSummaryData(
-  determination: Determination,
+  determination: VariationDetermination,
   attachments: Record<string, string>,
   downloadUrl: string,
   isEditable: boolean,
@@ -24,14 +24,26 @@ export function toOverallDecisionSummaryData(
     });
   }
 
+  // Show whether the variation impacts the agreement when available (variation review only)
+  if (determination.type === 'ACCEPTED' && typeof determination?.variationImpactsAgreement === 'boolean') {
+    factory.addRow(
+      'Does this variation result in changes to the current underlying agreement?',
+      determination?.variationImpactsAgreement ? 'Yes' : 'No',
+      {
+        change: isEditable,
+        changeLink: `../${OverallDecisionWizardStep.ADDITIONAL_INFO}`,
+      },
+    );
+  }
+
   return factory
-    .addTextAreaRow('Additional information', determination.additionalInformation, {
+    .addTextAreaRow('Additional information', determination?.additionalInformation, {
       change: isEditable,
       changeLink: `../${OverallDecisionWizardStep.ADDITIONAL_INFO}`,
     })
     .addFileListRow(
       'Uploaded files',
-      fileUtils.toDownloadableFiles(fileUtils.extractAttachments(determination.files, attachments), downloadUrl),
+      fileUtils.toDownloadableFiles(fileUtils.extractAttachments(determination?.files, attachments), downloadUrl),
       {
         change: isEditable,
         changeLink: `../${OverallDecisionWizardStep.ADDITIONAL_INFO}`,

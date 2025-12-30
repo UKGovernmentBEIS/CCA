@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { BehaviorSubject, EMPTY, filter, map, switchMap, tap, timer } from 'rxjs';
 
@@ -9,6 +9,9 @@ import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TimeoutBannerService {
+  private readonly keycloak = inject(KeycloakService);
+  private readonly authService = inject(AuthService);
+
   private get refreshTokenParsed() {
     return this.keycloak.getKeycloakInstance()?.refreshTokenParsed;
   }
@@ -33,10 +36,7 @@ export class TimeoutBannerService {
   readonly timeExtensionAllowed$ = new BehaviorSubject<boolean>(true);
   readonly isVisible$ = new BehaviorSubject<boolean>(false);
 
-  constructor(
-    private readonly keycloak: KeycloakService,
-    private readonly authService: AuthService,
-  ) {
+  constructor() {
     this.keycloak.keycloakEvents$
       .pipe(
         map((event) => event?.type),

@@ -1,45 +1,38 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { TextareaComponent } from '@netz/govuk-components';
+import { RadioComponent, RadioOptionComponent, TextareaComponent } from '@netz/govuk-components';
 import {
   OVERALL_DECISION_SUBTASK,
   TaskItemStatus,
   TasksApiService,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils';
+import { fileUtils, generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
+
+import { VariationDetermination } from 'cca-api';
 
 import { createSaveDeterminationActionDTO } from '../../../transform';
 import { ADDITIONAL_INFO_FORM, AdditionalInfoFormModel, provideAdditionalInfo } from './additional-info.provider';
 
 @Component({
   selector: 'cca-explanation-component',
-  template: `
-    <cca-wizard-step
-      [formGroup]="form"
-      [caption]="caption"
-      heading="Provide any additional information here to support your decision (optional)"
-      (formSubmit)="submit()"
-    >
-      <div govuk-textarea formControlName="additionalInfo" hint="This will be included in the official notice."></div>
-      <cca-multiple-file-input [baseDownloadUrl]="downloadUrl" formControlName="files" />
-    </cca-wizard-step>
-
-    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-    <netz-return-to-task-or-action-page />
-  `,
+  templateUrl: './additional-info.component.html',
   imports: [
-    WizardStepComponent,
     TextareaComponent,
     ReactiveFormsModule,
     MultipleFileInputComponent,
     ReturnToTaskOrActionPageComponent,
+    RadioOptionComponent,
+    RadioComponent,
+    WizardStepComponent,
   ],
   providers: [provideAdditionalInfo()],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,9 +45,29 @@ export class AdditionalInfoComponent {
 
   protected readonly form = inject<AdditionalInfoFormModel>(ADDITIONAL_INFO_FORM);
 
-  private readonly determination = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)();
+  private readonly variationImpactsAgreementValue = toSignal(
+    this.form.controls.variationImpactsAgreement.valueChanges,
+    {
+      initialValue: this.form.value.variationImpactsAgreement,
+    },
+  );
 
-  protected readonly caption = this.determination.type === 'ACCEPTED' ? 'Accept' : 'Reject';
+  private readonly determination = this.requestTaskStore.select(
+    underlyingAgreementVariationReviewQuery.selectDetermination,
+  );
+
+  protected readonly isAccepted = computed(() => this.determination().type === 'ACCEPTED');
+  protected readonly caption = computed(() => (this.isAccepted() ? 'Accept' : 'Reject'));
+
+  protected readonly showNoChangesGuidance = computed(
+    () => this.isAccepted() && this.variationImpactsAgreementValue() === false,
+  );
+
+  protected readonly additionalInfoLabel = computed(() => {
+    const optionalSuffix =
+      (this.isAccepted() && this.variationImpactsAgreementValue() === true) || !this.isAccepted() ? ' (optional)' : '';
+    return `Add any additional information${optionalSuffix}`;
+  });
 
   protected readonly downloadUrl = generateDownloadUrl(
     this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
@@ -70,13 +83,7 @@ export class AdditionalInfoComponent {
       },
     );
 
-    const files = this.form.value.files.map((f) => f.uuid);
-
-    const updatedDetermination = produce(this.determination, (draft) => {
-      draft.additionalInformation = this.form.value.additionalInfo;
-      draft.files = files;
-    });
-
+    const updatedDetermination = update(this.determination(), this.form);
     const dto = createSaveDeterminationActionDTO(requestTaskId, updatedDetermination, reviewSectionsCompleted);
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() =>
@@ -86,4 +93,18 @@ export class AdditionalInfoComponent {
       }),
     );
   }
+}
+
+function update(determination: VariationDetermination, form: AdditionalInfoFormModel): VariationDetermination {
+  return produce(determination, (draft) => {
+    if (determination.type === 'ACCEPTED') {
+      draft.variationImpactsAgreement = form.value.variationImpactsAgreement;
+    } else {
+      // ensure we don't send an irrelevant value when rejected
+      delete draft.variationImpactsAgreement;
+    }
+
+    draft.additionalInformation = form.value.additionalInformation;
+    draft.files = fileUtils.toUUIDs(form.value.files);
+  });
 }

@@ -11,35 +11,36 @@
     <parent>
         <groupId>uk.gov.netz</groupId>
         <artifactId>uk-netz-app-api-parent</artifactId>
-        <version>1.4.0</version>
+        <version>1.8.0</version>
     </parent>
 
     <properties>
 		<jsch.version>0.2.20</jsch.version>
-        <netz.common.version>1.12.0</netz.common.version>
+        <netz.common.version>1.16.0</netz.common.version>
         <netz.token.version>1.2.0</netz.token.version>
         <netz.terms.version>1.1.0</netz.terms.version>
         <netz.competentauthority.version>1.3.0</netz.competentauthority.version>
-        <netz.files.version>1.4.0</netz.files.version>
-        <netz.notification.version>1.6.0</netz.notification.version>
+        <netz.files.version>1.7.0</netz.files.version>
+        <netz.notification.version>1.7.0</netz.notification.version>
         <netz.notificationapi.version>1.2.0</netz.notificationapi.version>
         <netz.documenttemplate.version>1.6.0</netz.documenttemplate.version>
-        <netz.authorization.version>1.7.0</netz.authorization.version>
+        <netz.authorization.version>1.12.0</netz.authorization.version>
         <netz.rest-logging.version>1.4.0</netz.rest-logging.version>
         <netz.alert.version>1.1.0</netz.alert.version>
         <netz.mireport.version>1.2.0</netz.mireport.version>
         <netz.referencedata.version>1.4.0</netz.referencedata.version>
-        <netz.account.version>1.6.0</netz.account.version>
+        <netz.account.version>1.9.0</netz.account.version>
         <netz.verificationbody.version>1.3.0</netz.verificationbody.version>
-        <netz.user.version>1.5.0</netz.user.version>
-        <netz.request.version>1.20.0</netz.request.version>
+        <netz.user.version>1.8.0</netz.user.version>
+        <netz.request.version>1.26.0</netz.request.version>
         <netz.feedback.version>1.2.0</netz.feedback.version>
         <netz.companieshouse.version>1.4.0</netz.companieshouse.version>
         <netz.security-camunda-admin.version>1.1.0</netz.security-camunda-admin.version>
         <netz.swagger.version>1.2.0</netz.swagger.version>
-        <netz.security.version>1.3.0</netz.security.version>
+        <netz.security.version>1.5.0</netz.security.version>
         <netz.configuration.version>1.2.0</netz.configuration.version>
         <netz.rest-client.version>1.0.0</netz.rest-client.version>
+        <netz.third.party.data.provider.version>1.1.0</netz.third.party.data.provider.version>
     </properties>
 
     <dependencies>
@@ -86,6 +87,14 @@
                     <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-spring-boot-starter-process</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-spring-boot-starter-process-rest</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -216,6 +225,11 @@
             <groupId>uk.gov.netz</groupId>
             <artifactId>uk-netz-app-api-companieshouse</artifactId>
             <version>${netz.companieshouse.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.netz</groupId>
+            <artifactId>uk-netz-app-api-third-party-data-provider</artifactId>
+            <version>${netz.third.party.data.provider.version}</version>
         </dependency>
         
         <dependency>

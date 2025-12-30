@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, Inject, input, Optional, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal, inject } from '@angular/core';
 import { ActivatedRoute, RouterLinkWithHref } from '@angular/router';
 
 import {
@@ -16,11 +16,16 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReturnToTaskOrActionPageComponent {
-  readonly requestTaskIdRouteParam = input(':taskId');
-  readonly requestActionIdRouteParam = input(':actionId');
+  private readonly store = inject<RequestTaskStore | RequestActionStore>(TYPE_AWARE_STORE, { optional: true });
+  private readonly typeToText = inject(ITEM_TYPE_TO_RETURN_TEXT_MAPPER, { optional: true });
+  private readonly route = inject(ActivatedRoute);
 
-  readonly returnToUrl = signal(['']);
-  readonly returnToText = computed(() => {
+  protected readonly requestTaskIdRouteParam = input(':taskId');
+  protected readonly requestActionIdRouteParam = input(':actionId');
+
+  protected readonly returnToUrl = signal(['']);
+
+  protected readonly returnToText = computed(() => {
     if (!!this.store && !!this.typeToText) {
       const type = this.store.select(selectType)();
       return this.typeToText(type) ?? 'Dashboard';
@@ -33,11 +38,7 @@ export class ReturnToTaskOrActionPageComponent {
     return 'Dashboard';
   });
 
-  constructor(
-    @Optional() @Inject(TYPE_AWARE_STORE) private readonly store: RequestTaskStore | RequestActionStore,
-    @Optional() @Inject(ITEM_TYPE_TO_RETURN_TEXT_MAPPER) private readonly typeToText: (type: string) => string,
-    private readonly route: ActivatedRoute,
-  ) {
+  constructor() {
     let returnRoute = this.route;
 
     while (!!returnRoute.parent && !this.hasActionOrTaskIdRouteParam(returnRoute)) {

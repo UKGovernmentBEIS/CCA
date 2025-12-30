@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { DateInputComponent, TextareaComponent } from '@netz/govuk-components';
+import { DateInputComponent, DetailsComponent, TextareaComponent } from '@netz/govuk-components';
 import { TaskItemStatus, TasksApiService } from '@requests/common';
 import { FileInputComponent, MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
 import { fileUtils, generateDownloadUrl } from '@shared/utils';
@@ -32,6 +32,7 @@ import {
     DateInputComponent,
     FileInputComponent,
     MultipleFileInputComponent,
+    DetailsComponent,
   ],
   providers: [PreAuditReviewAuditReasonFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,

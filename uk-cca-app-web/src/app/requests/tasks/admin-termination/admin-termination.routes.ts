@@ -1,26 +1,10 @@
 import { Routes } from '@angular/router';
 
-import { PayloadMutatorsHandler, SideEffectsHandler } from '@netz/common/forms';
 import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/common';
-
-import {
-  provideAdminTerminationPayloadMutators,
-  provideAdminTerminationSideEffects,
-  provideAdminTerminationStepFlowManagers,
-  provideAdminTerminationTaskServices,
-} from './admin-termination.providers';
 
 export const ADMIN_TERMINATION_ROUTES: Routes = [
   {
     path: '',
-    providers: [
-      SideEffectsHandler,
-      PayloadMutatorsHandler,
-      provideAdminTerminationTaskServices(),
-      provideAdminTerminationPayloadMutators(),
-      provideAdminTerminationStepFlowManagers(),
-      provideAdminTerminationSideEffects(),
-    ],
     children: [
       {
         path: 'reason-for-admin-termination',
@@ -48,10 +32,6 @@ export const ADMIN_TERMINATION_ROUTES: Routes = [
           import('./send-for-peer-review/admin-termination-send-for-peer-review.routes').then(
             (r) => r.ADMIN_TERMINATION_SEND_FOR_PEER_REVIEW_ROUTES,
           ),
-      },
-      {
-        path: '**',
-        redirectTo: '/dashboard',
       },
     ],
   },

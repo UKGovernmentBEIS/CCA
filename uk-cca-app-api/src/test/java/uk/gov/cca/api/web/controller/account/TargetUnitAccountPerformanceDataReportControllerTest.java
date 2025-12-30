@@ -14,6 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusAttachmentService;
+import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
+import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetPeriodResultType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.AccountPerformanceDataReportDetailsDTO;
@@ -21,7 +24,6 @@ import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.AccountPe
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.AccountPerformanceDataUpdateLockDTO;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.orchestrator.account.service.TargetUnitAccountPerformanceDataReportServiceOrchestrator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.common.constants.RoleTypeConstants;
@@ -55,7 +57,13 @@ class TargetUnitAccountPerformanceDataReportControllerTest {
 	private TargetUnitAccountPerformanceDataReportController controller;
 
 	@Mock
-	private TargetUnitAccountPerformanceDataReportServiceOrchestrator orchestrator;
+	private AccountPerformanceDataStatusQueryService statusQueryService;
+
+	@Mock
+	private AccountPerformanceDataStatusService statusService;
+
+	@Mock
+	private AccountPerformanceDataStatusAttachmentService statusAttachmentService;
 
 	@Mock
 	private AppSecurityComponent appSecurityComponent;
@@ -93,7 +101,7 @@ class TargetUnitAccountPerformanceDataReportControllerTest {
 				.reportVersion(2).targetPeriodName("TP6 (2024)").isEditable(true).targetPeriodType(targetPeriodType)
 				.build();
 
-		when(orchestrator.getAccountPerformanceDataStatusInfo(accountId, targetPeriodType,
+		when(statusQueryService.getAccountPerformanceDataStatusInfo(accountId, targetPeriodType,
 				currentUser)).thenReturn(mockDto);
 		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
 
@@ -106,7 +114,7 @@ class TargetUnitAccountPerformanceDataReportControllerTest {
 				.andExpect(jsonPath("$.reportVersion").value(2))
 			.andExpect(jsonPath("$.targetPeriodName").value("TP6 (2024)"));
 
-		verify(orchestrator, times(1)).getAccountPerformanceDataStatusInfo(accountId,
+		verify(statusQueryService, times(1)).getAccountPerformanceDataStatusInfo(accountId,
 				targetPeriodType, currentUser);
 
 	}
@@ -118,7 +126,7 @@ class TargetUnitAccountPerformanceDataReportControllerTest {
 		final AppUser user = AppUser.builder().roleType(RoleTypeConstants.OPERATOR).build();
 
 		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
-		doThrow(new BusinessException(ErrorCode.FORBIDDEN)).when(orchestrator)
+		doThrow(new BusinessException(ErrorCode.FORBIDDEN)).when(statusQueryService)
 				.getAccountPerformanceDataStatusInfo(accountId, targetPeriodType, user);
 
 		mockMvc.perform(MockMvcRequestBuilders.get(CONTROLLER_PATH.replace("{accountId}", accountId.toString()) + "/status")
@@ -135,6 +143,11 @@ class TargetUnitAccountPerformanceDataReportControllerTest {
 
 		AccountPerformanceDataUpdateLockDTO updateLockDTO = AccountPerformanceDataUpdateLockDTO.builder().locked(true)
 				.targetPeriodType(targetPeriodType).build();
+		final AppUser user = AppUser.builder()
+				.roleType(RoleTypeConstants.REGULATOR)
+				.build();
+
+		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
 
 		// Act & Assert
 		mockMvc.perform(MockMvcRequestBuilders.put(CONTROLLER_PATH.replace("{accountId}", accountId.toString()) + "/lock")
@@ -144,7 +157,7 @@ class TargetUnitAccountPerformanceDataReportControllerTest {
 			.andDo(print());
 
 		// Verify service interaction
-		verify(orchestrator, times(1)).updateAccountPerformanceDataLock(accountId,
+		verify(statusService, times(1)).updateAccountPerformanceDataLock(accountId,
 				updateLockDTO);
 	}
 
@@ -156,7 +169,12 @@ class TargetUnitAccountPerformanceDataReportControllerTest {
 		final AccountPerformanceDataReportDetailsDTO mockDto = AccountPerformanceDataReportDetailsDTO.builder()
 				.tpOutcome(TargetPeriodResultType.TARGET_MET).build();
 
-		when(orchestrator.getAccountPerformanceDataReportDetails(accountId, targetPeriodType))
+		final AppUser user = AppUser.builder()
+				.roleType(RoleTypeConstants.REGULATOR)
+				.build();
+
+		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+		when(statusQueryService.getAccountPerformanceDataReportDetails(accountId, targetPeriodType))
 				.thenReturn(mockDto);
 
 		mockMvc.perform(MockMvcRequestBuilders.get(CONTROLLER_PATH.replace("{accountId}", accountId.toString()) + "/details")
@@ -166,7 +184,7 @@ class TargetUnitAccountPerformanceDataReportControllerTest {
 			.andExpect(status().isOk())
 			.andDo(print());
 
-		verify(orchestrator, times(1)).getAccountPerformanceDataReportDetails(accountId,
+		verify(statusQueryService, times(1)).getAccountPerformanceDataReportDetails(accountId,
 				targetPeriodType);
 
 	}
@@ -178,7 +196,12 @@ class TargetUnitAccountPerformanceDataReportControllerTest {
 		UUID fileAttachmentUuid = UUID.randomUUID();
 		FileToken expectedToken = FileToken.builder().token("token").build();
 
-		when(orchestrator.generateGetAccountPerformanceDataReportAttachmentToken(accountId, targetPeriodType,
+		final AppUser user = AppUser.builder()
+				.roleType(RoleTypeConstants.REGULATOR)
+				.build();
+
+		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+		when(statusAttachmentService.generateGetAccountPerformanceDataReportAttachmentToken(accountId, targetPeriodType,
 				fileAttachmentUuid)).thenReturn(expectedToken);
 
 		mockMvc.perform(MockMvcRequestBuilders.get(CONTROLLER_PATH.replace("{accountId}", accountId.toString()) + "/attachment")
@@ -187,7 +210,7 @@ class TargetUnitAccountPerformanceDataReportControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.token").value(expectedToken.getToken()));
 
-		verify(orchestrator, times(1)).generateGetAccountPerformanceDataReportAttachmentToken(accountId,
+		verify(statusAttachmentService, times(1)).generateGetAccountPerformanceDataReportAttachmentToken(accountId,
 				targetPeriodType, fileAttachmentUuid);
 	}
 
@@ -209,6 +232,6 @@ class TargetUnitAccountPerformanceDataReportControllerTest {
 			.andExpect(status().isForbidden());
 
 
-		verifyNoInteractions(orchestrator);
+		verifyNoInteractions(statusAttachmentService);
 	}
 }

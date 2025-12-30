@@ -3,19 +3,19 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
-import { TaskService } from '@netz/common/forms';
-import { RequestTaskStore } from '@netz/common/store';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   NOTIFY_OPERATOR_OF_DECISION_FORM,
   NotifyOperatorOfDecisionComponent,
   NotifyOperatorOfDecisionFormModel,
   NotifyOperatorOfDecisionFormProvider,
+  TasksApiService,
   toDecisionNotification,
 } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 
-import { AdminTerminationFinalDecisionQuery } from '../+state/admin-termination-final-decision.selectors';
-import { AdminTerminationFinalDecisionTaskService } from '../services/admin-termination-final-decision-task.service';
+import { adminTerminationFinalDecisionQuery } from '../admin-termination-final-decision.selectors';
+import { createNotifyOperatorActionDTO } from '../transform';
 
 @Component({
   selector: 'cca-final-decision-notify-operator',
@@ -47,13 +47,13 @@ export default class FinalDecisionNotifyOperatorComponent {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly requestTaskStore = inject(RequestTaskStore);
-  private readonly taskService = inject(TaskService);
+  private readonly tasksApiService = inject(TasksApiService);
 
   protected readonly form = inject<NotifyOperatorOfDecisionFormModel>(NOTIFY_OPERATOR_OF_DECISION_FORM);
 
   private readonly finalDecisionType = this.requestTaskStore.select(
-    AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionReasonDetails,
-  )().finalDecisionType;
+    adminTerminationFinalDecisionQuery.selectReasonDetails,
+  )()?.finalDecisionType;
 
   protected readonly heading =
     this.finalDecisionType === 'TERMINATE_AGREEMENT'
@@ -61,8 +61,12 @@ export default class FinalDecisionNotifyOperatorComponent {
       : 'Select who should receive the admin termination withdrawal notice';
 
   onSubmit() {
-    (this.taskService as AdminTerminationFinalDecisionTaskService)
-      .notifyOperator(toDecisionNotification(this.form.value))
-      .subscribe(() => this.router.navigate(['confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true }));
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+    const notification = toDecisionNotification(this.form.value);
+    const dto = createNotifyOperatorActionDTO(requestTaskId, notification);
+
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
+      this.router.navigate(['./confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true });
+    });
   }
 }

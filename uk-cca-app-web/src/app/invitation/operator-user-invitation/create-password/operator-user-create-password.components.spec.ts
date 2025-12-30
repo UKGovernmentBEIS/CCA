@@ -6,7 +6,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { screen } from '@testing-library/dom';
 import UserEvent from '@testing-library/user-event';
-import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { InvitedOperatorUserExtended, OperatorUserInvitationStore } from '../store';
 import { OperatorUserCreatePasswordComponent } from './operator-user-create-password.component';
@@ -39,7 +38,6 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
       imports: [OperatorUserCreatePasswordComponent],
       providers: [
         OperatorUserInvitationStore,
-        provideZxvbnServiceForPSM(),
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: route },

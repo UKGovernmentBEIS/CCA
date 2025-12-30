@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.authorization.ccaauth.core.domain.dto.CcaAuthorityInfoDTO;
 import uk.gov.cca.api.authorization.ccaauth.core.service.CcaAuthorityService;
 import uk.gov.cca.api.token.CcaJwtTokenAction;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
 import uk.gov.netz.api.token.JwtTokenAction;
 import uk.gov.netz.api.token.JwtTokenService;
@@ -33,13 +34,15 @@ class SectorUserTokenVerificationServiceTest {
     private CcaAuthorityService authorityService;
 
     @Test
-    void verifyInvitationTokenForPendingAuthority() {
+    void verifyInvitationToken() {
+    	String userId = "user";
+    	AppUser user = AppUser.builder().userId(userId).build();
     	String invitationToken = "invitationToken";
         JwtTokenAction jwtTokenAction = CcaJwtTokenAction.SECTOR_USER_INVITATION;
         String authorityUuid = "authorityUuid";
         CcaAuthorityInfoDTO authorityInfo = CcaAuthorityInfoDTO.builder()
             .id(1L)
-            .userId("user")
+            .userId(userId)
             .authorityStatus(AuthorityStatus.PENDING)
             .sectorAssociationId(1L)
             .build();
@@ -47,7 +50,7 @@ class SectorUserTokenVerificationServiceTest {
         when(jwtTokenService.resolveTokenActionClaim(invitationToken, jwtTokenAction)).thenReturn(authorityUuid);
         when(authorityService.findCcaAuthorityByUuidAndStatusPending(authorityUuid)).thenReturn(Optional.of(authorityInfo));
 
-        CcaAuthorityInfoDTO result = sectorUserTokenVerificationService.verifyInvitationTokenForPendingAuthority(invitationToken);
+        CcaAuthorityInfoDTO result = sectorUserTokenVerificationService.verifyInvitationToken(invitationToken, user);
 
         assertThat(result).isEqualTo(authorityInfo);
 

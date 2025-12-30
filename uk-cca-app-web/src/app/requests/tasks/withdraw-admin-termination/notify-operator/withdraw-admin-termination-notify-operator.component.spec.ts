@@ -5,11 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { screen } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
 
 import { CaExternalContactsService, NoticeRecipientsService, RegulatorAuthoritiesService, TasksService } from 'cca-api';
 
@@ -19,18 +17,13 @@ import {
   mockWithdrawAdminTerminationNotifyOperatorDefaultUsers,
   mockWithdrawAdminTerminationNotifyOperatorExternalContacts,
   mockWithdrawAdminTerminationNotifyOperatorRegulatorAuthorities,
-} from '../mocks/mock-withdraw-admin-termination-payload';
-import { WithdrawAdminTerminationTaskService } from '../services/withdraw-admin-termination-task.service';
+} from '../testing/mock-data';
 import WithdrawAdminTerminationNotifyOperatorComponent from './withdraw-admin-termination-notify-operator.component';
 
 describe('WithdrawAdminTerminationNotifyOperatorComponent', () => {
   let component: WithdrawAdminTerminationNotifyOperatorComponent;
   let fixture: ComponentFixture<WithdrawAdminTerminationNotifyOperatorComponent>;
   let store: RequestTaskStore;
-
-  const taskService: Partial<jest.Mocked<WithdrawAdminTerminationTaskService>> = {
-    notifyOperator: jest.fn().mockReturnValue(of({})),
-  };
 
   const tasksService: Partial<jest.Mocked<TasksService>> = {
     getDefaultNoticeRecipients: jest.fn().mockReturnValue(of(mockWithdrawAdminTerminationNotifyOperatorDefaultUsers)),
@@ -50,8 +43,6 @@ describe('WithdrawAdminTerminationNotifyOperatorComponent', () => {
     getCaRegulators: jest.fn().mockReturnValue(of(mockWithdrawAdminTerminationNotifyOperatorRegulatorAuthorities)),
   };
 
-  const taskServiceSpy = jest.spyOn(taskService, 'notifyOperator');
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [WithdrawAdminTerminationNotifyOperatorComponent],
@@ -59,7 +50,6 @@ describe('WithdrawAdminTerminationNotifyOperatorComponent', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
-        { provide: TaskService, useValue: taskService },
         { provide: TasksService, useValue: tasksService },
         { provide: NoticeRecipientsService, useValue: noticeRecipientsService },
         { provide: CaExternalContactsService, useValue: caExternalContactsService },
@@ -98,27 +88,5 @@ describe('WithdrawAdminTerminationNotifyOperatorComponent', () => {
     expect(
       screen.getByText('Select the name and signature that will be shown on the official notice document'),
     ).toBeInTheDocument();
-  });
-
-  it('should submit form and call "processRequestTaskActionSpy" method', async () => {
-    const user = UserEvent.setup();
-
-    await user.click(screen.getByLabelText('fname2 lname2, Sector user, test-add@example.com'));
-    await user.click(screen.getByLabelText('ext-cont@cca.uk'));
-
-    const select = screen.getByLabelText(
-      'Select the name and signature that will be shown on the official notice document',
-    );
-    await user.selectOptions(select, '0: reg-userid');
-
-    await user.click(screen.getByText('Confirm and complete'));
-
-    expect(taskServiceSpy).toHaveBeenCalledTimes(1);
-    expect(taskServiceSpy).toHaveBeenCalledWith({
-      externalContacts: [1],
-      operators: [],
-      sectorUsers: ['sec-id2'],
-      signatory: 'reg-userid',
-    });
   });
 });

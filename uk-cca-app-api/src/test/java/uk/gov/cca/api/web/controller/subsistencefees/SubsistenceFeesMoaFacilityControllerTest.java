@@ -20,8 +20,10 @@ import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaFacilityMarki
 import uk.gov.cca.api.subsistencefees.service.SubsistenceFeesMoaFacilityMarkingStatusService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.security.AppSecurityComponent;
 import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
 import uk.gov.netz.api.security.AuthorizedAspect;
@@ -98,6 +100,11 @@ class SubsistenceFeesMoaFacilityControllerTest {
                 .markingStatusHistoryList(List.of(subsistenceFeesMoaFacilityMarkingStatusHistoryDTO))
                 .build();
 
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(subsistenceFeesMoaFacilityMarkingStatusService.getMoaFacilityMarkingStatusHistoryInfo(moaFacilityId))
                 .thenReturn(subsistenceFeesMoaFacilityMarkingStatusHistoryInfoDTO);
 

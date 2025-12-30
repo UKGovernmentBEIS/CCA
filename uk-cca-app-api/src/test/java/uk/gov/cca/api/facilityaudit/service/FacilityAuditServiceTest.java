@@ -9,10 +9,13 @@ import uk.gov.cca.api.authorization.ccaauth.rules.services.resource.FacilityAuth
 import uk.gov.cca.api.facilityaudit.domain.FacilityAudit;
 import uk.gov.cca.api.facilityaudit.domain.FacilityAuditReasonType;
 import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditDTO;
+import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditUpdateDTO;
 import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditViewDTO;
 import uk.gov.cca.api.facilityaudit.repository.FacilityAuditRepository;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -22,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,7 +41,7 @@ class FacilityAuditServiceTest {
 	private FacilityAuditRepository repository;
 
 	@Mock
-	FacilityAuthorizationResourceService authorizationResourceService;
+	private FacilityAuthorizationResourceService authorizationResourceService;
 
 	@Test
 	void getFacilityAuditViewByFacilityId_REGULATOR() {
@@ -149,4 +153,49 @@ class FacilityAuditServiceTest {
         assertEquals(facilityAudit.getComments(), result.getComments());
         assertEquals(facilityAudit.getReasons(), result.getReasons());
     }
+
+	@Test
+	void createOrUpdateFacilityAudit_TRUE() {
+
+		final AppUser appUser = AppUser.builder().userId("userId").build();
+		final Long facilityId = 1L;
+		final FacilityAuditUpdateDTO facilityAuditUpdateDTO = FacilityAuditUpdateDTO.builder()
+				.auditRequired(true)
+				.comments("Comments")
+				.reasons(new ArrayList<>(List.of(FacilityAuditReasonType.REPORTING_DATA)))
+				.build();
+
+		when(repository.findFacilityAuditByFacilityId(facilityId))
+				.thenReturn(Optional.empty());
+
+		service.createOrUpdateFacilityAudit(facilityId, facilityAuditUpdateDTO, appUser.getUserId());
+
+		verify(repository, times(1)).save(any(FacilityAudit.class));
+		verify(repository, times(1)).findFacilityAuditByFacilityId(facilityId);
+	}
+
+	@Test
+	void createOrUpdateFacilityAudit_FALSE() {
+
+		final AppUser appUser = AppUser.builder().userId("userId").build();
+		final Long facilityId = 1L;
+		final FacilityAuditUpdateDTO facilityAuditUpdateDTO = FacilityAuditUpdateDTO.builder()
+				.auditRequired(false)
+				.build();
+		final FacilityAudit facilityAudit = new FacilityAudit(1L, facilityId, true, List.of(FacilityAuditReasonType.REPORTING_DATA),
+				"", "updatedBy", LocalDateTime.now());
+
+		when(repository.findFacilityAuditByFacilityId(facilityId)).thenReturn(Optional.of(facilityAudit));
+
+
+		service.createOrUpdateFacilityAudit(facilityId, facilityAuditUpdateDTO, appUser.getUserId());
+
+		verify(repository, times(1)).save(any(FacilityAudit.class));
+		verify(repository, times(1)).findFacilityAuditByFacilityId(facilityId);
+
+		assertEquals(facilityAuditUpdateDTO.getAuditRequired(), facilityAudit.isAuditRequired());
+		assertEquals(facilityAuditUpdateDTO.getComments(), facilityAudit.getComments());
+		assertEquals(facilityAuditUpdateDTO.getReasons(), facilityAudit.getReasons());
+		assertEquals(appUser.getUserId(), facilityAudit.getUpdatedBy());
+	}
 }

@@ -604,5 +604,30 @@
             <where>scheme_version = 'CCA_2'</where>
         </update>
     </changeSet>
+    
+    <changeSet id="0_1_0_target_set_UPDATE_CCA3_measurement_unit_for_certain_subsectors" author="vourdoukasd">
+        <sql>
+            update target_set ts
+            set energy_or_carbon_unit = 'GJ'
+            where exists (select 1
+                          from subsector_association_scheme sas, subsector_association sa
+                          where sas.target_set_id = ts.id
+                            and sa.id = sas.subsector_association_id
+                            and sa.name in ('Chemicals', 'Potash')
+                            and sas.scheme_version = 'CCA_3');
+        </sql>
+        <rollback>
+            <sql>
+                update target_set ts
+                set energy_or_carbon_unit = 'kWh'
+                where exists (select 1
+                from subsector_association_scheme sas, subsector_association sa
+                where sas.target_set_id = ts.id
+                and sa.id = sas.subsector_association_id
+                and sa.name in ('Chemicals', 'Potash')
+                and sas.scheme_version = 'CCA_3');
+            </sql>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>

@@ -31,7 +31,7 @@ public class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsP
                 .constructTargetUnitDetailsTemplateParams(payload.getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails());
 
         params.putAll(Map.of(
-        		"reason", payload.getDetermination().getReason(),
+        		"reason", payload.getDetermination().getDetermination().getReason(),
         		"versionMap", documentTemplateTransformationMapper.constructVersionMap(payload.getUnderlyingAgreementVersionMap()))
         		);
 

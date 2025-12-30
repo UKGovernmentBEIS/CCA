@@ -10,13 +10,13 @@
  * Do not edit the class manually.
  */
 import { UnderlyingAgreementVariationPayload } from './underlyingAgreementVariationPayload';
+import { VariationDetermination } from './variationDetermination';
 import { RequestActionUserInfo } from './requestActionUserInfo';
 import { DefaultNoticeRecipient } from './defaultNoticeRecipient';
 import { UnderlyingAgreementActivationDetails } from './underlyingAgreementActivationDetails';
 import { AccountReferenceData } from './accountReferenceData';
 import { UnderlyingAgreementReviewDecision } from './underlyingAgreementReviewDecision';
 import { UnderlyingAgreementVariationFacilityReviewDecision } from './underlyingAgreementVariationFacilityReviewDecision';
-import { Determination } from './determination';
 import { CcaDecisionNotification } from './ccaDecisionNotification';
 import { FileInfoDTO } from './fileInfoDTO';
 
@@ -31,7 +31,7 @@ export interface UnderlyingAgreementVariationActivatedRequestActionPayload {
   defaultContacts: DefaultNoticeRecipient[];
   usersInfo?: Record<string, RequestActionUserInfo>;
   officialNotices: FileInfoDTO[];
-  determination: Determination;
+  determination: VariationDetermination;
   reviewSectionsCompleted?: Record<string, string>;
   reviewGroupDecisions?: Record<string, UnderlyingAgreementReviewDecision>;
   facilitiesReviewGroupDecisions?: Record<string, UnderlyingAgreementVariationFacilityReviewDecision>;

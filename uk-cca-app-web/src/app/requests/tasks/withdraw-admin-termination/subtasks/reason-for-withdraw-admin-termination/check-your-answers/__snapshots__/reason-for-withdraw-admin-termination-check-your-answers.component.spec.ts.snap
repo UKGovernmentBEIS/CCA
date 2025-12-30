@@ -1,0 +1,92 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ReasonForWithdrawAdminTerminationCheckYourAnswersComponent should show proper summary values 1`] = `
+<cca-reason-for-withdraw-admin-termination-check-your-answers
+  activatedRoute={[Function ActivatedRouteStub]}
+  downloadUrl={[Function String]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  summaryData={[Function Array]}
+  taskId="null"
+  tasksApiService={[Function TasksApiService]}
+>
+  <div>
+    <netz-page-heading
+      caption="Withdraw admin termination"
+    >
+      <span
+        class="govuk-caption-l"
+      >
+        Withdraw admin termination
+      </span>
+      <h1
+        class="govuk-heading-l"
+      >
+        Check your answers
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Explain why you are withdrawing the admin termination
+          </dt>
+          <dd
+            class="pre-line govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              mplah mplah
+            </span>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Uploaded files
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              No files provided
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </cca-summary>
+    <button
+      class="govuk-button"
+      govukbutton=""
+      netzpendingbutton=""
+      type="button"
+    >
+      Confirm and complete
+    </button>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Withdraw admin termination 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-reason-for-withdraw-admin-termination-check-your-answers>
+`;

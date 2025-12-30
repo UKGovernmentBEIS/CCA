@@ -1,7 +1,6 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
-import { isFeatureEnabled } from '@shared/config';
 import { PendingRequestGuard } from '@shared/guards';
 
 import { ActiveTargetUnitStore } from './active-target-unit.store';
@@ -59,7 +58,6 @@ export const ACTIVE_TARGET_UNIT_ROUTES: Routes = [
       ...BUYOUT_AND_SURPLUS_ROUTES,
       {
         path: 'notes',
-        canActivate: [() => !isFeatureEnabled('hideNotes')()],
         children: NOTES_ROUTES,
       },
     ],

@@ -7,7 +7,6 @@ import { of, throwError } from 'rxjs';
 import { PageNotFoundComponent } from '@error/page-not-found/page-not-found.component';
 import { BasePage, MockType } from '@netz/common/testing';
 import UserEvent from '@testing-library/user-event';
-import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { ForgotPasswordService } from 'cca-api';
 
@@ -58,7 +57,6 @@ describe('ResetPasswordComponent', () => {
         ]),
         ResetPasswordStore,
         { provide: ForgotPasswordService, useValue: forgotPasswordService },
-        provideZxvbnServiceForPSM(),
       ],
     }).compileComponents();
 

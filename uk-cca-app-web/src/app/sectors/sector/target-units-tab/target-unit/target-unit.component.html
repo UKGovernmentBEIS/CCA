@@ -48,9 +48,9 @@
       <cca-buyout-and-surplus-tab />
     </ng-template>
 
-    @if (userIsRegulator && showNotes) {
+    @if (userIsRegulator) {
       <ng-template govukTabLazy id="notes" label="Notes">
-        <cca-workflow-notes />
+        <cca-target-unit-notes />
       </ng-template>
     }
   </govuk-tabs>

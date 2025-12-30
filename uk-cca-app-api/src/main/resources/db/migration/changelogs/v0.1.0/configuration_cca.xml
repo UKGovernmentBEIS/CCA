@@ -88,5 +88,24 @@
             delete from configuration where key IN ('ui.features.unaVariationHideStartTask');
         </rollback>
     </changeSet>
+    
+    <changeSet id="0_1_0_update_configuration_flags" author="apostolouk@unisystems.gr">
+        <sql>
+            delete from configuration where key IN ('ui.features.hideNotes', 'ui.features.hideFacilityAudit');
+            
+            update configuration
+            set value = 'false'
+            where key = 'ui.features.unaVariationHideStartTask';
+        </sql>
+        <rollback>
+            insert into configuration(key, value, type) values 
+            ('ui.features.hideNotes', true, 'BOOLEAN'),
+            ('ui.features.hideFacilityAudit', true, 'BOOLEAN');
+            
+            update configuration
+            set value = 'true'
+            where key = 'ui.features.unaVariationHideStartTask';
+        </rollback>
+    </changeSet>
         
 </databaseChangeLog>

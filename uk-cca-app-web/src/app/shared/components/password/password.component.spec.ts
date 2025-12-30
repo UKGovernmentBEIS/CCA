@@ -1,6 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { provideRouter } from '@angular/router';
 
@@ -11,7 +11,6 @@ import { render } from '@testing-library/angular';
 import { screen } from '@testing-library/dom';
 import { type UserEvent as UE } from '@testing-library/user-event';
 import UserEvent from '@testing-library/user-event';
-import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 
 import { PasswordComponent } from './password.component';
 import { PasswordValidators } from './password.service';
@@ -30,7 +29,7 @@ import { PASSWORD_FORM, passwordFormFactory } from './password-form.factory';
   providers: [passwordFormFactory],
 })
 export class TestComponent {
-  constructor(@Inject(PASSWORD_FORM) readonly form: FormGroup) {}
+  protected readonly form = inject<FormGroup>(PASSWORD_FORM);
 }
 
 describe('PasswordComponent', () => {
@@ -40,7 +39,7 @@ describe('PasswordComponent', () => {
       .mockReturnValue(of({ blacklisted: 'Password has been blacklisted. Please select another password' }));
 
     await render(TestComponent, {
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting(), provideZxvbnServiceForPSM()],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
     });
   });
 

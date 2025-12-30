@@ -1,7 +1,9 @@
-<ng-container *ngIf="vm$ | async as vm">
+@if (vm$ | async; as vm) {
   <netz-page-heading size="l">Reassign task</netz-page-heading>
 
-  <govuk-error-summary *ngIf="vm.showErrorSummary" [form]="vm.form"></govuk-error-summary>
+  @if (vm.showErrorSummary) {
+    <govuk-error-summary [form]="vm.form" />
+  }
 
   <form (ngSubmit)="submit(vm.requestTask.id, vm.form.get('assignee').value)" [formGroup]="vm.form">
     <div class="govuk-grid-row">
@@ -17,4 +19,4 @@
     </div>
     <button netzPendingButton govukButton type="submit">Confirm and complete</button>
   </form>
-</ng-container>
+}

@@ -148,9 +148,9 @@ export const TASKS_ROUTES: Routes = [
       {
         path: 'underlying-agreement-variation-await-peer-review',
         loadChildren: () =>
-          import(
-            './underlying-agreement-variation-wait-for-peer-review/underlying-agreement-variation-wait-for-peer-review.routes'
-          ).then((r) => r.UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW_ROUTES),
+          import('./underlying-agreement-variation-wait-for-peer-review/underlying-agreement-variation-wait-for-peer-review.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW_ROUTES,
+          ),
       },
       {
         path: 'performance-data-download',

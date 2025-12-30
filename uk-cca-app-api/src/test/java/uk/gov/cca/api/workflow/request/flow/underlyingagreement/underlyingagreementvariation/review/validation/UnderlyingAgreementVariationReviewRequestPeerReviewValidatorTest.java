@@ -12,6 +12,7 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.DeterminationType;
 import uk.gov.cca.api.workflow.request.flow.common.validation.peerreview.CcaPeerReviewValidator;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.VariationDetermination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.UnderlyingAgreementVariationReviewDecisionDataValidator;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -45,7 +46,9 @@ class UnderlyingAgreementVariationReviewRequestPeerReviewValidatorTest {
     @Test
     void validate() {
         final String peerReviewer = UUID.randomUUID().toString();
-        final Determination determination = Determination.builder().type(DeterminationType.ACCEPTED).additionalInformation("text").build();
+        final VariationDetermination determination = VariationDetermination.builder()
+                .determination(Determination.builder().type(DeterminationType.ACCEPTED).additionalInformation("text").build())
+                .build();
         final UnderlyingAgreementVariationReviewRequestTaskPayload taskPayload =
                 UnderlyingAgreementVariationReviewRequestTaskPayload
                         .builder()

@@ -3,6 +3,8 @@ package uk.gov.cca.api.web.security;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
@@ -15,8 +17,8 @@ import uk.gov.netz.api.security.AppSecurityComponentProvider;
 
 import java.util.List;
 
-import static uk.gov.netz.api.security.config.SecurityConstants.CLAIM_ROLE_TYPE;
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
+import static uk.gov.netz.api.security.config.SecurityConstants.CLAIM_ROLE_TYPE;
 
 @Primary
 @Component
@@ -33,17 +35,32 @@ public class AppCcaSecurityComponent implements AppSecurityComponentProvider {
      */
     public AppUser getAuthenticatedUser() {
         Jwt jwt = getToken();
+        if (jwt == null) {
+            return null;
+        }
+
         String roleType = jwt.getClaim(CLAIM_ROLE_TYPE);
         return userMapper.toAppUser(jwt.getClaimAsString(JwtClaimNames.SUB), jwt.getClaimAsString("email"), jwt.getClaimAsString("given_name"),
-            jwt.getClaimAsString("family_name"), getAuthorities(roleType), roleType);
+                jwt.getClaimAsString("family_name"), getAuthorities(roleType), roleType);
     }
 
     public String getAccessToken() {
-        return getToken().getTokenValue();
+        Jwt jwt = getToken();
+        if (jwt == null) {
+            return null;
+        }
+
+        return jwt.getTokenValue();
     }
 
     private Jwt getToken() {
-        return (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null
+                || !authentication.isAuthenticated()
+                || authentication instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+        return (Jwt) authentication.getPrincipal();
     }
 
     private List<CcaAuthorityDTO> getAuthorities(String roleType) {
@@ -58,8 +75,8 @@ public class AppCcaSecurityComponent implements AppSecurityComponentProvider {
 
     private List<CcaAuthorityDTO> getOperatorUserAuthorities() {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-            .map(CcaAuthorityDTO.class::cast)
-            .filter(authority -> !ObjectUtils.isEmpty(authority.getAuthorityPermissions()))
-            .toList();
+                .map(CcaAuthorityDTO.class::cast)
+                .filter(authority -> !ObjectUtils.isEmpty(authority.getAuthorityPermissions()))
+                .toList();
     }
 }

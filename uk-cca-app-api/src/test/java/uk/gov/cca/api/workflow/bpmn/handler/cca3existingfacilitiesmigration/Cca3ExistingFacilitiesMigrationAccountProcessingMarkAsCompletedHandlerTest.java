@@ -74,6 +74,6 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingMarkAsCompletedHandlerTest
         assertThat(accountState.isSucceeded()).isFalse();
         verify(execution, times(1)).getVariable(CcaBpmnProcessConstants.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_STATE);
         verify(execution, times(1)).setVariable(BpmnProcessConstants.REQUEST_DELETE_UPON_TERMINATE, true);
-        verify(fileAttachmentService, times(1)).deleteFileAttachmentsInBatches(Set.of("file1", "file2"));
+        verify(fileAttachmentService, times(1)).deleteFileAttachments(Set.of("file1", "file2"));
     }
 }

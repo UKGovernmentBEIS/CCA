@@ -14,18 +14,19 @@ import { FormService } from './form.service';
 
 @Directive()
 export abstract class FormInput implements ControlValueAccessor, OnInit, OnDestroy {
+  private readonly ngControl = inject(NgControl);
+  private readonly formService = inject(FormService);
+  private readonly container = inject(ControlContainer);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   @HostBinding('class.govuk-!-display-block') readonly govukDisplayBlock = true;
   @HostBinding('class.govuk-form-group') readonly govukFormGroupClass = true;
 
   protected readonly destroy$ = new Subject<void>();
   private isSubmitted = false;
-  private cdr = inject(ChangeDetectorRef);
-  protected constructor(
-    private readonly ngControl: NgControl,
-    private readonly formService: FormService,
-    private readonly container: ControlContainer,
-  ) {
-    ngControl.valueAccessor = this;
+
+  protected constructor() {
+    this.ngControl.valueAccessor = this;
   }
 
   @HostBinding('class.govuk-form-group--error') get govukFormGroupErrorClass(): boolean {

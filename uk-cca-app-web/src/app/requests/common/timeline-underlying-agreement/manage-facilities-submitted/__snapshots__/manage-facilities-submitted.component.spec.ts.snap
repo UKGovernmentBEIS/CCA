@@ -62,12 +62,6 @@ exports[`ManageFacilitiesComponent should show summary values: manage-facilities
                   Status
                 </button>
               </th>
-              <th
-                class="govuk-table__header"
-                scope="col"
-              >
-                 Actions 
-              </th>
             </tr>
           </thead>
           <tbody
@@ -95,10 +89,6 @@ exports[`ManageFacilitiesComponent should show summary values: manage-facilities
                 class="govuk-table__cell"
               >
                  New 
-              </td>
-              <td
-                class="govuk-table__cell"
-              >
               </td>
             </tr>
           </tbody>

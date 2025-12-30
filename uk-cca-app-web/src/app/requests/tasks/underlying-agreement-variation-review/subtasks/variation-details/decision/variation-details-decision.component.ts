@@ -17,13 +17,13 @@ import {
   underlyingAgreementVariationQuery,
   VARIATION_DETAILS_SUBTASK,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { SummaryComponent, WizardStepComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
-import { resetDetermination } from 'src/app/requests/tasks/underlying-agreement-review/utils';
-
 import { createSaveDecisionActionDTO } from '../../../transform';
+import { resetDetermination } from '../../../utils';
 
 @Component({
   selector: 'cca-variation-details-decision',
@@ -78,7 +78,9 @@ export class VariationDetailsDecisionComponent {
       },
     );
 
-    const determination = resetDetermination(this.store.select(underlyingAgreementReviewQuery.selectDetermination)());
+    const determination = resetDetermination(
+      this.store.select(underlyingAgreementVariationReviewQuery.selectDetermination)(),
+    );
 
     const decision = {
       type: this.form.value.type,

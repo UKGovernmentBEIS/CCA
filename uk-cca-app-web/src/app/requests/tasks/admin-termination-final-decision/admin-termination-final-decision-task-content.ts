@@ -7,8 +7,8 @@ import { TaskItemStatus } from '@requests/common';
 
 import { AdminTerminationFinalDecisionRequestTaskPayload } from 'cca-api';
 
-import { ADMIN_TERMINATION_FINAL_DECISION_SUBTASK } from './admin-termination-final-decision.helper';
 import { AdminTerminationFinalDecisionPrecontentComponent } from './precontent/admin-termination-final-decision-precontent.component';
+import { ADMIN_TERMINATION_FINAL_DECISION_SUBTASK } from './types';
 
 const adminTerminationFinalDecisionRoutePrefix = 'admin-termination-final-decision';
 
@@ -32,9 +32,8 @@ export function getAllAdminTerminationFinalDecisionSections(
       title: 'Decision',
       tasks: [
         {
-          name: ADMIN_TERMINATION_FINAL_DECISION_SUBTASK,
-          status: payload?.sectionsCompleted[ADMIN_TERMINATION_FINAL_DECISION_SUBTASK] ?? TaskItemStatus.NOT_STARTED,
           linkText: 'Final decision',
+          status: payload?.sectionsCompleted[ADMIN_TERMINATION_FINAL_DECISION_SUBTASK] ?? TaskItemStatus.NOT_STARTED,
           link: `${adminTerminationFinalDecisionRoutePrefix}/final-decision-reason`,
         },
       ],

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 
 import { ButtonDirective, GovukValidators, TextInputComponent } from '@netz/govuk-components';
@@ -14,6 +14,9 @@ import { EmailSentComponent } from '../email-sent/email-sent.component';
   imports: [ReactiveFormsModule, BackToTopComponent, EmailSentComponent, TextInputComponent, ButtonDirective],
 })
 export class SubmitEmailComponent {
+  private readonly forgotPasswordService = inject(ForgotPasswordService);
+  private readonly fb = inject(UntypedFormBuilder);
+
   protected isSummaryDisplayed: boolean;
   protected isEmailSent: boolean;
 
@@ -27,11 +30,6 @@ export class SubmitEmailComponent {
       ],
     ],
   });
-
-  constructor(
-    private readonly forgotPasswordService: ForgotPasswordService,
-    private readonly fb: UntypedFormBuilder,
-  ) {}
 
   onSubmit(): void {
     if (this.form.valid) {

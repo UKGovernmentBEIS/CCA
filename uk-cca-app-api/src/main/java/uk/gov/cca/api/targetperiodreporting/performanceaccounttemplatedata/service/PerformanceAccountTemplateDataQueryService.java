@@ -26,17 +26,22 @@ public class PerformanceAccountTemplateDataQueryService {
 	private final PerformanceAccountTemplateDataRepository repo;
 	private final PerformanceAccountTemplateDataCustomRepository customRepo;
     private static final PerformanceAccountTemplateMapper MAPPER = Mappers.getMapper(PerformanceAccountTemplateMapper.class);
-	
+
+	public SectorPerformanceAccountTemplateDataReportListDTO getSectorPerformanceAccountTemplateDataReportListDTO(
+			Long sectorAssociationId, SectorPerformanceAccountTemplateDataReportSearchCriteria criteria) {
+		final int reportYear = 2024;
+		final Year targetPeriodYear = Year.of(reportYear); //TODO make it configurable
+		if(Year.now().getValue() > reportYear + 1) {
+			throw new RuntimeException("cannot display pat reports");
+		}
+
+		return customRepo.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(
+				sectorAssociationId, criteria, targetPeriodYear);
+	}
+
 	public int calculateNextReportVersion(Long accountId, Year targetPeriodYear) {
 		int reportVersion = repo.findReportVersionByAccountIdAndTargetPeriodYear(accountId, targetPeriodYear);
 		return ++reportVersion;
-	}
-	
-	public SectorPerformanceAccountTemplateDataReportListDTO getSectorAccountsDataReportList(
-			Long sectorAssociationId, SectorPerformanceAccountTemplateDataReportSearchCriteria criteria,
-			Year targetPeriodYear) {
-		return customRepo.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId,
-				criteria, targetPeriodYear);
 	}
 
 	public Optional<AccountPerformanceAccountTemplateDataReportInfoDTO> findReportInfoByAccountIdAndTargetPeriod(Long accountId,

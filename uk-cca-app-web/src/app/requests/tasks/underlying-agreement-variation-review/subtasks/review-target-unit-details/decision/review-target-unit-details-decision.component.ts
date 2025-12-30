@@ -23,6 +23,7 @@ import {
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
 import { transformAddress } from '@shared/pipes';
 import { produce } from 'immer';
@@ -127,7 +128,9 @@ export class ReviewTargetUnitDetailsDecisionComponent implements OnInit {
       },
     );
 
-    const determination = resetDetermination(this.store.select(underlyingAgreementReviewQuery.selectDetermination)());
+    const determination = resetDetermination(
+      this.store.select(underlyingAgreementVariationReviewQuery.selectDetermination)(),
+    );
 
     const decision = {
       type: this.form.value.type,

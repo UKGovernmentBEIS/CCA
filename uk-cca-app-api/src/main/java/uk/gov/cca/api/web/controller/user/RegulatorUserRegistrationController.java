@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
 import uk.gov.netz.api.user.core.domain.dto.InvitedUserInfoDTO;
 import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
@@ -46,9 +47,10 @@ public class RegulatorUserRegistrationController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     public ResponseEntity<InvitedUserInfoDTO> acceptRegulatorInvitation(
+    		@Parameter(hidden = true) AppUser appUser,
             @RequestBody @Valid @Parameter(description = "The invitation token", required = true) TokenDTO invitationTokenDTO) {
         log.debug("Call to acceptRegulatorInvitation: {}", invitationTokenDTO);
-        return new ResponseEntity<>(regulatorUserInvitationService.acceptInvitation(invitationTokenDTO.getToken()), HttpStatus.OK);
+        return new ResponseEntity<>(regulatorUserInvitationService.acceptInvitation(invitationTokenDTO.getToken(), appUser), HttpStatus.OK);
     }
 
     @PutMapping(path = "/accept-authority-and-activate-user-from-invitation")
@@ -61,10 +63,11 @@ public class RegulatorUserRegistrationController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     public ResponseEntity<Void> acceptAuthorityAndActivateRegulatorUserFromInvite(
+    		@Parameter(hidden = true) AppUser appUser,
             @RequestBody @Valid @Parameter(description = "The regulator user credentials", required = true)
             InvitedUserCredentialsDTO invitedUserCredentialsDTO) {
         log.debug("Call to acceptAuthorityAndActivateRegulatorUserFromInvite: {}", invitedUserCredentialsDTO);
-        regulatorUserActivateService.acceptAuthorityAndActivateInvitedUser(invitedUserCredentialsDTO);
+        regulatorUserActivateService.acceptAuthorityAndActivateInvitedUser(invitedUserCredentialsDTO, appUser);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

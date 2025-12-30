@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { RequestTaskStore } from '@netz/common/store';
 import { PanelComponent } from '@netz/govuk-components';
 
-import { AdminTerminationFinalDecisionQuery } from '../../+state/admin-termination-final-decision.selectors';
+import { adminTerminationFinalDecisionQuery } from '../../admin-termination-final-decision.selectors';
 
 @Component({
   selector: 'cca-confirmation',
@@ -28,6 +28,6 @@ export default class ConfirmationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
   protected readonly finalDecisionType = this.requestTaskStore.select(
-    AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionReasonDetails,
-  )().finalDecisionType;
+    adminTerminationFinalDecisionQuery.selectReasonDetails,
+  )()?.finalDecisionType;
 }

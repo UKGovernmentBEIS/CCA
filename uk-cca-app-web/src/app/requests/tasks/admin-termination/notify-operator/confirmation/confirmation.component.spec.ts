@@ -3,9 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
 
-import { mockReasonForAdminTerminationPayload } from '../../mocks/mock-admin-termination-payload';
+import { mockReasonForAdminTerminationPayload } from '../../testing/mock-data';
 import ConfirmationComponent from './confirmation.component';
 
 describe('ConfirmationComponent', () => {
@@ -20,7 +19,7 @@ describe('ConfirmationComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
-    store.setRequestTaskItem({ requestTask: { type: 'TEST_TYPE' as any } });
+    store.setRequestTaskItem({ requestTask: { type: 'TEST_TYPE' } });
     store.setPayload(mockReasonForAdminTerminationPayload);
 
     fixture = TestBed.createComponent(ConfirmationComponent);
@@ -32,17 +31,7 @@ describe('ConfirmationComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display the correct banner and content for regulatory reason', () => {
-    expect(screen.getByText('Admin termination notice sent to operator')).toBeInTheDocument();
-    expect(document.getElementById('regulatory-reason-content').innerHTML.trim()).toBe(
-      'You must allow at least 28 days for the operator to appeal before you can start the final decision for the termination workflow.',
-    );
-    expect(screen.getByText('What happens next')).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        'A withdrawal task will now appear in your dashboard. You can withdraw the submission of this termination at any time.',
-      ),
-    ).toBeInTheDocument();
-    expect(screen.getByText('Return to: Dashboard')).toBeInTheDocument();
+  it('should show proper content', () => {
+    expect(fixture).toMatchSnapshot();
   });
 });

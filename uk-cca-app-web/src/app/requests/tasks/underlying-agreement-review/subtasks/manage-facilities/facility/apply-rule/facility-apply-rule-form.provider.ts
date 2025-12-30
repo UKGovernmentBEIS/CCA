@@ -65,7 +65,8 @@ export const facilityApplyRuleFormProvider: Provider = {
     });
 
     group.controls.energyConsumed.valueChanges.pipe(takeUntilDestroyed()).subscribe((energyConsumed) => {
-      if (Number(energyConsumed) < 70) {
+      // the `as any` cast is due to the form input becoming `empty string` when deleting the input
+      if (energyConsumed !== null && energyConsumed !== ('' as any) && Number(energyConsumed) < 70) {
         group.controls.energyConsumedProvision.enable();
         group.controls.startDate.enable();
       } else {

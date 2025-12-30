@@ -32,6 +32,7 @@ import uk.gov.netz.api.authorization.core.domain.AppAuthority;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
@@ -125,7 +126,11 @@ class SubsistenceFeesMoaControllerTest {
         SubsistenceFeesMoaDetailsDTO sfrMoaDetailsDTO = new SubsistenceFeesMoaDetailsDTO(1L, "CCACM1200", "ADS", "name",
                 fileInfoDTO, date, PaymentStatus.AWAITING_PAYMENT, 10L, 10L,
                 BigDecimal.valueOf(1000L), BigDecimal.valueOf(1000L), BigDecimal.valueOf(1000L), BigDecimal.valueOf(185L), 1L);
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
 
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(subsistenceFeesMoaQueryService.getSubsistenceFeesMoaDetailsById(moaId)).thenReturn(sfrMoaDetailsDTO);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -163,7 +168,11 @@ class SubsistenceFeesMoaControllerTest {
         Long moaId = 1L;
         UUID documentUuid = UUID.randomUUID();
         FileToken token = FileToken.builder().token(documentUuid.toString()).build();
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
 
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(subsistenceFeesMoaDocumentService.generateGetFileDocumentToken(moaId, documentUuid)).thenReturn(token);
 
         mockMvc.perform(MockMvcRequestBuilders

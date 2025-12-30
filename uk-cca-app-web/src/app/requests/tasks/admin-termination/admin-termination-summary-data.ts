@@ -4,8 +4,6 @@ import { fileUtils } from '@shared/utils';
 
 import { AdminTerminationReasonDetails } from 'cca-api';
 
-import { ReasonForAdminTerminationWizardStep } from './admin-termination.types';
-
 export function toAdminTerminationReasonSummaryData(
   adminTerminationReasonDetails: AdminTerminationReasonDetails,
   adminTerminationSubmitAttachments: Record<string, string>,
@@ -13,7 +11,7 @@ export function toAdminTerminationReasonSummaryData(
   downloadUrl: string,
 ): SummaryData {
   return new SummaryFactory()
-    .addSection('', `../${ReasonForAdminTerminationWizardStep.REASON_DETAILS}`)
+    .addSection('', '../reason-details')
     .addTextAreaRow('Termination reason', transformAdminTerminationReason(adminTerminationReasonDetails.reason), {
       change: isEditable,
     })

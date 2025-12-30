@@ -1,154 +1,442 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`AdditionalInfoComponent should match snapshot for AdditionalInfoComponent 1`] = `
+exports[`AdditionalInfoComponent when determination type is ACCEPTED should match snapshot 1`] = `
 <div
-  id="root0"
+  id="root4"
 >
-  <cca-wizard-step
-    class="ng-untouched ng-pristine ng-valid"
-    heading="Provide any additional information here to support your decision (optional)"
+  <div
+    class="govuk-!-width-two-thirds"
   >
-    <form
+    <cca-wizard-step
       class="ng-untouched ng-pristine ng-valid"
-      novalidate=""
+      heading="Provide any additional information here to support your decision"
     >
-      
-      <netz-page-heading>
-        <span
-          class="govuk-caption-l"
-        >
-          Reject
-        </span>
-        
-        <h1
-          class="govuk-heading-l"
-        >
-          Provide any additional information here to support your decision (optional)
-        </h1>
-      </netz-page-heading>
-      <div
-        class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
-        formcontrolname="additionalInfo"
-        govuk-textarea=""
-        hint="This will be included in the official notice."
-      >
-        <label
-          class="govuk-label govuk-visually-hidden"
-          for="additionalInfo"
-          id="l.additionalInfo"
-        >
-           
-
-        </label>
-        <div
-          class="govuk-hint"
-          id="additionalInfo-hint"
-        >
-           This will be included in the official notice. 
-        </div>
-        
-        
-        <textarea
-          aria-describedby="additionalInfo-hint"
-          class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-valid"
-          id="additionalInfo"
-          name="additionalInfo"
-          rows="5"
-        />
-        
-      </div>
-      <cca-multiple-file-input
+      <form
         class="ng-untouched ng-pristine ng-valid"
-        formcontrolname="files"
+        novalidate=""
       >
+        
+        <netz-page-heading>
+          <span
+            class="govuk-caption-l"
+          >
+            Accept
+          </span>
+          
+          <h1
+            class="govuk-heading-l"
+          >
+            Provide any additional information here to support your decision
+          </h1>
+        </netz-page-heading>
+        <p
+          class="govuk-label--m govuk-!-margin-bottom-1"
+        >
+           Does this variation result in changes to the current underlying agreement? 
+        </p>
         <div
-          class="cca-multi-file-upload cca-multi-file-upload--enhanced"
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="variationImpactsAgreement"
+          govuk-radio=""
         >
           <div
             class="govuk-form-group"
           >
-            <label
-              class="govuk-label govuk-label--m"
-              for="files"
-              id="l.files"
+            <fieldset
+              class="govuk-fieldset"
+              govukfieldset=""
+              id="variationImpactsAgreement"
             >
-              Upload a file
-            </label>
-            <span
-              class="govuk-hint"
-              id="files-hint-file-size"
-            >
-               Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
-            </span>
-            
-            
-            
-            <div
-              class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
-            >
-              <input
-                accept="*/*"
-                aria-labelledby="l.files ld.files"
-                class="govuk-file-upload cca-multi-file-upload__input"
-                id="files"
-                multiple=""
-                name="files"
-                type="file"
-              />
-              <p
-                class="govuk-body"
+              <legend
+                class="govuk-fieldset__legend"
+                govuklegend=""
+                id="l.variationImpactsAgreement"
               >
-                Drag and drop files here or
-              </p>
-              <label
-                class="govuk-button govuk-button--secondary"
-                for="files"
-                id="ld.files"
-              >
-                 Choose files 
-              </label>
+                
+                
+              </legend>
+              
+              
               <div
-                aria-live="polite"
-                class="govuk-visually-hidden"
-                role="status"
+                class="govuk-radios"
               >
+                
+                <div
+                  class="govuk-radios__item"
+                >
+                  <input
+                    aria-describedby="variationImpactsAgreement-option0-item-hint"
+                    class="govuk-radios__input"
+                    id="variationImpactsAgreement-option0"
+                    name="variationImpactsAgreement"
+                    type="radio"
+                    value="true"
+                  />
+                  <label
+                    class="govuk-label govuk-radios__label"
+                    for="variationImpactsAgreement-option0"
+                  >
+                     Yes 
+                    
+                    
+                  </label>
+                  <div
+                    class="govuk-radios__hint govuk-hint"
+                    id="variationImpactsAgreement-option0-item-hint"
+                  >
+                    A new version of the underlying agreement will be generated, even if there are no changes from the
+                      current version, and you must upload evidence of the operator's assent
+                  </div>
+                  
+                </div>
+                
+                
+                
+                
+                <div
+                  class="govuk-radios__item"
+                >
+                  <input
+                    aria-describedby="variationImpactsAgreement-option1-item-hint"
+                    class="govuk-radios__input"
+                    id="variationImpactsAgreement-option1"
+                    name="variationImpactsAgreement"
+                    type="radio"
+                    value="false"
+                  />
+                  <label
+                    class="govuk-label govuk-radios__label"
+                    for="variationImpactsAgreement-option1"
+                  >
+                     No 
+                    
+                    
+                  </label>
+                  <div
+                    class="govuk-radios__hint govuk-hint"
+                    id="variationImpactsAgreement-option1-item-hint"
+                  >
+                    A notification letter will be generated to acknowledge that you have accepted the
+                                        requested changes, but no new underlying agreement is needed
+                  </div>
+                  
+                </div>
+                
+                
+                
                 
               </div>
-            </div>
+            </fieldset>
           </div>
-          <cca-file-upload-list>
+        </div>
+        
+        <p
+          class="govuk-label--m govuk-!-margin-bottom-1"
+        >
+          Add any additional information (optional)
+        </p>
+        <p
+          class="govuk-hint"
+        >
+          This text will be included in the official notice
+        </p>
+        
+        <div
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="additionalInformation"
+          govuk-textarea=""
+        >
+          <label
+            class="govuk-label govuk-visually-hidden"
+            for="additionalInformation"
+            id="l.additionalInformation"
+          >
+             
+
+          </label>
+          
+          
+          <textarea
+            class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-valid"
+            id="additionalInformation"
+            name="additionalInformation"
+            rows="5"
+          />
+          
+        </div>
+        <cca-multiple-file-input
+          class="ng-untouched ng-pristine ng-valid"
+          formcontrolname="files"
+          label="Upload a file (optional)"
+        >
+          <div
+            class="cca-multi-file-upload cca-multi-file-upload--enhanced"
+          >
             <div
-              class="cca-multi-file__uploaded-files cca-hidden"
+              class="govuk-form-group"
             >
+              <label
+                class="govuk-label govuk-label--m"
+                for="files"
+                id="l.files"
+              >
+                Upload a file (optional)
+              </label>
+              <span
+                class="govuk-hint"
+                id="files-hint-file-size"
+              >
+                 Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
+              </span>
               
               
-              <dl
-                class="govuk-summary-list"
+              
+              <div
+                class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
+              >
+                <input
+                  accept="*/*"
+                  aria-labelledby="l.files ld.files"
+                  class="govuk-file-upload cca-multi-file-upload__input"
+                  id="files"
+                  multiple=""
+                  name="files"
+                  type="file"
+                />
+                <p
+                  class="govuk-body"
+                >
+                  Drag and drop files here or
+                </p>
+                <label
+                  class="govuk-button govuk-button--secondary"
+                  for="files"
+                  id="ld.files"
+                >
+                   Choose files 
+                </label>
+                <div
+                  aria-live="polite"
+                  class="govuk-visually-hidden"
+                  role="status"
+                >
+                  
+                </div>
+              </div>
+            </div>
+            <cca-file-upload-list>
+              <div
+                class="cca-multi-file__uploaded-files cca-hidden"
               >
                 
-              </dl>
+                
+                <dl
+                  class="govuk-summary-list"
+                >
+                  
+                </dl>
+                
+                
+                
+                
+                
+              </div>
               
-              
-              
-              
-              
-            </div>
-            
-          </cca-file-upload-list>
-        </div>
-      </cca-multiple-file-input>
-      <button
-        class="govuk-button"
-        govukbutton=""
-        netzpendingbutton=""
-        type="submit"
+            </cca-file-upload-list>
+          </div>
+        </cca-multiple-file-input>
+        <button
+          class="govuk-button"
+          govukbutton=""
+          netzpendingbutton=""
+          type="submit"
+        >
+          Continue
+        </button>
+        
+        
+      </form>
+    </cca-wizard-step>
+  </div>
+  <hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  />
+  <netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Review application for underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</div>
+`;
+
+exports[`AdditionalInfoComponent when determination type is REJECTED should match snapshot 1`] = `
+<div
+  id="root0"
+>
+  <div
+    class="govuk-!-width-two-thirds"
+  >
+    <cca-wizard-step
+      class="ng-untouched ng-pristine ng-valid"
+      heading="Provide any additional information here to support your decision"
+    >
+      <form
+        class="ng-untouched ng-pristine ng-valid"
+        novalidate=""
       >
-        Continue
-      </button>
-      
-      
-    </form>
-  </cca-wizard-step>
+        
+        <netz-page-heading>
+          <span
+            class="govuk-caption-l"
+          >
+            Reject
+          </span>
+          
+          <h1
+            class="govuk-heading-l"
+          >
+            Provide any additional information here to support your decision
+          </h1>
+        </netz-page-heading>
+        
+        <p
+          class="govuk-label--m govuk-!-margin-bottom-1"
+        >
+          Add any additional information (optional)
+        </p>
+        <p
+          class="govuk-hint"
+        >
+          This text will be included in the official notice
+        </p>
+        
+        <div
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="additionalInformation"
+          govuk-textarea=""
+        >
+          <label
+            class="govuk-label govuk-visually-hidden"
+            for="additionalInformation"
+            id="l.additionalInformation"
+          >
+             
+
+          </label>
+          <div
+            class="govuk-hint"
+            id="additionalInformation-hint"
+          >
+             This will be included in the official notice 
+          </div>
+          
+          
+          <textarea
+            aria-describedby="additionalInformation-hint"
+            class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-valid"
+            id="additionalInformation"
+            name="additionalInformation"
+            rows="5"
+          />
+          
+        </div>
+        <cca-multiple-file-input
+          class="ng-untouched ng-pristine ng-valid"
+          formcontrolname="files"
+          label="Upload a file (optional)"
+        >
+          <div
+            class="cca-multi-file-upload cca-multi-file-upload--enhanced"
+          >
+            <div
+              class="govuk-form-group"
+            >
+              <label
+                class="govuk-label govuk-label--m"
+                for="files"
+                id="l.files"
+              >
+                Upload a file (optional)
+              </label>
+              <span
+                class="govuk-hint"
+                id="files-hint-file-size"
+              >
+                 Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
+              </span>
+              
+              
+              
+              <div
+                class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
+              >
+                <input
+                  accept="*/*"
+                  aria-labelledby="l.files ld.files"
+                  class="govuk-file-upload cca-multi-file-upload__input"
+                  id="files"
+                  multiple=""
+                  name="files"
+                  type="file"
+                />
+                <p
+                  class="govuk-body"
+                >
+                  Drag and drop files here or
+                </p>
+                <label
+                  class="govuk-button govuk-button--secondary"
+                  for="files"
+                  id="ld.files"
+                >
+                   Choose files 
+                </label>
+                <div
+                  aria-live="polite"
+                  class="govuk-visually-hidden"
+                  role="status"
+                >
+                  
+                </div>
+              </div>
+            </div>
+            <cca-file-upload-list>
+              <div
+                class="cca-multi-file__uploaded-files cca-hidden"
+              >
+                
+                
+                <dl
+                  class="govuk-summary-list"
+                >
+                  
+                </dl>
+                
+                
+                
+                
+                
+              </div>
+              
+            </cca-file-upload-list>
+          </div>
+        </cca-multiple-file-input>
+        <button
+          class="govuk-button"
+          govukbutton=""
+          netzpendingbutton=""
+          type="submit"
+        >
+          Continue
+        </button>
+        
+        
+      </form>
+    </cca-wizard-step>
+  </div>
   <hr
     class="govuk-footer__section-break govuk-!-margin-bottom-3"
   />

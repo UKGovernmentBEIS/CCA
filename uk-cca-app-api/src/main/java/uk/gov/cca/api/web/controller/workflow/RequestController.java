@@ -87,7 +87,8 @@ public class RequestController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceType="#criteria.resourceType", resourceId = "#criteria.resourceId")
     public ResponseEntity<RequestDetailsSearchResults> getRequestDetailsByResource(
+    		@Parameter(hidden = true) AppUser appUser,
             @RequestBody @Valid @Parameter(description = "The search criteria", required = true) RequestSearchCriteria  criteria){
-        return new ResponseEntity<>(requestQueryService.findRequestDetailsBySearchCriteria(criteria), HttpStatus.OK);
+        return new ResponseEntity<>(requestQueryService.findRequestDetailsBySearchCriteria(criteria, appUser), HttpStatus.OK);
     }
 }

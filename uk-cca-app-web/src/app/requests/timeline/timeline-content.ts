@@ -31,6 +31,7 @@ import { UnderlyingAgreementReviewedAcceptedDecisionDetailsComponent } from './u
 import { UnderlyingAgreementReviewedRejectedDecisionDetailsComponent } from './underlying-agreement-reviewed/underlying-agreement-reviewed-rejected-decision/underlying-agreement-reviewed-rejected-decision-details.component';
 import { getAllUnderlyingAgreementSections } from './underlying-agreement-submitted/underlying-agreement-submitted-task-content';
 import { UnderlyingAgreementVariationActivatedComponent } from './underlying-agreement-variation-activated/underlying-agreement-variation-activated.component';
+import { UnderlyingAgreementVariationCompletedComponent } from './underlying-agreement-variation-completed/underlying-agreement-variation-completed.component';
 import { UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent } from './underlying-agreement-variation-reviewed/underlying-agreement-variation-reviewed-accepted-decision-details/underlying-agreement-variation-reviewed-accepted-decision-details.component';
 import { UnderlyingAgreementVariationReviewedRejectedDecisionDetailsComponent } from './underlying-agreement-variation-reviewed/underlying-agreement-variation-reviewed-rejected-decision/underlying-agreement-variation-reviewed-rejected-decision-details.component';
 import { getAllUnderlyingAgreementVariationSections } from './underlying-agreement-variation-submitted/underlying-agreement-variation-submitted-task-content';
@@ -210,6 +211,16 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     return {
       header: getItemActionHeader(action),
       component: UnderlyingAgreementVariationActivatedComponent,
+    };
+  },
+
+  UNDERLYING_AGREEMENT_VARIATION_APPLICATION_COMPLETED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: UnderlyingAgreementVariationCompletedComponent,
     };
   },
 

@@ -47,6 +47,7 @@ import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
@@ -162,7 +163,11 @@ class SubsistenceFeesRunViewControllerTest {
 
         SubsistenceFeesRunDetailsDTO sfrDetailsDTO = new SubsistenceFeesRunDetailsDTO(1L, "S2501", date, 
         		PaymentStatus.AWAITING_PAYMENT, BigDecimal.valueOf(1000L), BigDecimal.valueOf(1000L), BigDecimal.valueOf(1000L), 1L, 1L);
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
 
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(subsistenceFeesRunQueryService.getSubsistenceFeesRunDetailsById(runId)).thenReturn(sfrDetailsDTO);
 
         mockMvc.perform(MockMvcRequestBuilders

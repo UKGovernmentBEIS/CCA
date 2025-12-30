@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { expand, map, Observable, switchMap, timer } from 'rxjs';
@@ -21,7 +21,7 @@ export class SignatureFileDownloadComponent implements AfterViewChecked {
   private readonly regulatorUsersService = inject(RegulatorUsersService);
   private readonly usersService = inject(UsersService);
 
-  @ViewChild('anchor') readonly anchor: ElementRef<HTMLAnchorElement>;
+  protected readonly anchor = viewChild<ElementRef<HTMLAnchorElement>>('anchor');
 
   private hasDownloadedOnce = false;
   private userSignaturePath = `${this.usersService.configuration.basePath}/v1.0/user-signatures/`;
@@ -43,8 +43,9 @@ export class SignatureFileDownloadComponent implements AfterViewChecked {
   );
 
   ngAfterViewChecked() {
-    if (this.anchor.nativeElement.href.includes(this.userSignaturePath) && !this.hasDownloadedOnce) {
-      this.anchor.nativeElement.click();
+    const anchor = this.anchor();
+    if (anchor.nativeElement.href.includes(this.userSignaturePath) && !this.hasDownloadedOnce) {
+      anchor.nativeElement.click();
       this.hasDownloadedOnce = true;
       onfocus = () => close();
     }

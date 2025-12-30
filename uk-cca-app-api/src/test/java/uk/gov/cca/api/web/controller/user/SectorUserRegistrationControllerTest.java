@@ -29,6 +29,7 @@ import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.cca.api.web.orchestrator.user.service.SectorUserRegistrationOrchestratorService;
 import uk.gov.netz.api.security.AppSecurityComponent;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
 import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
@@ -72,6 +73,7 @@ class SectorUserRegistrationControllerTest {
 
     @Test
     void acceptInvitation() throws Exception {
+    	AppUser currentUser = AppUser.builder().userId("currentuser").build();
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setToken("token");
 
@@ -83,7 +85,9 @@ class SectorUserRegistrationControllerTest {
                 .invitationStatus(UserInvitationStatus.ACCEPTED)
                 .build();
 
-        when(sectorUserRegistrationOrchestratorService.acceptInvitation(tokenDTO.getToken())).thenReturn(sectorInvitedUserInfoDTO);
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
+        when(sectorUserRegistrationOrchestratorService.acceptInvitation(tokenDTO.getToken(), currentUser)).
+        		thenReturn(sectorInvitedUserInfoDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post(USER_CONTROLLER_PATH + ACCEPT_INVITATION_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -95,15 +99,17 @@ class SectorUserRegistrationControllerTest {
                 .andExpect(jsonPath("$.roleCode").value(sectorInvitedUserInfoDTO.getRoleCode()))
                 .andExpect(jsonPath("$.invitationStatus").value(sectorInvitedUserInfoDTO.getInvitationStatus().name()));
 
-        verify(sectorUserRegistrationOrchestratorService, times(1)).acceptInvitation(tokenDTO.getToken());
+        verify(sectorUserRegistrationOrchestratorService, times(1)).acceptInvitation(tokenDTO.getToken(), currentUser);
     }
 
     @Test
     void acceptInvitation_throw_business_exception() throws Exception {
+    	AppUser currentUser = AppUser.builder().userId("currentuser").build();
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setToken("token");
 
-        when(sectorUserRegistrationOrchestratorService.acceptInvitation(tokenDTO.getToken()))
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
+        when(sectorUserRegistrationOrchestratorService.acceptInvitation(tokenDTO.getToken(), currentUser))
                 .thenThrow(new BusinessException(CcaErrorCode.AUTHORITY_USER_IS_NOT_SECTOR_USER));
 
         mockMvc.perform(
@@ -112,16 +118,19 @@ class SectorUserRegistrationControllerTest {
                                 .content(mapper.writeValueAsString(tokenDTO)))
                 .andExpect(status().isBadRequest());
 
-        verify(sectorUserRegistrationOrchestratorService, times(1)).acceptInvitation(tokenDTO.getToken());
+        verify(sectorUserRegistrationOrchestratorService, times(1)).acceptInvitation(tokenDTO.getToken(), currentUser);
     }
 
     @Test
     void registerSectorUserFromInvitation() throws Exception {
+    	AppUser currentUser = AppUser.builder().userId("currentuser").build();
         SectorUserRegistrationWithCredentialsDTO user = SectorUserRegistrationWithCredentialsDTO.builder()
                 .emailToken("token").firstName("fn").lastName("ln").build();
         SectorUserDTO userDTO = SectorUserDTO.builder().email("email").firstName("fn").lastName("ln").jobTitle("jobTitle").build();
 
-        when(sectorUserActivationService.acceptAuthorityAndEnableInvitedUserWithCredentials(user)).thenReturn(userDTO);
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
+        when(sectorUserActivationService.acceptAuthorityAndEnableInvitedUserWithCredentials(user, currentUser))
+        		.thenReturn(userDTO);
 
         mockMvc.perform(
                         MockMvcRequestBuilders.put(USER_CONTROLLER_PATH + ENABLE_WITH_CREDENTIALS_FROM_INVITATION)
@@ -132,22 +141,25 @@ class SectorUserRegistrationControllerTest {
                 .andExpect(jsonPath("$.lastName").value("ln"))
                 .andExpect(jsonPath("$.email").value("email"));
 
-        verify(sectorUserActivationService, times(1)).acceptAuthorityAndEnableInvitedUserWithCredentials(user);
+        verify(sectorUserActivationService, times(1)).acceptAuthorityAndEnableInvitedUserWithCredentials(user, currentUser);
     }
 
     @Test
     void acceptAuthorityAndSetCredentialsToUser() throws Exception {
+    	AppUser currentUser = AppUser.builder().userId("currentuser").build();
         InvitedUserCredentialsDTO sectorUser = InvitedUserCredentialsDTO.builder()
                 .invitationToken("token")
                 .password("password")
                 .build();
 
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
+        
         mockMvc.perform(
                         MockMvcRequestBuilders.put(USER_CONTROLLER_PATH + ACCEPT_AUTHORITY_AND_SET_CREDENTIALS_TO_USER)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(sectorUser)))
                 .andExpect(status().isNoContent());
 
-        verify(sectorUserActivationService, times(1)).acceptAuthorityAndSetCredentialsToUser(sectorUser);
+        verify(sectorUserActivationService, times(1)).acceptAuthorityAndSetCredentialsToUser(sectorUser, currentUser);
     }
 }

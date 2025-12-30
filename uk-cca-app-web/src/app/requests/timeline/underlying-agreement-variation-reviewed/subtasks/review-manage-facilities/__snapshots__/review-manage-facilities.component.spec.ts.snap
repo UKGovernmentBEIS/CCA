@@ -2,7 +2,7 @@
 
 exports[`ReviewManageFacilitiesComponent should show summary values: manage-facilities 1`] = `
 <cca-review-manage-facilities
-  manageFacilities={[Function Function]}
+  facilities={[Function Function]}
   requestActionStore={[Function _RequestActionStore]}
 >
   <div>
@@ -63,10 +63,15 @@ exports[`ReviewManageFacilitiesComponent should show summary values: manage-faci
                 </button>
               </th>
               <th
+                aria-sort="none"
                 class="govuk-table__header"
                 scope="col"
               >
-                 Actions 
+                <button
+                  type="button"
+                >
+                  Decision status
+                </button>
               </th>
             </tr>
           </thead>
@@ -99,6 +104,13 @@ exports[`ReviewManageFacilitiesComponent should show summary values: manage-faci
               <td
                 class="govuk-table__cell"
               >
+                <govuk-tag>
+                  <strong
+                    class="govuk-tag govuk-tag--green"
+                  >
+                     Accepted 
+                  </strong>
+                </govuk-tag>
               </td>
             </tr>
             <tr
@@ -127,6 +139,13 @@ exports[`ReviewManageFacilitiesComponent should show summary values: manage-faci
               <td
                 class="govuk-table__cell"
               >
+                <govuk-tag>
+                  <strong
+                    class="govuk-tag govuk-tag--green"
+                  >
+                     Accepted 
+                  </strong>
+                </govuk-tag>
               </td>
             </tr>
           </tbody>

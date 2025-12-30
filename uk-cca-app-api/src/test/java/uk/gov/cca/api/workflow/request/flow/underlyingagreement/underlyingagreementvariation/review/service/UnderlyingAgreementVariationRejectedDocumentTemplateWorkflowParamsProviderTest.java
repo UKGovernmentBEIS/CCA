@@ -13,6 +13,7 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.notification.DocumentTemplateUnderlyingAgreementParamsProvider;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.VariationDetermination;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,9 +44,11 @@ class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider
 
     @Test
     void constructParams() {
-        final Determination determination = Determination.builder()
-                .reason("reason")
-                .additionalInformation("additionalInformation")
+        final VariationDetermination determination = VariationDetermination.builder()
+                .determination(Determination.builder()
+                        .reason("reason")
+                        .additionalInformation("additionalInformation")
+                        .build())
                 .build();
         final int version = 1;
         final Map<SchemeVersion, Integer> consolidationNumberMap = Map.of(SchemeVersion.CCA_2, version);
@@ -63,6 +66,8 @@ class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider
 
         when(documentTemplateUnderlyingAgreementParamsProvider.constructTargetUnitDetailsTemplateParams(targetUnitDetails))
                 .thenReturn(new HashMap<>(Map.of("targetUnitDetails", "test1")));
+        when(documentTemplateTransformationMapper.constructVersionMap(consolidationNumberMap))
+                .thenReturn(Map.of("CCA2", "1"));
 
         // Invoke
         Map<String, Object> actual = paramsProvider.constructParams(requestPayload);
@@ -71,9 +76,11 @@ class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider
         assertThat(actual).containsExactlyInAnyOrderEntriesOf(Map.of(
                 "targetUnitDetails", "test1",
                 "reason", "reason",
-                "versionMap", Map.of()
+                "versionMap", Map.of("CCA2", "1")
         ));
         verify(documentTemplateUnderlyingAgreementParamsProvider, times(1))
                 .constructTargetUnitDetailsTemplateParams(targetUnitDetails);
+        verify(documentTemplateTransformationMapper, times(1))
+                .constructVersionMap(consolidationNumberMap);
     }
 }

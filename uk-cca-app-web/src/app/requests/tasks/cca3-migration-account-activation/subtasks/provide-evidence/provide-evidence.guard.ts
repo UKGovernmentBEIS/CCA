@@ -4,7 +4,7 @@ import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot } from
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { CCA3_MIGRATION_PROVIDE_EVIDENCE_SUBTASK, TaskItemStatus } from '@requests/common';
 
-import { underlyingAgreementActivationQuery } from '../../../underlying-agreement-activation/+state/una-activation.selectors';
+import { underlyingAgreementActivationQuery } from '../../../underlying-agreement-activation/una-activation.selectors';
 import { cca3MigrationAccountActivationQuery } from '../../+state/cca3-migration-account-activation.selectors';
 
 export const provideEvidenceRedirectGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {

@@ -1,4 +1,4 @@
-import { AsyncPipe, DOCUMENT, KeyValue, KeyValuePipe, NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, KeyValue, KeyValuePipe, NgTemplateOutlet } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -9,6 +9,7 @@ import {
   viewChildren,
   viewChild,
   inject,
+  DOCUMENT,
 } from '@angular/core';
 import { AbstractControl, FormControlStatus, NgForm, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';

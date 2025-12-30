@@ -6,7 +6,7 @@ import { PanelComponent } from '@netz/govuk-components';
 @Component({
   selector: 'cca-confirmation',
   template: `
-    <govuk-panel title="Payment status updated"></govuk-panel>
+    <govuk-panel title="Payment status updated" />
 
     <div class="govuk-!-margin-top-9">
       <a class="govuk-link" [routerLink]="['../../']" [replaceUrl]="true" [relativeTo]="activatedRoute">

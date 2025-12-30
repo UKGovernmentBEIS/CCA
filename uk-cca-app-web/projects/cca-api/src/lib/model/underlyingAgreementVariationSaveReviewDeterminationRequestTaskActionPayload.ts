@@ -9,10 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Determination } from './determination';
+import { VariationDetermination } from './variationDetermination';
 
 export interface UnderlyingAgreementVariationSaveReviewDeterminationRequestTaskActionPayload {
   payloadType?: string;
-  determination?: Determination;
+  determination?: VariationDetermination;
   reviewSectionsCompleted?: Record<string, string>;
 }

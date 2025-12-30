@@ -114,6 +114,7 @@ module.exports = tseslint.config(
       'no-control-regex': 'off',
       'no-unused-vars': 'off', // or "@typescript-eslint/no-unused-vars": "off",
       'unused-imports/no-unused-imports': 'error',
+      '@angular-eslint/prefer-inject': 'off',
       'unused-imports/no-unused-vars': [
         'warn',
         {

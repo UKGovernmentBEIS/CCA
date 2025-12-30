@@ -5,8 +5,9 @@ import { RequestTaskPageContentFactory } from '@netz/common/request-task';
 import { RequestTaskStore } from '@netz/common/store';
 import { PROVIDE_EVIDENCE_SUBTASK, TaskItemStatus } from '@requests/common';
 
-import { UNAActivationRequestTaskPayload } from './underlying-agreement-activation.types';
-import UnderlyingAgreementActivationPreContentComponent from './underlying-agreement-activation-pre-content.component';
+import { UnderlyingAgreementActivationRequestTaskPayload } from 'cca-api';
+
+import UnderlyingAgreementActivationPreContentComponent from './precontent/underlying-agreement-activation-pre-content.component';
 
 const routePrefix = 'underlying-agreement-activation';
 
@@ -20,15 +21,17 @@ export const underlyingAgreementActivationTaskContent: RequestTaskPageContentFac
   };
 };
 
-function getAllUnderlyingAgreementActivationSections(payload: UNAActivationRequestTaskPayload): TaskSection[] {
+function getAllUnderlyingAgreementActivationSections(
+  payload: UnderlyingAgreementActivationRequestTaskPayload,
+): TaskSection[] {
   return [
     {
       title: 'Evidence',
       tasks: [
         {
+          linkText: 'Provide evidence',
           status: payload?.sectionsCompleted[PROVIDE_EVIDENCE_SUBTASK] ?? TaskItemStatus.NOT_STARTED,
           link: `${routePrefix}/provide-evidence`,
-          linkText: 'Provide evidence',
         },
       ],
     },

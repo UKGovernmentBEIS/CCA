@@ -76,7 +76,7 @@ class PerformanceAccountTemplateDataQueryServiceTest {
 		when(customRepo.getSectorPerformanceAccountTemplateDataReportListBySearchCriteria(sectorAssociationId, criteria,
 				targetPeriodYear)).thenReturn(listDTO);
 
-		var result = cut.getSectorAccountsDataReportList(sectorAssociationId, criteria, targetPeriodYear);
+		var result = cut.getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria);
 		
 		assertThat(result).isEqualTo(listDTO);
 		

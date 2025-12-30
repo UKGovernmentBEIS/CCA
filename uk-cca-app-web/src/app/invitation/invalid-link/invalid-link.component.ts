@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { map } from 'rxjs';
@@ -13,7 +13,7 @@ import { PageHeadingComponent } from '@netz/common/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InvalidLinkComponent {
-  protected readonly errorCode$ = this.route.queryParamMap.pipe(map((queryParamMap) => queryParamMap.get('code')));
+  private readonly route = inject(ActivatedRoute);
 
-  constructor(private readonly route: ActivatedRoute) {}
+  protected readonly errorCode$ = this.route.queryParamMap.pipe(map((queryParamMap) => queryParamMap.get('code')));
 }

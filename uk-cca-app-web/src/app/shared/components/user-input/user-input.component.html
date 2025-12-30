@@ -24,13 +24,13 @@
   widthClass="govuk-!-width-three-quarters"
 ></div>
 
-<h3 class="govuk-heading-s">{{ isNotification ? 'Address' : 'Your address' }}</h3>
+<h3 class="govuk-heading-s">{{ isNotification() ? 'Address' : 'Your address' }}</h3>
 
 <cca-county-address-input formGroupName="address" />
 
-<h3 class="govuk-heading-s">{{ isNotification ? 'Phone number' : 'Your phone number' }}</h3>
+<h3 class="govuk-heading-s">{{ isNotification() ? 'Phone number' : 'Your phone number' }}</h3>
 
-@switch (phoneType) {
+@switch (phoneType()) {
   @case ('full') {
     <div cca-phone-input formControlName="phoneNumber" label="Phone number 1" class="govuk-!-margin-bottom-1"></div>
     <div cca-phone-input formControlName="mobileNumber" label="Phone number 2 (optional)"></div>
@@ -57,7 +57,7 @@
   }
 }
 
-@if (!isNotification) {
+@if (!isNotification()) {
   <div
     autoComplete="email"
     formControlName="email"

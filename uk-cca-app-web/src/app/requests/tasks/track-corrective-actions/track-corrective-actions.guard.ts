@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
-import { CanDeactivateFn } from '@angular/router';
+import { CanDeactivateFn, createUrlTreeFromSnapshot } from '@angular/router';
 
-import { map, tap } from 'rxjs';
+import { catchError, map, of, tap } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
 
@@ -14,6 +14,10 @@ export const refreshDaysRemainingGuard: CanDeactivateFn<unknown> = (_, route) =>
   const taskId = +route.params.taskId;
 
   return tasksService.getTaskItemInfoById(taskId).pipe(
+    catchError(() => {
+      createUrlTreeFromSnapshot(route, ['/dashboard']);
+      return of(null);
+    }),
     tap((requestTaskItem) => store.setRequestTaskItem(requestTaskItem)),
     map(() => true),
   );

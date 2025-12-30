@@ -93,7 +93,7 @@ exports[`FacilityEligibilityDetailsComponent should test that the form renders p
                       for="adjacentFacilityId"
                       id="l.adjacentFacilityId"
                     >
-                      Specify facility ID of adjacent facility
+                       Specify facility ID of adjacent facility 
                     </label>
                     <p>
                     </p>

@@ -27,9 +27,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountInfoResponseDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountSiteContactDTO;
+import uk.gov.cca.api.account.service.TargetUnitAccountSiteContactService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.web.orchestrator.sectorassociation.service.SectorAssociationTargetUnitAccountsServiceOrchestrator;
 import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria;
 import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria.SortBy;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -42,7 +42,7 @@ import uk.gov.netz.api.security.Authorized;
 @Tag(name = "Sector association target unit accounts info")
 public class SectorAssociationTargetUnitAccountsController {
 
-	private final SectorAssociationTargetUnitAccountsServiceOrchestrator orchestrator;
+	private final TargetUnitAccountSiteContactService targetUnitAccountSiteContactService;
 	
 	@GetMapping
     @Operation(summary = "Retrieves the target unit accounts and their contacts for specified sector")
@@ -62,7 +62,7 @@ public class SectorAssociationTargetUnitAccountsController {
             @RequestParam("size") @Parameter(name = "size", description = "The page size")
             @Min(value = 1, message = "{parameter.pageSize.typeMismatch}")
             @NotNull(message = "{parameter.pageSize.typeMismatch}") Integer pageSize) {   	
-		return new ResponseEntity<>(orchestrator.getTargetUnitAccountsWithSiteContact(appUser, sectorId,
+		return new ResponseEntity<>(targetUnitAccountSiteContactService.getTargetUnitAccountsWithSiteContact(appUser, sectorId,
 				AccountSearchCriteria.builder()
 						.paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
 						.sortBy(SortBy.ACCOUNT_BUSINESS_ID)
@@ -84,7 +84,7 @@ public class SectorAssociationTargetUnitAccountsController {
         @PathVariable("sectorId") @Parameter(description = "The sector association id") Long sectorId,
         @RequestBody @Valid @NotEmpty @Parameter(description = "The target unit account with updated site contacts", required = true)
         List<TargetUnitAccountSiteContactDTO> siteContacts) {
-			orchestrator.updateTargetUnitAccountSiteContacts(user, sectorId, siteContacts);
+			targetUnitAccountSiteContactService.updateTargetUnitAccountSiteContacts(user, sectorId, siteContacts);
 	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

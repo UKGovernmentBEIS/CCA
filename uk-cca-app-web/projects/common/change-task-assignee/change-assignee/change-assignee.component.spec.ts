@@ -6,11 +6,11 @@ import { of } from 'rxjs';
 import { AuthStore } from '@netz/common/auth';
 import { PendingRequestService } from '@netz/common/services';
 import { RequestTaskStore } from '@netz/common/store';
-import { BasePage, mockClass } from '@netz/common/testing';
 
 import { TasksAssignmentService, TasksReleaseService } from 'cca-api';
 
 import { ChangeAssigneeComponent } from './change-assignee.component';
+import { BasePage, mockClass } from '../../testing';
 
 describe('ChangeAssigneeComponent', () => {
   let page: Page;

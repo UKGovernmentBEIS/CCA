@@ -1,14 +1,14 @@
-<div class="govuk-grid-row" *ngIf="vm() as vm">
-  <div class="govuk-grid-column-full">
-    <netz-page-heading size="l">{{ vm.header }}</netz-page-heading>
-    <p class="govuk-caption-m govuk-!-margin-bottom-8">{{ vm.requestAction.creationDate | govukDate: 'datetime' }}</p>
+@if (vm(); as vm) {
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <netz-page-heading size="l">{{ vm.header }}</netz-page-heading>
+      <p class="govuk-caption-m govuk-!-margin-bottom-8">{{ vm.requestAction.creationDate | govukDate: 'datetime' }}</p>
 
-    <ng-container *ngIf="vm.component as component; else sectionsTpl">
-      <ng-container *ngComponentOutlet="component"></ng-container>
-    </ng-container>
-
-    <ng-template #sectionsTpl>
-      <netz-task-list [sections]="vm.sections"></netz-task-list>
-    </ng-template>
+      @if (vm.component; as component) {
+        <ng-container *ngComponentOutlet="component" />
+      } @else {
+        <netz-task-list [sections]="vm.sections" />
+      }
+    </div>
   </div>
-</div>
+}

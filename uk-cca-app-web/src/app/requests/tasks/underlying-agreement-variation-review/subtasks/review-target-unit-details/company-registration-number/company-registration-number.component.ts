@@ -187,7 +187,6 @@ function updateTUDetails(
       subsectorAssociationName: null,
       responsiblePersonDetails: {
         ...draft.underlyingAgreementTargetUnitDetails.responsiblePersonDetails,
-        address: null,
       },
     };
   });

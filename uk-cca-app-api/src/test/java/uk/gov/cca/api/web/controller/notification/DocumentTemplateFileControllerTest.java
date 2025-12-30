@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.security.AppSecurityComponent;
 import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
 import uk.gov.netz.api.security.AuthorizedAspect;
@@ -80,7 +81,11 @@ class DocumentTemplateFileControllerTest {
         Long documentTemplateId = 1L;
         UUID fileUuid = UUID.randomUUID();
         FileToken fileToken = FileToken.builder().token("token").tokenExpirationMinutes(10L).build();
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
 
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(documentTemplateFileService.generateGetFileDocumentTemplateToken(documentTemplateId, fileUuid)).thenReturn(fileToken);
 
         mockMvc.perform(MockMvcRequestBuilders

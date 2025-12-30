@@ -10,6 +10,7 @@ import uk.gov.cca.api.authorization.ccaauth.core.domain.dto.CcaAuthorityInfoDTO;
 import uk.gov.cca.api.authorization.ccaauth.core.service.CcaAuthorityService;
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserDTO;
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserRegistrationWithCredentialsDTO;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
 
 import static org.mockito.Mockito.*;
@@ -37,6 +38,7 @@ class SectorUserActivationServiceTest {
 
     @Test
     void activateAndEnableSectorInvitedUser() {
+    	AppUser	user = AppUser.builder().build();
         String userId = "userId";
         String token = "token";
         String email = "email";
@@ -47,16 +49,16 @@ class SectorUserActivationServiceTest {
         SectorUserDTO userDTO = SectorUserDTO.builder().email(email).build();
 
         // Mock
-        when(sectorUserTokenVerificationService.verifyInvitationTokenForPendingAuthority(token))
+        when(sectorUserTokenVerificationService.verifyInvitationToken(token, user))
                 .thenReturn(authority);
         when(sectorUserAuthService.enableAndUpdateUserAndSetPassword(userRegistrationDTO, authority.getUserId()))
                 .thenReturn(userDTO);
         // Invoke
-        sectorUserActivationService.acceptAuthorityAndEnableInvitedUserWithCredentials(userRegistrationDTO);
+        sectorUserActivationService.acceptAuthorityAndEnableInvitedUserWithCredentials(userRegistrationDTO, user);
 
         // Verify
         verify(sectorUserTokenVerificationService, times(1))
-                .verifyInvitationTokenForPendingAuthority(userRegistrationDTO.getEmailToken());
+                .verifyInvitationToken(userRegistrationDTO.getEmailToken(), user);
         verify(authorityService, times(1))
         	.updateCcaAuthorityDetailsOrganisationName(authority.getId(), userRegistrationDTO.getOrganisationName());
         verify(sectorUserAuthService, times(1))
@@ -66,6 +68,7 @@ class SectorUserActivationServiceTest {
 
     @Test
     void acceptAuthorityAndSetCredentialsToUser() {
+    	AppUser	user = AppUser.builder().build();
         String userId = "userId";
         Long authorityId = 1L;
         Long sectorAssociationId = 1L;
@@ -78,16 +81,16 @@ class SectorUserActivationServiceTest {
         SectorUserDTO userDTO = SectorUserDTO.builder().email("email").build();
 
         when(sectorUserTokenVerificationService
-                .verifyInvitationTokenForPendingAuthority(invitedUserCredentialsDTO.getInvitationToken()))
+                .verifyInvitationToken(invitedUserCredentialsDTO.getInvitationToken(), user))
                 .thenReturn(authority);
         when(sectorUserAuthService
                 .setUserPassword(authority.getUserId(), invitedUserCredentialsDTO.getPassword()))
                 .thenReturn(userDTO);
 
-        sectorUserActivationService.acceptAuthorityAndSetCredentialsToUser(invitedUserCredentialsDTO);
+        sectorUserActivationService.acceptAuthorityAndSetCredentialsToUser(invitedUserCredentialsDTO, user);
 
         verify(sectorUserTokenVerificationService, times(1))
-                .verifyInvitationTokenForPendingAuthority(invitedUserCredentialsDTO.getInvitationToken());
+                .verifyInvitationToken(invitedUserCredentialsDTO.getInvitationToken(), user);
         verify(sectorUserRegisterValidationService, times(1)).validateRegisterForSectorAssociation(userId, sectorAssociationId);
         verify(sectorUserAuthService, times(1))
                 .setUserPassword(authority.getUserId(), invitedUserCredentialsDTO.getPassword());

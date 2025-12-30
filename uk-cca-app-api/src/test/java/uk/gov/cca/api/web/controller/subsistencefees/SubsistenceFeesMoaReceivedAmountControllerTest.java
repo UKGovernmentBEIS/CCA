@@ -27,6 +27,7 @@ import uk.gov.netz.api.authorization.core.domain.AppAuthority;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.authorization.rules.services.RoleAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.security.AppSecurityComponent;
 import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
@@ -176,7 +177,11 @@ class SubsistenceFeesMoaReceivedAmountControllerTest {
                 .receivedAmountHistoryList(List.of(moaReceivedAmountHistoryDTO))
                 .build();
 
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
 
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(subsistenceFeesMoaQueryService.getSubsistenceFeesMoaReceivedAmountInfo(moaId)).thenReturn(detailsDTO);
 
         mockMvc.perform(MockMvcRequestBuilders

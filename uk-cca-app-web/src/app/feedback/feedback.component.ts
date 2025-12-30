@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
@@ -38,6 +38,10 @@ type RateWithoutNotApplicable = Exclude<Rate, 'NOT_APPLICABLE_NOT_USED_YET'>;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FeedbackComponent implements OnInit {
+  private readonly fb = inject(UntypedFormBuilder);
+  private readonly usersService = inject(UsersService);
+  private readonly destroy$ = inject(DestroyRef);
+
   protected readonly feedbackSent$ = new BehaviorSubject<boolean>(null);
   protected readonly isErrorSummaryDisplayed = new BehaviorSubject<boolean>(false);
 
@@ -121,12 +125,6 @@ export class FeedbackComponent implements OnInit {
     VERY_DISSATISFIED: 'Very dissatisfied',
     NOT_APPLICABLE_NOT_USED_YET: 'Not applicable or not used yet',
   };
-
-  constructor(
-    private readonly fb: UntypedFormBuilder,
-    private readonly usersService: UsersService,
-    private readonly destroy$: DestroyRef,
-  ) {}
 
   ngOnInit() {
     this.feedbackForm

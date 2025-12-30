@@ -1,18 +1,24 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
-import { TaskService } from '@netz/common/forms';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
-
-import { AdminTerminationFinalDecisionReasonDetails } from 'cca-api';
+import { TaskItemStatus, TasksApiService } from '@requests/common';
+import { produce } from 'immer';
 
 import {
-  ADMIN_TERMINATION_FINAL_DECISION_SUBTASK,
-  AdminTerminationFinalDecisionTerminateAgreementWizardStep,
-} from '../../../admin-termination-final-decision.helper';
+  AdminTerminationFinalDecisionReasonDetails,
+  AdminTerminationFinalDecisionRequestTaskPayload,
+  AdminTerminationFinalDecisionSaveRequestTaskActionPayload,
+} from 'cca-api';
+
+import { adminTerminationFinalDecisionQuery } from '../../../admin-termination-final-decision.selectors';
+import { isWizardCompleted } from '../../../completed';
+import { createRequestTaskActionProcessDTO } from '../../../transform';
+import { ADMIN_TERMINATION_FINAL_DECISION_SUBTASK } from '../../../types';
 
 @Component({
   selector: 'cca-final-decision-reason-actions',
@@ -22,11 +28,11 @@ import {
     <p>You must select the admin termination final decision.</p>
 
     <div class="govuk-button-group">
-      <button (click)="onSelect('TERMINATE_AGREEMENT')" netzPendingButton govukButton type="button">
+      <button (click)="onSubmit('TERMINATE_AGREEMENT')" netzPendingButton govukButton type="button">
         Terminate agreement
       </button>
 
-      <button (click)="onSelect('WITHDRAW_TERMINATION')" govukSecondaryButton type="button">
+      <button (click)="onSubmit('WITHDRAW_TERMINATION')" govukSecondaryButton type="button">
         Withdraw termination
       </button>
     </div>
@@ -39,16 +45,47 @@ import {
 })
 export default class FinalDecisionReasonActionsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly adminTerminationFinalDecisionTaskService = inject(TaskService);
+  private readonly tasksApiService = inject(TasksApiService);
+  private readonly router = inject(Router);
+  private readonly requestTaskStore = inject(RequestTaskStore);
 
-  onSelect(action: AdminTerminationFinalDecisionReasonDetails['finalDecisionType']) {
-    this.adminTerminationFinalDecisionTaskService
-      .saveSubtask(
-        ADMIN_TERMINATION_FINAL_DECISION_SUBTASK,
-        AdminTerminationFinalDecisionTerminateAgreementWizardStep.ACTIONS,
-        this.activatedRoute,
-        { finalDecisionType: action },
-      )
-      .subscribe();
+  onSubmit(action: AdminTerminationFinalDecisionReasonDetails['finalDecisionType']) {
+    const payload = this.requestTaskStore.select(
+      requestTaskQuery.selectRequestTaskPayload,
+    )() as AdminTerminationFinalDecisionRequestTaskPayload;
+
+    const updatedPayload = update(payload, action);
+    const currentSectionsCompleted = this.requestTaskStore.select(
+      adminTerminationFinalDecisionQuery.selectSectionsCompleted,
+    )();
+
+    const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
+      draft[ADMIN_TERMINATION_FINAL_DECISION_SUBTASK] = TaskItemStatus.IN_PROGRESS;
+    });
+
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+    const dto = createRequestTaskActionProcessDTO(requestTaskId, updatedPayload, sectionsCompleted);
+
+    this.tasksApiService
+      .saveRequestTaskAction(dto)
+      .subscribe((response: AdminTerminationFinalDecisionRequestTaskPayload) => {
+        const path = isWizardCompleted(response?.adminTerminationFinalDecisionReasonDetails)
+          ? '../check-your-answers'
+          : '../reason-details';
+
+        this.router.navigate([path], { relativeTo: this.activatedRoute });
+      });
   }
+}
+
+function update(
+  payload: AdminTerminationFinalDecisionSaveRequestTaskActionPayload,
+  action: AdminTerminationFinalDecisionReasonDetails['finalDecisionType'],
+): AdminTerminationFinalDecisionSaveRequestTaskActionPayload {
+  return produce(payload, (draft) => {
+    draft.adminTerminationFinalDecisionReasonDetails = {
+      ...draft.adminTerminationFinalDecisionReasonDetails,
+      finalDecisionType: action,
+    };
+  });
 }

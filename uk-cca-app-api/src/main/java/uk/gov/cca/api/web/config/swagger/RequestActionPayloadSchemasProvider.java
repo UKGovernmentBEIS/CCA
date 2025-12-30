@@ -28,6 +28,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivatedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationAcceptedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationRejectedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationSubmittedRequestActionPayload;
 import uk.gov.netz.api.swagger.SwaggerSchemasAbstractProvider;
@@ -79,6 +80,7 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
         addResolvedShemas(UnderlyingAgreementVariationSubmittedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationSubmittedRequestActionPayload.class);
         addResolvedShemas(UnderlyingAgreementVariationAcceptedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationAcceptedRequestActionPayload.class);
 		addResolvedShemas(UnderlyingAgreementVariationRejectedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationRejectedRequestActionPayload.class);
+		addResolvedShemas(UnderlyingAgreementVariationCompletedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationCompletedRequestActionPayload.class);
 		addResolvedShemas(UnderlyingAgreementVariationActivatedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationActivatedRequestActionPayload.class);
 
 		// Performance data upload

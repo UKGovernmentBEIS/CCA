@@ -12,13 +12,23 @@ import {
   UnderlyingAgreementVariationPayload,
 } from 'cca-api';
 
-import { FacilityItemViewModel } from '../underlying-agreement';
-import { UnaPayload, UnderlyingAgreementRequestActionPayload } from './timeline-underlying-agreement.types';
+import { FacilityItemViewModel, FacilityTimelineItemViewModel } from '../underlying-agreement';
+import {
+  UnaPayload,
+  UnATimelineDecisionActionPayload,
+  UnderlyingAgreementRequestActionPayload,
+} from './timeline-underlying-agreement.types';
 
 const selectPayload: StateSelector<RequestActionState, UnderlyingAgreementRequestActionPayload> =
   createDescendingSelector(
     requestActionQuery.selectActionPayload,
     (actionPayload) => actionPayload as UnderlyingAgreementRequestActionPayload,
+  );
+
+const selectTimelineDecisionActionPayload: StateSelector<RequestActionState, UnATimelineDecisionActionPayload> =
+  createDescendingSelector(
+    requestActionQuery.selectActionPayload,
+    (actionPayload) => actionPayload as UnATimelineDecisionActionPayload,
   );
 
 const selectAccountReferenceData: StateSelector<RequestActionState, AccountReferenceData> = createDescendingSelector(
@@ -65,6 +75,21 @@ const selectFacilityItems: StateSelector<RequestActionState, FacilityItemViewMod
       status: f.status,
     })) ?? [],
 );
+
+const selectTimelineFacilityItems: StateSelector<RequestActionState, FacilityTimelineItemViewModel[]> =
+  createDescendingSelector(
+    selectTimelineDecisionActionPayload,
+    (payload) =>
+      payload?.underlyingAgreement?.facilities?.map(
+        (f) =>
+          ({
+            name: f.facilityDetails.name,
+            facilityId: f.facilityId,
+            status: f.status,
+            decisionStatus: payload?.reviewSectionsCompleted[f.facilityId],
+          }) as FacilityTimelineItemViewModel,
+      ) ?? [],
+  );
 
 const selectFacility = (facilityId: string): StateSelector<RequestActionState, Facility> => {
   return createDescendingSelector(selectUnderlyingAgreement, (underlyingAgreement) =>
@@ -113,9 +138,10 @@ export const underlyingAgreementRequestActionQuery = {
   selectAccountReferenceDataSectorAssociationDetails,
   selectSectorAssociationDetailsSchemeData,
   selectAttachments,
+  selectTimelineFacilityItems,
   selectUnderlyingAgreement,
   selectUnderlyingAgreementTargetUnitDetails,
-  selectManageFacilities: selectFacilityItems,
+  selectFacilityItems,
   selectFacility,
   selectTargetPeriod5Details,
   selectTargetPeriod6Details,

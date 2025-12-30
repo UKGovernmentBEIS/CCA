@@ -21,7 +21,6 @@ import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
-import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.activation.UnderlyingAgreementActivationDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.review.UnderlyingAgreementReviewDecision;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
@@ -70,7 +69,7 @@ public class UnderlyingAgreementVariationRequestPayload extends CcaRequestPayloa
     @Builder.Default
     private Map<UUID, String> underlyingAgreementActivationAttachments = new HashMap<>();
 
-	private Determination determination;
+	private VariationDetermination determination;
 	
 	private List<FileInfoDTO> officialNotices;
     

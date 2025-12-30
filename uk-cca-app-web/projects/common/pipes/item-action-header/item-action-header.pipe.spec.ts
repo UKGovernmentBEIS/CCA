@@ -227,25 +227,25 @@ describe('ItemActionHeaderPipe', () => {
         ...baseRequestAction,
         type: 'FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED',
       }),
-    ).toEqual('Pre-audit review completed by System user');
+    ).toEqual('Pre-audit review completed by John Bolt');
     expect(
       pipe.transform({
         ...baseRequestAction,
         type: 'FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED',
       }),
-    ).toEqual('Audit details and corrective actions by System user');
+    ).toEqual('Audit details and corrective actions completed by John Bolt');
     expect(
       pipe.transform({
         ...baseRequestAction,
         type: 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED',
       }),
-    ).toEqual('Track corrective actions completed by System user');
+    ).toEqual('Track corrective actions completed by John Bolt');
     expect(
       pipe.transform({
         ...baseRequestAction,
         type: 'FACILITY_AUDIT_CANCELLED',
       }),
-    ).toEqual('Audit facility cancelled by System user');
+    ).toEqual('Audit facility cancelled by John Bolt');
   });
 
   it('should display the approved application title', () => {

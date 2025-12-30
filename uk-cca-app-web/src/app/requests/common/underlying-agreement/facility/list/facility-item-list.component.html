@@ -1,4 +1,4 @@
-<govuk-table [columns]="tableColumns" [data]="sortedFacilityItems()" (sort)="sorting.set($event)">
+<govuk-table [columns]="tableColumns()" [data]="sortedFacilityItems()" (sort)="sorting.set($event)">
   <ng-template let-column="column" let-row="row">
     @switch (column.field) {
       @case ('name') {
@@ -32,6 +32,16 @@
               }
             }
           </div>
+        }
+      }
+
+      @case ('decisionStatus') {
+        @if (row[column.field] !== 'UNCHANGED') {
+          <govuk-tag [color]="row[column.field] | statusColor">
+            {{ row[column.field] | status }}
+          </govuk-tag>
+        } @else {
+          {{ row[column.field] | status }}
         }
       }
 

@@ -3,17 +3,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
-import { TaskService } from '@netz/common/forms';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   NOTIFY_OPERATOR_OF_DECISION_FORM,
   NotifyOperatorOfDecisionComponent,
   NotifyOperatorOfDecisionFormModel,
   NotifyOperatorOfDecisionFormProvider,
+  TasksApiService,
   toDecisionNotification,
 } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 
-import { UnderlyingAgreementActivationTaskService } from '../services/underlying-agreement-activation-task.service';
+import { createNotifyOperatorActionDTO } from '../transform';
 
 @Component({
   selector: 'cca-underlying-agreement-activation-notify-operator',
@@ -44,13 +45,18 @@ import { UnderlyingAgreementActivationTaskService } from '../services/underlying
 export default class UnderlyingAgreementActivationNotifyOperatorComponent {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly taskService = inject(TaskService);
+  private readonly requestTaskStore = inject(RequestTaskStore);
+  private readonly tasksApiService = inject(TasksApiService);
 
   protected readonly form = inject<NotifyOperatorOfDecisionFormModel>(NOTIFY_OPERATOR_OF_DECISION_FORM);
 
   onSubmit() {
-    (this.taskService as UnderlyingAgreementActivationTaskService)
-      .notifyOperator(toDecisionNotification(this.form.value))
-      .subscribe(() => this.router.navigate(['confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true }));
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+    const notification = toDecisionNotification(this.form.value);
+    const dto = createNotifyOperatorActionDTO(requestTaskId, notification);
+
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
+      this.router.navigate(['./confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true });
+    });
   }
 }

@@ -1,5 +1,5 @@
 import { HttpEvent } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 
 import { Observable } from 'rxjs';
@@ -13,6 +13,11 @@ import { FileUuidDTO, RequestTaskAttachmentActionProcessDTO, RequestTaskAttachme
 
 @Injectable({ providedIn: 'root' })
 export class RequestTaskFileService {
+  private readonly fileUploadService = inject(FileUploadService);
+  private readonly requestTaskAttachmentsHandlingService = inject(RequestTaskAttachmentsHandlingService);
+  private readonly businessErrorService = inject(BusinessErrorService);
+  private readonly formBuilder = inject(FormBuilder);
+
   readonly upload = (
     requestTaskId: number,
     requestTaskActionType: RequestTaskAttachmentActionProcessDTO['requestTaskActionType'],
@@ -22,13 +27,6 @@ export class RequestTaskFileService {
     requestTaskId: number,
     requestTaskActionType: RequestTaskAttachmentActionProcessDTO['requestTaskActionType'],
   ) => this.fileUploadService.uploadMany((file) => this.storeUpload(requestTaskId, file, requestTaskActionType));
-
-  constructor(
-    private readonly fileUploadService: FileUploadService,
-    private readonly requestTaskAttachmentsHandlingService: RequestTaskAttachmentsHandlingService,
-    private readonly businessErrorService: BusinessErrorService,
-    private readonly formBuilder: FormBuilder,
-  ) {}
 
   buildFormControl(
     requestTaskId: number,

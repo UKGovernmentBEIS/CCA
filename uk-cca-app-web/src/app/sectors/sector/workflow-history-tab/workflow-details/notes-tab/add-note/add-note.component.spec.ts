@@ -110,7 +110,7 @@ describe('WorkflowAddNoteComponent', () => {
 
   it('should have return link to workflow notes', () => {
     const compiled = fixture.nativeElement;
-    const returnLink = compiled.querySelector('a[routerLink="../../../"]');
+    const returnLink = compiled.querySelector('a[routerLink="../.."]');
 
     expect(returnLink).toBeTruthy();
     expect(returnLink.textContent).toContain('Return to: Workflow notes');

@@ -473,6 +473,7 @@ model/underlyingAgreementVariationActivationRequestTaskPayload.ts
 model/underlyingAgreementVariationActivationSaveRequestTaskActionPayload.ts
 model/underlyingAgreementVariationApplySavePayload.ts
 model/underlyingAgreementVariationApplySaveTargetUnitDetails.ts
+model/underlyingAgreementVariationCompletedRequestActionPayload.ts
 model/underlyingAgreementVariationDetails.ts
 model/underlyingAgreementVariationFacilityReviewDecision.ts
 model/underlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload.ts
@@ -499,5 +500,6 @@ model/userInfoDTO.ts
 model/userStateDTO.ts
 model/userTermsVersionDTO.ts
 model/userTermsVersionUpdateDTO.ts
+model/variationDetermination.ts
 model/verifierUserDTO.ts
 variables.ts

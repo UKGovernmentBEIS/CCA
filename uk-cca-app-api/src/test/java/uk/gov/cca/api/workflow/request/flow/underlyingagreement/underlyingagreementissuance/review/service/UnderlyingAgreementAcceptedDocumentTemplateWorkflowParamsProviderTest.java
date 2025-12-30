@@ -13,6 +13,7 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaReviewDecisionType;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.review.UnderlyingAgreementReviewDecisionDetails;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
@@ -76,6 +77,9 @@ class UnderlyingAgreementAcceptedDocumentTemplateWorkflowParamsProviderTest {
                         .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                         .underlyingAgreement(underlyingAgreement)
                         .build())
+                .determination(Determination.builder()
+								.additionalInformation("Some additional information")
+								.build())
                 .facilitiesReviewGroupDecisions(Map.of(
                         "ADS_1-F01244", UnderlyingAgreementFacilityReviewDecision.builder()
                                 .type(CcaReviewDecisionType.ACCEPTED)
@@ -101,7 +105,8 @@ class UnderlyingAgreementAcceptedDocumentTemplateWorkflowParamsProviderTest {
         assertThat(result).containsExactlyInAnyOrderEntriesOf(Map.of(
                 "targetUnitDetails", "test1",
                 "rejectedFacilities", List.of("ADS_1-F01246", "ADS_1-F01249"),
-                "versionMap", Map.of("CCA2", "v1", "CCA3", "v1")
+                "versionMap", Map.of("CCA2", "v1", "CCA3", "v1"),
+                "additionalInformation", "Some additional information"
         ));
         verify(documentTemplateUnderlyingAgreementParamsProvider, times(1))
                 .constructTargetUnitDetailsTemplateParams(targetUnitDetails);

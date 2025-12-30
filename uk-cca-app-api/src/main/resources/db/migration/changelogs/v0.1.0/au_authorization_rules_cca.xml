@@ -9028,5 +9028,170 @@
             </sql>
         </rollback>
     </changeSet>
+    
+    <changeSet id="0_1_0_add_request_type_authorization" author="P35066">
+    	<sql>
+    		insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+			select nextval('au_rule_seq'), 'REQUEST', code, 'requestAccessHandler', 'REGULATOR', null
+			from request_type;
+			insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+			select nextval('au_rule_seq'), 'REQUEST', code, 'requestAccessHandler', 'OPERATOR', null
+			from request_type;
+			insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+			select nextval('au_rule_seq'), 'REQUEST', code, 'requestAccessHandler', 'SECTOR_USER', null
+			from request_type
+			where code != 'FACILITY_AUDIT';
+			
+			INSERT INTO au_service_rule (rule_id, service_id)
+			SELECT r.id, s.id
+			FROM (
+			    select id 
+			from au_rule 
+			where resource_type = 'REQUEST'
+			  and resource_sub_type is not null
+			  and role_type = 'REGULATOR'
+			) r
+			CROSS JOIN (
+			    select s.id
+			from au_rule r
+			join au_service_rule sr on sr.rule_id = r.id
+			join au_service s on s.id = sr.service_id
+			where r.resource_type = 'REQUEST'
+			  and r.resource_sub_type is null
+			  and r.role_type = 'REGULATOR'
+			) s;
+			
+			INSERT INTO au_service_rule (rule_id, service_id)
+			SELECT r.id, s.id
+			FROM (
+			    select id 
+			from au_rule 
+			where resource_type = 'REQUEST'
+			  and resource_sub_type is not null
+			  and role_type = 'OPERATOR'
+			) r
+			CROSS JOIN (
+			    select s.id
+			from au_rule r
+			join au_service_rule sr on sr.rule_id = r.id
+			join au_service s on s.id = sr.service_id
+			where r.resource_type = 'REQUEST'
+			  and r.resource_sub_type is null
+			  and r.role_type = 'OPERATOR'
+			) s;
+			
+			INSERT INTO au_service_rule (rule_id, service_id)
+			SELECT r.id, s.id
+			FROM (
+			    select id 
+			from au_rule 
+			where resource_type = 'REQUEST'
+			  and resource_sub_type is not null
+			  and role_type = 'SECTOR_USER'
+			) r
+			CROSS JOIN (
+			    select s.id
+			from au_rule r
+			join au_service_rule sr on sr.rule_id = r.id
+			join au_service s on s.id = sr.service_id
+			where r.resource_type = 'REQUEST'
+			  and r.resource_sub_type is null
+			  and r.role_type = 'SECTOR_USER'
+			) s;
+			
+			--delete deprecated rules
+			delete
+			from au_service_rule
+			where rule_id in (
+			select id
+			from au_rule
+			where resource_type = 'REQUEST'
+			and resource_sub_type is null);
+			
+			delete from au_rule
+			where resource_type = 'REQUEST'
+			and resource_sub_type is null;
+    	</sql>
+    	<rollback>	
+    	</rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_POPULATE_getRequestDetailsByResource_at_FACILITY_level" author="P70311">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select aus.id, aur.id
+            from au_service aus,
+                 au_rule aur
+            where aus.name = 'getRequestDetailsByResource'
+              and aur.role_type in ('REGULATOR', 'SECTOR_USER', 'OPERATOR')
+              and aur.resource_type = 'FACILITY'
+              and aur.resource_sub_type is null
+              and aur.handler = 'facilityAccessHandler'
+              and aur.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule WHERE (service_id, rule_id) IN (
+                SELECT aus.id, aur.id
+                FROM au_service aus
+                CROSS JOIN au_rule aur
+                WHERE aur.resource_type = 'FACILITY'
+                AND aur.handler = 'facilityAccessHandler'
+                AND aur.scope is null
+                AND aur.resource_sub_type IS NULL
+                and aur.role_type in ('REGULATOR', 'SECTOR_USER', 'OPERATOR')
+                AND aus.name = 'getRequestDetailsByResource');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rule_for_request_action_type_UNDERLYING_AGREEMENT_VARIATION_APPLICATION_COMPLETED_for_all_roles" author="P70383">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_COMPLETED', 'requestActionViewHandler', 'OPERATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_COMPLETED', 'requestActionViewHandler', 'REGULATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_COMPLETED', 'requestActionViewHandler', 'SECTOR_USER');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST_ACTION'
+                and resource_sub_type = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_COMPLETED'
+                and handler in = 'requestActionViewHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_associate_services_with_request_action_type_UNDERLYING_AGREEMENT_VARIATION_APPLICATION_COMPLETED" author="P70383">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('getRequestActionById', 'generateRequestActionGetFileAttachmentToken', 'generateRequestActionGetFileDocumentToken')
+              and r.resource_type = 'REQUEST_ACTION'
+              and r.resource_sub_type = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_COMPLETED'
+              and r.handler = 'requestActionViewHandler'
+              and r.role_type in ('REGULATOR', 'OPERATOR', 'SECTOR_USER')
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('getRequestActionById', 'generateRequestActionGetFileAttachmentToken', 'generateRequestActionGetFileDocumentToken')
+                and r.resource_type = 'REQUEST_ACTION'
+                and r.resource_sub_type = 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_COMPLETED'
+                and r.handler = 'requestActionViewHandler'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>

@@ -19,6 +19,7 @@ import uk.gov.cca.api.user.sectoruser.domain.SectorInvitedUserInfoDTO;
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserDTO;
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserWithAuthorityDTO;
 import uk.gov.cca.api.user.sectoruser.transform.SectorUserAcceptInvitationMapper;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.core.domain.AuthorityStatus;
 import uk.gov.netz.api.user.core.domain.enumeration.UserInvitationStatus;
 
@@ -48,6 +49,7 @@ class SectorUserAcceptInvitationServiceTest {
 
     @Test
     void acceptInvitation() {
+    	AppUser user = AppUser.builder().build();
         String invitationToken = "token";
         String userId = "userId";
         Long sectorAssociationId = 1L;
@@ -63,7 +65,7 @@ class SectorUserAcceptInvitationServiceTest {
                 .contactType(ContactType.CONSULTANT)
                 .build();
 
-        when(sectorUserTokenVerificationService.verifyInvitationTokenForPendingAuthority(invitationToken)).thenReturn(authorityInfo);
+        when(sectorUserTokenVerificationService.verifyInvitationToken(invitationToken, user)).thenReturn(authorityInfo);
         when(ccaAuthorityDetailsRepository.findCcaAuthorityDetailsByAuthorityId(authorityInfo.getId())).thenReturn(ccaAuthorityDetails);
         when(sectorUserAuthService.getUserById(authorityInfo.getUserId())).thenReturn(sectorUser);
         when(sectorUserAcceptInvitationMapper.toSectorUserWithAuthorityDTO(sectorUser, authorityInfo))
@@ -72,11 +74,11 @@ class SectorUserAcceptInvitationServiceTest {
                 .thenReturn(userInvitationStatus);
         when(sectorUserAcceptInvitationMapper.toSectorInvitedUserInfoDTO(sectorUserWithAuthorityDTO, authorityRoleCode, userInvitationStatus, ContactType.CONSULTANT))
                 .thenReturn(sectorInvitedUserInfoDTO);
-        sectorUserAcceptInvitationService.acceptInvitation(invitationToken);
+        sectorUserAcceptInvitationService.acceptInvitation(invitationToken, user);
 
         verify(ccaAuthorityDetailsRepository, times(1)).findCcaAuthorityDetailsByAuthorityId(authorityInfo.getId());
         verify(sectorUserTokenVerificationService, times(1))
-                .verifyInvitationTokenForPendingAuthority(invitationToken);
+                .verifyInvitationToken(invitationToken, user);
         verify(sectorUserAuthService, times(1)).getUserById(userId);
         verify(sectorUserAcceptInvitationMapper, times(1)).
                 toSectorUserWithAuthorityDTO(sectorUser, authorityInfo);

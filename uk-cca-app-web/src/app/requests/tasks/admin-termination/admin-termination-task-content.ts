@@ -7,8 +7,8 @@ import { TaskItemStatus } from '@requests/common';
 
 import { AdminTerminationSubmitRequestTaskPayload } from 'cca-api';
 
-import { REASON_FOR_ADMIN_TERMINATION_SUBTASK } from './admin-termination.types';
 import { AdminTerminationPrecontentComponent } from './precontent/admin-termination-precontent.component';
+import { REASON_FOR_ADMIN_TERMINATION_SUBTASK } from './types';
 
 const adminTerminationRoutePrefix = 'admin-termination';
 
@@ -28,9 +28,8 @@ export function getAllAdminTerminationSections(payload: AdminTerminationSubmitRe
       title: 'Termination details',
       tasks: [
         {
-          name: REASON_FOR_ADMIN_TERMINATION_SUBTASK,
-          status: payload?.sectionsCompleted[REASON_FOR_ADMIN_TERMINATION_SUBTASK] ?? TaskItemStatus.NOT_STARTED,
           linkText: 'Reason for admin termination',
+          status: payload?.sectionsCompleted[REASON_FOR_ADMIN_TERMINATION_SUBTASK] ?? TaskItemStatus.NOT_STARTED,
           link: `${adminTerminationRoutePrefix}/reason-for-admin-termination`,
         },
       ],

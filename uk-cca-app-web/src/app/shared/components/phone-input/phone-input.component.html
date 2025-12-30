@@ -1,6 +1,6 @@
 <fieldset govukFieldset>
-  <legend govukLegend [hidden]="true">{{ label }}</legend>
-  <span govukFieldsetHint>{{ hint }}</span>
+  <legend govukLegend [hidden]="true">{{ label() }}</legend>
+  <span govukFieldsetHint>{{ hint() }}</span>
 
   @if (shouldDisplayErrors) {
     <govuk-error-message [errors]="control.errors" />
@@ -30,7 +30,7 @@
 
     <div class="govuk-grid-column-one-half">
       <div class="govuk-form-group">
-        <label [for]="id" class="govuk-label">{{ label }}</label>
+        <label [for]="id" class="govuk-label">{{ label() }}</label>
         @if (!disabled) {
           <input
             (blur)="onInputBlur()"

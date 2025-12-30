@@ -10,9 +10,11 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaReviewOutcome;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.DeterminationOutcome;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.DeterminationType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.VariationDetermination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.service.UnderlyingAgreementVariationReviewService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.validation.UnderlyingAgreementVariationReviewNotifyOperatorValidator;
@@ -60,8 +62,10 @@ class UnderlyingAgreementVariationReviewNotifyOperatorActionHandlerTest {
                         .builder()
                         .payloadType(CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW_PAYLOAD)
                         .reviewSectionsCompleted(Map.of(UnderlyingAgreementTargetUnitDetails.class.getName(), "COMPLETED"))
-                        .determination(Determination.builder().type(DeterminationType.ACCEPTED).additionalInformation("text").build())
-
+                        .determination(VariationDetermination.builder()
+                                .variationImpactsAgreement(true)
+                                .determination(Determination.builder().type(DeterminationType.ACCEPTED).additionalInformation("text").build())
+                                .build())
                         .build();
         final String processTaskId = "processTaskId";
         final Request request = Request.builder().id("1").build();
@@ -86,7 +90,49 @@ class UnderlyingAgreementVariationReviewNotifyOperatorActionHandlerTest {
         verify(underlyingAgreementVariationReviewService, times(1)).notifyOperator(requestTask, decisionNotification, appUser);
         verify(workflowService, times(1)).completeTask(processTaskId,
                 Map.of(BpmnProcessConstants.REQUEST_ID, requestTask.getRequest().getId(),
-                        BpmnProcessConstants.REVIEW_DETERMINATION, DeterminationType.ACCEPTED,
+                        BpmnProcessConstants.REVIEW_DETERMINATION, DeterminationOutcome.ACCEPTED,
+                        BpmnProcessConstants.REVIEW_OUTCOME, CcaReviewOutcome.NOTIFY_OPERATOR));
+    }
+
+    @Test
+    void process_with_COMPLETED() {
+        final AppUser appUser = AppUser.builder().build();
+        final long requestTaskId = 1L;
+        final String requestTaskActionType = CcaRequestTaskActionType.UNDERLYING_AGREEMENT_SUBMIT_APPLICATION;
+        final UnderlyingAgreementVariationReviewRequestTaskPayload requestTaskPayload =
+                UnderlyingAgreementVariationReviewRequestTaskPayload
+                        .builder()
+                        .payloadType(CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW_PAYLOAD)
+                        .reviewSectionsCompleted(Map.of(UnderlyingAgreementTargetUnitDetails.class.getName(), "COMPLETED"))
+                        .determination(VariationDetermination.builder()
+                                .variationImpactsAgreement(false)
+                                .determination(Determination.builder().type(DeterminationType.ACCEPTED).additionalInformation("text").build())
+                                .build())
+                        .build();
+        final String processTaskId = "processTaskId";
+        final Request request = Request.builder().id("1").build();
+        final RequestTask requestTask = RequestTask.builder().id(requestTaskId).request(request).payload(requestTaskPayload).processTaskId(processTaskId).build();
+        final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
+                .sectorUsers(Set.of("sector"))
+                .build();
+        final UnderlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload payload =
+                UnderlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload.builder()
+                        .decisionNotification(decisionNotification)
+                        .build();
+
+        when(requestTaskService.findTaskById(requestTaskId)).thenReturn(requestTask);
+
+        // Invoke
+        RequestTaskPayload taskPayload = handler.process(requestTaskId, requestTaskActionType, appUser, payload);
+
+        // Verify
+        assertThat(taskPayload).isEqualTo(requestTaskPayload);
+        verify(requestTaskService, times(1)).findTaskById(requestTaskId);
+        verify(validator, times(1)).validate(requestTask, payload, appUser);
+        verify(underlyingAgreementVariationReviewService, times(1)).notifyOperator(requestTask, decisionNotification, appUser);
+        verify(workflowService, times(1)).completeTask(processTaskId,
+                Map.of(BpmnProcessConstants.REQUEST_ID, requestTask.getRequest().getId(),
+                        BpmnProcessConstants.REVIEW_DETERMINATION, DeterminationOutcome.COMPLETED,
                         BpmnProcessConstants.REVIEW_OUTCOME, CcaReviewOutcome.NOTIFY_OPERATOR));
     }
 

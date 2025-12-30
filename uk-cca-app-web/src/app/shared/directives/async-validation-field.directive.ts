@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, DestroyRef, Directive, OnInit } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, Directive, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { distinctUntilChanged } from 'rxjs';
@@ -9,11 +9,9 @@ import { TextInputComponent } from '@netz/govuk-components';
   selector: 'govuk-text-input[ccaAsyncValidationField],[govuk-text-input][ccaAsyncValidationField]',
 })
 export class AsyncValidationFieldDirective implements OnInit {
-  constructor(
-    private readonly textInputComponent: TextInputComponent,
-    private readonly cdRef: ChangeDetectorRef,
-    private readonly destroy$: DestroyRef,
-  ) {}
+  private readonly textInputComponent = inject(TextInputComponent);
+  private readonly cdRef = inject(ChangeDetectorRef);
+  private readonly destroy$ = inject(DestroyRef);
 
   ngOnInit() {
     this.textInputComponent.control.statusChanges

@@ -1,0 +1,78 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-wizard-step
+    [formGroup]="form"
+    [caption]="caption()"
+    heading="Provide any additional information here to support your decision"
+    (formSubmit)="submit()"
+  >
+    @if (isAccepted()) {
+      <p class="govuk-label--m govuk-!-margin-bottom-1">
+        Does this variation result in changes to the current underlying agreement?
+      </p>
+
+      <div govuk-radio formControlName="variationImpactsAgreement">
+        <govuk-radio-option
+          hint="A new version of the underlying agreement will be generated, even if there are no changes from the
+                      current version, and you must upload evidence of the operator's assent"
+          label="Yes"
+          [value]="true"
+        />
+
+        <govuk-radio-option
+          label="No"
+          hint="A notification letter will be generated to acknowledge that you have accepted the
+                                        requested changes, but no new underlying agreement is needed"
+          [value]="false"
+        />
+      </div>
+    }
+
+    <p class="govuk-label--m govuk-!-margin-bottom-1">{{ additionalInfoLabel() }}</p>
+    <p class="govuk-hint">This text will be included in the official notice</p>
+
+    @if (showNoChangesGuidance()) {
+      <p class="govuk-hint">
+        Enter a brief description of the changes you have accepted. This will be included in the notification letter
+        sent to the operator.
+      </p>
+
+      <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text">What to include in your explanation</span>
+        </summary>
+
+        <div class="govuk-details__text">
+          <ul class="govuk-list govuk-list--bullet">
+            <li>
+              "We have updated the proportion of eligible energy use at SECT-F00001 from 65% to 75% following your
+              notification to us of an updated evaluation."
+            </li>
+            <li>
+              "We have updated evidence of the documents describing the eligible activities you carry out at the
+              facility with identifier SECT-F00002."
+            </li>
+            <li>
+              "We have changed the amount of base year energy assigned to fixed consumption from 1,000,000 kWh to
+              2,500,000 kWh at the facility with identifier SECT-F00003."
+            </li>
+            <li>
+              "We have updated the list of variable product groups for the facility with identifier SECT-F00004 to
+              include a new product introduced after the base year."
+            </li>
+          </ul>
+        </div>
+      </details>
+    }
+
+    <div
+      govuk-textarea
+      [hint]="!isAccepted() ? 'This will be included in the official notice' : ''"
+      formControlName="additionalInformation"
+    ></div>
+
+    <cca-multiple-file-input [baseDownloadUrl]="downloadUrl" formControlName="files" label="Upload a file (optional)" />
+  </cca-wizard-step>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

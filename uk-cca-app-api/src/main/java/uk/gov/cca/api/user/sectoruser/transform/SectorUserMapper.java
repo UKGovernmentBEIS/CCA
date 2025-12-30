@@ -76,16 +76,21 @@ public interface SectorUserMapper {
         userRepresentation.singleAttribute(KeycloakUserAttributes.JOB_TITLE.getName(), sectorUserDTO.getJobTitle());
 
         // Set phone numbers
-        userRepresentation.singleAttribute(KeycloakUserAttributes.PHONE_NUMBER_CODE.getName(),
-                sectorUserDTO.getPhoneNumber().getCountryCode());
-        userRepresentation.singleAttribute(KeycloakUserAttributes.PHONE_NUMBER.getName(),
-                sectorUserDTO.getPhoneNumber().getNumber());
+	    Optional.ofNullable(sectorUserDTO.getPhoneNumber()).ifPresentOrElse(phoneNumber -> {
+		    userRepresentation.singleAttribute(KeycloakUserAttributes.PHONE_NUMBER_CODE.getName(),
+				    phoneNumber.getCountryCode());
+		    userRepresentation.singleAttribute(KeycloakUserAttributes.PHONE_NUMBER.getName(),
+				    phoneNumber.getNumber());
+	    }, () -> {
+		    userRepresentation.singleAttribute(KeycloakUserAttributes.PHONE_NUMBER_CODE.getName(), null);
+		    userRepresentation.singleAttribute(KeycloakUserAttributes.PHONE_NUMBER.getName(), null);
+	    });
 
-        Optional.ofNullable(sectorUserDTO.getMobileNumber()).ifPresentOrElse(phoneNumberDTO -> {
+        Optional.ofNullable(sectorUserDTO.getMobileNumber()).ifPresentOrElse(mobileNumber -> {
             userRepresentation.singleAttribute(KeycloakUserAttributes.MOBILE_NUMBER_CODE.getName(),
-                    phoneNumberDTO.getCountryCode());
+                    mobileNumber.getCountryCode());
             userRepresentation.singleAttribute(KeycloakUserAttributes.MOBILE_NUMBER.getName(),
-                    phoneNumberDTO.getNumber());
+                    mobileNumber.getNumber());
         }, () -> {
             userRepresentation.singleAttribute(KeycloakUserAttributes.MOBILE_NUMBER_CODE.getName(), null);
             userRepresentation.singleAttribute(KeycloakUserAttributes.MOBILE_NUMBER.getName(), null);

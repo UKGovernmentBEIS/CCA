@@ -22,13 +22,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusAttachmentService;
+import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
+import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.AccountPerformanceDataStatusInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.AccountPerformanceDataUpdateLockDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.AccountPerformanceDataReportDetailsDTO;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.web.orchestrator.account.service.TargetUnitAccountPerformanceDataReportServiceOrchestrator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.security.Authorized;
 import uk.gov.netz.api.token.FileToken;
@@ -39,7 +41,9 @@ import uk.gov.netz.api.token.FileToken;
 @Tag(name = "Target Period Performance Data Report of the Account")
 public class TargetUnitAccountPerformanceDataReportController {
 
-    private final TargetUnitAccountPerformanceDataReportServiceOrchestrator orchestrator;
+	private final AccountPerformanceDataStatusQueryService accountPerformanceDataStatusQueryService;
+	private final AccountPerformanceDataStatusService accountPerformanceDataStatusService;
+	private final AccountPerformanceDataStatusAttachmentService accountPerformanceDataStatusAttachmentService;
 
     @GetMapping(path = "/status")
     @Operation(summary = "Retrieves the account performance data status info")
@@ -58,7 +62,8 @@ public class TargetUnitAccountPerformanceDataReportController {
             @Parameter(hidden = true) AppUser currentUser) {
 
 		return new ResponseEntity<>(
-				orchestrator.getAccountPerformanceDataStatusInfo(accountId, targetPeriodType, currentUser),
+				accountPerformanceDataStatusQueryService
+						.getAccountPerformanceDataStatusInfo(accountId, targetPeriodType, currentUser),
 				HttpStatus.OK);
     }
 
@@ -79,7 +84,8 @@ public class TargetUnitAccountPerformanceDataReportController {
             TargetPeriodType targetPeriodType
     ) {
 
-		return new ResponseEntity<>(orchestrator.getAccountPerformanceDataReportDetails(accountId, targetPeriodType),
+		return new ResponseEntity<>(accountPerformanceDataStatusQueryService
+				.getAccountPerformanceDataReportDetails(accountId, targetPeriodType),
 				HttpStatus.OK);
     }
 
@@ -98,8 +104,7 @@ public class TargetUnitAccountPerformanceDataReportController {
             @PathVariable("accountId") @Parameter(description = "The account id") Long accountId,
             @RequestBody @Valid @Parameter(description = "The update lock info") AccountPerformanceDataUpdateLockDTO updateLockDTO
     ) {
-		orchestrator.updateAccountPerformanceDataLock(accountId, updateLockDTO);
-
+	    accountPerformanceDataStatusService.updateAccountPerformanceDataLock(accountId, updateLockDTO);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -122,7 +127,8 @@ public class TargetUnitAccountPerformanceDataReportController {
     ) {
 
 		return new ResponseEntity<>(
-				orchestrator.generateGetAccountPerformanceDataReportAttachmentToken(accountId, targetPeriodType, fileAttachmentUuid),
+				accountPerformanceDataStatusAttachmentService
+						.generateGetAccountPerformanceDataReportAttachmentToken(accountId, targetPeriodType, fileAttachmentUuid),
 				HttpStatus.OK);
     }
 }

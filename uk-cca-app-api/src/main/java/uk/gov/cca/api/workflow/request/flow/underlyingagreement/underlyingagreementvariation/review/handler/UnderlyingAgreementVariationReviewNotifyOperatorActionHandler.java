@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaReviewOutcome;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.DeterminationOutcome;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.DeterminationType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
@@ -47,14 +48,15 @@ public class UnderlyingAgreementVariationReviewNotifyOperatorActionHandler
 
         // Update Request
         final CcaDecisionNotification decisionNotification = payload.getDecisionNotification();
-        final DeterminationType determinationType = taskPayload.getDetermination().getType();
+        final DeterminationType determinationType = taskPayload.getDetermination().getDetermination().getType();
+        final Boolean hasChanges = taskPayload.getDetermination().getVariationImpactsAgreement();
         underlyingAgreementVariationReviewService.notifyOperator(requestTask, decisionNotification, appUser);
 
         // Complete task
         workflowService.completeTask(
                 requestTask.getProcessTaskId(),
                 Map.of(BpmnProcessConstants.REQUEST_ID, requestTask.getRequest().getId(),
-                        BpmnProcessConstants.REVIEW_DETERMINATION, determinationType,
+                        BpmnProcessConstants.REVIEW_DETERMINATION, DeterminationOutcome.fromDeterminationType(determinationType, hasChanges),
                         BpmnProcessConstants.REVIEW_OUTCOME, CcaReviewOutcome.NOTIFY_OPERATOR)
         );
 

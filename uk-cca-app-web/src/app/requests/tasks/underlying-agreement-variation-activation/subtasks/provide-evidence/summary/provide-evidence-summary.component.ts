@@ -7,7 +7,7 @@ import { toProvideEvidenceSummaryData } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 import { generateDownloadUrl } from '@shared/utils';
 
-import { underlyingAgreementVariationActivationQuery } from '../../../+state/una-variation-activation.selectors';
+import { underlyingAgreementVariationActivationQuery } from '../../../una-variation-activation.selectors';
 
 @Component({
   selector: 'cca-provide-evidence-summary',
@@ -32,12 +32,8 @@ export default class ProvideEvidenceSummaryComponent {
 
   protected readonly summaryData = computed(() =>
     toProvideEvidenceSummaryData(
-      this.requestTaskStore.select(
-        underlyingAgreementVariationActivationQuery.selectUnderlyingAgreementActivationDetails,
-      )(),
-      this.requestTaskStore.select(
-        underlyingAgreementVariationActivationQuery.selectUnderlyingAgreementActivationAttachments,
-      )(),
+      this.requestTaskStore.select(underlyingAgreementVariationActivationQuery.selectDetails)(),
+      this.requestTaskStore.select(underlyingAgreementVariationActivationQuery.selectAttachments)(),
       this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
       this.downloadUrl,
     ),

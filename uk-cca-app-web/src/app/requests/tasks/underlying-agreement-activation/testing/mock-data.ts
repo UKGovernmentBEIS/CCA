@@ -1,6 +1,6 @@
 import { RequestTaskItemDTO, UnderlyingAgreementActivationDetails } from 'cca-api';
 
-import { UNAActivationRequestTaskPayload } from '../underlying-agreement-activation.types';
+import { UNAActivationRequestTaskPayload } from '../types';
 
 const mockUnderlyingAgreementActivation: UnderlyingAgreementActivationDetails = {
   evidenceFiles: ['evidenceFile'],

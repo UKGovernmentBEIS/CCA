@@ -22,6 +22,6 @@ export class ManageFacilitiesSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
   protected readonly manageFacilities = this.requestActionStore.select(
-    underlyingAgreementRequestActionQuery.selectManageFacilities,
+    underlyingAgreementRequestActionQuery.selectFacilityItems,
   );
 }

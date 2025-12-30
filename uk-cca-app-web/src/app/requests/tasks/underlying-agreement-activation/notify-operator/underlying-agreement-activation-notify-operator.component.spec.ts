@@ -1,18 +1,17 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { TaskService } from '@netz/common/forms';
-import { RequestTaskStore } from '@netz/common/store';
-import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
+import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
+import { screen } from '@testing-library/dom';
 
 import { CaExternalContactsService, NoticeRecipientsService, RegulatorAuthoritiesService } from 'cca-api';
 import { TasksService } from 'cca-api';
 
-import { UnderlyingAgreementActivationTaskService } from '../services/underlying-agreement-activation-task.service';
 import { mockRequestTaskItemDTO } from '../testing/mock-data';
 import UnderlyingAgreementActivationNotifyOperatorComponent from './underlying-agreement-activation-notify-operator.component';
 
@@ -20,12 +19,6 @@ describe('UnderlyingAgreementActivationNotifyOperatorComponent', () => {
   let component: UnderlyingAgreementActivationNotifyOperatorComponent;
   let fixture: ComponentFixture<UnderlyingAgreementActivationNotifyOperatorComponent>;
   let store: RequestTaskStore;
-  let page: Page;
-  let router: Router;
-
-  const taskService: Partial<jest.Mocked<UnderlyingAgreementActivationTaskService>> = {
-    notifyOperator: jest.fn().mockReturnValue(of({})),
-  };
 
   const tasksService: Partial<jest.Mocked<TasksService>> = {
     getDefaultNoticeRecipients: jest.fn().mockReturnValue(
@@ -84,12 +77,6 @@ describe('UnderlyingAgreementActivationNotifyOperatorComponent', () => {
     ),
   };
 
-  class Page extends BasePage<UnderlyingAgreementActivationNotifyOperatorComponent> {
-    get submitButton() {
-      return this.query<HTMLButtonElement>('button[type="submit"]');
-    }
-  }
-
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [UnderlyingAgreementActivationNotifyOperatorComponent],
@@ -98,11 +85,12 @@ describe('UnderlyingAgreementActivationNotifyOperatorComponent', () => {
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
-        { provide: TaskService, useValue: taskService },
         { provide: TasksService, useValue: tasksService },
         { provide: NoticeRecipientsService, useValue: noticeRecipientsService },
         { provide: CaExternalContactsService, useValue: caExternalContactsService },
         { provide: RegulatorAuthoritiesService, useValue: regulatorAuthoritiesService },
+        { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
+        { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Upload target unit assent' },
       ],
     }).compileComponents();
 
@@ -111,8 +99,6 @@ describe('UnderlyingAgreementActivationNotifyOperatorComponent', () => {
 
     fixture = TestBed.createComponent(UnderlyingAgreementActivationNotifyOperatorComponent);
     component = fixture.componentInstance;
-    page = new Page(fixture);
-    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
@@ -120,21 +106,22 @@ describe('UnderlyingAgreementActivationNotifyOperatorComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should redirect to notify operator', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    const taskServiceSpy = jest.spyOn(taskService, 'notifyOperator');
+  it('should display the correct header and caption', () => {
+    expect(screen.getByText('Notify operator')).toBeInTheDocument();
+    expect(screen.getByText('Select who should receive the active Underlying Agreement notice')).toBeInTheDocument();
+  });
 
-    page.submitButton.click();
-    fixture.detectChanges();
+  it('should contain submit button and "return to" link', () => {
+    expect(screen.getByText('Confirm and complete')).toBeInTheDocument();
+    expect(screen.getByText('Return to: Upload target unit assent')).toBeInTheDocument();
+  });
 
-    expect(taskServiceSpy).toHaveBeenCalledWith({
-      externalContacts: [],
-      operators: [],
-      sectorUsers: [],
-      signatory: '088fe8e5-9eb9-49d0-a6d0-d2f78031fe79',
-    });
-
-    expect(navigateSpy).toHaveBeenCalledTimes(1);
-    expect(navigateSpy).toHaveBeenCalledWith(['confirmation'], expect.anything());
+  it('should display the correct form fields', () => {
+    expect(screen.getByText('Users automatically notified')).toBeInTheDocument();
+    expect(screen.getByText('Select any additional users you want to notify')).toBeInTheDocument();
+    expect(screen.getByText('Select the external contacts you want to notify')).toBeInTheDocument();
+    expect(
+      screen.getByText('Select the name and signature that will be shown on the official notice document'),
+    ).toBeInTheDocument();
   });
 });

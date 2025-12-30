@@ -1,21 +1,12 @@
 import { DatePipe } from '@angular/common';
 import { Component, DoCheck, OnDestroy, OnInit, input, inject } from '@angular/core';
-import {
-  ControlContainer,
-  ControlValueAccessor,
-  FormBuilder,
-  NgControl,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-} from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import { BehaviorSubject, combineLatest, filter, takeUntil } from 'rxjs';
 
 import { ErrorMessageComponent } from '../error-message';
 import { GovukValidators } from '../error-message';
 import { FieldsetDirective, FieldsetHintDirective, LegendDirective } from '../fieldset';
-import { FormService } from '../form';
 import { FormInput } from '../form/form-input';
 import { DateInputValidators } from './date-input.validators';
 
@@ -57,11 +48,7 @@ export class DateInputComponent extends FormInput implements ControlValueAccesso
   private onBlur: () => any;
 
   constructor() {
-    const ngControl = inject(NgControl, { self: true, optional: true });
-    const formService = inject(FormService);
-    const container = inject(ControlContainer, { optional: true });
-
-    super(ngControl, formService, container);
+    super();
   }
 
   override ngOnInit(): void {

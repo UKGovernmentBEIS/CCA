@@ -4,8 +4,6 @@ import { fileUtils } from '@shared/utils';
 
 import { AdminTerminationFinalDecisionReasonDetails } from 'cca-api';
 
-import { AdminTerminationFinalDecisionTerminateAgreementWizardStep } from './admin-termination-final-decision.helper';
-
 export function toFinalDecisionReasonSummaryData(
   adminTerminationFinalDecisionReasonDetails: AdminTerminationFinalDecisionReasonDetails,
   adminTerminationFinalDecisionAttachments: Record<string, string>,
@@ -13,7 +11,7 @@ export function toFinalDecisionReasonSummaryData(
   downloadUrl: string,
 ): SummaryData {
   return new SummaryFactory()
-    .addSection('', `../${AdminTerminationFinalDecisionTerminateAgreementWizardStep.ACTIONS}`)
+    .addSection('', '../actions')
     .addRow(
       'Decision',
       transformAdminTerminationFinalDecisionType(adminTerminationFinalDecisionReasonDetails.finalDecisionType),
@@ -22,7 +20,7 @@ export function toFinalDecisionReasonSummaryData(
       },
     )
 
-    .addSection('', `../${AdminTerminationFinalDecisionTerminateAgreementWizardStep.REASON_DETAILS}`)
+    .addSection('', 'reason-details')
     .addTextAreaRow('Explain reason', adminTerminationFinalDecisionReasonDetails.explanation, {
       change: isEditable,
     })

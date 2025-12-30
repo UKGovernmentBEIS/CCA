@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { catchError, of } from 'rxjs';
+import { catchError, of, take } from 'rxjs';
 
 import {
   ConditionalContentDirective,
@@ -11,9 +11,10 @@ import {
   RadioOptionComponent,
   TextInputComponent,
 } from '@netz/govuk-components';
+import { sameCompanyRegistrationNumbers } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 
-import { AccountAddressDTO, CompaniesInformationService } from 'cca-api';
+import { AccountAddressDTO, CompaniesInformationService, CompanyProfileDTO, TargetUnitAccountPayload } from 'cca-api';
 
 import { CompanyRegistrationNumberFormModel } from '../../common/types';
 import { CreateTargetUnitStore } from '../create-target-unit.store';
@@ -21,6 +22,12 @@ import {
   COMPANY_REGISTRATION_NUMBER_FORM,
   CompanyRegistrationNumberFormProvider,
 } from './company-registration-number-form.provider';
+
+type CompanyNumberState = {
+  isCompanyRegistrationNumber: boolean;
+  companyRegistrationNumber: string;
+  registrationNumberMissingReason: string;
+};
 
 @Component({
   selector: 'cca-company-registration-number',
@@ -47,9 +54,7 @@ export class CompanyRegistrationNumberComponent {
   protected readonly form = inject<FormGroup<CompanyRegistrationNumberFormModel>>(COMPANY_REGISTRATION_NUMBER_FORM);
 
   onSubmitCompanyRegistrationNumber() {
-    const state = this.createTargetUnitStore.state;
-
-    const registrationNumberState = {
+    const registrationNumberState: CompanyNumberState = {
       isCompanyRegistrationNumber: this.form.value.isCompanyRegistrationNumber,
       companyRegistrationNumber: this.form.value.companyRegistrationNumber,
       registrationNumberMissingReason: this.form.value.registrationNumberMissingReason,
@@ -58,45 +63,49 @@ export class CompanyRegistrationNumberComponent {
     if (this.form.value.isCompanyRegistrationNumber) {
       this.companiesInformationService
         .getCompanyProfileByRegistrationNumber(this.form.value.companyRegistrationNumber)
-        .pipe(catchError(() => of(null)))
+        .pipe(
+          take(1),
+          catchError(() => of(null)),
+        )
         .subscribe((companyProfile) => {
-          if (companyProfile) {
-            // TODO: We need to clear the country field for now, as the mapping from country code to string
-            // and vice versa does not exist yet.
-            const address: AccountAddressDTO = { ...companyProfile?.address, country: null };
-
-            this.createTargetUnitStore.updateState({
-              ...state,
-              isCompanyRegistrationNumber: this.form.value.isCompanyRegistrationNumber,
-              companyRegistrationNumber: companyProfile.registrationNumber,
-              registrationNumberMissingReason: null,
-              name: companyProfile.name ?? null,
-              operatorType: null,
-              sicCodes: companyProfile.sicCodes ?? [],
-              address: address ?? null,
-            });
-          } else {
-            this.createTargetUnitStore.updateState({
-              ...registrationNumberState,
-              address: null,
-              name: null,
-              operatorType: null,
-              sicCodes: [],
-            });
-          }
-
-          this.router.navigate(['..', 'target-unit-details'], { relativeTo: this.activatedRoute });
+          this.updateStateAndNavigate(registrationNumberState, companyProfile);
         });
     } else {
-      this.createTargetUnitStore.updateState({
-        ...registrationNumberState,
-        address: null,
-        name: null,
-        operatorType: null,
-        sicCodes: [],
-      });
-
-      this.router.navigate(['..', 'target-unit-details'], { relativeTo: this.activatedRoute });
+      this.updateStateAndNavigate(registrationNumberState, null);
     }
   }
+
+  private updateStateAndNavigate(
+    companyNumberState: CompanyNumberState,
+    companyProfile: CompanyProfileDTO | null,
+  ): void {
+    const currentState = this.createTargetUnitStore.state;
+    const sameCRN = sameCompanyRegistrationNumbers(companyProfile, currentState.companyRegistrationNumber);
+
+    if (!sameCRN) {
+      const updatedState = updateTargetUnitState(currentState, companyNumberState, companyProfile);
+      this.createTargetUnitStore.updateState(updatedState);
+    }
+
+    this.router.navigate(['..', 'target-unit-details'], { relativeTo: this.activatedRoute });
+  }
+}
+
+function updateTargetUnitState(
+  state: TargetUnitAccountPayload,
+  companyNumberState: CompanyNumberState,
+  companyProfile: CompanyProfileDTO | null,
+): TargetUnitAccountPayload {
+  const address: AccountAddressDTO = { ...companyProfile?.address, country: null };
+
+  return {
+    ...state,
+    companyRegistrationNumber: companyProfile?.registrationNumber ?? companyNumberState.companyRegistrationNumber,
+    isCompanyRegistrationNumber: companyNumberState.isCompanyRegistrationNumber,
+    registrationNumberMissingReason: companyNumberState.registrationNumberMissingReason ?? null,
+    name: companyProfile?.name ?? null,
+    operatorType: null,
+    sicCodes: companyProfile?.sicCodes ?? [],
+    address: address ?? null,
+  };
 }

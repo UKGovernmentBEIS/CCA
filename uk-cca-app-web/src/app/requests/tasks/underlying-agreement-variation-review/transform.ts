@@ -1,6 +1,5 @@
 import {
   CcaDecisionNotification,
-  Determination,
   RequestTaskActionProcessDTO,
   UnderlyingAgreementReviewDecision,
   UnderlyingAgreementVariationFacilityReviewDecision,
@@ -12,6 +11,7 @@ import {
   UnderlyingAgreementVariationSaveReviewDeterminationRequestTaskActionPayload,
   UnderlyingAgreementVariationSaveReviewGroupDecisionRequestTaskActionPayload,
   UnderlyingAgreementVariationSaveReviewRequestTaskActionPayload,
+  VariationDetermination,
 } from 'cca-api';
 
 // Type definitions for DTOs
@@ -42,7 +42,7 @@ export function createSaveActionDTO(
   requestTaskProps: {
     sectionsCompleted?: Record<string, string>;
     reviewSectionsCompleted: Record<string, string>;
-    determination: Determination;
+    determination: VariationDetermination;
     reviewGroupDecisions?: Record<string, UnderlyingAgreementReviewDecision>;
     facilitiesReviewGroupDecisions?: Record<string, UnderlyingAgreementVariationFacilityReviewDecision>;
   },
@@ -75,7 +75,7 @@ export function createSaveDecisionActionDTO(
   group: UnderlyingAgreementVariationSaveReviewGroupDecisionRequestTaskActionPayload['group'],
   reviewSectionsCompleted: Record<string, string>,
   decision: UnderlyingAgreementReviewDecision,
-  determination: Determination,
+  determination: VariationDetermination,
 ): UnaVariationReviewSaveDecisionDTO {
   return {
     requestTaskId,
@@ -95,7 +95,7 @@ export function createSaveFacilityDecisionActionDTO(
   facilityId: string,
   reviewSectionsCompleted: Record<string, string>,
   decision: UnderlyingAgreementVariationFacilityReviewDecision,
-  determination: Determination,
+  determination: VariationDetermination,
 ): UnaVariationReviewSaveFacilityDecisionDTO {
   return {
     requestTaskId,
@@ -112,7 +112,7 @@ export function createSaveFacilityDecisionActionDTO(
 
 export function createSaveDeterminationActionDTO(
   requestTaskId: number,
-  determination: Determination,
+  determination: VariationDetermination,
   reviewSectionsCompleted: Record<string, string>,
 ): UnaVariationReviewSaveDeterminationDTO {
   return {

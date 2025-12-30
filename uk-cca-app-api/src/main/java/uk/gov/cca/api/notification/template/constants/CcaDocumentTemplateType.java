@@ -38,6 +38,9 @@ public class CcaDocumentTemplateType {
     // CR_L001_Variation_Refused.docx
     public static final String UNDERLYING_AGREEMENT_VARIATION_REJECTED = "UNDERLYING_AGREEMENT_VARIATION_REJECTED";
 
+    // CCA3 variation acknowledgement letter.docx
+    public static final String UNDERLYING_AGREEMENT_VARIATION_COMPLETED = "UNDERLYING_AGREEMENT_VARIATION_COMPLETED";
+
     // CCA3 variation termination letter.docx
     public static final String UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION = "UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_SCHEME_TERMINATION";
 

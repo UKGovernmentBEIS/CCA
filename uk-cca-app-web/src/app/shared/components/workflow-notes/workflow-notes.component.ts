@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe, KeyValuePipe } from '@angular/common';
+import { DatePipe, KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -7,7 +7,7 @@ import { map, of, switchMap } from 'rxjs';
 
 import { ButtonDirective } from '@netz/govuk-components';
 
-import { AccountNoteDto, AccountNoteResponse, AccountNotesService } from 'cca-api';
+import { RequestNoteDto, RequestNoteResponse, RequestNotesService } from 'cca-api';
 
 import { PaginationComponent } from '../pagination/pagination.component';
 
@@ -17,16 +17,16 @@ const DEFAULT_PAGE_SIZE = 10;
 @Component({
   selector: 'cca-workflow-notes',
   templateUrl: './workflow-notes.component.html',
-  imports: [CommonModule, DatePipe, KeyValuePipe, PaginationComponent, RouterLink, ButtonDirective],
+  imports: [DatePipe, KeyValuePipe, PaginationComponent, RouterLink, ButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowNotesComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly accountNotesService = inject(AccountNotesService);
+  private readonly requestNotesService = inject(RequestNotesService);
   private readonly queryParams = toSignal(this.activatedRoute.queryParamMap);
 
-  protected readonly targetUnitId = +this.activatedRoute.snapshot.paramMap.get('targetUnitId');
+  protected readonly requestId = this.activatedRoute.snapshot.paramMap.get('workflowId');
 
   readonly currentPage = computed(() => {
     const params = this.queryParams();
@@ -38,7 +38,7 @@ export class WorkflowNotesComponent {
     return +params?.get('pageSize') || DEFAULT_PAGE_SIZE;
   });
 
-  readonly state = signal<{ notes: AccountNoteDto[]; totalItems: number }>({ notes: [], totalItems: 0 });
+  readonly state = signal<{ notes: RequestNoteDto[]; totalItems: number }>({ notes: [], totalItems: 0 });
 
   constructor() {
     this.activatedRoute.queryParamMap
@@ -47,13 +47,12 @@ export class WorkflowNotesComponent {
         switchMap((queryParamMap) => {
           const page = +queryParamMap.get('page') || DEFAULT_PAGE;
           const pageSize = +queryParamMap.get('pageSize') || DEFAULT_PAGE_SIZE;
-          const accountId = this.targetUnitId;
 
-          const response$ = accountId
-            ? this.accountNotesService.getNotesByAccountId(accountId, page - 1, pageSize)
-            : of<AccountNoteResponse>({ accountNotes: [], totalItems: 0 });
+          const response$ = this.requestId
+            ? this.requestNotesService.getNotesByRequestId(this.requestId, page - 1, pageSize)
+            : of<RequestNoteResponse>({ requestNotes: [], totalItems: 0 });
 
-          return response$.pipe(map((resp) => ({ notes: resp.accountNotes ?? [], totalItems: resp.totalItems ?? 0 })));
+          return response$.pipe(map((resp) => ({ notes: resp.requestNotes ?? [], totalItems: resp.totalItems ?? 0 })));
         }),
       )
       .subscribe((state) => this.state.set(state));

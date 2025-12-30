@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 
 import {
@@ -25,15 +25,17 @@ import { CcaOperatorUserRegistrationWithCredentialsDTO } from 'cca-api';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserInputSummaryTemplateComponent implements OnInit {
-  @Input() userInfo: Partial<Omit<CcaOperatorUserRegistrationWithCredentialsDTO, 'emailToken'>>;
-  @Input() changeLink: string;
+  protected readonly route = inject(ActivatedRoute);
+
+  protected readonly userInfo =
+    input<Partial<Omit<CcaOperatorUserRegistrationWithCredentialsDTO, 'emailToken'>>>(undefined);
+
+  protected readonly changeLink = input<string>(undefined);
 
   changeQueryParams: Params = { change: true };
   modifiedUserInfo: Partial<Omit<CcaOperatorUserRegistrationWithCredentialsDTO, 'emailToken'>>;
 
-  constructor(readonly route: ActivatedRoute) {}
-
   ngOnInit() {
-    this.modifiedUserInfo = this.userInfo;
+    this.modifiedUserInfo = this.userInfo();
   }
 }

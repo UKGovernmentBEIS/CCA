@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.notification.template.constants.CcaDocumentTemplateType;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
+import uk.gov.cca.api.workflow.request.flow.common.service.CcaDecisionNotificationUsersService;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaFileDocumentGeneratorService;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaOfficialNoticeSendService;
@@ -24,6 +25,7 @@ import java.util.Set;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,6 +42,9 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingOfficialNoticeServiceTest 
 
     @Mock
     private CcaOfficialNoticeSendService ccaOfficialNoticeSendService;
+
+    @Mock
+    private CcaDecisionNotificationUsersService ccaDecisionNotificationUsersService;
 
     @Test
     void generateAcceptedOfficialNotice() {
@@ -115,5 +120,39 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingOfficialNoticeServiceTest 
         verify(requestService, times(1)).findRequestById(requestId);
         verify(ccaOfficialNoticeSendService, times(1))
                 .sendOfficialNotice(attachments, request, new ArrayList<>());
+        verifyNoInteractions(ccaDecisionNotificationUsersService);
+    }
+
+    @Test
+    void sendOfficialNotice_with_decision_notification() {
+        final String requestId = "requestId";
+        final FileInfoDTO document = FileInfoDTO.builder().name("document").build();
+        final FileInfoDTO notice = FileInfoDTO.builder().name("notice").build();
+        final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
+                .sectorUsers(Set.of("sector1", "sector2"))
+                .build();
+        final Request request = Request.builder()
+                .payload(Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload.builder()
+                        .underlyingAgreementDocument(document)
+                        .officialNotice(notice)
+                        .decisionNotification(decisionNotification)
+                        .build())
+                .build();
+        final List<FileInfoDTO> attachments = List.of(document, notice);
+        final List<String> ccRecipientsEmails = List.of("sector1@test.gr", "sector2@test.gr");
+
+        when(requestService.findRequestById(requestId)).thenReturn(request);
+        when(ccaDecisionNotificationUsersService.findCCUserEmails(decisionNotification))
+                .thenReturn(ccRecipientsEmails);
+
+        // Invoke
+        service.sendOfficialNotice(requestId);
+
+        // Verify
+        verify(requestService, times(1)).findRequestById(requestId);
+        verify(ccaOfficialNoticeSendService, times(1))
+                .sendOfficialNotice(attachments, request, ccRecipientsEmails);
+        verify(ccaDecisionNotificationUsersService, times(1))
+                .findCCUserEmails(decisionNotification);
     }
 }

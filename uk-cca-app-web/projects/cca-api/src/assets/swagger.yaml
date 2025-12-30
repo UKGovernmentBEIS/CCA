@@ -5629,18 +5629,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
   /v1.0/request-notes/{requestId}/files:
     get:
       tags:
@@ -5988,12 +6003,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - NONE
+                      - VIEW_ONLY
+                      - EXECUTE
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - NONE
+                      - VIEW_ONLY
+                      - EXECUTE
   /v1.0/notification-templates:
     get:
       tags:
@@ -6786,6 +6823,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ReferenceDataDTO'
       security: []
   /v1.0/company-information/{registrationNumber}:
     get:
@@ -8886,7 +8930,7 @@ components:
         group:
           type: string
         determination:
-          $ref: '#/components/schemas/Determination'
+          $ref: '#/components/schemas/VariationDetermination'
         decision:
           $ref: >-
             #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
@@ -9044,6 +9088,63 @@ components:
       description: The parameters based on which the report will be generated
       discriminator:
         propertyName: reportType
+    UnderlyingAgreementVariationCompletedRequestActionPayload:
+      required:
+        - decisionNotification
+        - defaultContacts
+        - determination
+        - officialNotices
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        accountReferenceData:
+          $ref: '#/components/schemas/AccountReferenceData'
+        underlyingAgreement:
+          $ref: '#/components/schemas/UnderlyingAgreementVariationPayload'
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
+        underlyingAgreementAttachments:
+          type: object
+          additionalProperties:
+            type: string
+        decisionNotification:
+          $ref: '#/components/schemas/CcaDecisionNotification'
+        defaultContacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/DefaultNoticeRecipient'
+        usersInfo:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RequestActionUserInfo'
+        officialNotices:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileInfoDTO'
+        determination:
+          $ref: '#/components/schemas/VariationDetermination'
+        reviewSectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
+        reviewGroupDecisions:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/UnderlyingAgreementReviewDecision'
+        facilitiesReviewGroupDecisions:
+          type: object
+          additionalProperties:
+            $ref: >-
+              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
+        reviewAttachments:
+          type: object
+          additionalProperties:
+            type: string
     PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload:
       required:
         - reportPackages
@@ -9306,7 +9407,7 @@ components:
         underlyingAgreement:
           $ref: '#/components/schemas/UnderlyingAgreementVariationReviewSavePayload'
         determination:
-          $ref: '#/components/schemas/Determination'
+          $ref: '#/components/schemas/VariationDetermination'
         reviewGroupDecisions:
           type: object
           additionalProperties:
@@ -10070,6 +10171,32 @@ components:
           type: object
           additionalProperties:
             type: string
+    VariationDetermination:
+      required:
+        - type
+      type: object
+      properties:
+        variationImpactsAgreement:
+          type: boolean
+        type:
+          type: string
+          enum:
+            - ACCEPTED
+            - REJECTED
+        reason:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        additionalInformation:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        files:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uuid
     UserBasicInfoDTO:
       type: object
       properties:
@@ -10700,7 +10827,7 @@ components:
           items:
             $ref: '#/components/schemas/FileInfoDTO'
         determination:
-          $ref: '#/components/schemas/Determination'
+          $ref: '#/components/schemas/VariationDetermination'
         reviewSectionsCompleted:
           type: object
           additionalProperties:
@@ -10835,7 +10962,7 @@ components:
           items:
             $ref: '#/components/schemas/FileInfoDTO'
         determination:
-          $ref: '#/components/schemas/Determination'
+          $ref: '#/components/schemas/VariationDetermination'
         reviewSectionsCompleted:
           type: object
           additionalProperties:
@@ -11708,7 +11835,7 @@ components:
         payloadType:
           type: string
         determination:
-          $ref: '#/components/schemas/Determination'
+          $ref: '#/components/schemas/VariationDetermination'
         reviewSectionsCompleted:
           type: object
           additionalProperties:
@@ -12590,7 +12717,7 @@ components:
         underlyingAgreementProposed:
           $ref: '#/components/schemas/UnderlyingAgreementVariationPayload'
         determination:
-          $ref: '#/components/schemas/Determination'
+          $ref: '#/components/schemas/VariationDetermination'
     SectorAssociationSiteContactInfoResponse:
       type: object
       properties:
@@ -13133,7 +13260,7 @@ components:
             - AUTHORISATION_AND_ADDITIONAL_EVIDENCE
             - VARIATION_DETAILS
         determination:
-          $ref: '#/components/schemas/Determination'
+          $ref: '#/components/schemas/VariationDetermination'
         decision:
           $ref: '#/components/schemas/UnderlyingAgreementReviewDecision'
         reviewSectionsCompleted:
@@ -13877,7 +14004,7 @@ components:
           items:
             $ref: '#/components/schemas/FileInfoDTO'
         determination:
-          $ref: '#/components/schemas/Determination'
+          $ref: '#/components/schemas/VariationDetermination'
         reviewSectionsCompleted:
           type: object
           additionalProperties:
@@ -14580,7 +14707,7 @@ components:
         underlyingAgreementProposed:
           $ref: '#/components/schemas/UnderlyingAgreementVariationPayload'
         determination:
-          $ref: '#/components/schemas/Determination'
+          $ref: '#/components/schemas/VariationDetermination'
         decision:
           $ref: '#/components/schemas/CcaPeerReviewDecision'
         peerReviewAttachments:

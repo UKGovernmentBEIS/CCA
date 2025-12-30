@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { PanelComponent } from '@netz/govuk-components';
-import { underlyingAgreementReviewQuery } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 
 @Component({
   selector: 'cca-variation-confirmation',
@@ -20,7 +20,7 @@ export class NotifyOperatorVariationConfirmationComponent {
   private readonly store = inject(RequestTaskStore);
 
   protected readonly decision =
-    this.store.select(underlyingAgreementReviewQuery.selectDetermination)().type === 'ACCEPTED'
+    this.store.select(underlyingAgreementVariationReviewQuery.selectDetermination)().type === 'ACCEPTED'
       ? 'approved'
       : 'rejected';
 }

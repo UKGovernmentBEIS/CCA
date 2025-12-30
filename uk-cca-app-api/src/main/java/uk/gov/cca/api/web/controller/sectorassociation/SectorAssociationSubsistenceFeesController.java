@@ -19,9 +19,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaSearchCriteria;
 import uk.gov.cca.api.subsistencefees.domain.dto.SubsistenceFeesMoaSearchResults;
+import uk.gov.cca.api.subsistencefees.service.SubsistenceFeesMoaQueryService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.web.orchestrator.sectorassociation.service.SectorAssociationSubsistenceFeesServiceOrchestrator;
 import uk.gov.netz.api.security.Authorized;
 
 @RestController
@@ -30,7 +30,7 @@ import uk.gov.netz.api.security.Authorized;
 @Tag(name = "Sector association subsistence fees")
 public class SectorAssociationSubsistenceFeesController {
 	
-	private final SectorAssociationSubsistenceFeesServiceOrchestrator orchestrator;
+	private final SubsistenceFeesMoaQueryService subsistenceFeesMoaQueryService;
 	
 	@PostMapping(path = "/moas")
     @Operation(summary = "Retrieves the subsistence fees MoAs for the specified sector")
@@ -44,6 +44,7 @@ public class SectorAssociationSubsistenceFeesController {
     public ResponseEntity<SubsistenceFeesMoaSearchResults> getSectorSubsistenceFeesMoas(
     		@Parameter(description = "The sectorAssociationId") @PathVariable("sectorAssociationId") Long sectorAssociationId,
     		@RequestBody @Valid @Parameter(description = "The search criteria", required = true) SubsistenceFeesMoaSearchCriteria criteria) {
-        return new ResponseEntity<>(orchestrator.getSectorSubsistenceFeesMoas(sectorAssociationId, criteria), HttpStatus.OK);
+        return new ResponseEntity<>(subsistenceFeesMoaQueryService
+		        .getSectorSubsistenceFeesMoas(sectorAssociationId, criteria), HttpStatus.OK);
     }
 }

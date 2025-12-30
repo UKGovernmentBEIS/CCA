@@ -331,6 +331,11 @@ class RequestNoteControllerTest {
         final UUID documentUuid = UUID.randomUUID();
         final FileToken expectedToken = FileToken.builder().token("token").build();
 
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(requestNoteService.generateGetFileNoteToken(requestId, documentUuid)).thenReturn(expectedToken);
 
         mockMvc.perform(MockMvcRequestBuilders

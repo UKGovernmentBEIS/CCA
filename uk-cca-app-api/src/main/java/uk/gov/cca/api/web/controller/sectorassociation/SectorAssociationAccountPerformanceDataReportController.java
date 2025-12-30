@@ -23,9 +23,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountPerformanceDataReportListDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountPerformanceDataReportSearchCriteria;
+import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.web.orchestrator.sectorassociation.service.SectorAssociationAccountPerformanceDataReportServiceOrchestrator;
 import uk.gov.netz.api.security.Authorized;
 
 @Validated
@@ -35,7 +35,7 @@ import uk.gov.netz.api.security.Authorized;
 @Tag(name = "Sector-Level Performance Data View Pages")
 public class SectorAssociationAccountPerformanceDataReportController {
     
-    private final SectorAssociationAccountPerformanceDataReportServiceOrchestrator orchestrator;
+    private final AccountPerformanceDataStatusQueryService accountPerformanceDataStatusQueryService;
     
     @PostMapping
     @Operation(summary = "Populates the target period performance data of sector accounts")
@@ -48,6 +48,8 @@ public class SectorAssociationAccountPerformanceDataReportController {
             @RequestBody @Valid @Parameter(description = "The search criteria") SectorAccountPerformanceDataReportSearchCriteria criteria) {
         
         return new ResponseEntity<>(
-                orchestrator.getSectorAccountPerformanceDataReportList(sectorAssociationId, criteria), HttpStatus.OK);
+                accountPerformanceDataStatusQueryService
+		                .getSectorAccountPerformanceDataReportList(sectorAssociationId, criteria),
+		        HttpStatus.OK);
     }
 }

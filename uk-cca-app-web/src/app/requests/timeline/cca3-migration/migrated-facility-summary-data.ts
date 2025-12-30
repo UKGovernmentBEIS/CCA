@@ -42,10 +42,7 @@ export function toMigratedFacilitySummaryData(facility: Cca3FacilityMigrationDat
         'Energy or carbon units used by the facility',
         measurementTypeToOptionTextPipe.transform(facility.measurementType),
       )
-      .addRow(
-        `Baseline energy to carbon factor (kgC/${measurementTypeToUnit.transform(facility.measurementType)})`,
-        String(facility.energyCarbonFactor),
-      )
+      .addRow('Baseline energy to carbon factor (kgC/kWh)', String(facility.energyCarbonFactor))
       .addRow('SRM used', boolToString(facility.usedReportingMechanism))
       .addRow(
         'Baseline total fixed energy (or carbon) value',

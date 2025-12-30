@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BehaviorSubject, from, ignoreElements, Observable } from 'rxjs';
@@ -7,10 +7,10 @@ import { BusinessError } from './business-error';
 
 @Injectable({ providedIn: 'root' })
 export class BusinessErrorService {
+  private readonly router = inject(Router);
+
   private readonly errorSubject = new BehaviorSubject<BusinessError>(null);
   readonly error$ = this.errorSubject.asObservable();
-
-  constructor(private readonly router: Router) {}
 
   showError(error: BusinessError): Observable<boolean> {
     this.errorSubject.next(error);

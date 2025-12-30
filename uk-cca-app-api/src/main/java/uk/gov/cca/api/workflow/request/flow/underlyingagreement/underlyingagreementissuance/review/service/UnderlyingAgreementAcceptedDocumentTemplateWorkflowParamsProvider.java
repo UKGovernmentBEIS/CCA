@@ -49,6 +49,8 @@ public class UnderlyingAgreementAcceptedDocumentTemplateWorkflowParamsProvider i
                 .map(Map.Entry::getKey)
                 .sorted(Comparator.comparing(id -> id))
                 .toList();
+        
+        params.put("additionalInformation", payload.getDetermination().getAdditionalInformation());
 
         params.putAll(Map.of(
                 "rejectedFacilities", rejectedFacilities,

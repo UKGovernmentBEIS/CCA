@@ -18,6 +18,7 @@ import {
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { FileInputComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
@@ -128,7 +129,7 @@ export class FacilityExtentComponent {
       draft[OVERALL_DECISION_SUBTASK] = TaskItemStatus.UNDECIDED;
     });
 
-    const currDetermination = this.store.select(underlyingAgreementReviewQuery.selectDetermination)();
+    const currDetermination = this.store.select(underlyingAgreementVariationReviewQuery.selectDetermination)();
     const determination = resetDetermination(currDetermination);
 
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();

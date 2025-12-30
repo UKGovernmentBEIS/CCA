@@ -5,13 +5,13 @@ import org.apache.commons.collections4.SetUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.DataValidator;
-import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.common.validation.FileAttachmentsExistenceValidator;
 import uk.gov.cca.api.workflow.request.flow.common.validation.review.ReviewDeterminationViolation;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.review.UnderlyingAgreementReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationFacilityReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.VariationDetermination;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class UnderlyingAgreementVariationReviewDecisionDataValidator {
 
     private final DataValidator<UnderlyingAgreementReviewDecision> reviewDecisionDataValidator;
     private final DataValidator<UnderlyingAgreementVariationFacilityReviewDecision> facilityReviewDecisionDataValidator;
-    private final DataValidator<Determination> determinationDataValidator;
+    private final DataValidator<VariationDetermination> determinationDataValidator;
     private final FileAttachmentsExistenceValidator fileAttachmentsExistenceValidator;
 
 
@@ -120,7 +120,7 @@ public class UnderlyingAgreementVariationReviewDecisionDataValidator {
         // Validate determination data
         determinationDataValidator.validate(taskPayload.getDetermination())
                 .map(businessViolation ->
-                        new ReviewDeterminationViolation(Determination.class.getName(),
+                        new ReviewDeterminationViolation(VariationDetermination.class.getName(),
                                 ReviewDeterminationViolation.ReviewDeterminationViolationMessage.INVALID_DETERMINATION_DATA,
                                 businessViolation.getData()))
                 .ifPresent(violations::add);
@@ -129,7 +129,7 @@ public class UnderlyingAgreementVariationReviewDecisionDataValidator {
     private void validateNotEmptyDetermination(final UnderlyingAgreementVariationReviewRequestTaskPayload taskPayload, List<ReviewDeterminationViolation> violations) {
         // Validate not empty Determination
         if (taskPayload.getDetermination() == null) {
-            violations.add(new ReviewDeterminationViolation(Determination.class.getName(),
+            violations.add(new ReviewDeterminationViolation(VariationDetermination.class.getName(),
                     ReviewDeterminationViolation.ReviewDeterminationViolationMessage.INVALID_DETERMINATION_DATA));
         }
     }

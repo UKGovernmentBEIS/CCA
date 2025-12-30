@@ -1,5 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ControlContainer, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { Component } from '@angular/core';
 
@@ -28,6 +28,7 @@ describe('TextareaComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, BrowserModule, TextareaComponent, TestComponent, ErrorMessageComponent],
+      providers: [ControlContainer],
     }).compileComponents();
 
     hostComponentFixture = TestBed.createComponent(TestComponent);

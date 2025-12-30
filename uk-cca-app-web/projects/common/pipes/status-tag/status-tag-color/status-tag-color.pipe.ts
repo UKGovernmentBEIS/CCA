@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 
 import { TagColor } from '@netz/govuk-components';
 
@@ -6,7 +6,7 @@ import { TASK_STATUS_TAG_MAP, TaskStatusTagMap } from '../status-tag.providers';
 
 @Pipe({ name: 'statusTagColor', pure: true })
 export class StatusTagColorPipe implements PipeTransform {
-  constructor(@Inject(TASK_STATUS_TAG_MAP) private statusMap: TaskStatusTagMap) {}
+  private readonly statusMap = inject<TaskStatusTagMap>(TASK_STATUS_TAG_MAP);
 
   transform(status: string): TagColor {
     return this.statusMap[status].color;

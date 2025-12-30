@@ -14,7 +14,7 @@ export const WorkflowHistoryDetailsResolver: ResolveFn<WorkflowHistoryDetailsRes
   const requestsService = inject(RequestsService);
   const requestActionsService = inject(RequestActionsService);
 
-  const runId = route.paramMap.get('id');
+  const runId = route.paramMap.get('workflowId');
 
   return combineLatest({
     workflowDetails: requestsService.getRequestDetailsById(runId),

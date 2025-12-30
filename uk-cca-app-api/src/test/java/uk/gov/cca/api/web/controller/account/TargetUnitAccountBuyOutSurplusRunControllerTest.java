@@ -22,10 +22,12 @@ import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.AccountBuyO
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.SurplusGainedDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.SurplusHistoryDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.SurplusUpdateDTO;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusExclusionService;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.SurplusQueryService;
+import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.SurplusService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.orchestrator.account.service.TargetUnitAccountBuyOutSurplusServiceOrchestrator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.common.constants.RoleTypeConstants;
@@ -58,7 +60,13 @@ class TargetUnitAccountBuyOutSurplusRunControllerTest {
 	private TargetUnitAccountBuyOutSurplusController controller;
 
 	@Mock
-	private TargetUnitAccountBuyOutSurplusServiceOrchestrator targetUnitAccountBuyOutSurplusServiceOrchestrator;
+	private BuyOutSurplusExclusionService exclusionService;
+
+	@Mock
+	private SurplusService surplusService;
+
+	@Mock
+	private SurplusQueryService surplusQueryService;
 
 	@Mock
 	private AppSecurityComponent appSecurityComponent;
@@ -116,7 +124,7 @@ class TargetUnitAccountBuyOutSurplusRunControllerTest {
 						.param("targetPeriodType",TargetPeriodType.TP6.name()))
 				.andExpect(status().isNoContent());
 
-		verify(targetUnitAccountBuyOutSurplusServiceOrchestrator, times(1))
+		verify(surplusService, times(1))
 				.updateSurplusGained(
 						surplusUpdateDTO,
 						accountId,
@@ -135,8 +143,12 @@ class TargetUnitAccountBuyOutSurplusRunControllerTest {
 		final List<SurplusGainedDTO> surplusGainedDTOList = List.of(surplusGainedDTO);
 		final AccountBuyOutSurplusInfoDTO accountBuyOutSurplusInfoDTO = AccountBuyOutSurplusInfoDTO.builder()
 				.excluded(false).surplusGainedDTOList(surplusGainedDTOList).build();
+		final AppUser user = AppUser.builder()
+				.roleType(RoleTypeConstants.REGULATOR)
+				.build();
 
-		when(targetUnitAccountBuyOutSurplusServiceOrchestrator.getBuyOutSurplusInfoByAccountId(accountId))
+		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+		when(exclusionService.getBuyOutSurplusInfoByAccountId(accountId))
 				.thenReturn(accountBuyOutSurplusInfoDTO);
 
 		mockMvc.perform(get(GET_PATH)
@@ -148,7 +160,7 @@ class TargetUnitAccountBuyOutSurplusRunControllerTest {
 				.andExpect(jsonPath("$.surplusGainedDTOList[0].surplusGained").value("0"))
 				.andExpect(jsonPath("$.surplusGainedDTOList[0].hasHistory").value(false));
 
-		verify(targetUnitAccountBuyOutSurplusServiceOrchestrator, times(1))
+		verify(exclusionService, times(1))
 				.getBuyOutSurplusInfoByAccountId(accountId);
 	}
 
@@ -164,7 +176,12 @@ class TargetUnitAccountBuyOutSurplusRunControllerTest {
 						.comments("comments")
 						.build()
 		);
-		when(targetUnitAccountBuyOutSurplusServiceOrchestrator.getAllSurplusHistoryByTargetPeriodAndAccountId(TargetPeriodType.TP6, accountId))
+		final AppUser user = AppUser.builder()
+				.roleType(RoleTypeConstants.REGULATOR)
+				.build();
+
+		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+		when(surplusQueryService.getAllSurplusHistoryByAccountIdAndTargetPeriod(TargetPeriodType.TP6, accountId))
 				.thenReturn(surplusHistoryDTOS);
 
 		mockMvc.perform(get(GET_PATH)
@@ -176,8 +193,8 @@ class TargetUnitAccountBuyOutSurplusRunControllerTest {
 				.andExpect(jsonPath("$[0].comments").value(surplusHistoryDTOS.get(0).getComments()))
 				.andExpect(jsonPath("$[0].surplusGained").value(surplusHistoryDTOS.get(0).getSurplusGained()));
 
-		verify(targetUnitAccountBuyOutSurplusServiceOrchestrator, times(1))
-				.getAllSurplusHistoryByTargetPeriodAndAccountId(TargetPeriodType.TP6, accountId);
+		verify(surplusQueryService, times(1))
+				.getAllSurplusHistoryByAccountIdAndTargetPeriod(TargetPeriodType.TP6, accountId);
 	}
 
 	@Test
@@ -186,11 +203,17 @@ class TargetUnitAccountBuyOutSurplusRunControllerTest {
 		final long accountId = 1L;
 		final String POST_PATH = REQUEST_PATH.replace("{accountId}", String.valueOf(accountId)) + "/exclude";
 
+		final AppUser user = AppUser.builder()
+				.roleType(RoleTypeConstants.REGULATOR)
+				.build();
+
+		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+
 		mockMvc.perform(post(POST_PATH))
 				.andExpect(status().isNoContent())
 				.andDo(MockMvcResultHandlers.print());
 
-		verify(targetUnitAccountBuyOutSurplusServiceOrchestrator, times(1))
+		verify(exclusionService, times(1))
 				.excludeAccountFromBuyOutSurplus(accountId);
 	}
 
@@ -199,12 +222,16 @@ class TargetUnitAccountBuyOutSurplusRunControllerTest {
 
 		final long accountId = 1L;
 		final String DELETE_PATH = REQUEST_PATH.replace("{accountId}", String.valueOf(accountId)) + "/include";
+		final AppUser user = AppUser.builder()
+				.roleType(RoleTypeConstants.REGULATOR)
+				.build();
 
+		when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
 		mockMvc.perform(delete(DELETE_PATH))
 				.andExpect(status().isNoContent())
 				.andDo(MockMvcResultHandlers.print());
 
-		verify(targetUnitAccountBuyOutSurplusServiceOrchestrator, times(1))
+		verify(exclusionService, times(1))
 				.removeAccountExclusionFromBuyOutSurplus(accountId);
 	}
 }

@@ -2076,4 +2076,54 @@ This is an automatic email - please do not reply to this address.')
         </customChange>
     </changeSet>
 
+    <changeSet id="0_1_0_insert_UNDERLYING_AGREEMENT_VARIATION_COMPLETED_template" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.InsertDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND" />
+            <param name="fileDocumentName" value="CCA3 variation acknowledgement letter.docx" />
+        </customChange>
+        <sql>
+            insert into document_template (
+                id,
+                type,
+                name,
+                competent_authority,
+                workflow,
+                last_updated_date,
+                file_document_template_id,
+                notification_template_id)
+            values (
+                       nextval('document_template_seq'),
+                       'UNDERLYING_AGREEMENT_VARIATION_COMPLETED',
+                       'Variation acknowledgement notice',
+                       'ENGLAND',
+                       'Variation of Underlying agreement',
+                       '2025-11-21 00:00:00',
+                       (select id from file_document_template where file_name = 'CCA3 variation acknowledgement letter.docx' order by id desc limit 1),
+                   (select id from notification_template where name = 'GenericEmailTemplate'));
+        </sql>
+        <rollback>
+            delete from document_template
+            where name = 'Variation acknowledgement notice' and competent_authority = 'ENGLAND';
+
+            delete from file_document_template
+            where ctid IN (select ctid FROM file_document_template where file_name = 'CCA3 variation acknowledgement letter.docx' order by id desc limit 1);
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_underlying_agreement_variation_accepted_notice_add_additionalInformation" author="apostolouk@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_ACCEPTED"/>
+            <param name="fileDocumentName" value="CCA3 variation proposed agreement cover letter.docx"/>
+        </customChange>
+    </changeSet>
+    
+    <changeSet id="0_1_0_update_proposed_underlying_agreement_notice_template_add_additionalInformation" author="apostolouk@unisystems.gr">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_ACCEPTED"/>
+            <param name="fileDocumentName" value="AA_L002_Proposed_Underlying_Agreement.docx"/>
+        </customChange>
+    </changeSet>
+
 </databaseChangeLog>

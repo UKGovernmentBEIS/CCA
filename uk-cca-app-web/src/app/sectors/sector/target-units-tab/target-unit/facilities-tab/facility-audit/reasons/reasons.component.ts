@@ -41,16 +41,12 @@ export class ReasonsComponent {
   ];
 
   protected readonly form = new FormGroup({
-    reasons: new FormControl(this.facilityAuditStore.state.reasons, {
-      validators:
-        this.facilityAuditStore.state.reasons.length === 0
-          ? [GovukValidators.required('Select at least one reason for the audit')]
-          : [],
-    }),
-    comments: new FormControl(this.facilityAuditStore.state.comments, {
-      validators:
-        this.facilityAuditStore.state.comments.length === 0 ? [GovukValidators.required('Enter a comment')] : [],
-    }),
+    reasons: new FormControl(this.facilityAuditStore.state.reasons ?? null, [
+      GovukValidators.required('Select at least one reason for the audit'),
+    ]),
+    comments: new FormControl(this.facilityAuditStore.state.comments ?? null, [
+      GovukValidators.required('Enter a comment'),
+    ]),
   });
 
   onSubmit() {

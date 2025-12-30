@@ -26,7 +26,7 @@ describe('RelatedActionsComponent', () => {
         [allowedRequestTaskActions]="allowedActions"
         [showReassignAction]="isAssignable"
         [taskId]="taskId"
-      ></netz-related-actions>
+      />
     `,
     imports: [RelatedActionsComponent],
   })

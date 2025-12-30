@@ -20,6 +20,7 @@ import {
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { FileInputComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
@@ -76,19 +77,23 @@ export class FacilityApplyRuleComponent {
     },
   );
 
-  protected readonly isLessThan70 = computed(() => {
-    return this.energyConsumedValue() && Number(this.energyConsumedValue()) < 70;
-  });
+  protected readonly isLessThan70 = computed(
+    () =>
+      this.energyConsumedValue() !== null &&
+      this.energyConsumedValue() !== '' &&
+      Number(this.energyConsumedValue()) < 70,
+  );
 
-  protected readonly energyConsumedEligible: Signal<number | null> = computed(() => {
+  protected readonly energyConsumedEligible = computed(() => {
     const energyConsumed = this.energyConsumedValue();
     const energyConsumedProvision = this.energyConsumedProvisionValue();
 
     if (Number(energyConsumed) >= 70) return 100;
-    if (Number(energyConsumed) == 0) return 0;
+    if (Number(energyConsumed) === 0) return 0;
 
-    if (energyConsumedProvision && Number(energyConsumed) > 0)
+    if (Number(energyConsumedProvision) >= 0 && Number(energyConsumed) > 0) {
       return calculateEnergyConsumedEligible(energyConsumed, energyConsumedProvision);
+    }
 
     return null;
   });
@@ -149,7 +154,7 @@ export class FacilityApplyRuleComponent {
       draft[OVERALL_DECISION_SUBTASK] = TaskItemStatus.UNDECIDED;
     });
 
-    const currDetermination = this.store.select(underlyingAgreementReviewQuery.selectDetermination)();
+    const currDetermination = this.store.select(underlyingAgreementVariationReviewQuery.selectDetermination)();
     const determination = resetDetermination(currDetermination);
 
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
@@ -188,7 +193,7 @@ function updateFacilityApplyRule(
       energyConsumed: String(form.value.energyConsumed),
       energyConsumedProvision: String(form.value.energyConsumedProvision),
       startDate: form.value.startDate,
-      energyConsumedEligible: String(energyConsumedEligible),
+      energyConsumedEligible: energyConsumedEligible !== null ? String(energyConsumedEligible) : null,
       evidenceFile: form.value.evidenceFile?.uuid ?? null,
     };
   });

@@ -20,9 +20,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.service.PerformanceAccountTemplateDataQueryService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
-import uk.gov.cca.api.web.orchestrator.sectorassociation.service.SectorAssociationPerformanceAccountTemplateDataReportServiceOrchestrator;
 import uk.gov.netz.api.security.Authorized;
 
 @Validated
@@ -32,7 +32,7 @@ import uk.gov.netz.api.security.Authorized;
 @Tag(name = "Sector-Level Performance Account Template Data View Pages")
 public class SectorAssociationPerformanceAccountTemplateDataReportController {
 
-	private final SectorAssociationPerformanceAccountTemplateDataReportServiceOrchestrator orchestrator;
+	private final PerformanceAccountTemplateDataQueryService performanceAccountTemplateDataQueryService;
 
 	@PostMapping
 	@Operation(summary = "Populates the performance account template data of sector accounts")
@@ -47,7 +47,8 @@ public class SectorAssociationPerformanceAccountTemplateDataReportController {
 			@PathVariable @Parameter(description = "The sector association id") Long sectorAssociationId,
 			@RequestBody @Valid @Parameter(description = "The search criteria") SectorPerformanceAccountTemplateDataReportSearchCriteria criteria) {
 		return new ResponseEntity<>(
-				orchestrator.getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria),
+				performanceAccountTemplateDataQueryService
+						.getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria),
 				HttpStatus.OK);
 	}
 

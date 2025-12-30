@@ -1,9 +1,8 @@
 import { NgClass } from '@angular/common';
-import { Component, input, inject, computed, model } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, NgControl, ReactiveFormsModule } from '@angular/forms';
+import { Component, input, computed, model } from '@angular/core';
+import { ControlValueAccessor, ReactiveFormsModule } from '@angular/forms';
 
 import { ErrorMessageComponent } from '../error-message';
-import { FormService } from '../form';
 import { FormInput } from '../form/form-input';
 import { GovukSelectOption } from './select.interface';
 import { GovukTextWidthClass } from './select.type';
@@ -27,11 +26,7 @@ export class SelectComponent extends FormInput implements ControlValueAccessor {
   readonly currentLabel = computed(() => this.label() ?? 'Select');
 
   constructor() {
-    const ngControl = inject(NgControl, { self: true, optional: true });
-    const formService = inject(FormService);
-    const container = inject(ControlContainer, { optional: true });
-
-    super(ngControl, formService, container);
+    super();
   }
 
   writeValue(): void {}

@@ -1,17 +1,18 @@
 import { Component, computed, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { GovukTableColumn, SortEvent, TableComponent } from '@netz/govuk-components';
-import { FacilityItemViewModel } from '@requests/common';
-import { StatusPipe } from '@shared/pipes';
+import { GovukTableColumn, SortEvent, TableComponent, TagComponent } from '@netz/govuk-components';
+import { StatusColorPipe, StatusPipe } from '@shared/pipes';
+
+import { FacilityTimelineItemViewModel } from '../../types';
 
 @Component({
   selector: 'cca-facility-item-list',
   templateUrl: './facility-item-list.component.html',
-  imports: [StatusPipe, TableComponent, RouterLink],
+  imports: [StatusPipe, StatusColorPipe, TagComponent, TableComponent, RouterLink],
 })
 export class FacilityItemListComponent {
-  protected readonly facilityItems = input.required<FacilityItemViewModel[]>();
+  protected readonly facilityItems = input.required<FacilityTimelineItemViewModel[]>();
   protected readonly isEditable = input(false);
 
   protected readonly sorting = signal<SortEvent>({ column: 'name', direction: 'ascending' });
@@ -22,14 +23,21 @@ export class FacilityItemListComponent {
 
   protected readonly statusColumn = 'status';
 
-  protected readonly tableColumns: GovukTableColumn[] = [
-    { field: 'name', header: 'Name', isSortable: true },
-    { field: 'facilityId', header: 'Facility ID', isSortable: true },
-    { field: this.statusColumn, header: 'Status', isSortable: true },
-    { field: 'links', header: 'Actions' },
-  ];
+  protected readonly tableColumns = computed(() => {
+    const headers: GovukTableColumn[] = [
+      { field: 'name', header: 'Name', isSortable: true },
+      { field: 'facilityId', header: 'Facility ID', isSortable: true },
+      { field: this.statusColumn, header: 'Status', isSortable: true },
+    ];
 
-  onSort(sortEvent: SortEvent): (fa: FacilityItemViewModel, fb: FacilityItemViewModel) => number {
+    if (this.sortedFacilityItems().some((f) => f.decisionStatus)) {
+      headers.push({ field: 'decisionStatus', header: 'Decision status', isSortable: true });
+    }
+
+    return headers;
+  });
+
+  onSort(sortEvent: SortEvent): (fa: FacilityTimelineItemViewModel, fb: FacilityTimelineItemViewModel) => number {
     return (fa, fb) => {
       const diff: number = fa[sortEvent.column].localeCompare(fb[sortEvent.column], 'en-GB', {
         numeric: true,

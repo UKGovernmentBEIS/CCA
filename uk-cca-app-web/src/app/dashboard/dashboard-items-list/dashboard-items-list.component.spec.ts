@@ -12,9 +12,7 @@ import { DashboardItemsListComponent } from './dashboard-items-list.component';
 /* eslint-disable @angular-eslint/component-selector */
 @Component({
   selector: '',
-  template: `
-    <cca-dashboard-items-list [items]="items" [tableColumns]="tableColumns" [unassignedLabel]="'Unassigned'" />
-  `,
+  template: ` <cca-dashboard-items-list [items]="items" [tableColumns]="tableColumns" /> `,
   imports: [DashboardItemsListComponent],
 })
 class TestParentComponent {

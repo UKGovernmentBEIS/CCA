@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import uk.gov.cca.api.facilityaudit.domain.FacilityAuditReasonType;
 import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditUpdateDTO;
 import uk.gov.cca.api.facilityaudit.domain.dto.FacilityAuditViewDTO;
-import uk.gov.cca.api.web.orchestrator.facility.service.FacilityAuditServiceOrchestrator;
+import uk.gov.cca.api.facilityaudit.service.FacilityAuditService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.NetzErrorCode;
@@ -33,7 +33,7 @@ class FacilityAuditControllerTest {
 	private FacilityAuditController controller;
 
 	@Mock
-	private FacilityAuditServiceOrchestrator serviceOrchestrator;
+	private FacilityAuditService service;
 
 	@Test
 	void getFacilityAuditViewByFacilityId() {
@@ -46,7 +46,7 @@ class FacilityAuditControllerTest {
 				.roleType("REGULATOR")
 				.build();
 
-		when(serviceOrchestrator.getFacilityAuditViewByFacilityId(facilityId, appUser))
+		when(service.getFacilityAuditViewByFacilityId(facilityId, appUser))
 				.thenReturn(facilityAudit);
 
 		ResponseEntity<FacilityAuditViewDTO> result = controller.getFacilityAuditViewByFacilityId(facilityId, appUser);
@@ -66,7 +66,7 @@ class FacilityAuditControllerTest {
 				.build();
 
 		doThrow(new BusinessException(RESOURCE_NOT_FOUND))
-				.when(serviceOrchestrator).getFacilityAuditViewByFacilityId(facilityId, appUser);
+				.when(service).getFacilityAuditViewByFacilityId(facilityId, appUser);
 
 		NetzErrorCode code = assertThrows(BusinessException.class,
 				() -> controller.getFacilityAuditViewByFacilityId(facilityId,appUser))
@@ -89,7 +89,7 @@ class FacilityAuditControllerTest {
 
 		controller.editFacilityAuditDetailsByFacilityId(facilityId, appUser, facilityAuditUpdateDTO);
 
-		verify(serviceOrchestrator, times(1))
-				.createOrUpdateFacilityAuditByFacilityId(facilityId, facilityAuditUpdateDTO, appUser.getUserId());
+		verify(service, times(1))
+				.createOrUpdateFacilityAudit(facilityId, facilityAuditUpdateDTO, appUser.getUserId());
 	}
 }

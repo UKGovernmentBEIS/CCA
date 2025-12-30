@@ -41,8 +41,6 @@ describe('TimelineItemLinkPipe', () => {
 
       'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_CANCELLED',
 
-      'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED',
-      'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED',
       'FACILITY_AUDIT_CANCELLED',
     ];
 
@@ -156,6 +154,12 @@ describe('TimelineItemLinkPipe', () => {
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
 
     requestAction.type = 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED';
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 

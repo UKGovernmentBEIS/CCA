@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { ErrorHandler, Injectable, NgZone } from '@angular/core';
+import { ErrorHandler, inject, Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { first, from, Observable, switchMap, throwError } from 'rxjs';
@@ -8,13 +8,11 @@ import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalErrorHandlingService implements ErrorHandler {
-  excludedUrls = ['.+/account/+\\w+/header-info$'];
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly ngZone = inject(NgZone);
 
-  constructor(
-    private readonly authService: AuthService,
-    private readonly router: Router,
-    private readonly ngZone: NgZone,
-  ) {}
+  excludedUrls = ['.+/account/+\\w+/header-info$'];
 
   handleError(error: unknown): void {
     this.ngZone.run(() =>

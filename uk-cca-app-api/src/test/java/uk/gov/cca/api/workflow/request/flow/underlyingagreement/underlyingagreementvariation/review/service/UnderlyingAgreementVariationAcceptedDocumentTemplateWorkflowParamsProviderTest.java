@@ -24,10 +24,12 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransformationMapper;
+import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.notification.DocumentTemplateUnderlyingAgreementParamsProvider;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.VariationDetermination;
 
 @ExtendWith(MockitoExtension.class)
 class UnderlyingAgreementVariationAcceptedDocumentTemplateWorkflowParamsProviderTest {
@@ -83,6 +85,12 @@ class UnderlyingAgreementVariationAcceptedDocumentTemplateWorkflowParamsProvider
                 		.underlyingAgreement(underlyingAgreement)
                 		.build())
                 .underlyingAgreementVersionMap(consolidationNumberMap)
+                .determination(VariationDetermination.builder()
+                		.determination(
+						Determination.builder()
+								.additionalInformation("Some additional information")
+								.build())
+						.build())
                 .build();
         
         Map<String, String> transformedMap = Map.of("CCA2", "v1", "CCA3", "v1");
@@ -101,6 +109,7 @@ class UnderlyingAgreementVariationAcceptedDocumentTemplateWorkflowParamsProvider
         assertThat(result).containsExactlyInAnyOrderEntriesOf(Map.of(
         		"targetUnitDetails", "test1", 
         		"versionMap", transformedMap,
-        		"terminatedSchemeVersion", ""));
+        		"terminatedSchemeVersion", "",
+        		"additionalInformation", "Some additional information"));
     }
 }

@@ -169,7 +169,7 @@ public class PerformanceDataUploadService {
                         PerformanceDataUploadViolation.PerformanceDataUploadViolationMessage.MULTIPLE_FILES_FOR_ACCOUNT_FOUND.getMessage()
                 );
                 accountReportsFiles.remove(accountId);
-                fileAttachmentService.deleteFileAttachmentsInBatches(Set.of(duplicateAccount.getFile().getUuid()));
+                fileAttachmentService.deleteFileAttachments(Set.of(duplicateAccount.getFile().getUuid()));
             }
         } catch (Exception e) {
             // If excel read fails add to task payload errors

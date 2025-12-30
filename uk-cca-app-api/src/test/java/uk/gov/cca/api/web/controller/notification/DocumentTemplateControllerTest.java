@@ -197,7 +197,11 @@ class DocumentTemplateControllerTest {
                 .documentTemplate(documentTemplateDTO)
                 .notificationTemplate(notificationTemplateInfoDTO)
                 .build();
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
 
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(documentTemplateQueryServiceOrchestrator.getDocumentTemplateDTOById(documentTemplateId)).thenReturn(documentTemplateViewDTO);
 
         mockMvc.perform(MockMvcRequestBuilders

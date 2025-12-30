@@ -19,6 +19,6 @@ import { DaysRemainingPipe } from '@netz/common/pipes';
   imports: [DaysRemainingPipe],
 })
 export class TaskHeaderInfoComponent {
-  readonly assignee = input<string>();
-  readonly daysRemaining = input<number>();
+  protected readonly assignee = input<string>();
+  protected readonly daysRemaining = input<number>();
 }

@@ -122,19 +122,26 @@ function manageFacilitiesStatus(payload: UNAVariationRequestTaskPayload): TaskIt
   const facilitySections = Object.keys(payload?.sectionsCompleted).filter(
     (section) => !staticVariationSections.includes(section),
   );
-
   if (facilitySections.length === 0) throw new Error('No facility found.');
 
+  const inProgressExists = facilitySections.some(
+    (section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.IN_PROGRESS,
+  );
   const validFacilities = payload?.underlyingAgreement?.facilities?.filter((f) => f.status !== 'EXCLUDED');
-  if (validFacilities.length === 0) return TaskItemStatus.IN_PROGRESS;
+  if (validFacilities.length === 0 || inProgressExists) return TaskItemStatus.IN_PROGRESS;
 
-  if (facilitySections.some((section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.COMPLETED)) {
+  if (facilitySections.every((section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.COMPLETED)) {
     return TaskItemStatus.COMPLETED;
   }
 
-  return facilitySections.every((section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.UNCHANGED)
-    ? TaskItemStatus.UNCHANGED
-    : TaskItemStatus.IN_PROGRESS;
+  if (facilitySections.every((section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.UNCHANGED)) {
+    return TaskItemStatus.UNCHANGED;
+  }
+
+  const completedExists = facilitySections.some(
+    (section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.COMPLETED,
+  );
+  if (completedExists && !inProgressExists) return TaskItemStatus.COMPLETED;
 }
 
 function canSubmit(payload: UNAVariationRequestTaskPayload): boolean {

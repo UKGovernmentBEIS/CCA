@@ -29,6 +29,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationReviewGroup;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.VariationDetermination;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewSavePayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationSaveFacilityReviewGroupDecisionRequestTaskActionPayload;
@@ -90,9 +91,11 @@ class UnderlyingAgreementVariationReviewServiceTest {
                                 .underlyingAgreement(UnderlyingAgreement.builder().build())
                                 .underlyingAgreementVariationDetails(UnderlyingAgreementVariationDetails.builder().build())
                                 .build())
-                        .determination(Determination.builder()
-                                .type(DeterminationType.ACCEPTED)
-                                .additionalInformation("info")
+                        .determination(VariationDetermination.builder()
+                                .determination(Determination.builder()
+                                        .type(DeterminationType.ACCEPTED)
+                                        .additionalInformation("info")
+                                        .build())
                                 .build())
                         .build();
 
@@ -199,11 +202,13 @@ class UnderlyingAgreementVariationReviewServiceTest {
                         .builder()
                         .payloadType(CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW_PAYLOAD)
                         .reviewSectionsCompleted(Map.of(UnderlyingAgreementTargetUnitDetails.class.getName(), "COMPLETED"))
-                        .determination(Determination.builder()
-                                .type(DeterminationType.REJECTED)
-                                .reason("My reason")
-                                .additionalInformation("Information")
-                                .files(Set.of(UUID.randomUUID()))
+                        .determination(VariationDetermination.builder()
+                                .determination(Determination.builder()
+                                        .type(DeterminationType.REJECTED)
+                                        .reason("My reason")
+                                        .additionalInformation("Information")
+                                        .files(Set.of(UUID.randomUUID()))
+                                        .build())
                                 .build())
                         .build();
 
@@ -307,7 +312,9 @@ class UnderlyingAgreementVariationReviewServiceTest {
         UnderlyingAgreementVariationSaveReviewDeterminationRequestTaskActionPayload reviewSaveDeterminationPayload =
                 UnderlyingAgreementVariationSaveReviewDeterminationRequestTaskActionPayload.builder()
                         .payloadType(CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_DETERMINATION_PAYLOAD)
-                        .determination(Determination.builder().type(DeterminationType.ACCEPTED).additionalInformation("text").build())
+                        .determination(VariationDetermination.builder()
+                                .determination(Determination.builder().type(DeterminationType.ACCEPTED).additionalInformation("text").build())
+                                .build())
                         .build();
 
         service.saveDetermination(reviewSaveDeterminationPayload, requestTask);
@@ -317,14 +324,7 @@ class UnderlyingAgreementVariationReviewServiceTest {
         UnderlyingAgreementVariationReviewRequestTaskPayload
                 payloadSaved = (UnderlyingAgreementVariationReviewRequestTaskPayload) requestTask.getPayload();
 
-        assertThat(payloadSaved.getDetermination().getReason())
-                .isEqualTo(reviewSaveDeterminationPayload.getDetermination().getReason());
-        assertThat(payloadSaved.getDetermination().getType())
-                .isEqualTo(reviewSaveDeterminationPayload.getDetermination().getType());
-        assertThat(payloadSaved.getDetermination().getAdditionalInformation())
-                .isEqualTo(reviewSaveDeterminationPayload.getDetermination().getAdditionalInformation());
-        assertThat(payloadSaved.getDetermination().getFiles())
-                .isEqualTo(reviewSaveDeterminationPayload.getDetermination().getFiles());
+        assertThat(payloadSaved.getDetermination()).isEqualTo(reviewSaveDeterminationPayload.getDetermination());
     }
 
     @Test

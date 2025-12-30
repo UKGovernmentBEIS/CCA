@@ -1,5 +1,4 @@
-import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { GovukDatePipe, ItemActionHeaderPipe } from '@netz/common/pipes';
@@ -9,20 +8,21 @@ import { RequestActionInfoDTO } from 'cca-api';
 @Component({
   selector: 'netz-timeline-item',
   template: `
-    <h3 class="govuk-heading-s govuk-!-margin-bottom-1">{{ action | itemActionHeader }}</h3>
-    <p class="govuk-!-margin-bottom-1">{{ action.creationDate | govukDate: 'datetime' }}</p>
-    <span *ngIf="link"
-      ><a [routerLink]="link" [relativeTo]="route" [state]="state" class="govuk-link">View details</a></span
-    >
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-1">{{ action() | itemActionHeader }}</h3>
+    <p class="govuk-!-margin-bottom-1">{{ action().creationDate | govukDate: 'datetime' }}</p>
+
+    @if (link()) {
+      <span><a [routerLink]="link()" [relativeTo]="route" [state]="state()" class="govuk-link">View details</a></span>
+    }
     <hr class="govuk-!-margin-top-6" />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ItemActionHeaderPipe, GovukDatePipe, RouterLink, NgIf],
+  imports: [ItemActionHeaderPipe, GovukDatePipe, RouterLink],
 })
 export class TimelineItemComponent {
-  @Input() action: RequestActionInfoDTO;
-  @Input() link: any[];
-  @Input() state: any;
+  protected readonly route = inject(ActivatedRoute);
 
-  constructor(protected readonly route: ActivatedRoute) {}
+  protected readonly action = input<RequestActionInfoDTO>(undefined);
+  protected readonly link = input<any[]>(undefined);
+  protected readonly state = input<any>(undefined);
 }

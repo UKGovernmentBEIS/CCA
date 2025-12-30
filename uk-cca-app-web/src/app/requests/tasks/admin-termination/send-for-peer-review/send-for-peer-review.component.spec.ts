@@ -2,7 +2,6 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { of } from 'rxjs';
 
@@ -47,7 +46,7 @@ describe('AdminTerminationSendForPeerReviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdminTerminationSendForPeerReviewComponent, RouterTestingModule],
+      imports: [AdminTerminationSendForPeerReviewComponent],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
@@ -63,7 +62,7 @@ describe('AdminTerminationSendForPeerReviewComponent', () => {
     jest.spyOn(router, 'navigate');
 
     store.setRequestTaskItem({
-      requestTask: { id: 456, type: 'ADMIN_TERMINATION_APPLICATION_SUBMIT' as any },
+      requestTask: { id: 456, type: 'ADMIN_TERMINATION_APPLICATION_SUBMIT' },
       requestInfo: { accountId: 1 },
     });
 

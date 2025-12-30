@@ -20,6 +20,7 @@ import {
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 import { operatorTypeOptions } from '@shared/pipes';
 import { produce } from 'immer';
@@ -114,7 +115,7 @@ export class TargetUnitDetailsComponent implements OnInit {
     const decisions = areIdentical ? currentDecisions : deleteDecision(currentDecisions, 'TARGET_UNIT_DETAILS');
 
     const { determination, reviewSectionsCompleted, sectionsCompleted } = applySaveActionSideEffects(
-      this.store.select(underlyingAgreementReviewQuery.selectDetermination)(),
+      this.store.select(underlyingAgreementVariationReviewQuery.selectDetermination)(),
       this.store.select(underlyingAgreementReviewQuery.selectReviewSectionsCompleted)(),
       this.store.select(underlyingAgreementQuery.selectSectionsCompleted)(),
       REVIEW_TARGET_UNIT_DETAILS_SUBTASK,

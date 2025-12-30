@@ -1,6 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { screen } from '@testing-library/dom';
@@ -13,17 +14,17 @@ describe('CompanyRegistrationNumberComponent', () => {
   let component: CompanyRegistrationNumberComponent;
   let fixture: ComponentFixture<CompanyRegistrationNumberComponent>;
   let createTargetUnitStore: CreateTargetUnitStore;
+  let router: Router;
+  const route = new ActivatedRouteStub();
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CompanyRegistrationNumberComponent],
-      providers: [
-        { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
-        provideHttpClient(),
-        CreateTargetUnitStore,
-      ],
+      imports: [CompanyRegistrationNumberComponent, RouterTestingModule],
+      providers: [{ provide: ActivatedRoute, useValue: route }, provideHttpClient(), CreateTargetUnitStore],
     }).compileComponents();
 
+    router = TestBed.inject(Router);
+    jest.spyOn(router, 'navigate');
     createTargetUnitStore = TestBed.inject(CreateTargetUnitStore);
     createTargetUnitStore.setState(mockCreateTargetUnitState);
 
@@ -45,5 +46,21 @@ describe('CompanyRegistrationNumberComponent', () => {
     expect(screen.getByLabelText('Company number')).toBeInTheDocument();
     expect(screen.getByLabelText('Yes, the applicant is registered and has a company number')).toBeInTheDocument();
     expect(screen.getByLabelText('No, the applicant does not have a company number')).toBeInTheDocument();
+  });
+
+  it('should update the target unit state when the applicant has no company number', () => {
+    const form = component['form'];
+
+    form.controls.isCompanyRegistrationNumber.setValue(false);
+    form.controls.registrationNumberMissingReason.setValue('Not registered');
+
+    component.onSubmitCompanyRegistrationNumber();
+
+    expect(createTargetUnitStore.state.isCompanyRegistrationNumber).toBe(false);
+    expect(createTargetUnitStore.state.companyRegistrationNumber).toBeUndefined();
+    expect(createTargetUnitStore.state.registrationNumberMissingReason).toBe('Not registered');
+    expect(createTargetUnitStore.state.name).toBeNull();
+    expect(createTargetUnitStore.state.sicCodes).toEqual([]);
+    expect(router.navigate).toHaveBeenCalledWith(['..', 'target-unit-details'], { relativeTo: route });
   });
 });

@@ -7,7 +7,7 @@ import { SummaryComponent } from '@shared/components';
 import { FinalDecisionTypePipe } from '@shared/pipes';
 import { generateDownloadUrl } from '@shared/utils';
 
-import { AdminTerminationFinalDecisionQuery } from '../../../+state/admin-termination-final-decision.selectors';
+import { adminTerminationFinalDecisionQuery } from '../../../admin-termination-final-decision.selectors';
 import { toFinalDecisionReasonSummaryData } from '../../../final-decision-reason-summary-data';
 
 @Component({
@@ -35,12 +35,12 @@ export default class FinalDecisionReasonSummaryComponent {
   private readonly downloadUrl = generateDownloadUrl(this.taskId);
 
   protected readonly finalDecisionType = this.requestTaskStore.select(
-    AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionReasonDetails,
-  )().finalDecisionType;
+    adminTerminationFinalDecisionQuery.selectReasonDetails,
+  )()?.finalDecisionType;
 
   protected readonly summaryData = toFinalDecisionReasonSummaryData(
-    this.requestTaskStore.select(AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionReasonDetails)(),
-    this.requestTaskStore.select(AdminTerminationFinalDecisionQuery.selectAdminTerminationFinalDecisionAttachments)(),
+    this.requestTaskStore.select(adminTerminationFinalDecisionQuery.selectReasonDetails)(),
+    this.requestTaskStore.select(adminTerminationFinalDecisionQuery.selectAttachments)(),
     this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     this.downloadUrl,
   );

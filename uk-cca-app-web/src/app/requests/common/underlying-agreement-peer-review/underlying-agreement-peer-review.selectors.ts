@@ -7,6 +7,8 @@ import {
   UnderlyingAgreementPeerReviewRequestTaskPayload,
 } from 'cca-api';
 
+import { FacilityTimelineItemViewModel } from '../underlying-agreement/types';
+
 export type UNAPeerReviewTaskPayload = UnderlyingAgreementPeerReviewRequestTaskPayload;
 
 const selectPayload: StateSelector<RequestTaskState, UNAPeerReviewTaskPayload> = createDescendingSelector(
@@ -22,13 +24,17 @@ const selectUnderlyingAgreementTargetUnitDetails = createDescendingSelector(
 );
 
 const selectManageFacilities = createDescendingSelector(
-  selectUnderlyingAgreement,
-  (underlyingAgreement) =>
-    underlyingAgreement?.facilities?.map((f) => ({
-      name: f.facilityDetails.name,
-      facilityId: f.facilityId,
-      status: f.status,
-    })) ?? [],
+  selectPayload,
+  (payload) =>
+    payload?.underlyingAgreement?.facilities?.map(
+      (f) =>
+        ({
+          name: f.facilityDetails.name,
+          facilityId: f.facilityId,
+          status: f.status,
+          decisionStatus: payload?.reviewSectionsCompleted[f.facilityId],
+        }) as FacilityTimelineItemViewModel,
+    ) ?? [],
 );
 
 const selectFacilities = createDescendingSelector(

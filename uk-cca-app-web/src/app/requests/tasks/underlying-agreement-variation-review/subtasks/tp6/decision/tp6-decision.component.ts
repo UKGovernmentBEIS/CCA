@@ -19,6 +19,7 @@ import {
   underlyingAgreementReviewQuery,
   underlyingAgreementVariationQuery,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
 import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
@@ -118,7 +119,9 @@ export class TP6DecisionComponent {
       underlyingAgreementReviewQuery.selectReviewSectionsCompleted,
     )();
 
-    const currDetermination = this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)();
+    const currDetermination = this.requestTaskStore.select(
+      underlyingAgreementVariationReviewQuery.selectDetermination,
+    )();
 
     // Reset determination and sectionsCompleted for variation review
     const determination = resetDetermination(currDetermination);

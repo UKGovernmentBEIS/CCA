@@ -13,9 +13,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.Validator;
+
+import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.security.AppSecurityComponent;
 import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
 import uk.gov.netz.api.user.core.domain.dto.InvitedUserInfoDTO;
 import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
@@ -41,6 +45,9 @@ class RegulatorUserRegistrationControllerTest {
 
     @Mock
     private RegulatorUserInvitationService regulatorUserInvitationService;
+    
+    @Mock
+    private AppSecurityComponent appSecurityComponent;
 
     @Mock
     private RegulatorUserActivateService regulatorUserActivateService;
@@ -55,17 +62,20 @@ class RegulatorUserRegistrationControllerTest {
         objectMapper = new ObjectMapper();
         mockMvc = MockMvcBuilders.standaloneSetup(regulatorUserRegistrationController)
             .setControllerAdvice(new ExceptionControllerAdvice())
+            .setCustomArgumentResolvers(new AppUserArgumentResolver(appSecurityComponent))
             .setValidator(validator)
             .build();
     }
 
     @Test
     void acceptInvitation() throws Exception {
+    	AppUser currentUser = AppUser.builder().userId("currentuser").build();
         String email = "email";
         TokenDTO invitationToken = TokenDTO.builder().token("token").build();
         InvitedUserInfoDTO invitedUserInfo = InvitedUserInfoDTO.builder().email(email).build();
 
-        when(regulatorUserInvitationService.acceptInvitation(invitationToken.getToken()))
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
+        when(regulatorUserInvitationService.acceptInvitation(invitationToken.getToken(), currentUser))
             .thenReturn(invitedUserInfo);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH + ACCEPT_INVITATION_PATH)
@@ -79,55 +89,62 @@ class RegulatorUserRegistrationControllerTest {
 
         assertEquals(invitedUserInfo, actualResult);
 
-        verify(regulatorUserInvitationService, times(1)).acceptInvitation(invitationToken.getToken());
+        verify(regulatorUserInvitationService, times(1)).acceptInvitation(invitationToken.getToken(), currentUser);
     }
 
     @Test
     void acceptInvitation_bad_request_exception() throws Exception {
+    	AppUser currentUser = AppUser.builder().userId("currentuser").build();
         TokenDTO invitationToken = new TokenDTO();
         invitationToken.setToken("token");
 
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
         doThrow(new BusinessException(ErrorCode.USER_INVALID_STATUS)).when(regulatorUserInvitationService)
-            .acceptInvitation(invitationToken.getToken());
+            .acceptInvitation(invitationToken.getToken(), currentUser);
 
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_PATH + ACCEPT_INVITATION_PATH)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(invitationToken)))
             .andExpect(status().isBadRequest());
 
-        verify(regulatorUserInvitationService, times(1)).acceptInvitation(invitationToken.getToken());
+        verify(regulatorUserInvitationService, times(1)).acceptInvitation(invitationToken.getToken(), currentUser);
     }
 
     @Test
     void enableRegulatorInvitedUser() throws Exception{
+    	AppUser currentUser = AppUser.builder().userId("currentuser").build();
         InvitedUserCredentialsDTO invitedUserCredentialsDTO = InvitedUserCredentialsDTO.builder()
             .invitationToken("invitationToken")
             .password("password")
             .build();
 
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
+        
         mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + ACCEPT_AUTH_AND_ACTIVATE_USER_FROM_INVITATION)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(invitedUserCredentialsDTO)))
             .andExpect(status().isNoContent());
 
-        verify(regulatorUserActivateService, times(1)).acceptAuthorityAndActivateInvitedUser(invitedUserCredentialsDTO);
+        verify(regulatorUserActivateService, times(1)).acceptAuthorityAndActivateInvitedUser(invitedUserCredentialsDTO, currentUser);
     }
 
     @Test
     void acceptAuthorityAndActivateUserFromInvite_bad_request_exception() throws Exception{
+    	AppUser currentUser = AppUser.builder().userId("currentuser").build();
         InvitedUserCredentialsDTO invitedUserCredentialsDTO = InvitedUserCredentialsDTO.builder()
                 .invitationToken("invitationToken")
                 .password("password")
                 .build();
-
+        
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(currentUser);
         doThrow(new BusinessException(ErrorCode.INVALID_TOKEN)).when(regulatorUserActivateService)
-                .acceptAuthorityAndActivateInvitedUser(invitedUserCredentialsDTO);
+                .acceptAuthorityAndActivateInvitedUser(invitedUserCredentialsDTO, currentUser);
 
         mockMvc.perform(MockMvcRequestBuilders.put(BASE_PATH + ACCEPT_AUTH_AND_ACTIVATE_USER_FROM_INVITATION)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invitedUserCredentialsDTO)))
                 .andExpect(status().isBadRequest());
 
-        verify(regulatorUserActivateService, times(1)).acceptAuthorityAndActivateInvitedUser(invitedUserCredentialsDTO);
+        verify(regulatorUserActivateService, times(1)).acceptAuthorityAndActivateInvitedUser(invitedUserCredentialsDTO, currentUser);
     }
 }

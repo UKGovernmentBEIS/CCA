@@ -8,7 +8,7 @@ import { TaskItemStatus } from '@requests/common';
 import { AdminTerminationWithdrawRequestTaskPayload } from 'cca-api';
 
 import { WithdrawAdminTerminationPrecontentComponent } from './precontent/withdraw-admin-termination-precontent.component';
-import { REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK } from './withdraw-admin-termination.types';
+import { REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK } from './types';
 
 const withdrawAdminTerminationRoutePrefix = 'withdraw-admin-termination';
 
@@ -30,11 +30,10 @@ export function getAllWithdrawAdminTerminationSections(
       title: 'Withdrawal details',
       tasks: [
         {
-          name: REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK,
+          link: `${withdrawAdminTerminationRoutePrefix}/reason-for-withdraw-admin-termination`,
           status:
             payload?.sectionsCompleted[REASON_FOR_WITHDRAW_ADMIN_TERMINATION_SUBTASK] ?? TaskItemStatus.NOT_STARTED,
           linkText: 'Reason for withdrawing the admin termination',
-          link: `${withdrawAdminTerminationRoutePrefix}/reason-for-withdraw-admin-termination`,
         },
       ],
     },

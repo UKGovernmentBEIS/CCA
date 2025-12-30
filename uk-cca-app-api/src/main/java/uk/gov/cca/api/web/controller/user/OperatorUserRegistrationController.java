@@ -24,6 +24,7 @@ import uk.gov.cca.api.user.operator.service.CcaOperatorUserAcceptInvitationServi
 import uk.gov.cca.api.user.operator.service.CcaOperatorUserActivationService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
 import uk.gov.netz.api.user.core.domain.dto.TokenDTO;
 import uk.gov.netz.api.user.operator.domain.OperatorUserDTO;
@@ -49,9 +50,10 @@ public class OperatorUserRegistrationController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     public ResponseEntity<CcaOperatorInvitedUserInfoDTO> acceptOperatorInvitation(
+    		@Parameter(hidden = true) AppUser appUser,
             @RequestBody @Valid @Parameter(description = "The invitation token", required = true) TokenDTO invitationTokenDTO) {
         CcaOperatorInvitedUserInfoDTO operatorInvitedUserInfo =
-                ccaOperatorUserAcceptInvitationService.acceptInvitation(invitationTokenDTO.getToken());
+                ccaOperatorUserAcceptInvitationService.acceptInvitation(invitationTokenDTO.getToken(), appUser);
         return new ResponseEntity<>(operatorInvitedUserInfo, HttpStatus.OK);
     }
 
@@ -62,10 +64,11 @@ public class OperatorUserRegistrationController {
     @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     public ResponseEntity<CcaOperatorUserDTO> acceptAuthorityAndEnableInvitedOperatorUserWithCredentials(
+    		@Parameter(hidden = true) AppUser currentUser,
             @RequestBody @Valid @Parameter(description = "The operator user", required = true)
             CcaOperatorUserRegistrationWithCredentialsDTO ccaOperatorUserRegistrationWithCredentialsDTO) {
         return new ResponseEntity<>(ccaOperatorUserActivationService.acceptAuthorityAndEnableInvitedUserWithCredentials(
-                ccaOperatorUserRegistrationWithCredentialsDTO), HttpStatus.OK);
+                ccaOperatorUserRegistrationWithCredentialsDTO, currentUser), HttpStatus.OK);
     }
 
     @PutMapping(path = "/accept-authority-and-set-credentials-to-operator-user")
@@ -79,9 +82,10 @@ public class OperatorUserRegistrationController {
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     public ResponseEntity<Void> acceptAuthorityAndSetCredentialsToOperatorUser(
+    		@Parameter(hidden = true) AppUser currentUser,
             @RequestBody @Valid @Parameter(description = "The operator user credentials", required = true)
             InvitedUserCredentialsDTO invitedUserCredentialsDTO) {
-        ccaOperatorUserActivationService.acceptAuthorityAndSetCredentialsToUser(invitedUserCredentialsDTO);
+        ccaOperatorUserActivationService.acceptAuthorityAndSetCredentialsToUser(invitedUserCredentialsDTO, currentUser);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

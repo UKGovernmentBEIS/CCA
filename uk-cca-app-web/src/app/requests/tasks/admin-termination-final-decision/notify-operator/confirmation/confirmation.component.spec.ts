@@ -5,7 +5,7 @@ import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { screen } from '@testing-library/dom';
 
-import { mockAdminTerminationFinalDecisionPayload } from '../../mocks/mock-admin-termination-final-decision-payload';
+import { mockAdminTerminationFinalDecisionPayload } from '../../testing/mock-data';
 import ConfirmationComponent from './confirmation.component';
 
 describe('ConfirmationComponent', () => {
@@ -20,7 +20,7 @@ describe('ConfirmationComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
-    store.setRequestTaskItem({ requestTask: { type: 'TEST_TYPE' as any } });
+    store.setRequestTaskItem({ requestTask: { type: 'TEST_TYPE' } });
     store.setPayload(mockAdminTerminationFinalDecisionPayload);
 
     fixture = TestBed.createComponent(ConfirmationComponent);

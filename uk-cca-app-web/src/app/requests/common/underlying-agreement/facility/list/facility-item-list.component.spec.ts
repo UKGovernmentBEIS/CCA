@@ -38,16 +38,19 @@ describe('FacilityItemListComponent', () => {
         name: 'Factor 1',
         facilityId: 'ADS_1-F00001',
         status: 'NEW',
+        decisionStatus: 'ACCEPTED',
       },
       {
         name: 'Factor 2',
         facilityId: 'ADS_1-F00002',
         status: 'NEW',
+        decisionStatus: 'REJECTED',
       },
       {
         name: 'Factor 3',
         facilityId: 'ADS_1-F00003',
         status: 'NEW',
+        decisionStatus: 'UNCHANGED',
       },
     ]);
 
@@ -61,10 +64,10 @@ describe('FacilityItemListComponent', () => {
 
   it('should show list values', () => {
     expect(page.facilitiesTable).toEqual([
-      ['Name', 'Facility ID', 'Status', 'Actions'],
-      ['Factor 1', 'ADS_1-F00001', 'New', ''],
-      ['Factor 2', 'ADS_1-F00002', 'New', ''],
-      ['Factor 3', 'ADS_1-F00003', 'New', ''],
+      ['Name', 'Facility ID', 'Status', 'Decision status'],
+      ['Factor 1', 'ADS_1-F00001', 'New', 'Accepted'],
+      ['Factor 2', 'ADS_1-F00002', 'New', 'Rejected'],
+      ['Factor 3', 'ADS_1-F00003', 'New', 'Unchanged'],
     ]);
   });
 });

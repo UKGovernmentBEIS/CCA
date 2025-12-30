@@ -19,12 +19,12 @@ import {
   VARIATION_DETAILS_SUBTASK,
   VariationChangesTypePipe,
 } from '@requests/common';
+import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
-import { resetDetermination } from 'src/app/requests/tasks/underlying-agreement-review/utils';
-
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../transform';
+import { resetDetermination } from '../../../utils';
 import {
   VARIATION_DETAILS_FORM,
   VariationDetailsFormModel,
@@ -96,7 +96,9 @@ export class VariationDetailsComponent {
     const dto = createSaveActionDTO(requestTaskId, updatedPayload, {
       sectionsCompleted,
       reviewSectionsCompleted,
-      determination: resetDetermination(payload.determination),
+      determination: resetDetermination(
+        this.store.select(underlyingAgreementVariationReviewQuery.selectDetermination)(),
+      ),
     });
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {

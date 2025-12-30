@@ -7,7 +7,6 @@ import { firstValueFrom } from 'rxjs';
 
 import { ConfigService } from '@shared/config';
 import { AuthService, GlobalErrorHandlingService, LatestTermsService } from '@shared/services';
-import { provideZxvbnServiceForPSM } from 'angular-password-strength-meter/zxcvbn';
 import { KeycloakAngularModule, KeycloakOptions, KeycloakService } from 'keycloak-angular';
 import { KeycloakConfig } from 'keycloak-js';
 
@@ -38,7 +37,6 @@ export const appConfig: ApplicationConfig = {
       ApiModule.forRoot(() => new Configuration({ basePath: environment.apiOptions.baseUrl })),
       KeycloakAngularModule,
     ),
-    provideZxvbnServiceForPSM(),
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandlingService,

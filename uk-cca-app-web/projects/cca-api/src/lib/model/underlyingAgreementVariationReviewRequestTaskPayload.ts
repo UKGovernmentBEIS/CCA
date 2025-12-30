@@ -10,10 +10,10 @@
  * Do not edit the class manually.
  */
 import { UnderlyingAgreementVariationPayload } from './underlyingAgreementVariationPayload';
+import { VariationDetermination } from './variationDetermination';
 import { AccountReferenceData } from './accountReferenceData';
 import { UnderlyingAgreementReviewDecision } from './underlyingAgreementReviewDecision';
 import { UnderlyingAgreementVariationFacilityReviewDecision } from './underlyingAgreementVariationFacilityReviewDecision';
-import { Determination } from './determination';
 import { UnderlyingAgreementContainer } from './underlyingAgreementContainer';
 
 export interface UnderlyingAgreementVariationReviewRequestTaskPayload {
@@ -30,5 +30,5 @@ export interface UnderlyingAgreementVariationReviewRequestTaskPayload {
   facilitiesReviewGroupDecisions?: Record<string, UnderlyingAgreementVariationFacilityReviewDecision>;
   reviewAttachments?: Record<string, string>;
   underlyingAgreementProposed?: UnderlyingAgreementVariationPayload;
-  determination?: Determination;
+  determination?: VariationDetermination;
 }

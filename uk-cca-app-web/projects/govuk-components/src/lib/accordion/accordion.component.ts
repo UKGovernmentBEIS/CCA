@@ -36,7 +36,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
           }}</span>
         </button>
       </div>
-      <ng-content select="govuk-accordion-item"></ng-content>
+      <ng-content select="govuk-accordion-item" />
     </div>
   `,
   providers: [accordionFactory],

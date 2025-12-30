@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { ErrorPageComponent } from '@shared/components';
@@ -21,7 +21,7 @@ import { BusinessErrorService } from './business-error.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BusinessErrorComponent implements OnDestroy {
-  constructor(readonly businessErrorService: BusinessErrorService) {}
+  readonly businessErrorService = inject(BusinessErrorService);
 
   ngOnDestroy() {
     this.businessErrorService.clear();

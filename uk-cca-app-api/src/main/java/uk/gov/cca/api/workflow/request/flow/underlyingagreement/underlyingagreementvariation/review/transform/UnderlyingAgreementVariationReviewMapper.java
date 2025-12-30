@@ -13,6 +13,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationAcceptedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationRejectedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationReviewRequestTaskPayload;
 import uk.gov.netz.api.common.config.MapperConfig;
@@ -54,6 +55,20 @@ public interface UnderlyingAgreementVariationReviewMapper {
 
     @AfterMapping
     default void setRejectedUnderlyingAgreementVariationAttachments(@MappingTarget UnderlyingAgreementVariationRejectedRequestActionPayload requestActionPayload,
+                                                                    UnderlyingAgreementVariationRequestPayload taskPayload) {
+        requestActionPayload.setUnderlyingAgreementAttachments(taskPayload.getUnderlyingAgreementAttachments());
+        requestActionPayload.setReviewAttachments(taskPayload.getReviewAttachments());
+    }
+
+    @Mapping(target = "payloadType", expression = "java(CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_COMPLETED_PAYLOAD)")
+    @Mapping(target = "underlyingAgreementAttachments", ignore = true)
+    @Mapping(target = "reviewAttachments", ignore = true)
+    @Mapping(target = "attachments", ignore = true)
+    UnderlyingAgreementVariationCompletedRequestActionPayload toUnderlyingAgreementVariationCompletedRequestActionPayload(
+            UnderlyingAgreementVariationRequestPayload payload, Map<String, RequestActionUserInfo> usersInfo, List<DefaultNoticeRecipient> defaultContacts);
+
+    @AfterMapping
+    default void setCompletedUnderlyingAgreementVariationAttachments(@MappingTarget UnderlyingAgreementVariationCompletedRequestActionPayload requestActionPayload,
                                                                     UnderlyingAgreementVariationRequestPayload taskPayload) {
         requestActionPayload.setUnderlyingAgreementAttachments(taskPayload.getUnderlyingAgreementAttachments());
         requestActionPayload.setReviewAttachments(taskPayload.getReviewAttachments());

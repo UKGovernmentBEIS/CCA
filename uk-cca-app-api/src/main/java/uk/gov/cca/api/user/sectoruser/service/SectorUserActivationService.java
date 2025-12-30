@@ -7,6 +7,7 @@ import uk.gov.cca.api.authorization.ccaauth.core.domain.dto.CcaAuthorityInfoDTO;
 import uk.gov.cca.api.authorization.ccaauth.core.service.CcaAuthorityService;
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserDTO;
 import uk.gov.cca.api.user.sectoruser.domain.SectorUserRegistrationWithCredentialsDTO;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.user.core.domain.dto.InvitedUserCredentialsDTO;
 
 @Service
@@ -19,9 +20,9 @@ public class SectorUserActivationService {
     private final SectorUserRegisteredAcceptInvitationService sectorUserRegisteredAcceptInvitationService;
     private final SectorUserRegisterValidationService sectorUserRegisterValidationService;
 
-    public SectorUserDTO acceptAuthorityAndEnableInvitedUserWithCredentials(SectorUserRegistrationWithCredentialsDTO sectorUserRegistrationWithCredentialsDTO) {
+    public SectorUserDTO acceptAuthorityAndEnableInvitedUserWithCredentials(SectorUserRegistrationWithCredentialsDTO sectorUserRegistrationWithCredentialsDTO, AppUser appUser) {
     	CcaAuthorityInfoDTO authority = sectorUserTokenVerificationService
-            .verifyInvitationTokenForPendingAuthority(sectorUserRegistrationWithCredentialsDTO.getEmailToken());
+            .verifyInvitationToken(sectorUserRegistrationWithCredentialsDTO.getEmailToken(), appUser);
 
         if (sectorUserRegistrationWithCredentialsDTO.getOrganisationName() != null) {
         	authorityService.updateCcaAuthorityDetailsOrganisationName(authority.getId(), sectorUserRegistrationWithCredentialsDTO.getOrganisationName());
@@ -37,9 +38,9 @@ public class SectorUserActivationService {
         return sectorUserDTO;
     }
 
-    public void acceptAuthorityAndSetCredentialsToUser(InvitedUserCredentialsDTO invitedUserCredentialsDTO) {
+    public void acceptAuthorityAndSetCredentialsToUser(InvitedUserCredentialsDTO invitedUserCredentialsDTO, AppUser appUser) {
         CcaAuthorityInfoDTO ccaAuthorityInfoDTO = sectorUserTokenVerificationService
-                .verifyInvitationTokenForPendingAuthority(invitedUserCredentialsDTO.getInvitationToken());
+                .verifyInvitationToken(invitedUserCredentialsDTO.getInvitationToken(), appUser);
         sectorUserRegisterValidationService.validateRegisterForSectorAssociation(ccaAuthorityInfoDTO.getUserId(), ccaAuthorityInfoDTO.getSectorAssociationId());
         sectorUserAuthService.setUserPassword(ccaAuthorityInfoDTO.getUserId(), invitedUserCredentialsDTO.getPassword());
         sectorUserRegisteredAcceptInvitationService.acceptAuthorityAndNotify(ccaAuthorityInfoDTO.getId());

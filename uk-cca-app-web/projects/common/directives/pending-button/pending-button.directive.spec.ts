@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -21,7 +21,7 @@ describe('PendingButtonDirective', () => {
     imports: [PendingButtonDirective, ButtonDirective],
   })
   class TestComponent {
-    constructor(private readonly pendingRequest: PendingRequestService) {}
+    private readonly pendingRequest = inject(PendingRequestService);
 
     startRequest() {
       timer(500).pipe(this.pendingRequest.trackRequest()).subscribe();

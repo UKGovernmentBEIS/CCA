@@ -1,4 +1,4 @@
-import { NgComponentOutlet, NgFor, NgIf } from '@angular/common';
+import { NgComponentOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,

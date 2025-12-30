@@ -16,6 +16,7 @@ describe('StatusColorPipe', () => {
     expect(pipe.transform('paid')).toEqual('green');
     expect(pipe.transform('approved')).toEqual('green');
     expect(pipe.transform('live')).toEqual('green');
+    expect(pipe.transform('accepted')).toEqual('green');
 
     expect(pipe.transform('completed_with_failures')).toEqual('red');
     expect(pipe.transform('terminated')).toEqual('red');

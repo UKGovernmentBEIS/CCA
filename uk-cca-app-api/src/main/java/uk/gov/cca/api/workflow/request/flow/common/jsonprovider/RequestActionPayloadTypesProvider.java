@@ -30,40 +30,13 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivatedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationAcceptedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationRejectedRequestActionPayload;
 import uk.gov.netz.api.common.config.jackson.JsonSubTypesProvider;
 
 import java.util.List;
 
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.ADMIN_TERMINATION_FINAL_DECISION_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.ADMIN_TERMINATION_PEER_REVIEW_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.ADMIN_TERMINATION_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.ADMIN_TERMINATION_WITHDRAW_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.BUY_OUT_SURPLUS_RUN_COMPLETED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.FACILITY_AUDIT_PRE_AUDIT_REVIEW_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.PERFORMANCE_DATA_SPREADSHEET_PROCESSING_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.SECTOR_MOA_GENERATED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.SUBSISTENCE_FEES_RUN_COMPLETED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.TARGET_UNIT_ACCOUNT_CREATION_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.TARGET_UNIT_MOA_GENERATED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.TP6_BUY_OUT_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.TP6_SURPLUS_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_ACCEPTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_ACTIVATED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_MIGRATED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_PEER_REVIEW_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_REJECTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW_SUBMITTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_REJECTED_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_SUBMITTED_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.*;
 
 
 @Component
@@ -94,6 +67,7 @@ public class RequestActionPayloadTypesProvider implements JsonSubTypesProvider {
                 new NamedType(UnderlyingAgreementVariationSubmittedRequestActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_SUBMITTED_PAYLOAD),
                 new NamedType(UnderlyingAgreementVariationAcceptedRequestActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_PAYLOAD),
                 new NamedType(UnderlyingAgreementVariationRejectedRequestActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_REJECTED_PAYLOAD),
+                new NamedType(UnderlyingAgreementVariationCompletedRequestActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_COMPLETED_PAYLOAD),
                 new NamedType(UnderlyingAgreementVariationActivatedRequestActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_PAYLOAD),
                 new NamedType(CcaPeerReviewDecisionSubmittedRequestActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW_SUBMITTED_PAYLOAD),
 

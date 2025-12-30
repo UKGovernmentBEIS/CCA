@@ -1,10 +1,10 @@
 import { produce } from 'immer';
 
-import { ADTFDRequestTaskPayload } from './admin-termination-final-decision.types';
+import { AdminTerminationFinalDecisionRequestTaskPayload } from 'cca-api';
 
 export function initializeAdminTerminationFinalDecisionPayload(
-  payload: ADTFDRequestTaskPayload,
-): ADTFDRequestTaskPayload {
+  payload: AdminTerminationFinalDecisionRequestTaskPayload,
+): AdminTerminationFinalDecisionRequestTaskPayload {
   return produce(payload, (p) => {
     if (!p.adminTerminationFinalDecisionReasonDetails) {
       p.adminTerminationFinalDecisionReasonDetails = { explanation: '', finalDecisionType: null, relevantFiles: [] };

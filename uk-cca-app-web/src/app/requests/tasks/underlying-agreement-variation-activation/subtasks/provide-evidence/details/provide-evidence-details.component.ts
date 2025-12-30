@@ -1,15 +1,23 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
-import { TaskService } from '@netz/common/forms';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { TextareaComponent } from '@netz/govuk-components';
-import { PROVIDE_EVIDENCE_SUBTASK } from '@requests/common';
+import { PROVIDE_EVIDENCE_SUBTASK, TaskItemStatus, TasksApiService } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 import { generateDownloadUrl } from '@shared/utils';
+import { produce } from 'immer';
 
+import {
+  UnderlyingAgreementActivationRequestTaskPayload,
+  UnderlyingAgreementVariationActivationSaveRequestTaskActionPayload,
+} from 'cca-api';
+
+import { createRequestTaskActionProcessDTO } from '../../../transform';
+import { underlyingAgreementVariationActivationQuery } from '../../../una-variation-activation.selectors';
 import {
   PROVIDE_EVIDENCE_DETAILS_FORM,
   ProvideEvidenceDetailsFormProvider,
@@ -18,6 +26,7 @@ import {
 
 @Component({
   selector: 'cca-provide-evidence-details',
+  templateUrl: './provide-evidence-details.component.html',
   imports: [
     WizardStepComponent,
     ReactiveFormsModule,
@@ -25,26 +34,51 @@ import {
     MultipleFileInputComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  templateUrl: './provide-evidence-details.component.html',
   providers: [ProvideEvidenceDetailsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class ProvideEvidenceDetailsComponent {
-  private readonly taskService = inject(TaskService);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly tasksApiService = inject(TasksApiService);
+  private readonly router = inject(Router);
+  private readonly requestTaskStore = inject(RequestTaskStore);
 
-  protected readonly form =
-    inject<FormGroup<UnderlyingAgreementActivationDetailsFormModel>>(PROVIDE_EVIDENCE_DETAILS_FORM);
+  protected readonly form = inject<UnderlyingAgreementActivationDetailsFormModel>(PROVIDE_EVIDENCE_DETAILS_FORM);
 
   private readonly taskId = this.activatedRoute.snapshot.paramMap.get('taskId');
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 
   onSubmit() {
-    this.taskService
-      .saveSubtask(PROVIDE_EVIDENCE_SUBTASK, 'details', this.activatedRoute, {
-        evidenceFiles: fileUtils.toUUIDs(this.form.value.evidenceFiles),
-        comments: this.form.value.comments,
-      })
-      .subscribe();
+    const payload = this.requestTaskStore.select(
+      requestTaskQuery.selectRequestTaskPayload,
+    )() as UnderlyingAgreementActivationRequestTaskPayload;
+
+    const updatedPayload = update(payload, this.form);
+    const currentSectionsCompleted = this.requestTaskStore.select(
+      underlyingAgreementVariationActivationQuery.selectSectionsCompleted,
+    )();
+
+    const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
+      draft[PROVIDE_EVIDENCE_SUBTASK] = TaskItemStatus.IN_PROGRESS;
+    });
+
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
+    const dto = createRequestTaskActionProcessDTO(requestTaskId, updatedPayload, sectionsCompleted);
+
+    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
+      this.router.navigate(['../check-your-answers'], { relativeTo: this.activatedRoute });
+    });
   }
+}
+
+function update(
+  payload: UnderlyingAgreementVariationActivationSaveRequestTaskActionPayload,
+  form: UnderlyingAgreementActivationDetailsFormModel,
+): UnderlyingAgreementVariationActivationSaveRequestTaskActionPayload {
+  return produce(payload, (draft) => {
+    draft.underlyingAgreementActivationDetails = {
+      evidenceFiles: fileUtils.toUUIDs(form.controls.evidenceFiles.value),
+      comments: form.controls.comments.value,
+    };
+  });
 }

@@ -5,7 +5,7 @@ import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { screen } from '@testing-library/dom';
 
-import { mockReasonForAdminTerminationPayload } from '../mocks/mock-admin-termination-payload';
+import { mockReasonForAdminTerminationPayload } from '../testing/mock-data';
 import { AdminTerminationPrecontentComponent } from './admin-termination-precontent.component';
 
 describe('AdminTerminationPrecontentComponent', () => {
@@ -20,7 +20,7 @@ describe('AdminTerminationPrecontentComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
-    store.setRequestTaskItem({ requestTask: { type: 'TEST_TYPE' as any } });
+    store.setRequestTaskItem({ requestTask: { type: 'TEST_TYPE' } });
     store.setPayload(mockReasonForAdminTerminationPayload);
     store.setState({ ...store.state, isEditable: true });
 

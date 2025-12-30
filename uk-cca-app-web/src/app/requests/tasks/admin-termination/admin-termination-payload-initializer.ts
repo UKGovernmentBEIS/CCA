@@ -1,8 +1,10 @@
 import { produce } from 'immer';
 
-import { ADTRequestTaskPayload } from './admin-termination.types';
+import { AdminTerminationSubmitRequestTaskPayload } from 'cca-api';
 
-export function initializeAdminTerminationPayload(payload: ADTRequestTaskPayload): ADTRequestTaskPayload {
+export function initializeAdminTerminationPayload(
+  payload: AdminTerminationSubmitRequestTaskPayload,
+): AdminTerminationSubmitRequestTaskPayload {
   return produce(payload, (p) => {
     if (!p.adminTerminationReasonDetails)
       p.adminTerminationReasonDetails = { explanation: '', reason: null, relevantFiles: [] };

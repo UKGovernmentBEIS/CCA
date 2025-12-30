@@ -2471,4 +2471,13 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_REQUEST_ACTIONS_UNA_VARIATION_ADD_variationImpactsAgreement" author="P70383">
+        <comment>Add variationImpactsAgreement in determination of variation request action payload</comment>
+        <sql>
+            UPDATE request_action
+            SET payload = jsonb_set(payload, '{determination,variationImpactsAgreement}', 'true')
+            WHERE type IN ('UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACCEPTED', 'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACTIVATED')
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

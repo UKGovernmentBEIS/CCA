@@ -133,6 +133,64 @@ class UnderlyingAgreementServiceTest {
     }
 
     @Test
+    void updateUnderlyingAgreement_no_document() {
+        final long accountId = 1L;
+        final UnderlyingAgreementContainer newContainer = UnderlyingAgreementContainer.builder()
+                .underlyingAgreement(UnderlyingAgreement.builder()
+                        .facilities(Set.of(
+                                Facility.builder()
+                                        .status(FacilityStatus.NEW)
+                                        .facilityItem(FacilityItem.builder()
+                                                .facilityDetails(FacilityDetails.builder()
+                                                        .participatingSchemeVersions(Set.of(SchemeVersion.CCA_3))
+                                                        .build())
+                                                .cca3BaselineAndTargets(Cca3FacilityBaselineAndTargets.builder()
+                                                        .facilityBaselineEnergyConsumption(FacilityBaselineEnergyConsumption.builder()
+                                                                .variableEnergyConsumptionDataByProduct(List.of(
+                                                                        ProductVariableEnergyConsumptionData.builder()
+                                                                                .productStatus(ProductStatus.NEW)
+                                                                                .build()
+                                                                ))
+                                                                .build())
+                                                        .build())
+                                                .build())
+                                        .build()
+                        ))
+                        .build())
+                .build();
+        final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
+                .schemeVersion(SchemeVersion.CCA_3)
+                .build();
+        List<UnderlyingAgreementDocument> underlyingAgreementDocuments = List.of(
+                UnderlyingAgreementDocument.builder().consolidationNumber(2).schemeVersion(SchemeVersion.CCA_2).build(),
+                UnderlyingAgreementDocument.builder().consolidationNumber(3).schemeVersion(SchemeVersion.CCA_3).build()
+        );
+        UnderlyingAgreementEntity persistentEntity = UnderlyingAgreementEntity.builder()
+                .underlyingAgreementDocuments(new ArrayList<>(underlyingAgreementDocuments))
+                .build();
+
+        when(underlyingAgreementRepository.findByAccountId(accountId))
+                .thenReturn(Optional.of(persistentEntity));
+
+        // Invoke
+        underlyingAgreementService.updateUnderlyingAgreement(newContainer, accountId, underlyingAgreementValidationContext, false);
+
+        // Verify
+        assertThat(persistentEntity.getUnderlyingAgreementContainer()).isEqualTo(newContainer);
+        assertThat(persistentEntity.getUnderlyingAgreementContainer().getUnderlyingAgreement().getFacilities().stream()
+                .allMatch(f -> f.getStatus().equals(FacilityStatus.LIVE))).isTrue();
+        assertThat(persistentEntity.getUnderlyingAgreementContainer().getUnderlyingAgreement().getFacilities().stream()
+                .allMatch(f -> f.getFacilityItem().getCca3BaselineAndTargets().getFacilityBaselineEnergyConsumption().getVariableEnergyConsumptionDataByProduct()
+                        .stream().allMatch(p -> p.getProductStatus().equals(ProductStatus.LIVE)))).isTrue();
+        assertThat(persistentEntity.getDocumentForSchemeVersion(SchemeVersion.CCA_2).getConsolidationNumber()).isEqualTo(2);
+        assertThat(persistentEntity.getDocumentForSchemeVersion(SchemeVersion.CCA_2).getTerminatedDate()).isNotNull();
+        assertThat(persistentEntity.getDocumentForSchemeVersion(SchemeVersion.CCA_3).getConsolidationNumber()).isEqualTo(3);
+        assertThat(persistentEntity.getDocumentForSchemeVersion(SchemeVersion.CCA_3).getTerminatedDate()).isNull();
+        verify(underlyingAgreementValidatorService, times(1)).validate(newContainer, underlyingAgreementValidationContext);
+        verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
+    }
+
+    @Test
     void updateUnderlyingAgreement_with_update_and_terminate_document() {
         final long accountId = 1L;
         final UnderlyingAgreementContainer newContainer = UnderlyingAgreementContainer.builder()
@@ -173,7 +231,8 @@ class UnderlyingAgreementServiceTest {
                 .thenReturn(Optional.of(persistentEntity));
 
         // Invoke
-        underlyingAgreementService.updateUnderlyingAgreement(newContainer, accountId, underlyingAgreementValidationContext);
+        underlyingAgreementService
+                .updateUnderlyingAgreement(newContainer, accountId, underlyingAgreementValidationContext, true);
 
         // Verify
         assertThat(persistentEntity.getUnderlyingAgreementContainer()).isEqualTo(newContainer);
@@ -231,7 +290,8 @@ class UnderlyingAgreementServiceTest {
                 .thenReturn(Optional.of(persistentEntity));
 
         // Invoke
-        underlyingAgreementService.updateUnderlyingAgreement(newContainer, accountId, underlyingAgreementValidationContext);
+        underlyingAgreementService
+                .updateUnderlyingAgreement(newContainer, accountId, underlyingAgreementValidationContext, true);
 
         // Verify
         assertThat(persistentEntity.getUnderlyingAgreementContainer()).isEqualTo(newContainer);
@@ -265,7 +325,7 @@ class UnderlyingAgreementServiceTest {
 
         // Invoke
         BusinessException businessException = assertThrows(BusinessException.class, () ->
-                underlyingAgreementService.updateUnderlyingAgreement(newContainer, accountId, underlyingAgreementValidationContext));
+                underlyingAgreementService.updateUnderlyingAgreement(newContainer, accountId, underlyingAgreementValidationContext, true));
 
         // Verify
         assertThat(businessException.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);

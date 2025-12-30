@@ -16,7 +16,7 @@ import { ItemDTO } from 'cca-api';
   imports: [RouterLink, ItemNamePipe, ItemLinkPipe, DaysRemainingPipe],
 })
 export class RelatedTasksComponent {
-  readonly items = input<ItemDTO[]>();
-  readonly heading = input<string>('Related tasks');
-  readonly noBorders = input<boolean>(false);
+  protected readonly items = input<ItemDTO[]>();
+  protected readonly heading = input<string>('Related tasks');
+  protected readonly noBorders = input<boolean>(false);
 }

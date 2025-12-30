@@ -35,7 +35,7 @@ export class DocumentViewComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly documentTemplatesService = inject(DocumentTemplatesService);
 
-  protected readonly notification = signal(this.router.getCurrentNavigation()?.extras.state?.notification);
+  protected readonly notification = signal(this.router.currentNavigation()?.extras.state?.notification);
 
   protected readonly documentTemplate = toSignal(
     this.documentTemplatesService.getDocumentTemplateById(this.activatedRoute.snapshot.params.templateId).pipe(

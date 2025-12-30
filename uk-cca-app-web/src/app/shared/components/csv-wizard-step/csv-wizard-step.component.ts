@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -27,33 +27,34 @@ import { CsvErrorSummaryComponent } from '../csv-error-summary/csv-error-summary
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CsvWizardStepComponent {
-  @Input() showBackLink = false;
-  @Input() formGroup: UntypedFormGroup;
-  @Input() heading: string;
-  @Input() caption: string;
-  @Input() submitText = 'Continue';
-  @Input() hideSubmit: boolean;
-  @Input() showReturnLink = false;
-  @Input() showCancelLink = false;
-  @Input() cancelLinkPath: string;
-  @Output() readonly formSubmit = new EventEmitter<UntypedFormGroup>();
+  protected readonly showBackLink = input(false);
+  protected readonly formGroup = input<UntypedFormGroup>(undefined);
+  protected readonly heading = input<string>(undefined);
+  protected readonly caption = input<string>(undefined);
+  protected readonly submitText = input('Continue');
+  protected readonly hideSubmit = input<boolean>(undefined);
+  protected readonly showReturnLink = input(false);
+  protected readonly showCancelLink = input(false);
+  protected readonly cancelLinkPath = input<string>(undefined);
+
+  protected readonly formSubmit = output<UntypedFormGroup>();
 
   isSummaryDisplayedSubject = new BehaviorSubject(false);
 
   onSubmit(): void {
-    this.formGroup.statusChanges
-      .pipe(
-        startWith(this.formGroup.status),
+    this.formGroup()
+      .statusChanges.pipe(
+        startWith(this.formGroup().status),
         filter((status) => status !== 'PENDING'),
         take(1),
       )
       .subscribe((status) => {
         switch (status) {
           case 'VALID':
-            this.formSubmit.emit(this.formGroup);
+            this.formSubmit.emit(this.formGroup());
             break;
           case 'INVALID':
-            this.formGroup.markAllAsTouched();
+            this.formGroup().markAllAsTouched();
             this.isSummaryDisplayedSubject.next(true);
             break;
         }

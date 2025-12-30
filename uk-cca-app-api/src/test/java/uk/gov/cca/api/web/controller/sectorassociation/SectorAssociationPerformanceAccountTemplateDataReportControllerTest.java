@@ -28,15 +28,16 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.service.PerformanceAccountTemplateDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.dto.SectorPerformanceAccountTemplateDataReportItemDTO;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
-import uk.gov.cca.api.web.orchestrator.sectorassociation.service.SectorAssociationPerformanceAccountTemplateDataReportServiceOrchestrator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
@@ -61,7 +62,7 @@ class SectorAssociationPerformanceAccountTemplateDataReportControllerTest {
     private AppUserAuthorizationService appUserAuthorizationService;
 
     @Mock
-    private SectorAssociationPerformanceAccountTemplateDataReportServiceOrchestrator orchestrator;
+    private PerformanceAccountTemplateDataQueryService dataQueryService;
 
     private ObjectMapper mapper;
     
@@ -109,8 +110,12 @@ class SectorAssociationPerformanceAccountTemplateDataReportControllerTest {
 						.build()))
 				.total(1L)
 				.build();
+        final AppUser user = AppUser.builder()
+                .roleType(RoleTypeConstants.REGULATOR)
+                .build();
 
-        when(orchestrator.getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria)).thenReturn(listDTO);
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+        when(dataQueryService.getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria)).thenReturn(listDTO);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(CONTROLLER_PATH.replace("{sectorAssociationId}", sectorAssociationId.toString()))
@@ -122,7 +127,7 @@ class SectorAssociationPerformanceAccountTemplateDataReportControllerTest {
                         .andExpect(jsonPath("$.items[0].targetUnitAccountBusinessId").value(listDTO.getItems().get(0).getTargetUnitAccountBusinessId()))
                         .andExpect(jsonPath("$.items[0].operatorName").value(listDTO.getItems().get(0).getOperatorName()));
 
-        verify(orchestrator, times(1)).getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria);
+        verify(dataQueryService, times(1)).getSectorPerformanceAccountTemplateDataReportListDTO(sectorAssociationId, criteria);
     }
     
     @Test
@@ -147,7 +152,7 @@ class SectorAssociationPerformanceAccountTemplateDataReportControllerTest {
         				.andExpect(status().isForbidden());
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
-        verifyNoInteractions(orchestrator);
+        verifyNoInteractions(dataQueryService);
     }
     
 }

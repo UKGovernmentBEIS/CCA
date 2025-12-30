@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, DestroyRef, Directive, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, Directive, inject, input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
@@ -14,30 +14,28 @@ import { UsersTableItem } from './users-table-item';
   providers: [UserFullNamePipe],
 })
 export class UsersTableDirective implements OnInit {
-  @Input() users: Observable<UsersTableItem[]>;
-  @Input() form: UntypedFormGroup;
+  private readonly host = inject<TableComponent<UsersTableItem>>(TableComponent);
+  private readonly fb = inject(UntypedFormBuilder);
+  private readonly destroy$ = inject(DestroyRef);
+  private readonly userFullNamePipe = inject(UserFullNamePipe);
+  private readonly cdRef = inject(ChangeDetectorRef);
+
+  protected readonly users = input<Observable<UsersTableItem[]>>(undefined);
+  protected readonly form = input<UntypedFormGroup>(undefined);
 
   private sorting$ = new BehaviorSubject<SortEvent>({ column: 'createdDate', direction: 'descending' });
 
-  constructor(
-    private readonly host: TableComponent<UsersTableItem>,
-    private readonly fb: UntypedFormBuilder,
-    private readonly destroy$: DestroyRef,
-    private readonly userFullNamePipe: UserFullNamePipe,
-    private readonly cdRef: ChangeDetectorRef,
-  ) {}
-
   private get formArray(): UntypedFormArray {
-    return this.form.get(this.formArrayName) as UntypedFormArray;
+    return this.form().get(this.formArrayName) as UntypedFormArray;
   }
 
   private get formArrayName(): string {
-    return Object.keys(this.form.controls).find((key) => this.form.get(key) instanceof UntypedFormArray);
+    return Object.keys(this.form().controls).find((key) => this.form().get(key) instanceof UntypedFormArray);
   }
 
   ngOnInit() {
     combineLatest([
-      this.users.pipe(
+      this.users().pipe(
         map((users) =>
           users.slice().map((userAuthority) =>
             this.fb.group(
@@ -92,6 +90,6 @@ export class UsersTableDirective implements OnInit {
   }
 
   private setFormArray(controls: UntypedFormGroup[]): void {
-    this.form.setControl(this.formArrayName, this.fb.array(controls, { validators: this.formArray.validator }));
+    this.form().setControl(this.formArrayName, this.fb.array(controls, { validators: this.formArray.validator }));
   }
 }

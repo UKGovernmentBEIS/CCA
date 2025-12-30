@@ -3,9 +3,9 @@ export const UNDERLYING_AGREEMENT_VARIATION_REVIEWED_TIMELINE_ROUTES = [
     path: '',
     data: { backlink: '../' },
     loadComponent: () =>
-      import(
-        './underlying-agreement-variation-reviewed-task-list/underlying-agreement-variation-reviewed-task-list.component'
-      ).then((c) => c.UnderlyingAgreementVariationReviewedTaskListComponent),
+      import('./underlying-agreement-variation-reviewed-task-list/underlying-agreement-variation-reviewed-task-list.component').then(
+        (c) => c.UnderlyingAgreementVariationReviewedTaskListComponent,
+      ),
   },
   {
     path: 'variation-details',

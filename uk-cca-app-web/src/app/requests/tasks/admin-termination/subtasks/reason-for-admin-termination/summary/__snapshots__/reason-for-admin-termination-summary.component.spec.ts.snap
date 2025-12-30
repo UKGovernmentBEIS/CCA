@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ReasonForAdminTerminationSummaryComponent should show proper summary values 1`] = `
+<cca-reason-for-admin-termination-summary
+  activatedRoute={[Function ActivatedRouteStub]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  summaryData={[Function Array]}
+  taskId="null"
+>
+  <div>
+    <netz-page-heading
+      caption="Admin termination"
+    >
+      <span
+        class="govuk-caption-l"
+      >
+        Admin termination
+      </span>
+      <h1
+        class="govuk-heading-l"
+      >
+        Summary
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Termination reason
+          </dt>
+          <dd
+            class="pre-line govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              Failure to agree a variation in a target
+            </span>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Explain why the account is being terminated
+          </dt>
+          <dd
+            class="pre-line govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              mplah mplah
+            </span>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Uploaded files
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              No files provided
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </cca-summary>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Dashboard 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-reason-for-admin-termination-summary>
+`;

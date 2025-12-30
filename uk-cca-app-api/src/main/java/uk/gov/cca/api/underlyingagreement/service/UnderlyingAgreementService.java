@@ -40,6 +40,14 @@ public class UnderlyingAgreementService {
     private final UnderlyingAgreementDocumentRepository underlyingAgreementDocumentRepository;
     private final UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
 
+    /**
+     * Submits a new UNA with new documents.
+     *
+     * @param container The una
+     * @param accountId The account id
+     * @param underlyingAgreementValidationContext UNA validation context
+     * @return Persisted UNA
+     */
     @Transactional
     public UnderlyingAgreementEntity submitUnderlyingAgreement(UnderlyingAgreementContainer container, Long accountId,
     		UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
@@ -65,9 +73,18 @@ public class UnderlyingAgreementService {
         return underlyingAgreementRepository.save(entity);
     }
 
+    /**
+     * Updates the UNA and documents termination date if needed.
+     * For true flag document versions are properly updated.
+     *
+     * @param newContainer The update UNA
+     * @param accountId The account id
+     * @param underlyingAgreementValidationContext UNA validation context
+     */
     @Transactional
     public void updateUnderlyingAgreement(UnderlyingAgreementContainer newContainer, Long accountId,
-    		UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
+                                          UnderlyingAgreementValidationContext underlyingAgreementValidationContext,
+                                          boolean updateDocuments) {
         // Validate
         underlyingAgreementValidatorService.validate(newContainer, underlyingAgreementValidationContext);
 
@@ -80,7 +97,7 @@ public class UnderlyingAgreementService {
         UnderlyingAgreementEntity entity = underlyingAgreementRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
 
-        // Get versions of documents to be generated
+        // Get versions of documents to be changed
         Set<SchemeVersion> proposedActiveSchemeVersions = UnderlyingAgreementCalculateSchemeVersionsUtil
                 .calculateSchemeVersionsFromActiveFacilities(newContainer.getUnderlyingAgreement().getFacilities());
 
@@ -97,13 +114,16 @@ public class UnderlyingAgreementService {
             }
         });
 
-        // proposedActiveSchemeVersions - persistedSchemeVersions -> Create new document
-        SetUtils.difference(proposedActiveSchemeVersions, persistedSchemeVersions).forEach(version ->
-                entity.addUnderlyingAgreementDocument(UnderlyingAgreementDocument.createUnderlyingAgreementDocument(version)));
+        // Update underlying agreement documents
+        if(updateDocuments) {
+            // proposedActiveSchemeVersions - persistedSchemeVersions -> Create new document
+            SetUtils.difference(proposedActiveSchemeVersions, persistedSchemeVersions).forEach(version ->
+                    entity.addUnderlyingAgreementDocument(UnderlyingAgreementDocument.createUnderlyingAgreementDocument(version)));
 
-        // Find common between proposedActiveSchemeVersions and persistedSchemeVersions -> Update document
-        SetUtils.intersection(persistedSchemeVersions, proposedActiveSchemeVersions).forEach(version ->
-                updateUnderlyingAgreementDocument(entity.getDocumentForSchemeVersion(version)));
+            // Find common between proposedActiveSchemeVersions and persistedSchemeVersions -> Update document
+            SetUtils.intersection(persistedSchemeVersions, proposedActiveSchemeVersions).forEach(version ->
+                    updateUnderlyingAgreementDocument(entity.getDocumentForSchemeVersion(version)));
+        }
 
         // Update underlying agreement
         entity.setUnderlyingAgreementContainer(newContainer);

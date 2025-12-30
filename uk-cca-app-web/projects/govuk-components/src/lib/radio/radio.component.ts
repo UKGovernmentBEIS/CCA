@@ -1,10 +1,9 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterContentChecked, AfterContentInit, Component, input, contentChildren, inject } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, NgControl } from '@angular/forms';
+import { AfterContentChecked, AfterContentInit, Component, input, contentChildren } from '@angular/core';
+import { ControlValueAccessor } from '@angular/forms';
 
 import { ErrorMessageComponent } from '../error-message';
 import { FieldsetDirective, FieldsetHintDirective, LegendDirective, LegendSizeType } from '../fieldset';
-import { FormService } from '../form';
 import { FormInput } from '../form/form-input';
 import { RadioOptionComponent } from './radio-option/radio-option.component';
 
@@ -34,11 +33,7 @@ export class RadioComponent<T>
   private isDisabled: boolean;
 
   constructor() {
-    const ngControl = inject(NgControl, { self: true, optional: true });
-    const formService = inject(FormService);
-    const container = inject(ControlContainer, { optional: true });
-
-    super(ngControl, formService, container);
+    super();
   }
 
   ngAfterContentInit() {

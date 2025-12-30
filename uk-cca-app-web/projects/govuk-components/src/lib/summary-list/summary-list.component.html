@@ -9,7 +9,7 @@
             <ng-container
               [ngTemplateOutlet]="keyTemplate()"
               [ngTemplateOutletContext]="{ $implicit: item, index: i }"
-            ></ng-container>
+            />
           } @else {
             {{ item.key }}
           }
@@ -20,7 +20,7 @@
             <ng-container
               [ngTemplateOutlet]="valueTemplate()"
               [ngTemplateOutletContext]="{ $implicit: item, index: i }"
-            ></ng-container>
+            />
           } @else {
             {{ item.value }}
           }

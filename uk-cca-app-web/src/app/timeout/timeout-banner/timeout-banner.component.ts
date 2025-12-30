@@ -1,8 +1,9 @@
-import { AsyncPipe, DOCUMENT } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  DOCUMENT,
   ElementRef,
   inject,
   OnInit,
