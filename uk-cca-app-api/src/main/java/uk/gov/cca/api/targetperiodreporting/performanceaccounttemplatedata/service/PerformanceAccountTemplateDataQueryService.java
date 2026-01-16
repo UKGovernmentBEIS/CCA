@@ -31,7 +31,7 @@ public class PerformanceAccountTemplateDataQueryService {
 			Long sectorAssociationId, SectorPerformanceAccountTemplateDataReportSearchCriteria criteria) {
 		final int reportYear = 2024;
 		final Year targetPeriodYear = Year.of(reportYear); //TODO make it configurable
-		if(Year.now().getValue() > reportYear + 1) {
+		if(!criteria.getTargetPeriodType().equals(TargetPeriodType.TP6)) {
 			throw new RuntimeException("cannot display pat reports");
 		}
 

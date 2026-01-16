@@ -154,8 +154,6 @@ function updateTUDetails(
       operatorName: companyProfile?.name ?? null,
       operatorType: null,
       operatorAddress: address ?? null,
-      subsectorAssociationId: null,
-      subsectorAssociationName: null,
     };
   });
 }

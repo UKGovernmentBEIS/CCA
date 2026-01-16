@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
@@ -68,7 +69,7 @@ public class PerformanceAccountTemplateDataUploadProcessingActionHandler
 		
 		final int reportYear = 2024;
 		final Year targetPeriodYear = Year.of(reportYear); //TODO make it configurable
-		if(Year.now().getValue() > reportYear + 1) {
+		if(!requestTaskActionPayload.getPerformanceAccountTemplateDataUpload().getTargetPeriodType().equals(TargetPeriodType.TP6)) {
 			throw new RuntimeException("cannot submit pat");
 			//TODO remove me when configurable
 		}
