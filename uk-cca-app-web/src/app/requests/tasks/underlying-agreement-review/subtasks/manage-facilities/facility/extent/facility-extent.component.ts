@@ -6,6 +6,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DetailsComponent, RadioComponent, RadioOptionComponent } from '@netz/govuk-components';
 import {
+  FACILITY_EXTENT_FORM,
+  FacilityExtentFormModel,
+  FacilityExtentFormProvider,
   FacilityWizardStep,
   isFacilityWizardCompleted,
   OVERALL_DECISION_SUBTASK,
@@ -25,11 +28,6 @@ import {
 
 import { createSaveActionDTO, toUnderlyingAgreementSaveReviewPayload } from '../../../../transform';
 import { resetDetermination } from '../../../../utils';
-import {
-  FACILITY_EXTENT_FORM,
-  FacilityExtentFormModel,
-  facilityExtentFormProvider,
-} from './facility-extent-form.provider';
 
 @Component({
   selector: 'cca-facility-extent',
@@ -43,7 +41,7 @@ import {
     DetailsComponent,
     RouterLink,
   ],
-  providers: [facilityExtentFormProvider],
+  providers: [FacilityExtentFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityExtentComponent {

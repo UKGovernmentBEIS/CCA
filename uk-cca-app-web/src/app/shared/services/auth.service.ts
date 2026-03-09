@@ -1,19 +1,19 @@
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { combineLatest, from, map, Observable, of, switchMap, tap } from 'rxjs';
+import { combineLatest, from, map, type Observable, of, switchMap, tap } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
-import { KeycloakService } from 'keycloak-angular';
-import { KeycloakLoginOptions, KeycloakProfile } from 'keycloak-js';
+import { KeycloakService } from '@shared/services';
+import type { KeycloakLoginOptions, KeycloakProfile } from 'keycloak-js';
 
 import {
   AuthoritiesService,
   TermsAndConditionsService,
-  UserDTO,
+  type UserDTO,
   UsersService,
-  UserStateDTO,
-  UserTermsVersionDTO,
+  type UserStateDTO,
+  type UserTermsVersionDTO,
 } from 'cca-api';
 
 import { selectIsFeatureEnabled } from '../config/config.selectors';
@@ -78,6 +78,6 @@ export class AuthService {
   }
 
   loadIsLoggedIn(): Observable<boolean> {
-    return of(this.keycloakService.isLoggedIn()).pipe(tap((isLoggedIn) => this.authStore.setIsLoggedIn(isLoggedIn)));
+    return of(this.keycloakService.isAuthenticated).pipe(tap((isLoggedIn) => this.authStore.setIsLoggedIn(isLoggedIn)));
   }
 }

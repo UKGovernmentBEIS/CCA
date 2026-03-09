@@ -32,7 +32,8 @@
               <div class="govuk-grid-row">
                 <div class="govuk-grid-column-three-quarters govuk-!-margin-bottom-3">
                   <a [routerLink]="['workflow-details', workflow.id]" class="govuk-link">
-                    {{ workflow.id }} {{ workflow?.requestType | workflowType }}
+                    {{ workflow.id }}
+                    {{ workflow?.requestType | workflowType: workflow?.requestMetadata?.['initiatorRoleType'] }}
                   </a>
 
                   @if (workflow?.requestType === 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING') {

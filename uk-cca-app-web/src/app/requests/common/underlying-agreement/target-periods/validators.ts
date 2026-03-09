@@ -14,7 +14,7 @@ export function measurementTypeValidator(): ValidatorFn {
     if (!measurementType) return { required: 'Select the measurement units used by the target unit.' };
 
     const isEnergyUnit = (unit: string) => ['ENERGY_KWH', 'ENERGY_MWH', 'ENERGY_GJ'].includes(unit);
-    const isCarbonUnit = (unit: string) => ['CARBON_TONNES', 'CARBON_KG'].includes(unit);
+    const isCarbonUnit = (unit: string) => ['CARBON_TONNE', 'CARBON_KG'].includes(unit);
 
     const sectorIsEnergy = isEnergyUnit(sectorMeasurementType);
     const sectorIsCarbon = isCarbonUnit(sectorMeasurementType);

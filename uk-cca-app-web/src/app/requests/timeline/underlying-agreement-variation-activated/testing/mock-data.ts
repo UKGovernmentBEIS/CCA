@@ -1,8 +1,6 @@
 import { RequestActionDTO, UnderlyingAgreementVariationActivatedRequestActionPayload } from 'cca-api';
 
 const mockVariationActivatedPayload: UnderlyingAgreementVariationActivatedRequestActionPayload = {
-  determination: null,
-  underlyingAgreement: null,
   defaultContacts: [
     {
       name: 'Res name',

@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
+  RESPONSIBLE_PERSON_FORM,
+  ResponsiblePersonFormProvider,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   TasksApiService,
   underlyingAgreementQuery,
@@ -17,10 +19,6 @@ import { UnderlyingAgreementApplySavePayload } from 'cca-api';
 
 import { createSaveActionDTO, toUnderlyingAgreementSaveReviewPayload } from '../../../transform';
 import { applySaveActionSideEffects } from '../../../utils';
-import {
-  UNA_RESPONSIBLE_PERSON_FORM,
-  UnaTargetUnitResponsiblePersonFormProvider,
-} from './responsible-person-form.provider';
 
 @Component({
   selector: 'cca-responsible-person',
@@ -38,7 +36,7 @@ import {
     ResponsiblePersonInputComponent,
     ReturnToTaskOrActionPageComponent,
   ],
-  providers: [UnaTargetUnitResponsiblePersonFormProvider],
+  providers: [ResponsiblePersonFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResponsiblePersonComponent {
@@ -47,7 +45,7 @@ export class ResponsiblePersonComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly store = inject(RequestTaskStore);
 
-  protected readonly form = inject<FormGroup<ResponsiblePersonFormModel>>(UNA_RESPONSIBLE_PERSON_FORM);
+  protected readonly form = inject<FormGroup<ResponsiblePersonFormModel>>(RESPONSIBLE_PERSON_FORM);
 
   onSubmit() {
     const payload = this.store.select(requestTaskQuery.selectRequestTaskPayload)();

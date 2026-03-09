@@ -9,10 +9,9 @@ import { of } from 'rxjs';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { MockType } from '@netz/common/testing';
-import { TasksApiService, underlyingAgreementQuery } from '@requests/common';
+import { FACILITY_EXTENT_FORM, TasksApiService, underlyingAgreementQuery } from '@requests/common';
 
 import { FacilityExtentComponent } from './facility-extent.component';
-import { FACILITY_EXTENT_FORM } from './facility-extent-form.provider';
 
 describe('FacilityExtentComponent', () => {
   let component: FacilityExtentComponent;

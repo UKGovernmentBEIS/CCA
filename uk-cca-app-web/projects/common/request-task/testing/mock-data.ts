@@ -4,8 +4,10 @@ export const mockRequestTask: RequestTaskState = {
   requestTaskItem: {
     allowedRequestTaskActions: [],
     requestInfo: {
-      accountId: 1,
-      competentAuthority: 'ENGLAND',
+      resourceType: 'ACCOUNT',
+      resources: {
+        ACCOUNT: '17',
+      },
     },
     requestTask: {
       assignable: true,

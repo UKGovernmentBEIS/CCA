@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ExcludeProductComponent should render the component with the correct content 1`] = `
+<cca-exclude-product
+  activatedRoute={[Function Object]}
+  draftService={[Function Object]}
+  facility={[Function Function]}
+  facilityId={[Function String]}
+  productName={[Function String]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+>
+  <netz-page-heading>
+    <span
+      class="govuk-caption-l"
+    >
+      Facility 1
+    </span>
+    <h1
+      class="govuk-heading-l"
+    >
+       Are you sure you want to exclude Product 1? 
+    </h1>
+  </netz-page-heading><p>
+    Your product and all its data will remain available but will be marked as excluded.
+  </p><govuk-warning-text
+    assistivetext=""
+  >
+    <div
+      class="govuk-warning-text"
+    >
+      <span
+        aria-hidden="true"
+        class="govuk-warning-text__icon"
+      >
+        !
+      </span>
+      <strong
+        class="govuk-warning-text__text"
+      >
+        <span
+          class="govuk-warning-text__assistive"
+        >
+        </span>
+         The product will be treated as excluded and removed from all baseline calculations. 
+      </strong>
+    </div>
+  </govuk-warning-text><button
+    class="govuk-button govuk-button--warning"
+  >
+    Exclude product
+  </button>
+</cca-exclude-product>
+`;

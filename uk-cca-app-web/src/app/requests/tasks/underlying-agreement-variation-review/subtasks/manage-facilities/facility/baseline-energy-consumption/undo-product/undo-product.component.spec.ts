@@ -2,13 +2,11 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-
-import { of } from 'rxjs';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { MockType } from '@netz/common/testing';
-import { TasksApiService, underlyingAgreementQuery, underlyingAgreementReviewQuery } from '@requests/common';
+import { BaselineEnergyDraftService, underlyingAgreementQuery, underlyingAgreementReviewQuery } from '@requests/common';
 
 import {
   mockActivatedRouteWithProductParams,
@@ -23,25 +21,40 @@ describe('UndoProductComponent', () => {
   let component: UndoProductComponent;
   let fixture: ComponentFixture<UndoProductComponent>;
   let store: RequestTaskStore;
-  let tasksApiService: MockType<TasksApiService>;
+  let draftService: MockType<BaselineEnergyDraftService>;
+  let router: Router;
 
   beforeEach(() => {
-    tasksApiService = {
-      saveRequestTaskAction: jest.fn().mockReturnValue(of(mockRequestTaskPayload)),
+    draftService = {
+      initializeFromStore: jest.fn(),
+      draftSignal: jest.fn().mockReturnValue({
+        totalFixedEnergy: '100',
+        hasVariableEnergy: true,
+        variableEnergyType: 'BY_PRODUCT',
+        products: [],
+      }) as any,
+      saveFormSnapshot: jest.fn(),
+      setProducts: jest.fn(),
+      removeProduct: jest.fn(),
+      excludeProduct: jest.fn(),
+      undoExcludeProduct: jest.fn(),
+      updateTotalFixedEnergy: jest.fn(),
+      clear: jest.fn(),
     };
 
     TestBed.configureTestingModule({
-      imports: [UndoProductComponent],
+      imports: [UndoProductComponent, RouterModule.forRoot([])],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: mockActivatedRouteWithProductParams },
-        { provide: TasksApiService, useValue: tasksApiService },
+        { provide: BaselineEnergyDraftService, useValue: draftService },
       ],
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
+    router = TestBed.inject(Router);
 
     jest.spyOn(store, 'select').mockImplementation((selector) => {
       if (selector === requestTaskQuery.selectRequestTaskPayload) {
@@ -111,10 +124,10 @@ describe('UndoProductComponent', () => {
     expect(button.textContent).toContain('Undo exclusion');
   });
 
-  it('should call onUndo when undo button is clicked', () => {
-    const onUndoSpy = jest.spyOn(component, 'onUndo');
+  it('should call draftService.undoExcludeProduct when undo button is clicked', () => {
+    jest.spyOn(router, 'navigate').mockResolvedValue(true);
     const button = fixture.nativeElement.querySelector('.govuk-button');
     button.click();
-    expect(onUndoSpy).toHaveBeenCalled();
+    expect(draftService.undoExcludeProduct).toHaveBeenCalledWith('Product 1');
   });
 });

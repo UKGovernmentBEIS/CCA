@@ -26,6 +26,10 @@ export function catchTaskReassignedBadRequest(handler: (res: HttpErrorResponse) 
   return catchBadRequest('REQUEST_TASK_ACTION1001', handler);
 }
 
+export function catchErrorCode(code: string, handler: (res: HttpErrorResponse) => Observable<any>) {
+  return catchElseRethrow((res) => res instanceof HttpErrorResponse && res.error?.code === code, handler);
+}
+
 export function isBadRequest(res: unknown, codes?: ErrorCodes | ErrorCodes[] | string): res is BadRequest {
   return (
     res instanceof HttpErrorResponse &&
@@ -78,6 +82,7 @@ export class ErrorCodes {
   static NOTIF1002 = 'NOTIF1002';
   static NOTIF1003 = 'NOTIF1003';
   static REPORT1001 = 'REPORT1001';
+  static MIREPORT1001 = 'MIREPORT1001';
   static FORM1001 = 'FORM1001';
   static BATCHREISSUE0001 = 'BATCHREISSUE0001';
   static BATCHREISSUE0002 = 'BATCHREISSUE0002';
@@ -86,6 +91,11 @@ export class ErrorCodes {
   static ACCOUNT1001 = 'ACCOUNT1001';
   static SECTOR1001 = 'SECTOR1001';
   static SECTOR1002 = 'SECTOR1002';
+  static UNA1001 = 'UNA1001';
+  static UNA1002 = 'UNA1002';
+  static UNAV1001 = 'UNAV1001';
+  static UNAV1002 = 'UNAV1002';
+  static UNAV1004 = 'UNAV1004';
 }
 
 export interface BadRequest extends HttpErrorResponse {

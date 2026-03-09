@@ -5,14 +5,14 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
 
-   <changeSet id="0_1_0_create_custom_mi_report" author="apostolouk@unisystems.gr">
+    <changeSet id="0_1_0_delete_custom_mi_report" author="p35066">
         <sql>
-		INSERT INTO mi_report (id, competent_authority, type) VALUES ((1), 'ENGLAND', 'CUSTOM');
+			DELETE
+	            FROM mi_report_system
+	            WHERE type = 'CUSTOM';
         </sql>
         <rollback>
-        	DELETE
-            FROM mi_report
-            WHERE type = 'CUSTOM';
+        	INSERT INTO mi_report_system (id, competent_authority, type) VALUES ((1), 'ENGLAND', 'CUSTOM');
         </rollback>
     </changeSet>
 

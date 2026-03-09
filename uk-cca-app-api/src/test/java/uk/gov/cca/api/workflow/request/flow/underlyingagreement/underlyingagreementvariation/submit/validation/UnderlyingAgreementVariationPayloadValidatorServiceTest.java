@@ -12,9 +12,10 @@ import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.authorisation.AuthorisationAndAdditionalEvidence;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.TargetPeriodDetailsValidatorService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.CCA2BaselineAndTargetsValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationModificationType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
@@ -22,12 +23,14 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.EditedUnderlyingAgreementVariationDetailsValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.EditedUnderlyingAgreementVariationTargetUnitDetailsValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.UnderlyingAgreementVariationReviewDecisionDataValidator;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.UnderlyingAgreementVariationSubmitFacilitiesContextValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.UnderlyingAgreementVariationViolation;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSubmitRequestTaskPayload;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +53,7 @@ class UnderlyingAgreementVariationPayloadValidatorServiceTest {
     private UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
 
     @Mock
-    private TargetPeriodDetailsValidatorService targetPeriodDetailsValidatorService;
+    private CCA2BaselineAndTargetsValidatorService cca2BaselineAndTargetsValidatorService;
 
     @Mock
     private EditedUnderlyingAgreementVariationTargetUnitDetailsValidatorService underlyingAgreementVariationTargetUnitDetailsValidatorService;
@@ -67,9 +70,13 @@ class UnderlyingAgreementVariationPayloadValidatorServiceTest {
     @Mock
     private UnderlyingAgreementVariationReviewDecisionDataValidator underlyingAgreementVariationReviewDecisionDataValidator;
 
+    @Mock
+    private UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService underlyingAgreementCca2EndDateValidatorService;
+    
     @Test
     void validate() {
         final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder()
+        		.facilities(Set.of())
                 .authorisationAndAdditionalEvidence(AuthorisationAndAdditionalEvidence.builder()
                         .authorisationAttachmentIds(Set.of(UUID.randomUUID()))
                         .build())
@@ -117,7 +124,7 @@ class UnderlyingAgreementVariationPayloadValidatorServiceTest {
         validationResults.add(BusinessValidationResult.valid());
         when(underlyingAgreementValidatorService.getValidationResults(container, context))
                 .thenReturn(validationResults);
-        when(targetPeriodDetailsValidatorService.validate(container, originalContainer))
+        when(cca2BaselineAndTargetsValidatorService.validate(container, originalContainer, LocalDate.of(2025, 1, 1)))
                 .thenReturn(BusinessValidationResult.valid());
         when(underlyingAgreementVariationTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
@@ -129,24 +136,28 @@ class UnderlyingAgreementVariationPayloadValidatorServiceTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(underlyingAgreementVariationReviewDecisionDataValidator.validateFacilityAndGroupReviewDecisions(taskPayload))
                 .thenReturn(BusinessValidationResult.valid());
+        when(underlyingAgreementCca2EndDateValidatorService.validate(Set.of()))
+				.thenReturn(BusinessValidationResult.valid());
 
         // Invoke
         validatorService.validate(requestTask);
 
         // Verify
         verify(underlyingAgreementValidatorService, times(1)).getValidationResults(container, context);
-        verify(targetPeriodDetailsValidatorService, times(1)).validate(container, originalContainer);
+        verify(cca2BaselineAndTargetsValidatorService, times(1)).validate(container, originalContainer, LocalDate.of(2025, 1, 1));
         verify(underlyingAgreementVariationTargetUnitDetailsValidatorService, times(1)).validate(requestTask);
         verify(underlyingAgreementVariationDetailsValidatorService, times(1)).validate(taskPayload);
         verify(underlyingAgreementVariationSubmitFacilitiesContextValidatorService, times(1)).validate(container);
         verify(underlyingAgreementVariationApplicationReasonDataValidator, times(1)).validate(taskPayload);
         verify(underlyingAgreementVariationReviewDecisionDataValidator, times(1))
                 .validateFacilityAndGroupReviewDecisions(taskPayload);
+        verify(underlyingAgreementCca2EndDateValidatorService, times(1)).validate(Set.of());
     }
 
     @Test
     void validate_not_valid() {
         final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder()
+        		.facilities(Set.of())
                 .authorisationAndAdditionalEvidence(AuthorisationAndAdditionalEvidence.builder()
                         .authorisationAttachmentIds(Set.of(UUID.randomUUID()))
                         .build())
@@ -194,7 +205,7 @@ class UnderlyingAgreementVariationPayloadValidatorServiceTest {
         validationResults.add(BusinessValidationResult.invalid(List.of()));
         when(underlyingAgreementValidatorService.getValidationResults(container, context))
                 .thenReturn(validationResults);
-        when(targetPeriodDetailsValidatorService.validate(container, originalContainer))
+        when(cca2BaselineAndTargetsValidatorService.validate(container, originalContainer, LocalDate.of(2025, 1, 1)))
                 .thenReturn(BusinessValidationResult.valid());
         when(underlyingAgreementVariationTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
@@ -209,6 +220,8 @@ class UnderlyingAgreementVariationPayloadValidatorServiceTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(underlyingAgreementVariationReviewDecisionDataValidator.validateFacilityAndGroupReviewDecisions(taskPayload))
                 .thenReturn(BusinessValidationResult.valid());
+        when(underlyingAgreementCca2EndDateValidatorService.validate(Set.of()))
+				.thenReturn(BusinessValidationResult.valid());
 
         // Invoke
         BusinessException businessException = assertThrows(BusinessException.class,
@@ -217,12 +230,13 @@ class UnderlyingAgreementVariationPayloadValidatorServiceTest {
         // Verify
         assertThat(businessException.getErrorCode()).isEqualTo(CcaErrorCode.INVALID_UNDERLYING_AGREEMENT_VARIATION);
         verify(underlyingAgreementValidatorService, times(1)).getValidationResults(container, context);
-        verify(targetPeriodDetailsValidatorService, times(1)).validate(container, originalContainer);
+        verify(cca2BaselineAndTargetsValidatorService, times(1)).validate(container, originalContainer, LocalDate.of(2025, 1, 1));
         verify(underlyingAgreementVariationTargetUnitDetailsValidatorService, times(1)).validate(requestTask);
         verify(underlyingAgreementVariationDetailsValidatorService, times(1)).validate(taskPayload);
         verify(underlyingAgreementVariationSubmitFacilitiesContextValidatorService, times(1)).validate(container);
         verify(underlyingAgreementVariationApplicationReasonDataValidator, times(1)).validate(taskPayload);
         verify(underlyingAgreementVariationReviewDecisionDataValidator, times(1))
                 .validateFacilityAndGroupReviewDecisions(taskPayload);
+        verify(underlyingAgreementCca2EndDateValidatorService, times(1)).validate(Set.of());
     }
 }

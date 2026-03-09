@@ -1,5 +1,3 @@
-import { MiReportResult } from 'cca-api';
+import { MiReportUserDefinedResult } from 'cca-api';
 
-export interface ExtendedMiReportResult extends MiReportResult {
-  results: Array<any>;
-}
+export type ExtendedMiReportResult = MiReportUserDefinedResult;

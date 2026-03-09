@@ -28,21 +28,23 @@
     }
 
     <p class="govuk-label--m govuk-!-margin-bottom-1">{{ additionalInfoLabel() }}</p>
-    <p class="govuk-hint">This text will be included in the official notice</p>
 
     @if (showNoChangesGuidance()) {
       <p class="govuk-hint">
-        Enter a brief description of the changes you have accepted. This will be included in the notification letter
-        sent to the operator.
+        Enter a brief description of the changes you have accepted. This will be included in the official notice
       </p>
 
       <details class="govuk-details" data-module="govuk-details">
         <summary class="govuk-details__summary">
-          <span class="govuk-details__summary-text">What to include in your explanation</span>
+          <span class="govuk-details__summary-text">Description examples</span>
         </summary>
 
         <div class="govuk-details__text">
           <ul class="govuk-list govuk-list--bullet">
+            <li>
+              "We have updated the personal information of the Responsible Person in the Manage your Climate Change
+              Agreements service as set out in this letter."
+            </li>
             <li>
               "We have updated the proportion of eligible energy use at SECT-F00001 from 65% to 75% following your
               notification to us of an updated evaluation."
@@ -66,7 +68,7 @@
 
     <div
       govuk-textarea
-      [hint]="!isAccepted() ? 'This will be included in the official notice' : ''"
+      [hint]="!showNoChangesGuidance() ? 'This will be included in the official notice' : ''"
       formControlName="additionalInformation"
     ></div>
 

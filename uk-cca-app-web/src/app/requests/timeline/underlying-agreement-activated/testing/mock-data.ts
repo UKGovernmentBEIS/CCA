@@ -34,14 +34,10 @@ const officialNotice = {
 };
 
 const activatedPayloadDTO: UnderlyingAgreementActivatedRequestActionPayload = {
-  determination: null,
-  underlyingAgreement: null,
-  ...{
-    defaultContacts: defaultContacts,
-    usersInfo: usersInfo,
-    decisionNotification: decisionNotification,
-    officialNotice: officialNotice,
-  },
+  defaultContacts: defaultContacts,
+  usersInfo: usersInfo,
+  decisionNotification: decisionNotification,
+  officialNotice: officialNotice,
   payloadType: 'UNDERLYING_AGREEMENT_ACTIVATED_PAYLOAD',
   underlyingAgreementActivationDetails: {
     comments: 'comments',

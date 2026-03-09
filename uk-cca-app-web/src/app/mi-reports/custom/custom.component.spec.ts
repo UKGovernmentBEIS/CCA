@@ -1,12 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { BasePage, mockClass } from '@netz/common/testing';
 
-import { MiReportsService } from 'cca-api';
+import { MiReportsUserDefinedService } from 'cca-api';
 
 import { MiReportsExportService } from '../core/mi-reports-export.service';
 import { mockCustomMiReportResult } from '../testing/mock-data';
@@ -17,7 +18,7 @@ describe('CustomComponent', () => {
   let fixture: ComponentFixture<CustomReportComponent>;
   let page: Page;
 
-  const miReportsService = mockClass(MiReportsService);
+  const miReportsUserDefinedService = mockClass(MiReportsUserDefinedService);
   const miReportsExportService = mockClass(MiReportsExportService);
 
   class Page extends BasePage<CustomReportComponent> {
@@ -25,8 +26,12 @@ describe('CustomComponent', () => {
       this.setInputValue('#query', value);
     }
 
-    get queryErrorMessage() {
-      return this.query<HTMLParagraphElement>('p.govuk-error-message');
+    get errorSummary() {
+      return this.query<HTMLElement>('govuk-error-summary');
+    }
+
+    get errorSummaryErrors() {
+      return this.queryAll<HTMLAnchorElement>('govuk-error-summary a');
     }
 
     get formErrorMessage() {
@@ -42,7 +47,8 @@ describe('CustomComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CustomReportComponent, PageHeadingComponent],
       providers: [
-        { provide: MiReportsService, useValue: miReportsService },
+        provideRouter([]),
+        { provide: MiReportsUserDefinedService, useValue: miReportsUserDefinedService },
         { provide: MiReportsExportService, useValue: miReportsExportService },
       ],
     }).compileComponents();
@@ -62,7 +68,7 @@ describe('CustomComponent', () => {
     page.executeButton.click();
     fixture.detectChanges();
 
-    miReportsService.generateCustomReport.mockReturnValueOnce(of(mockCustomMiReportResult));
+    miReportsUserDefinedService.generateCustomReport.mockReturnValueOnce(of(mockCustomMiReportResult));
 
     expect(page.formErrorMessage).toBeTruthy();
 
@@ -70,19 +76,16 @@ describe('CustomComponent', () => {
     page.executeButton.click();
     fixture.detectChanges();
 
-    expect(page.queryErrorMessage).toBeFalsy();
+    expect(page.errorSummary).toBeFalsy();
     expect(page.formErrorMessage).toBeFalsy();
-    expect(miReportsService.generateCustomReport).toHaveBeenCalledTimes(1);
-    expect(miReportsService.generateCustomReport).toHaveBeenCalledWith({
-      reportType: 'CUSTOM',
+    expect(miReportsUserDefinedService.generateCustomReport).toHaveBeenCalledTimes(1);
+    expect(miReportsUserDefinedService.generateCustomReport).toHaveBeenCalledWith({
       sqlQuery: 'select * from account',
     });
-
-    expect(page.queryErrorMessage).toBeFalsy();
   });
 
   it('should display error message when submitting an invalid sql', () => {
-    jest.spyOn(miReportsService, 'generateCustomReport').mockReturnValue(
+    jest.spyOn(miReportsUserDefinedService, 'generateCustomReport').mockReturnValue(
       throwError(
         () =>
           new HttpErrorResponse({
@@ -100,14 +103,12 @@ describe('CustomComponent', () => {
     page.executeButton.click();
     fixture.detectChanges();
 
-    expect(page.formErrorMessage).toBeFalsy();
-    expect(miReportsService.generateCustomReport).toHaveBeenCalledTimes(1);
-    expect(miReportsService.generateCustomReport).toHaveBeenCalledWith({
-      reportType: 'CUSTOM',
+    expect(miReportsUserDefinedService.generateCustomReport).toHaveBeenCalledTimes(1);
+    expect(miReportsUserDefinedService.generateCustomReport).toHaveBeenCalledWith({
       sqlQuery: 'select * from accounts',
     });
 
-    expect(page.queryErrorMessage).toBeTruthy();
-    expect(page.queryErrorMessage.textContent.trim()).toEqual('Custom query could not be executed');
+    expect(page.errorSummary).toBeTruthy();
+    expect(page.errorSummaryErrors[0].textContent.trim()).toEqual('Unable to execute query');
   });
 });

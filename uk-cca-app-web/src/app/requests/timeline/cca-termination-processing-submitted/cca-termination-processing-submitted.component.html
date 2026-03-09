@@ -1,0 +1,17 @@
+<h3 class="govuk-heading-m">Facilities</h3>
+
+@if (facilities?.length) {
+  <govuk-table [columns]="tableColumns" [data]="paginatedItems()">
+    <ng-template let-column="column" let-row="row">
+      {{ row[column.field] }}
+    </ng-template>
+  </govuk-table>
+
+  <cca-pagination
+    [count]="facilities.length"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  />
+}

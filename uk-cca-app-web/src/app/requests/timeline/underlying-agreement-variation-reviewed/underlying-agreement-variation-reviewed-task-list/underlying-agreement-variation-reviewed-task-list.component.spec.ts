@@ -57,7 +57,7 @@ describe('UnderlyingAgreementVariationReviewedTaskListComponent', () => {
     expect(page.sections.map((el) => el.textContent.trim())).toEqual([
       'Describe the changes',
       'Target unit details',
-      'Manage facilities list',
+      'Manage facilities',
       'TP5 (2021-2022)',
       'TP6 (2024)',
       'Authorisation and additional evidence',

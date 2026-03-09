@@ -6,6 +6,9 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { CheckboxComponent, CheckboxesComponent, TextInputComponent } from '@netz/govuk-components';
 import {
   areEntitiesIdentical,
+  FACILITY_CONTACT_DETAILS_FORM,
+  FacilityContactDetailsFormProvider,
+  FacilityContactFormModel,
   FacilityWizardStep,
   filterFieldsWithFalsyValues,
   isFacilityWizardCompleted,
@@ -25,11 +28,6 @@ import { UnderlyingAgreementVariationReviewSavePayload } from 'cca-api';
 
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../../transform';
 import { deleteFacilityDecision, resetDetermination } from '../../../../utils';
-import {
-  FACILITY_CONTACT_DETAILS_FORM,
-  facilityContactDetailsFormProvider,
-  FacilityContactFormModel,
-} from './facility-contact-details-form.provider';
 
 @Component({
   selector: 'cca-facility-contact-details',
@@ -44,7 +42,7 @@ import {
     PhoneInputComponent,
     RouterLink,
   ],
-  providers: [facilityContactDetailsFormProvider],
+  providers: [FacilityContactDetailsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityContactDetailsComponent {

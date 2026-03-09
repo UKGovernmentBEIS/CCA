@@ -66,7 +66,7 @@ export class AdditionalInfoComponent {
   protected readonly additionalInfoLabel = computed(() => {
     const optionalSuffix =
       (this.isAccepted() && this.variationImpactsAgreementValue() === true) || !this.isAccepted() ? ' (optional)' : '';
-    return `Add any additional information${optionalSuffix}`;
+    return `Additional information${optionalSuffix}`;
   });
 
   protected readonly downloadUrl = generateDownloadUrl(

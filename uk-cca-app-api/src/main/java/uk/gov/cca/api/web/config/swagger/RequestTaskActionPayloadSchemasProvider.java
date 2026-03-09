@@ -11,6 +11,7 @@ import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrective
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataGenerateRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadProcessingRequestTaskActionPayload;
@@ -23,6 +24,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.submit.domain.UnderlyingAgreementSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.regulatorledsubmit.domain.UnderlyingAgreementVariationRegulatorLedSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationSaveFacilityReviewGroupDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationSaveReviewDeterminationRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationSaveReviewGroupDecisionRequestTaskActionPayload;
@@ -79,6 +81,7 @@ public class RequestTaskActionPayloadSchemasProvider extends SwaggerSchemasAbstr
         addResolvedShemas(UnderlyingAgreementVariationSaveReviewDeterminationRequestTaskActionPayload.class.getSimpleName(), UnderlyingAgreementVariationSaveReviewDeterminationRequestTaskActionPayload.class);
         addResolvedShemas(UnderlyingAgreementVariationActivationSaveRequestTaskActionPayload.class.getSimpleName(), UnderlyingAgreementVariationActivationSaveRequestTaskActionPayload.class);
         addResolvedShemas(UnderlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload.class.getSimpleName(), UnderlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload.class);
+        addResolvedShemas(UnderlyingAgreementVariationRegulatorLedSaveRequestTaskActionPayload.class.getSimpleName(), UnderlyingAgreementVariationRegulatorLedSaveRequestTaskActionPayload.class);
 
         // Admin Termination
         addResolvedShemas(AdminTerminationSaveRequestTaskActionPayload.class.getSimpleName(), AdminTerminationSaveRequestTaskActionPayload.class);
@@ -104,6 +107,9 @@ public class RequestTaskActionPayloadSchemasProvider extends SwaggerSchemasAbstr
         addResolvedShemas(AuditDetailsCorrectiveActionsSubmitSaveRequestTaskActionPayload.class.getSimpleName(), AuditDetailsCorrectiveActionsSubmitSaveRequestTaskActionPayload.class);
         addResolvedShemas(AuditTrackCorrectiveActionsSaveRequestTaskActionPayload.class.getSimpleName(), AuditTrackCorrectiveActionsSaveRequestTaskActionPayload.class);
         addResolvedShemas(AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload.class.getSimpleName(), AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload.class);
+
+        // Non Compliance
+        addResolvedShemas(NonComplianceDetailsSubmitSaveRequestTaskActionPayload.class.getSimpleName(), NonComplianceDetailsSubmitSaveRequestTaskActionPayload.class);
     }
 
 }

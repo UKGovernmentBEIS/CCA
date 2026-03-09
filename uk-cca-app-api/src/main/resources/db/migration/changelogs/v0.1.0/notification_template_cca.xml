@@ -895,15 +895,6 @@ This is an automatic email - please do not reply to this address.'
         </customChange>
     </changeSet>
 
-    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_template_with_workflow_data" author="P70383">
-        <comment>Update AIT_L001_Administrative_Termination.docx</comment>
-        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
-            <param name="competentAuthority" value="ENGLAND"/>
-            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_ACCEPTED"/>
-            <param name="fileDocumentName" value="CR_L002_Variation_Approved.docx"/>
-        </customChange>
-    </changeSet>
-
     <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_VARIATION_REJECTED_template_with_workflow_data" author="P70383">
         <comment>Update AIT_L001_Administrative_Termination.docx</comment>
         <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
@@ -977,14 +968,6 @@ This is an automatic email - please do not reply to this address.'
             <param name="fileDocumentName" value="CR_L001_Variation_Refused.docx"/>
         </customChange>
     </changeSet>
-    <changeSet id="0_1_0_update_Variation_Approved_document_info" author="P70628">
-        <comment>Update CR_L002_Variation_Approved.docx</comment>
-        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
-            <param name="competentAuthority" value="ENGLAND"/>
-            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_ACCEPTED"/>
-            <param name="fileDocumentName" value="CR_L002_Variation_Approved.docx"/>
-        </customChange>
-    </changeSet>
 
     <changeSet id="0_1_0_update_Withdrawal_of_termination_letter_document_info" author="P70628">
         <comment>Update Withdrawal of termination letter.docx</comment>
@@ -992,15 +975,6 @@ This is an automatic email - please do not reply to this address.'
             <param name="competentAuthority" value="ENGLAND"/>
             <param name="type" value="ADMIN_TERMINATION_REGULATORY_WITHDRAWN"/>
             <param name="fileDocumentName" value="Withdrawal of termination letter.docx"/>
-        </customChange>
-    </changeSet>
-
-    <changeSet id="0_1_0_update_Variation_Approved_documents_tu_identifier" author="vourdoukasd@unisystems.gr">
-        <comment>Update CR_L002_Variation_Approved.docx</comment>
-        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
-            <param name="competentAuthority" value="ENGLAND"/>
-            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_ACCEPTED"/>
-            <param name="fileDocumentName" value="CR_L002_Variation_Approved.docx"/>
         </customChange>
     </changeSet>
 
@@ -1112,15 +1086,6 @@ This is an automatic email - please do not reply to this address.'
             <param name="competentAuthority" value="ENGLAND"/>
             <param name="type" value="REPORTING_SPREADSHEETS_DOWNLOAD_TP6"/>
             <param name="fileDocumentName" value="Consolidated target reporting template (blank).xlsx"/>
-        </customChange>
-    </changeSet>
-
-    <changeSet id="0_1_0_update_Variation_Approved_documents_template_amendment" author="vourdoukasd@unisystems.gr">
-        <comment>Update CR_L002_Variation_Approved.docx</comment>
-        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
-            <param name="competentAuthority" value="ENGLAND"/>
-            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_ACCEPTED"/>
-            <param name="fileDocumentName" value="CR_L002_Variation_Approved.docx"/>
         </customChange>
     </changeSet>
 
@@ -1686,15 +1651,6 @@ This is an automatic email - please do not reply to this address.')
         </customChange>
     </changeSet>
     
-    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_VARIATION_ACCEPTED_document_template_sector_variables" author="apostolouk@unisystems.gr">
-        <comment>Update sector variables for CR_L002_Variation_Approved.docx</comment>
-        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
-            <param name="competentAuthority" value="ENGLAND"/>
-            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_ACCEPTED"/>
-            <param name="fileDocumentName" value="CR_L002_Variation_Approved.docx"/>
-        </customChange>
-    </changeSet>
-    
     <changeSet id="0_1_0_update_SECTOR_MOA_document_template_sector_variables" author="apostolouk@unisystems.gr">
         <comment>Update sector variables for SC_L002_Sector_MoA.docx</comment>
         <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
@@ -2126,4 +2082,27 @@ This is an automatic email - please do not reply to this address.')
         </customChange>
     </changeSet>
 
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_CCA3_activation_date" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_CCA3"/>
+            <param name="fileDocumentName" value="CCA3 agreement.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_underlying_agreement_variation_accepted_notice_template_with_reulator_led" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_ACCEPTED"/>
+            <param name="fileDocumentName" value="CCA3 variation proposed agreement cover letter.docx"/>
+        </customChange>
+    </changeSet>
+
+    <changeSet id="0_1_0_update_UNDERLYING_AGREEMENT_VARIATION_COMPLETED_template_with_regulator_led" author="P70383">
+        <customChange class="uk.gov.netz.api.documenttemplate.initialdata.UpdateDocumentTemplateFileTaskChange">
+            <param name="competentAuthority" value="ENGLAND"/>
+            <param name="type" value="UNDERLYING_AGREEMENT_VARIATION_COMPLETED"/>
+            <param name="fileDocumentName" value="CCA3 variation acknowledgement letter.docx"/>
+        </customChange>
+    </changeSet>
 </databaseChangeLog>

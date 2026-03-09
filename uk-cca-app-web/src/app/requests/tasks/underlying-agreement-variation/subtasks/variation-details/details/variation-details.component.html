@@ -6,33 +6,24 @@
   data-testid="variation-details-form"
 >
   <div class="govuk-!-width-two-thirds">
-    <p>Select the changes that apply to this variation</p>
+    <p>Select the type(s) of changes that apply to this variation</p>
     <div govukInsetText>
-      <p>Any changes to items must be made through the task list.</p>
-      <p>You can add or exclude a facility or change its name in the Manage facilities section.</p>
       <p>
-        If you are making a change to the eligibility percentage, the operator may need to agree to a new underlying
-        agreement, even if there are no changes to the original underlying agreement.
+        Any changes to items must be made through the task list.<br />You can add or exclude a facility or change its
+        name in the Manage facilities section.
       </p>
     </div>
 
-    <h2 class="govuk-heading-m">Target unit and facility changes</h2>
-    <div formControlName="facilityChanges" govuk-checkboxes>
-      @for (option of facilityChanges; track option) {
-        <govuk-checkbox [value]="option" [label]="option | variationChanges" />
-      }
-    </div>
-
-    <h2 class="govuk-heading-m">Amend the baseline and target due to</h2>
-    <div formControlName="baselineChanges" govuk-checkboxes>
-      @for (option of baselineChanges; track option) {
+    <h2 class="govuk-heading-m">Changes that usually require the operator to provide their assent</h2>
+    <div formControlName="requireOperatorAssent" govuk-checkboxes>
+      @for (option of requireOperatorAssent; track option) {
         <govuk-checkbox [value]="option.value" [label]="option.value | variationChanges" [hint]="option?.hint" />
       }
     </div>
 
-    <h2 class="govuk-heading-m">Amend the target currency to</h2>
-    <div formControlName="targetCurrencyChanges" govuk-checkboxes>
-      @for (option of targetCurrencyChanges; track option) {
+    <h2 class="govuk-heading-m">Changes that don't usually require the operator to provide their assent</h2>
+    <div formControlName="dontRequireOperatorAssent" govuk-checkboxes>
+      @for (option of dontRequireOperatorAssent; track option) {
         <govuk-checkbox [value]="option" [label]="option | variationChanges" />
       }
     </div>
@@ -46,7 +37,7 @@
 
     <div
       govuk-textarea
-      label="Explain what you are changing and the reason for the changes"
+      label="Explain in more detail what you are changing and the reason for the changes"
       formControlName="reason"
     ></div>
   </div>

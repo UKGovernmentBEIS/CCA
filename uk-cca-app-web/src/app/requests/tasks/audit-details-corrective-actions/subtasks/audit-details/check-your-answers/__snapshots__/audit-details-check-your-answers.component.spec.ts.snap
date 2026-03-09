@@ -46,7 +46,7 @@ exports[`AuditDetailsCheckYourAnswersComponent should display the correct conten
             govuksummarylistrowvalue=""
           >
             <span>
-              Desk-based interview
+              Desk-based audit
             </span>
           </dd>
           <dd
@@ -159,7 +159,7 @@ exports[`AuditDetailsCheckYourAnswersComponent should display the correct conten
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Annotated site plan
+            Audit documents
           </dt>
           <dd
             class="govuk-summary-list__value"

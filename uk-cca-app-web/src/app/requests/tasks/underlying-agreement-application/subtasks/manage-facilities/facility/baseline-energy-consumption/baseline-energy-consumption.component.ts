@@ -7,6 +7,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { RadioComponent, RadioOptionComponent, TextInputComponent } from '@netz/govuk-components';
 import {
+  BaselineEnergyDraftService,
   calculateFixedEnergy,
   calculateOtherYearsVariableEnergy,
   calculateTotalEnergy,
@@ -60,6 +61,7 @@ export class BaselineEnergyConsumptionComponent {
   private readonly router = inject(Router);
   private readonly tasksApiService = inject(TasksApiService);
   private readonly requestTaskStore = inject(RequestTaskStore);
+  private readonly draftService = inject(BaselineEnergyDraftService);
 
   protected readonly form = inject<FacilityBaselineEnergyConsumptionFormModel>(
     FACILITY_BASELINE_ENERGY_CONSUMPTION_FORM,
@@ -85,9 +87,7 @@ export class BaselineEnergyConsumptionComponent {
     underlyingAgreementQuery.selectFacilityBaselineEnergyConsumption(this.facilityIndex),
   );
 
-  protected readonly products = computed(
-    () => this.facilityEnergyConsumption()?.variableEnergyConsumptionDataByProduct,
-  );
+  protected readonly products = computed(() => this.draftService.draftSignal()?.products ?? []);
 
   private readonly hasVariableEnergyValue = toSignal(this.form.controls.hasVariableEnergy.valueChanges, {
     initialValue: this.form.value.hasVariableEnergy,
@@ -167,12 +167,15 @@ export class BaselineEnergyConsumptionComponent {
       requestTaskQuery.selectRequestTaskPayload,
     )() as UnderlyingAgreementSubmitRequestTaskPayload;
 
+    // Get products from draft service
+    const draftProducts = this.draftService.draftSignal()?.products ?? [];
+
     const actionPayload = toUnderlyingAgreementSavePayload(payload);
     const updatedPayload = updateFacilityBaselineEnergyConsumption(
       actionPayload,
       this.form,
       this.facilityId,
-      this.form.controls.products.value ?? this.products(),
+      draftProducts,
     );
 
     const currentSectionsCompleted = this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)();
@@ -184,6 +187,9 @@ export class BaselineEnergyConsumptionComponent {
     const dto = createRequestTaskActionProcessDTO(requestTaskId, updatedPayload, sectionsCompleted);
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
+      // Clear draft on successful submission
+      this.draftService.clear();
+
       const facility = payload.underlyingAgreement.facilities.find((f) => f.facilityId === this.facilityId);
       if (isFacilityWizardCompleted(facility)) {
         this.router.navigate(['../check-your-answers'], { relativeTo: this.activatedRoute });
@@ -194,35 +200,14 @@ export class BaselineEnergyConsumptionComponent {
   }
 
   onAddProduct() {
-    const currentState = this.requestTaskStore.state;
-
-    const updatedState = produce(currentState, (draft) => {
-      const payload = draft.requestTaskItem.requestTask.payload as UnderlyingAgreementSubmitRequestTaskPayload;
-      const facilities = payload?.underlyingAgreement?.facilities;
-      const facilityIndex = facilities.findIndex((facility) => facility.facilityId === this.facilityId);
-      if (facilityIndex === -1) return;
-
-      const baselineAndTargets = facilities[facilityIndex].cca3BaselineAndTargets;
-
-      const formValue = this.form.getRawValue();
-      const existingBaselineEnergy = baselineAndTargets?.facilityBaselineEnergyConsumption;
-
-      const totalFixedEnergyValue = formValue.totalFixedEnergy ?? existingBaselineEnergy?.totalFixedEnergy ?? '';
-
-      const products = this.products() ?? existingBaselineEnergy?.variableEnergyConsumptionDataByProduct ?? [];
-
-      baselineAndTargets.facilityBaselineEnergyConsumption = {
-        ...existingBaselineEnergy,
-        totalFixedEnergy: String(totalFixedEnergyValue),
-        // hard coded values are used here because the user can never add a product without
-        // hasVariableEnergy: true && BY_PRODUCT being selected.
-        hasVariableEnergy: true,
-        variableEnergyType: 'BY_PRODUCT',
-        variableEnergyConsumptionDataByProduct: products,
-      };
+    // Save current form state to draft service before navigation
+    // Include hasVariableEnergy and variableEnergyType to preserve user's selections
+    this.draftService.saveFormSnapshot({
+      totalFixedEnergy: this.form.value.totalFixedEnergy,
+      hasVariableEnergy: this.form.value.hasVariableEnergy,
+      variableEnergyType: this.form.value.variableEnergyType,
     });
-
-    this.requestTaskStore.setState(updatedState);
+    // Navigation handled by routerLink in template
   }
 }
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.cca.api.common.domain.SchemeVersion;
-import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
+import uk.gov.cca.api.facility.domain.dto.FacilityBusinessIdDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.web.orchestrator.facility.service.FacilityIdGeneratorServiceOrchestrator;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
@@ -42,12 +42,12 @@ public class FacilityController {
 
     @GetMapping(path = "/generate/{accountId}")
     @Operation(summary = "Get the next facility business id per sector association id")
-    @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = FacilityDTO.class))})
+    @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = FacilityBusinessIdDTO.class))})
     @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#accountId")
-    public ResponseEntity<FacilityDTO> generateFacilityBusinessId(
+    public ResponseEntity<FacilityBusinessIdDTO> generateFacilityBusinessId(
             @Parameter(hidden = true) AppUser appUser,
             @PathVariable("accountId") @Parameter(description = "The account id") Long accountId) {
         return new ResponseEntity<>(facilityIdGeneratorServiceOrchestrator.generateFacilityBusinessId(accountId), HttpStatus.OK);

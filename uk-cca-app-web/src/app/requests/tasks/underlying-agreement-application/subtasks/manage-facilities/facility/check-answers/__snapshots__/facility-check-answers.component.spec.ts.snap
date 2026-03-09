@@ -1077,7 +1077,7 @@ exports[`FacilityCheckAnswersComponent should display facility details when data
           class="govuk-summary-list__key"
           govuksummarylistrowkey=""
         >
-          Energy or carbon units used by the target unit
+          Energy or carbon units used by the facility
         </dt>
         <dd
           class="govuk-summary-list__value"

@@ -1,0 +1,17 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  [caption]="'Exclude ' + facility()?.facilityDetails?.name + ' facility'"
+  heading="Set exclusion date"
+  data-testid="exclude-facility-form"
+  submitText="Save and continue"
+>
+  <div
+    formControlName="excludedDate"
+    govuk-date-input
+    hint="Enter the date that the facility was excluded from your agreement"
+  ></div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" [routerLink]="['../../']"> Return to: Manage facilities list </a>

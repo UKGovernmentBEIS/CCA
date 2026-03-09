@@ -32,7 +32,7 @@ export function getAllUnderlyingAgreementVariationSections(una: UnderlyingAgreem
         {
           status: '',
           link: `${routePrefix}/manage-facilities`,
-          linkText: 'Manage facilities list',
+          linkText: 'Manage facilities',
         },
       ],
     },

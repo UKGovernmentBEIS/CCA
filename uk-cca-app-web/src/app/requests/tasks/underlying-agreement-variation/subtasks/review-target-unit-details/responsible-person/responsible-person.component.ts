@@ -8,6 +8,7 @@ import {
   RESPONSIBLE_PERSON_FORM,
   ResponsiblePersonFormProvider,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
+  TaskItemStatus,
   TasksApiService,
   underlyingAgreementQuery,
 } from '@requests/common';
@@ -15,7 +16,10 @@ import { ResponsiblePersonInputComponent, WizardStepComponent } from '@shared/co
 import { ResponsiblePersonFormModel } from '@shared/components';
 import { produce } from 'immer';
 
-import { UnderlyingAgreementVariationSubmitRequestTaskPayload } from 'cca-api';
+import {
+  UnderlyingAgreementVariationApplySavePayload,
+  UnderlyingAgreementVariationSubmitRequestTaskPayload,
+} from 'cca-api';
 
 import { createRequestTaskActionProcessDTO, toUnderlyingAgreementVariationSavePayload } from '../../../transform';
 import { extractReviewProps } from '../../../utils';
@@ -59,32 +63,12 @@ export default class ResponsiblePersonComponent {
     )() as UnderlyingAgreementVariationSubmitRequestTaskPayload;
 
     const actionPayload = toUnderlyingAgreementVariationSavePayload(payload);
-
-    // Update the responsible person with form data
-    const formValue = this.form.getRawValue();
-
-    const updatedPayload = produce(actionPayload, (draft) => {
-      draft.underlyingAgreementTargetUnitDetails.responsiblePersonDetails = {
-        firstName: formValue.firstName,
-        lastName: formValue.lastName,
-        email: formValue.email,
-        address: formValue.sameAddress?.[0]
-          ? draft.underlyingAgreementTargetUnitDetails.operatorAddress // Use operator address if same
-          : {
-              line1: formValue.address.line1,
-              line2: formValue.address.line2,
-              city: formValue.address.city,
-              county: formValue.address.county,
-              postcode: formValue.address.postcode,
-              country: formValue.address.country,
-            },
-      };
-    });
+    const updatedPayload = updateResponsiblePerson(actionPayload, this.form);
 
     const currentSectionsCompleted = this.store.select(underlyingAgreementQuery.selectSectionsCompleted)() || {};
 
     const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
-      draft[REVIEW_TARGET_UNIT_DETAILS_SUBTASK] = 'IN_PROGRESS';
+      draft[REVIEW_TARGET_UNIT_DETAILS_SUBTASK] = TaskItemStatus.IN_PROGRESS;
     });
 
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
@@ -95,4 +79,29 @@ export default class ResponsiblePersonComponent {
       this.router.navigate(['../check-your-answers'], { relativeTo: this.route });
     });
   }
+}
+
+function updateResponsiblePerson(
+  payload: UnderlyingAgreementVariationApplySavePayload,
+  form: FormGroup<ResponsiblePersonFormModel>,
+): UnderlyingAgreementVariationApplySavePayload {
+  const formValue = form.getRawValue();
+
+  return produce(payload, (draft) => {
+    draft.underlyingAgreementTargetUnitDetails.responsiblePersonDetails = {
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      email: formValue.email,
+      address: formValue.sameAddress?.[0]
+        ? draft.underlyingAgreementTargetUnitDetails.operatorAddress // Use operator address if same
+        : {
+            line1: formValue.address.line1,
+            line2: formValue.address.line2,
+            city: formValue.address.city,
+            county: formValue.address.county,
+            postcode: formValue.address.postcode,
+            country: formValue.address.country,
+          },
+    };
+  });
 }

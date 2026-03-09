@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
 import {
+  BaselineEnergyDraftService,
   FacilityBaselineEnergyConsumptionFormModel,
   facilityBaselineEnergyProductsValidator,
   normaliseNumber,
@@ -20,54 +21,64 @@ export const FACILITY_BASELINE_ENERGY_CONSUMPTION_FORM = new InjectionToken<Faci
 
 export const FacilityBaselineEnergyConsumptionFormProvider: Provider = {
   provide: FACILITY_BASELINE_ENERGY_CONSUMPTION_FORM,
-  deps: [ActivatedRoute, FormBuilder, RequestTaskStore],
-  useFactory: (activatedRoute: ActivatedRoute, fb: FormBuilder, requestTaskStore: RequestTaskStore) => {
+  deps: [ActivatedRoute, FormBuilder, RequestTaskStore, BaselineEnergyDraftService],
+  useFactory: (
+    activatedRoute: ActivatedRoute,
+    fb: FormBuilder,
+    requestTaskStore: RequestTaskStore,
+    draftService: BaselineEnergyDraftService,
+  ) => {
     const facilityId = activatedRoute.snapshot.params.facilityId;
     const una = requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreement)();
     const facilityIndex = una.facilities?.findIndex((facility) => facility.facilityId === facilityId) ?? -1;
 
-    const baselineEnergyConsumption = requestTaskStore.select(
+    const storeData = requestTaskStore.select(
       underlyingAgreementQuery.selectFacilityBaselineEnergyConsumption(facilityIndex),
     )();
 
-    const products = baselineEnergyConsumption?.variableEnergyConsumptionDataByProduct ?? [];
+    // Initialize draft from store (no-op if already initialized)
+    draftService.initializeFromStore(storeData);
+    const draft = draftService.draftSignal();
 
     const productsControl = fb.control<FacilityBaselineEnergyConsumption['variableEnergyConsumptionDataByProduct']>(
-      products,
+      draft?.products ?? [],
       {
-        validators: [],
         updateOn: 'change',
       },
     );
 
+    const totalFixedEnergyValue = draft?.totalFixedEnergy == null ? null : normaliseNumber(draft.totalFixedEnergy);
+
     const form = fb.group(
       {
-        totalFixedEnergy: fb.control(normaliseNumber(baselineEnergyConsumption?.totalFixedEnergy), {
+        // Fields that survive navigation - read from draft
+        totalFixedEnergy: fb.control(totalFixedEnergyValue, {
           validators: [
             GovukValidators.required('Enter the total fixed energy consumption'),
             GovukValidators.maxDecimalsValidator(7),
           ],
           updateOn: 'change',
         }),
-        hasVariableEnergy: fb.control(baselineEnergyConsumption?.hasVariableEnergy ?? null, {
+        hasVariableEnergy: fb.control(draft?.hasVariableEnergy ?? null, {
           validators: [GovukValidators.required('Select yes if the facility has variable energy consumption')],
           updateOn: 'change',
         }),
-        baselineVariableEnergy: fb.control(normaliseNumber(baselineEnergyConsumption?.baselineVariableEnergy), {
+        variableEnergyType: fb.control(draft?.variableEnergyType ?? null, {
+          updateOn: 'change',
+        }),
+        // TOTALS-specific fields - read from store (don't need to survive navigation)
+        baselineVariableEnergy: fb.control(normaliseNumber(storeData?.baselineVariableEnergy), {
           validators: [GovukValidators.maxDecimalsValidator(7)],
           updateOn: 'change',
         }),
-        totalThroughput: fb.control(normaliseNumber(baselineEnergyConsumption?.totalThroughput), {
+        totalThroughput: fb.control(normaliseNumber(storeData?.totalThroughput), {
           validators: [
             GovukValidators.maxDecimalsValidator(7),
             GovukValidators.positiveNumber('Enter a number greater than zero'),
           ],
           updateOn: 'change',
         }),
-        throughputUnit: fb.control(baselineEnergyConsumption?.throughputUnit ?? null, {
-          updateOn: 'change',
-        }),
-        variableEnergyType: fb.control(baselineEnergyConsumption?.variableEnergyType ?? null, {
+        throughputUnit: fb.control(storeData?.throughputUnit ?? null, {
           updateOn: 'change',
         }),
         products: productsControl,
@@ -105,6 +116,11 @@ export const FacilityBaselineEnergyConsumptionFormProvider: Provider = {
       form.controls.variableEnergyType.updateValueAndValidity({ emitEvent: false });
       form.controls.totalThroughput.updateValueAndValidity();
       form.controls.throughputUnit.updateValueAndValidity();
+    });
+
+    // Sync totalFixedEnergy changes to draft service
+    form.controls.totalFixedEnergy.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
+      draftService.updateTotalFixedEnergy(value?.toString() ?? null);
     });
 
     // React to variableEnergyType changes

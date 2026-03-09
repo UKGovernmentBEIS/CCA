@@ -1,47 +1,62 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
+import { catchError, of, take } from 'rxjs';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
+  CompaniesHouseDetailsComponent,
+  CompaniesHouseState,
   toVariationReviewTargetUnitDetailsSummaryDataWithDecision,
   transformAccountReferenceData,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
+import { transformAddress } from '@shared/pipes';
 import { generateDownloadUrl } from '@shared/utils';
+
+import { CompaniesInformationService, CompanyProfileDTO } from 'cca-api';
 
 @Component({
   selector: 'cca-una-summary-target-unit-details',
-  template: `
-    <div>
-      <netz-page-heading>Target unit details</netz-page-heading>
-
-      <ng-template #contentTpl let-showOriginal="showOriginal">
-        <cca-summary [data]="showOriginal ? summaryDataOriginal : summaryDataCurrent" />
-      </ng-template>
-
-      <cca-highlight-diff>
-        <ng-container slot="previous" *ngTemplateOutlet="contentTpl; context: { showOriginal: true }" />
-        <ng-container slot="current" *ngTemplateOutlet="contentTpl; context: { showOriginal: false }" />
-      </cca-highlight-diff>
-    </div>
-
-    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-    <netz-return-to-task-or-action-page />
-  `,
+  templateUrl: './review-target-unit-details-summary.component.html',
   imports: [
     PageHeadingComponent,
     SummaryComponent,
     ReturnToTaskOrActionPageComponent,
     HighlightDiffComponent,
     NgTemplateOutlet,
+    ReactiveFormsModule,
+    CompaniesHouseDetailsComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReviewTargetUnitDetailsSummaryComponent {
+export class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
   private readonly requestTaskStore = inject(RequestTaskStore);
+  private readonly companiesInformationService = inject(CompaniesInformationService);
+
+  protected readonly toggleCompaniesHouseDetailsCtrl = new FormControl<boolean>(false);
+  protected readonly toggleCompaniesHouseDetails = toSignal(this.toggleCompaniesHouseDetailsCtrl.valueChanges, {
+    initialValue: false,
+  });
+
+  protected readonly mainColumnClass = computed(() =>
+    this.toggleCompaniesHouseDetails() ? 'govuk-grid-column-two-thirds' : 'govuk-grid-column-full',
+  );
+
+  private readonly companiesHouseDetailsResponse = signal<CompanyProfileDTO | null>(null);
+
+  protected readonly companiesHouseState = computed<CompaniesHouseState>(() => {
+    const response = this.companiesHouseDetailsResponse();
+    return {
+      details: typeof response === 'object' ? response : null,
+      address: typeof response === 'object' ? transformAddress(response?.address).join('\n') : null,
+    };
+  });
 
   private readonly downloadUrl = generateDownloadUrl(
     this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
@@ -55,7 +70,11 @@ export class ReviewTargetUnitDetailsSummaryComponent {
   private readonly originalTargetUnitDetails = transformAccountReferenceData(this.accountReferenceData);
   private readonly currentTargetUnitDetails = this.requestTaskStore.select(
     underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails,
-  )();
+  );
+
+  protected readonly tuDetails = computed(() =>
+    this.currentTargetUnitDetails() ? this.currentTargetUnitDetails() : this.originalTargetUnitDetails,
+  );
 
   private readonly decision = this.requestTaskStore.select(
     underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'),
@@ -70,10 +89,26 @@ export class ReviewTargetUnitDetailsSummaryComponent {
   );
 
   protected readonly summaryDataCurrent = toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
-    this.currentTargetUnitDetails,
+    this.currentTargetUnitDetails(),
     this.decision,
     this.attachments,
     this.downloadUrl,
     this.isEditable,
   );
+
+  ngOnInit() {
+    if (this.tuDetails().companyRegistrationNumber) {
+      this.companiesInformationService
+        .getCompanyProfileByRegistrationNumber(this.tuDetails().companyRegistrationNumber)
+        .pipe(
+          take(1),
+          catchError(() => of(null)),
+        )
+        .subscribe((res) => {
+          if (typeof res === 'object') {
+            this.companiesHouseDetailsResponse.set(res);
+          }
+        });
+    }
+  }
 }

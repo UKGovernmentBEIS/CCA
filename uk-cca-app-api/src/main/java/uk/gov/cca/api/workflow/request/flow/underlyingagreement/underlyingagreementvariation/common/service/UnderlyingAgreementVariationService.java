@@ -11,7 +11,6 @@ import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataCreationDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataUpdateDTO;
 import uk.gov.cca.api.facility.service.FacilityDataUpdateService;
-import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
@@ -20,16 +19,15 @@ import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.UnderlyingAgreementFacilityCertificationTransferService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.transform.UnderlyingAgreementAccountReferenceDataMapper;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationFacilityReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.netz.api.account.service.AccountSearchAdditionalKeywordService;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -47,28 +45,32 @@ public class UnderlyingAgreementVariationService {
 
     public void updateFacilitiesAndAccount(final Long accountId, final UnderlyingAgreementContainer unaContainerFinal,
                                            final UnderlyingAgreementVariationRequestPayload requestPayload) {
-        final UnderlyingAgreement proposedUnderlyingAgreement = requestPayload
-                .getUnderlyingAgreementProposed().getUnderlyingAgreement();
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = requestPayload
                 .getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails();
 
         // Save facility data
-        saveFacilityData(accountId, requestPayload.getFacilitiesReviewGroupDecisions(), proposedUnderlyingAgreement.getFacilities());
+        saveFacilityData(accountId, requestPayload);
 
         // Save search keywords
         saveKeywords(accountId, targetUnitDetails, unaContainerFinal);
 
-        final TargetUnitAccountUpdateDTO targetUnitAccountUpdateDTO = ACCOUNT_MAPPER.toTargetUnitAccountUpdateDTO(targetUnitDetails);
-
         // Update account status and details
+        final TargetUnitAccountUpdateDTO targetUnitAccountUpdateDTO = ACCOUNT_MAPPER.toTargetUnitAccountUpdateDTO(targetUnitDetails);
         targetUnitAccountUpdateService.updateTargetUnitAccountUponUnderlyingAgreementVariation(accountId, targetUnitAccountUpdateDTO);
     }
 
-    private void saveFacilityData(final Long accountId,
-                                  final Map<String, UnderlyingAgreementVariationFacilityReviewDecision> facilitiesReviewGroupDecisions,
-                                  final Set<Facility> facilities) {
+    private void saveFacilityData(final Long accountId, final UnderlyingAgreementVariationRequestPayload requestPayload) {
+        final Set<Facility> facilities = requestPayload.getUnderlyingAgreementProposed()
+                .getUnderlyingAgreement().getFacilities();
+
+        final Map<String, LocalDate> facilityChargeStartDateMap = RoleTypeConstants.REGULATOR.equals(requestPayload.getInitiatorRoleType())
+                ? new HashMap<>(requestPayload.getRegulatorLedFacilityChargeStartDateMap())
+                : requestPayload.getFacilitiesReviewGroupDecisions().entrySet().stream()
+                    .filter(entry -> Boolean.TRUE.equals(entry.getValue().getChangeStartDate()))
+                    .collect(HashMap::new, (map, entry) -> map.put(entry.getKey(), entry.getValue().getStartDate()), HashMap::putAll);
+
         // Save new facilities
-        saveFacilityDataForNewFacilities(accountId, facilities, facilitiesReviewGroupDecisions);
+        saveFacilityDataForNewFacilities(accountId, facilities, facilityChargeStartDateMap);
 
         // Update existing facilities
         updateFacilityDataForExistingFacilities(facilities);
@@ -84,12 +86,11 @@ public class UnderlyingAgreementVariationService {
         accountSearchAdditionalKeywordService.storeKeywordsForAccount(accountId, searchKeywordsForAccount);
     }
 
-    private void saveFacilityDataForNewFacilities(final Long accountId, final Set<Facility> facilities, final Map<String, UnderlyingAgreementVariationFacilityReviewDecision> facilitiesReviewGroupDecisions) {
+    private void saveFacilityDataForNewFacilities(final Long accountId, final Set<Facility> facilities, Map<String, LocalDate> facilityChargeStartDateMap) {
         Map<FacilityItem, LocalDate> chargeStartDateByNewFacilityItem = facilities.stream()
                 .filter(facility -> facility.getStatus().equals(FacilityStatus.NEW))
                 .map(Facility::getFacilityItem)
-                .collect(HashMap::new, (map, facility) -> map.put(facility, Optional.ofNullable(facilitiesReviewGroupDecisions.get(facility.getFacilityId()))
-                        .map(UnderlyingAgreementVariationFacilityReviewDecision::getStartDate).orElse(null)), HashMap::putAll);
+                .collect(HashMap::new, (map, facility) -> map.put(facility, facilityChargeStartDateMap.get(facility.getFacilityId())), HashMap::putAll);
 
         // Create new facilities
         if (!chargeStartDateByNewFacilityItem.isEmpty()) {

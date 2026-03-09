@@ -3,10 +3,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { PageHeadingComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { StatusTagColorPipe, StatusTagTextPipe, TASK_STATUS_TAG_MAP } from '@netz/common/pipes';
-import { RequestTaskStore } from '@netz/common/store';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   ButtonDirective,
   GovukSelectOption,
@@ -47,6 +47,7 @@ const FILTERS_AND_PAGINATION_LIMIT = 10;
     UtilityPanelComponent,
     SelectComponent,
     TextInputComponent,
+    ReturnToTaskOrActionPageComponent,
   ],
   providers: [{ provide: TASK_STATUS_TAG_MAP, useValue: taskStatusTagMap }, StatusPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,6 +59,7 @@ export class ManageFacilitiesComponent {
   private readonly statusPipe = inject(StatusPipe);
 
   protected readonly manageFacilities = this.store.select(underlyingAgreementReviewQuery.selectFacilitiesItems);
+  protected readonly isEditable = this.store.select(requestTaskQuery.selectIsEditable);
 
   protected readonly filtersAndPaginationLimit = FILTERS_AND_PAGINATION_LIMIT;
 

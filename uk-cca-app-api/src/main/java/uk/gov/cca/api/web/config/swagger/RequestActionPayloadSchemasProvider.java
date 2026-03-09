@@ -10,12 +10,14 @@ import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.TP6B
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.run.domain.BuyOutSurplusRunCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.processing.domain.Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.cca2termination.processing.domain.Cca2TerminationAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivatedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerReviewDecisionSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaGeneratedRequestActionPayload;
@@ -28,6 +30,8 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivatedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationAcceptedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRegulatorLedSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.regulatorledsubmit.domain.UnderlyingAgreementVariationRegulatorLedCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationRejectedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationSubmittedRequestActionPayload;
@@ -42,22 +46,22 @@ import uk.gov.netz.api.workflow.request.flow.rfi.domain.RfiSubmittedRequestActio
 
 @Component
 public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractProvider {
-    
+
     @Override
     public void afterPropertiesSet() {
     	//common
     	addResolvedShemas(RfiResponseSubmittedRequestActionPayload.class.getSimpleName(), RfiResponseSubmittedRequestActionPayload.class);
     	addResolvedShemas(RfiSubmittedRequestActionPayload.class.getSimpleName(), RfiSubmittedRequestActionPayload.class);
-    	
+
     	addResolvedShemas(RdeDecisionForcedRequestActionPayload.class.getSimpleName(), RdeDecisionForcedRequestActionPayload.class);
     	addResolvedShemas(RdeRejectedRequestActionPayload.class.getSimpleName(), RdeRejectedRequestActionPayload.class);
     	addResolvedShemas(RdeSubmittedRequestActionPayload.class.getSimpleName(), RdeSubmittedRequestActionPayload.class);
-    	
+
     	addResolvedShemas(PaymentProcessedRequestActionPayload.class.getSimpleName(), PaymentProcessedRequestActionPayload.class);
     	addResolvedShemas(PaymentCancelledRequestActionPayload.class.getSimpleName(), PaymentCancelledRequestActionPayload.class);
-    	
+
     	//project specific
-    	
+
     	addResolvedShemas(TargetUnitAccountCreationSubmittedRequestActionPayload.class.getSimpleName(), TargetUnitAccountCreationSubmittedRequestActionPayload.class);
 
         // Underlying Agreement
@@ -65,14 +69,14 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
     	addResolvedShemas(UnderlyingAgreementRejectedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementRejectedRequestActionPayload.class);
 		addResolvedShemas(UnderlyingAgreementAcceptedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementAcceptedRequestActionPayload.class);
 		addResolvedShemas(UnderlyingAgreementActivatedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementActivatedRequestActionPayload.class);
-		
+
         addResolvedShemas(UnderlyingAgreementMigratedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementMigratedRequestActionPayload.class);
 
         // Admin Termination
     	addResolvedShemas(AdminTerminationSubmittedRequestActionPayload.class.getSimpleName(), AdminTerminationSubmittedRequestActionPayload.class);
     	addResolvedShemas(AdminTerminationFinalDecisionSubmittedRequestActionPayload.class.getSimpleName(), AdminTerminationFinalDecisionSubmittedRequestActionPayload.class);
     	addResolvedShemas(AdminTerminationWithdrawSubmittedRequestActionPayload.class.getSimpleName(), AdminTerminationWithdrawSubmittedRequestActionPayload.class);
-    	
+
     	//Peer review
     	addResolvedShemas(CcaPeerReviewDecisionSubmittedRequestActionPayload.class.getSimpleName(), CcaPeerReviewDecisionSubmittedRequestActionPayload.class);
 
@@ -82,13 +86,15 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
 		addResolvedShemas(UnderlyingAgreementVariationRejectedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationRejectedRequestActionPayload.class);
 		addResolvedShemas(UnderlyingAgreementVariationCompletedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationCompletedRequestActionPayload.class);
 		addResolvedShemas(UnderlyingAgreementVariationActivatedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationActivatedRequestActionPayload.class);
+		addResolvedShemas(UnderlyingAgreementVariationRegulatorLedSubmittedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationRegulatorLedSubmittedRequestActionPayload.class);
+		addResolvedShemas(UnderlyingAgreementVariationRegulatorLedCompletedRequestActionPayload.class.getSimpleName(), UnderlyingAgreementVariationRegulatorLedCompletedRequestActionPayload.class);
 
 		// Performance data upload
 		addResolvedShemas(PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload.class.getSimpleName(), PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload.class);
-		
+
 		// PΑΤ
 		addResolvedShemas(PerformanceAccountTemplateProcessingSubmittedRequestActionPayload.class.getSimpleName(), PerformanceAccountTemplateProcessingSubmittedRequestActionPayload.class);
-		
+
 		// Subsistence fees
 		addResolvedShemas(SubsistenceFeesRunCompletedRequestActionPayload.class.getSimpleName(), SubsistenceFeesRunCompletedRequestActionPayload.class);
 		addResolvedShemas(SectorMoaGeneratedRequestActionPayload.class.getSimpleName(), SectorMoaGeneratedRequestActionPayload.class);
@@ -110,6 +116,12 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
 
 		// CCA2 Extension Notice
 		addResolvedShemas(Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload.class.getSimpleName(), Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload.class);
+
+		// CCA2 Termination
+		addResolvedShemas(Cca2TerminationAccountProcessingSubmittedRequestActionPayload.class.getSimpleName(), Cca2TerminationAccountProcessingSubmittedRequestActionPayload.class);
+
+		// Non Compliance
+		addResolvedShemas(NonComplianceDetailsSubmittedRequestActionPayload.class.getSimpleName(), NonComplianceDetailsSubmittedRequestActionPayload.class);
 	}
 
 }

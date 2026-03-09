@@ -18,6 +18,7 @@ import { NoticeRecipientDTO } from '../model/noticeRecipientDTO';
 import { RequestTaskActionProcessDTO } from '../model/requestTaskActionProcessDTO';
 import { RequestTaskItemDTO } from '../model/requestTaskItemDTO';
 import { RequestTaskPayload } from '../model/requestTaskPayload';
+import { ResourceHeaderInfoDTO } from '../model/resourceHeaderInfoDTO';
 
 import { BASE_PATH } from '../variables';
 import { Configuration } from '../configuration';
@@ -144,6 +145,84 @@ export class TasksService {
 
     return this.httpClient.get<NoticeRecipientDTO[]>(
       `${this.configuration.basePath}/v1.0/tasks/${encodeURIComponent(String(id))}/default-recipients`,
+      {
+        responseType: responseType_ as any,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
+  }
+
+  /**
+   * Get the request task header info for the provided resource
+   * @param resourceType The resource type associated with given resource id
+   * @param resourceId The resource id for which the available workflows will be retrieved
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getRequestTaskHeaderInfo(resourceType: string, resourceId: string): Observable<ResourceHeaderInfoDTO>;
+  public getRequestTaskHeaderInfo(
+    resourceType: string,
+    resourceId: string,
+    observe: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<ResourceHeaderInfoDTO>>;
+  public getRequestTaskHeaderInfo(
+    resourceType: string,
+    resourceId: string,
+    observe: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<ResourceHeaderInfoDTO>>;
+  public getRequestTaskHeaderInfo(
+    resourceType: string,
+    resourceId: string,
+    observe: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<ResourceHeaderInfoDTO>;
+  public getRequestTaskHeaderInfo(
+    resourceType: string,
+    resourceId: string,
+    observe: any = 'body',
+    reportProgress = false,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any> {
+    if (resourceType === null || resourceType === undefined) {
+      throw new Error('Required parameter resourceType was null or undefined when calling getRequestTaskHeaderInfo.');
+    }
+    if (resourceId === null || resourceId === undefined) {
+      throw new Error('Required parameter resourceId was null or undefined when calling getRequestTaskHeaderInfo.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (bearerAuth) required
+    const credential = this.configuration.lookupCredential('bearerAuth');
+    if (credential) {
+      headers = headers.set('Authorization', 'Bearer ' + credential);
+    }
+
+    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    let responseType_: 'text' | 'json' = 'json';
+    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+      responseType_ = 'text';
+    }
+
+    return this.httpClient.get<ResourceHeaderInfoDTO>(
+      `${this.configuration.basePath}/v1.0/tasks/header-info/${encodeURIComponent(String(resourceType))}/${encodeURIComponent(String(resourceId))}`,
       {
         responseType: responseType_ as any,
         withCredentials: this.configuration.withCredentials,

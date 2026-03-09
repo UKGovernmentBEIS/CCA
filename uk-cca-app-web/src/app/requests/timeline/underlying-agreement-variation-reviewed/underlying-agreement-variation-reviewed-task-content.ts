@@ -39,7 +39,7 @@ export function getAllUnderlyingAgreementVariationReviewTimelineSections(
         {
           status: calcManageFacilitiesStatus(payload.reviewSectionsCompleted, payload.underlyingAgreement?.facilities),
           link: 'review-manage-facilities',
-          linkText: 'Manage facilities list',
+          linkText: 'Manage facilities',
         },
       ],
     },

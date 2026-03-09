@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, UrlTree } from '@angular/router';
 
 import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { KeycloakService } from 'keycloak-angular';
+import { KeycloakService } from '@shared/services';
 
 import { AuthoritiesService, TermsAndConditionsService, UsersService } from 'cca-api';
 

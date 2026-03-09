@@ -4,10 +4,6 @@ import { MiReportResult } from 'cca-api';
 
 export const pageSize = 20;
 
-export const miReportTypeDescriptionMap: Partial<Record<MiReportResult['reportType'], string>> = {
-  CUSTOM: 'Custom SQL report',
-};
-
 export const miReportTypeLinkMap: Partial<Record<MiReportResult['reportType'], string[]>> = {
   CUSTOM: ['./', 'custom'],
 };

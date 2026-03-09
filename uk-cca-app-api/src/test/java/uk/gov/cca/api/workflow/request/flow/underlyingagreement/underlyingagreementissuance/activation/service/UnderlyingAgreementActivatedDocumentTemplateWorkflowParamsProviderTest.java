@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
@@ -12,6 +13,7 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementSchemeVersionsHelperService;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.notification.DocumentTemplateUnderlyingAgreementParamsProvider;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementPayload;
@@ -34,6 +36,9 @@ class UnderlyingAgreementActivatedDocumentTemplateWorkflowParamsProviderTest {
 
     @Mock
     private DocumentTemplateUnderlyingAgreementParamsProvider documentTemplateUnderlyingAgreementParamsProvider;
+    
+    @Mock
+    private UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
 
     @Test
     void getContextActionType() {
@@ -46,24 +51,25 @@ class UnderlyingAgreementActivatedDocumentTemplateWorkflowParamsProviderTest {
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = UnderlyingAgreementTargetUnitDetails.builder()
                 .operatorName("operatorName")
                 .build();
-        final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder()
-        		.facilities(Set.of(Facility.builder()
-        				.facilityItem(FacilityItem.builder()
-        						.facilityDetails(FacilityDetails.builder()
-        								.participatingSchemeVersions(Set.of(SchemeVersion.CCA_2)).build()
-        								).build()
-        						)
-        				.status(FacilityStatus.LIVE)
-        				.build(), 
-        				Facility.builder()
-        				.facilityItem(FacilityItem.builder()
-        						.facilityDetails(FacilityDetails.builder()
-        								.participatingSchemeVersions(Set.of(SchemeVersion.CCA_3)).build()
-        								).build()
-        						)
-        				.status(FacilityStatus.LIVE)
-        				.build()
-        				))
+        final Set<Facility> facilities = Set.of(Facility.builder()
+				.facilityItem(FacilityItem.builder()
+						.facilityDetails(FacilityDetails.builder()
+								.participatingSchemeVersions(Set.of(SchemeVersion.CCA_2)).build()
+								).build()
+						)
+				.status(FacilityStatus.LIVE)
+				.build(), 
+				Facility.builder()
+				.facilityItem(FacilityItem.builder()
+						.facilityDetails(FacilityDetails.builder()
+								.participatingSchemeVersions(Set.of(SchemeVersion.CCA_3)).build()
+								).build()
+						)
+				.status(FacilityStatus.LIVE)
+				.build()
+				);
+		final UnderlyingAgreement underlyingAgreement = UnderlyingAgreement.builder()
+        		.facilities(facilities)
         		.build();
         final UnderlyingAgreementRequestPayload payload = UnderlyingAgreementRequestPayload.builder()
                 .underlyingAgreement(UnderlyingAgreementPayload.builder()
@@ -77,11 +83,15 @@ class UnderlyingAgreementActivatedDocumentTemplateWorkflowParamsProviderTest {
 
         when(documentTemplateUnderlyingAgreementParamsProvider.constructTargetUnitDetailsTemplateParams(targetUnitDetails))
                 .thenReturn(new HashMap<>(Map.of("test", "test")));
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(facilities))
+				.thenReturn(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3));
 
         // Invoke
         provider.constructParams(payload);
 
         // Verify
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1))
+				.calculateSchemeVersionsFromActiveFacilities(facilities);
         verify(documentTemplateUnderlyingAgreementParamsProvider, times(1))
                 .constructTargetUnitDetailsTemplateParams(targetUnitDetails);
     }

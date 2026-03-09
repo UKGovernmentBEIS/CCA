@@ -43,7 +43,7 @@ exports[`AuditDetailsSummaryComponent should display the correct content 1`] = `
           govuksummarylistrowvalue=""
         >
           <span>
-            Desk-based interview
+            Desk-based audit
           </span>
         </dd>
         <dd
@@ -156,7 +156,7 @@ exports[`AuditDetailsSummaryComponent should display the correct content 1`] = `
           class="govuk-summary-list__key"
           govuksummarylistrowkey=""
         >
-          Annotated site plan
+          Audit documents
         </dt>
         <dd
           class="govuk-summary-list__value"

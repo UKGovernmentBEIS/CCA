@@ -1,12 +1,11 @@
 import { Routes } from '@angular/router';
 
-import { WORKFLOW_NOTES_ROUTES } from '../../sectors/sector/workflow-history-tab/workflow-details/notes-tab/notes.routes';
-import { WorkflowHistoryDetailsResolver } from './workflow-history.resolver';
+import { NOTES_ROUTES, WorkflowDetailsResolver } from '@shared/components';
 
 export const SUBSISTENCE_FEES_WORKFLOW_HISTORY_ROUTES: Routes = [
   {
     path: ':workflowId',
-    resolve: { details: WorkflowHistoryDetailsResolver },
+    resolve: { details: WorkflowDetailsResolver },
     data: {
       breadcrumb: ({ details }) => ({
         text: `${details.workflowDetails.id}`,
@@ -22,7 +21,7 @@ export const SUBSISTENCE_FEES_WORKFLOW_HISTORY_ROUTES: Routes = [
         path: 'timeline',
         loadChildren: () => import('@requests/timeline').then((c) => c.TIMELINE_ROUTES),
       },
-      ...WORKFLOW_NOTES_ROUTES,
+      ...NOTES_ROUTES,
     ],
   },
 ];

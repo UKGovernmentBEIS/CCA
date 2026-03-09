@@ -9,7 +9,7 @@ import { of } from 'rxjs';
 import { RequestTaskStore } from '@netz/common/store';
 import { TasksApiService } from '@requests/common';
 
-import { TargetUnitAccountInfoViewService } from 'cca-api';
+import { TasksService } from 'cca-api';
 
 import { mockTrackCorrectiveActionsState } from '../../../testing/mock-data';
 import { TrackCorrectiveActionsDetailsComponent } from './track-corrective-actions-details.component';
@@ -20,7 +20,7 @@ describe('TrackCorrectiveActionsDetailsComponent', () => {
   let store: RequestTaskStore;
   let router: Router;
   let tasksApiService: TasksApiService;
-  let targetUnitAccountInfoViewService: jest.Mocked<Partial<TargetUnitAccountInfoViewService>>;
+  let tasksService: jest.Mocked<Partial<TasksService>>;
 
   const route: any = {
     snapshot: {
@@ -41,8 +41,8 @@ describe('TrackCorrectiveActionsDetailsComponent', () => {
   });
 
   beforeEach(async () => {
-    targetUnitAccountInfoViewService = {
-      getTargetUnitAccountDetailsById: jest.fn().mockReturnValue(of({})),
+    tasksService = {
+      getRequestTaskHeaderInfo: jest.fn().mockReturnValue(of({})),
     };
 
     await TestBed.configureTestingModule({
@@ -52,7 +52,7 @@ describe('TrackCorrectiveActionsDetailsComponent', () => {
         RequestTaskStore,
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },
-        { provide: TargetUnitAccountInfoViewService, useValue: targetUnitAccountInfoViewService },
+        { provide: TasksService, useValue: tasksService },
       ],
     }).compileComponents();
 

@@ -21,17 +21,17 @@ export function toPreAuditReviewRequestedDocumentsSummaryData(
       { change: isEditable },
     )
     .addFileListRow(
-      'Process flow maps document',
+      'Manufacturing process description document',
       fileUtils.toDownloadableFiles(
-        fileUtils.extractAttachments([requestedDocuments?.processFlowMapsFile], attachments),
+        fileUtils.extractAttachments([requestedDocuments?.manufacturingProcessFile], attachments),
         downloadUrl,
       ),
       { change: isEditable },
     )
     .addFileListRow(
-      'Manufacturing process description document',
+      'Process flow maps document',
       fileUtils.toDownloadableFiles(
-        fileUtils.extractAttachments([requestedDocuments?.manufacturingProcessFile], attachments),
+        fileUtils.extractAttachments([requestedDocuments?.processFlowMapsFile], attachments),
         downloadUrl,
       ),
       { change: isEditable },

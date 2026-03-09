@@ -18,8 +18,6 @@ import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestActionUser
 public interface UnderlyingAgreementActivationMapper {
 
 	@Mapping(target = "payloadType", source = "payloadType")
-	@Mapping(target = "underlyingAgreementAttachments", ignore = true)
-	@Mapping(target = "reviewAttachments", ignore = true)
 	@Mapping(target = "underlyingAgreementActivationAttachments", ignore = true)
 	@Mapping(target = "attachments", ignore = true)
 	UnderlyingAgreementActivatedRequestActionPayload toUnderlyingAgreementActivatedRequestActionPayload(
@@ -28,8 +26,6 @@ public interface UnderlyingAgreementActivationMapper {
 	@AfterMapping
     default void setUnderlyingAgreementAttachments(@MappingTarget UnderlyingAgreementActivatedRequestActionPayload requestActionPayload,
     		UnderlyingAgreementRequestPayload payload) {
-        requestActionPayload.setUnderlyingAgreementAttachments(payload.getUnderlyingAgreementAttachments());
-        requestActionPayload.setReviewAttachments(payload.getReviewAttachments());
         requestActionPayload.setUnderlyingAgreementActivationAttachments(payload.getUnderlyingAgreementActivationAttachments());
     }
 }

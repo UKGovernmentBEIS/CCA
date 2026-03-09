@@ -38,7 +38,7 @@ export function getAllUnderlyingAgreementWaitForPeerReviewSections(_payload: any
       tasks: [
         {
           status: TaskItemStatus.COMPLETED,
-          linkText: 'Manage facilities list',
+          linkText: 'Manage facilities',
           link: `${waitForPeerReviewRoutePrefix}/manage-facilities`,
         },
       ],

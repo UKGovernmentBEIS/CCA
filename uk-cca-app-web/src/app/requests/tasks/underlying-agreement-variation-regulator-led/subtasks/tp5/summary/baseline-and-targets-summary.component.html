@@ -1,0 +1,15 @@
+<div>
+  <netz-page-heading [caption]="isTargetPeriod5 ? 'TP5 (2021-2022)' : 'TP6 (2024)'">Summary</netz-page-heading>
+
+  <ng-template #contentTpl let-showOriginal="showOriginal">
+    <cca-summary [data]="showOriginal ? summaryDataOriginal : summaryDataCurrent" />
+  </ng-template>
+
+  <cca-highlight-diff>
+    <ng-container slot="previous" *ngTemplateOutlet="contentTpl; context: { showOriginal: true }" />
+    <ng-container slot="current" *ngTemplateOutlet="contentTpl; context: { showOriginal: false }" />
+  </cca-highlight-diff>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

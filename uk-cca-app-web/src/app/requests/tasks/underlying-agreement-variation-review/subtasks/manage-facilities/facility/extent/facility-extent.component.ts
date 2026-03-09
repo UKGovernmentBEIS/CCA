@@ -7,6 +7,9 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DetailsComponent, RadioComponent, RadioOptionComponent } from '@netz/govuk-components';
 import {
   areEntitiesIdentical,
+  FACILITY_EXTENT_FORM,
+  FacilityExtentFormModel,
+  FacilityExtentFormProvider,
   FacilityWizardStep,
   filterFieldsWithFalsyValues,
   isFacilityWizardCompleted,
@@ -26,11 +29,6 @@ import { FacilityExtent, UnderlyingAgreementVariationReviewSavePayload } from 'c
 
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../../transform';
 import { deleteFacilityDecision, resetDetermination } from '../../../../utils';
-import {
-  FACILITY_EXTENT_FORM,
-  FacilityExtentFormModel,
-  facilityExtentFormProvider,
-} from './facility-extent-form.provider';
 
 @Component({
   selector: 'cca-facility-extent',
@@ -44,7 +42,7 @@ import {
     DetailsComponent,
     RouterLink,
   ],
-  providers: [facilityExtentFormProvider],
+  providers: [FacilityExtentFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityExtentComponent {

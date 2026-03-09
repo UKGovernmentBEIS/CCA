@@ -2,7 +2,7 @@ const yaml = require('js-yaml');
 const fs = require('fs');
 const path = require('path');
 
-async () => {
+(async () => {
   const swaggerFile = path.join(__dirname, 'projects', 'cca-api', 'src', 'assets', 'swagger.yaml');
   const directory = path.dirname(swaggerFile);
 
@@ -38,4 +38,4 @@ async () => {
     console.error('COULD NOT UPDATE SWAGGER FILE - CHECK THAT API IS UP AND RUNNING');
     process.exit(1);
   }
-};
+})();

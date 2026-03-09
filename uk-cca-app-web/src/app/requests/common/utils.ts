@@ -4,7 +4,6 @@ import { produce } from 'immer';
 
 import {
   AccountReferenceData,
-  CompanyProfileDTO,
   Facility,
   TargetUnitAccountContactDTO,
   UnderlyingAgreementReviewRequestTaskPayload,
@@ -14,7 +13,12 @@ import {
 } from 'cca-api';
 
 import { TaskItemStatus } from './task-item-status';
-import { OVERALL_DECISION_SUBTASK, staticVariationSections } from './underlying-agreement';
+import {
+  OVERALL_DECISION_SUBTASK,
+  staticRegulatorLedVariationSections,
+  staticVariationSections,
+  UNAVariationRegulatorLedRequestTaskPayload,
+} from './underlying-agreement';
 
 export type TUDetailsSection = {
   isCompanyRegistrationNumber: boolean;
@@ -45,7 +49,9 @@ export function filterEditableTaskLinks(sections: TaskSection[], isEditable: boo
 }
 
 const filterTaskLinks = (task: TaskItem): TaskItem =>
-  task.status === TaskItemStatus.NOT_STARTED ? { ...task, link: '' } : task;
+  task.status === TaskItemStatus.NOT_STARTED || task.status === TaskItemStatus.IN_PROGRESS
+    ? { ...task, link: '' }
+    : task;
 
 const deletePhoneNumberAndJobTitle = (
   responsiblePerson: TargetUnitAccountContactDTO,
@@ -138,6 +144,34 @@ export function calcManageFacilitiesStatus(
     : TaskItemStatus.REJECTED;
 }
 
+export function regulatorLedManageFacilitiesStatus(
+  payload: UNAVariationRegulatorLedRequestTaskPayload,
+): TaskItemStatus {
+  const facilitySections = Object.keys(payload?.sectionsCompleted).filter(
+    (section) => !staticRegulatorLedVariationSections.includes(section),
+  );
+  if (facilitySections.length === 0) throw new Error('No facility found.');
+
+  const inProgressExists = facilitySections.some(
+    (section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.IN_PROGRESS,
+  );
+  const validFacilities = payload?.underlyingAgreement?.facilities?.filter((f) => f.status !== 'EXCLUDED');
+  if (validFacilities.length === 0 || inProgressExists) return TaskItemStatus.IN_PROGRESS;
+
+  if (facilitySections.every((section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.COMPLETED)) {
+    return TaskItemStatus.COMPLETED;
+  }
+
+  if (facilitySections.every((section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.UNCHANGED)) {
+    return TaskItemStatus.UNCHANGED;
+  }
+
+  const completedExists = facilitySections.some(
+    (section) => payload?.sectionsCompleted?.[section] === TaskItemStatus.COMPLETED,
+  );
+  if (completedExists && !inProgressExists) return TaskItemStatus.COMPLETED;
+}
+
 export function filterFieldsWithFalsyValues(obj: unknown): unknown {
   if (obj === null || obj === undefined || typeof obj !== 'object') return obj;
 
@@ -150,14 +184,6 @@ export function filterFieldsWithFalsyValues(obj: unknown): unknown {
 
     return acc;
   }, {});
-}
-
-export function sameCompanyRegistrationNumbers(
-  companyProfile: CompanyProfileDTO,
-  existingCompanyRegistrationNumber: string,
-): boolean {
-  if (!companyProfile?.registrationNumber || !existingCompanyRegistrationNumber) return false;
-  return companyProfile?.registrationNumber === existingCompanyRegistrationNumber;
 }
 
 export function areEntitiesIdentical(current: unknown, original: unknown): boolean {

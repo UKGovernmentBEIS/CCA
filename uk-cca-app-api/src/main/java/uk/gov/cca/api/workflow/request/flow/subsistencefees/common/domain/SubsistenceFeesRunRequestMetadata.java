@@ -33,6 +33,9 @@ public class SubsistenceFeesRunRequestMetadata extends RequestMetadata {
 
     @Builder.Default
     private Map<Long, MoaReport> accountsReports = new HashMap<>();
+    
+    @Builder.Default
+    private Long skippedSectors = 0L;
 
     @JsonIgnore
     public List<MoaReport> getAllReports() {
@@ -50,5 +53,9 @@ public class SubsistenceFeesRunRequestMetadata extends RequestMetadata {
     @JsonProperty(access = Access.READ_ONLY)
     public Long getFailedInvoices() {
         return getAllReports().stream().filter(report -> Boolean.FALSE.equals(report.getSucceeded())).collect(Collectors.counting());
+    }
+    
+    public void incrementSkippedSectors() {
+        skippedSectors++;
     }
 }

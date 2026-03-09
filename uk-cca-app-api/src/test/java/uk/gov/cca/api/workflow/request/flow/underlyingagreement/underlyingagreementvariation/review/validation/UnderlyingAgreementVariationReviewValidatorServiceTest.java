@@ -14,9 +14,10 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.TargetPeriodDetailsValidatorService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.CCA2BaselineAndTargetsValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.EditedUnderlyingAgreementVariationApplicationReasonDataValidator;
@@ -49,7 +50,7 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
     private UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
 
     @Mock
-    private TargetPeriodDetailsValidatorService targetPeriodDetailsValidatorService;
+    private CCA2BaselineAndTargetsValidatorService cca2BaselineAndTargetsValidatorService;
 
     @Mock
     private EditedUnderlyingAgreementVariationTargetUnitDetailsValidatorService editedUnderlyingAgreementVariationTargetUnitDetailsValidatorService;
@@ -69,8 +70,12 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
     @Mock
     private ProposedUnderlyingAgreementVariationApplicationReasonDataValidator proposedUnderlyingAgreementVariationApplicationReasonDataValidator;
 
+    @Mock
+    private UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService underlyingAgreementCca2EndDateValidatorService;
+    
     @Test
     void validateEditedUnderlyingAgreement() {
+    	final LocalDateTime creationDate = LocalDateTime.of(2025, 1, 1, 0, 0);
         final Set<Facility> facilities = Set.of(Facility.builder()
                 .status(FacilityStatus.NEW)
                 .facilityItem(FacilityItem.builder().facilityId("1").build())
@@ -103,7 +108,7 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
                                 .build())
                 .build();
         final Request request = Request.builder()
-                .creationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
+                .creationDate(creationDate)
                 .payload(UnderlyingAgreementVariationRequestPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
                                 .underlyingAgreement(UnderlyingAgreement.builder()
@@ -125,7 +130,7 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
         validationResults.add(BusinessValidationResult.valid());
         when(underlyingAgreementValidatorService.getValidationResults(originalContainer, context))
                 .thenReturn(validationResults);
-        when(targetPeriodDetailsValidatorService.validate(any(), eq(originalContainer)))
+        when(cca2BaselineAndTargetsValidatorService.validate(any(), eq(originalContainer), eq(creationDate.toLocalDate())))
                 .thenReturn(BusinessValidationResult.valid());
         when(editedUnderlyingAgreementVariationTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
@@ -138,7 +143,7 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
 
         // Verify
         verify(underlyingAgreementValidatorService, times(1)).getValidationResults(originalContainer, context);
-        verify(targetPeriodDetailsValidatorService, times(1)).validate(any(), eq(originalContainer));
+        verify(cca2BaselineAndTargetsValidatorService, times(1)).validate(any(), eq(originalContainer), eq(creationDate.toLocalDate()));
         verify(editedUnderlyingAgreementVariationTargetUnitDetailsValidatorService, times(1))
                 .validate(requestTask);
         verify(editedVariationDetailsValidator, times(1))
@@ -149,6 +154,7 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
 
     @Test
     void validateEditedUnderlyingAgreement_not_valid() {
+    	final LocalDateTime creationDate = LocalDateTime.of(2028, 1, 1, 0, 0);
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = UnderlyingAgreementTargetUnitDetails.builder()
                 .operatorName("operatorName")
                 .build();
@@ -180,7 +186,7 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
                                 .build())
                 .build();
         final Request request = Request.builder()
-                .creationDate(LocalDateTime.of(2028, 1, 1, 0, 0))
+                .creationDate(creationDate)
                 .payload(UnderlyingAgreementVariationRequestPayload.builder()
                         .originalUnderlyingAgreementContainer(originalContainer)
                         .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
@@ -206,7 +212,7 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
         validationResults.add(BusinessValidationResult.valid());
         when(underlyingAgreementValidatorService.getValidationResults(originalContainer, context))
                 .thenReturn(validationResults);
-        when(targetPeriodDetailsValidatorService.validate(any(), eq(originalContainer)))
+        when(cca2BaselineAndTargetsValidatorService.validate(any(), eq(originalContainer), eq(creationDate.toLocalDate())))
                 .thenReturn(BusinessValidationResult.valid());
         when(editedUnderlyingAgreementVariationTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
@@ -232,6 +238,7 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
 
     @Test
     void validateProposedUnderlyingAgreement() {
+    	final LocalDateTime creationDate = LocalDateTime.of(2028, 1, 1, 0, 0);
         final Set<Facility> facilities = Set.of(Facility.builder()
                 .status(FacilityStatus.NEW)
                 .facilityItem(FacilityItem.builder().facilityId("1").build())
@@ -264,7 +271,7 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
                                 .build())
                 .build();
         final Request request = Request.builder()
-                .creationDate(LocalDateTime.of(2028, 1, 1, 0, 0))
+                .creationDate(creationDate)
                 .payload(UnderlyingAgreementVariationRequestPayload.builder()
                         .underlyingAgreement(UnderlyingAgreementVariationPayload.builder()
                                 .underlyingAgreement(UnderlyingAgreement.builder()
@@ -286,13 +293,15 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
         validationResults.add(BusinessValidationResult.valid());
         when(underlyingAgreementValidatorService.getValidationResults(originalContainer, context))
                 .thenReturn(validationResults);
-        when(targetPeriodDetailsValidatorService.validate(any(), eq(originalContainer)))
+        when(cca2BaselineAndTargetsValidatorService.validate(any(), eq(originalContainer), eq(creationDate.toLocalDate())))
                 .thenReturn(BusinessValidationResult.valid());
         when(proposedUnderlyingAgreementVariationTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
         when(proposedVariationDetailsValidator.validate(taskPayload)).thenReturn(BusinessValidationResult.valid());
         when(proposedUnderlyingAgreementVariationApplicationReasonDataValidator.validate(taskPayload))
                 .thenReturn(BusinessValidationResult.valid());
+        when(underlyingAgreementCca2EndDateValidatorService.validate(facilities))
+				.thenReturn(BusinessValidationResult.valid());
 
         // Invoke
         validatorService.validateProposedUnderlyingAgreement(requestTask);
@@ -300,12 +309,13 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
         // Verify
         verify(underlyingAgreementValidatorService, times(1))
                 .getValidationResults(originalContainer, context);
-        verify(targetPeriodDetailsValidatorService, times(1)).validate(any(), eq(originalContainer));
+        verify(cca2BaselineAndTargetsValidatorService, times(1)).validate(any(), eq(originalContainer), eq(creationDate.toLocalDate()));
         verify(proposedUnderlyingAgreementVariationTargetUnitDetailsValidatorService, times(1))
                 .validate(requestTask);
         verify(proposedVariationDetailsValidator, times(1))
                 .validate(taskPayload);
         verify(proposedUnderlyingAgreementVariationApplicationReasonDataValidator, times(1))
                 .validate(taskPayload);
+        verify(underlyingAgreementCca2EndDateValidatorService, times(1)).validate(facilities);
     }
 }

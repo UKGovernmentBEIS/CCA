@@ -111,20 +111,22 @@ function update(
   payload: UnderlyingAgreementVariationReviewSavePayload,
   form: FormGroup<ResponsiblePersonFormModel>,
 ): UnderlyingAgreementVariationReviewSavePayload {
+  const formValue = form.getRawValue();
+
   return produce(payload, (draft) => {
     draft.underlyingAgreementTargetUnitDetails.responsiblePersonDetails = {
-      firstName: form.getRawValue().firstName,
-      lastName: form.getRawValue().lastName,
-      email: form.getRawValue().email,
-      address: form.getRawValue().sameAddress?.[0]
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      email: formValue.email,
+      address: formValue.sameAddress?.[0]
         ? draft.underlyingAgreementTargetUnitDetails.operatorAddress // Use operator address if same
         : {
-            line1: form.getRawValue().address.line1,
-            line2: form.getRawValue().address.line2,
-            city: form.getRawValue().address.city,
-            county: form.getRawValue().address.county,
-            postcode: form.getRawValue().address.postcode,
-            country: form.getRawValue().address.country,
+            line1: formValue.address.line1,
+            line2: formValue.address.line2,
+            city: formValue.address.city,
+            county: formValue.address.county,
+            postcode: formValue.address.postcode,
+            country: formValue.address.country,
           },
     };
   });

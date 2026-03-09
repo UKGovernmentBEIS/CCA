@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { userIsAssigneeGuard } from 'src/app/shared/guards/user-is-assignee.guard';
+import { userIsAssigneeGuard } from '@shared/guards';
 
 import { UnderlyingAgreementVariationPeerReviewStore } from './+state/underlying-agreement-variation-peer-review.store';
 

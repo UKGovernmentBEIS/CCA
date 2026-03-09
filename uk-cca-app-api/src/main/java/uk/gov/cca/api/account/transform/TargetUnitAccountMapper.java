@@ -3,7 +3,6 @@ package uk.gov.cca.api.account.transform;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountContact;
 import uk.gov.cca.api.account.domain.TargetUnitAccountContactType;
@@ -19,7 +18,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {AccountAddressMapper.class}, config = MapperConfig.class)
 public interface TargetUnitAccountMapper {
 
-    TargetUnitAccountHeaderInfoDTO toTargetUnitAccountHeaderInfoDTO(TargetUnitAccount account);
+    TargetUnitAccountHeaderInfoDTO toTargetUnitAccountHeaderInfo(TargetUnitAccount account);
 
     @Mapping(target = "accountId", source = "id")
     TargetUnitAccountBusinessInfoDTO toTargetUnitAccountBusinessInfoDTO(TargetUnitAccount account);
@@ -30,7 +29,7 @@ public interface TargetUnitAccountMapper {
     @Mapping(target = "responsiblePerson", source = "targetUnitAccountContacts", qualifiedByName = "responsiblePersonToDTO")
     @Mapping(target = "administrativeContactDetails", source = "targetUnitAccountContacts", qualifiedByName = "administrativeContactDetailsToDTO")
     TargetUnitAccountDTO toTargetUnitAccountDTO(TargetUnitAccount account);
-    
+
     @Mapping(target = "address", ignore = true)
     TargetUnitAccountDTO toNoContactsTargetUnitAccountDTO(TargetUnitAccount account);
 

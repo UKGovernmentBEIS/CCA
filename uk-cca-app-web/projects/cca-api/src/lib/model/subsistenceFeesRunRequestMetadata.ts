@@ -16,6 +16,7 @@ export interface SubsistenceFeesRunRequestMetadata {
   chargingYear?: number;
   sectorsReports?: Record<string, MoaReport>;
   accountsReports?: Record<string, MoaReport>;
+  skippedSectors?: number;
   readonly sentInvoices?: number;
   readonly failedInvoices?: number;
 }

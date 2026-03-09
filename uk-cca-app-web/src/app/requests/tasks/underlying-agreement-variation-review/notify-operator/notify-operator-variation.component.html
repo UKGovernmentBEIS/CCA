@@ -1,3 +1,7 @@
+@if (isErrorSummaryDisplayed()) {
+  <govuk-error-summary [form]="errorForm" />
+}
+
 <cca-wizard-step
   (formSubmit)="onSubmit()"
   [formGroup]="form"
@@ -8,11 +12,13 @@
 >
   <h3 class="govuk-heading-m">Users automatically notified</h3>
 
-  @for (user of defaultUsers(); track user.email) {
-    <p class="govuk-!-margin-bottom-1 govuk-!-margin-top-0">
-      {{ user.firstName }} {{ user.lastName }}, {{ user.type | noticeRecipientsType }}, {{ user.email }}
-    </p>
-  }
+  <div class="govuk-!-margin-bottom-6">
+    @for (user of defaultUsers(); track user.email) {
+      <p class="govuk-!-margin-bottom-1 govuk-!-margin-top-0">
+        {{ user.firstName }} {{ user.lastName }}, {{ user.type | noticeRecipientsType }}, {{ user.email }}
+      </p>
+    }
+  </div>
 
   @if (additionalUsers(); as additionalUsers) {
     <div

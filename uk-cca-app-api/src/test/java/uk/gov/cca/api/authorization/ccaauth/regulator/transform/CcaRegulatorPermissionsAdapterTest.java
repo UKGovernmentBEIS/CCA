@@ -16,12 +16,15 @@ import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PER
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_ADMIN_TERMINATION_SUBMISSION;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_FACILITY_AUDIT_EDIT;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_FACILITY_AUDIT_SUBMISSION;
+import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_NON_COMPLIANCE_SUBMISSION;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_OPERATOR_USERS_EDIT;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_SECTOR_ASSOCIATION_EDIT;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_SECTOR_USERS_EDIT;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW;
+import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_PEER_REVIEW;
+import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.ADMIN_TERMINATION_PEER_REVIEW;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.ADMIN_TERMINATION_SUBMISSION;
@@ -30,10 +33,13 @@ import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulator
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.MANAGE_OPERATOR_USERS;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.MANAGE_SECTOR_ASSOCIATIONS;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.MANAGE_SECTOR_USERS;
+import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.NON_COMPLIANCE_SUBMISSION;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.UNDERLYING_AGREEMENT_APPLICATION_REVIEW;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW;
+import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.UNDERLYING_AGREEMENT_VARIATION_REVIEW;
+import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.UNDERLYING_AGREEMENT_VARIATION_SUBMISSION;
 import static uk.gov.netz.api.authorization.core.domain.Permission.PERM_ACCOUNT_USERS_EDIT;
 import static uk.gov.netz.api.authorization.core.domain.Permission.PERM_CA_USERS_EDIT;
 import static uk.gov.netz.api.authorization.core.domain.Permission.PERM_TASK_ASSIGNMENT;
@@ -68,11 +74,15 @@ class CcaRegulatorPermissionsAdapterTest {
                         Map.entry(UNDERLYING_AGREEMENT_APPLICATION_REVIEW, EXECUTE),
                         Map.entry(UNDERLYING_AGREEMENT_VARIATION_REVIEW, EXECUTE),
                         Map.entry(UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW, EXECUTE),
-                        Map.entry(FACILITY_AUDIT_SUBMISSION, EXECUTE));
+                        Map.entry(UNDERLYING_AGREEMENT_VARIATION_SUBMISSION, EXECUTE),
+                        Map.entry(UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW, EXECUTE),
+                        Map.entry(FACILITY_AUDIT_SUBMISSION, EXECUTE),
+                        Map.entry(NON_COMPLIANCE_SUBMISSION, EXECUTE));
 
         List<String> expectedPermissions = List.of(
                 PERM_TASK_ASSIGNMENT, PERM_SECTOR_ASSOCIATION_EDIT, PERM_SECTOR_USERS_EDIT, PERM_OPERATOR_USERS_EDIT, PERM_ADMIN_TERMINATION_SUBMISSION, PERM_ADMIN_TERMINATION_PEER_REVIEW,
-                PERM_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW, PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW, PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW, PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW, PERM_FACILITY_AUDIT_SUBMISSION);
+                PERM_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW, PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW, PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW, PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW,
+                PERM_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT, PERM_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_PEER_REVIEW, PERM_FACILITY_AUDIT_SUBMISSION, PERM_NON_COMPLIANCE_SUBMISSION);
 
         assertThat(regulatorPermissionsAdapter.getPermissionsFromPermissionGroupLevels(permissionGroupLevels))
                 .containsExactlyInAnyOrderElementsOf(expectedPermissions);
@@ -92,7 +102,10 @@ class CcaRegulatorPermissionsAdapterTest {
                 Map.entry(UNDERLYING_AGREEMENT_APPLICATION_REVIEW, EXECUTE),
                 Map.entry(UNDERLYING_AGREEMENT_VARIATION_REVIEW, EXECUTE),
                 Map.entry(UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW, EXECUTE),
-                Map.entry(FACILITY_AUDIT_SUBMISSION, EXECUTE)
+                Map.entry(UNDERLYING_AGREEMENT_VARIATION_SUBMISSION, EXECUTE),
+                Map.entry(UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW, EXECUTE),
+                Map.entry(FACILITY_AUDIT_SUBMISSION, EXECUTE),
+                Map.entry(NON_COMPLIANCE_SUBMISSION, EXECUTE)
         );
 
         List<String> expectedPermissions = List.of(
@@ -104,7 +117,10 @@ class CcaRegulatorPermissionsAdapterTest {
                 PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW,
                 PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW,
                 PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW,
-                PERM_FACILITY_AUDIT_SUBMISSION);
+                PERM_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT,
+                PERM_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_PEER_REVIEW,
+                PERM_FACILITY_AUDIT_SUBMISSION,
+                PERM_NON_COMPLIANCE_SUBMISSION);
 
         assertThat(regulatorPermissionsAdapter.getPermissionsFromPermissionGroupLevels(permissionGroupLevels))
                 .containsExactlyInAnyOrderElementsOf(expectedPermissions);
@@ -124,12 +140,16 @@ class CcaRegulatorPermissionsAdapterTest {
                         Map.entry(UNDERLYING_AGREEMENT_APPLICATION_REVIEW, EXECUTE),
                         Map.entry(UNDERLYING_AGREEMENT_VARIATION_REVIEW, EXECUTE),
                         Map.entry(UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW, EXECUTE),
-                        Map.entry(FACILITY_AUDIT_SUBMISSION, EXECUTE)
+                        Map.entry(UNDERLYING_AGREEMENT_VARIATION_SUBMISSION, EXECUTE),
+                        Map.entry(UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW, EXECUTE),
+                        Map.entry(FACILITY_AUDIT_SUBMISSION, EXECUTE),
+                        Map.entry(NON_COMPLIANCE_SUBMISSION, EXECUTE)
                 );
 
         List<String> expectedPermissions = List.of(
                 PERM_TASK_ASSIGNMENT, PERM_ADMIN_TERMINATION_SUBMISSION, PERM_ADMIN_TERMINATION_PEER_REVIEW, PERM_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW,
-                PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW, PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW, PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW, PERM_FACILITY_AUDIT_SUBMISSION);
+                PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW, PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW, PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW,
+                PERM_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT, PERM_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_PEER_REVIEW, PERM_FACILITY_AUDIT_SUBMISSION, PERM_NON_COMPLIANCE_SUBMISSION);
 
         assertThat(regulatorPermissionsAdapter.getPermissionsFromPermissionGroupLevels(permissionGroupLevels))
                 .containsExactlyInAnyOrderElementsOf(expectedPermissions);
@@ -146,7 +166,10 @@ class CcaRegulatorPermissionsAdapterTest {
                 PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW,
                 PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW,
                 PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW,
-                PERM_FACILITY_AUDIT_SUBMISSION);
+                PERM_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT,
+                PERM_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_PEER_REVIEW,
+                PERM_FACILITY_AUDIT_SUBMISSION,
+                PERM_NON_COMPLIANCE_SUBMISSION);
 
         Map<String, RegulatorPermissionLevel> expectedPermissionGroupLevels = new LinkedHashMap<>();
         expectedPermissionGroupLevels.put(MANAGE_USERS_AND_CONTACTS, NONE);
@@ -160,9 +183,11 @@ class CcaRegulatorPermissionsAdapterTest {
         expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_APPLICATION_REVIEW, EXECUTE);
         expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_VARIATION_REVIEW, EXECUTE);
         expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW, EXECUTE);
+        expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_VARIATION_SUBMISSION, EXECUTE);
+        expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW, EXECUTE);
         expectedPermissionGroupLevels.put(FACILITY_AUDIT_SUBMISSION, EXECUTE);
 		expectedPermissionGroupLevels.put(MANAGE_FACILITY_AUDIT,  NONE);
-
+        expectedPermissionGroupLevels.put(NON_COMPLIANCE_SUBMISSION, EXECUTE);
 
         assertThat(regulatorPermissionsAdapter.getPermissionGroupLevelsFromPermissions(permissions))
                 .containsExactlyInAnyOrderEntriesOf(expectedPermissionGroupLevels);
@@ -183,8 +208,11 @@ class CcaRegulatorPermissionsAdapterTest {
                 PERM_UNDERLYING_AGREEMENT_APPLICATION_REVIEW,
                 PERM_UNDERLYING_AGREEMENT_VARIATION_REVIEW,
                 PERM_UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW,
+                PERM_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT,
+                PERM_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_PEER_REVIEW,
                 PERM_FACILITY_AUDIT_SUBMISSION,
-		        PERM_FACILITY_AUDIT_EDIT
+		        PERM_FACILITY_AUDIT_EDIT,
+                PERM_NON_COMPLIANCE_SUBMISSION
         );
 
         Map<String, RegulatorPermissionLevel> expectedPermissionGroupLevels = new LinkedHashMap<>();
@@ -199,8 +227,11 @@ class CcaRegulatorPermissionsAdapterTest {
         expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_APPLICATION_REVIEW, EXECUTE);
         expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_VARIATION_REVIEW, EXECUTE);
         expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW, EXECUTE);
+        expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_VARIATION_SUBMISSION, EXECUTE);
+        expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW, EXECUTE);
         expectedPermissionGroupLevels.put(FACILITY_AUDIT_SUBMISSION, EXECUTE);
 	    expectedPermissionGroupLevels.put(MANAGE_FACILITY_AUDIT,  EXECUTE);
+        expectedPermissionGroupLevels.put(NON_COMPLIANCE_SUBMISSION, EXECUTE);
 
         assertThat(regulatorPermissionsAdapter.getPermissionGroupLevelsFromPermissions(permissions))
                 .containsExactlyInAnyOrderEntriesOf(expectedPermissionGroupLevels);
@@ -220,9 +251,11 @@ class CcaRegulatorPermissionsAdapterTest {
         expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_APPLICATION_REVIEW, List.of(EXECUTE, NONE));
         expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_VARIATION_REVIEW, List.of(EXECUTE, NONE));
         expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW, List.of(NONE, EXECUTE));
+        expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_VARIATION_SUBMISSION, List.of(NONE, EXECUTE));
+        expectedPermissionGroupLevels.put(UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW, List.of(NONE, EXECUTE));
         expectedPermissionGroupLevels.put(FACILITY_AUDIT_SUBMISSION, List.of(NONE, EXECUTE));
         expectedPermissionGroupLevels.put(MANAGE_FACILITY_AUDIT, List.of(NONE, EXECUTE));
-
+        expectedPermissionGroupLevels.put(NON_COMPLIANCE_SUBMISSION, List.of(NONE, EXECUTE));
 
         Map<String, List<RegulatorPermissionLevel>> actualPermissionGroupLevels =
                 regulatorPermissionsAdapter.getPermissionGroupLevels();

@@ -26,7 +26,7 @@ exports[`VariationDetailsComponent should show summary values 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Target Unit/Facility changes
+            Changes that usually require the operator to provide their assent
           </dt>
           <dd
             class="pre-line govuk-summary-list__value"
@@ -45,14 +45,14 @@ exports[`VariationDetailsComponent should show summary values 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Amend the baseline and target due to
+            Changes that don't usually require the operator to provide their assent
           </dt>
           <dd
             class="pre-line govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
             <span>
-              a structural change
+              Amend a facility's base year data due to a structural change
             </span>
           </dd>
         </div>
@@ -64,7 +64,7 @@ exports[`VariationDetailsComponent should show summary values 1`] = `
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Explain what you are changing and the reason for the changes
+            Explain in more detail what you are changing and the reason for the changes
           </dt>
           <dd
             class="pre-line govuk-summary-list__value"

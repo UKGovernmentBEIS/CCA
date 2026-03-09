@@ -7,8 +7,8 @@ import { AuthStore } from '@netz/common/auth';
 import { PageHeadingComponent } from '@netz/common/components';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { BackToTopComponent } from '@shared/components';
+import { KeycloakService } from '@shared/services';
 import { screen } from '@testing-library/dom';
-import { KeycloakService } from 'keycloak-angular';
 
 import { AuthoritiesService, TermsAndConditionsService, UsersService, UserStateDTO } from 'cca-api';
 

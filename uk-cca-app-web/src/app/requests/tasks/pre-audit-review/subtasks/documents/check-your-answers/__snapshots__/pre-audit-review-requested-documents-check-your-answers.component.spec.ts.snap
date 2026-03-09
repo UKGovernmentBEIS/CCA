@@ -67,7 +67,7 @@ exports[`PreAuditReviewRequestedDocumentsCheckYourAnswersComponent should displa
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Process flow maps document
+            Manufacturing process description document
           </dt>
           <dd
             class="govuk-summary-list__value"
@@ -97,7 +97,7 @@ exports[`PreAuditReviewRequestedDocumentsCheckYourAnswersComponent should displa
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Manufacturing process description document
+            Process flow maps document
           </dt>
           <dd
             class="govuk-summary-list__value"

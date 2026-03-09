@@ -9,14 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { UnderlyingAgreementVariationPayload } from './underlyingAgreementVariationPayload';
-import { VariationDetermination } from './variationDetermination';
 import { RequestActionUserInfo } from './requestActionUserInfo';
 import { DefaultNoticeRecipient } from './defaultNoticeRecipient';
 import { UnderlyingAgreementActivationDetails } from './underlyingAgreementActivationDetails';
 import { AccountReferenceData } from './accountReferenceData';
-import { UnderlyingAgreementReviewDecision } from './underlyingAgreementReviewDecision';
-import { UnderlyingAgreementVariationFacilityReviewDecision } from './underlyingAgreementVariationFacilityReviewDecision';
 import { CcaDecisionNotification } from './ccaDecisionNotification';
 import { FileInfoDTO } from './fileInfoDTO';
 
@@ -24,18 +20,10 @@ export interface UnderlyingAgreementVariationActivatedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
   accountReferenceData?: AccountReferenceData;
-  underlyingAgreement?: UnderlyingAgreementVariationPayload;
-  sectionsCompleted?: Record<string, string>;
-  underlyingAgreementAttachments?: Record<string, string>;
   decisionNotification: CcaDecisionNotification;
   defaultContacts: DefaultNoticeRecipient[];
   usersInfo?: Record<string, RequestActionUserInfo>;
   officialNotices: FileInfoDTO[];
-  determination: VariationDetermination;
-  reviewSectionsCompleted?: Record<string, string>;
-  reviewGroupDecisions?: Record<string, UnderlyingAgreementReviewDecision>;
-  facilitiesReviewGroupDecisions?: Record<string, UnderlyingAgreementVariationFacilityReviewDecision>;
-  reviewAttachments?: Record<string, string>;
   underlyingAgreementDocuments: Record<string, FileInfoDTO>;
   underlyingAgreementActivationDetails: UnderlyingAgreementActivationDetails;
   underlyingAgreementActivationAttachments?: Record<string, string>;

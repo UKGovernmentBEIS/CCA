@@ -5,11 +5,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
-import { of } from 'rxjs';
-
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { MockType } from '@netz/common/testing';
-import { TasksApiService, underlyingAgreementQuery } from '@requests/common';
+import { BaselineEnergyDraftService, underlyingAgreementQuery } from '@requests/common';
 
 import {
   mockActivatedRoute,
@@ -25,11 +23,21 @@ describe('AddProductComponent', () => {
   let component: AddProductComponent;
   let fixture: ComponentFixture<AddProductComponent>;
   let store: RequestTaskStore;
-  let tasksApiService: MockType<TasksApiService>;
+  let draftService: MockType<BaselineEnergyDraftService>;
 
   beforeEach(() => {
-    tasksApiService = {
-      saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    draftService = {
+      initializeFromStore: jest.fn(),
+      draftSignal: jest.fn().mockReturnValue({
+        totalFixedEnergy: '100',
+        hasVariableEnergy: true,
+        variableEnergyType: 'BY_PRODUCT',
+        products: [mockProductVariableEnergyData],
+      }) as any,
+      saveFormSnapshot: jest.fn(),
+      setProducts: jest.fn(),
+      removeProduct: jest.fn(),
+      clear: jest.fn(),
     };
 
     const destroyRef = { onDestroy: jest.fn() } as unknown as DestroyRef;
@@ -48,7 +56,7 @@ describe('AddProductComponent', () => {
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        { provide: TasksApiService, useValue: tasksApiService },
+        { provide: BaselineEnergyDraftService, useValue: draftService },
         { provide: DestroyRef, useValue: destroyRef },
         { provide: ADD_PRODUCT_FORM, useValue: testForm },
       ],
@@ -162,8 +170,8 @@ describe('AddProductComponent', () => {
     expect(compiled.textContent).toContain('Add another product');
   });
 
-  it('should display save and continue button', () => {
+  it('should display update table button', () => {
     const compiled = fixture.nativeElement;
-    expect(compiled.textContent).toContain('Save and continue');
+    expect(compiled.textContent).toContain('Update table');
   });
 });

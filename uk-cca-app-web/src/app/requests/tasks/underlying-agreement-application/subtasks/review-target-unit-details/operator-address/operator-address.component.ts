@@ -5,8 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
-  areEntitiesIdentical,
-  filterFieldsWithFalsyValues,
   isTargetUnitDetailsWizardCompleted,
   OPERATOR_ADDRESS_FORM,
   OperatorAddressFormProvider,
@@ -71,17 +69,10 @@ export class OperatorAddressComponent {
       .saveRequestTaskAction(dto)
       .subscribe((payload: UnderlyingAgreementSubmitRequestTaskPayload) => {
         const tuDetails = payload.underlyingAgreement?.underlyingAgreementTargetUnitDetails;
-        const completed = isTargetUnitDetailsWizardCompleted(tuDetails);
 
-        const isSameAddress = areEntitiesIdentical(
-          filterFieldsWithFalsyValues(tuDetails?.operatorAddress),
-          filterFieldsWithFalsyValues(tuDetails?.responsiblePersonDetails?.address),
-        );
-
-        const path =
-          completed && isSameAddress
-            ? '../check-your-answers'
-            : `../${ReviewTargetUnitDetailsWizardStep.RESPONSIBLE_PERSON}`;
+        const path = isTargetUnitDetailsWizardCompleted(tuDetails)
+          ? '../check-your-answers'
+          : `../${ReviewTargetUnitDetailsWizardStep.RESPONSIBLE_PERSON}`;
 
         this.router.navigate([path], { relativeTo: this.route });
       });

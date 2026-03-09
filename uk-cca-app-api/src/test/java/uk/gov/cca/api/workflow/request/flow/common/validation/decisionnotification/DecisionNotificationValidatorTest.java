@@ -9,12 +9,10 @@ import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.BusinessViolation;
 import uk.gov.cca.api.common.validation.DataValidator;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
-import uk.gov.cca.api.workflow.request.flow.common.validation.FileAttachmentsExistenceValidator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,9 +32,6 @@ class DecisionNotificationValidatorTest {
 
     @Mock
     private CcaDecisionNotificationUsersValidator ccaDecisionNotificationUsersValidator;
-
-    @Mock
-    private FileAttachmentsExistenceValidator fileAttachmentsExistenceValidator;
 
     @Test
     void validateDecisionNotification() {
@@ -78,27 +73,5 @@ class DecisionNotificationValidatorTest {
         verify(ccaDecisionNotificationDataValidator, times(1)).validate(decisionNotification);
         verify(ccaDecisionNotificationUsersValidator, times(1))
                 .validate(requestTask, decisionNotification, appUser);
-    }
-
-    @Test
-    void validateUnderlyingAgreementFiles() {
-
-        when(fileAttachmentsExistenceValidator.valid(Set.of(), Set.of())).thenReturn(true);
-
-        BusinessValidationResult result = decisionNotificationValidator.validateUnderlyingAgreementFiles(Set.of(), Map.of());
-
-        assertThat(result.isValid()).isTrue();
-        verify(fileAttachmentsExistenceValidator, times(1)).valid(Set.of(), Set.of());
-    }
-
-    @Test
-    void validateUnderlyingAgreementFiles_not_valid() {
-
-        when(fileAttachmentsExistenceValidator.valid(Set.of(), Set.of())).thenReturn(false);
-
-        BusinessValidationResult result = decisionNotificationValidator.validateUnderlyingAgreementFiles(Set.of(), Map.of());
-        // Verify
-        assertThat(result.isValid()).isFalse();
-        verify(fileAttachmentsExistenceValidator, times(1)).valid(Set.of(), Set.of());
     }
 }

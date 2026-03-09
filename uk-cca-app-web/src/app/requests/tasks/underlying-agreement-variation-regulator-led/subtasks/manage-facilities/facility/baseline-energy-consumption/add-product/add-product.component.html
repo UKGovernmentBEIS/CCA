@@ -1,0 +1,36 @@
+@if (hasFormErrors() && (form?.pristine || form?.dirty)) {
+  <govuk-error-summary [form]="form" />
+}
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <ng-container formArrayName="products">
+    @for (product of productsArray.controls; let i = $index; track product) {
+      <div [formGroupName]="i">
+        <cca-add-product-item
+          [group]="product"
+          [index]="i"
+          [baselineYearOptions]="baselineYearOptions"
+          [facilityUnit]="facilityThroughputUnit | measurementTypeToUnit"
+          [canRemove]="productsArray.length > 1"
+          (remove)="onRemoveProduct(i)"
+        />
+      </div>
+    }
+  </ng-container>
+
+  <div class="govuk-button-group govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <button
+        type="button"
+        class="govuk-button govuk-button--secondary govuk-!-margin-bottom-5"
+        (click)="onAddProduct()"
+      >
+        Add another product
+      </button>
+    </div>
+
+    <div class="govuk-grid-column-full govuk-!-margin-top-5">
+      <button class="govuk-button" type="submit">Save and continue</button>
+    </div>
+  </div>
+</form>

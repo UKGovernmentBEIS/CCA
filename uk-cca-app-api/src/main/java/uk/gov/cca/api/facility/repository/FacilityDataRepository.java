@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.QueryHint;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.facility.domain.FacilityData;
 
 import java.util.List;
@@ -56,4 +57,14 @@ public interface FacilityDataRepository extends JpaRepository<FacilityData, Long
     @QueryHints({ @QueryHint(name = "javax.persistence.query.timeout", value = "5000") })
     @Query(value = "select fd from FacilityData fd where fd.id = :id")
     Optional<FacilityData> findByIdForUpdate(Long id);
+    
+    @Query(value = "SELECT DISTINCT new uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO(tu.id, tu.businessId, tu.name) " +
+			"FROM TargetUnitAccount tu " +
+			"JOIN FacilityData fd ON fd.accountId = tu.id " +
+			"WHERE tu.status = 'LIVE' " +
+			"AND fd.closedDate IS NULL " +
+			"AND fd.participatingSchemeVersions = jsonb_build_array(:schemeVersion) ")
+    List<TargetUnitAccountBusinessInfoDTO> findLiveAccountsWithAtLeastOneFacilityForSchemeVersionOnly(String schemeVersion);
+
+    List<FacilityData> findAllByAccountId(Long accountId);
 }

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.common.domain.SchemeVersion;
-import uk.gov.cca.api.underlyingagreement.utils.UnderlyingAgreementCalculateSchemeVersionsUtil;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementSchemeVersionsHelperService;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaReviewDecisionType;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.notification.DocumentTemplateUnderlyingAgreementParamsProvider;
@@ -24,6 +24,7 @@ public class UnderlyingAgreementAcceptedDocumentTemplateWorkflowParamsProvider i
         DocumentTemplateWorkflowParamsProvider<UnderlyingAgreementRequestPayload> {
 
     private final DocumentTemplateUnderlyingAgreementParamsProvider documentTemplateUnderlyingAgreementParamsProvider;
+    private final UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
 
     @Override
     public String getContextActionType() {
@@ -38,8 +39,9 @@ public class UnderlyingAgreementAcceptedDocumentTemplateWorkflowParamsProvider i
         Map<String, Object> params = documentTemplateUnderlyingAgreementParamsProvider
                 .constructTargetUnitDetailsTemplateParams(proposedUnderlyingAgreement.getUnderlyingAgreementTargetUnitDetails());
 
-        Set<String> schemeVersions = UnderlyingAgreementCalculateSchemeVersionsUtil
-        		.calculateSchemeVersionsFromActiveFacilities(payload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities())
+        Set<String> schemeVersions = underlyingAgreementSchemeVersionsHelperService
+        		.calculateSchemeVersionsFromActiveFacilities(
+        				payload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities())
         		.stream()
         		.map(SchemeVersion::getDescription)
         		.collect(Collectors.toSet());

@@ -6,6 +6,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { DetailsComponent, RadioComponent, RadioOptionComponent } from '@netz/govuk-components';
 import {
+  FACILITY_EXTENT_FORM,
+  FacilityExtentFormModel,
+  FacilityExtentFormProvider,
   FacilityWizardStep,
   isFacilityWizardCompleted,
   TaskItemStatus,
@@ -23,11 +26,6 @@ import {
 } from 'cca-api';
 
 import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } from '../../../../transform';
-import {
-  FACILITY_EXTENT_FORM,
-  FacilityExtentFormModel,
-  FacilityExtentFormProvider,
-} from './facility-extent-form.provider';
 
 @Component({
   selector: 'cca-facility-extent',

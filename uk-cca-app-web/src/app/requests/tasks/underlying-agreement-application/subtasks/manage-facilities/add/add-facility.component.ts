@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -42,10 +42,12 @@ export class AddFacilityComponent {
   private readonly router = inject(Router);
 
   private readonly requestInfo = this.store.select(requestTaskQuery.selectRequestInfo);
+  private readonly resourceType = computed(() => this.requestInfo()?.resourceType);
+  private readonly resource = computed(() => this.requestInfo()?.resources?.[this.resourceType()]);
 
   onSubmit(form: FormGroup<FacilityDetailsFormModel>) {
     this.facilityService
-      .generateFacilityBusinessId(this.requestInfo().accountId)
+      .generateFacilityBusinessId(+this.resource())
       .pipe(switchMap((facility) => this.update(form, facility.facilityBusinessId)))
       .subscribe();
   }

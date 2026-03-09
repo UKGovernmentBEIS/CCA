@@ -8,6 +8,7 @@ import { initializeAdminTerminationPayload } from './admin-termination/admin-ter
 import { initializeAdminTerminationFinalDecisionPayload } from './admin-termination-final-decision/admin-termination-final-decision-payload-initializer';
 import { initializeUnderlyingAgreementSubmitPayload } from './underlying-agreement-application/underlying-agreement-application-payload-initializer';
 import { initializeUnderlyingAgreementVariationSubmitPayload } from './underlying-agreement-variation/underlying-agreement-variation-payload-initializer';
+import { initializeUnderlyingAgreementVariationRegulatorLedSubmitPayload } from './underlying-agreement-variation-regulator-led/underlying-agreement-variation-regulator-led-payload-initializer';
 import { initializeWithdrawAdminTerminationPayload } from './withdraw-admin-termination/withdraw-admin-termination-payload-initializer';
 
 export const initializePayloadGuard = () => {
@@ -27,6 +28,10 @@ export const initializePayloadGuard = () => {
 
         case 'UNDERLYING_AGREEMENT_VARIATION_SUBMIT':
           store.setPayload(initializeUnderlyingAgreementVariationSubmitPayload(payload));
+          break;
+
+        case 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT':
+          store.setPayload(initializeUnderlyingAgreementVariationRegulatorLedSubmitPayload(payload));
           break;
 
         case 'ADMIN_TERMINATION_APPLICATION_SUBMIT':

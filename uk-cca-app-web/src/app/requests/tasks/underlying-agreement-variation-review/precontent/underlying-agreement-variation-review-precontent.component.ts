@@ -19,9 +19,7 @@ import { underlyingAgreementReviewQuery } from '@requests/common';
       >
         Send for peer review
       </button>
-    }
 
-    @if (determinationSubmitted() && isEditable()) {
       <button netzPendingButton govukButton type="button" (click)="onNotifyOperatorOfDecision()">
         Notify operator of decision
       </button>

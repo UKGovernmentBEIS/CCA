@@ -1,89 +1,94 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
-import { firstValueFrom, Subject } from 'rxjs';
-import { TestScheduler } from 'rxjs/testing';
-
 import { mockClass } from '@netz/common/testing';
-import { testSchedulerFactory } from '@netz/common/testing/marble-helpers';
-import { AuthService } from '@shared/services';
-import { KeycloakEvent, KeycloakEventType, KeycloakService } from 'keycloak-angular';
-import { KeycloakInstance } from 'keycloak-js';
+import { AuthService, KeycloakEventType, KeycloakService } from '@shared/services';
 
 import { TimeoutBannerService } from './timeout-banner.service';
 
 describe('TimeoutBannerService', () => {
   let service: TimeoutBannerService;
-  let testScheduler: TestScheduler;
+  let keycloakService: jest.Mocked<KeycloakService>;
+  let authService: jest.Mocked<AuthService>;
 
-  const mockRefreshTokenParsed = { iat: 0, exp: 210 };
-  const mockRefreshTokenParsedNoExtension = { iat: 0, exp: 100 };
-  const keycloakEvents$ = new Subject<KeycloakEvent>();
-
-  const keycloakService: Partial<jest.Mocked<KeycloakService>> = {
-    getKeycloakInstance: jest.fn().mockReturnValue({ refreshTokenParsed: mockRefreshTokenParsed }),
-    keycloakEvents$,
-    updateToken: jest.fn().mockReturnValue(Promise.resolve(true)),
-    logout: jest.fn().mockImplementation(),
-  };
-
-  const authService = mockClass(AuthService);
+  const futureExp = Math.floor(Date.now() / 1000) + 210;
+  const mockRefreshTokenParsed = { iat: Math.floor(Date.now() / 1000) - 100, exp: futureExp };
 
   beforeEach(() => {
-    testScheduler = testSchedulerFactory();
+    const keycloakServiceMock = mockClass(KeycloakService);
+    const authServiceMock = mockClass(AuthService);
 
     TestBed.configureTestingModule({
       providers: [
-        { provide: KeycloakService, useValue: keycloakService },
-        { provide: AuthService, useValue: authService },
+        { provide: KeycloakService, useValue: keycloakServiceMock },
+        { provide: AuthService, useValue: authServiceMock },
+        TimeoutBannerService,
       ],
     });
 
+    keycloakService = TestBed.inject(KeycloakService) as jest.Mocked<KeycloakService>;
+    authService = TestBed.inject(AuthService) as jest.Mocked<AuthService>;
     service = TestBed.inject(TimeoutBannerService);
+
+    (keycloakService.keycloakEvents as any) = signal(null);
+    (keycloakService.updateToken as any) = jest.fn().mockResolvedValue(true);
+    Object.defineProperty(keycloakService, 'keycloakInstance', {
+      value: {
+        refreshTokenParsed: mockRefreshTokenParsed,
+      },
+      configurable: true,
+    });
+
+    authService.logout.mockResolvedValue(undefined);
+  });
+
+  afterEach(() => {
+    jest.clearAllTimers();
+    jest.useRealTimers();
+    jest.clearAllMocks();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should logout user if time limit exceeded', () => {
-    testScheduler.run(({ cold, expectObservable, flush }) => {
-      jest.useFakeTimers();
-      jest.setSystemTime(testScheduler.now());
-
-      cold('-a- 200s', { a: { type: KeycloakEventType.OnAuthRefreshSuccess } }).subscribe((event) => {
-        jest.setSystemTime(testScheduler.now());
-        keycloakService.keycloakEvents$.next(event);
-      });
-
-      expectObservable(service.isVisible$).toBe('a 89s 999ms b 119s 999ms a', { a: false, b: true });
-
-      flush();
-
-      expect(keycloakService.logout).toHaveBeenCalled();
-    });
+  it('should initialize with correct values', () => {
+    expect(service.isVisible()).toBeFalsy();
+    expect(service.timeExtensionAllowed()).toBeTruthy();
   });
 
-  it('should extend time session', async () => {
-    service.extendSession();
-
-    expect(keycloakService.updateToken).toHaveBeenCalled();
-    await expect(firstValueFrom(service.isVisible$)).resolves.toBeFalsy();
+  it('should extend session', async () => {
+    await service.extendSession();
+    expect(keycloakService.updateToken).toHaveBeenCalledWith(-1);
   });
 
-  it('should not allow time extension', () => {
-    testScheduler.run(({ cold, expectObservable }) => {
-      jest.useFakeTimers();
-      jest.setSystemTime(testScheduler.now());
-      keycloakService.getKeycloakInstance.mockReturnValue({
-        refreshTokenParsed: mockRefreshTokenParsedNoExtension,
-      } as KeycloakInstance);
+  it('should hide banner when extending session', async () => {
+    service.isVisible.set(true);
+    await service.extendSession();
+    expect(service.isVisible()).toBeFalsy();
+  });
 
-      cold('-a- 200s', { a: { type: KeycloakEventType.OnAuthRefreshSuccess } }).subscribe((event) => {
-        jest.setSystemTime(testScheduler.now());
-        keycloakService.keycloakEvents$.next(event);
-      });
+  it('should sign out and hide banner', () => {
+    service.isVisible.set(true);
+    service.signOut();
+    expect(service.isVisible()).toBeFalsy();
+    expect(authService.logout).toHaveBeenCalled();
+  });
 
-      expectObservable(service.timeExtensionAllowed$).toBe('ab', { a: true, b: false });
+  it('should handle auth events', () => {
+    (keycloakService.keycloakEvents as any).set({
+      type: KeycloakEventType.OnAuthRefreshSuccess,
     });
+    expect(service.countDownTime()).toBeGreaterThanOrEqual(0);
+  });
+
+  it('should cleanup on destroy', () => {
+    jest.useFakeTimers();
+    (keycloakService.keycloakEvents as any).set({
+      type: KeycloakEventType.OnAuthRefreshSuccess,
+    });
+    service.ngOnDestroy();
+    expect(jest.getTimerCount()).toBe(0);
+    jest.useRealTimers();
   });
 });

@@ -1,6 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { catchError, of, take } from 'rxjs';
 
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -8,6 +12,8 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import {
   areEntitiesIdentical,
+  CompaniesHouseDetailsComponent,
+  CompaniesHouseState,
   filterFieldsWithFalsyValues,
   TaskItemStatus,
   TasksApiService,
@@ -21,33 +27,18 @@ import {
   underlyingAgreementReviewQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
+import { transformAddress } from '@shared/pipes';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
+
+import { CompaniesInformationService, CompanyProfileDTO } from 'cca-api';
 
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../transform';
 import { resetDetermination } from '../../../utils';
 
 @Component({
   selector: 'cca-check-your-answers',
-  template: `
-    <div>
-      <netz-page-heading caption="Target unit details">Check your answers</netz-page-heading>
-
-      <ng-template #contentTpl let-showOriginal="showOriginal">
-        <cca-summary [data]="showOriginal ? summaryDataOriginal : summaryDataCurrent" />
-      </ng-template>
-
-      <cca-highlight-diff>
-        <ng-container slot="previous" *ngTemplateOutlet="contentTpl; context: { showOriginal: true }" />
-        <ng-container slot="current" *ngTemplateOutlet="contentTpl; context: { showOriginal: false }" />
-      </cca-highlight-diff>
-
-      <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
-    </div>
-
-    <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-    <netz-return-to-task-or-action-page />
-  `,
+  templateUrl: './review-target-unit-details-check-your-answers.component.html',
   imports: [
     PageHeadingComponent,
     SummaryComponent,
@@ -56,14 +47,36 @@ import { resetDetermination } from '../../../utils';
     ReturnToTaskOrActionPageComponent,
     HighlightDiffComponent,
     NgTemplateOutlet,
+    CompaniesHouseDetailsComponent,
+    ReactiveFormsModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReviewTargetUnitDetailsCheckYourAnswersComponent {
+export class ReviewTargetUnitDetailsCheckYourAnswersComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly tasksApiService = inject(TasksApiService);
   private readonly store = inject(RequestTaskStore);
+  private readonly companiesInformationService = inject(CompaniesInformationService);
+
+  protected readonly toggleCompaniesHouseDetailsCtrl = new FormControl<boolean>(false);
+  protected readonly toggleCompaniesHouseDetails = toSignal(this.toggleCompaniesHouseDetailsCtrl.valueChanges, {
+    initialValue: false,
+  });
+
+  protected readonly mainColumnClass = computed(() =>
+    this.toggleCompaniesHouseDetails() ? 'govuk-grid-column-two-thirds' : 'govuk-grid-column-full',
+  );
+
+  private readonly companiesHouseDetailsResponse = signal<CompanyProfileDTO | null>(null);
+
+  protected readonly companiesHouseState = computed<CompaniesHouseState>(() => {
+    const response = this.companiesHouseDetailsResponse();
+    return {
+      details: typeof response === 'object' ? response : null,
+      address: typeof response === 'object' ? transformAddress(response?.address).join('\n') : null,
+    };
+  });
 
   private readonly downloadUrl = generateDownloadUrl(
     this.store.select(requestTaskQuery.selectRequestTaskId)().toString(),
@@ -75,10 +88,14 @@ export class ReviewTargetUnitDetailsCheckYourAnswersComponent {
   private readonly originalTargetUnitDetails = transformAccountReferenceData(this.accountReferenceData);
   private readonly currentTargetUnitDetails = this.store.select(
     underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails,
-  )();
+  );
+
+  protected readonly tuDetails = computed(() =>
+    this.currentTargetUnitDetails() ? this.currentTargetUnitDetails() : this.originalTargetUnitDetails,
+  );
 
   private readonly areIdentical = areEntitiesIdentical(
-    filterFieldsWithFalsyValues(this.currentTargetUnitDetails),
+    filterFieldsWithFalsyValues(this.currentTargetUnitDetails()),
     filterFieldsWithFalsyValues(this.originalTargetUnitDetails),
   );
 
@@ -95,12 +112,28 @@ export class ReviewTargetUnitDetailsCheckYourAnswersComponent {
   );
 
   protected readonly summaryDataCurrent = toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
-    this.currentTargetUnitDetails,
+    this.currentTargetUnitDetails(),
     this.decision,
     this.attachments,
     this.downloadUrl,
     this.isEditable,
   );
+
+  ngOnInit() {
+    if (this.tuDetails().companyRegistrationNumber) {
+      this.companiesInformationService
+        .getCompanyProfileByRegistrationNumber(this.tuDetails().companyRegistrationNumber)
+        .pipe(
+          take(1),
+          catchError(() => of(null)),
+        )
+        .subscribe((res) => {
+          if (typeof res === 'object') {
+            this.companiesHouseDetailsResponse.set(res);
+          }
+        });
+    }
+  }
 
   onSubmit() {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();

@@ -13,6 +13,7 @@ import uk.gov.cca.api.workflow.request.flow.common.service.notification.TargetUn
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +46,7 @@ public class Cca3ExistingFacilitiesMigrationAccountProcessingActivationDefaultNo
     }
 
     @Override
-    public String getType() {
-        return CcaRequestTaskType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION;
+    public Set<String> getTypes() {
+        return Set.of(CcaRequestTaskType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION);
     }
 }

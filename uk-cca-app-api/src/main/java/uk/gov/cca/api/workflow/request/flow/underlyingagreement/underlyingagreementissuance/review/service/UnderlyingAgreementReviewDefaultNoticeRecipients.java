@@ -10,6 +10,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class UnderlyingAgreementReviewDefaultNoticeRecipients implements Request
     }
 
     @Override
-    public String getType() {
-        return CcaRequestTaskType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW;
+    public Set<String> getTypes() {
+        return Set.of(CcaRequestTaskType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW);
     }
 }

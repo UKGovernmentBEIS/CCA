@@ -85,10 +85,19 @@ public class FacilityDataUpdateService {
     }
 
     @Transactional
-    public void terminateFacilities(Long accountId, LocalDateTime terminationDateTime) {
+    public void terminateActiveFacilities(Long accountId, LocalDateTime terminationDateTime) {
         List<FacilityData> activeFacilitiesData = repository.findFacilityDataByAccountIdAndClosedDateIsNull(accountId);
 
-        for (FacilityData facility : activeFacilitiesData) {
+        applyTermination(terminationDateTime, activeFacilitiesData);
+    }
+    
+    @Transactional
+    public void terminateFacilities(LocalDateTime terminationDateTime, List<FacilityData> activeFacilitiesData) {
+        applyTermination(terminationDateTime, activeFacilitiesData);
+    }
+
+	private void applyTermination(LocalDateTime terminationDateTime, List<FacilityData> activeFacilitiesData) {
+		for (FacilityData facility : activeFacilitiesData) {
             facility.setClosedDate(terminationDateTime);
             if (facility.getSchemeExitDate() == null) {
                 facility.setSchemeExitDate(terminationDateTime.toLocalDate());
@@ -96,7 +105,7 @@ public class FacilityDataUpdateService {
         }
 
         repository.saveAll(activeFacilitiesData);
-    }
+	}
 
     @Transactional
     public void updateFacilitiesDataParticipatingScheme(Set<String> facilityBusinessIds, SchemeVersion schemeVersion) {

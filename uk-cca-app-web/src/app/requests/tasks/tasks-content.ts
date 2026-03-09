@@ -18,6 +18,9 @@ import { underlyingAgreementReviewTaskContent } from './underlying-agreement-rev
 import { underlyingAgreementVariationTaskContent } from './underlying-agreement-variation/underlying-agreement-variation-task-content';
 import { underlyingAgreementVariationActivationTaskContent } from './underlying-agreement-variation-activation/underlying-agreement-variation-activation-task-content';
 import { underlyingAgreementVariationPeerReviewTaskContent } from './underlying-agreement-variation-peer-review/underlying-agreement-variation-peer-review-task-content';
+import { underlyingAgreementVariationRegulatorLedTaskContent } from './underlying-agreement-variation-regulator-led/underlying-agreement-variation-regulator-led-task-content';
+import { unaRegulatorLedVariationPeerReviewTaskContent } from './underlying-agreement-variation-regulator-led-peer-review/underlying-agreement-variation-regulator-led-peer-review-task-content';
+import { unaRegulatorLedVariationWaitForPeerReviewTaskContent } from './underlying-agreement-variation-regulator-led-wait-for-peer-review/underlying-agreement-variation-regulator-led-wait-for-peer-review-task-content';
 import { underlyingAgreementVariationReviewTaskContent } from './underlying-agreement-variation-review/underlying-agreement-variation-review-task-content';
 import { underlyingAgreementVariationWaitActivationTaskContent } from './underlying-agreement-variation-wait-activation/underlying-agreement-variation-wait-activation-task-content';
 import { underlyingAgreementVariationWaitForPeerReviewTaskContent } from './underlying-agreement-variation-wait-for-peer-review/underlying-agreement-variation-wait-for-peer-review-task-content';
@@ -49,6 +52,10 @@ export const tasksContent: RequestTaskPageContentFactoryMap = {
   UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_REVIEW: underlyingAgreementVariationWaitReviewTaskContent,
   UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_ACTIVATION: underlyingAgreementVariationWaitActivationTaskContent,
   UNDERLYING_AGREEMENT_VARIATION_ACTIVATION: underlyingAgreementVariationActivationTaskContent,
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT: underlyingAgreementVariationRegulatorLedTaskContent,
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_WAIT_FOR_PEER_REVIEW:
+    unaRegulatorLedVariationWaitForPeerReviewTaskContent,
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW: unaRegulatorLedVariationPeerReviewTaskContent,
 
   PERFORMANCE_DATA_DOWNLOAD_SUBMIT: performanceDataDownloadTaskContent,
   PERFORMANCE_DATA_UPLOAD_SUBMIT: performanceDataUploadTaskContent,
@@ -59,4 +66,6 @@ export const tasksContent: RequestTaskPageContentFactoryMap = {
   PRE_AUDIT_REVIEW_SUBMIT: preAuditReviewTaskContent,
   AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT: auditDetailsCorrectiveActionsTaskContent,
   AUDIT_TRACK_CORRECTIVE_ACTIONS: trackCorrectiveActionsTaskContent,
+
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_ACTIVATION: underlyingAgreementVariationActivationTaskContent,
 };

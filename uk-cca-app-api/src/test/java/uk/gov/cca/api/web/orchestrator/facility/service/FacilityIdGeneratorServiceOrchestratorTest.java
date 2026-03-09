@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
-import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
+import uk.gov.cca.api.facility.domain.dto.FacilityBusinessIdDTO;
 import uk.gov.cca.api.facility.service.FacilityIdentifierService;
 import uk.gov.cca.api.sectorassociation.service.SectorAssociationQueryService;
 
@@ -36,7 +36,7 @@ class FacilityIdGeneratorServiceOrchestratorTest {
         final String facilityBusinessId = "SA-F00001";
         final String acronym = "SA";
 
-        FacilityDTO facilityDTOSaved = FacilityDTO.builder()
+        FacilityBusinessIdDTO facilityDTOSaved = FacilityBusinessIdDTO.builder()
                 .facilityBusinessId(facilityBusinessId)
                 .build();
 
@@ -44,7 +44,7 @@ class FacilityIdGeneratorServiceOrchestratorTest {
         when(facilityIdentifierService.incrementAndGet(sectorAssociationId)).thenReturn(identifierId);
         when(sectorAssociationQueryService.getSectorAssociationAcronymById(sectorAssociationId)).thenReturn(acronym);
 
-        FacilityDTO facilityDTO = facilityIdGeneratorServiceOrchestrator.generateFacilityBusinessId(accountId);
+        FacilityBusinessIdDTO facilityDTO = facilityIdGeneratorServiceOrchestrator.generateFacilityBusinessId(accountId);
 
         assertThat(facilityDTO).isEqualTo(facilityDTOSaved);
         verify(facilityIdentifierService, times(1)).incrementAndGet(sectorAssociationId);

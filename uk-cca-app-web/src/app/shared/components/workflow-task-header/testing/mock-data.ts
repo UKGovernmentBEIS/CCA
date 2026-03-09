@@ -9,8 +9,10 @@ export const mockWorkflowTaskHeaderInfo: TargetUnitAccountHeaderInfoDTO = {
 export const mockRequestInfo: RequestInfoDTO = {
   id: 'ADS_2-T00008-ATER-1',
   type: 'ADMIN_TERMINATION',
-  competentAuthority: 'ENGLAND',
-  accountId: 8,
+  resourceType: 'ACCOUNT',
+  resources: {
+    ACCOUNT: '17',
+  },
 };
 
 export const mockRequestTaskItem: RequestTaskItemDTO = {

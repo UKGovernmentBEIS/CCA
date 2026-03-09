@@ -1,0 +1,172 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CheckYourAnswersComponent should match snapshot for OverallDecisionCheckYourAnswersComponent 1`] = `
+<div
+  id="root0"
+>
+  <div>
+    <netz-page-heading
+      caption="Determine operator assent"
+    >
+      <span
+        class="govuk-caption-l"
+      >
+        Determine operator assent
+      </span>
+      
+      <h1
+        class="govuk-heading-l"
+      >
+        Check your answers
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Does this variation result in changes to the current underlying agreement?
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            
+            
+            
+            <span>
+              
+            </span>
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/additional-info?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Additional information (optional)
+          </dt>
+          <dd
+            class="pre-line govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            
+            
+            
+            <span>
+              adqwdasd
+            </span>
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/additional-info?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+          
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Uploaded files
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              No files provided
+            </span>
+            
+            
+            
+            
+            
+          </dd>
+          <dd
+            class="govuk-summary-list__actions"
+            govuksummarylistrowactions=""
+          >
+            <a
+              class="govuk-link"
+              href="/additional-info?change=true"
+            >
+              Change
+            </a>
+          </dd>
+          
+          
+        </div>
+        
+        
+        
+      </dl>
+      
+      
+    </cca-summary>
+    <button
+      class="govuk-button"
+      govukbutton=""
+      netzpendingbutton=""
+      type="button"
+    >
+      Confirm and complete
+    </button>
+  </div>
+  <hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  />
+  <netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Review application for underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</div>
+`;

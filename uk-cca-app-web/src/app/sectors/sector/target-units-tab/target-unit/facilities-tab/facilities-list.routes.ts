@@ -3,10 +3,10 @@ import { Routes } from '@angular/router';
 
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
 import { resetCurrentFacility, setCurrentFacility } from '@requests/common';
+import { WORKFLOW_DETAILS_ROUTES } from '@shared/components';
 
 import { FacilityAuditStore } from './facility-audit/facility-audit.store';
 import { FacilityDetailsResolver } from './facility-details.resolver';
-import { WORKFLOW_DETAILS_ROUTES } from './workflow-history-tab/workflow-details/workflow-details.routes';
 
 export const FACILITIES_LIST_ROUTES: Routes = [
   {

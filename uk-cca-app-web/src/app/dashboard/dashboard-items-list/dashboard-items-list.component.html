@@ -4,7 +4,7 @@
       @switch (column.field) {
         @case ('taskType') {
           <a [routerLink]="row | itemLink" class="govuk-link">
-            {{ row[column.field] | itemName: row.requestId?.split('-')[1] }}
+            {{ row[column.field] | itemName }}
           </a>
 
           <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">

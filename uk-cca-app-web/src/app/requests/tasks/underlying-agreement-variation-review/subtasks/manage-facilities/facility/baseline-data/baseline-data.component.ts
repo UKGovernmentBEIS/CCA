@@ -13,7 +13,9 @@ import {
 } from '@netz/govuk-components';
 import {
   areEntitiesIdentical,
+  FACILITY_BASELINE_DATA_FORM,
   FacilityBaselineDataFormModel,
+  FacilityBaselineDataFormProvider,
   FacilityWizardStep,
   filterFieldsWithFalsyValues,
   isFacilityWizardCompleted,
@@ -24,8 +26,8 @@ import {
   UNAVariationReviewRequestTaskPayload,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
+  underlyingAgreementVariationReviewQuery,
 } from '@requests/common';
-import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
 import { fileUtils, generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
@@ -34,7 +36,6 @@ import { UnderlyingAgreementVariationReviewSavePayload } from 'cca-api';
 
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../../transform';
 import { deleteFacilityDecision, resetDetermination } from '../../../../utils';
-import { FACILITY_BASELINE_DATA_FORM, FacilityBaselineDataFormProvider } from './baseline-data-form.provider';
 
 @Component({
   selector: 'cca-baseline-data',

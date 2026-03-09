@@ -100,7 +100,7 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingActivationDefaultNoticeRec
     }
 
     @Test
-    void getType() {
-        assertThat(service.getType()).isEqualTo(CcaRequestTaskType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION);
+    void getTypes() {
+        assertThat(service.getTypes()).containsExactly(CcaRequestTaskType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION);
     }
 }

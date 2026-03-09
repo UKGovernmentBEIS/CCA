@@ -8,7 +8,7 @@ import { TabLazyDirective, TabsComponent, TagComponent } from '@netz/govuk-compo
 import { WorkflowNotesComponent } from '@shared/components';
 import { StatusColorPipe, StatusPipe } from '@shared/pipes';
 
-import { WorkflowHistoryDetailsResponse } from './workflow-history.resolver';
+import { WorkflowHistoryDetailsResponse } from '../../buy-out-surplus/workflow-history/workflow-history.resolver';
 
 @Component({
   selector: 'cca-workflow-history',

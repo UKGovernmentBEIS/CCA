@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`FacilitySummaryComponent should show summary values 1`] = `
+<cca-facility-summary
+  activatedRoute={[Function Object]}
+  downloadUrl={[Function String]}
+  facility={[Function Function]}
+  facilityId={[Function String]}
+  originalFacility={[Function Function]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  schemeVersion={[Function Function]}
+  sectorSchemeData={[Function Function]}
+  summaryDataCurrent={[Function Function]}
+  summaryDataOriginal={[Function Function]}
+  taskId={[Function Number]}
+>
+  <hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><a
+    class="govuk-link"
+    href="/"
+  >
+     Return to: Manage facilities 
+  </a>
+</cca-facility-summary>
+`;

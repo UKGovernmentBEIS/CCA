@@ -18,7 +18,7 @@ export const processActionsDetailsTypesMap: Partial<Record<RequestDetailsDTO['re
 };
 
 export const userRoleWorkflowAccessMap: Record<UserStateDTO['roleType'], string[]> = {
-  REGULATOR: ['ADMIN_TERMINATION'],
+  REGULATOR: ['ADMIN_TERMINATION', 'UNDERLYING_AGREEMENT_VARIATION'],
   OPERATOR: [],
   SECTOR_USER: [
     'UNDERLYING_AGREEMENT_VARIATION',
@@ -38,7 +38,7 @@ export const taskWorkflowContentDisplayMap: Record<RequestDetailsDTO['requestTyp
     errors: [],
   },
   UNDERLYING_AGREEMENT_VARIATION: {
-    title: 'Make a permanent change to your underlying agreement',
+    title: 'Make a permanent change to the underlying agreement',
     button: 'Start a variation',
     type: 'UNDERLYING_AGREEMENT_VARIATION',
     errors: [],

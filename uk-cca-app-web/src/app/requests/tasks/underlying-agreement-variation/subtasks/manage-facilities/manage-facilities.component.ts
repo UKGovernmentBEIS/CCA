@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { PageHeadingComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { StatusTagColorPipe, StatusTagTextPipe, TASK_STATUS_TAG_MAP } from '@netz/common/pipes';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -53,6 +53,7 @@ export type FacilityStatus = 'NEW' | 'LIVE' | 'EXCLUDED' | null;
     SelectComponent,
     TextInputComponent,
     ErrorSummaryComponent,
+    ReturnToTaskOrActionPageComponent,
   ],
   providers: [{ provide: TASK_STATUS_TAG_MAP, useValue: taskStatusTagMap }, StatusPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,

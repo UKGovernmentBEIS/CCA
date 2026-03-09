@@ -10,9 +10,10 @@ import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.proc
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaNotifyOperatorForDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerReviewDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmitSaveRequestTaskActionPayload;
-import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataGenerateRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadProcessingRequestTaskActionPayload;
@@ -25,6 +26,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.submit.domain.UnderlyingAgreementSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.regulatorledsubmit.domain.UnderlyingAgreementVariationRegulatorLedSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationSaveFacilityReviewGroupDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationSaveReviewDeterminationRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationSaveReviewGroupDecisionRequestTaskActionPayload;
@@ -35,37 +37,7 @@ import uk.gov.netz.api.workflow.request.flow.common.domain.PeerReviewRequestTask
 
 import java.util.List;
 
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.ADMIN_TERMINATION_FINAL_DECISION_SAVE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.ADMIN_TERMINATION_PEER_REVIEW_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.ADMIN_TERMINATION_SAVE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.ADMIN_TERMINATION_SUBMIT_PEER_REVIEW_DECISION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.ADMIN_TERMINATION_WITHDRAW_SAVE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SAVE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_SAVE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SAVE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.FACILITY_AUDIT_PRE_AUDIT_REVIEW_SAVE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMIT_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.PERFORMANCE_DATA_DOWNLOAD_GENERATE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.PERFORMANCE_DATA_UPLOAD_PROCESSING_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_ACTIVATION_SAVE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_APPLICATION_SAVE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_PEER_REVIEW_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_SAVE_APPLICATION_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_SAVE_FACILITY_REVIEW_GROUP_DECISION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_SAVE_REVIEW_DETERMINATION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_SAVE_REVIEW_GROUP_DECISION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_SUBMIT_PEER_REVIEW_DECISION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_SAVE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_SAVE_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW_REQUEST_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_SAVE_APPLICATION_REVIEW_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_SAVE_FACILITY_REVIEW_GROUP_DECISION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_DETERMINATION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_SAVE_REVIEW_GROUP_DECISION_PAYLOAD;
-import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.UNDERLYING_AGREEMENT_VARIATION_SUBMIT_PEER_REVIEW_DECISION_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType.*;
 
 
 @Component
@@ -102,6 +74,7 @@ public class RequestTaskActionPayloadTypesProvider implements JsonSubTypesProvid
                 new NamedType(UnderlyingAgreementVariationNotifyOperatorForDecisionRequestTaskActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD),
                 new NamedType(PeerReviewRequestTaskActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW_REQUEST_PAYLOAD),
                 new NamedType(CcaPeerReviewDecisionRequestTaskActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_SUBMIT_PEER_REVIEW_DECISION_PAYLOAD),
+                new NamedType(UnderlyingAgreementVariationRegulatorLedSaveRequestTaskActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SAVE_PAYLOAD),
 
                 // Performance data download
                 new NamedType(PerformanceDataGenerateRequestTaskActionPayload.class, PERFORMANCE_DATA_DOWNLOAD_GENERATE_PAYLOAD),
@@ -121,7 +94,10 @@ public class RequestTaskActionPayloadTypesProvider implements JsonSubTypesProvid
                 new NamedType(PreAuditReviewSubmitSaveRequestTaskActionPayload.class, FACILITY_AUDIT_PRE_AUDIT_REVIEW_SAVE_PAYLOAD),
                 new NamedType(AuditDetailsCorrectiveActionsSubmitSaveRequestTaskActionPayload.class, FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SAVE_PAYLOAD),
                 new NamedType(AuditTrackCorrectiveActionsSaveRequestTaskActionPayload.class, FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SAVE_PAYLOAD),
-                new NamedType(AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload.class, FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMIT_PAYLOAD)
+                new NamedType(AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload.class, FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMIT_PAYLOAD),
+
+                // Non Compliance
+                new NamedType(NonComplianceDetailsSubmitSaveRequestTaskActionPayload.class, NON_COMPLIANCE_DETAILS_SAVE_PAYLOAD)
         );
     }
 

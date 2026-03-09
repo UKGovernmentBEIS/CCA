@@ -27,7 +27,7 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Target Unit/Facility changes
+            Changes that don't usually require the operator to provide their assent
           </dt>
           <dd
             class="pre-line govuk-summary-list__value"
@@ -40,43 +40,11 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
               Amend the 70% rule evaluation for one or more facilities
             </span>
             
-            
-            
-            
-          </dd>
-          <dd
-            class="govuk-summary-list__actions"
-            govuksummarylistrowactions=""
-          >
-            <a
-              class="govuk-link"
-              href="/variation-details?change=true"
-            >
-              Change
-            </a>
-          </dd>
-          
-          
-        </div>
-        <div
-          class="govuk-summary-list__row"
-          govuksummarylistrow=""
-        >
-          <dt
-            class="govuk-summary-list__key"
-            govuksummarylistrowkey=""
-          >
-            Amend the target currency to
-          </dt>
-          <dd
-            class="pre-line govuk-summary-list__value"
-            govuksummarylistrowvalue=""
-          >
-            
+            <br />
             
             
             <span>
-              change the throughput unit
+              Amend the target currency to change the throughput unit
             </span>
             
             
@@ -105,7 +73,7 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Explain what you are changing and the reason for the changes
+            Explain in more detail what you are changing and the reason for the changes
           </dt>
           <dd
             class="pre-line govuk-summary-list__value"

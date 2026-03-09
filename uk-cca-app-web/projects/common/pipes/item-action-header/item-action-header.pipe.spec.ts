@@ -122,6 +122,43 @@ describe('ItemActionHeaderPipe', () => {
     expect(
       pipe.transform({
         ...baseRequestAction,
+        type: 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_SUBMITTED',
+      }),
+    ).toEqual('Underlying agreement variation proposed by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_COMPLETED',
+      }),
+    ).toEqual('Underlying agreement variation completed by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_ACTIVATED',
+      }),
+    ).toEqual('Underlying agreement variation activated by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW_REQUESTED',
+      }),
+    ).toEqual('Peer review requested by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEWER_ACCEPTED',
+      }),
+    ).toEqual('Peer review agreement submitted by John Bolt');
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEWER_REJECTED',
+      }),
+    ).toEqual('Peer review disagreement submitted by John Bolt');
+
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
         type: 'PERFORMANCE_DATA_SPREADSHEET_PROCESSING_SUBMITTED',
       }),
     ).toEqual('Performance report submitted by John Bolt');
@@ -246,6 +283,13 @@ describe('ItemActionHeaderPipe', () => {
         type: 'FACILITY_AUDIT_CANCELLED',
       }),
     ).toEqual('Audit facility cancelled by John Bolt');
+
+    expect(
+      pipe.transform({
+        ...baseRequestAction,
+        type: 'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED',
+      }),
+    ).toEqual('CCA2 Underlying agreement terminated');
   });
 
   it('should display the approved application title', () => {

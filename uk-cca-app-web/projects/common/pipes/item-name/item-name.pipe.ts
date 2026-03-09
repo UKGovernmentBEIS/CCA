@@ -4,8 +4,7 @@ import { ItemDTO } from 'cca-api';
 
 @Pipe({ name: 'itemName', pure: true })
 export class ItemNamePipe implements PipeTransform {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  transform(value: ItemDTO['taskType'], year?: string | number): string {
+  transform(value: ItemDTO['taskType']): string {
     switch (value) {
       case 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT':
         return 'Apply for underlying agreement';
@@ -47,6 +46,14 @@ export class ItemNamePipe implements PipeTransform {
         return 'Peer review application for underlying agreement variation';
       case 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW':
         return 'Application for underlying agreement variation sent to peer reviewer';
+      case 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT':
+        return 'Vary the underlying agreement';
+      case 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_ACTIVATION':
+        return 'Upload target unit assent on variation';
+      case 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_WAIT_FOR_PEER_REVIEW':
+        return 'Underlying agreement variation sent to peer reviewer';
+      case 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW':
+        return 'Peer review of underlying agreement variation';
 
       case 'PERFORMANCE_DATA_DOWNLOAD_SUBMIT':
         return 'Download target period reporting (TPR) spreadsheets';

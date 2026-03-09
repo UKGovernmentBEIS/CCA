@@ -2,12 +2,14 @@ import { InjectionToken, type Provider } from '@angular/core';
 import { FormBuilder, type FormControl, type FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-export const WORKFLOW_HISTORY_TAB_FORM_PROVIDER = new InjectionToken('Workflow history tab form provider');
-
 export type WorkflowHistoryTabFormModel = FormGroup<{
   requestTypes: FormControl<string[]>;
   requestStatuses: FormControl<string[]>;
 }>;
+
+export const WORKFLOW_HISTORY_TAB_FORM_PROVIDER = new InjectionToken<WorkflowHistoryTabFormModel>(
+  'Workflow history tab form provider',
+);
 
 export const WorkflowHistoryTabFormProvider: Provider = {
   provide: WORKFLOW_HISTORY_TAB_FORM_PROVIDER,

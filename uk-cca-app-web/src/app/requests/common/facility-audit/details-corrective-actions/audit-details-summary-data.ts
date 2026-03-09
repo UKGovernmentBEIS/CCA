@@ -17,7 +17,7 @@ export function toAuditDetailsSummaryData(
     .addSection('', '../details')
     .addRow(
       'Audit technique',
-      auditDetails?.auditTechnique === 'DESK_BASED_INTERVIEW' ? 'Desk-based interview' : 'On-site visit',
+      auditDetails?.auditTechnique === 'DESK_BASED_INTERVIEW' ? 'Desk-based audit' : 'On-site visit',
       {
         change: isEditable,
       },
@@ -32,7 +32,7 @@ export function toAuditDetailsSummaryData(
       change: isEditable,
     })
     .addFileListRow(
-      'Annotated site plan',
+      'Audit documents',
       fileUtils.toDownloadableFiles(
         fileUtils.extractAttachments(auditDetails?.auditDocuments, attachments),
         downloadUrl,

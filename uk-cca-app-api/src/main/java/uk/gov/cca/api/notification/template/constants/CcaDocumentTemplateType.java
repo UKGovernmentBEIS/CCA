@@ -26,7 +26,7 @@ public class CcaDocumentTemplateType {
     //AA_L001_Underlying_Agreement_Application_Refusal.docx
     public static final String UNDERLYING_AGREEMENT_REJECTED = "UNDERLYING_AGREEMENT_REJECTED";
     
-    // AA_L002_Proposed_Underlying_Agreement
+    // CCA3 variation proposed agreement cover letter.docx
     public static final String UNDERLYING_AGREEMENT_ACCEPTED = "UNDERLYING_AGREEMENT_ACCEPTED";
     
     // AA_L003_Underlying_Agreement_Activated

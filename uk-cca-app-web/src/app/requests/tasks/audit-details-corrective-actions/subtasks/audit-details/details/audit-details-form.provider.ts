@@ -53,7 +53,12 @@ export const PreAuditReviewAuditReasonFormProvider: Provider = {
       }),
       finalAuditReportDate: fb.control(
         auditDetails?.finalAuditReportDate ? new Date(auditDetails?.finalAuditReportDate) : null,
-        { validators: [GovukValidators.required('Enter the date of the final audit report')] },
+        {
+          validators: [
+            GovukValidators.required('Enter the date of the final audit report'),
+            GovukValidators.required('The date must be today or in the past'),
+          ],
+        },
       ),
       auditDocuments: auditDocumentsControl,
     });

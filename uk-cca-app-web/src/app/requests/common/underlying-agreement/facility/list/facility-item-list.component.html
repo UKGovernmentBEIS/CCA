@@ -45,6 +45,10 @@
         }
       }
 
+      @case ('chargeStartDate') {
+        {{ row[column.field] | date }}
+      }
+
       @default {
         {{ row[column.field] }}
       }

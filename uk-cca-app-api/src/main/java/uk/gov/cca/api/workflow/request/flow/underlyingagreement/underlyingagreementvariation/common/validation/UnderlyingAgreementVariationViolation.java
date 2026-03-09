@@ -28,7 +28,9 @@ public class UnderlyingAgreementVariationViolation extends BusinessViolation {
         INVALID_SECTION_DATA("Invalid section data"),
         INVALID_UNDERLYING_AGREEMENT_VARIATION_ACTIVATION_DETAILS_DATA("Invalid underlying agreement variation activation details data"),
         ATTACHMENT_NOT_FOUND("Attachment not found"),
-        INVALID_APPLICATION_REASON_SECTION("Invalid application reason");
+        INVALID_APPLICATION_REASON_SECTION("Invalid application reason"),
+        INVALID_FACILITY_CHARGE_START_DATE("Invalid facility charge start date"),
+        INVALID_VARIATION_REGULATOR_LED_DETERMINATION("Invalid variation regulator led determination");
 
         private final String message;
 

@@ -14,6 +14,9 @@ import {
 import {
   AgreementTypeEnum,
   CaNameEnum,
+  FACILITY_ELIGIBILITY_DETAILS_FORM,
+  FacilityEligibilityDetailsFormProvider,
+  FacilityEligibilityFormModel,
   FacilityWizardStep,
   isFacilityWizardCompleted,
   TaskItemStatus,
@@ -31,11 +34,6 @@ import {
 
 import { createRequestTaskActionProcessDTO, toUnderlyingAgreementVariationSavePayload } from '../../../../transform';
 import { extractReviewProps } from '../../../../utils';
-import {
-  FACILITY_ELIGIBILITY_DETAILS_FORM,
-  FacilityEligibilityDetailsFormProvider,
-  FacilityEligibilityFormModel,
-} from './facility-eligibility-details-form.provider';
 @Component({
   selector: 'cca-facility-eligibility-details',
   templateUrl: './facility-eligibility-details.component.html',

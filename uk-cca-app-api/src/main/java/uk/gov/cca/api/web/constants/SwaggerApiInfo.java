@@ -341,4 +341,6 @@ public final class SwaggerApiInfo {
     public static final String UPDATE_FACILITY_ERROR_BAD_REQUEST = BAD_REQUEST + ERROR_CODES_HEADER +
             "FORM1001 | Form validation failed \t\n " +
             "FACILITY1000 | Facility cannot be updated";
+    public static final String MI_REPORT_NAME_EXISTS_FOR_CA = BAD_REQUEST + ERROR_CODES_HEADER +
+            "MIREPORT1001 | The provided MI Report name already exists";
 }

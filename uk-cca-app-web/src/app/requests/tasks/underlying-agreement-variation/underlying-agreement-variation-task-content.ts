@@ -6,6 +6,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
   AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK,
   BaselineAndTargetPeriodsSubtasks,
+  filterEditableTaskLinks,
   isStatusFinal,
   REVIEW_TARGET_UNIT_DETAILS_SUBTASK,
   staticVariationSections,
@@ -18,11 +19,14 @@ import {
 const routePrefix = 'underlying-agreement-variation';
 
 export const underlyingAgreementVariationTaskContent: RequestTaskPageContentFactory = () => {
-  const payload = inject(RequestTaskStore).select(requestTaskQuery.selectRequestTaskPayload)();
+  const store = inject(RequestTaskStore);
+  const payload = store.select(requestTaskQuery.selectRequestTaskPayload)();
+  const isEditable = store.select(requestTaskQuery.selectIsEditable)();
+  const sections = getAllUnderlyingAgreementVariationSections(payload);
 
   return {
     header: 'Apply to vary the underlying agreement',
-    sections: getAllUnderlyingAgreementVariationSections(payload),
+    sections: filterEditableTaskLinks(sections, isEditable),
   };
 };
 

@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
+import uk.gov.cca.api.common.domain.ResourceHeaderInfoDTO;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
+import uk.gov.cca.api.web.orchestrator.common.ResourceHeaderInfoProviderDelegator;
 import uk.gov.cca.api.workflow.request.application.task.RequestTaskRecipientsService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.security.Authorized;
@@ -34,6 +36,9 @@ import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestTaskAct
 
 import java.util.List;
 
+import static uk.gov.cca.api.web.constants.SwaggerApiInfo.INTERNAL_SERVER_ERROR;
+import static uk.gov.cca.api.web.constants.SwaggerApiInfo.OK;
+
 @RestController
 @RequestMapping(path = "/v1.0/tasks")
 @RequiredArgsConstructor
@@ -44,6 +49,8 @@ public class RequestTaskController {
     private final RequestTaskViewService requestTaskViewService;
     private final RequestTaskRecipientsService requestTaskRecipientsService;
     private final RequestTaskActionHandlerMapper requestTaskActionHandlerMapper;
+    private final ResourceHeaderInfoProviderDelegator resourceHeaderInfoProviderDelegator;
+
 
     @GetMapping(path = "/{id}")
     @Operation(summary = "Get task item info by id")
@@ -89,15 +96,34 @@ public class RequestTaskController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#requestTaskActionProcessDTO.requestTaskId")
     public ResponseEntity<RequestTaskPayload> processRequestTaskAction(@Parameter(hidden = true) AppUser appUser,
-                                                         @RequestBody @Valid @Parameter(description = "The request task action body", required = true)
-                                                         RequestTaskActionProcessDTO requestTaskActionProcessDTO) {
-    	RequestTaskPayload taskPayload = requestTaskActionHandlerMapper
+                                                                       @RequestBody @Valid @Parameter(description = "The request task action body", required = true)
+                                                                       RequestTaskActionProcessDTO requestTaskActionProcessDTO) {
+        RequestTaskPayload taskPayload = requestTaskActionHandlerMapper
                 .get(requestTaskActionProcessDTO.getRequestTaskActionType())
                 .process(requestTaskActionProcessDTO.getRequestTaskId(),
                         requestTaskActionProcessDTO.getRequestTaskActionType(),
                         appUser,
                         requestTaskActionProcessDTO.getRequestTaskActionPayload());
 
-    	return ObjectUtils.isEmpty(taskPayload) ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : ResponseEntity.ok(taskPayload);
+        return ObjectUtils.isEmpty(taskPayload) ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : ResponseEntity.ok(taskPayload);
+    }
+
+    @GetMapping("/header-info/{resourceType}/{resourceId}")
+    @Operation(summary = "Get the request task header info for the provided resource")
+    @ApiResponse(responseCode = "200", description = OK, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ResourceHeaderInfoDTO.class))})
+    @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @Authorized(resourceId = "#resourceId", resourceType = "#resourceType")
+    public ResponseEntity<ResourceHeaderInfoDTO> getRequestTaskHeaderInfo(
+            @PathVariable("resourceType") @Parameter(name = "resourceType", description = "The resource type associated with given resource id") String resourceType,
+            @PathVariable("resourceId") @Parameter(name = "resourceId", description = "The resource id for which the available workflows will be retrieved", required = true) String resourceId) {
+
+        ResourceHeaderInfoDTO headerInfo = resourceHeaderInfoProviderDelegator
+                .getResourceHeaderInfoProvider(resourceType)
+                .map(p -> p.getResourceHeaderInfo(resourceId))
+                .orElse(null);
+
+        return new ResponseEntity<>(headerInfo, HttpStatus.OK);
     }
 }

@@ -10,9 +10,10 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaReviewDecisionType;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.review.UnderlyingAgreementPayloadType;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.TargetPeriodDetailsValidatorService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.CCA2BaselineAndTargetsValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.transform.UnderlyingAgreementContainerMapper;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.validation.EditedUnderlyingAgreementTargetUnitDetailsValidatorService;
@@ -32,7 +33,8 @@ import static uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.do
 public class UnderlyingAgreementReviewValidatorService {
 
     private final UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
-    private final TargetPeriodDetailsValidatorService targetPeriodDetailsValidatorService;
+    private final CCA2BaselineAndTargetsValidatorService cca2BaselineAndTargetsValidatorService;
+    private final UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService underlyingAgreementCca2EndDateValidatorService;
     private final EditedUnderlyingAgreementTargetUnitDetailsValidatorService editedUnderlyingAgreementTargetUnitDetailsValidatorService;
     private final ProposedUnderlyingAgreementTargetUnitDetailsValidatorService proposedUnderlyingAgreementTargetUnitDetailsValidatorService;
 
@@ -54,7 +56,7 @@ public class UnderlyingAgreementReviewValidatorService {
 
         // Validate target period details
         validationResults.add(this.updateViolationMsgWithSectionInfo(
-                targetPeriodDetailsValidatorService.validateCCA2RelatedTargetPeriodsAreEmpty(editedUnaContainer),
+                cca2BaselineAndTargetsValidatorService.validateEmpty(editedUnaContainer),
                 EDITED
         ));
 
@@ -90,7 +92,7 @@ public class UnderlyingAgreementReviewValidatorService {
 
         // Validate target period details
         validationResults.add(this.updateViolationMsgWithSectionInfo(
-                targetPeriodDetailsValidatorService.validateCCA2RelatedTargetPeriodsAreEmpty(proposedUnaContainer),
+                cca2BaselineAndTargetsValidatorService.validateEmpty(proposedUnaContainer),
                 PROPOSED
         ));
 
@@ -98,6 +100,9 @@ public class UnderlyingAgreementReviewValidatorService {
 
         // Validate if Sector user's facilityIds match Regulator
         validationResults.add(validateProposedFacilityIds(taskPayload, requestPayload));
+        
+        // Validate CCA2 end date related rules for facilities
+        validationResults.add(underlyingAgreementCca2EndDateValidatorService.validate(proposedUnaContainer.getUnderlyingAgreement().getFacilities()));
 
         validationResults.add(proposedUnderlyingAgreementTargetUnitDetailsValidatorService.validate(requestTask));
 

@@ -1,0 +1,27 @@
+<govuk-table [columns]="tableColumns" [data]="state().reports">
+  <ng-template let-column="column" let-row="row">
+    @switch (column.field) {
+      @case ('reportName') {
+        <a [routerLink]="['edit-mi-report', row.id]" class="govuk-link">{{ row.reportName }}</a>
+      }
+      @case ('id') {
+        <a class="govuk-link" href="javascript:void(0)" (click)="exportToExcel(row)">Export to Excel</a> |
+        <a [routerLink]="['delete-mi-report', row.id]" class="govuk-link">Delete</a>
+      }
+      @case ('description') {
+        <span>{{ row[column.field] | textEllipsis }}</span>
+      }
+      @default {
+        <span>{{ row[column.field] }}</span>
+      }
+    }
+  </ng-template>
+</govuk-table>
+
+<cca-pagination
+  [count]="state().totalItems"
+  [currentPage]="state().currentPage"
+  [pageSize]="state().pageSize"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
+/>

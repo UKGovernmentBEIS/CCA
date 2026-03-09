@@ -1,0 +1,39 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Set the subsistence charge start date from the default"
+  heading="Start date of paying the subsistence charge fee"
+  data-testid="exclude-facility-form"
+  submitText="Confirm and continue"
+>
+  <h2 class="govuk-heading-m govuk-!-margin-top-6">
+    Do you want to change the subsistence charge start date from the default?
+  </h2>
+
+  <div govuk-radio formControlName="hasChargeStartDate">
+    <govuk-radio-option label="Yes" [value]="true">
+      <ng-container govukConditionalContent>
+        <div
+          formControlName="chargeStartDate"
+          govuk-date-input
+          label="Start date of paying the subsistence charge fee"
+        ></div>
+      </ng-container>
+    </govuk-radio-option>
+
+    <govuk-radio-option label="No" [value]="false" />
+  </div>
+
+  <govuk-details summary=" More information on the subsistence charge start date">
+    <p class="govuk-!-width-two-thirds">
+      By default, this facility will become eligible for a subsistence charge fee as soon as their assent to the
+      underlying agreement is uploaded by the administrator. If the facility has already paid for the current year
+      whilst it was part of a previous target unit, you may need to override this default date.
+    </p>
+
+    <p>Please note that the subsistence charge period starts on 1 January each year.</p>
+  </govuk-details>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" [routerLink]="['../../']"> Return to: Manage facilities list </a>

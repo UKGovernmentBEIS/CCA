@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum UnderlyingAgreementVariationOutcome {
-
 	SUBMITTED,
-    CANCELLED;
+    CANCELLED,
+    COMPLETED,
 }

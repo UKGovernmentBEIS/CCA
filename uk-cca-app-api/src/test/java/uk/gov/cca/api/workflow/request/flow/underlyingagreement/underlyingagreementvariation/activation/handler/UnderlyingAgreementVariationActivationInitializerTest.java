@@ -38,7 +38,8 @@ class UnderlyingAgreementVariationActivationInitializerTest {
 
     @Test
     void getRequestTaskTypes() {
-        assertThat(initializer.getRequestTaskTypes())
-                .containsExactly(CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATION);
+        assertThat(initializer.getRequestTaskTypes()).containsExactlyInAnyOrder(
+                CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATION,
+                CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_ACTIVATION);
     }
 }

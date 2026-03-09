@@ -1,0 +1,1105 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CheckYourAnswersComponent should render the summary sections and rows 1`] = `
+<cca-check-your-answers
+  accountReferenceData={[Function Function]}
+  companiesHouseDetailsResponse={[Function Function]}
+  companiesHouseState={[Function Function]}
+  companiesInformationService={[Function _CompaniesInformationService]}
+  isEditable={[Function Function]}
+  mainColumnClass={[Function Function]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  route={[Function ActivatedRouteStub]}
+  router={[Function Object]}
+  summaryDataCurrent={[Function Array]}
+  summaryDataOriginal={[Function Array]}
+  targetUnitDetails={[Function Function]}
+  tasksApiService={[Function Object]}
+  toggleCompaniesHouseDetails={[Function Function]}
+  toggleCompaniesHouseDetailsCtrl={[Function FormControl2]}
+  tuDetails={[Function Function]}
+>
+  <div>
+    <div
+      class="govuk-grid-row"
+    >
+      <div
+        class="govuk-grid-column-two-thirds"
+      >
+        <netz-page-heading
+          caption="Change"
+        >
+          <span
+            class="govuk-caption-l"
+          >
+            Change
+          </span>
+          <h1
+            class="govuk-heading-l"
+          >
+            Check your answers
+          </h1>
+        </netz-page-heading>
+      </div>
+      <div
+        class="govuk-grid-column-one-third govuk-!-padding-top-6"
+      >
+        <div
+          class="govuk-form-group"
+        >
+          <fieldset
+            class="govuk-fieldset"
+          >
+            <div
+              class="govuk-checkboxes govuk-checkboxes--small"
+              data-module="govuk-checkboxes"
+            >
+              <div
+                class="govuk-checkboxes__item"
+              >
+                <input
+                  class="govuk-checkboxes__input ng-untouched ng-pristine ng-valid"
+                  id="toggleCompaniesHouseDetails"
+                  name="toggleCompaniesHouseDetails"
+                  type="checkbox"
+                  value="false"
+                />
+                <label
+                  class="govuk-label govuk-checkboxes__label"
+                  for="toggleCompaniesHouseDetails"
+                >
+                   Show Companies House details 
+                </label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <div
+      class="govuk-grid-row"
+    >
+      <div
+        class="govuk-!-padding-top-7 govuk-grid-column-full"
+      >
+        <cca-highlight-diff>
+          <div
+            class="govuk-!-display-none"
+          >
+            <cca-summary>
+              <h2
+                class="govuk-heading-m"
+              >
+                Target unit details
+              </h2>
+              <dl
+                class="govuk-summary-list govuk-!-margin-bottom-9"
+                govuk-summary-list=""
+              >
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Operator name
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      tu3-oper1
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Operator type
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      Limited company
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Company number
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      Not provided
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Reason for not having a registration number
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      no registration number
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+              <h2
+                class="govuk-heading-m"
+              >
+                Operator address
+              </h2>
+              <dl
+                class="govuk-summary-list govuk-!-margin-bottom-9"
+                govuk-summary-list=""
+              >
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Address
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      addr1
+                    </span>
+                    <br />
+                    <span>
+                      asd
+                    </span>
+                    <br />
+                    <span>
+                      kjhn
+                    </span>
+                    <br />
+                    <span>
+                      765476
+                    </span>
+                    <br />
+                    <span>
+                      87678
+                    </span>
+                    <br />
+                    <span>
+                      GB-SCT
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+              <h2
+                class="govuk-heading-m"
+              >
+                Responsible Person
+              </h2>
+              <dl
+                class="govuk-summary-list govuk-!-margin-bottom-9"
+                govuk-summary-list=""
+              >
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    First name
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      resp1
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Last name
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      user
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Email address
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      resp1@cca.uk
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Address
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      addr1
+                    </span>
+                    <br />
+                    <span>
+                      asd
+                    </span>
+                    <br />
+                    <span>
+                      kjhn
+                    </span>
+                    <br />
+                    <span>
+                      765476
+                    </span>
+                    <br />
+                    <span>
+                      87678
+                    </span>
+                    <br />
+                    <span>
+                      GB-SCT
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+            </cca-summary>
+          </div>
+          <div
+            class="govuk-!-display-none"
+          >
+            <cca-summary>
+              <h2
+                class="govuk-heading-m"
+              >
+                Target unit details
+              </h2>
+              <dl
+                class="govuk-summary-list govuk-!-margin-bottom-9"
+                govuk-summary-list=""
+              >
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Operator name
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      tu3-oper1
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Operator type
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      Limited company
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Company number
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      Not provided
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Reason for not having a registration number
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      no registration number
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+              <h2
+                class="govuk-heading-m"
+              >
+                Operator address
+              </h2>
+              <dl
+                class="govuk-summary-list govuk-!-margin-bottom-9"
+                govuk-summary-list=""
+              >
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Address
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      addr1
+                    </span>
+                    <br />
+                    <span>
+                      asd
+                    </span>
+                    <br />
+                    <span>
+                      kjhn
+                    </span>
+                    <br />
+                    <span>
+                      765476
+                    </span>
+                    <br />
+                    <span>
+                      87678
+                    </span>
+                    <br />
+                    <span>
+                      GB-SCT
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+              <h2
+                class="govuk-heading-m"
+              >
+                Responsible Person
+              </h2>
+              <dl
+                class="govuk-summary-list govuk-!-margin-bottom-9"
+                govuk-summary-list=""
+              >
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    First name
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      resp1
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Last name
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      user
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Email address
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      resp1@cca.uk
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+                <div
+                  class="govuk-summary-list__row"
+                  govuksummarylistrow=""
+                >
+                  <dt
+                    class="govuk-summary-list__key"
+                    govuksummarylistrowkey=""
+                  >
+                    Address
+                  </dt>
+                  <dd
+                    class="govuk-summary-list__value"
+                    govuksummarylistrowvalue=""
+                  >
+                    <span>
+                      addr1
+                    </span>
+                    <br />
+                    <span>
+                      asd
+                    </span>
+                    <br />
+                    <span>
+                      kjhn
+                    </span>
+                    <br />
+                    <span>
+                      765476
+                    </span>
+                    <br />
+                    <span>
+                      87678
+                    </span>
+                    <br />
+                    <span>
+                      GB-SCT
+                    </span>
+                  </dd>
+                  <dd
+                    class="govuk-summary-list__actions"
+                    govuksummarylistrowactions=""
+                  >
+                    <a
+                      class="govuk-link"
+                      href=""
+                    >
+                      Change
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+            </cca-summary>
+          </div>
+          <div
+            class="highlight"
+          >
+            <h2
+              class="govuk-heading-m"
+            >
+              Target unit details
+            </h2>
+            <dl
+              class="govuk-summary-list govuk-!-margin-bottom-9"
+            >
+              <div
+                class="govuk-summary-list__row"
+              >
+                <dt
+                  class="govuk-summary-list__key"
+                >
+                  Operator name
+                </dt>
+                <dd
+                  class="govuk-summary-list__value"
+                >
+                  <span>
+                    tu3-oper1
+                  </span>
+                </dd>
+                <dd
+                  class="govuk-summary-list__actions"
+                >
+                  <a
+                    class="govuk-link"
+                    href=""
+                  >
+                    Change
+                  </a>
+                </dd>
+              </div>
+              <div
+                class="govuk-summary-list__row"
+              >
+                <dt
+                  class="govuk-summary-list__key"
+                >
+                  Operator type
+                </dt>
+                <dd
+                  class="govuk-summary-list__value"
+                >
+                  <span>
+                    Limited company
+                  </span>
+                </dd>
+                <dd
+                  class="govuk-summary-list__actions"
+                >
+                  <a
+                    class="govuk-link"
+                    href=""
+                  >
+                    Change
+                  </a>
+                </dd>
+              </div>
+              <div
+                class="govuk-summary-list__row"
+              >
+                <dt
+                  class="govuk-summary-list__key"
+                >
+                  Company number
+                </dt>
+                <dd
+                  class="govuk-summary-list__value"
+                >
+                  <span>
+                    Not provided
+                  </span>
+                </dd>
+                <dd
+                  class="govuk-summary-list__actions"
+                >
+                  <a
+                    class="govuk-link"
+                    href=""
+                  >
+                    Change
+                  </a>
+                </dd>
+              </div>
+              <div
+                class="govuk-summary-list__row"
+              >
+                <dt
+                  class="govuk-summary-list__key"
+                >
+                  Reason for not having a registration number
+                </dt>
+                <dd
+                  class="govuk-summary-list__value"
+                >
+                  <span>
+                    no registration number
+                  </span>
+                </dd>
+                <dd
+                  class="govuk-summary-list__actions"
+                >
+                  <a
+                    class="govuk-link"
+                    href=""
+                  >
+                    Change
+                  </a>
+                </dd>
+              </div>
+            </dl>
+            <h2
+              class="govuk-heading-m"
+            >
+              Operator address
+            </h2>
+            <dl
+              class="govuk-summary-list govuk-!-margin-bottom-9"
+            >
+              <div
+                class="govuk-summary-list__row"
+              >
+                <dt
+                  class="govuk-summary-list__key"
+                >
+                  Address
+                </dt>
+                <dd
+                  class="govuk-summary-list__value"
+                >
+                  <span>
+                    addr1
+                  </span>
+                  <br />
+                  <span>
+                    asd
+                  </span>
+                  <br />
+                  <span>
+                    kjhn
+                  </span>
+                  <br />
+                  <span>
+                    765476
+                  </span>
+                  <br />
+                  <span>
+                    87678
+                  </span>
+                  <br />
+                  <span>
+                    GB-SCT
+                  </span>
+                </dd>
+                <dd
+                  class="govuk-summary-list__actions"
+                >
+                  <a
+                    class="govuk-link"
+                    href=""
+                  >
+                    Change
+                  </a>
+                </dd>
+              </div>
+            </dl>
+            <h2
+              class="govuk-heading-m"
+            >
+              Responsible Person
+            </h2>
+            <dl
+              class="govuk-summary-list govuk-!-margin-bottom-9"
+            >
+              <div
+                class="govuk-summary-list__row"
+              >
+                <dt
+                  class="govuk-summary-list__key"
+                >
+                  First name
+                </dt>
+                <dd
+                  class="govuk-summary-list__value"
+                >
+                  <span>
+                    resp1
+                  </span>
+                </dd>
+                <dd
+                  class="govuk-summary-list__actions"
+                >
+                  <a
+                    class="govuk-link"
+                    href=""
+                  >
+                    Change
+                  </a>
+                </dd>
+              </div>
+              <div
+                class="govuk-summary-list__row"
+              >
+                <dt
+                  class="govuk-summary-list__key"
+                >
+                  Last name
+                </dt>
+                <dd
+                  class="govuk-summary-list__value"
+                >
+                  <span>
+                    user
+                  </span>
+                </dd>
+                <dd
+                  class="govuk-summary-list__actions"
+                >
+                  <a
+                    class="govuk-link"
+                    href=""
+                  >
+                    Change
+                  </a>
+                </dd>
+              </div>
+              <div
+                class="govuk-summary-list__row"
+              >
+                <dt
+                  class="govuk-summary-list__key"
+                >
+                  Email address
+                </dt>
+                <dd
+                  class="govuk-summary-list__value"
+                >
+                  <span>
+                    resp1@cca.uk
+                  </span>
+                </dd>
+                <dd
+                  class="govuk-summary-list__actions"
+                >
+                  <a
+                    class="govuk-link"
+                    href=""
+                  >
+                    Change
+                  </a>
+                </dd>
+              </div>
+              <div
+                class="govuk-summary-list__row"
+              >
+                <dt
+                  class="govuk-summary-list__key"
+                >
+                  Address
+                </dt>
+                <dd
+                  class="govuk-summary-list__value"
+                >
+                  <span>
+                    addr1
+                  </span>
+                  <br />
+                  <span>
+                    asd
+                  </span>
+                  <br />
+                  <span>
+                    kjhn
+                  </span>
+                  <br />
+                  <span>
+                    765476
+                  </span>
+                  <br />
+                  <span>
+                    87678
+                  </span>
+                  <br />
+                  <span>
+                    GB-SCT
+                  </span>
+                </dd>
+                <dd
+                  class="govuk-summary-list__actions"
+                >
+                  <a
+                    class="govuk-link"
+                    href=""
+                  >
+                    Change
+                  </a>
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </cca-highlight-diff>
+      </div>
+    </div>
+    <button
+      class="govuk-button"
+      govukbutton=""
+      netzpendingbutton=""
+      type="button"
+    >
+      Confirm and complete
+    </button>
+  </div><hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  /><netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href=""
+    >
+       Return to: Vary the underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</cca-check-your-answers>
+`;

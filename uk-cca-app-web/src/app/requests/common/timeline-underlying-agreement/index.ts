@@ -9,3 +9,4 @@ export * from './testing/mock-data';
 export * from './timeline-underlying-agreement.selectors';
 export * from './timeline-underlying-agreement.types';
 export * from './variation-details-submitted/variation-details-submitted.component';
+export * from './operator-assent-decision-submitted/operator-assent-decision-submitted.component';

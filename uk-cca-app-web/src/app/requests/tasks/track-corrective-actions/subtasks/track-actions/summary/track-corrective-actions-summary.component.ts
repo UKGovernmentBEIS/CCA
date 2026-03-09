@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
@@ -7,7 +7,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { toTrackActionSummaryData } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 
-import { TargetUnitAccountInfoViewService } from 'cca-api';
+import { FacilityHeaderInfoDTO, TasksService } from 'cca-api';
 
 import { trackCorrectiveActionsQuery } from '../../../track-corrective-actions.selectors';
 
@@ -19,7 +19,7 @@ import { trackCorrectiveActionsQuery } from '../../../track-corrective-actions.s
 
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <a class="govuk-link" routerLink="../../..">
-      Return to: Track corrective actions {{ targetUnitAccountDetails()?.targetUnitAccountDetails?.businessId }}
+      Return to: Track corrective actions {{ facilityInfo()?.businessId }}
     </a>
   `,
   imports: [PageHeadingComponent, SummaryComponent, RouterLink],
@@ -28,7 +28,7 @@ import { trackCorrectiveActionsQuery } from '../../../track-corrective-actions.s
 export class TrackCorrectiveActionsSummaryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly requestTaskStore = inject(RequestTaskStore);
-  private readonly targetUnitAccountInfoViewService = inject(TargetUnitAccountInfoViewService);
+  private readonly tasksService = inject(TasksService);
 
   protected readonly actionId = this.activatedRoute.snapshot.params.actionId;
 
@@ -36,10 +36,12 @@ export class TrackCorrectiveActionsSummaryComponent {
     trackCorrectiveActionsQuery.selectAuditTrackCorrectiveActions,
   )()?.correctiveActionResponses[this.actionId];
 
-  protected readonly targetUnitAccountDetails = toSignal(
-    this.targetUnitAccountInfoViewService.getTargetUnitAccountDetailsById(
-      this.requestTaskStore.select(requestTaskQuery.selectRequestInfo)()?.accountId,
-    ),
+  private readonly requestInfo = this.requestTaskStore.select(requestTaskQuery.selectRequestInfo);
+  private readonly resourceType = computed(() => this.requestInfo()?.resourceType);
+  private readonly resource = computed(() => this.requestInfo()?.resources?.[this.resourceType()]);
+
+  protected readonly facilityInfo: Signal<FacilityHeaderInfoDTO> = toSignal(
+    this.tasksService.getRequestTaskHeaderInfo(this.resourceType(), this.resource()),
   );
 
   protected readonly data = toTrackActionSummaryData(

@@ -6,30 +6,29 @@ import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { CheckboxComponent, CheckboxesComponent, InsetTextDirective, TextareaComponent } from '@netz/govuk-components';
 import {
-  baselineChangesTypesOption,
-  facilityChangesTypes,
+  dontRequireOperatorAssentTypes,
   otherChangesTypes,
   OVERALL_DECISION_SUBTASK,
-  targetCurrencyChangesTypes,
+  requireOperatorAssentTypesWithHint,
   TaskItemStatus,
   TasksApiService,
   UNAVariationReviewRequestTaskPayload,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
+  VARIATION_DETAILS_FORM,
   VARIATION_DETAILS_SUBTASK,
   VariationChangesTypePipe,
+  VariationDetailsFormModel,
+  VariationDetailsFormProvider,
 } from '@requests/common';
 import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
+import { UnderlyingAgreementVariationReviewSavePayload } from 'cca-api';
+
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../transform';
 import { resetDetermination } from '../../../utils';
-import {
-  VARIATION_DETAILS_FORM,
-  VariationDetailsFormModel,
-  VariationDetailsFormProvider,
-} from './variation-details-form.provider';
 
 @Component({
   selector: 'cca-variation-details',
@@ -55,9 +54,8 @@ export class VariationDetailsComponent {
 
   protected readonly form = inject<FormGroup<VariationDetailsFormModel>>(VARIATION_DETAILS_FORM);
 
-  protected readonly facilityChanges = facilityChangesTypes;
-  protected readonly baselineChanges = baselineChangesTypesOption;
-  protected readonly targetCurrencyChanges = targetCurrencyChangesTypes;
+  protected readonly requireOperatorAssent = requireOperatorAssentTypesWithHint;
+  protected readonly dontRequireOperatorAssent = dontRequireOperatorAssentTypes;
   protected readonly otherChanges = otherChangesTypes;
 
   onSubmit() {
@@ -67,17 +65,7 @@ export class VariationDetailsComponent {
     )() as UNAVariationReviewRequestTaskPayload;
 
     const actionPayload = toUnderlyingAgreementVariationReviewSavePayload(payload);
-    const updatedPayload = produce(actionPayload, (draft) => {
-      draft.underlyingAgreementVariationDetails = {
-        reason: this.form.value.reason,
-        modifications: [
-          ...(this.form.value?.facilityChanges ?? []),
-          ...(this.form.value?.baselineChanges ?? []),
-          ...(this.form.value?.targetCurrencyChanges ?? []),
-          ...(this.form.value?.otherChanges ?? []),
-        ],
-      };
-    });
+    const updatedPayload = updateVariationDetails(actionPayload, this.form);
 
     const currentSectionsCompleted = this.store.select(underlyingAgreementQuery.selectSectionsCompleted)();
     const currentReviewSectionsCompleted = this.store.select(
@@ -105,4 +93,22 @@ export class VariationDetailsComponent {
       this.router.navigate(['../decision'], { relativeTo: this.activatedRoute });
     });
   }
+}
+
+function updateVariationDetails(
+  payload: UnderlyingAgreementVariationReviewSavePayload,
+  form: FormGroup<VariationDetailsFormModel>,
+): UnderlyingAgreementVariationReviewSavePayload {
+  return produce(payload, (draft) => {
+    draft.underlyingAgreementVariationDetails = {
+      ...draft.underlyingAgreementVariationDetails,
+      reason: form.value.reason,
+      modifications: [
+        ...(draft.underlyingAgreementVariationDetails?.modifications ?? []),
+        ...(form.value?.requireOperatorAssent ?? []),
+        ...(form.value?.dontRequireOperatorAssent ?? []),
+        ...(form.value?.otherChanges ?? []),
+      ],
+    };
+  });
 }

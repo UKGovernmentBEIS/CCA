@@ -20,7 +20,7 @@ export function getAllUnderlyingAgreementSections(una: UnderlyingAgreementPayloa
         {
           status: '',
           link: `${prefix}manage-facilities`,
-          linkText: 'Manage facilities list',
+          linkText: 'Manage facilities',
         },
       ],
     },

@@ -9,7 +9,8 @@ import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.ValidatorHelper;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.TargetPeriodDetailsValidatorService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.CCA2BaselineAndTargetsValidatorService;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.transform.UnderlyingAgreementContainerMapper;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.validation.EditedUnderlyingAgreementTargetUnitDetailsValidatorService;
@@ -24,7 +25,8 @@ import java.util.List;
 public class UnderlyingAgreementPayloadValidatorService {
 
     private final UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
-    private final TargetPeriodDetailsValidatorService targetPeriodDetailsValidatorService;
+    private final CCA2BaselineAndTargetsValidatorService cca2BaselineAndTargetsValidatorService;
+    private final UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService underlyingAgreementCca2EndDateValidatorService;
     private final EditedUnderlyingAgreementTargetUnitDetailsValidatorService underlyingAgreementTargetUnitDetailsValidatorService;
     private static final UnderlyingAgreementContainerMapper UNDERLYING_AGREEMENT_CONTAINER_MAPPER = Mappers.getMapper(UnderlyingAgreementContainerMapper.class);
 
@@ -42,10 +44,13 @@ public class UnderlyingAgreementPayloadValidatorService {
                 .getValidationResults(unaContainer, underlyingAgreementValidationContext);
 
         // Validate target period details
-        validationResults.add(targetPeriodDetailsValidatorService.validateCCA2RelatedTargetPeriodsAreEmpty(unaContainer));
+        validationResults.add(cca2BaselineAndTargetsValidatorService.validateEmpty(unaContainer));
 
         // Validate target unit
         validationResults.add(underlyingAgreementTargetUnitDetailsValidatorService.validate(requestTask));
+        
+        // Validate CCA2 end date related rules for facilities
+        validationResults.add(underlyingAgreementCca2EndDateValidatorService.validate(unaContainer.getUnderlyingAgreement().getFacilities()));
 
         boolean isValid = validationResults.stream().allMatch(BusinessValidationResult::isValid);
 

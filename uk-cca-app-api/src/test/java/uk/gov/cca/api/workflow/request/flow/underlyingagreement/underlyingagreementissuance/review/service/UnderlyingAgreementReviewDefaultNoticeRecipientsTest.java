@@ -89,9 +89,9 @@ class UnderlyingAgreementReviewDefaultNoticeRecipientsTest {
     }
 
     @Test
-    void getType() {
-        assertThat(service.getType())
-                .isEqualTo(CcaRequestTaskType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW);
+    void getTypes() {
+        assertThat(service.getTypes())
+                .containsExactly(CcaRequestTaskType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW);
     }
 
     private void addResourcesToRequest(Long accountId, Request request) {

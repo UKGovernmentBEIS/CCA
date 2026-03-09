@@ -10,6 +10,7 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient
 import uk.gov.cca.api.workflow.request.flow.common.service.CcaRequestActionUserInfoResolver;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaOfficialNoticeSendService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.service.UnderlyingAgreementVariationAcceptedGenerateDocumentsService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.service.UnderlyingAgreementVariationOfficialNoticeService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationAcceptedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.transform.UnderlyingAgreementVariationReviewMapper;

@@ -23,6 +23,7 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementSchemeVersionsHelperService;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestPayload;
@@ -51,6 +52,9 @@ class UnderlyingAgreementAcceptedGenerateDocumentsServiceTest {
 
     @Mock
     private UnderlyingAgreementOfficialNoticeService officialNoticeService;
+    
+    @Mock
+    private UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
 
     @Test
     void generateDocuments() {
@@ -117,6 +121,9 @@ class UnderlyingAgreementAcceptedGenerateDocumentsServiceTest {
         when(officialNoticeService.generateAcceptedOfficialNotice(requestId))
                 .thenReturn(CompletableFuture.completedFuture(officialNotice));
         when(requestService.findRequestById(requestId)).thenReturn(request);
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3));
 
         service.generateDocuments(requestId);
 
@@ -124,6 +131,8 @@ class UnderlyingAgreementAcceptedGenerateDocumentsServiceTest {
         verify(createDocumentService, times(1)).create(requestId, SchemeVersion.CCA_3);
         verify(officialNoticeService, times(1)).generateAcceptedOfficialNotice(requestId);
         verify(requestService, times(1)).findRequestById(requestId);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
 
         assertThat(requestPayload.getUnderlyingAgreementDocuments()).isEqualTo(documentMap);
         assertThat(requestPayload.getOfficialNotice()).isEqualTo(officialNotice);
@@ -177,6 +186,9 @@ class UnderlyingAgreementAcceptedGenerateDocumentsServiceTest {
         when(requestService.findRequestById(requestId)).thenReturn(request);
         when(officialNoticeService.generateAcceptedOfficialNotice(requestId))
                 .thenReturn(CompletableFuture.completedFuture(officialNotice));
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(SchemeVersion.CCA_2));
 
         BusinessException be = assertThrows(BusinessException.class, () -> service.generateDocuments(requestId));
         assertThat(be.getErrorCode()).isEqualTo(ErrorCode.DOCUMENT_TEMPLATE_FILE_GENERATION_ERROR);
@@ -184,6 +196,8 @@ class UnderlyingAgreementAcceptedGenerateDocumentsServiceTest {
         verify(createDocumentService, times(1)).create(requestId, schemeVersion);
         verify(officialNoticeService, times(1)).generateAcceptedOfficialNotice(requestId);
         verify(requestService, times(1)).findRequestById(requestId);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
 
         assertThat(requestPayload.getUnderlyingAgreementDocuments()).isNull();
         assertThat(requestPayload.getOfficialNotice()).isNull();
@@ -237,6 +251,9 @@ class UnderlyingAgreementAcceptedGenerateDocumentsServiceTest {
         when(requestService.findRequestById(requestId)).thenReturn(request);
         when(officialNoticeService.generateAcceptedOfficialNotice(requestId))
                 .thenReturn(CompletableFuture.completedFuture(officialNotice));
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(schemeVersion));
 
         BusinessException be = assertThrows(BusinessException.class, () -> service.generateDocuments(requestId));
         assertThat(be.getErrorCode()).isEqualTo(ErrorCode.INTERNAL_SERVER);
@@ -244,7 +261,9 @@ class UnderlyingAgreementAcceptedGenerateDocumentsServiceTest {
         verify(createDocumentService, times(1)).create(requestId, schemeVersion);
         verify(officialNoticeService, times(1)).generateAcceptedOfficialNotice(requestId);
         verify(requestService, times(1)).findRequestById(requestId);
-
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
+        
         assertThat(requestPayload.getUnderlyingAgreementDocuments()).isNull();
         assertThat(requestPayload.getOfficialNotice()).isNull();
     }

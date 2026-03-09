@@ -40,9 +40,7 @@ export class RequestActionPageComponent {
 
   vm: Signal<ViewModel> = computed(() => {
     const requestAction = this.store.select(requestActionQuery.selectAction)();
-    if (!requestAction) {
-      return null;
-    }
+    if (!requestAction) return null;
 
     const { header, sections, component } = runInInjectionContext(this.injector, () =>
       this.contentFactoryMap[requestAction.type](),

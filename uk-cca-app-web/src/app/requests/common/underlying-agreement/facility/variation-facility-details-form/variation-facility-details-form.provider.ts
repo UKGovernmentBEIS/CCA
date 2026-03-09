@@ -15,7 +15,7 @@ import {
   isCreationDateAfterCutOffDate,
   underlyingAgreementQuery,
 } from '@requests/common';
-import { createFacilityAddressForm, FacilityAddressFormModel } from '@shared/components';
+import { AccountAddressFormModel, createAccountAddressForm } from '@shared/components';
 import { ConfigService } from '@shared/config';
 import { UK_COUNTRY_CODES } from '@shared/services';
 import { SchemeVersion, SchemeVersions } from '@shared/types';
@@ -33,7 +33,7 @@ export type VariationFacilityDetailsFormModel = {
   participatingSchemeVersions: FormControl<SchemeVersions>;
   schemeParticipationChoice: FormControl<boolean | null>;
   sameAddress?: FormControl<boolean[]>;
-  facilityAddress: FormGroup<FacilityAddressFormModel>;
+  facilityAddress: FormGroup<AccountAddressFormModel>;
 };
 
 export const VARIATION_FACILITY_DETAILS_FORM = new InjectionToken<VariationFacilityDetailsFormModel>(
@@ -77,7 +77,7 @@ export const VariationFacilityDetailsFormProvider: Provider = {
       }
     }
 
-    const addressFormGroup = createFacilityAddressForm(facility?.facilityDetails?.facilityAddress ?? null);
+    const addressFormGroup = createAccountAddressForm(facility?.facilityDetails?.facilityAddress ?? null);
 
     const group = fb.group<VariationFacilityDetailsFormModel>({
       name: fb.control(facility?.facilityDetails?.name ?? null, textFieldValidators('site name')),

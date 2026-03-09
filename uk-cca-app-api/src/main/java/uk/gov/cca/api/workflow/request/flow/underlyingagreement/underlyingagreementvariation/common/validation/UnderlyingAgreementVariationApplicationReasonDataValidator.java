@@ -5,8 +5,8 @@ import org.springframework.util.ObjectUtils;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationBaseRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestTaskPayload;
 import uk.gov.netz.api.common.exception.BusinessException;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
 @Service
-public abstract class UnderlyingAgreementVariationApplicationReasonDataValidator<T extends UnderlyingAgreementVariationRequestTaskPayload> {
+public abstract class UnderlyingAgreementVariationApplicationReasonDataValidator<T extends UnderlyingAgreementVariationBaseRequestTaskPayload> {
 
     public abstract UnderlyingAgreementVariationPayload getUnderlyingAgreementPayload(T taskPayload);
 

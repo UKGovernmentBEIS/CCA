@@ -96,3 +96,8 @@ a[role='button'] {
 .background {
   background: var(--govuk-light-grey);
 }
+
+.link-separator a:not(:last-child) {
+  border-right: 2px solid lightgrey;
+  padding-right: 0.2em;
+}

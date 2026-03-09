@@ -1,10 +1,10 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { expand, map, Observable, switchMap, timer } from 'rxjs';
 
-import { FileDocumentsService, FileToken, RequestNotesService } from 'cca-api';
+import { AccountNotesService, FileDocumentsService, FileToken, RequestNotesService } from 'cca-api';
 
 @Component({
   selector: 'cca-request-note-files-download',
@@ -19,6 +19,7 @@ import { FileDocumentsService, FileToken, RequestNotesService } from 'cca-api';
 export class RequestNoteFilesDownloadComponent implements AfterViewChecked {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly requestNotesService = inject(RequestNotesService);
+  private readonly accountNotesService = inject(AccountNotesService);
   private readonly fileDocumentsService = inject(FileDocumentsService);
 
   protected readonly anchor = viewChild<ElementRef<HTMLAnchorElement>>('anchor');
@@ -28,7 +29,13 @@ export class RequestNoteFilesDownloadComponent implements AfterViewChecked {
 
   readonly url$ = this.activatedRoute.paramMap.pipe(
     switchMap((params) => {
-      const request$ = this.notesDownloadInfo(params);
+      const workflowId = params.get('workflowId');
+      const targetUnitId = params.get('targetUnitId');
+      const uuid = params.get('uuid');
+
+      const request$ = workflowId
+        ? this.requestNotedDownloadInfo(workflowId, uuid)
+        : this.accountNotesDownloadInfo(+targetUnitId, uuid);
 
       return request$.pipe(
         expand((response) => timer(response.tokenExpirationMinutes * 1000 * 60).pipe(switchMap(() => request$))),
@@ -45,7 +52,11 @@ export class RequestNoteFilesDownloadComponent implements AfterViewChecked {
     }
   }
 
-  private notesDownloadInfo(params: ParamMap): Observable<FileToken> {
-    return this.requestNotesService.generateGetRequestFileNoteToken(params.get('workflowId'), params.get('uuid'));
+  private requestNotedDownloadInfo(id: string, uuid: string): Observable<FileToken> {
+    return this.requestNotesService.generateGetRequestFileNoteToken(id, uuid);
+  }
+
+  private accountNotesDownloadInfo(id: number, uuid: string): Observable<FileToken> {
+    return this.accountNotesService.generateGetAccountFileNoteToken(id, uuid);
   }
 }

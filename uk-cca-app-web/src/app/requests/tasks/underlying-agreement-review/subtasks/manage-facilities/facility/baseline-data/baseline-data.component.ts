@@ -12,7 +12,9 @@ import {
   TextInputComponent,
 } from '@netz/govuk-components';
 import {
+  FACILITY_BASELINE_DATA_FORM,
   FacilityBaselineDataFormModel,
+  FacilityBaselineDataFormProvider,
   FacilityWizardStep,
   isFacilityWizardCompleted,
   MeasurementTypeToUnitPipe,
@@ -30,7 +32,6 @@ import { UnderlyingAgreementApplySavePayload, UnderlyingAgreementReviewRequestTa
 
 import { createSaveActionDTO, toUnderlyingAgreementSaveReviewPayload } from '../../../../transform';
 import { resetDetermination } from '../../../../utils';
-import { FACILITY_BASELINE_DATA_FORM, FacilityBaselineDataFormProvider } from './baseline-data-form.provider';
 
 @Component({
   selector: 'cca-baseline-data',

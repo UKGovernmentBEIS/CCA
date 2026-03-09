@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.utils.ConcurrencyUtils;
-import uk.gov.cca.api.underlyingagreement.utils.UnderlyingAgreementCalculateSchemeVersionsUtil;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementSchemeVersionsHelperService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.service.UnderlyingAgreementCreateDocumentService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.service.UnderlyingAgreementOfficialNoticeService;
@@ -33,6 +33,7 @@ public class UnderlyingAgreementAcceptedGenerateDocumentsService {
 	private final RequestService requestService;
 	private final UnderlyingAgreementCreateDocumentService underlyingAgreementCreateDocumentService;
 	private final UnderlyingAgreementOfficialNoticeService underlyingAgreementOfficialNoticeService;
+	private final UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
 	
 	@Transactional
 	public void generateDocuments(String requestId) {
@@ -44,8 +45,9 @@ public class UnderlyingAgreementAcceptedGenerateDocumentsService {
 			final Request request = requestService.findRequestById(requestId);
 	        final UnderlyingAgreementRequestPayload requestPayload = (UnderlyingAgreementRequestPayload) request.getPayload();
 	        
-	        Set<SchemeVersion> schemeVersions = UnderlyingAgreementCalculateSchemeVersionsUtil
-	        		.calculateSchemeVersionsFromActiveFacilities(requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
+	        Set<SchemeVersion> schemeVersions = underlyingAgreementSchemeVersionsHelperService
+	        		.calculateSchemeVersionsFromActiveFacilities(
+	        				requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
 	        
 	        schemeVersions.forEach(version -> underlyingAgreementDocumentFutureMap.put(version, 
 	        		underlyingAgreementCreateDocumentService.create(requestId, version)));

@@ -27,6 +27,12 @@ describe('WorkflowTypePipe', () => {
     expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION')).toBe('Underlying agreement variation');
   });
 
+  it('should transform "UNDERLYING_AGREEMENT_VARIATION" with initiatorRoleType to "Underlying agreement variation by Regulator"', () => {
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION', 'REGULATOR')).toBe(
+      'Underlying agreement variation by regulator',
+    );
+  });
+
   it('should transform "ADMIN_TERMINATION" to "Admin Termination"', () => {
     expect(pipe.transform('ADMIN_TERMINATION')).toBe('Admin Termination');
   });

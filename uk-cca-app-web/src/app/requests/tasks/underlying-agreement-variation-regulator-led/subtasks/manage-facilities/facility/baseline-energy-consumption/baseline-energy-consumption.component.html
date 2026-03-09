@@ -1,0 +1,177 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  [caption]="facility()?.facilityDetails?.name"
+  heading="Baseline energy or carbon consumption"
+  data-testid="baseline-energy-consumption-form"
+>
+  <div class="govuk-grid-row">
+    <p class="govuk-grid-column-two-thirds">
+      The baseline energy or carbon consumption refers to the energy or carbon consumed in the 12 month period from the
+      Start date of the baseline. The targets set for the facility will be the percentage improvement in energy
+      efficiency or carbon efficiency from this base year.
+    </p>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-top-7">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-!-margin-bottom-0">
+        Enter the fixed amount of energy consumed (or carbon emitted) during the baseline
+      </p>
+      <p class="govuk-hint govuk-!-margin-top-1">
+        Fixed energy consumption is the portion of a facility's total energy consumed (or carbon emitted) that does not
+        vary with throughput. This value may be entered as zero
+      </p>
+
+      <div
+        class="govuk-!-width-one-half"
+        govuk-text-input
+        formControlName="totalFixedEnergy"
+        inputType="number"
+        widthClass="govuk-!-width-one-half"
+        [suffix]="facilityThroughputUnit | measurementTypeToUnit"
+      ></div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <div
+        formControlName="hasVariableEnergy"
+        govuk-radio
+        legend="Should any of the energy consumed (or carbon emitted) during the baseline be categorised as variable"
+        hint="Variable energy consumption is the portion of a facility's total energy consumed (or carbon emitted) that varies in direct proportion to production output, such as energy per unit of product (e.g. kWh/tonne)"
+      >
+        <govuk-radio-option [value]="true" [label]="'Yes'" />
+        <govuk-radio-option [value]="false" [label]="'No'" />
+      </div>
+    </div>
+  </div>
+
+  @if (showVariableEnergyType()) {
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div
+          formControlName="variableEnergyType"
+          [isInline]="true"
+          govuk-radio
+          legend="Indicate how you want to account for the portion of variable energy used (or carbon emitted) for your facility"
+        >
+          <govuk-radio-option [value]="'TOTALS'" [label]="'Totals only'" />
+          <govuk-radio-option [value]="'BY_PRODUCT'" [label]="'Split by product'" />
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (showTotalsOnlyFields()) {
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div
+          govuk-text-input
+          formControlName="baselineVariableEnergy"
+          label="Total baseline variable energy"
+          labelSize="small"
+          hint="This value may be entered as zero"
+          inputType="number"
+          widthClass="govuk-!-width-one-half"
+          [suffix]="facilityThroughputUnit | measurementTypeToUnit"
+        ></div>
+      </div>
+    </div>
+  }
+
+  @if (showSplitByProductFields()) {
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-!-margin-bottom-1">You must add at least one product.</p>
+        <p class="govuk-!-margin-top-1 govuk-!-margin-bottom-3">
+          The variable energy and total energy amounts will be calculated based on your products "Baseline energy".
+        </p>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <cca-split-by-product-table [products]="products()" [facilityThroughputUnit]="facilityThroughputUnit" />
+
+        <button
+          type="button"
+          class="govuk-button govuk-button--secondary govuk-!-margin-bottom-5"
+          (click)="onAddProduct()"
+          [routerLink]="['add-product']"
+          [relativeTo]="activatedRoute"
+        >
+          Add product
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (showThroughputFields()) {
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <p class="govuk-label--s govuk-!-margin-bottom-0">Total baseline throughput</p>
+        <p class="govuk-hint govuk-!-margin-top-1">
+          For facilities where SRM is used, this must be the adjusted throughput
+        </p>
+      </div>
+
+      <div class="govuk-grid-column-one-quarter">
+        <div govuk-text-input formControlName="totalThroughput" inputType="number"></div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <div govuk-text-input formControlName="throughputUnit" label="Throughput unit" labelSize="small"></div>
+      </div>
+    </div>
+  }
+
+  @if (showTotalsOnlyFields()) {
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-form-group govuk-!-margin-top-2">
+          <p class="govuk-label govuk-label--s">Energy intensity</p>
+          <p class="govuk-hint">Automatically calculated</p>
+          <p class="govuk-body govuk-!-margin-bottom-0">
+            @if (energyIntensityDisplay(); as intensity) {
+              {{ intensity }} {{ facilityThroughputUnit | measurementTypeToUnit }}/{{
+                form.controls.throughputUnit.value
+              }}
+            } @else {
+              --
+            }
+          </p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-two-thirds grey-background">
+      <p class="govuk-label--m">Baseline year {{ baselineYear }} calculated energy amounts</p>
+      <p class="govuk-label--s">Fixed baseline energy for the facility</p>
+      <p>{{ calculatedFixedEnergy() | number: '1.0-7' }} {{ facilityThroughputUnit | measurementTypeToUnit }}</p>
+      <p class="govuk-label--s">Variable baseline energy for the facility</p>
+      <p>{{ calculatedVariableEnergy() | number: '1.0-7' }} {{ facilityThroughputUnit | measurementTypeToUnit }}</p>
+      <hr class="govuk-!-margin-bottom-3" />
+      <p class="govuk-label--s">Baseline total energy for the facility</p>
+      <p>{{ calculatedTotalEnergy() | number: '1.0-7' }} {{ facilityThroughputUnit | measurementTypeToUnit }}</p>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      @if (calculatedOtherYearsVariable()) {
+        <p>Baseline total variable energy for other years</p>
+        <p class="govuk-hint">This is the total amount for all products declared with different baseline year</p>
+        <p>
+          {{ calculatedOtherYearsVariable() | number: '1.0-7' }} {{ facilityThroughputUnit | measurementTypeToUnit }}
+        </p>
+      }
+    </div>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" [routerLink]="['../../']"> Return to: Manage facilities </a>

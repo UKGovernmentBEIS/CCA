@@ -6,7 +6,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.FacilityAddress;
 import uk.gov.cca.api.facility.domain.FacilityData;
@@ -170,7 +169,7 @@ class FacilityDataUpdateServiceTest {
     }
 
     @Test
-    void terminateFacilities() {
+    void terminateActiveFacilities() {
         final Long accountId = 999L;
         List<FacilityData> facilitiesData = List.of(FacilityData.builder()
                 .facilityBusinessId("facilityId")
@@ -191,7 +190,7 @@ class FacilityDataUpdateServiceTest {
         when(repository.findFacilityDataByAccountIdAndClosedDateIsNull(accountId))
                 .thenReturn(facilitiesData);
 
-        service.terminateFacilities(accountId, terminationDate);
+        service.terminateActiveFacilities(accountId, terminationDate);
 
         verify(repository, times(1)).saveAll(facilitiesData);
         assertThat(facilitiesData.getFirst().getClosedDate()).isNotNull();

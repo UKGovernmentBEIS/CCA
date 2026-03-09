@@ -1,0 +1,269 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ExplanationComponent should match snapshot for AdditionalInfoComponent 1`] = `
+<div
+  id="root0"
+>
+  <div
+    class="govuk-!-width-two-thirds"
+  >
+    <cca-wizard-step
+      caption="Determine operator assent"
+      class="ng-untouched ng-pristine ng-valid"
+      heading="Provide any additional information here to support your decision"
+    >
+      <form
+        class="ng-untouched ng-pristine ng-valid"
+        novalidate=""
+      >
+        
+        <netz-page-heading>
+          <span
+            class="govuk-caption-l"
+          >
+            Determine operator assent
+          </span>
+          
+          <h1
+            class="govuk-heading-l"
+          >
+            Provide any additional information here to support your decision
+          </h1>
+        </netz-page-heading>
+        <div
+          class="govuk-!-margin-top-9 govuk-!-margin-bottom-6 govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="variationImpactsAgreement"
+          govuk-radio=""
+          legend="Does this variation result in changes to the current underlying agreement?"
+          legendsize="medium"
+        >
+          <div
+            class="govuk-form-group"
+          >
+            <fieldset
+              class="govuk-fieldset"
+              govukfieldset=""
+              id="variationImpactsAgreement"
+            >
+              <legend
+                class="govuk-fieldset__legend govuk-fieldset__legend--m"
+                govuklegend=""
+                id="l.variationImpactsAgreement"
+              >
+                 Does this variation result in changes to the current underlying agreement? 
+                
+                
+              </legend>
+              
+              
+              <div
+                class="govuk-radios"
+              >
+                
+                <div
+                  class="govuk-radios__item"
+                >
+                  <input
+                    aria-describedby="variationImpactsAgreement-option0-item-hint"
+                    class="govuk-radios__input"
+                    id="variationImpactsAgreement-option0"
+                    name="variationImpactsAgreement"
+                    type="radio"
+                    value="true"
+                  />
+                  <label
+                    class="govuk-label govuk-radios__label"
+                    for="variationImpactsAgreement-option0"
+                  >
+                     Yes 
+                    
+                    
+                  </label>
+                  <div
+                    class="govuk-radios__hint govuk-hint"
+                    id="variationImpactsAgreement-option0-item-hint"
+                  >
+                    A new version of the underlying agreement wll be generated, even if there are no changes from the current version, and you must upload evidence of the operator's assent
+                  </div>
+                  
+                </div>
+                
+                
+                
+                
+                <div
+                  class="govuk-radios__item"
+                >
+                  <input
+                    aria-describedby="variationImpactsAgreement-option1-item-hint"
+                    class="govuk-radios__input"
+                    id="variationImpactsAgreement-option1"
+                    name="variationImpactsAgreement"
+                    type="radio"
+                    value="false"
+                  />
+                  <label
+                    class="govuk-label govuk-radios__label"
+                    for="variationImpactsAgreement-option1"
+                  >
+                     No 
+                    
+                    
+                  </label>
+                  <div
+                    class="govuk-radios__hint govuk-hint"
+                    id="variationImpactsAgreement-option1-item-hint"
+                  >
+                    A notification letter will be generated to acknowledge that you have accepted the requested changes, but no new underlying agreement is needed
+                  </div>
+                  
+                </div>
+                
+                
+                
+                
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <h3
+          class="govuk-heading-m"
+        >
+          Additional information (optional)
+        </h3>
+        <p
+          class="govuk-hint"
+        >
+          This will be included into the official notice
+        </p>
+        
+        <div
+          class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
+          formcontrolname="additionalInformation"
+          govuk-textarea=""
+        >
+          <label
+            class="govuk-label govuk-visually-hidden"
+            for="additionalInformation"
+            id="l.additionalInformation"
+          >
+             
+
+          </label>
+          
+          
+          <textarea
+            class="govuk-textarea govuk-!-margin-bottom-1 ng-untouched ng-pristine ng-valid"
+            id="additionalInformation"
+            name="additionalInformation"
+            rows="5"
+          />
+          
+        </div>
+        <cca-multiple-file-input
+          class="ng-untouched ng-pristine ng-valid"
+          formcontrolname="files"
+          label="Upload a file (optional)"
+        >
+          <div
+            class="cca-multi-file-upload cca-multi-file-upload--enhanced"
+          >
+            <div
+              class="govuk-form-group"
+            >
+              <label
+                class="govuk-label govuk-label--m"
+                for="files"
+                id="l.files"
+              >
+                Upload a file (optional)
+              </label>
+              <span
+                class="govuk-hint"
+                id="files-hint-file-size"
+              >
+                 Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB. 
+              </span>
+              
+              
+              
+              <div
+                class="cca-multi-file-upload__dropzone govuk-!-margin-top-4"
+              >
+                <input
+                  accept="*/*"
+                  aria-labelledby="l.files ld.files"
+                  class="govuk-file-upload cca-multi-file-upload__input"
+                  id="files"
+                  multiple=""
+                  name="files"
+                  type="file"
+                />
+                <p
+                  class="govuk-body"
+                >
+                  Drag and drop files here or
+                </p>
+                <label
+                  class="govuk-button govuk-button--secondary"
+                  for="files"
+                  id="ld.files"
+                >
+                   Choose files 
+                </label>
+                <div
+                  aria-live="polite"
+                  class="govuk-visually-hidden"
+                  role="status"
+                >
+                  
+                </div>
+              </div>
+            </div>
+            <cca-file-upload-list>
+              <div
+                class="cca-multi-file__uploaded-files cca-hidden"
+              >
+                
+                
+                <dl
+                  class="govuk-summary-list"
+                >
+                  
+                </dl>
+                
+                
+                
+                
+                
+              </div>
+              
+            </cca-file-upload-list>
+          </div>
+        </cca-multiple-file-input>
+        <button
+          class="govuk-button"
+          govukbutton=""
+          netzpendingbutton=""
+          type="submit"
+        >
+          Continue
+        </button>
+        
+        
+      </form>
+    </cca-wizard-step>
+  </div>
+  <hr
+    class="govuk-footer__section-break govuk-!-margin-bottom-3"
+  />
+  <netz-return-to-task-or-action-page>
+    <a
+      class="govuk-link"
+      href="/undefined"
+    >
+       Return to: Vary the underlying agreement 
+    </a>
+  </netz-return-to-task-or-action-page>
+</div>
+`;

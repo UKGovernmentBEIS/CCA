@@ -22,13 +22,16 @@ export class NotifyOperatorOfDecisionComponent {
   private readonly tasksService = inject(TasksService);
   private readonly regulatorAuthoritiesService = inject(RegulatorAuthoritiesService);
 
-  private readonly accountId = this.requestTaskStore.select(requestTaskQuery.selectRequestInfo)()?.accountId;
+  private readonly requestInfo = this.requestTaskStore.select(requestTaskQuery.selectRequestInfo);
+  private readonly resourceType = computed(() => this.requestInfo()?.resourceType);
+  private readonly resource = computed(() => this.requestInfo()?.resources?.[this.resourceType()]);
+
   private readonly taskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
 
   protected readonly defaultUsers = toSignal(this.tasksService.getDefaultNoticeRecipients(this.taskId));
 
   protected readonly additionalUsers = toSignal(
-    this.noticeRecipientsService.getAdditionalNoticeRecipients(this.accountId),
+    this.noticeRecipientsService.getAdditionalNoticeRecipients(+this.resource()),
   );
 
   private readonly externalContacts = toSignal(this.caExternalContactsService.getCaExternalContacts());

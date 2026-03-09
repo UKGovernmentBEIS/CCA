@@ -3,7 +3,8 @@ package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagree
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestTaskPayload;
+
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationBaseRequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 
@@ -18,8 +19,8 @@ public class UnderlyingAgreementVariationSectionUploadAttachmentService {
     @Transactional
     public void uploadAttachment(Long requestTaskId, String attachmentUuid, String filename) {
         RequestTask requestTask = requestTaskService.findTaskById(requestTaskId);
-        UnderlyingAgreementVariationRequestTaskPayload requestTaskPayload =
-                (UnderlyingAgreementVariationRequestTaskPayload) requestTask.getPayload();
+        UnderlyingAgreementVariationBaseRequestTaskPayload requestTaskPayload =
+                (UnderlyingAgreementVariationBaseRequestTaskPayload) requestTask.getPayload();
 
         requestTaskPayload.getUnderlyingAgreementAttachments().put(UUID.fromString(attachmentUuid), filename);
     }

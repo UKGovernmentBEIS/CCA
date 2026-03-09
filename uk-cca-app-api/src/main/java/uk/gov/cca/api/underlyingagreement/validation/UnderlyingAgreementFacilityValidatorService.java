@@ -1,15 +1,6 @@
 package uk.gov.cca.api.underlyingagreement.validation;
 
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_AGREEMENT_COMPOSITION_TYPE;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ENERGY_CONSUMPTION_BY_PRODUCT_STATUS;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_ID;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_ON_OWNERSHIP_CHANGE;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_TARGETS;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_PREVIOUS_FACILITY_ID;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_UNIT_TYPE;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_UNIQUE_PRODUCT_NAME;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.*;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -85,13 +76,14 @@ public class UnderlyingAgreementFacilityValidatorService {
         Optional.ofNullable(facility.getFacilityItem().getFacilityDetails().getPreviousFacilityId())
                 .ifPresent(id -> {
                 	boolean previousFacilityActive = (facilityValidationContextMap.get(id) != null && facilityValidationContextMap.get(id).getClosedDate() == null);
-                    if (FacilityStatus.NEW.equals(facility.getStatus()) && !previousFacilityActive) {
-                        violations.add(new UnderlyingAgreementViolation(SECTION_NAME, INVALID_PREVIOUS_FACILITY_ID, id));
+                    
+                	if (FacilityStatus.NEW.equals(facility.getStatus()) && !previousFacilityActive) {
+                    	violations.add(new UnderlyingAgreementViolation(SECTION_NAME, INVALID_PREVIOUS_FACILITY_ID, id));
                     }
                 });
     }
 
-    public void validateCca3BaselineAndTargets(final Facility facility, final UnderlyingAgreementContainer container,
+	public void validateCca3BaselineAndTargets(final Facility facility, final UnderlyingAgreementContainer container,
                                                List<UnderlyingAgreementViolation> violations) {
         Optional.ofNullable(facility.getFacilityItem().getCca3BaselineAndTargets()).ifPresent(
                 baselineAndTargets -> {
@@ -145,20 +137,42 @@ public class UnderlyingAgreementFacilityValidatorService {
         final LocalDate requestCreationDate = underlyingAgreementValidationContext.getRequestCreationDate().toLocalDate();
 
         // Facility scheme cannot be greater than current scheme
-        schemeVersions.stream()
+        validateFacilitySchemeAgainstCurrentScheme(underlyingAgreementValidationContext, violations, schemeVersions);
+        
+        validateFacilitySchemeForNewAgreement(underlyingAgreementValidationContext, violations, schemeVersions,
+				applicationReason, status);
+
+        validateFacilitySchemeForChangeOfOwnership(facility, facilityValidationContextMap, violations, schemeVersions,
+				applicationReason, requestCreationDate);
+    }
+    
+    private void validateFacilitySchemeAgainstCurrentScheme(
+			UnderlyingAgreementValidationContext underlyingAgreementValidationContext,
+			List<UnderlyingAgreementViolation> violations, final Set<SchemeVersion> schemeVersions) {
+		schemeVersions.stream()
                 .reduce((a, b) -> a.getVersion() > b.getVersion() ? a : b)
                 .ifPresent(facilityScheme -> {
                     if (facilityScheme.getVersion() > underlyingAgreementValidationContext.getSchemeVersion().getVersion()) {
                         violations.add(new UnderlyingAgreementViolation(SECTION_NAME, INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME, facilityScheme));
                     }
                 });
-
-        if (FacilityStatus.NEW.equals(status) && ApplicationReasonType.NEW_AGREEMENT.equals(applicationReason)
+	}
+    
+    private void validateFacilitySchemeForNewAgreement(
+			UnderlyingAgreementValidationContext underlyingAgreementValidationContext,
+			List<UnderlyingAgreementViolation> violations, final Set<SchemeVersion> schemeVersions,
+			final ApplicationReasonType applicationReason, final FacilityStatus status) {
+		if (FacilityStatus.NEW.equals(status) && ApplicationReasonType.NEW_AGREEMENT.equals(applicationReason)
                 && !SetUtils.difference(schemeVersions, Set.of(underlyingAgreementValidationContext.getSchemeVersion())).isEmpty()) {
             violations.add(new UnderlyingAgreementViolation(SECTION_NAME, INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME, schemeVersions));
         }
+	}
 
-        if (ApplicationReasonType.CHANGE_OF_OWNERSHIP.equals(applicationReason)) {
+	private void validateFacilitySchemeForChangeOfOwnership(final Facility facility,
+			Map<String, FacilityValidationContext> facilityValidationContextMap,
+			List<UnderlyingAgreementViolation> violations, final Set<SchemeVersion> schemeVersions,
+			final ApplicationReasonType applicationReason, final LocalDate requestCreationDate) {
+		if (ApplicationReasonType.CHANGE_OF_OWNERSHIP.equals(applicationReason)) {
             Optional.ofNullable(facility.getFacilityItem().getFacilityDetails().getPreviousFacilityId())
                     .ifPresent(previousFacilityId -> {
                     	
@@ -182,7 +196,7 @@ public class UnderlyingAgreementFacilityValidatorService {
                         }
                     });
         }
-    }
+	}
 
     private void validateFacilityBaselineEnergyConsumption(final Facility facility, final List<UnderlyingAgreementViolation> violations) {
         // Validate that there is at least one non EXCLUDED product

@@ -10,6 +10,7 @@ exports[`BaselineEnergyConsumptionComponent should render the form with the corr
   calculatedTotalEnergy={[Function Function]}
   calculatedVariableEnergy={[Function Function]}
   decimalPipe={[Function _DecimalPipe]}
+  draftService={[Function Object]}
   facility={[Function Function]}
   facilityEnergyConsumption={[Function Function]}
   facilityId={[Function String]}
@@ -114,7 +115,7 @@ exports[`BaselineEnergyConsumptionComponent should render the form with the corr
             class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
             formcontrolname="hasVariableEnergy"
             govuk-radio=""
-            hint="Variable energy consumption is the portion of a facility's total energy consumed (or carbon emitted) that is related to throughput"
+            hint="Variable energy consumption is the portion of a facility's total energy consumed (or carbon emitted) that varies in direct proportion to production output, such as energy per unit of product (e.g. kWh/tonne)"
             legend="Should any of the energy consumed (or carbon emitted) during the baseline be categorised as variable"
           >
             <div
@@ -138,7 +139,7 @@ exports[`BaselineEnergyConsumptionComponent should render the form with the corr
                   govukfieldsethint=""
                   id="hasVariableEnergy-hint"
                 >
-                  Variable energy consumption is the portion of a facility's total energy consumed (or carbon emitted) that is related to throughput
+                  Variable energy consumption is the portion of a facility's total energy consumed (or carbon emitted) that varies in direct proportion to production output, such as energy per unit of product (e.g. kWh/tonne)
                 </div>
                 <div
                   class="govuk-radios"

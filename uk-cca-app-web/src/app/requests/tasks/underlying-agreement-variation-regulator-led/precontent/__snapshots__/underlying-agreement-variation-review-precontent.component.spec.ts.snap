@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`UnderlyingAgreementRegulatorLedVariationPrecontentComponent should display the correct content 1`] = `
+<cca-underlying-agreement-regulator-led-variation-precontent
+  activatedRoute={[Function ActivatedRouteStub]}
+  facilityItems={[Function Function]}
+  isEditable={[Function Function]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  sectionsCompleted={[Function Function]}
+  showNotifyAndPeerReviewButtons={[Function Function]}
+>
+</cca-underlying-agreement-regulator-led-variation-precontent>
+`;

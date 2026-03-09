@@ -27,7 +27,7 @@ import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "tpr_account_performance_data_status",
+@Table(name = "tpr_performance_data_account_status",
 		uniqueConstraints = @UniqueConstraint(columnNames = {"target_period_id", "account_id"}))
 @NamedQuery(
 		name = AccountPerformanceDataStatus.NAMED_QUERY_FIND_ELIGIBLE_ACCOUNTS_FOR_PERFORMANCE_DATA_REPORTING_BY_SECTOR,
@@ -50,8 +50,8 @@ public class AccountPerformanceDataStatus {
 	public static final String NAMED_QUERY_FIND_ELIGIBLE_ACCOUNTS_FOR_PERFORMANCE_DATA_REPORTING_BY_SECTOR = "AccountPerformanceDataStatus.findEligibleAccountsForPerformanceDataReportingBySector";
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tpr_account_performance_data_status_seq")
-	@SequenceGenerator(name = "tpr_account_performance_data_status_seq", sequenceName = "tpr_account_performance_data_status_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tpr_performance_data_account_status_seq")
+	@SequenceGenerator(name = "tpr_performance_data_account_status_seq", sequenceName = "tpr_performance_data_account_status_seq", allocationSize = 1)
 	private Long id;
 
 	@NotNull

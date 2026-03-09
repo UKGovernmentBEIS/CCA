@@ -17,13 +17,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.cca.api.facility.domain.FacilityDataStatus;
 import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilitySearchCriteria;
+import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationStatus;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.CertificationPeriodType;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityCertificationDetailsDTO;
-import uk.gov.cca.api.web.orchestrator.facility.dto.FacilitySearchResultExtendedDTO;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilityInfoDTO;
+import uk.gov.cca.api.web.orchestrator.facility.dto.FacilitySearchResultExtendedDTO;
 import uk.gov.cca.api.web.orchestrator.facility.dto.FacilitySearchResults;
 import uk.gov.cca.api.web.orchestrator.facility.service.FacilityInfoServiceOrchestrator;
 import uk.gov.cca.api.web.orchestrator.facility.service.FacilitySearchServiceOrchestrator;
@@ -41,6 +42,7 @@ import java.util.List;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
@@ -69,6 +71,9 @@ class FacilityViewControllerTest {
 
     @Mock
     private FacilityInfoServiceOrchestrator facilityInfoServiceOrchestrator;
+
+    @Mock
+    private FacilityDataQueryService facilityDataQueryService;
 
     @BeforeEach
     void setUp() {

@@ -15,7 +15,7 @@ import {
   isCreationDateAfterCutOffDate,
   underlyingAgreementQuery,
 } from '@requests/common';
-import { createFacilityAddressForm, FacilityAddressFormModel } from '@shared/components';
+import { AccountAddressFormModel, createAccountAddressForm } from '@shared/components';
 import { ConfigService } from '@shared/config';
 import { UK_COUNTRY_CODES } from '@shared/services';
 import { SchemeVersion, SchemeVersions } from '@shared/types';
@@ -33,7 +33,7 @@ export type FacilityDetailsFormModel = {
   participatingSchemeVersions: FormControl<SchemeVersions>;
   schemeParticipationChoice: FormControl<boolean | null>;
   sameAddress?: FormControl<boolean[]>;
-  facilityAddress: FormGroup<FacilityAddressFormModel>;
+  facilityAddress: FormGroup<AccountAddressFormModel>;
 };
 
 export const FACILITY_DETAILS_FORM = new InjectionToken<FacilityDetailsFormModel>('Facility Details Form');
@@ -75,7 +75,7 @@ export const FacilityDetailsFormProvider: Provider = {
       }
     }
 
-    const addressFormGroup = createFacilityAddressForm(facility?.facilityDetails?.facilityAddress ?? null);
+    const addressFormGroup = createAccountAddressForm(facility?.facilityDetails?.facilityAddress ?? null);
 
     const group = fb.group<FacilityDetailsFormModel>({
       name: fb.control(

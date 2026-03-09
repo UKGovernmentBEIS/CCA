@@ -1,39 +1,52 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { provideRouter } from '@angular/router';
+
+import { of } from 'rxjs';
 
 import { PageHeadingComponent } from '@netz/common/components';
-import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
+import { BasePage, mockClass } from '@netz/common/testing';
 
-import { miReportTypeDescriptionMap } from './core/mi-report';
+import { MiReportsUserDefinedService } from 'cca-api';
+
+import { MiReportsExportService } from './core/mi-reports-export.service';
 import { MiReportsComponent } from './mi-reports.component';
-import { MiReportsStore } from './mi-reports.store';
 
 describe('MiReportsComponent', () => {
   let component: MiReportsComponent;
-  let miReportsStore: MiReportsStore;
   let fixture: ComponentFixture<MiReportsComponent>;
   let page: Page;
 
-  const miReports = [{ id: 1, miReportType: 'CUSTOM' }];
-
   class Page extends BasePage<MiReportsComponent> {
-    get cells(): HTMLTableCellElement[] {
-      return Array.from(this.queryAll<HTMLTableCellElement>('td'));
+    get buttons(): HTMLAnchorElement[] {
+      return Array.from(this.queryAll<HTMLAnchorElement>('a[govukButton]'));
+    }
+
+    get heading(): HTMLElement {
+      return this.query<HTMLElement>('netz-page-heading');
     }
   }
 
-  const routeStub = new ActivatedRouteStub(null, null, {
-    miReports: miReports,
-  });
-
   beforeEach(async () => {
+    const mockMiReportsUserDefinedService = mockClass(MiReportsUserDefinedService);
+    mockMiReportsUserDefinedService.getAllMiReportsUserDefined = jest
+      .fn()
+      .mockReturnValue(of({ queries: [], total: 0 }));
+
+    const mockMiReportsExportService = mockClass(MiReportsExportService);
+
     await TestBed.configureTestingModule({
       imports: [MiReportsComponent, PageHeadingComponent],
-      providers: [{ provide: ActivatedRoute, useValue: routeStub }],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([]),
+        { provide: MiReportsUserDefinedService, useValue: mockMiReportsUserDefinedService },
+        { provide: MiReportsExportService, useValue: mockMiReportsExportService },
+      ],
     }).compileComponents();
 
-    miReportsStore = TestBed.inject(MiReportsStore);
-    miReportsStore.setState(miReports);
     fixture = TestBed.createComponent(MiReportsComponent);
     component = fixture.componentInstance;
     page = new Page(fixture);
@@ -44,17 +57,19 @@ describe('MiReportsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should create table with expected content', () => {
-    const cells = page.cells;
-    expect(cells.length).toEqual(1);
+  it('should display page heading', () => {
+    expect(page.heading.textContent).toContain('MI Reports');
+  });
 
-    const reportDescriptions = cells.map((c) => c.textContent);
-    const expectedDescriptions = miReports
-      .map((r) => miReportTypeDescriptionMap[r.miReportType])
-      .sort((a, b) => a.localeCompare(b));
+  it('should have Custom report button', () => {
+    const customButton = page.buttons.find((b) => b.textContent.includes('Custom report'));
+    expect(customButton).toBeTruthy();
+    expect(customButton.getAttribute('routerlink')).toBe('custom');
+  });
 
-    reportDescriptions.forEach((value, index) => {
-      expect(value).toEqual(expectedDescriptions[index]);
-    });
+  it('should have Create new report button', () => {
+    const createButton = page.buttons.find((b) => b.textContent.includes('Create new report'));
+    expect(createButton).toBeTruthy();
+    expect(createButton.getAttribute('routerlink')).toBe('create-mi-report');
   });
 });

@@ -1,15 +1,26 @@
-import { KeycloakService } from 'keycloak-angular';
+import { signal } from '@angular/core';
+
+import { KeycloakService } from '@shared/services';
 
 import Mock = jest.Mock;
 import { AuthService } from '@shared/services';
 
 import { AuthoritiesService, TermsAndConditionsService, UsersService } from 'cca-api';
 
-export const mockKeycloakService: Record<keyof KeycloakService, Mock> = {
+export const mockKeycloakService: Record<keyof KeycloakService, any> = {
   login: jest.fn(),
   logout: jest.fn(),
   isLoggedIn: jest.fn(),
   loadUserProfile: jest.fn(),
+  init: jest.fn(),
+  getKeycloakInstance: jest.fn(),
+  getToken: jest.fn(),
+  updateToken: jest.fn(),
+  getUserProfile: jest.fn(),
+  isTokenExpired: jest.fn(),
+  getTokenParsed: jest.fn(),
+  getRefreshTokenParsed: jest.fn(),
+  keycloakEvents: signal(null),
 } as any;
 
 export const mockAuthService: Record<keyof AuthService, Mock> = {

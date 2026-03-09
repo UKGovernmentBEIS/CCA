@@ -11,6 +11,7 @@ import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountContact;
 import uk.gov.cca.api.account.domain.TargetUnitAccountContactType;
 import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
+import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDTO;
@@ -118,10 +119,11 @@ class TargetUnitAccountMapperTest {
                 .sicCodes(List.of("sicCode"))
                 .sectorAssociationId(sectorAssociationId)
                 .address(AccountAddress.builder().build())
+                .status(TargetUnitAccountStatus.LIVE)
                 .targetUnitAccountContacts(getTargetUnitAccountContacts())
                 .build();
 
-        TargetUnitAccountHeaderInfoDTO result = mapper.toTargetUnitAccountHeaderInfoDTO(account);
+        TargetUnitAccountHeaderInfoDTO result = mapper.toTargetUnitAccountHeaderInfo(account);
 
         assertThat(result.getName()).isEqualTo(account.getName());
         assertThat(result.getBusinessId()).isEqualTo(account.getBusinessId());

@@ -1,0 +1,55 @@
+<div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <netz-page-heading caption="Target unit details">Check your answers</netz-page-heading>
+    </div>
+
+    <div class="govuk-grid-column-one-third govuk-!-padding-top-6">
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+            <div class="govuk-checkboxes__item">
+              <input
+                [formControl]="toggleCompaniesHouseDetailsCtrl"
+                class="govuk-checkboxes__input"
+                id="toggleCompaniesHouseDetails"
+                name="toggleCompaniesHouseDetails"
+                type="checkbox"
+                [value]="toggleCompaniesHouseDetails()"
+              />
+              <label class="govuk-label govuk-checkboxes__label" for="toggleCompaniesHouseDetails">
+                Show Companies House details
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #contentTpl let-showOriginal="showOriginal">
+    <cca-summary [data]="showOriginal ? summaryDataOriginal : summaryDataCurrent" />
+  </ng-template>
+
+  <div class="govuk-grid-row">
+    <div [class]="mainColumnClass()" class="govuk-!-padding-top-7">
+      <cca-highlight-diff>
+        <ng-container slot="previous" *ngTemplateOutlet="contentTpl; context: { showOriginal: true }" />
+        <ng-container slot="current" *ngTemplateOutlet="contentTpl; context: { showOriginal: false }" />
+      </cca-highlight-diff>
+    </div>
+
+    @if (toggleCompaniesHouseDetails()) {
+      <cca-companies-house-details
+        [toggleCompaniesHouseDetails]="toggleCompaniesHouseDetails()"
+        [companiesHouseState]="companiesHouseState()"
+        [tuDetails]="tuDetails()"
+      />
+    }
+  </div>
+
+  <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

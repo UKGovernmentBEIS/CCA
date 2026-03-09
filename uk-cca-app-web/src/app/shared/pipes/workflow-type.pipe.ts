@@ -4,7 +4,7 @@ import { RequestDetailsDTO } from 'cca-api';
 
 @Pipe({ name: 'workflowType' })
 export class WorkflowTypePipe implements PipeTransform {
-  transform(type: RequestDetailsDTO['requestType']): string {
+  transform(type: RequestDetailsDTO['requestType'], initiatorRoleType?: string): string {
     switch (type) {
       case 'CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING':
         return 'CCA2 extension';
@@ -19,7 +19,7 @@ export class WorkflowTypePipe implements PipeTransform {
         return 'Underlying agreement';
 
       case 'UNDERLYING_AGREEMENT_VARIATION':
-        return 'Underlying agreement variation';
+        return `Underlying agreement variation${initiatorRoleType === 'REGULATOR' ? ' by regulator' : ''}`;
 
       case 'ADMIN_TERMINATION':
         return 'Admin Termination';

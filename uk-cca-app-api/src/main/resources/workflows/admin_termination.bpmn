@@ -186,7 +186,6 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0ywxc48" sourceRef="Activity_0v9mekt" targetRef="Gateway_0w37tbs" />
   </bpmn:process>
-  <bpmn:message id="Message_1mtirqe" name="rfiCancelled" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PROCESS_ADMIN_TERMINATION">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">

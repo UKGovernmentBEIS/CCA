@@ -10,23 +10,23 @@ public class CcaRegulatorPermissionGroup {
     public static final String MANAGE_OPERATOR_USERS = "MANAGE_OPERATOR_USERS";
     public static final String MANAGE_FACILITY_AUDIT = "MANAGE_FACILITY_AUDIT";
 
-    /**
-     * Add permission to Regulator for Admin Termination Work Flow
-     */
+    /** Add permission to Regulator for Admin Termination Work Flow */
     public static final String ADMIN_TERMINATION_SUBMISSION = "ADMIN_TERMINATION_SUBMISSION";
-
     public static final String ADMIN_TERMINATION_PEER_REVIEW = "ADMIN_TERMINATION_PEER_REVIEW";
 
+    /** Add permission to Regulator for UNA Work Flow */
     public static final String UNDERLYING_AGREEMENT_APPLICATION_REVIEW = "UNDERLYING_AGREEMENT_APPLICATION_REVIEW";
-
     public static final String UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW = "UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW";
 
+    /** Add permission to Regulator for UNA Variation Work Flow */
     public static final String UNDERLYING_AGREEMENT_VARIATION_REVIEW = "UNDERLYING_AGREEMENT_VARIATION_REVIEW";
-
+    public static final String UNDERLYING_AGREEMENT_VARIATION_SUBMISSION = "UNDERLYING_AGREEMENT_VARIATION_SUBMISSION";
     public static final String UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW = "UNDERLYING_AGREEMENT_VARIATION_APPLICATION_PEER_REVIEW";
+    public static final String UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW = "UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW";
 
-    /**
-     * Add permission to Regulator for Facility Audit Work Flow
-     */
+    /** Add permission to Regulator for Facility Audit Work Flow */
     public static final String FACILITY_AUDIT_SUBMISSION = "FACILITY_AUDIT_SUBMISSION";
+
+    /** Add permission to Regulator for Non Compliance Work Flow */
+    public static final String NON_COMPLIANCE_SUBMISSION = "NON_COMPLIANCE_SUBMISSION";
 }

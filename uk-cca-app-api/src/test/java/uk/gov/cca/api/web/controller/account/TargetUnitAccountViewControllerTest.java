@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
-import uk.gov.cca.api.account.domain.dto.TargetUnitAccountHeaderInfoDTO;
 import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
 import uk.gov.cca.api.sectorassociation.domain.dto.SubsectorAssociationDTO;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
@@ -26,9 +25,9 @@ import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
 import uk.gov.cca.api.web.orchestrator.account.dto.TargetUnitAccountDetailsResponseDTO;
 import uk.gov.cca.api.web.orchestrator.account.service.TargetUnitAccountQueryServiceOrchestrator;
 import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria;
+import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria.SortBy;
 import uk.gov.netz.api.account.domain.dto.AccountSearchResultInfoDTO;
 import uk.gov.netz.api.account.domain.dto.AccountSearchResults;
-import uk.gov.netz.api.account.domain.dto.AccountSearchCriteria.SortBy;
 import uk.gov.netz.api.account.service.AccountSearchServiceDelegator;
 import uk.gov.netz.api.authorization.core.domain.AppAuthority;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -196,38 +195,4 @@ class TargetUnitAccountViewControllerTest {
         // verify
         verify(accountSearchServiceDelegator, times(1)).getAccountsByUserAndSearchCriteria(authUser, accountSearchCriteria);
     }
-
-    @Test
-    void getAccountHeaderInfoById() throws Exception {
-        Long accountId = 1L;
-        String accountName = "Test Account";
-        String businessId = "AIC/800544";
-        TargetUnitAccountStatus status = TargetUnitAccountStatus.LIVE;
-        AppUser authUser = AppUser.builder()
-                .userId("userId")
-                .roleType(RoleTypeConstants.REGULATOR)
-                .authorities(List.of(AppAuthority.builder().competentAuthority(CompetentAuthorityEnum.ENGLAND).build()))
-                .build();
-
-        TargetUnitAccountHeaderInfoDTO targetUnitAccountHeaderInfoDTO = TargetUnitAccountHeaderInfoDTO.builder()
-                .name(accountName)
-                .businessId(businessId)
-                .status(status).build();
-
-
-        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
-        when(targetUnitAccountQueryService.getTargetUnitAccountHeaderInfo(accountId)).thenReturn(targetUnitAccountHeaderInfoDTO);
-
-        mockMvc.perform(get(BASE_PATH + accountId + "/header-info")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(jsonPath("$.name").value(accountName))
-                .andExpect(jsonPath("$.businessId").value(businessId))
-                .andExpect(jsonPath("$.status").value(status.getName()));
-
-        // verify
-        verify(targetUnitAccountQueryService, times(1)).getTargetUnitAccountHeaderInfo(accountId);
-    }
-
 }

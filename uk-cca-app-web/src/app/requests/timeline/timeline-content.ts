@@ -12,6 +12,7 @@ import { AdminTerminationSubmittedTimelineComponent } from './admin-termination-
 import { AdminTerminationWithdrawSubmittedTimelineComponent } from './admin-termination-withdraw-submitted/admin-termination-withdraw-submitted-timeline.component';
 import { BuyOutFeeCalculatedComponent } from './buy-out-fee-calculated/buy-out-fee-calculated.component';
 import { BuyOutSurplusBatchRunCompletedComponent } from './buy-out-surplus-batch-run-completed/buy-out-surplus-batch-run-completed.component';
+import { CcaTerminationProcessingSubmittedComponent } from './cca-termination-processing-submitted/cca-termination-processing-submitted.component';
 import { Cca2ExtensionComponent } from './cca2-extension/cca2-extension.component';
 import { Cca3MigrationActivatedComponent } from './cca3-migration/activated/cca3-migration-activated.component';
 import { Cca3MigrationCompletedComponent } from './cca3-migration/completed/cca3-migration-completed.component';
@@ -32,6 +33,8 @@ import { UnderlyingAgreementReviewedRejectedDecisionDetailsComponent } from './u
 import { getAllUnderlyingAgreementSections } from './underlying-agreement-submitted/underlying-agreement-submitted-task-content';
 import { UnderlyingAgreementVariationActivatedComponent } from './underlying-agreement-variation-activated/underlying-agreement-variation-activated.component';
 import { UnderlyingAgreementVariationCompletedComponent } from './underlying-agreement-variation-completed/underlying-agreement-variation-completed.component';
+import { UnARegulatorLedVariationReviewedDecisionDetailsComponent } from './underlying-agreement-variation-regulator-led-reviewed/peer-review-decision.component';
+import { UnARegulatorLedVariationSubmittedComponent } from './underlying-agreement-variation-regulator-led-submitted/underlying-agreement-variation-regulator-led-submitted.component';
 import { UnderlyingAgreementVariationReviewedAcceptedDecisionDetailsComponent } from './underlying-agreement-variation-reviewed/underlying-agreement-variation-reviewed-accepted-decision-details/underlying-agreement-variation-reviewed-accepted-decision-details.component';
 import { UnderlyingAgreementVariationReviewedRejectedDecisionDetailsComponent } from './underlying-agreement-variation-reviewed/underlying-agreement-variation-reviewed-rejected-decision/underlying-agreement-variation-reviewed-rejected-decision-details.component';
 import { getAllUnderlyingAgreementVariationSections } from './underlying-agreement-variation-submitted/underlying-agreement-variation-submitted-task-content';
@@ -401,6 +404,66 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     return {
       header: getItemActionHeader(action),
       component: TrackCorrectiveActionsCompletedComponent,
+    };
+  },
+
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: UnARegulatorLedVariationSubmittedComponent,
+    };
+  },
+
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_COMPLETED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: UnARegulatorLedVariationSubmittedComponent,
+    };
+  },
+
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_ACTIVATED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: UnderlyingAgreementVariationActivatedComponent,
+    };
+  },
+
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEWER_ACCEPTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: UnARegulatorLedVariationReviewedDecisionDetailsComponent,
+    };
+  },
+
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEWER_REJECTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: UnARegulatorLedVariationReviewedDecisionDetailsComponent,
+    };
+  },
+
+  CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: CcaTerminationProcessingSubmittedComponent,
     };
   },
 };

@@ -94,9 +94,10 @@ class UnderlyingAgreementVariationActivationDefaultNoticeRecipientsTest {
     }
 
     @Test
-    void getType() {
-        assertThat(service.getType())
-                .isEqualTo(CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATION);
+    void getTypes() {
+        assertThat(service.getTypes()).containsExactlyInAnyOrder(
+                CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATION,
+                CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_ACTIVATION);
     }
     
     private void addResourcesToRequest(Long accountId, Request request) {

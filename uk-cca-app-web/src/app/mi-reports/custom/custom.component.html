@@ -1,3 +1,7 @@
+@if (isErrorSummaryDisplayed()) {
+  <govuk-error-summary [form]="form" />
+}
+
 <netz-page-heading size="xl">Enter a query</netz-page-heading>
 
 <p>
@@ -12,11 +16,7 @@
   </a>
 </p>
 
-@if (errorMessage(); as errorMessage) {
-  <p class="govuk-error-message">{{ errorMessage }}</p>
-}
-
-<form (ngSubmit)="exportToExcel()" [formGroup]="reportOptionsForm">
+<form (ngSubmit)="exportToExcel()" [formGroup]="form">
   <div govuk-textarea formControlName="query" label="Enter a query"></div>
 
   <div class="govuk-button-group">

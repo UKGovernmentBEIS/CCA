@@ -39,6 +39,7 @@ public enum CcaErrorCode implements NetzErrorCode {
     INVALID_UNDERLYING_AGREEMENT_VARIATION("UNAV1001", HttpStatus.BAD_REQUEST, "Invalid Underlying Agreement Variation"),
     INVALID_UNDERLYING_AGREEMENT_VARIATION_REVIEW("UNAV1002", HttpStatus.BAD_REQUEST, "Invalid Underlying Agreement Variation Review"),
     INVALID_UNDERLYING_AGREEMENT_VARIATION_ACTIVATION("UNAV1003", HttpStatus.BAD_REQUEST, "Invalid Underlying Agreement Variation Activation"),
+    INVALID_UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED("UNAV1004", HttpStatus.BAD_REQUEST, "Invalid Underlying Agreement Variation Regulator Led"),
     /** Codes for Reporting Spreadsheets Download errors. */
     INVALID_PERFORMANCE_DATA_DOWNLOAD("TPRDL1001", HttpStatus.BAD_REQUEST, "Invalid Performance Data Download"),
     /** Codes for Performance Data Upload errors. */
@@ -79,6 +80,10 @@ public enum CcaErrorCode implements NetzErrorCode {
     INVALID_FACILITY_AUDIT("AUDT1001", HttpStatus.BAD_REQUEST, "Invalid Facility Audit"),
     /** Codes for Cca2 extension notice errors. */
     CCA2_EXTENSION_NOTICE_RUN_EXIST("CCA2EXT1001", HttpStatus.BAD_REQUEST, "Cca2 extension notice run already in progress"),
+    /** Codes for CCA2 termination run errors. */
+    CCA2_TERMINATION_RUN_EXIST("CCA2END1001", HttpStatus.BAD_REQUEST, "CCA2 termination run already in progress"),
+    /** Non Compliance */
+    INVALID_NON_COMPLIANCE("NCOM1001", HttpStatus.BAD_REQUEST, "Invalid Non Compliance")
     ;
 
 

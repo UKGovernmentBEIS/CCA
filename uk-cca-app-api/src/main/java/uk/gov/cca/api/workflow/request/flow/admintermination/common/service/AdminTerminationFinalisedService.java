@@ -1,71 +1,29 @@
 package uk.gov.cca.api.workflow.request.flow.admintermination.common.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import uk.gov.cca.api.account.service.TargetUnitAccountUpdateService;
-import uk.gov.cca.api.facility.service.FacilityDataUpdateService;
-import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
-import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
-import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
-import uk.gov.cca.api.workflow.request.core.domain.constants.CcaRequestStatuses;
-import uk.gov.netz.api.workflow.request.WorkflowService;
-import uk.gov.netz.api.workflow.request.core.domain.Request;
-import uk.gov.netz.api.workflow.request.core.service.RequestQueryService;
-import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import uk.gov.cca.api.workflow.request.flow.common.service.TerminateAccountAndOpenWorkflowsService;
+import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
 @Service
 @RequiredArgsConstructor
 public class AdminTerminationFinalisedService {
-    private final RequestService requestService;
-    private final TargetUnitAccountUpdateService targetUnitAccountUpdateService;
-    private final RequestQueryService requestQueryService;
-    private final WorkflowService workflowService;
-    private final FacilityDataUpdateService facilityDataUpdateService;
-    private final UnderlyingAgreementService underlyingAgreementService;
-    private static final String TERMINATE_REASON = "Workflow terminated by the system because the final decision is \"Terminate agreement\"";
-    private static final Set<String> EXCLUDED_REQUEST_TYPES = Set.of(CcaRequestType.ADMIN_TERMINATION, CcaRequestType.FACILITY_AUDIT);
+	
+	private final RequestService requestService;
+	private final TerminateAccountAndOpenWorkflowsService terminateAccountAndOpenWorkflowsService;
 
     @Transactional
     public void terminateAccountAndOpenWorkflows(String requestId) {
-        final Request request = requestService.findRequestById(requestId);
-        final Long accountId = request.getAccountId();
-        final LocalDateTime terminationDate = LocalDateTime.now();
-
-        // Update Target Unit Account Status
-        targetUnitAccountUpdateService.handleTargetUnitAccountTerminated(accountId, terminationDate);
-
-        // Terminate facility data
-        facilityDataUpdateService.terminateFacilities(accountId, terminationDate);
-
-        // Update terminated date of the related UnA documents
-        underlyingAgreementService.terminateActiveUnaDocuments(accountId, terminationDate);
-
-        // Any open WF related to this Target Unit account is terminated.
-        terminateWorkflowsByAccountId(accountId);
+    	final Request request = requestService.findRequestById(requestId);
+    	final LocalDateTime terminationDate = LocalDateTime.now();
+    	final String terminatedBy = request.getPayload().getRegulatorAssignee();
+    	
+    	terminateAccountAndOpenWorkflowsService.terminateAccountAndOpenWorkflows(request, terminationDate, terminatedBy);
 
     }
-
-    private void terminateWorkflowsByAccountId(Long accountId) {
-        List<Request> accountRequests = requestQueryService.findInProgressRequestsByAccount(accountId);
-
-        accountRequests.stream()
-                .filter(ar -> !EXCLUDED_REQUEST_TYPES.contains(ar.getType().getCode()))
-                .forEach(ar -> {
-                            // A dedicated timeline event is registered to the terminated workflow,
-                            // that "explains" the reason why the Workflow was terminated.
-                            ar.setStatus(CcaRequestStatuses.CANCELLED);
-                            requestService.addActionToRequest(ar,
-                                    null,
-                                    CcaRequestActionType.REQUEST_TERMINATED,
-                                    ar.getPayload().getRegulatorAssignee());
-                            workflowService.deleteProcessInstance(ar.getProcessInstanceId(), TERMINATE_REASON);
-                        }
-                );
-    }
-
 }

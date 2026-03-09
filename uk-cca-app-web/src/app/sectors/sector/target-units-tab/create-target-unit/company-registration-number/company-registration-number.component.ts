@@ -11,7 +11,6 @@ import {
   RadioOptionComponent,
   TextInputComponent,
 } from '@netz/govuk-components';
-import { sameCompanyRegistrationNumbers } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 
 import { AccountAddressDTO, CompaniesInformationService, CompanyProfileDTO, TargetUnitAccountPayload } from 'cca-api';
@@ -80,13 +79,8 @@ export class CompanyRegistrationNumberComponent {
     companyProfile: CompanyProfileDTO | null,
   ): void {
     const currentState = this.createTargetUnitStore.state;
-    const sameCRN = sameCompanyRegistrationNumbers(companyProfile, currentState.companyRegistrationNumber);
-
-    if (!sameCRN) {
-      const updatedState = updateTargetUnitState(currentState, companyNumberState, companyProfile);
-      this.createTargetUnitStore.updateState(updatedState);
-    }
-
+    const updatedState = updateTargetUnitState(currentState, companyNumberState, companyProfile);
+    this.createTargetUnitStore.updateState(updatedState);
     this.router.navigate(['..', 'target-unit-details'], { relativeTo: this.activatedRoute });
   }
 }

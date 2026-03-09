@@ -14,6 +14,9 @@ import {
 import {
   AgreementTypeEnum,
   CaNameEnum,
+  FACILITY_ELIGIBILITY_DETAILS_FORM,
+  FacilityEligibilityDetailsFormProvider,
+  FacilityEligibilityFormModel,
   FacilityWizardStep,
   isFacilityWizardCompleted,
   OVERALL_DECISION_SUBTASK,
@@ -33,12 +36,6 @@ import {
 
 import { createSaveActionDTO, toUnderlyingAgreementSaveReviewPayload } from '../../../../transform';
 import { resetDetermination } from '../../../../utils';
-import {
-  FACILITY_ELIGIBILITY_DETAILS_FORM,
-  facilityEligibilityDetailsFormProvider,
-  FacilityEligibilityFormModel,
-} from './facility-eligibility-details-form.provider';
-
 @Component({
   selector: 'cca-facility-eligibility-details',
   templateUrl: './facility-eligibility-details.component.html',
@@ -53,7 +50,7 @@ import {
     FileInputComponent,
     RouterLink,
   ],
-  providers: [facilityEligibilityDetailsFormProvider],
+  providers: [FacilityEligibilityDetailsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityEligibilityDetailsComponent {

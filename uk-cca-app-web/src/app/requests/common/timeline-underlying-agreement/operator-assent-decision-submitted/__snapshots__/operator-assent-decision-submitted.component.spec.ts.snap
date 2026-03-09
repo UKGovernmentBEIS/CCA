@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`OperatorAssentDecisionSubmittedComponent should show summary values 1`] = `
+<cca-operator-assent-decision-submitted
+  requestActionStore={[Function _RequestActionStore]}
+  summaryData={[Function Function]}
+>
+  <div>
+    <netz-page-heading>
+      <h1
+        class="govuk-heading-l"
+      >
+        Determine operator assent
+      </h1>
+    </netz-page-heading>
+    <cca-summary>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Does this variation result in changes to the current underlying agreement?
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              Yes
+            </span>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Additional information (optional)
+          </dt>
+          <dd
+            class="pre-line govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              sakjhd kjash d
+            </span>
+          </dd>
+        </div>
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Uploaded files
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              No files provided
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </cca-summary>
+  </div>
+</cca-operator-assent-decision-submitted>
+`;

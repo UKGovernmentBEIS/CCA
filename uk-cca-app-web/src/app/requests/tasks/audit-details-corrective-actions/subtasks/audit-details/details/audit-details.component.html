@@ -8,7 +8,7 @@
   >
     <p class="govuk-label govuk-label--m">Audit technique</p>
     <div class="govuk-!-margin-bottom-9" formControlName="auditTechnique" govuk-radio [isInline]="true">
-      <govuk-radio-option [value]="'DESK_BASED_INTERVIEW'" [label]="'Desk-based interview'" />
+      <govuk-radio-option [value]="'DESK_BASED_INTERVIEW'" [label]="'Desk-based audit'" />
       <govuk-radio-option [value]="'ON_SITE_VISIT'" [label]="'On-site visit'" />
     </div>
 
@@ -26,7 +26,7 @@
       govuk-textarea
       label="Comments"
       labelSize="medium"
-      hint="Summarise the outcomes of the audit interview and the actions you took"
+      hint="Summarise the key outcomes from the audit and the actions you took.  (Please note that operator users will be able to see these comments.)"
       formControlName="comments"
     ></div>
 
@@ -36,15 +36,11 @@
       label="When did you send the final audit report to the operator?"
       size="normal"
       class="govuk-!-margin-bottom-9 govuk-!-margin-top-9"
+      [max]="today"
     ></div>
 
     <p class="govuk-label govuk-label--m">Audit documents</p>
-    <span class="govuk-hint"> Upload at least one relevant file from the audit, for example </span>
-    <ul class="govuk-hint">
-      <li>the completed audit check list</li>
-      <li>notes from the audit interview</li>
-      <li>copies of the initial and final audit reports sent to the operator</li>
-    </ul>
+    <span class="govuk-hint"> Upload the final audit report you sent to the operator</span>
     <cca-multiple-file-input [baseDownloadUrl]="downloadUrl" formControlName="auditDocuments" label=" " hint=" " />
   </cca-wizard-step>
 

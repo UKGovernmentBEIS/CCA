@@ -4,10 +4,10 @@ import { UnderlyingAgreementReviewDecision, UnderlyingAgreementVariationDetails 
 
 import { VariationChangesEnum } from '../pipes/variation-changes-type.pipe';
 import {
-  baselineChangesTypes,
-  facilityChangesTypes,
+  deprecatedChangesTypes,
+  dontRequireOperatorAssentTypes,
   otherChangesTypes,
-  targetCurrencyChangesTypes,
+  requireOperatorAssentTypes,
 } from '../variation-details';
 import { addDecisionSummaryData } from './decision-summary-data';
 
@@ -18,22 +18,24 @@ function toSummaryData(
 ): SummaryFactory {
   const factory = new SummaryFactory().addSection('', `${prefix}variation-details`);
 
-  let facilityChanges = [];
-  let baselineChanges = [];
-  let targetCurrencyChanges = [];
+  let requireOperatorAssent = [];
+  let dontRequireOperatorAssent = [];
+  let deprecatedChanges = [];
   let otherChanges = [];
 
   if (variationDetails?.modifications?.length) {
-    facilityChanges = facilityChangesTypes.filter((c) => variationDetails.modifications.includes(c));
-    baselineChanges = baselineChangesTypes.filter((c) => variationDetails.modifications.includes(c));
-    targetCurrencyChanges = targetCurrencyChangesTypes.filter((c) => variationDetails.modifications.includes(c));
+    requireOperatorAssent = requireOperatorAssentTypes.filter((c) => variationDetails.modifications.includes(c));
+    dontRequireOperatorAssent = dontRequireOperatorAssentTypes.filter((c) =>
+      variationDetails.modifications.includes(c),
+    );
+    deprecatedChanges = deprecatedChangesTypes.filter((c) => variationDetails.modifications.includes(c));
     otherChanges = otherChangesTypes.filter((c) => variationDetails.modifications.includes(c));
   }
 
-  if (facilityChanges.length > 0) {
+  if (requireOperatorAssent.length > 0) {
     factory.addTextAreaRow(
-      'Target Unit/Facility changes',
-      facilityChanges.map((c) => VariationChangesEnum[c]),
+      'Changes that usually require the operator to provide their assent',
+      requireOperatorAssent.map((c) => VariationChangesEnum[c]),
       {
         change: isEditable,
         appendChangeParam: true,
@@ -41,21 +43,13 @@ function toSummaryData(
     );
   }
 
-  if (baselineChanges.length > 0) {
+  if (dontRequireOperatorAssent.length > 0 || deprecatedChanges.length > 0) {
     factory.addTextAreaRow(
-      'Amend the baseline and target due to',
-      baselineChanges.map((c) => VariationChangesEnum[c]),
-      {
-        change: isEditable,
-        appendChangeParam: true,
-      },
-    );
-  }
-
-  if (targetCurrencyChanges.length > 0) {
-    factory.addTextAreaRow(
-      'Amend the target currency to',
-      targetCurrencyChanges.map((c) => VariationChangesEnum[c]),
+      "Changes that don't usually require the operator to provide their assent",
+      [
+        ...dontRequireOperatorAssent.map((c) => VariationChangesEnum[c]),
+        ...deprecatedChanges.map((c) => VariationChangesEnum[c]),
+      ],
       {
         change: isEditable,
         appendChangeParam: true,
@@ -74,10 +68,14 @@ function toSummaryData(
     );
   }
 
-  factory.addTextAreaRow('Explain what you are changing and the reason for the changes', variationDetails?.reason, {
-    change: isEditable,
-    appendChangeParam: true,
-  });
+  factory.addTextAreaRow(
+    'Explain in more detail what you are changing and the reason for the changes',
+    variationDetails?.reason,
+    {
+      change: isEditable,
+      appendChangeParam: true,
+    },
+  );
 
   return factory;
 }
@@ -99,5 +97,6 @@ export function toVariationDetailsSummaryDataWithDecision(
   prefix = '../',
 ): SummaryData {
   const factory = toSummaryData(variationDetails, isEditable, prefix);
+  if (!decision?.type) return factory.create();
   return addDecisionSummaryData(factory, decision, reviewAttachments, isEditable, downloadUrl).create();
 }

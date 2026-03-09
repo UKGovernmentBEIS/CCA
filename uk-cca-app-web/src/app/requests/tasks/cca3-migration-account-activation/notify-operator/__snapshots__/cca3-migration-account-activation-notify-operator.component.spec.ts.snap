@@ -38,6 +38,10 @@ exports[`UnderlyingAgreementActivationNotifyOperatorComponent should render the 
           Users automatically notified
         </h3>
         <div
+          class="govuk-!-margin-bottom-6"
+        >
+        </div>
+        <div
           class="govuk-!-display-block govuk-form-group ng-untouched ng-pristine ng-valid"
           formcontrolname="signatory"
           govuk-select=""

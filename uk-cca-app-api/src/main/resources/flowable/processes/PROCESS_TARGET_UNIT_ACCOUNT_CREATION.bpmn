@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:design="http://flowable.org/design" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.30.0" design:palette="flowable-work-process-palette">
+  <process id="PROCESS_TARGET_UNIT_ACCOUNT_CREATION" name="Target unit account creation process" isExecutable="true">
+    <extensionElements>
+      <design:stencilid>BPMNDiagram</design:stencilid>
+      <design:creationdate>2025-11-10T08:09:08.854Z</design:creationdate>
+      <design:modificationdate>2025-11-10T08:17:56.622Z</design:modificationdate>
+    </extensionElements>
+    <serviceTask id="Activity_0d377x9" name="Update Workflow status to COMPLETED" flowable:delegateExpression="#{requestUpdateStatusHandlerFlowable}">
+      <extensionElements>
+        <flowable:field name="requestStatus">
+          <flowable:string>COMPLETED</flowable:string>
+        </flowable:field>
+        <design:stencilid>ServiceTask</design:stencilid>
+        <design:stencilsuperid>Task</design:stencilsuperid>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="UNDERLYING_AGREEMENT_APPLICATION_SUBMIT" name="Initialize underlying agreement WF" flowable:delegateExpression="#{targetUnitAccountApplyUnderlyingAgreementHandlerFlowable}">
+      <extensionElements>
+        <design:stencilid>ServiceTask</design:stencilid>
+        <design:stencilsuperid>Task</design:stencilsuperid>
+      </extensionElements>
+    </serviceTask>
+    <startEvent id="TARGET_UNIT_ACCOUNT_CREATION_START_EVENT" name="Start Event" flowable:formFieldValidation="false">
+      <extensionElements>
+        <flowable:work-form-field-validation>false</flowable:work-form-field-validation>
+        <design:stencilid>StartNoneEvent</design:stencilid>
+        <design:display_ref_in_diagram>true</design:display_ref_in_diagram>
+      </extensionElements>
+    </startEvent>
+    <endEvent id="Event_09xj9ho" name="End Event">
+      <extensionElements>
+        <design:stencilid>EndNoneEvent</design:stencilid>
+        <design:display_ref_in_diagram>true</design:display_ref_in_diagram>
+      </extensionElements>
+    </endEvent>
+    <sequenceFlow id="Flow_1s9beh3" sourceRef="Activity_0d377x9" targetRef="UNDERLYING_AGREEMENT_APPLICATION_SUBMIT">
+      <extensionElements>
+        <design:stencilid>SequenceFlow</design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="SequenceFlow_4" sourceRef="UNDERLYING_AGREEMENT_APPLICATION_SUBMIT" targetRef="Event_09xj9ho">
+      <extensionElements>
+        <design:stencilid>SequenceFlow</design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="SequenceFlow_1" sourceRef="TARGET_UNIT_ACCOUNT_CREATION_START_EVENT" targetRef="Activity_0d377x9">
+      <extensionElements>
+        <design:stencilid>SequenceFlow</design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_PROCESS_ACCOUNT_CREATION">
+    <bpmndi:BPMNPlane bpmnElement="PROCESS_ACCOUNT_CREATION" id="BPMNPlane_PROCESS_ACCOUNT_CREATION">
+      <bpmndi:BPMNShape bpmnElement="Activity_0d377x9" id="BPMNShape_Activity_0d377x9">
+        <omgdc:Bounds height="80.0" width="100.0" x="312.0" y="117.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UNDERLYING_AGREEMENT_APPLICATION_SUBMIT" id="BPMNShape_UNDERLYING_AGREEMENT_APPLICATION_SUBMIT">
+        <omgdc:Bounds height="80.0" width="100.0" x="536.0" y="117.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="TARGET_UNIT_ACCOUNT_CREATION_START_EVENT" id="BPMNShape_TARGET_UNIT_ACCOUNT_CREATION_START_EVENT">
+        <omgdc:Bounds height="30.0" width="30.0" x="161.0" y="142.0"></omgdc:Bounds>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="18.0" width="59.0" x="149.0" y="182.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Event_09xj9ho" id="BPMNShape_Event_09xj9ho">
+        <omgdc:Bounds height="28.0" width="28.0" x="746.0" y="143.0"></omgdc:Bounds>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="18.0" width="55.0" x="734.0" y="115.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_1s9beh3" id="BPMNEdge_Flow_1s9beh3" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="412.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="536.0" y="157.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_4" id="BPMNEdge_SequenceFlow_4" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+        <omgdi:waypoint x="636.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="746.0" y="157.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_1" id="BPMNEdge_SequenceFlow_1" flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="191.0" y="157.0"></omgdi:waypoint>
+        <omgdi:waypoint x="312.0" y="157.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

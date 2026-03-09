@@ -7,13 +7,12 @@ import { GovukValidators } from '@netz/govuk-components';
 import { UnderlyingAgreementVariationDetails } from 'cca-api';
 
 import { underlyingAgreementVariationQuery } from '../+state';
-import { baselineChangesTypes, facilityChangesTypes, otherChangesTypes, targetCurrencyChangesTypes } from './types';
+import { dontRequireOperatorAssentTypes, otherChangesTypes, requireOperatorAssentTypes } from './types';
 import { changesRequiredFieldsValidator } from './validators';
 
 export type VariationDetailsFormModel = {
-  facilityChanges: FormControl<UnderlyingAgreementVariationDetails['modifications']>;
-  baselineChanges: FormControl<UnderlyingAgreementVariationDetails['modifications']>;
-  targetCurrencyChanges: FormControl<UnderlyingAgreementVariationDetails['modifications']>;
+  requireOperatorAssent: FormControl<UnderlyingAgreementVariationDetails['modifications']>;
+  dontRequireOperatorAssent: FormControl<UnderlyingAgreementVariationDetails['modifications']>;
   otherChanges: FormControl<UnderlyingAgreementVariationDetails['modifications']>;
   reason: FormControl<UnderlyingAgreementVariationDetails['reason']>;
 };
@@ -26,26 +25,25 @@ export const VariationDetailsFormProvider: Provider = {
   useFactory: (fb: FormBuilder, requestTaskStore: RequestTaskStore) => {
     const variationDetails = requestTaskStore.select(underlyingAgreementVariationQuery.selectVariationDetails)();
 
-    let facilityChanges,
-      baselineChanges,
-      targetCurrencyChanges,
-      otherChanges = [];
+    let requireOperatorAssent = [];
+    let dontRequireOperatorAssent = [];
+    let otherChanges = [];
 
     if (variationDetails?.modifications?.length) {
-      facilityChanges = facilityChangesTypes.filter((c) => variationDetails.modifications.includes(c));
-      baselineChanges = baselineChangesTypes.filter((c) => variationDetails.modifications.includes(c));
-      targetCurrencyChanges = targetCurrencyChangesTypes.filter((c) => variationDetails.modifications.includes(c));
+      requireOperatorAssent = requireOperatorAssentTypes.filter((c) => variationDetails.modifications.includes(c));
+      dontRequireOperatorAssent = dontRequireOperatorAssentTypes.filter((c) =>
+        variationDetails.modifications.includes(c),
+      );
       otherChanges = otherChangesTypes.filter((c) => variationDetails.modifications.includes(c));
     }
 
     return fb.group(
       {
-        facilityChanges: fb.control(facilityChanges),
-        baselineChanges: fb.control(baselineChanges),
-        targetCurrencyChanges: fb.control(targetCurrencyChanges),
+        requireOperatorAssent: fb.control(requireOperatorAssent),
+        dontRequireOperatorAssent: fb.control(dontRequireOperatorAssent),
         otherChanges: fb.control(otherChanges),
         reason: fb.control(variationDetails?.reason ?? null, [
-          GovukValidators.required('Explain what you are changing and the reason for the changes'),
+          GovukValidators.required('Explain in more detail what you are changing and the reason for the changes'),
           GovukValidators.maxLength(10000, 'The reason for the changes should not be more than 10000 characters'),
         ]),
       },

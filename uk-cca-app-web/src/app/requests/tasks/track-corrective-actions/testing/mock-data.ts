@@ -60,8 +60,8 @@ export const mockTrackCorrectiveActionsState = {
   requestInfo: {
     id: 'ADS_4-F00004-AUDT-1',
     type: 'FACILITY_AUDIT',
-    competentAuthority: 'ENGLAND',
-    accountId: 11,
+    resourceType: 'ACCOUNT',
+    resources: { ACCOUNT: '17' },
     creationDate: '2025-11-18T11:45:59.57719Z',
   },
 } as unknown as RequestTaskState;

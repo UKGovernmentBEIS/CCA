@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
-import { PageHeadingComponent } from '@netz/common/components';
+import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
 
@@ -15,9 +14,9 @@ import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agree
       <netz-page-heading>Variation details</netz-page-heading>
       <cca-summary [data]="summaryData()" />
     </div>
-    <a routerLink="../../" class="govuk-link">Return to: Peer review application for underlying agreement variation</a>
+    <netz-return-to-task-or-action-page />
   `,
-  imports: [PageHeadingComponent, SummaryComponent, RouterLink],
+  imports: [PageHeadingComponent, SummaryComponent, ReturnToTaskOrActionPageComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VariationDetailsComponent {

@@ -53,7 +53,7 @@ describe('AdditionalInfoComponent', () => {
     });
 
     it('should display common elements', async () => {
-      expect(screen.getByText(/Add any additional information/)).toBeInTheDocument();
+      expect(screen.getByText(/Additional information/)).toBeInTheDocument();
       expect(screen.getByText('Continue')).toBeInTheDocument();
       expect(screen.getByText('Provide any additional information here to support your decision')).toBeInTheDocument();
     });
@@ -107,10 +107,52 @@ describe('AdditionalInfoComponent', () => {
     });
 
     it('should display common elements', async () => {
-      expect(screen.getByText(/Add any additional information/)).toBeInTheDocument();
-      expect(screen.getByText(/This text will be included in the official notice/)).toBeInTheDocument();
+      expect(screen.getByText(/Additional information/)).toBeInTheDocument();
       expect(screen.getByText('Continue')).toBeInTheDocument();
       expect(screen.getByText('Provide any additional information here to support your decision')).toBeInTheDocument();
+    });
+  });
+
+  describe('when determination type is ACCEPTED and variationImpactsAgreement is false', () => {
+    let store: RequestTaskStore;
+    let container: Element;
+
+    beforeEach(async () => {
+      const acceptedNoChangesState = produce(mockVariationReviewRequestTaskState, (draft) => {
+        draft.requestTaskItem.requestTask.payload.determination.type = 'ACCEPTED';
+        draft.requestTaskItem.requestTask.payload.determination.variationImpactsAgreement = false;
+      });
+
+      const result = await render(AdditionalInfoComponent, {
+        providers: [
+          provideHttpClient(),
+          provideHttpClientTesting(),
+          RequestTaskStore,
+          { provide: TaskService, useValue: unaTaskService },
+          { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
+          { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Review application for underlying agreement' },
+        ],
+        configureTestBed: (testbed) => {
+          store = testbed.inject(RequestTaskStore);
+          store.setState(acceptedNoChangesState);
+        },
+      });
+
+      container = result.container;
+    });
+
+    it('should match snapshot', async () => {
+      expect(container).toMatchSnapshot();
+    });
+
+    it('should show description examples details', async () => {
+      expect(screen.getByText('Description examples')).toBeInTheDocument();
+    });
+
+    it('should show the responsible person bullet point', async () => {
+      expect(
+        screen.getByText(/We have updated the personal information of the Responsible Person/),
+      ).toBeInTheDocument();
     });
   });
 });

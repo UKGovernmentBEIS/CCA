@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.common.domain.SchemeVersion;
-import uk.gov.cca.api.underlyingagreement.utils.UnderlyingAgreementCalculateSchemeVersionsUtil;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementSchemeVersionsHelperService;
 import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransformationMapper;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.CcaDocumentTemplateGenerationContextActionType;
@@ -22,6 +22,7 @@ public class UnderlyingAgreementVariationActivatedDocumentTemplateWorkflowParams
 
     private final DocumentTemplateUnderlyingAgreementParamsProvider documentTemplateUnderlyingAgreementParamsProvider;
     private final DocumentTemplateTransformationMapper documentTemplateTransformationMapper;
+    private final UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
 
     @Override
     public String getContextActionType() {
@@ -38,9 +39,9 @@ public class UnderlyingAgreementVariationActivatedDocumentTemplateWorkflowParams
                 .constructTargetUnitDetailsTemplateParams(targetUnitDetails);
 
         Map<SchemeVersion, Integer> activatedVersionMap = new EnumMap<>(SchemeVersion.class);
-        UnderlyingAgreementCalculateSchemeVersionsUtil
-                .calculateSchemeVersionsFromActiveFacilities(payload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities())
-                .forEach(version -> activatedVersionMap.put(version, versionMap.getOrDefault(version, 0)  + 1));
+        underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		payload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities())
+        			.forEach(version -> activatedVersionMap.put(version, versionMap.getOrDefault(version, 0)  + 1));
 
         params.put("versionMap", documentTemplateTransformationMapper.constructVersionMap(activatedVersionMap));
 

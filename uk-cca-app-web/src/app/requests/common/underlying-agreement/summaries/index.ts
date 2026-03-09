@@ -9,3 +9,4 @@ export * from './una-variation-review-tu-details-summary-data';
 export * from './underlying-agreement-activation-summary-data';
 export * from './variation-details-summary-data';
 export * from './to-overall-decision-summary-data';
+export * from './operator-assent-decision-summary-data';

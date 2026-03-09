@@ -11,6 +11,7 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementSchemeVersionsHelperService;
 import uk.gov.cca.api.workflow.request.core.transform.DocumentTemplateTransformationMapper;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.common.domain.SchemeVersion;
@@ -40,6 +41,9 @@ class UnderlyingAgreementVariationActivatedDocumentTemplateWorkflowParamsProvide
 
     @Mock
     private DocumentTemplateTransformationMapper documentTemplateTransformationMapper;
+    
+    @Mock
+    private UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
 
     @Test
     void getContextActionType() {
@@ -56,21 +60,22 @@ class UnderlyingAgreementVariationActivatedDocumentTemplateWorkflowParamsProvide
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = UnderlyingAgreementTargetUnitDetails.builder()
                 .operatorName("operatorName")
                 .build();
-        final UnderlyingAgreementVariationRequestPayload payload = UnderlyingAgreementVariationRequestPayload.builder()
+        final Set<Facility> facility = Set.of(
+		        Facility.builder()
+		                .status(FacilityStatus.LIVE)
+		                .facilityItem(FacilityItem.builder()
+		                        .facilityDetails(FacilityDetails.builder()
+		                                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
+		                                .build())
+		                        .build())
+		                .build()
+		);
+		final UnderlyingAgreementVariationRequestPayload payload = UnderlyingAgreementVariationRequestPayload.builder()
                 .underlyingAgreementVersionMap(consolidationNumberMap)
                 .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                         .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                         .underlyingAgreement(UnderlyingAgreement.builder()
-                                .facilities(Set.of(
-                                        Facility.builder()
-                                                .status(FacilityStatus.LIVE)
-                                                .facilityItem(FacilityItem.builder()
-                                                        .facilityDetails(FacilityDetails.builder()
-                                                                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
-                                                                .build())
-                                                        .build())
-                                                .build()
-                                ))
+                                .facilities(facility)
                                 .build())
                         .build())
                 .build();
@@ -79,6 +84,8 @@ class UnderlyingAgreementVariationActivatedDocumentTemplateWorkflowParamsProvide
                 .thenReturn(new HashMap<>(Map.of("account", "test1")));
         when(documentTemplateTransformationMapper.constructVersionMap(Map.of(SchemeVersion.CCA_2, 3)))
                 .thenReturn(Map.of("CCA2", "3"));
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(facility))
+				.thenReturn(Set.of(SchemeVersion.CCA_2));
 
         // Invoke
         Map<String, Object> params = provider.constructParams(payload);
@@ -88,6 +95,8 @@ class UnderlyingAgreementVariationActivatedDocumentTemplateWorkflowParamsProvide
                 "account", "test1",
                 "versionMap", Map.of("CCA2", "3")
         ));
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1))
+				.calculateSchemeVersionsFromActiveFacilities(facility);
         verify(documentTemplateUnderlyingAgreementParamsProvider, times(1))
                 .constructTargetUnitDetailsTemplateParams(targetUnitDetails);
         verify(documentTemplateTransformationMapper, times(1))
@@ -99,6 +108,16 @@ class UnderlyingAgreementVariationActivatedDocumentTemplateWorkflowParamsProvide
         final Map<SchemeVersion, Integer> consolidationNumberMap = Map.of(
                 SchemeVersion.CCA_3, 1
         );
+        final Set<Facility> facility = Set.of(
+		        Facility.builder()
+		                .status(FacilityStatus.LIVE)
+		                .facilityItem(FacilityItem.builder()
+		                        .facilityDetails(FacilityDetails.builder()
+		                                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
+		                                .build())
+		                        .build())
+		                .build()
+		);
         final UnderlyingAgreementTargetUnitDetails targetUnitDetails = UnderlyingAgreementTargetUnitDetails.builder()
                 .operatorName("operatorName")
                 .build();
@@ -107,16 +126,7 @@ class UnderlyingAgreementVariationActivatedDocumentTemplateWorkflowParamsProvide
                 .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                         .underlyingAgreementTargetUnitDetails(targetUnitDetails)
                         .underlyingAgreement(UnderlyingAgreement.builder()
-                                .facilities(Set.of(
-                                        Facility.builder()
-                                                .status(FacilityStatus.LIVE)
-                                                .facilityItem(FacilityItem.builder()
-                                                        .facilityDetails(FacilityDetails.builder()
-                                                                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
-                                                                .build())
-                                                        .build())
-                                                .build()
-                                ))
+                                .facilities(facility)
                                 .build())
                         .build())
                 .build();
@@ -125,6 +135,8 @@ class UnderlyingAgreementVariationActivatedDocumentTemplateWorkflowParamsProvide
                 .thenReturn(new HashMap<>(Map.of("account", "test1")));
         when(documentTemplateTransformationMapper.constructVersionMap(Map.of(SchemeVersion.CCA_2, 1)))
                 .thenReturn(Map.of("CCA2", "1"));
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(facility))
+				.thenReturn(Set.of(SchemeVersion.CCA_2));
 
         // Invoke
         Map<String, Object> params = provider.constructParams(payload);
@@ -134,6 +146,8 @@ class UnderlyingAgreementVariationActivatedDocumentTemplateWorkflowParamsProvide
                 "account", "test1",
                 "versionMap", Map.of("CCA2", "1")
         ));
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1))
+				.calculateSchemeVersionsFromActiveFacilities(facility);
         verify(documentTemplateUnderlyingAgreementParamsProvider, times(1))
                 .constructTargetUnitDetailsTemplateParams(targetUnitDetails);
         verify(documentTemplateTransformationMapper, times(1))

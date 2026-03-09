@@ -1,10 +1,11 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
+import uk.gov.cca.api.common.domain.CcaRoleTypeConstants;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementQueryService;
@@ -27,8 +29,12 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
+import uk.gov.netz.api.common.constants.RoleTypeConstants;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.workflow.request.StartProcessRequestService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 import uk.gov.netz.api.workflow.request.flow.common.domain.RequestCreateActionEmptyPayload;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestParams;
 
@@ -56,7 +62,8 @@ class UnderlyingAgreementVariationCreateActionHandlerTest {
 		final Long sectorId = 2L;
 		final String userId = "userId";
 		final RequestCreateActionEmptyPayload payload = RequestCreateActionEmptyPayload.builder().build();
-		final AppUser appUser = AppUser.builder().userId(userId).roleType(SECTOR_USER).build();
+		final String currentUserRoleType = CcaRoleTypeConstants.SECTOR_USER;
+		final AppUser appUser = AppUser.builder().userId(userId).roleType(currentUserRoleType).build();
 		final UnderlyingAgreementContainer originalContainer = UnderlyingAgreementContainer.builder().build();
 		final int version = 1;
 		final Map<SchemeVersion, Integer> consolidationNumberMap = Map.of(SchemeVersion.CCA_3, version);
@@ -65,12 +72,16 @@ class UnderlyingAgreementVariationCreateActionHandlerTest {
         final RequestParams requestParams = RequestParams.builder()
                 .type(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION)
                 .requestResources(Map.of(
-				ResourceType.ACCOUNT, accountId.toString(), 
-				CcaResourceType.SECTOR_ASSOCIATION, sectorId.toString()
+						ResourceType.ACCOUNT, accountId.toString(),
+						CcaResourceType.SECTOR_ASSOCIATION, sectorId.toString()
+				))
+				.processVars(Map.of(
+						BpmnProcessConstants.REQUEST_INITIATOR_ROLE_TYPE, currentUserRoleType
 				))
                 .requestPayload(UnderlyingAgreementVariationRequestPayload.builder()
                         .payloadType(CcaRequestPayloadType.UNDERLYING_AGREEMENT_VARIATION_REQUEST_PAYLOAD)
 						.workflowSchemeVersion(workflowSchemeVersion)
+						.initiatorRoleType(currentUserRoleType)
 						.underlyingAgreementVersionMap(consolidationNumberMap)
                         .originalUnderlyingAgreementContainer(originalContainer)
                         .sectorUserAssignee(userId)
@@ -78,6 +89,7 @@ class UnderlyingAgreementVariationCreateActionHandlerTest {
 				.requestMetadata(UnderlyingAgreementVariationRequestMetadata.builder()
 						.type(CcaRequestMetadataType.UNDERLYING_AGREEMENT_VARIATION)
 						.workflowSchemeVersion(workflowSchemeVersion)
+						.initiatorRoleType(currentUserRoleType)
 						.build())
                 .build();
 
@@ -103,6 +115,97 @@ class UnderlyingAgreementVariationCreateActionHandlerTest {
 		verify(underlyingAgreementQueryService, times(1)).getUnderlyingAgreementContainerByAccountId(accountId);
 		verify(requestCreateAccountAndSectorResourcesService, times(1)).createRequestResources(accountId);
         verify(startProcessRequestService, times(1)).startProcess(requestParams);
+	}
+
+	@Test
+	void process_regulator() {
+		final Long accountId = 1L;
+		final Long sectorId = 2L;
+		final String userId = "userId";
+		final RequestCreateActionEmptyPayload payload = RequestCreateActionEmptyPayload.builder().build();
+		final String currentUserRoleType = RoleTypeConstants.REGULATOR;
+		final AppUser appUser = AppUser.builder().userId(userId).roleType(currentUserRoleType).build();
+		final UnderlyingAgreementContainer originalContainer = UnderlyingAgreementContainer.builder().build();
+		final int version = 1;
+		final Map<SchemeVersion, Integer> consolidationNumberMap = Map.of(SchemeVersion.CCA_3, version);
+		final SchemeVersion workflowSchemeVersion = SchemeVersion.CCA_3;
+
+		final RequestParams requestParams = RequestParams.builder()
+				.type(CcaRequestType.UNDERLYING_AGREEMENT_VARIATION)
+				.requestResources(Map.of(
+						ResourceType.ACCOUNT, accountId.toString(),
+						CcaResourceType.SECTOR_ASSOCIATION, sectorId.toString()
+				))
+				.processVars(Map.of(
+						BpmnProcessConstants.REQUEST_INITIATOR_ROLE_TYPE, currentUserRoleType
+				))
+				.requestPayload(UnderlyingAgreementVariationRequestPayload.builder()
+						.payloadType(CcaRequestPayloadType.UNDERLYING_AGREEMENT_VARIATION_REQUEST_PAYLOAD)
+						.workflowSchemeVersion(workflowSchemeVersion)
+						.initiatorRoleType(currentUserRoleType)
+						.underlyingAgreementVersionMap(consolidationNumberMap)
+						.originalUnderlyingAgreementContainer(originalContainer)
+						.regulatorAssignee(userId)
+						.build())
+				.requestMetadata(UnderlyingAgreementVariationRequestMetadata.builder()
+						.type(CcaRequestMetadataType.UNDERLYING_AGREEMENT_VARIATION)
+						.workflowSchemeVersion(workflowSchemeVersion)
+						.initiatorRoleType(currentUserRoleType)
+						.build())
+				.build();
+
+		when(workflowSchemeVersionConfig.getUnaVariation()).thenReturn(workflowSchemeVersion);
+		when(underlyingAgreementQueryService.getConsolidationNumberMap(accountId))
+				.thenReturn(consolidationNumberMap);
+		when(underlyingAgreementQueryService.getUnderlyingAgreementContainerByAccountId(accountId))
+				.thenReturn(originalContainer);
+		when(requestCreateAccountAndSectorResourcesService.createRequestResources(accountId)).thenReturn(Map.of(
+				ResourceType.ACCOUNT, accountId.toString(),
+				CcaResourceType.SECTOR_ASSOCIATION, sectorId.toString()
+		));
+		when(startProcessRequestService.startProcess(requestParams))
+				.thenReturn(Request.builder().id("1").build());
+
+		// Invoke
+		String result = handler.process(accountId, payload, appUser);
+
+		// Verify
+		assertThat(result).isEqualTo("1");
+		verify(workflowSchemeVersionConfig, times(1)).getUnaVariation();
+		verify(underlyingAgreementQueryService, times(1)).getConsolidationNumberMap(accountId);
+		verify(underlyingAgreementQueryService, times(1)).getUnderlyingAgreementContainerByAccountId(accountId);
+		verify(requestCreateAccountAndSectorResourcesService, times(1)).createRequestResources(accountId);
+		verify(startProcessRequestService, times(1)).startProcess(requestParams);
+	}
+
+	@Test
+	void process_not_valid_user() {
+		final Long accountId = 1L;
+		final String userId = "userId";
+		final RequestCreateActionEmptyPayload payload = RequestCreateActionEmptyPayload.builder().build();
+		final String currentUserRoleType = RoleTypeConstants.OPERATOR;
+		final AppUser appUser = AppUser.builder().userId(userId).roleType(currentUserRoleType).build();
+		final UnderlyingAgreementContainer originalContainer = UnderlyingAgreementContainer.builder().build();
+		final int version = 1;
+		final Map<SchemeVersion, Integer> consolidationNumberMap = Map.of(SchemeVersion.CCA_3, version);
+		final SchemeVersion workflowSchemeVersion = SchemeVersion.CCA_3;
+
+		when(workflowSchemeVersionConfig.getUnaVariation()).thenReturn(workflowSchemeVersion);
+		when(underlyingAgreementQueryService.getConsolidationNumberMap(accountId))
+				.thenReturn(consolidationNumberMap);
+		when(underlyingAgreementQueryService.getUnderlyingAgreementContainerByAccountId(accountId))
+				.thenReturn(originalContainer);
+
+		// Invoke
+		BusinessException ex = assertThrows(BusinessException.class,
+				() -> handler.process(accountId, payload, appUser));
+
+		// Verify
+		assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.REQUEST_CREATE_ACTION_NOT_ALLOWED);
+		verify(workflowSchemeVersionConfig, times(1)).getUnaVariation();
+		verify(underlyingAgreementQueryService, times(1)).getConsolidationNumberMap(accountId);
+		verify(underlyingAgreementQueryService, times(1)).getUnderlyingAgreementContainerByAccountId(accountId);
+		verifyNoInteractions(requestCreateAccountAndSectorResourcesService, startProcessRequestService);
 	}
 	
 	@Test

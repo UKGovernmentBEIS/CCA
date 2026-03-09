@@ -58,6 +58,9 @@ class UnderlyingAgreementServiceTest {
 
     @Mock
     private UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
+    
+    @Mock
+    private UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
 
     @Test
     void submitUnderlyingAgreement() {
@@ -111,6 +114,10 @@ class UnderlyingAgreementServiceTest {
                 .build();
         entity.addUnderlyingAgreementDocument(unaDocumentCca2);
         entity.addUnderlyingAgreementDocument(unaDocumentCca3);
+        
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		container.getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3));
 
         // Invoke
         underlyingAgreementService.submitUnderlyingAgreement(container, accountId, underlyingAgreementValidationContext);
@@ -120,6 +127,8 @@ class UnderlyingAgreementServiceTest {
         // Verify
         verify(underlyingAgreementValidatorService, times(1)).validate(container, underlyingAgreementValidationContext);
         verify(underlyingAgreementRepository, times(1)).save(captor.capture());
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1))
+        		.calculateSchemeVersionsFromActiveFacilities(container.getUnderlyingAgreement().getFacilities());
 
         assertTrue(container.getUnderlyingAgreement().getFacilities().stream()
                 .allMatch(f -> f.getStatus().equals(FacilityStatus.LIVE)));
@@ -171,6 +180,9 @@ class UnderlyingAgreementServiceTest {
 
         when(underlyingAgreementRepository.findByAccountId(accountId))
                 .thenReturn(Optional.of(persistentEntity));
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		newContainer.getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(SchemeVersion.CCA_3));
 
         // Invoke
         underlyingAgreementService.updateUnderlyingAgreement(newContainer, accountId, underlyingAgreementValidationContext, false);
@@ -188,6 +200,8 @@ class UnderlyingAgreementServiceTest {
         assertThat(persistentEntity.getDocumentForSchemeVersion(SchemeVersion.CCA_3).getTerminatedDate()).isNull();
         verify(underlyingAgreementValidatorService, times(1)).validate(newContainer, underlyingAgreementValidationContext);
         verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1))
+				.calculateSchemeVersionsFromActiveFacilities(newContainer.getUnderlyingAgreement().getFacilities());
     }
 
     @Test
@@ -229,6 +243,9 @@ class UnderlyingAgreementServiceTest {
 
         when(underlyingAgreementRepository.findByAccountId(accountId))
                 .thenReturn(Optional.of(persistentEntity));
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		newContainer.getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(SchemeVersion.CCA_3));
 
         // Invoke
         underlyingAgreementService
@@ -248,6 +265,8 @@ class UnderlyingAgreementServiceTest {
 
         verify(underlyingAgreementValidatorService, times(1)).validate(newContainer, underlyingAgreementValidationContext);
         verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1))
+				.calculateSchemeVersionsFromActiveFacilities(newContainer.getUnderlyingAgreement().getFacilities());
     }
 
     @Test
@@ -288,6 +307,9 @@ class UnderlyingAgreementServiceTest {
 
         when(underlyingAgreementRepository.findByAccountId(accountId))
                 .thenReturn(Optional.of(persistentEntity));
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		newContainer.getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3));
 
         // Invoke
         underlyingAgreementService
@@ -308,6 +330,8 @@ class UnderlyingAgreementServiceTest {
 
         verify(underlyingAgreementValidatorService, times(1)).validate(newContainer, underlyingAgreementValidationContext);
         verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1))
+				.calculateSchemeVersionsFromActiveFacilities(newContainer.getUnderlyingAgreement().getFacilities());
     }
 
     @Test
@@ -329,59 +353,6 @@ class UnderlyingAgreementServiceTest {
 
         // Verify
         assertThat(businessException.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
-        verify(underlyingAgreementValidatorService, times(1)).validate(newContainer, underlyingAgreementValidationContext);
-        verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
-    }
-
-    @Test
-    void migrateUnderlyingAgreementToScheme() {
-        final long accountId = 1L;
-        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
-        final UnderlyingAgreementContainer newContainer = UnderlyingAgreementContainer.builder()
-                .underlyingAgreement(UnderlyingAgreement.builder().build())
-                .build();
-        final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
-                .schemeVersion(schemeVersion)
-                .build();
-
-        UnderlyingAgreementEntity persistentEntity = new UnderlyingAgreementEntity();
-
-        when(underlyingAgreementRepository.findByAccountId(accountId))
-                .thenReturn(Optional.of(persistentEntity));
-
-        // Invoke
-        underlyingAgreementService.migrateUnderlyingAgreementToScheme(newContainer, accountId,
-                underlyingAgreementValidationContext);
-
-        // Verify
-        assertThat(persistentEntity.getUnderlyingAgreementContainer()).isEqualTo(newContainer);
-        assertThat(persistentEntity.getUnderlyingAgreementContainer()).isEqualTo(newContainer);
-        assertThat(persistentEntity.getDocumentForSchemeVersion(schemeVersion)).isNotNull();
-
-        verify(underlyingAgreementValidatorService, times(1)).validate(newContainer, underlyingAgreementValidationContext);
-        verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
-    }
-
-    @Test
-    void migrateUnderlyingAgreementToScheme_not_found() {
-        final long accountId = 1L;
-        final UnderlyingAgreementContainer newContainer = UnderlyingAgreementContainer.builder()
-                .underlyingAgreement(UnderlyingAgreement.builder().build())
-                .build();
-        final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
-                .schemeVersion(SchemeVersion.CCA_3)
-                .build();
-
-        when(underlyingAgreementRepository.findByAccountId(accountId))
-                .thenReturn(Optional.empty());
-
-        // Invoke
-        BusinessException ex = assertThrows(BusinessException.class, () ->
-                underlyingAgreementService.migrateUnderlyingAgreementToScheme(newContainer, accountId,
-                        underlyingAgreementValidationContext));
-
-        // Verify
-        assertThat(ex.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
         verify(underlyingAgreementValidatorService, times(1)).validate(newContainer, underlyingAgreementValidationContext);
         verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
     }

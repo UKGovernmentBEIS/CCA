@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.service.FacilityDataUpdateService;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
-import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementSchemeService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class Cca3ExistingFacilitiesMigrationAccountProcessingActivatedService {
 
     private final RequestService requestService;
-    private final UnderlyingAgreementService underlyingAgreementService;
+    private final UnderlyingAgreementSchemeService underlyingAgreementSchemeService;
     private final FacilityDataUpdateService facilityDataUpdateService;
     private final CcaRequestActionUserInfoResolver ccaRequestActionUserInfoResolver;
     private final CcaOfficialNoticeSendService ccaOfficialNoticeSendService;
@@ -56,7 +56,7 @@ public class Cca3ExistingFacilitiesMigrationAccountProcessingActivatedService {
                 .schemeVersion(SchemeVersion.CCA_3)
                 .build();
 
-        underlyingAgreementService.migrateUnderlyingAgreementToScheme(underlyingAgreementContainer, request.getAccountId(),
+        underlyingAgreementSchemeService.migrateUnderlyingAgreementToScheme(underlyingAgreementContainer, request.getAccountId(),
                 underlyingAgreementValidationContext);
 
         // Update facility data scheme

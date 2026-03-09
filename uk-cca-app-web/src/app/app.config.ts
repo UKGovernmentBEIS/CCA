@@ -1,14 +1,19 @@
-import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
-import { ApplicationConfig, ErrorHandler, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  type ApplicationConfig,
+  ErrorHandler,
+  importProvidersFrom,
+  inject,
+  provideAppInitializer,
+} from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { provideRouter, withInMemoryScrolling, withRouterConfig } from '@angular/router';
 
 import { firstValueFrom } from 'rxjs';
 
 import { ConfigService } from '@shared/config';
-import { AuthService, GlobalErrorHandlingService, LatestTermsService } from '@shared/services';
-import { KeycloakAngularModule, KeycloakOptions, KeycloakService } from 'keycloak-angular';
-import { KeycloakConfig } from 'keycloak-js';
+import { AuthService, GlobalErrorHandlingService, KeycloakService, LatestTermsService } from '@shared/services';
+import type { KeycloakConfig } from 'keycloak-js';
 
 import { ApiModule, Configuration } from 'cca-api';
 
@@ -16,14 +21,12 @@ import { environment } from 'src/environments/environment';
 
 import { APP_ROUTES, routerOptions } from './app.routes';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
+import { KeycloakBearerInterceptor } from './interceptors/keycloak-bearer.interceptor';
 import { PendingRequestInterceptor } from './interceptors/pending-request.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(
-      withInterceptors([HttpErrorInterceptor, PendingRequestInterceptor]),
-      withInterceptorsFromDi(), // needed because KeycloakInterceptor is a Class Guard Injected in KeycloakAngularModule
-    ),
+    provideHttpClient(withInterceptors([KeycloakBearerInterceptor, HttpErrorInterceptor, PendingRequestInterceptor])),
     provideAppInitializer(() => {
       const initializerFn = init(
         inject(AuthService),
@@ -33,10 +36,7 @@ export const appConfig: ApplicationConfig = {
       );
       return initializerFn();
     }),
-    importProvidersFrom(
-      ApiModule.forRoot(() => new Configuration({ basePath: environment.apiOptions.baseUrl })),
-      KeycloakAngularModule,
-    ),
+    importProvidersFrom(ApiModule.forRoot(() => new Configuration({ basePath: environment.apiOptions.baseUrl }))),
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandlingService,
@@ -45,7 +45,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(
       APP_ROUTES,
       withRouterConfig(routerOptions),
-      withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' }),
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled',
+        anchorScrolling: 'enabled',
+      }),
     ),
   ],
 };
@@ -59,14 +62,12 @@ function init(
   return () =>
     firstValueFrom(configService.initConfigState())
       .then((state) => {
-        const options: KeycloakOptions = {
-          ...environment.keycloakOptions,
-          config: {
-            ...(environment.keycloakOptions.config as KeycloakConfig),
-            url: state.keycloakServerUrl ?? (environment.keycloakOptions.config as KeycloakConfig).url,
-          },
+        const keycloakConfig: KeycloakConfig = {
+          ...environment.keycloakConfig,
+          ...environment.keycloakInitOptions,
+          url: state.keycloakServerUrl,
         };
-        return keycloakService.init(options);
+        return keycloakService.init(keycloakConfig);
       })
       .catch((error) => console.error(error))
       .then(() => firstValueFrom(authService.checkUser()))

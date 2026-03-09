@@ -1,17 +1,22 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { map } from 'rxjs';
+import { EMPTY, map } from 'rxjs';
 
+import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { CheckboxComponent, CheckboxesComponent, SelectComponent } from '@netz/govuk-components';
+import { CheckboxComponent, CheckboxesComponent, ErrorSummaryComponent, SelectComponent } from '@netz/govuk-components';
 import {
+  API_ERROR_FORM,
+  ApiErrorFormModel,
+  ApiErrorFormProvider,
   NOTIFY_OPERATOR_OF_DECISION_FORM,
   NotifyOperatorOfDecisionFormModel,
   NotifyOperatorOfDecisionFormProvider,
+  setApiErrors,
   TasksApiService,
   toDecisionNotification,
   transformAccountReferenceData,
@@ -41,10 +46,11 @@ import { createProposedUnderlyingAgreementPayload } from '../utils';
     ReturnToTaskOrActionPageComponent,
     CheckboxComponent,
     CheckboxesComponent,
+    ErrorSummaryComponent,
     SelectComponent,
     NoticeRecipientsTypePipe,
   ],
-  providers: [NotifyOperatorOfDecisionFormProvider],
+  providers: [NotifyOperatorOfDecisionFormProvider, ApiErrorFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotifyOperatorComponent {
@@ -58,8 +64,13 @@ export class NotifyOperatorComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
 
   protected readonly form = inject<NotifyOperatorOfDecisionFormModel>(NOTIFY_OPERATOR_OF_DECISION_FORM);
+  protected readonly errorForm = inject<ApiErrorFormModel>(API_ERROR_FORM);
+  protected readonly isErrorSummaryDisplayed = signal(false);
 
-  private readonly accountId = this.store.select(requestTaskQuery.selectRequestInfo)()?.accountId;
+  private readonly requestInfo = this.store.select(requestTaskQuery.selectRequestInfo);
+  private readonly resourceType = computed(() => this.requestInfo()?.resourceType);
+  private readonly resource = computed(() => this.requestInfo()?.resources?.[this.resourceType()]);
+
   private readonly taskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
   private readonly defaultNoticeRecipients = toSignal(this.tasksService.getDefaultNoticeRecipients(this.taskId));
 
@@ -87,7 +98,7 @@ export class NotifyOperatorComponent {
   );
 
   protected readonly additionalUsers = toSignal(
-    this.noticeRecipientsService.getAdditionalNoticeRecipients(this.accountId),
+    this.noticeRecipientsService.getAdditionalNoticeRecipients(+this.resource()),
   );
 
   protected readonly defaultUsers = computed(() => {
@@ -147,8 +158,17 @@ export class NotifyOperatorComponent {
 
     const dto = createNotifyOperatorActionDTO(requestTaskId, notification, proposedUnderlyingAgreement);
 
-    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['./confirmation'], { relativeTo: this.activatedRoute });
-    });
+    this.tasksApiService
+      .saveRequestTaskAction(dto)
+      .pipe(
+        catchBadRequest([ErrorCodes.UNA1001, ErrorCodes.UNA1002], (res) => {
+          setApiErrors(this.errorForm, res);
+          this.isErrorSummaryDisplayed.set(true);
+          return EMPTY;
+        }),
+      )
+      .subscribe(() => {
+        this.router.navigate(['./confirmation'], { relativeTo: this.activatedRoute });
+      });
   }
 }

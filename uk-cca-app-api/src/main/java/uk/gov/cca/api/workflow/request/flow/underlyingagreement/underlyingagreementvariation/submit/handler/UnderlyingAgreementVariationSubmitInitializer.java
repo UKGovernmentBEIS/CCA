@@ -4,12 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
-import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
-import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod5Details;
-import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod6Details;
-import uk.gov.cca.api.underlyingagreement.utils.UnderlyingAgreementCalculateSchemeVersionsUtil;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementSchemeVersionsHelperService;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
@@ -30,7 +27,8 @@ import java.util.Set;
 public class UnderlyingAgreementVariationSubmitInitializer implements InitializeRequestTaskHandler {
 
 	private final AccountReferenceDetailsService accountReferenceDetailsService;
-
+	private final UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
+	
 	private static final UnderlyingAgreementTargetUnitDetailsMapper TARGET_UNIT_DETAILS_MAPPER = Mappers.getMapper(UnderlyingAgreementTargetUnitDetailsMapper.class);
 
 	@Override
@@ -42,7 +40,8 @@ public class UnderlyingAgreementVariationSubmitInitializer implements Initialize
 		final UnderlyingAgreementVariationRequestPayload payload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();
 		final UnderlyingAgreementContainer originalUnderlyingAgreementContainer = payload.getOriginalUnderlyingAgreementContainer();
 		final UnderlyingAgreement originalUnderlyingAgreement = originalUnderlyingAgreementContainer.getUnderlyingAgreement();
-		final boolean showTp5Tp6 = shouldShowTp5Tp6(originalUnderlyingAgreementContainer);
+		final boolean showTp5Tp6 = underlyingAgreementSchemeVersionsHelperService.shouldShowTp5Tp6(
+				originalUnderlyingAgreementContainer, request.getCreationDate().toLocalDate());
 
 		return UnderlyingAgreementVariationSubmitRequestTaskPayload.builder()
 				.payloadType(CcaRequestTaskPayloadType.UNDERLYING_AGREEMENT_VARIATION_SUBMIT_PAYLOAD)
@@ -67,21 +66,5 @@ public class UnderlyingAgreementVariationSubmitInitializer implements Initialize
 	@Override
 	public Set<String> getRequestTaskTypes() {
 		return Set.of(CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_SUBMIT);
-	}
-
-	private boolean shouldShowTp5Tp6(UnderlyingAgreementContainer originalContainer) {
-
-		final Set<SchemeVersion> schemeVersions = UnderlyingAgreementCalculateSchemeVersionsUtil
-        		.calculateSchemeVersionsFromActiveFacilities(originalContainer.getUnderlyingAgreement().getFacilities());
-
-		// All live facilities are CCA3-only
-		if (!schemeVersions.contains(SchemeVersion.CCA_2)) {
-			return false;
-		}
-
-		final TargetPeriod5Details originalTp5 = originalContainer.getUnderlyingAgreement().getTargetPeriod5Details();
-		final TargetPeriod6Details originalTp6 = originalContainer.getUnderlyingAgreement().getTargetPeriod6Details();
-		// TP5/TP6 Relevant data exists
-		return originalTp5 != null && originalTp6 != null;
 	}
 }

@@ -35,16 +35,26 @@ describe('UnderlyingAgreementReviewPrecontentComponent', () => {
     });
   });
 
-  it('should render notify button', () => {
+  it('should render notify button and navigate to correct url', async () => {
     expect(screen.getByText('Notify operator of decision')).toBeVisible();
-  });
 
-  it('should navigate to correct url', async () => {
     const spy = jest.spyOn(router, 'navigate');
     const user = UserEvent.setup();
 
     await user.click(screen.getByText('Notify operator of decision'));
     expect(spy).toHaveBeenCalledWith(['underlying-agreement-variation-review', 'notify-operator'], {
+      relativeTo: mockRoute,
+    });
+  });
+
+  it('should render peer review button and navigate to correct url', async () => {
+    expect(screen.getByText('Send for peer review')).toBeVisible();
+
+    const spy = jest.spyOn(router, 'navigate');
+    const user = UserEvent.setup();
+
+    await user.click(screen.getByText('Send for peer review'));
+    expect(spy).toHaveBeenCalledWith(['underlying-agreement-variation-review', 'send-for-peer-review'], {
       relativeTo: mockRoute,
     });
   });

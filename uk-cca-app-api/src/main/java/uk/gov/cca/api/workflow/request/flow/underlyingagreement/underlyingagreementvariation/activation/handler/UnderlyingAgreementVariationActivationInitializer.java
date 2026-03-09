@@ -21,6 +21,9 @@ public class UnderlyingAgreementVariationActivationInitializer implements Initia
 
     @Override
     public Set<String> getRequestTaskTypes() {
-        return Set.of(CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATION);
+        return Set.of(
+                CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_ACTIVATION,
+                CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_ACTIVATION
+        );
     }
 }

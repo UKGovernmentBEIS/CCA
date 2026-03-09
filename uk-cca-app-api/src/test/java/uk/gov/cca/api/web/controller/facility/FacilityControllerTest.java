@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.cca.api.common.domain.SchemeVersion;
-import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
+import uk.gov.cca.api.facility.domain.dto.FacilityBusinessIdDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.web.orchestrator.facility.service.FacilityIdGeneratorServiceOrchestrator;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
@@ -95,7 +95,7 @@ class FacilityControllerTest {
         final String facilityBusinessId = "SA-F00001";
         final AppUser user = AppUser.builder().roleType(SECTOR_USER).build();
 
-        final FacilityDTO facilityDTO = FacilityDTO.builder().facilityBusinessId(facilityBusinessId).build();
+        final FacilityBusinessIdDTO facilityDTO = FacilityBusinessIdDTO.builder().facilityBusinessId(facilityBusinessId).build();
 
         when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
         when(facilityIdGeneratorServiceOrchestrator.generateFacilityBusinessId(accountId)).thenReturn(facilityDTO);

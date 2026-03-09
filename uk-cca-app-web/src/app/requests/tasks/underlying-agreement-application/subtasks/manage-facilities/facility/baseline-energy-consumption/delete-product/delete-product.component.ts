@@ -2,14 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageHeadingComponent } from '@netz/common/components';
-import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { RequestTaskStore } from '@netz/common/store';
 import { WarningTextComponent } from '@netz/govuk-components';
-import { TaskItemStatus, TasksApiService, underlyingAgreementQuery } from '@requests/common';
-import { produce } from 'immer';
-
-import { UnderlyingAgreementApplySavePayload, UnderlyingAgreementSubmitRequestTaskPayload } from 'cca-api';
-
-import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } from '../../../../../transform';
+import { BaselineEnergyDraftService, underlyingAgreementQuery } from '@requests/common';
 
 @Component({
   selector: 'cca-delete-product',
@@ -18,7 +13,10 @@ import { createRequestTaskActionProcessDTO, toUnderlyingAgreementSavePayload } f
       Are you sure you want to delete {{ this.productName }}?
     </netz-page-heading>
 
-    <p>Your product and all its data will be deleted permanently</p>
+    <p>
+      When you submit the "Baseline energy or carbon consumption" page, your product and all its data will be deleted
+      permanently
+    </p>
 
     <govuk-warning-text assistiveText="">You will not be able to undo this action.</govuk-warning-text>
     <button (click)="onDelete()" class="govuk-button govuk-button--warning">Delete product</button>
@@ -30,7 +28,7 @@ export class DeleteProductComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly tasksApiService = inject(TasksApiService);
+  private readonly draftService = inject(BaselineEnergyDraftService);
 
   private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
   protected readonly productName = this.activatedRoute.snapshot.paramMap.get('productName');
@@ -40,44 +38,10 @@ export class DeleteProductComponent {
   );
 
   onDelete() {
-    const payload = this.requestTaskStore.select(
-      requestTaskQuery.selectRequestTaskPayload,
-    )() as UnderlyingAgreementSubmitRequestTaskPayload;
+    // Remove product from draft service (NO API CALL)
+    this.draftService.removeProduct(this.productName);
 
-    const actionPayload = toUnderlyingAgreementSavePayload(payload);
-
-    const updatedPayload = deleteVariableEnergyProduct(actionPayload, this.productName, this.facilityId);
-
-    const currentSectionsCompleted = this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)();
-    const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
-      draft[this.facilityId] = TaskItemStatus.IN_PROGRESS;
-    });
-
-    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
-    const dto = createRequestTaskActionProcessDTO(requestTaskId, updatedPayload, sectionsCompleted);
-
-    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['../..'], { relativeTo: this.activatedRoute });
-    });
+    // Navigate back to parent
+    this.router.navigate(['../..'], { relativeTo: this.activatedRoute });
   }
-}
-
-function deleteVariableEnergyProduct(
-  payload: UnderlyingAgreementApplySavePayload,
-  productName: string,
-  facilityId: string,
-) {
-  return produce(payload, (draft) => {
-    const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId);
-    if (facilityIndex === -1) return;
-
-    const facility = draft.facilities[facilityIndex].cca3BaselineAndTargets.facilityBaselineEnergyConsumption;
-
-    const data = facility.variableEnergyConsumptionDataByProduct;
-
-    const foundIndex = data.findIndex((p) => p.productName === productName);
-    if (foundIndex === -1) return;
-
-    data.splice(foundIndex, 1);
-  });
 }

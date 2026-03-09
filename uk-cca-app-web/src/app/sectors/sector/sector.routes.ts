@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { WORKFLOW_DETAILS_ROUTES } from '@shared/components';
 import { PendingRequestGuard } from '@shared/guards';
 
 import { CONTACTS_ROUTES } from './contacts-tab/contacts.routes';
@@ -8,7 +9,6 @@ import { SCHEME_ROUTES } from './scheme-tab/scheme.routes';
 import { SUBSISTENCE_FEES_TAB_ROUTES } from './subsistence-fees-tab/subsistence-fees-tab.routes';
 import { IsAllowedUserGuard } from './subsistence-fees-tab/subsitence-fees-tab.guard';
 import { TARGET_UNIT_ROUTES } from './target-units-tab/target-unit.routes';
-import { WORKFLOW_DETAILS_ROUTES } from './workflow-history-tab/workflow-details/workflow-details.routes';
 
 export const SECTOR_ROUTES: Routes = [
   {

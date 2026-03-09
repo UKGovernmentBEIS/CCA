@@ -1,0 +1,88 @@
+@if (facility(); as facility) {
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    [caption]="facility.facilityDetails.name"
+    heading="CCA eligibility details and authorisation"
+    data-testid="add-facility-eligibility-details-form"
+  >
+    <div class="govuk-!-width-two-thirds">
+      <div
+        formControlName="isConnectedToExistingFacility"
+        govuk-radio
+        legend="Is the facility adjacent to or connected to an existing CCA facility?"
+      >
+        <govuk-radio-option [value]="true" [label]="'Yes'">
+          <ng-container govukConditionalContent>
+            <div
+              widthClass="govuk-!-width-one-third"
+              formControlName="adjacentFacilityId"
+              cca-text-input
+              label="Specify facility ID of adjacent facility"
+            ></div>
+          </ng-container>
+        </govuk-radio-option>
+        <govuk-radio-option [value]="false" [label]="'No'" />
+      </div>
+
+      <div class="govuk-!-width-three-quarters">
+        <label for="agreementType">
+          What is the legal basis for this facility being considered an eligible activity?
+        </label>
+        <p class="govuk-hint">
+          Activities carried out in facilities are considered to be eligible of they are or would be regulated under the
+          Environmental Permitting Regulations (EPR), or, they are part of a sector that has been identified as energy
+          intensive
+        </p>
+        <div
+          widthClass="govuk-!-width-full"
+          [options]="agreementTypeOptions"
+          formControlName="agreementType"
+          govuk-select
+        ></div>
+      </div>
+
+      @if (isEnvironmental()) {
+        <div class="govuk-!-width-three-quarters">
+          <div
+            formControlName="erpAuthorisationExists"
+            [isInline]="true"
+            govuk-radio
+            legend="Do you hold a current Environmental Permitting Regulations (EPR) authorisation for any activity being carried out in the facility?"
+          >
+            <govuk-radio-option [value]="true" [label]="'Yes'" />
+            <govuk-radio-option [value]="false" [label]="'No'" />
+          </div>
+        </div>
+
+        @if (isAuthorisation()) {
+          <div
+            widthClass="govuk-!-width-three-quarters"
+            formControlName="authorisationNumber"
+            cca-text-input
+            label="Authorisation number"
+          ></div>
+
+          <div
+            widthClass="govuk-!-width-three-quarters"
+            [options]="caOptions"
+            formControlName="regulatorName"
+            label="Regulator name"
+            govuk-select
+          ></div>
+
+          <cca-file-input
+            [downloadUrl]="getDownloadUrl"
+            formControlName="permitFile"
+            hint="Upload a file"
+            label="Attach a copy of the permit"
+            [showFilesizeHint]="false"
+          />
+        }
+      }
+    </div>
+  </cca-wizard-step>
+}
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" [routerLink]="['../../']"> Return to: Manage facilities </a>

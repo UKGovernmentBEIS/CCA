@@ -6,7 +6,7 @@ import { lastValueFrom, of } from 'rxjs';
 import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { AuthService, LatestTermsStore } from '@shared/services';
-import { KeycloakService } from 'keycloak-angular';
+import { KeycloakService } from '@shared/services';
 
 import { AuthoritiesService, TermsAndConditionsService, UsersService } from 'cca-api';
 

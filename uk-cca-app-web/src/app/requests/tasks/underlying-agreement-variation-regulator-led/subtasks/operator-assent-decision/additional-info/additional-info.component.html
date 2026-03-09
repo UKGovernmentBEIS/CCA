@@ -1,0 +1,64 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-wizard-step
+    [formGroup]="form"
+    caption="Determine operator assent"
+    heading="Provide any additional information here to support your decision"
+    (formSubmit)="submit()"
+  >
+    <div
+      class="govuk-!-margin-top-9 govuk-!-margin-bottom-6"
+      formControlName="variationImpactsAgreement"
+      govuk-radio
+      legend="Does this variation result in changes to the current underlying agreement?"
+      legendSize="medium"
+    >
+      <govuk-radio-option
+        [value]="true"
+        [label]="'Yes'"
+        hint="A new version of the underlying agreement wll be generated, even if there are no changes from the current version, and you must upload evidence of the operator's assent"
+      />
+      <govuk-radio-option
+        [value]="false"
+        [label]="'No'"
+        hint="A notification letter will be generated to acknowledge that you have accepted the requested changes, but no new underlying agreement is needed"
+      />
+    </div>
+
+    <h3 class="govuk-heading-m">Additional information {{ infoLabel() }}</h3>
+    <p class="govuk-hint">{{ infoHint() }}This will be included into the official notice</p>
+
+    @if (!impactsAgreementCtrlValue()) {
+      <govuk-details summary="Description examples">
+        <ul class="govuk-list govuk-list--bullet">
+          <li>
+            “We have updated the personal information of the Responsible Person in the Manage your Climate Change
+            Agreements service as set out in this letter.”
+          </li>
+          <li>
+            "We have updated the proportion of eligible energy use at SECT-F00001 from 65% to 75% following your
+            notification to us of an updated evaluation."
+          </li>
+          <li>
+            "We have updated evidence of the documents describing the eligible activities you carry out at the facility
+            with identifier SECT-F00002."
+          </li>
+          <li>
+            "We have changed the amount of base year energy assigned to fixed consumption from XXXX to YYYY at the
+            facility with identifier SECT-F00003."
+          </li>
+          <li>
+            "We have updated the list of variable product groups for the facility with identifier SECT-F00004 to include
+            a new product introduced after the base year."
+          </li>
+        </ul>
+      </govuk-details>
+    }
+
+    <div govuk-textarea formControlName="additionalInformation"></div>
+
+    <cca-multiple-file-input [baseDownloadUrl]="downloadUrl" formControlName="files" label="Upload a file (optional)" />
+  </cca-wizard-step>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

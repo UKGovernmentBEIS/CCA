@@ -10,6 +10,8 @@ import {
   UnderlyingAgreementTargetUnitDetails,
   UnderlyingAgreementVariationDetails,
   UnderlyingAgreementVariationPayload,
+  UnderlyingAgreementVariationRegulatorLedCompletedRequestActionPayload,
+  VariationRegulatorLedDetermination,
 } from 'cca-api';
 
 import { FacilityItemViewModel, FacilityTimelineItemViewModel } from '../underlying-agreement';
@@ -132,6 +134,12 @@ const selectFacilityBaselineEnergyConsumption = (facilityIndex: number) =>
     (una) => una?.facilities?.[facilityIndex]?.cca3BaselineAndTargets?.facilityBaselineEnergyConsumption,
   );
 
+const selectDetermination: StateSelector<RequestActionState, VariationRegulatorLedDetermination> =
+  createDescendingSelector(
+    selectPayload,
+    (payload) => (payload as UnderlyingAgreementVariationRegulatorLedCompletedRequestActionPayload).determination,
+  );
+
 export const underlyingAgreementRequestActionQuery = {
   selectPayload,
   selectAccountReferenceData,
@@ -149,4 +157,5 @@ export const underlyingAgreementRequestActionQuery = {
   selectVariationDetails,
   selectFacilityTargetComposition,
   selectFacilityBaselineEnergyConsumption,
+  selectDetermination,
 };

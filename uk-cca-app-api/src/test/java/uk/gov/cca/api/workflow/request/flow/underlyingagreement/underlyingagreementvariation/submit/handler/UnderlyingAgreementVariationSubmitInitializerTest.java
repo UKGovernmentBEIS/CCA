@@ -20,6 +20,7 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementSchemeVersionsHelperService;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
@@ -36,6 +37,7 @@ import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -54,9 +56,13 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
 
     @Mock
     private AccountReferenceDetailsService accountReferenceDetailsService;
+    
+    @Mock
+    private UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
 
     @Test
     void initializePayload() {
+    	final LocalDateTime creationDate = LocalDateTime.now();
         final SchemeVersion workflowSchemeVersion = SchemeVersion.CCA_3;
         final Long accountId = 1L;
         final String facilityId = "facilityId";
@@ -83,6 +89,7 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
                 .build();
         final Request request = Request.builder()
                 .id("ADS_53-T00037-VAR-1")
+                .creationDate(creationDate)
                 .payload(UnderlyingAgreementVariationRequestPayload.builder()
                         .workflowSchemeVersion(workflowSchemeVersion)
                         .originalUnderlyingAgreementContainer(originalData)
@@ -161,12 +168,15 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
                         .build();
 
         when(accountReferenceDetailsService.getAccountReferenceData(accountId)).thenReturn(data);
+        when(underlyingAgreementSchemeVersionsHelperService.shouldShowTp5Tp6(originalData, creationDate.toLocalDate()))
+        		.thenReturn(true);
 
         // Invoke
         RequestTaskPayload actual = handler.initializePayload(request);
 
         // Verify
         verify(accountReferenceDetailsService, times(1)).getAccountReferenceData(accountId);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowTp5Tp6(originalData, creationDate.toLocalDate());
         assertThat(actual).isInstanceOf(UnderlyingAgreementVariationSubmitRequestTaskPayload.class)
                 .isEqualTo(expected);
     }
@@ -189,6 +199,7 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
 
     @Test
     void initializePayload_hidesTp5Tp6_whenOnlyCca3Live() {
+    	final LocalDateTime creationDate = LocalDateTime.now();
         final SchemeVersion workflowSchemeVersion = SchemeVersion.CCA_3;
         final Long accountId = 2L;
         final String facilityId = "facilityId2";
@@ -213,6 +224,7 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
                 .build();
         final Request request = Request.builder()
                 .id("ADS_53-T00037-VAR-2")
+                .creationDate(creationDate)
                 .payload(UnderlyingAgreementVariationRequestPayload.builder()
                         .workflowSchemeVersion(workflowSchemeVersion)
                         .originalUnderlyingAgreementContainer(originalData)
@@ -291,12 +303,15 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
                         .build();
 
         when(accountReferenceDetailsService.getAccountReferenceData(accountId)).thenReturn(data);
+        when(underlyingAgreementSchemeVersionsHelperService.shouldShowTp5Tp6(originalData, creationDate.toLocalDate()))
+        		.thenReturn(false);
 
         // Invoke
         RequestTaskPayload actual = handler.initializePayload(request);
 
         // Verify
         verify(accountReferenceDetailsService, times(1)).getAccountReferenceData(accountId);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowTp5Tp6(originalData, creationDate.toLocalDate());
         assertThat(actual).isInstanceOf(UnderlyingAgreementVariationSubmitRequestTaskPayload.class)
                 .isEqualTo(expected);
     }

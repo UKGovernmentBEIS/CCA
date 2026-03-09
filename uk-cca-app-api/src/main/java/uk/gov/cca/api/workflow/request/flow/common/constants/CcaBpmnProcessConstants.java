@@ -87,4 +87,15 @@ public class CcaBpmnProcessConstants {
     // CCA2 Extension Notice
     public final String CCA2_EXTENSION_NOTICE_ACCOUNT_STATE = "cca2ExtensionNoticeAccountState";
     public final String CCA2_EXTENSION_NOTICE_RUN_REQUEST_BUSINESS_KEY = "cca2ExtensionNoticeRunRequestBusinessKey";
+
+    // CCA2 Termination
+    public final String CCA2_TERMINATION_RUN_INITIATE_FLAG = "cca2TerminationRunInitiateFlag";
+    public final String CCA2_TERMINATION_ACCOUNT_STATE = "cca2TerminationAccountState";
+    public final String CCA2_TERMINATION_RUN_REQUEST_BUSINESS_KEY = "cca2TerminationRunRequestBusinessKey";
+
+    // Non Compliance
+    public static final String NON_COMPLIANCE_OUTCOME = "nonComplianceOutcome";
+    public static final String IS_NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_NEEDED = "isNonComplianceEnforcementResponseNoticeNeeded";
+    public static final String IS_NON_COMPLIANCE_PENALTY_NOTICE_NEEDED = "isNonCompliancePenaltyNoticeNeeded";
+    public static final String IS_NON_COMPLIANCE_REISSUE_PENALTY_NEEDED = "isNonComplianceReissuePenaltyNeeded";
 }

@@ -6,19 +6,8 @@ import { ExtendedMiReportResult } from './mi-interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class MiReportsExportService {
-  manipulateResultsAndExportToExcel(
-    miReportResult: ExtendedMiReportResult,
-    filename: string,
-    manipulateResultsFn?: (parameter: Record<string, any>[]) => Record<string, any>[],
-  ) {
-    const removedColumnsResults = miReportResult.results.map((result) =>
-      miReportResult.columnNames
-        .map((columnName) => ({ [columnName]: result[columnName] }))
-        .reduce((prev, cur) => ({ ...prev, ...cur }), {}),
-    );
-
-    const results = manipulateResultsFn ? manipulateResultsFn(removedColumnsResults) : removedColumnsResults;
-    const ws = utils.json_to_sheet(results);
+  exportToExcel(miReportResult: ExtendedMiReportResult, filename: string) {
+    const ws = utils.json_to_sheet(miReportResult.results);
     const wb = utils.book_new();
 
     utils.book_append_sheet(wb, ws, 'Data');

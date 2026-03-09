@@ -6,9 +6,12 @@ exports[`TrackCorrectiveActionsSummaryComponent should display the correct conte
   activatedRoute={[Function Object]}
   correctiveActionResponse="undefined"
   data={[Function Array]}
+  facilityInfo={[Function Function]}
+  requestInfo={[Function Function]}
   requestTaskStore={[Function _RequestTaskStore]}
-  targetUnitAccountDetails={[Function Function]}
-  targetUnitAccountInfoViewService={[Function Object]}
+  resource={[Function Function]}
+  resourceType={[Function Function]}
+  tasksService={[Function Object]}
 >
   <netz-page-heading>
     <span

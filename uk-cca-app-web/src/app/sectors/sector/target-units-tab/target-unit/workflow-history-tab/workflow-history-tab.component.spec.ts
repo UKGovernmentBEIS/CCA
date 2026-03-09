@@ -8,9 +8,9 @@ import { HistoryCategory } from '@shared/types';
 
 import { RequestsService } from 'cca-api';
 
+import { WorkflowHistoryTabFormProvider } from '../../../workflow-history-tab/workflow-history-tab-form.provider';
 import { mockRequestDetailsSearchResultsData } from './testing/mock-data';
 import { WorkflowHistoryTabComponent } from './workflow-history-tab.component';
-import { WorkflowHistoryTabFormProvider } from './workflow-history-tab-form.provider';
 
 describe('WorkflowHistoryTabComponent', () => {
   let component: WorkflowHistoryTabComponent;

@@ -77,9 +77,11 @@ describe('VariationDetailsCheckYourAnswersComponent', () => {
     expect(page.header.textContent.trim()).toEqual('Check your answers');
 
     expect(page.summaryListValues).toEqual([
-      ['Target Unit/Facility changes', 'Amend the 70% rule evaluation for one or more facilities'],
-      ['Amend the target currency to', 'change the throughput unit'],
-      ['Explain what you are changing and the reason for the changes', 'Variation reason'],
+      [
+        "Changes that don't usually require the operator to provide their assent",
+        'Amend the 70% rule evaluation for one or more facilitiesAmend the target currency to change the throughput unit',
+      ],
+      ['Explain in more detail what you are changing and the reason for the changes', 'Variation reason'],
       ['Decision status', 'Accepted'],
       ['Notes', 'Variation details notes'],
       ['Uploaded files', 'No files provided'],

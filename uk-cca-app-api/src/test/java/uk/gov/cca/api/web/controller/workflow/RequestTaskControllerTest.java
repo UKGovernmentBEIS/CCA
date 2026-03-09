@@ -17,18 +17,24 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
+import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountHeaderInfoDTO;
+import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
 import uk.gov.cca.api.web.config.AppUserArgumentResolver;
 import uk.gov.cca.api.web.controller.exception.ExceptionControllerAdvice;
+import uk.gov.cca.api.web.orchestrator.common.ResourceHeaderInfoProviderDelegator;
 import uk.gov.cca.api.workflow.request.application.task.RequestTaskRecipientsService;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadSubmitRequestTaskPayload;
+import uk.gov.netz.api.authorization.core.domain.AppAuthority;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.authorization.rules.services.AppUserAuthorizationService;
 import uk.gov.netz.api.common.constants.RoleTypeConstants;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
+import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.security.AppSecurityComponent;
 import uk.gov.netz.api.security.AuthorizationAspectUserResolver;
 import uk.gov.netz.api.security.AuthorizedAspect;
@@ -46,6 +52,7 @@ import uk.gov.netz.api.workflow.request.flow.common.jsonprovider.RequestTaskActi
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -85,15 +92,21 @@ class RequestTaskControllerTest {
     @Mock
     private RequestTaskActionHandler<RequestTaskActionEmptyPayload> requestTaskActionHandler;
 
+    @Mock
+    private ResourceHeaderInfoProviderDelegator resourceHeaderInfoProviderDelegator;
+
+    @Mock
+    private TargetUnitAccountQueryService targetUnitAccountQueryService;
+
     private ObjectMapper mapper;
 
     @BeforeEach
     void setUp() {
         mapper = new ObjectMapper();
         mapper.registerSubtypes(new RequestTaskActionPayloadCommonTypesProvider().getTypes().toArray(NamedType[]::new));
-        
+
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-		mappingJackson2HttpMessageConverter.setObjectMapper(mapper);
+        mappingJackson2HttpMessageConverter.setObjectMapper(mapper);
 
         AuthorizationAspectUserResolver authorizationAspectUserResolver = new AuthorizationAspectUserResolver(appSecurityComponent);
         AuthorizedAspect aspect = new AuthorizedAspect(appUserAuthorizationService, authorizationAspectUserResolver);
@@ -240,7 +253,7 @@ class RequestTaskControllerTest {
                 appUser,
                 (RequestTaskActionEmptyPayload) requestTaskActionProcessDTO.getRequestTaskActionPayload());
     }
-    
+
     @Test
     void processRequestTaskAction_no_content() throws Exception {
         AppUser appUser = AppUser.builder().userId("id").build();
@@ -300,6 +313,41 @@ class RequestTaskControllerTest {
         verify(requestTaskActionHandler, never()).process(anyLong(), any(), any(), any());
     }
 
+    @Test
+    void getRequestTaskHeaderInfo() throws Exception {
+        Long accountId = 1L;
+        String accountName = "Test Account";
+        String businessId = "AIC/800544";
+        TargetUnitAccountStatus status = TargetUnitAccountStatus.LIVE;
+        AppUser authUser = AppUser.builder()
+                .userId("userId")
+                .roleType(RoleTypeConstants.REGULATOR)
+                .authorities(List.of(AppAuthority.builder().competentAuthority(CompetentAuthorityEnum.ENGLAND).build()))
+                .build();
+
+        final String resourceId = "1";
+        final String resourceType = "ACCOUNT";
+
+        TargetUnitAccountHeaderInfoDTO requestTaskHeaderInfo = TargetUnitAccountHeaderInfoDTO.builder()
+                .name(accountName)
+                .businessId(businessId)
+                .status(status)
+                .build();
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(authUser);
+        when(resourceHeaderInfoProviderDelegator.getResourceHeaderInfoProvider(ResourceType.ACCOUNT)).thenReturn(Optional.of(targetUnitAccountQueryService));
+        when(targetUnitAccountQueryService.getResourceHeaderInfo(String.valueOf(accountId))).thenReturn(requestTaskHeaderInfo);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/header-info/" + "/" + resourceType + "/" + resourceId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(accountName))
+                .andExpect(jsonPath("$.businessId").value(businessId))
+                .andExpect(jsonPath("$.status").value(status.getName()));
+
+        verify(resourceHeaderInfoProviderDelegator, times(1)).getResourceHeaderInfoProvider(ResourceType.ACCOUNT);
+        verify(targetUnitAccountQueryService, times(1)).getResourceHeaderInfo(String.valueOf(accountId));
+    }
+
     private RequestTaskItemDTO createTaskItem(Long taskid, String type) {
         return RequestTaskItemDTO.builder()
                 .requestTask(RequestTaskDTO.builder()
@@ -310,6 +358,4 @@ class RequestTaskControllerTest {
                 .userAssignCapable(false)
                 .build();
     }
-
-
 }

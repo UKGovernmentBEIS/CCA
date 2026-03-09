@@ -7,7 +7,7 @@ import { combineLatest, startWith } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { normaliseNumber, underlyingAgreementQuery } from '@requests/common';
+import { BaselineEnergyDraftService, normaliseNumber, underlyingAgreementQuery } from '@requests/common';
 import { requireProductsValidator, uniqueFieldValidator } from '@shared/validators';
 
 import { ProductVariableEnergyConsumptionData } from 'cca-api';
@@ -29,12 +29,13 @@ export const ADD_PRODUCT_FORM = new InjectionToken<AddProductFormModel>('Baselin
 
 export const AddProductFormProvider: Provider = {
   provide: ADD_PRODUCT_FORM,
-  deps: [ActivatedRoute, FormBuilder, DestroyRef, RequestTaskStore],
+  deps: [ActivatedRoute, FormBuilder, DestroyRef, RequestTaskStore, BaselineEnergyDraftService],
   useFactory: (
     activatedRoute: ActivatedRoute,
     fb: FormBuilder,
     destroyRef: DestroyRef,
     requestTaskStore: RequestTaskStore,
+    draftService: BaselineEnergyDraftService,
   ) => {
     const facilityId = activatedRoute.snapshot.params.facilityId;
     const una = requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreement)();
@@ -44,7 +45,9 @@ export const AddProductFormProvider: Provider = {
       underlyingAgreementQuery.selectFacilityBaselineEnergyConsumption(facilityIndex),
     )();
 
-    const existingProducts = baselineEnergyConsumption?.variableEnergyConsumptionDataByProduct ?? [];
+    // Read products from draft service
+    const draft = draftService.draftSignal();
+    const existingProducts = draft?.products ?? baselineEnergyConsumption?.variableEnergyConsumptionDataByProduct ?? [];
 
     const productControls = existingProducts.length
       ? existingProducts.map((product) =>

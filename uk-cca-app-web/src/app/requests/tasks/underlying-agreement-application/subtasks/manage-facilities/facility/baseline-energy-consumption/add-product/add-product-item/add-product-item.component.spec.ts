@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
+import { AddProductItemComponent } from '@requests/common';
+
 import { createProductFormGroup } from '../add-product-form.provider';
-import { AddProductItemComponent } from './add-product-item.component';
 
 @Component({
   selector: 'cca-test-wrapper',

@@ -10,7 +10,7 @@ export function toOverallDecisionSummaryData(
   downloadUrl: string,
   isEditable: boolean,
 ) {
-  const decisionValue = determination.type === 'ACCEPTED' ? 'Accept' : 'Reject';
+  const decisionValue = !determination.type ? 'Undecided' : determination.type === 'ACCEPTED' ? 'Accept' : 'Reject';
 
   const factory = new SummaryFactory().addSection('').addRow('Decision', decisionValue, {
     change: isEditable,

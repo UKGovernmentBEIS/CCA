@@ -2,7 +2,7 @@
   <netz-page-heading size="l" id="dialog-title">Your session will end soon</netz-page-heading>
 
   <div class="govuk-body">
-    @if (timeoutBannerService.timeExtensionAllowed$ | async) {
+    @if (timeoutBannerService.timeExtensionAllowed()) {
       <p aria-hidden="true" aria-relevant="additions">
         You must select "Continue" within the next
         {{ timeoutBannerService.timeOffsetSeconds | secondsToMinutes }} to stay signed in to the Manage your Energy

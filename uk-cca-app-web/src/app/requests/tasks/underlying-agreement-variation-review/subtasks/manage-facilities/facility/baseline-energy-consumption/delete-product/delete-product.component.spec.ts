@@ -2,13 +2,11 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-
-import { of } from 'rxjs';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { MockType } from '@netz/common/testing';
-import { TasksApiService, underlyingAgreementQuery, underlyingAgreementReviewQuery } from '@requests/common';
+import { BaselineEnergyDraftService, underlyingAgreementQuery, underlyingAgreementReviewQuery } from '@requests/common';
 
 import {
   mockActivatedRouteWithProductParams,
@@ -23,25 +21,40 @@ describe('DeleteProductComponent', () => {
   let component: DeleteProductComponent;
   let fixture: ComponentFixture<DeleteProductComponent>;
   let store: RequestTaskStore;
-  let tasksApiService: MockType<TasksApiService>;
+  let draftService: MockType<BaselineEnergyDraftService>;
+  let router: Router;
 
   beforeEach(() => {
-    tasksApiService = {
-      saveRequestTaskAction: jest.fn().mockReturnValue(of(mockRequestTaskPayload)),
+    draftService = {
+      initializeFromStore: jest.fn(),
+      draftSignal: jest.fn().mockReturnValue({
+        totalFixedEnergy: '100',
+        hasVariableEnergy: true,
+        variableEnergyType: 'BY_PRODUCT',
+        products: [],
+      }) as any,
+      saveFormSnapshot: jest.fn(),
+      setProducts: jest.fn(),
+      removeProduct: jest.fn(),
+      excludeProduct: jest.fn(),
+      undoExcludeProduct: jest.fn(),
+      updateTotalFixedEnergy: jest.fn(),
+      clear: jest.fn(),
     };
 
     TestBed.configureTestingModule({
-      imports: [DeleteProductComponent],
+      imports: [DeleteProductComponent, RouterModule.forRoot([])],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: mockActivatedRouteWithProductParams },
-        { provide: TasksApiService, useValue: tasksApiService },
+        { provide: BaselineEnergyDraftService, useValue: draftService },
       ],
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
+    router = TestBed.inject(Router);
 
     jest.spyOn(store, 'select').mockImplementation((selector) => {
       if (selector === requestTaskQuery.selectRequestTaskPayload) {
@@ -94,7 +107,7 @@ describe('DeleteProductComponent', () => {
 
   it('should display delete confirmation message', () => {
     const compiled = fixture.nativeElement;
-    expect(compiled.textContent).toContain('Your product and all its data will be deleted permanently');
+    expect(compiled.textContent).toContain('your product and all its data will be deleted permanently');
   });
 
   it('should have delete button', () => {
@@ -104,10 +117,10 @@ describe('DeleteProductComponent', () => {
     expect(button.textContent).toContain('Delete product');
   });
 
-  it('should call onDelete when delete button is clicked', () => {
-    const onDeleteSpy = jest.spyOn(component, 'onDelete');
+  it('should call draftService.removeProduct when delete button is clicked', () => {
+    jest.spyOn(router, 'navigate').mockResolvedValue(true);
     const button = fixture.nativeElement.querySelector('.govuk-button--warning');
     button.click();
-    expect(onDeleteSpy).toHaveBeenCalled();
+    expect(draftService.removeProduct).toHaveBeenCalledWith('Product 1');
   });
 });

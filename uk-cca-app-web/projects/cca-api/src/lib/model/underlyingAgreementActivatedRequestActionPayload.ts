@@ -9,32 +9,21 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { UnderlyingAgreementFacilityReviewDecision } from './underlyingAgreementFacilityReviewDecision';
 import { RequestActionUserInfo } from './requestActionUserInfo';
 import { DefaultNoticeRecipient } from './defaultNoticeRecipient';
 import { UnderlyingAgreementActivationDetails } from './underlyingAgreementActivationDetails';
 import { AccountReferenceData } from './accountReferenceData';
-import { UnderlyingAgreementReviewDecision } from './underlyingAgreementReviewDecision';
-import { Determination } from './determination';
 import { CcaDecisionNotification } from './ccaDecisionNotification';
 import { FileInfoDTO } from './fileInfoDTO';
-import { UnderlyingAgreementPayload } from './underlyingAgreementPayload';
 
 export interface UnderlyingAgreementActivatedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
   accountReferenceData?: AccountReferenceData;
-  underlyingAgreement: UnderlyingAgreementPayload;
-  underlyingAgreementAttachments?: Record<string, string>;
   decisionNotification: CcaDecisionNotification;
   defaultContacts: DefaultNoticeRecipient[];
   usersInfo?: Record<string, RequestActionUserInfo>;
   officialNotice: FileInfoDTO;
-  determination: Determination;
-  reviewSectionsCompleted?: Record<string, string>;
-  reviewGroupDecisions?: Record<string, UnderlyingAgreementReviewDecision>;
-  facilitiesReviewGroupDecisions?: Record<string, UnderlyingAgreementFacilityReviewDecision>;
-  reviewAttachments?: Record<string, string>;
   underlyingAgreementDocuments: Record<string, FileInfoDTO>;
   underlyingAgreementActivationDetails: UnderlyingAgreementActivationDetails;
   underlyingAgreementActivationAttachments?: Record<string, string>;

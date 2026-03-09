@@ -13,12 +13,12 @@ import { HistoryCategory } from '@shared/types';
 
 import { RequestDetailsSearchResults, type RequestSearchCriteria, RequestsService } from 'cca-api';
 
-import { WorkflowHistoryTabState, workflowStatusesMap, workflowTypesMap } from './workflow-history-tab.types';
 import {
   WORKFLOW_HISTORY_TAB_FORM_PROVIDER,
-  type WorkflowHistoryTabFormModel,
+  WorkflowHistoryTabFormModel,
   WorkflowHistoryTabFormProvider,
-} from './workflow-history-tab-form.provider';
+} from '../../../workflow-history-tab/workflow-history-tab-form.provider';
+import { WorkflowHistoryTabState, workflowStatusesMap, workflowTypesMap } from './workflow-history-tab.types';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;

@@ -26,6 +26,10 @@ describe('ItemNamePipe', () => {
       'Application for underlying agreement sent to peer reviewer',
     );
 
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_ACTIVATION')).toEqual(
+      'Upload target unit assent on variation',
+    );
+
     expect(pipe.transform('ADMIN_TERMINATION_APPLICATION_SUBMIT')).toEqual('Admin termination');
     expect(pipe.transform('ADMIN_TERMINATION_APPLICATION_WITHDRAW')).toEqual('Withdraw admin termination');
     expect(pipe.transform('ADMIN_TERMINATION_APPLICATION_FINAL_DECISION')).toEqual('Admin termination final decision');
@@ -57,6 +61,17 @@ describe('ItemNamePipe', () => {
 
     expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW')).toEqual(
       'Application for underlying agreement variation sent to peer reviewer',
+    );
+
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_WAIT_FOR_PEER_REVIEW')).toEqual(
+      'Underlying agreement variation sent to peer reviewer',
+    );
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW')).toEqual(
+      'Peer review of underlying agreement variation',
+    );
+
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT')).toEqual(
+      'Vary the underlying agreement',
     );
 
     expect(pipe.transform('PERFORMANCE_DATA_DOWNLOAD_SUBMIT')).toEqual(

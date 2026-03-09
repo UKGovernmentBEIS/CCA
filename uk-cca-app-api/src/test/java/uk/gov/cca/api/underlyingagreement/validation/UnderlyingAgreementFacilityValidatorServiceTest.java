@@ -83,7 +83,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
                 .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
@@ -99,7 +99,8 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         
         Set<String> facilityBusinessIds = getFacilityAndPreviousFacilityBusinessIds(facility);
         		
-        when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(new HashMap<>());
+        when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds))
+        		.thenReturn(new HashMap<>());
 
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
@@ -116,7 +117,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
-        final Facility facility = createFacility(FacilityStatus.LIVE, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.LIVE, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         facility.getFacilityItem().getFacilityDetails().setParticipatingSchemeVersions(Set.of(SchemeVersion.CCA_2));
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
@@ -139,7 +140,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
 				.build());
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(facilityValidationContextMap);
-
+        
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
@@ -155,7 +156,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
                 .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
@@ -177,10 +178,10 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
 				.build());
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(facilityValidationContextMap);
-
+        
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
-
+        
         // Verify
         assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(INVALID_FACILITY_ID.getMessage());
         verify(facilityDataQueryService, times(1))
@@ -193,7 +194,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
-        final Facility facility = createFacility(FacilityStatus.LIVE, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.LIVE, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
                 .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
@@ -215,7 +216,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
 						.build());
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(facilityValidationContextMap);
-
+        
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
@@ -232,7 +233,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
         final String previousFacilityId = "previousFacilityId";
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         facility.getFacilityItem().getFacilityDetails().setApplicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP);
         facility.getFacilityItem().getFacilityDetails().setPreviousFacilityId(previousFacilityId);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
@@ -275,7 +276,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
                 .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
@@ -292,7 +293,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         Set<String> facilityBusinessIds = getFacilityAndPreviousFacilityBusinessIds(facility);
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(new HashMap<>());
-
+        
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
@@ -308,7 +309,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         facility.getFacilityItem().getCca3BaselineAndTargets().getFacilityTargets().setImprovements(Map.of(
                 TargetImprovementType.TP8, BigDecimal.TEN,
                 TargetImprovementType.TP9, BigDecimal.TEN
@@ -329,7 +330,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         Set<String> facilityBusinessIds = getFacilityAndPreviousFacilityBusinessIds(facility);
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(new HashMap<>());
-
+        
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
@@ -345,7 +346,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         facility.getFacilityItem().getFacilityDetails().setParticipatingSchemeVersions(Set.of(SchemeVersion.CCA_2));
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
@@ -363,7 +364,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         Set<String> facilityBusinessIds = getFacilityAndPreviousFacilityBusinessIds(facility);
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(new HashMap<>());
-
+        
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
@@ -381,7 +382,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
         final String previousFacilityId = "previousFacilityId";
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         facility.getFacilityItem().getFacilityDetails().setApplicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP);
         facility.getFacilityItem().getFacilityDetails().setParticipatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3));
         facility.getFacilityItem().getFacilityDetails().setPreviousFacilityId(previousFacilityId);
@@ -409,7 +410,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(facilityValidationContextMap);
         when(underlyingAgreementConfig.getSchemeParticipationFlagCutOffDate()).thenReturn(LocalDate.now().minusDays(1));
-
+        
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
@@ -425,7 +426,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
     void validate_CCA2_valid() {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_2;
         final UUID evidenceFile = UUID.randomUUID();
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, null);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, null, Set.of(SchemeVersion.CCA_3));
         facility.getFacilityItem().getFacilityDetails().setParticipatingSchemeVersions(Set.of(SchemeVersion.CCA_2));
         facility.getFacilityItem().setCca3BaselineAndTargets(null);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
@@ -444,7 +445,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         Set<String> facilityBusinessIds = getFacilityAndPreviousFacilityBusinessIds(facility);
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(new HashMap<>());
-
+        
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
@@ -460,7 +461,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_2;
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .schemeVersion(currentSchemeVersion)
                 .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
@@ -477,7 +478,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         Set<String> facilityBusinessIds = getFacilityAndPreviousFacilityBusinessIds(facility);
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(new HashMap<>());
-
+        
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
@@ -497,7 +498,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final UUID calculatorFile = UUID.randomUUID();
         final String previousFacilityId = "previousFacilityId";
 
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         facility.getFacilityItem().getFacilityDetails().setApplicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP);
         facility.getFacilityItem().getFacilityDetails().setPreviousFacilityId(previousFacilityId);
         facility.getFacilityItem().getFacilityDetails().setParticipatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3));
@@ -542,7 +543,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         // exclude all products
         facility.getFacilityItem().getCca3BaselineAndTargets().getFacilityBaselineEnergyConsumption().getVariableEnergyConsumptionDataByProduct()
                 .forEach(p -> p.setProductStatus(ProductStatus.EXCLUDED));
@@ -563,7 +564,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         Set<String> facilityBusinessIds = getFacilityAndPreviousFacilityBusinessIds(facility);
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(new HashMap<>());
-
+        
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
@@ -581,7 +582,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         // exclude all products
         facility.getFacilityItem().getCca3BaselineAndTargets().getFacilityBaselineEnergyConsumption().getVariableEnergyConsumptionDataByProduct()
                 .forEach(p -> p.setProductStatus(ProductStatus.LIVE));
@@ -602,7 +603,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         Set<String> facilityBusinessIds = getFacilityAndPreviousFacilityBusinessIds(facility);
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(new HashMap<>());
-
+        
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
@@ -619,7 +620,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
         final UUID evidenceFile = UUID.randomUUID();
         final UUID calculatorFile = UUID.randomUUID();
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile);
+        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
         List<ProductVariableEnergyConsumptionData> products = List.of(
                 ProductVariableEnergyConsumptionData.builder()
                         .baselineYear(Year.of(2022))
@@ -666,7 +667,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         Set<String> facilityBusinessIds = getFacilityAndPreviousFacilityBusinessIds(facility);
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(new HashMap<>());
-
+        
         // Invoke
         validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
 
@@ -678,7 +679,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
         verifyNoMoreInteractions(facilityDataQueryService);
     }
 
-    private Facility createFacility(FacilityStatus status, UUID evidenceFile, UUID calculatorFile) {
+    private Facility createFacility(FacilityStatus status, UUID evidenceFile, UUID calculatorFile, Set<SchemeVersion> schemeVersions) {
         return Facility.builder()
                 .status(status)
                 .facilityItem(FacilityItem.builder()
@@ -686,7 +687,7 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
                         .facilityDetails(FacilityDetails.builder()
                                 .isCoveredByUkets(Boolean.TRUE)
                                 .applicationReason(ApplicationReasonType.NEW_AGREEMENT)
-                                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_3))
+                                .participatingSchemeVersions(schemeVersions)
                                 .facilityAddress(FacilityAddressDTO.builder()
                                         .line1("Line 1")
                                         .line2("Line 2")

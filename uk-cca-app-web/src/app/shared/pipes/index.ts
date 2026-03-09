@@ -1,6 +1,5 @@
 export * from './address.pipe';
 export * from './action-type-to-breadcrumb.pipe';
-export * from './competent-authority.pipe';
 export * from './contact-type.pipe';
 export * from './duration-pipe';
 export * from './final-decision-type.pipe';

@@ -6,11 +6,14 @@ exports[`TrackCorrectiveActionsCheckYourAnswersComponent should display the corr
   activatedRoute={[Function Object]}
   correctiveActionResponse="undefined"
   data={[Function Array]}
+  facilityInfo={[Function Function]}
+  requestInfo={[Function Function]}
   requestTaskStore={[Function _RequestTaskStore]}
+  resource={[Function Function]}
+  resourceType={[Function Function]}
   router={[Function _Router]}
-  targetUnitAccountDetails={[Function Function]}
-  targetUnitAccountInfoViewService={[Function Object]}
   tasksApiService={[Function TasksApiService]}
+  tasksService={[Function Object]}
 >
   <div>
     <netz-page-heading>

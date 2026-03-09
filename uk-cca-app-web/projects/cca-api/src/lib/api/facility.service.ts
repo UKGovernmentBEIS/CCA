@@ -14,7 +14,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParam
 import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
-import { FacilityDTO } from '../model/facilityDTO';
+import { FacilityBusinessIdDTO } from '../model/facilityBusinessIdDTO';
 
 import { BASE_PATH } from '../variables';
 import { Configuration } from '../configuration';
@@ -87,25 +87,25 @@ export class FacilityService {
    * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
    * @param reportProgress flag to report request and response progress.
    */
-  public generateFacilityBusinessId(accountId: number): Observable<FacilityDTO>;
+  public generateFacilityBusinessId(accountId: number): Observable<FacilityBusinessIdDTO>;
   public generateFacilityBusinessId(
     accountId: number,
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpResponse<FacilityDTO>>;
+  ): Observable<HttpResponse<FacilityBusinessIdDTO>>;
   public generateFacilityBusinessId(
     accountId: number,
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<HttpEvent<FacilityDTO>>;
+  ): Observable<HttpEvent<FacilityBusinessIdDTO>>;
   public generateFacilityBusinessId(
     accountId: number,
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
-  ): Observable<FacilityDTO>;
+  ): Observable<FacilityBusinessIdDTO>;
   public generateFacilityBusinessId(
     accountId: number,
     observe: any = 'body',
@@ -139,7 +139,7 @@ export class FacilityService {
       responseType_ = 'text';
     }
 
-    return this.httpClient.get<FacilityDTO>(
+    return this.httpClient.get<FacilityBusinessIdDTO>(
       `${this.configuration.basePath}/v1.0/facility/generate/${encodeURIComponent(String(accountId))}`,
       {
         responseType: responseType_ as any,

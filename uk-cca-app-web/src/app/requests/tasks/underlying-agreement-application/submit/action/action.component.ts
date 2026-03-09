@@ -1,17 +1,31 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { EMPTY } from 'rxjs';
+
+import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { ButtonDirective } from '@netz/govuk-components';
-import { TasksApiService } from '@requests/common';
+import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
+import {
+  API_ERROR_FORM,
+  ApiErrorFormModel,
+  ApiErrorFormProvider,
+  setApiErrors,
+  TasksApiService,
+} from '@requests/common';
 
 import { RequestTaskActionProcessDTO } from 'cca-api';
 
 @Component({
   selector: 'cca-una-submit-action',
   template: `
+    @if (isErrorSummaryDisplayed()) {
+      <govuk-error-summary [form]="errorForm" />
+    }
+
     <netz-page-heading size="xl"> Submit to regulator </netz-page-heading>
 
     <p>Your application will be sent directly to your Regulator (Environment Agency).</p>
@@ -27,7 +41,15 @@ import { RequestTaskActionProcessDTO } from 'cca-api';
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
     <netz-return-to-task-or-action-page />
   `,
-  imports: [ButtonDirective, PageHeadingComponent, PendingButtonDirective, ReturnToTaskOrActionPageComponent],
+  imports: [
+    ButtonDirective,
+    ErrorSummaryComponent,
+    PageHeadingComponent,
+    PendingButtonDirective,
+    ReactiveFormsModule,
+    ReturnToTaskOrActionPageComponent,
+  ],
+  providers: [ApiErrorFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UnderlyingAgreementSubmitActionComponent {
@@ -35,6 +57,9 @@ export class UnderlyingAgreementSubmitActionComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly store = inject(RequestTaskStore);
   private readonly tasksApiService = inject(TasksApiService);
+
+  protected readonly errorForm = inject<ApiErrorFormModel>(API_ERROR_FORM);
+  protected readonly isErrorSummaryDisplayed = signal(false);
 
   submit() {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
@@ -47,8 +72,17 @@ export class UnderlyingAgreementSubmitActionComponent {
       },
     };
 
-    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['confirmation'], { relativeTo: this.route });
-    });
+    this.tasksApiService
+      .saveRequestTaskAction(dto)
+      .pipe(
+        catchBadRequest(ErrorCodes.UNA1001, (res) => {
+          setApiErrors(this.errorForm, res);
+          this.isErrorSummaryDisplayed.set(true);
+          return EMPTY;
+        }),
+      )
+      .subscribe(() => {
+        this.router.navigate(['confirmation'], { relativeTo: this.route });
+      });
   }
 }

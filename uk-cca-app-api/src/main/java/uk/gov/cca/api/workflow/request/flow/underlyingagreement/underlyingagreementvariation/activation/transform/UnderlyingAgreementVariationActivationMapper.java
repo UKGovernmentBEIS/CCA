@@ -4,6 +4,7 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+
 import uk.gov.cca.api.workflow.request.flow.common.domain.DefaultNoticeRecipient;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivatedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
@@ -17,8 +18,6 @@ import java.util.Map;
 public interface UnderlyingAgreementVariationActivationMapper {
 
     @Mapping(target = "payloadType", source = "payloadType")
-    @Mapping(target = "underlyingAgreementAttachments", ignore = true)
-    @Mapping(target = "reviewAttachments", ignore = true)
     @Mapping(target = "underlyingAgreementActivationAttachments", ignore = true)
     @Mapping(target = "attachments", ignore = true)
     UnderlyingAgreementVariationActivatedRequestActionPayload toUnderlyingAgreementVariationActivatedRequestActionPayload(
@@ -27,8 +26,6 @@ public interface UnderlyingAgreementVariationActivationMapper {
     @AfterMapping
     default void setUnderlyingAgreementAttachments(@MappingTarget UnderlyingAgreementVariationActivatedRequestActionPayload requestActionPayload,
                                                    UnderlyingAgreementVariationRequestPayload payload) {
-        requestActionPayload.setUnderlyingAgreementAttachments(payload.getUnderlyingAgreementAttachments());
-        requestActionPayload.setReviewAttachments(payload.getReviewAttachments());
         requestActionPayload.setUnderlyingAgreementActivationAttachments(payload.getUnderlyingAgreementActivationAttachments());
     }
 }

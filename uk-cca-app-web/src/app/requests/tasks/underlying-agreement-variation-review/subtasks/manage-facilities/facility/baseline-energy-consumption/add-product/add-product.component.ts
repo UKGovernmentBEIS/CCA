@@ -2,28 +2,17 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal 
 import { FormArray, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { RequestTaskStore } from '@netz/common/store';
 import { ErrorSummaryComponent, GovukSelectOption, GovukValidators } from '@netz/govuk-components';
 import {
-  areEntitiesIdentical,
-  filterFieldsWithFalsyValues,
+  BaselineEnergyDraftService,
   mapToProductVariableEnergyConsumptionData,
   MeasurementTypeToUnitPipe,
-  OVERALL_DECISION_SUBTASK,
-  resetFacilityNonComparisonFields,
-  TaskItemStatus,
-  TasksApiService,
-  UNAVariationReviewRequestTaskPayload,
   underlyingAgreementQuery,
-  underlyingAgreementReviewQuery,
 } from '@requests/common';
+import { AddProductItemComponent } from '@requests/common';
 import { CCAGovukValidators } from '@shared/validators';
-import { produce } from 'immer';
 
-import { UnderlyingAgreementVariationReviewSavePayload } from 'cca-api';
-
-import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../../../transform';
-import { deleteFacilityDecision, resetDetermination } from '../../../../../utils';
 import {
   ADD_PRODUCT_FORM,
   AddProductFormModel,
@@ -31,7 +20,6 @@ import {
   createProductFormGroup,
   ProductFormGroup,
 } from './add-product-form.provider';
-import { AddProductItemComponent } from './add-product-item/add-product-item.component';
 
 @Component({
   selector: 'cca-add-product',
@@ -49,10 +37,10 @@ import { AddProductItemComponent } from './add-product-item/add-product-item.com
 export class AddProductComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly tasksApiService = inject(TasksApiService);
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly draftService = inject(BaselineEnergyDraftService);
 
   private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
   private readonly una = this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreement)();
@@ -103,69 +91,29 @@ export class AddProductComponent implements OnInit {
 
     this.hasFormErrors.set(false);
 
-    const payload = this.requestTaskStore.select(
-      requestTaskQuery.selectRequestTaskPayload,
-    )() as UNAVariationReviewRequestTaskPayload;
-
-    const originalPayload = (
-      this.requestTaskStore.select(requestTaskQuery.selectRequestTaskPayload)() as UNAVariationReviewRequestTaskPayload
-    )?.originalUnderlyingAgreementContainer;
-
-    const actionPayload = toUnderlyingAgreementVariationReviewSavePayload(payload);
-    const updatedPayload = updateVariableEnergyProducts(actionPayload, this.form, this.facilityId);
-
-    const originalFacility = originalPayload?.underlyingAgreement?.facilities?.find(
-      (f) => f.facilityId === this.facilityId,
-    );
-    const currentFacility = updatedPayload.facilities?.find((f) => f.facilityId === this.facilityId);
-
-    let areIdentical = false;
-
-    if (originalFacility) {
-      const resetOriginal = resetFacilityNonComparisonFields(originalFacility);
-      const resetCurrent = resetFacilityNonComparisonFields(currentFacility);
-
-      const filterOriginal = filterFieldsWithFalsyValues(resetOriginal);
-      const filterCurrent = filterFieldsWithFalsyValues(resetCurrent);
-
-      areIdentical = areEntitiesIdentical(filterCurrent, filterOriginal);
-    }
-
-    const currentDecisions = this.requestTaskStore.select(
-      underlyingAgreementReviewQuery.selectFacilityReviewGroupDecisions,
-    )();
-    const decisions = areIdentical ? deleteFacilityDecision(currentDecisions, this.facilityId) : currentDecisions;
-
-    const currentSectionsCompleted = this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)();
-    const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
-      draft[this.facilityId] = TaskItemStatus.IN_PROGRESS;
-    });
-
-    const currentReviewSectionsCompleted = this.requestTaskStore.select(
-      underlyingAgreementReviewQuery.selectReviewSectionsCompleted,
+    const baselineEnergyConsumption = this.requestTaskStore.select(
+      underlyingAgreementQuery.selectFacilityBaselineEnergyConsumption(this.facilityIndex),
     )();
 
-    const reviewSectionsCompleted = produce(currentReviewSectionsCompleted, (draft) => {
-      draft[this.facilityId] = TaskItemStatus.UNDECIDED;
-      draft[OVERALL_DECISION_SUBTASK] = TaskItemStatus.UNDECIDED;
+    const existingProducts =
+      this.draftService.draftSignal()?.products ??
+      baselineEnergyConsumption?.variableEnergyConsumptionDataByProduct ??
+      [];
+
+    const existingProductsByName = new Map(existingProducts.map((product) => [product.productName, product]));
+
+    // Map form controls to product data
+    const updatedProducts = this.productsArray.controls.map((control) => {
+      const rawValue = control.getRawValue();
+      const previousProduct = existingProductsByName.get(rawValue.productName ?? '');
+      return mapToProductVariableEnergyConsumptionData(rawValue, previousProduct);
     });
 
-    const determination = resetDetermination(
-      this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)(),
-    );
+    // Save to draft service (NO API CALL)
+    this.draftService.setProducts(updatedProducts);
 
-    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
-    const dto = createSaveActionDTO(requestTaskId, updatedPayload, {
-      sectionsCompleted,
-      reviewSectionsCompleted,
-      determination,
-      reviewGroupDecisions: this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewGroupDecisions)(),
-      facilitiesReviewGroupDecisions: decisions,
-    });
-
-    this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {
-      this.router.navigate(['..'], { relativeTo: this.activatedRoute });
-    });
+    // Navigate back to parent
+    this.router.navigate(['..'], { relativeTo: this.activatedRoute });
   }
 
   private updateProductValidationMessages() {
@@ -198,41 +146,4 @@ export class AddProductComponent implements OnInit {
       this.form.updateValueAndValidity();
     });
   }
-}
-
-function updateVariableEnergyProducts(
-  payload: UnderlyingAgreementVariationReviewSavePayload,
-  form: AddProductFormModel,
-  facilityId: string,
-): UnderlyingAgreementVariationReviewSavePayload {
-  return produce(payload, (draft) => {
-    const facilityIndex = draft.facilities?.findIndex((facility) => facility.facilityId === facilityId);
-    if (facilityIndex === -1) return;
-
-    const baselineEnergyConsumption = draft.facilities[facilityIndex].cca3BaselineAndTargets
-      ?.facilityBaselineEnergyConsumption ?? { variableEnergyConsumptionDataByProduct: [] };
-
-    const existingProducts = baselineEnergyConsumption?.variableEnergyConsumptionDataByProduct ?? [];
-    const productControls = form.controls.products.controls;
-
-    const updatedProducts = productControls.map((control, index) => {
-      const { productName, baselineYear, baselineVariableEnergy, baselineThroughput, throughputUnit } =
-        control.getRawValue();
-
-      return mapToProductVariableEnergyConsumptionData(
-        {
-          productName,
-          baselineYear,
-          baselineVariableEnergy,
-          baselineThroughput,
-          throughputUnit,
-        },
-        existingProducts[index],
-      );
-    });
-
-    baselineEnergyConsumption.variableEnergyConsumptionDataByProduct = updatedProducts;
-    draft.facilities[facilityIndex].cca3BaselineAndTargets.facilityBaselineEnergyConsumption =
-      baselineEnergyConsumption as any;
-  });
 }

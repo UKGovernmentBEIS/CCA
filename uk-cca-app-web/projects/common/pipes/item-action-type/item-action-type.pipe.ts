@@ -20,6 +20,12 @@ export enum ItemActionEnum {
   UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACTIVATED = 'Underlying agreement variation activated',
   UNDERLYING_AGREEMENT_VARIATION_APPLICATION_CANCELLED = 'Underlying agreement variation application cancelled',
   UNDERLYING_AGREEMENT_VARIATION_APPLICATION_COMPLETED = 'Underlying agreement variation application completed',
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_SUBMITTED = 'Underlying agreement variation proposed',
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_COMPLETED = 'Underlying agreement variation completed',
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_ACTIVATED = 'Underlying agreement variation activated',
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW_REQUESTED = 'Peer review requested',
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEWER_ACCEPTED = 'Peer review agreement submitted',
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEWER_REJECTED = 'Peer review disagreement submitted',
   PERFORMANCE_DATA_SPREADSHEET_PROCESSING_SUBMITTED = 'Performance report submitted',
   PERFORMANCE_ACCOUNT_TEMPLATE_PROCESSING_SUBMITTED = 'PAT report submitted',
   SUBSISTENCE_FEES_RUN_SUBMITTED = 'Subsistence fees payment request run submitted',
@@ -45,6 +51,7 @@ export enum ItemActionEnum {
   FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED = 'Audit details and corrective actions completed',
   FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED = 'Track corrective actions completed',
   FACILITY_AUDIT_CANCELLED = 'Audit facility cancelled',
+  REQUEST_TERMINATED = 'Workflow terminated by the system',
 }
 
 @Pipe({ name: 'itemActionType', pure: true })

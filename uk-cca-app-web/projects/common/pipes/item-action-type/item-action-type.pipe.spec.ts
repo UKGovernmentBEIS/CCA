@@ -29,6 +29,25 @@ describe('ItemActionTypePipe', () => {
       'Underlying agreement application cancelled',
     );
 
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_SUBMITTED')).toEqual(
+      'Underlying agreement variation proposed',
+    );
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_COMPLETED')).toEqual(
+      'Underlying agreement variation completed',
+    );
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_ACTIVATED')).toEqual(
+      'Underlying agreement variation activated',
+    );
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW_REQUESTED')).toEqual(
+      'Peer review requested',
+    );
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEWER_ACCEPTED')).toEqual(
+      'Peer review agreement submitted',
+    );
+    expect(pipe.transform('UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEWER_REJECTED')).toEqual(
+      'Peer review disagreement submitted',
+    );
+
     expect(pipe.transform('ADMIN_TERMINATION_APPLICATION_SUBMITTED')).toEqual('Admin termination submitted');
     expect(pipe.transform('ADMIN_TERMINATION_WITHDRAW_APPLICATION_SUBMITTED')).toEqual(
       'Admin termination withdrawn submitted',
@@ -104,6 +123,8 @@ describe('ItemActionTypePipe', () => {
       'Track corrective actions completed',
     );
     expect(pipe.transform('FACILITY_AUDIT_CANCELLED')).toEqual('Audit facility cancelled');
+
+    expect(pipe.transform('REQUEST_TERMINATED')).toEqual('Workflow terminated by the system');
 
     expect(pipe.transform(undefined)).toEqual('Approved Application');
   });

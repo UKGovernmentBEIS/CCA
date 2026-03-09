@@ -281,7 +281,7 @@ function toFacilityWizardSummaryFactory(
         },
       )
       .addRow(
-        'Energy or carbon units used by the target unit',
+        'Energy or carbon units used by the facility',
         measurementTypeToOptionTextPipe.transform(targetComposition?.measurementType),
         {
           change: isEditable,

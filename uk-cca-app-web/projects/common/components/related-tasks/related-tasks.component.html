@@ -10,7 +10,7 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-three-quarters">
           <h3 class="govuk-heading-s govuk-!-margin-bottom-1">
-            {{ item.taskType | itemName: item.requestId?.split('-')[1] }}
+            {{ item.taskType | itemName }}
           </h3>
 
           @if (item.daysRemaining !== null && item.daysRemaining !== undefined) {

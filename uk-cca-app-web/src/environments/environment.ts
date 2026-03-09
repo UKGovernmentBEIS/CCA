@@ -2,7 +2,6 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { KeycloakOptions } from 'keycloak-angular';
 import { KeycloakConfig, KeycloakInitOptions } from 'keycloak-js';
 
 // Add here your keycloak setup infos
@@ -17,15 +16,6 @@ const keycloakInitOptions: KeycloakInitOptions = {
   pkceMethod: 'S256',
 };
 
-const keycloakOptions: KeycloakOptions = {
-  config: keycloakConfig,
-  initOptions: keycloakInitOptions,
-  enableBearerInterceptor: true,
-  loadUserProfileAtStartUp: true,
-  bearerExcludedUrls: [],
-  shouldAddToken: ({ url }) => !url.includes('api.pwnedpasswords.com'),
-};
-
 const apiOptions = {
   baseUrl: '//localhost:8082/api',
 };
@@ -36,7 +26,8 @@ const timeoutBanner = {
 
 export const environment = {
   production: false,
-  keycloakOptions,
+  keycloakConfig,
+  keycloakInitOptions,
   apiOptions,
   timeoutBanner,
 };

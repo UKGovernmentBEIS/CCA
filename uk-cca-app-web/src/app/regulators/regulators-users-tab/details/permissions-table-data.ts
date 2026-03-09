@@ -64,6 +64,16 @@ export const tableRows = [
     type: 'Variation',
   },
   {
+    permission: 'UNDERLYING_AGREEMENT_VARIATION_SUBMISSION',
+    task: `Trigger and Complete Regulator's Variation`,
+    type: `Regulator's Variation`,
+  },
+  {
+    permission: 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW',
+    task: `Peer Review Regulator's Variation`,
+    type: `Regulator's Variation`,
+  },
+  {
     permission: 'MANAGE_FACILITY_AUDIT',
     task: 'Flag for Audit',
     type: 'Audit',

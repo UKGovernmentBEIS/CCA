@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthStore } from '@netz/common/auth';
 import { BreadcrumbService } from '@netz/common/navigation';
 import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
-import { KeycloakService } from 'keycloak-angular';
+import { KeycloakService } from '@shared/services';
 
 import { UserStateDTO } from 'cca-api';
 

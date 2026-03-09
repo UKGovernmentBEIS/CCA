@@ -1,0 +1,135 @@
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
+import { DetailsComponent, RadioComponent, RadioOptionComponent } from '@netz/govuk-components';
+import {
+  FACILITY_EXTENT_FORM,
+  FacilityExtentFormModel,
+  FacilityExtentFormProvider,
+  FacilityWizardStep,
+  isFacilityWizardCompleted,
+  TaskItemStatus,
+  TasksApiService,
+  UNAVariationRegulatorLedRequestTaskPayload,
+  underlyingAgreementQuery,
+  underlyingAgreementVariationRegulatorLedQuery,
+} from '@requests/common';
+import { FileInputComponent, WizardStepComponent } from '@shared/components';
+import { produce } from 'immer';
+
+import {
+  FacilityExtent,
+  UnderlyingAgreementVariationRegulatorLedSavePayload,
+  UnderlyingAgreementVariationSubmitRequestTaskPayload,
+} from 'cca-api';
+
+import { createRequestTaskActionProcessDTO, toUnAVariationRegulatorLedSavePayload } from '../../../../transform';
+
+@Component({
+  selector: 'cca-facility-extent',
+  templateUrl: './facility-extent.component.html',
+  imports: [
+    WizardStepComponent,
+    ReactiveFormsModule,
+    RadioComponent,
+    RadioOptionComponent,
+    FileInputComponent,
+    DetailsComponent,
+    RouterLink,
+  ],
+  providers: [FacilityExtentFormProvider],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class FacilityExtentComponent {
+  private readonly requestTaskStore = inject(RequestTaskStore);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly tasksApiService = inject(TasksApiService);
+
+  protected readonly form = inject<FormGroup<FacilityExtentFormModel>>(FACILITY_EXTENT_FORM);
+
+  private readonly facilityId = this.route.snapshot.params.facilityId;
+
+  protected readonly facility = computed(() =>
+    this.requestTaskStore.select(underlyingAgreementQuery.selectFacility(this.facilityId))(),
+  );
+
+  private readonly activitiesClaimedExists: Signal<FacilityExtent['areActivitiesClaimed']> = toSignal(
+    this.form.controls.areActivitiesClaimed.valueChanges,
+    {
+      initialValue: this.form.controls.areActivitiesClaimed.value,
+    },
+  );
+
+  protected readonly isActivitiesDescriptionFileExist: Signal<boolean> = computed(() => {
+    if (this.activitiesClaimedExists()) {
+      this.form.controls.activitiesDescriptionFile.enable();
+      return true;
+    } else {
+      this.form.controls.activitiesDescriptionFile.disable();
+      this.form.controls.activitiesDescriptionFile.reset();
+      return false;
+    }
+  });
+
+  getDownloadUrl(uuid: string) {
+    return ['../../../../file-download', uuid];
+  }
+
+  onSubmit() {
+    const payload = this.requestTaskStore.select(
+      requestTaskQuery.selectRequestTaskPayload,
+    )() as UNAVariationRegulatorLedRequestTaskPayload;
+
+    const actionPayload = toUnAVariationRegulatorLedSavePayload(payload);
+    const updatedPayload = updateFacilityExtent(actionPayload, this.form, this.facilityId);
+
+    const currentSectionsCompleted =
+      this.requestTaskStore.select(underlyingAgreementQuery.selectSectionsCompleted)() || {};
+
+    const sectionsCompleted = produce(currentSectionsCompleted, (draft) => {
+      draft[this.facilityId] = TaskItemStatus.IN_PROGRESS;
+    });
+
+    const determination = this.requestTaskStore.select(
+      underlyingAgreementVariationRegulatorLedQuery.selectDetermination,
+    )();
+
+    const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)() as number;
+    const dto = createRequestTaskActionProcessDTO(requestTaskId, updatedPayload, sectionsCompleted, determination);
+
+    this.tasksApiService
+      .saveRequestTaskAction(dto)
+      .subscribe((payload: UnderlyingAgreementVariationSubmitRequestTaskPayload) => {
+        const facility = payload.underlyingAgreement.facilities.find((f) => f.facilityId === this.facilityId);
+        if (isFacilityWizardCompleted(facility)) {
+          this.router.navigate(['../check-your-answers'], { relativeTo: this.route });
+        } else {
+          this.router.navigate([`../${FacilityWizardStep.APPLY_RULE}`], { relativeTo: this.route });
+        }
+      });
+  }
+}
+
+function updateFacilityExtent(
+  payload: UnderlyingAgreementVariationRegulatorLedSavePayload,
+  form: FormGroup<FacilityExtentFormModel>,
+  facilityId: string,
+): UnderlyingAgreementVariationRegulatorLedSavePayload {
+  return produce(payload, (draft) => {
+    const facilityIndex = draft.facilities?.findIndex((f) => f.facilityId === facilityId) ?? -1;
+    if (facilityIndex === -1) return;
+
+    draft.facilities[facilityIndex].facilityExtent = {
+      areActivitiesClaimed: form.value.areActivitiesClaimed,
+      manufacturingProcessFile: form.value.manufacturingProcessFile?.uuid ?? null,
+      processFlowFile: form.value.processFlowFile?.uuid ?? null,
+      annotatedSitePlansFile: form.value.annotatedSitePlansFile?.uuid ?? null,
+      eligibleProcessFile: form.value.eligibleProcessFile?.uuid ?? null,
+      activitiesDescriptionFile: form.value?.activitiesDescriptionFile?.uuid ?? null,
+    };
+  });
+}

@@ -1,13 +1,11 @@
 import { DestroyRef, InjectionToken, Provider } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 
 import { combineLatest, startWith } from 'rxjs';
 
-import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { normaliseNumber, underlyingAgreementQuery } from '@requests/common';
+import { BaselineEnergyDraftService, normaliseNumber } from '@requests/common';
 import { requireProductsValidator, uniqueFieldValidator } from '@shared/validators';
 
 import { ProductVariableEnergyConsumptionData } from 'cca-api';
@@ -29,22 +27,11 @@ export const ADD_PRODUCT_FORM = new InjectionToken<AddProductFormModel>('Baselin
 
 export const AddProductFormProvider: Provider = {
   provide: ADD_PRODUCT_FORM,
-  deps: [ActivatedRoute, FormBuilder, DestroyRef, RequestTaskStore],
-  useFactory: (
-    activatedRoute: ActivatedRoute,
-    fb: FormBuilder,
-    destroyRef: DestroyRef,
-    requestTaskStore: RequestTaskStore,
-  ) => {
-    const facilityId = activatedRoute.snapshot.params.facilityId;
-    const una = requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreement)();
-    const facilityIndex = una.facilities?.findIndex((facility) => facility.facilityId === facilityId) ?? -1;
-
-    const baselineEnergyConsumption = requestTaskStore.select(
-      underlyingAgreementQuery.selectFacilityBaselineEnergyConsumption(facilityIndex),
-    )();
-
-    const existingProducts = baselineEnergyConsumption?.variableEnergyConsumptionDataByProduct ?? [];
+  deps: [FormBuilder, DestroyRef, BaselineEnergyDraftService],
+  useFactory: (fb: FormBuilder, destroyRef: DestroyRef, draftService: BaselineEnergyDraftService) => {
+    // Read products from draft service
+    const draft = draftService.draftSignal();
+    const existingProducts = draft?.products ?? [];
 
     const productControls = existingProducts.length
       ? existingProducts.map((product) =>

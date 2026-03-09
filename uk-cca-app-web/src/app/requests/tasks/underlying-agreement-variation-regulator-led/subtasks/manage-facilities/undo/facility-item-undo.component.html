@@ -1,0 +1,16 @@
+@if (facility(); as facility) {
+  <div>
+    <netz-page-heading>
+      Are you sure you want to undo the exclusion of {{ facility.facilityDetails.name }} ({{ facility.facilityId }})?
+    </netz-page-heading>
+
+    <p>This will return the facility to an active status.</p>
+
+    <div class="govuk-button-group">
+      <button type="button" netzPendingButton (click)="onSubmit()" govukButton>Yes, undo the exclusion</button>
+    </div>
+  </div>
+}
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<a class="govuk-link" [routerLink]="['../../']"> Return to: Manage facilities list </a>

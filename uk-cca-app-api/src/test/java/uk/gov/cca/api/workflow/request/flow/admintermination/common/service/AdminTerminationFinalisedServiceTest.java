@@ -5,71 +5,44 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.account.domain.TargetUnitAccount;
-import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
-import uk.gov.cca.api.account.service.TargetUnitAccountUpdateService;
-import uk.gov.cca.api.facility.service.FacilityDataUpdateService;
-import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
-import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.admintermination.common.domain.AdminTerminationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionReasonDetails;
 import uk.gov.cca.api.workflow.request.flow.admintermination.finaldecision.domain.AdminTerminationFinalDecisionType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
-import uk.gov.netz.api.authorization.rules.domain.ResourceType;
-import uk.gov.netz.api.workflow.request.WorkflowService;
+import uk.gov.cca.api.workflow.request.flow.common.service.TerminateAccountAndOpenWorkflowsService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
-import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
 import uk.gov.netz.api.workflow.request.core.domain.RequestType;
 import uk.gov.netz.api.workflow.request.core.domain.constants.RequestStatuses;
-import uk.gov.netz.api.workflow.request.core.service.RequestQueryService;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AdminTerminationFinalisedServiceTest {
 
+	@InjectMocks
+    private AdminTerminationFinalisedService finalisedService;
+	
     @Mock
     private RequestService requestService;
     
-    @InjectMocks
-    private AdminTerminationFinalisedService finalisedService;
-
     @Mock
-    private TargetUnitAccountUpdateService targetUnitAccountUpdateService;
+    private TerminateAccountAndOpenWorkflowsService terminateAccountAndOpenWorkflowsService;
+
     
-    @Mock
-    private RequestQueryService requestQueryService;
-   
-    @Mock
-    private FacilityDataUpdateService facilityDataUpdateService;
-
-    @Mock
-    private WorkflowService workflowService;
-
-    @Mock
-    private UnderlyingAgreementService underlyingAgreementService;
-    
-    private static final String TERMINATE_REASON = "Workflow terminated by the system because the final decision is \"Terminate agreement\"";
-
-
     @Test
     void terminateAccountStatusAndWorkflows() {
         final String requestId = "requestId";
-        final Long accountId = 999L;
         final String regulator = "regulator";
         final String processInstanceId = "processInstanceId";
 
@@ -79,14 +52,6 @@ class AdminTerminationFinalisedServiceTest {
         final Map<UUID, String> attachments = Map.of(UUID.randomUUID(), "attachment");
         final CcaDecisionNotification ccaDecisionNotification = CcaDecisionNotification.builder()
                 .sectorUsers(Set.of("sector"))
-                .build();
-
-        String businessId = "ADS_53-T00004";
-
-        TargetUnitAccount account = TargetUnitAccount.builder()
-                .id(accountId)
-                .status(TargetUnitAccountStatus.LIVE)
-                .businessId(businessId)
                 .build();
 
         final Request request = Request.builder()
@@ -103,70 +68,15 @@ class AdminTerminationFinalisedServiceTest {
                         .build())
                 .status(RequestStatuses.IN_PROGRESS)
                 .build();
-        addResourcesToRequest(accountId, request);
-        account.setId(accountId);
 
         // Mock the requestService
         when(requestService.findRequestById(requestId)).thenReturn(request);
-
-        // Mock the requestQueryService to include the created request
-        Request anotherRequest = Request.builder()
-                .id("anotherRequestId")
-                .processInstanceId("anotherProcessInstanceId")
-                .payload(AdminTerminationRequestPayload.builder()
-                        .regulatorAssignee(regulator)
-                        .adminTerminationFinalDecisionReasonDetails(reasonDetails)
-                        .adminTerminationFinalDecisionAttachments(attachments)
-                        .decisionNotification(ccaDecisionNotification)
-                        .build())
-                .type(RequestType.builder().code("OTHER_TYPE").build())
-                .status(RequestStatuses.IN_PROGRESS)
-                .build();
-        addResourcesToRequest(accountId, anotherRequest);
-
-        // Facility Audit request
-        Request facilityAuditRequest = Request.builder()
-                .id("facilityAuditRequestId")
-                .processInstanceId("facilityAuditProcessInstanceId")
-                .payload(AdminTerminationRequestPayload.builder()
-                        .regulatorAssignee(regulator)
-                        .adminTerminationFinalDecisionReasonDetails(reasonDetails)
-                        .adminTerminationFinalDecisionAttachments(attachments)
-                        .decisionNotification(ccaDecisionNotification)
-                        .build())
-                .type(RequestType.builder().code(CcaRequestType.FACILITY_AUDIT).build())
-                .status(RequestStatuses.IN_PROGRESS)
-                .build();
-        addResourcesToRequest(accountId, facilityAuditRequest);
-
-        when(requestQueryService.findInProgressRequestsByAccount(accountId)).thenReturn(List.of(request, anotherRequest, facilityAuditRequest));
 
         // Invoke the method under test
         finalisedService.terminateAccountAndOpenWorkflows(requestId);
 
         // Verify the interactions
         verify(requestService, times(1)).findRequestById(requestId);
-        verify(targetUnitAccountUpdateService, times(1)).handleTargetUnitAccountTerminated(eq(accountId), any(LocalDateTime.class));
-        verify(underlyingAgreementService, times(1)).terminateActiveUnaDocuments(eq(accountId), any(LocalDateTime.class));
-        verify(workflowService, times(1)).deleteProcessInstance("anotherProcessInstanceId", TERMINATE_REASON);
-        verify(requestService, times(1)).addActionToRequest(eq(anotherRequest), any(), eq(CcaRequestActionType.REQUEST_TERMINATED), eq(regulator));
-
-        // Verifying that no action was taken on the ADMIN_TERMINATION request itself since it is filtered out
-        verify(requestService, never()).addActionToRequest(eq(request), any(), eq(CcaRequestActionType.REQUEST_TERMINATED), eq(regulator));
-        verify(workflowService, never()).deleteProcessInstance(processInstanceId, TERMINATE_REASON);
-
-        verify(facilityDataUpdateService, times(1)).terminateFacilities(eq(accountId), any(LocalDateTime.class));
-        verifyNoMoreInteractions(requestService, targetUnitAccountUpdateService, underlyingAgreementService, requestQueryService, workflowService);
-
+        verify(terminateAccountAndOpenWorkflowsService, times(1)).terminateAccountAndOpenWorkflows(eq(request), any(LocalDateTime.class), eq(regulator));
     }
-    
-    private void addResourcesToRequest(Long accountId, Request request) {
-		RequestResource accountResource = RequestResource.builder()
-				.resourceType(ResourceType.ACCOUNT)
-				.resourceId(accountId.toString())
-				.request(request)
-				.build();
-
-        request.getRequestResources().add(accountResource);
-	}
 }

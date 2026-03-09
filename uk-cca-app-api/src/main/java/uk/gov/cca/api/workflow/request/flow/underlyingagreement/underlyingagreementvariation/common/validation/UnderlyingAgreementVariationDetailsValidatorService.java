@@ -5,16 +5,16 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.DataValidator;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationBaseRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestTaskPayload;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public abstract class UnderlyingAgreementVariationDetailsValidatorService<T extends UnderlyingAgreementVariationRequestTaskPayload> {
+public abstract class UnderlyingAgreementVariationDetailsValidatorService<T extends UnderlyingAgreementVariationBaseRequestTaskPayload> {
     private final DataValidator<UnderlyingAgreementVariationDetails> validator;
 
     public abstract UnderlyingAgreementVariationPayload getUnderlyingAgreementPayload(T taskPayload);

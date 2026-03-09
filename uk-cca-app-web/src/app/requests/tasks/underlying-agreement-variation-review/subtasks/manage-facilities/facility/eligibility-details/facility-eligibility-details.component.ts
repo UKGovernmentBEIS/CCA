@@ -15,6 +15,9 @@ import {
   AgreementTypeEnum,
   areEntitiesIdentical,
   CaNameEnum,
+  FACILITY_ELIGIBILITY_DETAILS_FORM,
+  FacilityEligibilityDetailsFormProvider,
+  FacilityEligibilityFormModel,
   FacilityWizardStep,
   filterFieldsWithFalsyValues,
   isFacilityWizardCompleted,
@@ -33,13 +36,6 @@ import { EligibilityDetailsAndAuthorisation, UnderlyingAgreementVariationReviewS
 
 import { createSaveActionDTO, toUnderlyingAgreementVariationReviewSavePayload } from '../../../../transform';
 import { deleteFacilityDecision, resetDetermination } from '../../../../utils';
-// Import the file helper from our utils
-import {
-  FACILITY_ELIGIBILITY_DETAILS_FORM,
-  facilityEligibilityDetailsFormProvider,
-  FacilityEligibilityFormModel,
-} from './facility-eligibility-details-form.provider';
-
 @Component({
   selector: 'cca-facility-eligibility-details',
   templateUrl: './facility-eligibility-details.component.html',
@@ -54,7 +50,7 @@ import {
     FileInputComponent,
     RouterLink,
   ],
-  providers: [facilityEligibilityDetailsFormProvider],
+  providers: [FacilityEligibilityDetailsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityEligibilityDetailsComponent {

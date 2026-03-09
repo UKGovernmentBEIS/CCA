@@ -1,7 +1,6 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
@@ -32,8 +31,6 @@ public class UnderlyingAgreementFacilityCertificationTransferService {
     private final FacilityCertificationService facilityCertificationService;
     private final FacilityDataQueryService facilityDataQueryService;
     private final CertificationPeriodService certificationPeriodService;
-    @Value("${facility-certification.new-entrants-start-date}")
-    private String facilityCertificationNewEntrantsStartDate;
 
     @Transactional
     public void processFacilityCertificationsForNewFacilities(Set<FacilityBaseInfoDTO> createdFacilities,
@@ -55,12 +52,9 @@ public class UnderlyingAgreementFacilityCertificationTransferService {
         List<FacilityCertificationDTO> allCertifications =
                 this.copyFacilityCertifications(createdFacilities, changeOfOwnershipMap);
 
-        // TODO: Remove this condition on 01/01/2026
-        if(!LocalDate.now().isBefore(LocalDate.parse(facilityCertificationNewEntrantsStartDate))) {
-            allCertifications.addAll(
-            this.certifyNewEntrantFacilitiesForActiveCertificationPeriod(createdFacilities, newEntrantFacilityBusinessIds)
-            );
-        }
+        allCertifications.addAll(
+        this.certifyNewEntrantFacilitiesForActiveCertificationPeriod(createdFacilities, newEntrantFacilityBusinessIds)
+        );
 
         if (!allCertifications.isEmpty()) {
             facilityCertificationService.createFacilityCertifications(allCertifications);

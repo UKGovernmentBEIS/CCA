@@ -40,4 +40,9 @@ public class CcaRequestType {
 
     public static final String CCA2_EXTENSION_NOTICE_RUN = "CCA2_EXTENSION_NOTICE_RUN";
     public static final String CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING = "CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING";
+
+    public static final String CCA2_TERMINATION_RUN = "CCA2_TERMINATION_RUN";
+    public static final String CCA2_TERMINATION_ACCOUNT_PROCESSING = "CCA2_TERMINATION_ACCOUNT_PROCESSING";
+
+    public static final String NON_COMPLIANCE = "NON_COMPLIANCE";
 }

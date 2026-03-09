@@ -32,7 +32,7 @@ public class RequestTaskRecipientsService {
 
         // Get default recipients per task otherwise get from target unit account
         requestTaskDefaultNoticeRecipients.stream()
-                .filter(service -> service.getType().equals(taskType.getCode()))
+                .filter(service -> service.getTypes().contains(taskType.getCode()))
                 .findFirst().ifPresentOrElse(
                         service -> defaultNoticeRecipients.addAll(service.getRecipients(requestTask)),
                         () -> defaultNoticeRecipients.addAll(targetUnitAccountNoticeRecipients.getNoticeRecipients(accountId))

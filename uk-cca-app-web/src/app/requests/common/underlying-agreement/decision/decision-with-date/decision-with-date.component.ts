@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -27,14 +27,12 @@ import { underlyingAgreementQuery } from '../../+state';
     RadioComponent,
     TextareaComponent,
     RadioOptionComponent,
-    FormsModule,
     ReactiveFormsModule,
     MultipleFileInputComponent,
     ConditionalContentDirective,
     CheckboxComponent,
     CheckboxesComponent,
     DateInputComponent,
-    CheckboxesComponent,
     DetailsComponent,
   ],
   viewProviders: [existingControlContainer],

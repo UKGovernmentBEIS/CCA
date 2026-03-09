@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -18,7 +18,7 @@ import { MultipleFileInputComponent, WizardStepComponent } from '@shared/compone
 import { fileUtils, generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
-import { AuditTrackCorrectiveActionsSaveRequestTaskActionPayload, TargetUnitAccountInfoViewService } from 'cca-api';
+import { AuditTrackCorrectiveActionsSaveRequestTaskActionPayload, FacilityHeaderInfoDTO, TasksService } from 'cca-api';
 
 import { trackCorrectiveActionsQuery } from '../../../track-corrective-actions.selectors';
 import { createSaveRequestTaskActionProcessDTO, toSaveRequestTaskPayload } from '../../../transform';
@@ -52,7 +52,7 @@ export class TrackCorrectiveActionsDetailsComponent {
   private readonly router = inject(Router);
   private readonly tasksApiService = inject(TasksApiService);
   private readonly requestTaskStore = inject(RequestTaskStore);
-  private readonly targetUnitAccountInfoViewService = inject(TargetUnitAccountInfoViewService);
+  private readonly tasksService = inject(TasksService);
 
   private readonly taskId = this.activatedRoute.snapshot.params.taskId;
   protected readonly actionId = this.activatedRoute.snapshot.params.actionId;
@@ -60,10 +60,12 @@ export class TrackCorrectiveActionsDetailsComponent {
 
   protected readonly downloadUrl = generateDownloadUrl(this.taskId);
 
-  protected readonly targetUnitAccountDetails = toSignal(
-    this.targetUnitAccountInfoViewService.getTargetUnitAccountDetailsById(
-      this.requestTaskStore.select(requestTaskQuery.selectRequestInfo)()?.accountId,
-    ),
+  private readonly requestInfo = this.requestTaskStore.select(requestTaskQuery.selectRequestInfo);
+  private readonly resourceType = computed(() => this.requestInfo()?.resourceType);
+  private readonly resource = computed(() => this.requestInfo()?.resources?.[this.resourceType()]);
+
+  protected readonly facilityInfo: Signal<FacilityHeaderInfoDTO> = toSignal(
+    this.tasksService.getRequestTaskHeaderInfo(this.resourceType(), this.resource()),
   );
 
   protected readonly correctiveActionResponse = this.requestTaskStore.select(

@@ -4,11 +4,13 @@ import { UuidFilePair } from '@shared/components';
 
 import {
   BaselineData,
+  CompanyProfileDTO,
   Facility,
   TargetComposition,
   TargetPeriod5Details,
   UnderlyingAgreementReviewRequestTaskPayload,
   UnderlyingAgreementSubmitRequestTaskPayload,
+  UnderlyingAgreementVariationRegulatorLedSubmitRequestTaskPayload,
   UnderlyingAgreementVariationReviewRequestTaskPayload,
   UnderlyingAgreementVariationSubmitRequestTaskPayload,
 } from 'cca-api';
@@ -27,6 +29,9 @@ export type UNAReviewRequestTaskPayload = UnderlyingAgreementReviewRequestTaskPa
 
 export type UNAVariationRequestTaskPayload = UnderlyingAgreementVariationSubmitRequestTaskPayload;
 
+export type UNAVariationRegulatorLedRequestTaskPayload =
+  UnderlyingAgreementVariationRegulatorLedSubmitRequestTaskPayload;
+
 export type UNAVariationReviewRequestTaskPayload = UnderlyingAgreementVariationReviewRequestTaskPayload;
 
 export const UPLOAD_SECTION_ATTACHMENT_TYPE = {
@@ -34,6 +39,8 @@ export const UPLOAD_SECTION_ATTACHMENT_TYPE = {
   UNDERLYING_AGREEMENT_APPLICATION_REVIEW: 'UNDERLYING_AGREEMENT_UPLOAD_SECTION_ATTACHMENT',
   UNDERLYING_AGREEMENT_VARIATION_SUBMIT: 'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_SECTION_ATTACHMENT',
   UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW: 'UNDERLYING_AGREEMENT_VARIATION_UPLOAD_SECTION_ATTACHMENT',
+  UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMIT:
+    'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_UPLOAD_SECTION_ATTACHMENT',
 };
 
 export const UPLOAD_DECISION_ATTACHMENT_TYPE = {
@@ -63,6 +70,7 @@ export const REVIEW_TARGET_UNIT_DETAILS_SUBTASK = 'underlyingAgreementTargetUnit
 export const AUTHORISATION_ADDITIONAL_EVIDENCE_SUBTASK = 'authorisationAndAdditionalEvidence';
 export const PROVIDE_EVIDENCE_SUBTASK = 'underlyingAgreementActivationDetails';
 export const OVERALL_DECISION_SUBTASK = 'overallDecision';
+export const OPERATOR_ASSENT_DECISION_SUBTASK = 'operatorAssentDecision';
 export const CCA3_MIGRATION_PROVIDE_EVIDENCE_SUBTASK = 'activationDetails';
 
 export enum BaselineAndTargetPeriodsSubtasks {
@@ -117,6 +125,12 @@ export const DECISION_TO_SUBTASK_MAP = Object.fromEntries(
 
 export const staticVariationSections = [VARIATION_DETAILS_SUBTASK, ...nonFacilitySections];
 
+export const staticRegulatorLedVariationSections = [
+  VARIATION_DETAILS_SUBTASK,
+  ...nonFacilitySections,
+  OPERATOR_ASSENT_DECISION_SUBTASK,
+];
+
 export const staticVariationSectionsWithoutBaselineAndTargets = [
   VARIATION_DETAILS_SUBTASK,
   ...nonBaselineAndTargetsTasks,
@@ -142,6 +156,7 @@ export enum ManageFacilitiesWizardStep {
   DELETE_FACILITY = 'delete',
   EXCLUDE_FACILITY = 'exclude',
   UNDO_FACILITY = 'undo',
+  CHARGE_DATE = 'charge-date',
 }
 
 export enum FacilityWizardStep {
@@ -154,6 +169,7 @@ export enum FacilityWizardStep {
   BASELINE_DATA = 'baseline-data',
   BASELINE_ENERGY_CONSUMPTION = 'baseline-energy-consumption',
   TARGETS = 'targets',
+  PRODUCTS = 'products',
 }
 
 export enum BaseLineAndTargetsStep {
@@ -190,7 +206,19 @@ export type FacilityTimelineItemViewModel = {
   facilityId: string;
   status?: Facility['status'];
   decisionStatus?: TaskItemStatus | null;
+  chargeStartDate?: string;
 };
+
+export type CompanyNumberState = {
+  isCompanyRegistrationNumber: boolean;
+  companyRegistrationNumber: string;
+  registrationNumberMissingReason: string;
+};
+
+export interface CompanyRegistrationNumberSubmitEvent {
+  companyNumberState: CompanyNumberState;
+  companyProfile: CompanyProfileDTO | null;
+}
 
 export function toFacilityItemViewModel(facility: Facility): FacilityItemViewModel {
   return { facilityId: facility.facilityId, name: facility.facilityDetails.name, status: facility.status };

@@ -1,7 +1,15 @@
 package uk.gov.cca.api.web.controller.account;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,19 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import lombok.RequiredArgsConstructor;
-
-import uk.gov.cca.api.account.domain.dto.TargetUnitAccountHeaderInfoDTO;
-import uk.gov.cca.api.account.service.TargetUnitAccountQueryService;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
 import uk.gov.cca.api.web.controller.exception.ErrorResponse;
 import uk.gov.cca.api.web.orchestrator.account.dto.TargetUnitAccountDetailsResponseDTO;
@@ -38,11 +33,11 @@ import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.security.Authorized;
 import uk.gov.netz.api.security.AuthorizedRole;
 
+import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 import static uk.gov.cca.api.web.constants.SwaggerApiInfo.INTERNAL_SERVER_ERROR;
 import static uk.gov.cca.api.web.constants.SwaggerApiInfo.OK;
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.OPERATOR;
 import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
-import static uk.gov.cca.api.common.domain.CcaRoleTypeConstants.SECTOR_USER;
 
 
 @Validated
@@ -54,8 +49,6 @@ public class TargetUnitAccountViewController {
 
     private final TargetUnitAccountQueryServiceOrchestrator targetUnitAccountQueryServiceOrchestrator;
     private final AccountSearchServiceDelegator accountSearchServiceDelegator;
-    private final TargetUnitAccountQueryService targetUnitAccountQueryService;
-
 
     @GetMapping
     @Operation(summary = "Retrieves the current user associated accounts")
@@ -68,7 +61,7 @@ public class TargetUnitAccountViewController {
             @RequestParam(value = "page") @NotNull @Parameter(name = "page", description = "The page number starting from zero") @Min(value = 0, message = "{parameter.page.typeMismatch}") Integer page,
             @RequestParam(value = "size") @NotNull @Parameter(name = "size", description = "The page size") @Min(value = 1, message = "{parameter.pageSize.typeMismatch}") Integer pageSize
     ) {
-    	return new ResponseEntity<>(
+        return new ResponseEntity<>(
                 accountSearchServiceDelegator.getAccountsByUserAndSearchCriteria(
                         appUser,
                         AccountSearchCriteria.builder()
@@ -76,7 +69,7 @@ public class TargetUnitAccountViewController {
                                 .paging(PagingRequest.builder().pageNumber(page).pageSize(pageSize).build())
                                 .sortBy(SortBy.ACCOUNT_BUSINESS_ID)
                                 .direction(Direction.ASC)
-                                .build()), 
+                                .build()),
                 HttpStatus.OK);
     }
 
@@ -96,18 +89,6 @@ public class TargetUnitAccountViewController {
             @PathVariable("accountId") @Parameter(description = "The account id") Long accountId) {
 
         return new ResponseEntity<>(targetUnitAccountQueryServiceOrchestrator.getTargetUnitAccountDetailsById(accountId), HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}/header-info")
-    @Operation(summary = "Get the account header info for the provided account")
-    @ApiResponse(responseCode = "200", description = OK, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = TargetUnitAccountHeaderInfoDTO.class))})
-    @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
-    @Authorized(resourceId = "#accountId")
-    public ResponseEntity<TargetUnitAccountHeaderInfoDTO> getAccountHeaderInfoById(
-            @Parameter(description = "The account id") @PathVariable("id") Long accountId) {
-        return new ResponseEntity<>(targetUnitAccountQueryService.getTargetUnitAccountHeaderInfo(accountId), HttpStatus.OK);
     }
 }
 

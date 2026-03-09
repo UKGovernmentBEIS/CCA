@@ -1,5 +1,6 @@
 package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain;
 
+import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,8 @@ public class UnderlyingAgreementVariationRequestPayload extends CcaRequestPayloa
 
 	private SchemeVersion workflowSchemeVersion;
 
+	private String initiatorRoleType;
+
 	private Map<SchemeVersion, Integer> underlyingAgreementVersionMap;
 	
 	private AccountReferenceData accountReferenceData;
@@ -66,10 +69,18 @@ public class UnderlyingAgreementVariationRequestPayload extends CcaRequestPayloa
 	@Builder.Default
 	private Map<UUID, String> reviewAttachments = new HashMap<>();
 
+	@Builder.Default
+	private Map<String, LocalDate> regulatorLedFacilityChargeStartDateMap = new HashMap<>();
+
+	@Builder.Default
+	private Map<UUID, String> regulatorLedSubmitAttachments = new HashMap<>();
+
     @Builder.Default
     private Map<UUID, String> underlyingAgreementActivationAttachments = new HashMap<>();
 
 	private VariationDetermination determination;
+
+	private VariationRegulatorLedDetermination regulatorLedDetermination;
 	
 	private List<FileInfoDTO> officialNotices;
     

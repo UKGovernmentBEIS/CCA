@@ -3,12 +3,12 @@
 exports[`DeleteProductComponent should render the component with the correct content 1`] = `
 <cca-delete-product
   activatedRoute={[Function Object]}
+  draftService={[Function Object]}
   facility={[Function Function]}
   facilityId={[Function String]}
   productName={[Function String]}
   requestTaskStore={[Function _RequestTaskStore]}
   router={[Function _Router]}
-  tasksApiService={[Function Object]}
 >
   <netz-page-heading>
     <span
@@ -22,7 +22,7 @@ exports[`DeleteProductComponent should render the component with the correct con
        Are you sure you want to delete Product 1? 
     </h1>
   </netz-page-heading><p>
-    Your product and all its data will be deleted permanently
+     When you submit the "Baseline energy or carbon consumption" page, your product and all its data will be deleted permanently. 
   </p><govuk-warning-text
     assistivetext=""
   >

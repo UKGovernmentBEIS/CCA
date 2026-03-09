@@ -22,7 +22,6 @@ export const UNDERLYING_AGREEMENT_VARIATION_ROUTES: Routes = [
       },
       {
         path: 'manage-facilities',
-        canActivate: [isEditableSummaryRedirectGuard],
         loadChildren: () =>
           import('./subtasks/manage-facilities/manage-facilities.routes').then((r) => r.MANAGE_FACILITIES_ROUTES),
       },

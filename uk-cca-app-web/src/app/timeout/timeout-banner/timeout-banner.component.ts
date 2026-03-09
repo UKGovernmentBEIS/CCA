@@ -1,16 +1,13 @@
-import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   DOCUMENT,
+  effect,
   ElementRef,
   inject,
-  OnInit,
   Renderer2,
   viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { ButtonDirective } from '@netz/govuk-components';
@@ -22,23 +19,22 @@ import { TimeoutBannerService } from './timeout-banner.service';
   selector: 'cca-timeout-banner',
   templateUrl: './timeout-banner.component.html',
   styleUrl: './timeout-banner.component.css',
-  imports: [PageHeadingComponent, AsyncPipe, SecondsToMinutesPipe, ButtonDirective],
+  imports: [PageHeadingComponent, SecondsToMinutesPipe, ButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TimeoutBannerComponent implements OnInit {
+export class TimeoutBannerComponent {
   private readonly renderer = inject(Renderer2);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly document = inject<Document>(DOCUMENT);
-
   protected readonly timeoutBannerService = inject(TimeoutBannerService);
+  private readonly document = inject(DOCUMENT);
 
   readonly modal = viewChild<ElementRef<HTMLDialogElement>>('modal');
 
   private overlayClass = 'govuk-timeout-warning-overlay';
   private lastFocusedElement = null;
 
-  ngOnInit() {
-    this.timeoutBannerService.isVisible$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isVisible) => {
+  constructor() {
+    effect(() => {
+      const isVisible = this.timeoutBannerService.isVisible();
       isVisible ? this.showDialog() : this.hideDialog();
     });
   }

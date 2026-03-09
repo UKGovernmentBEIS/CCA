@@ -2,7 +2,17 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { UuidFilePair } from '@shared/components';
 
-import { FacilityBaselineData, FacilityBaselineEnergyConsumption } from 'cca-api';
+import {
+  FacilityBaselineData,
+  FacilityBaselineEnergyConsumption,
+  UnderlyingAgreementApplySavePayload,
+  UnderlyingAgreementVariationApplySavePayload,
+  UnderlyingAgreementVariationRegulatorLedSavePayload,
+  UnderlyingAgreementVariationReviewSavePayload,
+} from 'cca-api';
+
+import { FacilityTargetCompositionFormModel } from '../target-periods';
+import { FacilityTargetsFormModel } from './targets';
 
 export type FacilityBaselineDataFormModel = FormGroup<{
   isTwelveMonths: FormControl<FacilityBaselineData['isTwelveMonths']>;
@@ -23,3 +33,19 @@ export type FacilityBaselineEnergyConsumptionFormModel = FormGroup<{
   variableEnergyType: FormControl<FacilityBaselineEnergyConsumption['variableEnergyType']>;
   products: FormControl<FacilityBaselineEnergyConsumption['variableEnergyConsumptionDataByProduct']>;
 }>;
+
+export type FacilityTargetCompositionSubmitEvent = {
+  form: FacilityTargetCompositionFormModel;
+  facilityId: string;
+};
+
+export interface FacilityTargetsSubmitEvent {
+  form: FacilityTargetsFormModel;
+  facilityId: string;
+}
+
+export type FacilityPayload =
+  | UnderlyingAgreementApplySavePayload
+  | UnderlyingAgreementVariationApplySavePayload
+  | UnderlyingAgreementVariationReviewSavePayload
+  | UnderlyingAgreementVariationRegulatorLedSavePayload;

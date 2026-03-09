@@ -9,6 +9,7 @@ import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.CCA3_EXISTING_FACILITIES_MIGRATION_RUN_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_AUDIT_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_CERTIFICATION_RUN_REQUEST_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.NON_COMPLIANCE_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_DOWNLOAD_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_GENERATE_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_PROCESSING_PAYLOAD;
@@ -38,6 +39,7 @@ import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.comm
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.common.domain.FacilityAuditRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.facilitycertification.common.domain.FacilityCertificationRunRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateDataProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.common.domain.PerformanceDataGenerateRequestPayload;
@@ -91,7 +93,9 @@ public class RequestPayloadTypesProvider implements JsonSubTypesProvider {
         		new NamedType(FacilityAuditRequestPayload.class, FACILITY_AUDIT_REQUEST_PAYLOAD),
 
 				new NamedType(Cca2ExtensionNoticeRunRequestPayload.class, CCA2_EXTENSION_NOTICE_RUN_REQUEST_PAYLOAD),
-				new NamedType(Cca2ExtensionNoticeAccountProcessingRequestPayload.class, CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_PAYLOAD)
+				new NamedType(Cca2ExtensionNoticeAccountProcessingRequestPayload.class, CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_PAYLOAD),
+
+				new NamedType(NonComplianceRequestPayload.class, NON_COMPLIANCE_REQUEST_PAYLOAD)
 		);
 	}
 

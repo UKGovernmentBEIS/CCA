@@ -80,6 +80,13 @@ export const TIMELINE_ROUTES: Routes = [
           ),
       },
       {
+        path: 'underlying-agreement-variation-regulator-led-submitted',
+        loadChildren: () =>
+          import('./underlying-agreement-variation-regulator-led-submitted/underlying-agreement-variation-regulator-led-submitted.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_TIMELINE_ROUTES,
+          ),
+      },
+      {
         path: 'cca3-migration',
         loadChildren: () => import('./cca3-migration/cca3-migration.routes').then((r) => r.CCA3_MIGRATION_ROUTES),
       },

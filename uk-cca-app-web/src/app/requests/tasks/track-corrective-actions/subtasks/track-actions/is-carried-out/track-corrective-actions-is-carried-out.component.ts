@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -22,7 +22,8 @@ import { produce } from 'immer';
 import {
   AuditTrackCorrectiveActionsSaveRequestTaskActionPayload,
   CorrectiveActionFollowUpResponse,
-  TargetUnitAccountInfoViewService,
+  FacilityHeaderInfoDTO,
+  TasksService,
 } from 'cca-api';
 
 import { trackCorrectiveActionsQuery } from '../../../track-corrective-actions.selectors';
@@ -58,14 +59,16 @@ export class TrackCorrectiveActionsIsCarriedOutComponent {
   private readonly router = inject(Router);
   private readonly tasksApiService = inject(TasksApiService);
   private readonly requestTaskStore = inject(RequestTaskStore);
-  private readonly targetUnitAccountInfoViewService = inject(TargetUnitAccountInfoViewService);
+  private readonly tasksService = inject(TasksService);
 
   protected readonly actionId = this.activatedRoute.snapshot.params.actionId;
 
-  protected readonly targetUnitAccountDetails = toSignal(
-    this.targetUnitAccountInfoViewService.getTargetUnitAccountDetailsById(
-      this.requestTaskStore.select(requestTaskQuery.selectRequestInfo)()?.accountId,
-    ),
+  private readonly requestInfo = this.requestTaskStore.select(requestTaskQuery.selectRequestInfo);
+  private readonly resourceType = computed(() => this.requestInfo()?.resourceType);
+  private readonly resource = computed(() => this.requestInfo()?.resources?.[this.resourceType()]);
+
+  protected readonly facilityInfo: Signal<FacilityHeaderInfoDTO> = toSignal(
+    this.tasksService.getRequestTaskHeaderInfo(this.resourceType(), this.resource()),
   );
 
   protected readonly correctiveActionResponse = this.requestTaskStore.select(

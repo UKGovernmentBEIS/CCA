@@ -2,6 +2,7 @@ package uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagree
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.RequestTaskDefaultNoticeRecipients;
@@ -10,6 +11,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class UnderlyingAgreementVariationReviewDefaultNoticeRecipients implement
     }
 
     @Override
-    public String getType() {
-        return CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW;
+    public Set<String> getTypes() {
+        return Set.of(CcaRequestTaskType.UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REVIEW);
     }
 }

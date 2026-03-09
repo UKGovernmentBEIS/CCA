@@ -6,7 +6,7 @@ import { of, throwError } from 'rxjs';
 
 import { BasePage, mockClass } from '@netz/common/testing';
 import { AuthService } from '@shared/services';
-import { KeycloakService } from 'keycloak-angular';
+import { KeycloakService } from '@shared/services';
 
 import { ForgotPasswordService } from 'cca-api';
 

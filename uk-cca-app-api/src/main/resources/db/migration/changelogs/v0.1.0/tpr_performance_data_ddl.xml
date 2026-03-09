@@ -145,4 +145,20 @@
         </update>
     </changeSet>
 
+    <changeSet id="0_1_0_RENAME_tpr_account_performance_data_status_TABLE" author="P70383">
+        <comment>Rename to tpr_performance_data_account_status table</comment>
+        <renameSequence oldSequenceName="tpr_account_performance_data_status_seq" newSequenceName="tpr_performance_data_account_status_seq" />
+        <sql>
+            ALTER TABLE tpr_account_performance_data_status RENAME CONSTRAINT tpr_account_performance_data_status_pk TO tpr_performance_data_account_status_pk;
+        </sql>
+        <renameTable newTableName="tpr_performance_data_account_status" oldTableName="tpr_account_performance_data_status" />
+        <rollback>
+            <renameSequence oldSequenceName="tpr_performance_data_account_status_seq" newSequenceName="tpr_account_performance_data_status_seq" />
+            <sql>
+                ALTER TABLE tpr_performance_data_account_status RENAME CONSTRAINT tpr_performance_data_account_status_pk TO tpr_account_performance_data_status_pk;
+            </sql>
+            <renameTable newTableName="tpr_account_performance_data_status" oldTableName="tpr_performance_data_account_status" />
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

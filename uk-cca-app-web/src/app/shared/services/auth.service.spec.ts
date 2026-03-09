@@ -13,7 +13,7 @@ import {
   selectUserTerms,
 } from '@netz/common/auth';
 import { ActivatedRouteSnapshotStub, ActivatedRouteStub, mockClass } from '@netz/common/testing';
-import { KeycloakService } from 'keycloak-angular';
+import { KeycloakService } from '@shared/services';
 
 import {
   AuthoritiesService,
@@ -32,6 +32,7 @@ describe('AuthService', () => {
   let authStore: AuthStore;
   let activatedRoute: ActivatedRoute;
   let configStore: ConfigStore;
+
   const keycloakService = mockClass(KeycloakService);
 
   const user = {
@@ -113,7 +114,7 @@ describe('AuthService', () => {
 
   it('should update all user info when checkUser is called', async () => {
     expect(authStore.state).toEqual(initialState);
-    keycloakService.isLoggedIn.mockReturnValueOnce(false);
+    (keycloakService.isAuthenticated as any) = false;
 
     await expect(firstValueFrom(service.checkUser())).resolves.toBeNull();
 
@@ -124,7 +125,7 @@ describe('AuthService', () => {
     expect(authStore.select(selectUserProfile)()).toBeNull();
 
     authStore.setIsLoggedIn(null);
-    keycloakService.isLoggedIn.mockReturnValueOnce(true);
+    (keycloakService.isAuthenticated as any) = true;
 
     await expect(firstValueFrom(service.checkUser())).resolves.toBeNull();
 

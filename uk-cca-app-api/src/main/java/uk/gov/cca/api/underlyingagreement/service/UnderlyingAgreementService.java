@@ -13,7 +13,6 @@ import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementEntity;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductStatus;
 import uk.gov.cca.api.underlyingagreement.repository.UnderlyingAgreementDocumentRepository;
 import uk.gov.cca.api.underlyingagreement.repository.UnderlyingAgreementRepository;
-import uk.gov.cca.api.underlyingagreement.utils.UnderlyingAgreementCalculateSchemeVersionsUtil;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
 import uk.gov.netz.api.common.exception.BusinessException;
@@ -39,6 +38,7 @@ public class UnderlyingAgreementService {
     private final UnderlyingAgreementRepository underlyingAgreementRepository;
     private final UnderlyingAgreementDocumentRepository underlyingAgreementDocumentRepository;
     private final UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
+    private final UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
 
     /**
      * Submits a new UNA with new documents.
@@ -60,7 +60,7 @@ public class UnderlyingAgreementService {
         activateVariableEnergyProducts(container);
 
         // Create documents for applicable scheme version(s) and submit
-        Set<SchemeVersion> schemeVersions = UnderlyingAgreementCalculateSchemeVersionsUtil
+        Set<SchemeVersion> schemeVersions = underlyingAgreementSchemeVersionsHelperService
         		.calculateSchemeVersionsFromActiveFacilities(container.getUnderlyingAgreement().getFacilities());
         
         UnderlyingAgreementEntity entity = UnderlyingAgreementEntity.builder()
@@ -98,7 +98,7 @@ public class UnderlyingAgreementService {
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
 
         // Get versions of documents to be changed
-        Set<SchemeVersion> proposedActiveSchemeVersions = UnderlyingAgreementCalculateSchemeVersionsUtil
+        Set<SchemeVersion> proposedActiveSchemeVersions = underlyingAgreementSchemeVersionsHelperService
                 .calculateSchemeVersionsFromActiveFacilities(newContainer.getUnderlyingAgreement().getFacilities());
 
         // Persisted versions
@@ -143,21 +143,6 @@ public class UnderlyingAgreementService {
         updateUnderlyingAgreementDocument(document);
     }
 
-    @Transactional
-    public void migrateUnderlyingAgreementToScheme(UnderlyingAgreementContainer newContainer, Long accountId,
-                                                   UnderlyingAgreementValidationContext underlyingAgreementValidationContext) {
-        // Validate
-        underlyingAgreementValidatorService.validate(newContainer, underlyingAgreementValidationContext);
-
-        UnderlyingAgreementEntity entity = underlyingAgreementRepository.findByAccountId(accountId)
-                .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
-
-        // Update underlying agreement and create new scheme document
-        UnderlyingAgreementDocument unaDocument = UnderlyingAgreementDocument
-                .createUnderlyingAgreementDocument(underlyingAgreementValidationContext.getSchemeVersion());
-        entity.setUnderlyingAgreementContainer(newContainer);
-        entity.addUnderlyingAgreementDocument(unaDocument);
-    }
 
     /**
      * A Utility method that constructs the search keywords for the account
@@ -182,14 +167,26 @@ public class UnderlyingAgreementService {
 
     @Transactional
     public void terminateActiveUnaDocuments(Long accountId, LocalDateTime terminatedDate) {
-        UnderlyingAgreementEntity entity = underlyingAgreementRepository.findByAccountId(accountId)
-                .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
+        UnderlyingAgreementEntity entity = findUnderlyingAgreementEntity(accountId);
 
         entity.getUnderlyingAgreementDocuments()
                 .stream()
                 .filter(document -> ObjectUtils.isEmpty(document.getTerminatedDate()))
                 .forEach(document -> terminateUnderlyingAgreementDocument(document, terminatedDate));
     }
+    
+    public void terminateUnderlyingAgreementDocument(UnderlyingAgreementDocument document, LocalDateTime terminatedDate) {
+        if (document == null) {
+            throw new BusinessException(RESOURCE_NOT_FOUND);
+        }
+
+        document.setTerminatedDate(terminatedDate);
+    }
+
+	public UnderlyingAgreementEntity findUnderlyingAgreementEntity(Long accountId) {
+		return underlyingAgreementRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
+	}
 
     private void activateFacilities(UnderlyingAgreementContainer container) {
         container.getUnderlyingAgreement().getFacilities().forEach(f -> f.setStatus(LIVE));
@@ -210,13 +207,5 @@ public class UnderlyingAgreementService {
         document.setActivationDate(LocalDateTime.now());
         document.setConsolidationNumber(document.getConsolidationNumber() + 1);
         document.setTerminatedDate(null);
-    }
-
-    private void terminateUnderlyingAgreementDocument(UnderlyingAgreementDocument document, LocalDateTime terminatedDate) {
-        if (document == null) {
-            throw new BusinessException(RESOURCE_NOT_FOUND);
-        }
-
-        document.setTerminatedDate(terminatedDate);
     }
 }

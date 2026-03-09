@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.subsistencefees.domain.MoaType;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.common.domain.MoaReport;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.common.domain.SubsistenceFeesRunRequestMetadata;
-import uk.gov.netz.api.workflow.request.WorkflowService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
@@ -27,9 +26,6 @@ class MoaCompletedServiceTest {
 
 	@InjectMocks
     private MoaCompletedService moaCompletedService;
-
-	@Mock
-	private WorkflowService workflowService;
 	
 	@Mock
 	private RequestService requestService;
@@ -48,7 +44,7 @@ class MoaCompletedServiceTest {
     	
     	when(requestService.findRequestById(requestId)).thenReturn(request);
     	
-    	moaCompletedService.completed(requestId, sectorId, MoaType.SECTOR_MOA, moaRequestId, true, List.of());
+    	moaCompletedService.completed(requestId, sectorId, MoaType.SECTOR_MOA, moaRequestId, true, List.of(), false);
         verify(requestService, times(1)).findRequestById(requestId);
         assertThat(((SubsistenceFeesRunRequestMetadata)request.getMetadata()).getSectorsReports().get(sectorId).getSucceeded()).isTrue();
         assertThat(((SubsistenceFeesRunRequestMetadata)request.getMetadata()).getSectorsReports().get(sectorId).getIssueDate()).isNotNull();
@@ -67,12 +63,9 @@ class MoaCompletedServiceTest {
     			.build();
     	
     	when(requestService.findRequestById(requestId)).thenReturn(request);
-    	when(requestService.findRequestById(moaRequestId)).thenReturn(Request.builder().processInstanceId("123").build());
     	
-    	moaCompletedService.completed(requestId, accountId, MoaType.TARGET_UNIT_MOA, moaRequestId, false, List.of("errors"));
+    	moaCompletedService.completed(requestId, accountId, MoaType.TARGET_UNIT_MOA, moaRequestId, false, List.of("errors"), false);
         verify(requestService, times(1)).findRequestById(requestId);
-        verify(requestService, times(1)).findRequestById(moaRequestId);
-        verify(workflowService, times(1)).deleteProcessInstance("123", "Moa request failed");
         assertThat(((SubsistenceFeesRunRequestMetadata)request.getMetadata()).getAccountsReports().get(accountId).getSucceeded()).isFalse();
         assertThat(((SubsistenceFeesRunRequestMetadata)request.getMetadata()).getAccountsReports().get(accountId).getIssueDate()).isNull();
         assertThat(((SubsistenceFeesRunRequestMetadata)request.getMetadata()).getAccountsReports().get(accountId).getErrors()).isEqualTo(List.of("errors"));

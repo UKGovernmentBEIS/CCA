@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:design="http://flowable.org/design" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Flowable Design" exporterVersion="2025.1.03" design:palette="flowable-work-process-palette">
+  <message id="Message_0cd90hc" name="facilityCertificationAccountProcessingCompleted"></message>
+  <process id="PROCESS_CCA2_TERMINATION_ACCOUNT_PROCESSING" name="CCA2 Termination Account Processing" isExecutable="true">
+    <extensionElements>
+      <design:stencilid>BPMNDiagram</design:stencilid>
+      <design:creationdate>2026-01-21T08:19:26.430Z</design:creationdate>
+      <design:modificationdate>2026-01-21T08:26:33.180Z</design:modificationdate>
+    </extensionElements>
+    <serviceTask id="Activity_1e66bwi" name="account processing completed successfully" flowable:delegateExpression="#{cca2TerminationAccountProcessingMarkAsCompletedHandlerFlowable}">
+      <extensionElements>
+        <design:stencilid>ServiceTask</design:stencilid>
+        <design:stencilsuperid>Task</design:stencilsuperid>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="Activity_022wprc" name="Do process" flowable:async="true" flowable:delegateExpression="#{cca2TerminationAccountProcessingHandlerFlowable}">
+      <extensionElements>
+        <design:stencilid>ServiceTask</design:stencilid>
+        <design:stencilsuperid>Task</design:stencilsuperid>
+      </extensionElements>
+    </serviceTask>
+    <startEvent id="StartEvent_1" flowable:formFieldValidation="false">
+      <extensionElements>
+        <flowable:work-form-field-validation>false</flowable:work-form-field-validation>
+        <design:stencilid>StartNoneEvent</design:stencilid>
+      </extensionElements>
+    </startEvent>
+    <endEvent id="Event_0grjtyr" name="account processing completed">
+      <extensionElements>
+        <design:stencilid>EndNoneEvent</design:stencilid>
+        <design:display_ref_in_diagram>true</design:display_ref_in_diagram>
+      </extensionElements>
+    </endEvent>
+    <sequenceFlow id="Flow_06i99dp" sourceRef="Activity_1e66bwi" targetRef="Event_0grjtyr">
+      <extensionElements>
+        <design:stencilid>SequenceFlow</design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_1nz40up" sourceRef="Activity_022wprc" targetRef="Activity_1e66bwi">
+      <extensionElements>
+        <design:stencilid>SequenceFlow</design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_1hiqvh9" sourceRef="StartEvent_1" targetRef="Activity_022wprc">
+      <extensionElements>
+        <design:stencilid>SequenceFlow</design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_PROCESS_CCA2_TERMINATION_ACCOUNT_PROCESSING">
+    <bpmndi:BPMNPlane bpmnElement="PROCESS_CCA2_TERMINATION_ACCOUNT_PROCESSING" id="BPMNPlane_PROCESS_CCA2_TERMINATION_ACCOUNT_PROCESSING">
+      <bpmndi:BPMNShape bpmnElement="Activity_1e66bwi" id="BPMNShape_Activity_1e66bwi">
+        <omgdc:Bounds height="80.0" width="100.0" x="542.0" y="80.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Activity_022wprc" id="BPMNShape_Activity_022wprc">
+        <omgdc:Bounds height="80.0" width="100.0" x="322.0" y="80.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="StartEvent_1" id="BPMNShape_StartEvent_1">
+        <omgdc:Bounds height="30.0" width="30.0" x="155.0" y="105.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Event_0grjtyr" id="BPMNShape_Event_0grjtyr">
+        <omgdc:Bounds height="28.0" width="28.0" x="768.0" y="106.0"></omgdc:Bounds>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="18.0" width="162.0" x="712.0" y="150.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_06i99dp" id="BPMNEdge_Flow_06i99dp" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+        <omgdi:waypoint x="642.0" y="120.0"></omgdi:waypoint>
+        <omgdi:waypoint x="768.0" y="120.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_1nz40up" id="BPMNEdge_Flow_1nz40up" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="422.0" y="120.0"></omgdi:waypoint>
+        <omgdi:waypoint x="542.0" y="120.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_1hiqvh9" id="BPMNEdge_Flow_1hiqvh9" flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="185.0" y="120.0"></omgdi:waypoint>
+        <omgdi:waypoint x="322.0" y="120.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

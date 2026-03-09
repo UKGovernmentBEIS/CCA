@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:design="http://flowable.org/design" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.30.0" design:palette="flowable-work-process-palette">
+  <message id="Message_0cd90hc" name="targetUnitMoaCompleted"></message>
+  <process id="PROCESS_TARGET_UNIT_MOA" name="Target Unit MOA Process" isExecutable="true">
+    <extensionElements>
+      <design:stencilid>BPMNDiagram</design:stencilid>
+      <design:creationdate>2025-11-18T08:16:15.437Z</design:creationdate>
+      <design:modificationdate>2025-11-19T14:02:20.696Z</design:modificationdate>
+    </extensionElements>
+    <serviceTask id="Activity_1e66bwi" name="TU MOA generated successfully" flowable:delegateExpression="#{targetUnitMoaGenerateMarkAsCompletedHandlerFlowable}">
+      <extensionElements>
+        <design:stencilid>ServiceTask</design:stencilid>
+        <design:stencilsuperid>Task</design:stencilsuperid>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="Activity_1fw5ib6" name="Generate TU MOA failed" flowable:delegateExpression="#{targetUnitMoaGenerateMarkAsFailedHandlerFlowable}">
+      <extensionElements>
+        <design:stencilid>ServiceTask</design:stencilid>
+        <design:stencilsuperid>Task</design:stencilsuperid>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="Activity_022wprc" name="Generate TU MOA" flowable:async="true" flowable:delegateExpression="#{targetUnitMoaGenerateHandlerFlowable}">
+      <extensionElements>
+        <design:stencilid>ServiceTask</design:stencilid>
+        <design:stencilsuperid>Task</design:stencilsuperid>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="Activity_14mjrv4" name="TU MOA completed" flowable:delegateExpression="#{targetUnitMoaCompletedHandlerFlowable}">
+      <extensionElements>
+        <design:stencilid>ServiceTask</design:stencilid>
+        <design:stencilsuperid>Task</design:stencilsuperid>
+      </extensionElements>
+    </serviceTask>
+    <startEvent id="StartEvent_1" flowable:formFieldValidation="false">
+      <extensionElements>
+        <flowable:work-form-field-validation>false</flowable:work-form-field-validation>
+        <design:stencilid>StartNoneEvent</design:stencilid>
+      </extensionElements>
+    </startEvent>
+    <endEvent id="Event_0grjtyr">
+      <extensionElements>
+        <design:stencilid>EndNoneEvent</design:stencilid>
+        <design:display_ref_in_diagram>true</design:display_ref_in_diagram>
+      </extensionElements>
+    </endEvent>
+    <sequenceFlow id="Flow_12acu25" sourceRef="Activity_1e66bwi" targetRef="Activity_14mjrv4">
+      <extensionElements>
+        <design:stencilid>SequenceFlow</design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_0wu3tlh" sourceRef="Activity_1fw5ib6" targetRef="Activity_14mjrv4">
+      <extensionElements>
+        <design:stencilid>SequenceFlow</design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+    <boundaryEvent id="Event_15b3rt0" name="Generate TU MOA failed" attachedToRef="Activity_022wprc">
+      <extensionElements>
+        <design:stencilid>IntermediateErrorEventBoundary</design:stencilid>
+        <design:display_ref_in_diagram>true</design:display_ref_in_diagram>
+      </extensionElements>
+      <errorEventDefinition></errorEventDefinition>
+    </boundaryEvent>
+    <sequenceFlow id="Flow_1v46q7k" sourceRef="Event_15b3rt0" targetRef="Activity_1fw5ib6">
+      <extensionElements>
+        <design:stencilid>SequenceFlow</design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_1nz40up" sourceRef="Activity_022wprc" targetRef="Activity_1e66bwi">
+      <extensionElements>
+        <design:stencilid>SequenceFlow</design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="SequenceFlow_1" sourceRef="Activity_14mjrv4" targetRef="Event_0grjtyr">
+      <extensionElements>
+        <design:stencilid>SequenceFlow</design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_1hiqvh9" sourceRef="StartEvent_1" targetRef="Activity_022wprc">
+      <extensionElements>
+        <design:stencilid>SequenceFlow</design:stencilid>
+      </extensionElements>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_PROCESS_TARGET_UNIT_MOA">
+    <bpmndi:BPMNPlane bpmnElement="PROCESS_TARGET_UNIT_MOA" id="BPMNPlane_PROCESS_TARGET_UNIT_MOA">
+      <bpmndi:BPMNShape bpmnElement="Activity_1e66bwi" id="BPMNShape_Activity_1e66bwi">
+        <omgdc:Bounds height="80.0" width="100.0" x="550.0" y="80.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Activity_1fw5ib6" id="BPMNShape_Activity_1fw5ib6">
+        <omgdc:Bounds height="80.0" width="100.0" x="550.0" y="260.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Activity_022wprc" id="BPMNShape_Activity_022wprc">
+        <omgdc:Bounds height="80.0" width="100.0" x="310.0" y="80.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Activity_14mjrv4" id="BPMNShape_Activity_14mjrv4">
+        <omgdc:Bounds height="80.0" width="100.0" x="894.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="StartEvent_1" id="BPMNShape_StartEvent_1">
+        <omgdc:Bounds height="30.0" width="30.0" x="155.0" y="105.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Event_0grjtyr" id="BPMNShape_Event_0grjtyr">
+        <omgdc:Bounds height="28.0" width="28.0" x="1097.0" y="196.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Event_15b3rt0" id="BPMNShape_Event_15b3rt0">
+        <omgdc:Bounds height="30.0" width="30.0" x="345.0" y="145.0"></omgdc:Bounds>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="18.0" width="131.0" x="366.0" y="184.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_0wu3tlh" id="BPMNEdge_Flow_0wu3tlh" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="650.0" y="300.0"></omgdi:waypoint>
+        <omgdi:waypoint x="772.0" y="300.0"></omgdi:waypoint>
+        <omgdi:waypoint x="772.0" y="210.0"></omgdi:waypoint>
+        <omgdi:waypoint x="894.0" y="210.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_1v46q7k" id="BPMNEdge_Flow_1v46q7k" flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="360.0" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="360.0" y="300.0"></omgdi:waypoint>
+        <omgdi:waypoint x="550.0" y="300.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_1nz40up" id="BPMNEdge_Flow_1nz40up" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="410.0" y="120.0"></omgdi:waypoint>
+        <omgdi:waypoint x="550.0" y="120.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_12acu25" id="BPMNEdge_Flow_12acu25" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="650.0" y="120.0"></omgdi:waypoint>
+        <omgdi:waypoint x="772.0" y="120.0"></omgdi:waypoint>
+        <omgdi:waypoint x="772.0" y="210.0"></omgdi:waypoint>
+        <omgdi:waypoint x="894.0" y="210.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_1hiqvh9" id="BPMNEdge_Flow_1hiqvh9" flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0" flowable:targetDockerY="40.0">
+        <omgdi:waypoint x="185.0" y="120.0"></omgdi:waypoint>
+        <omgdi:waypoint x="310.0" y="120.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_1" id="BPMNEdge_SequenceFlow_1" flowable:sourceDockerX="50.0" flowable:sourceDockerY="40.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+        <omgdi:waypoint x="994.0" y="210.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1097.0" y="210.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -8,15 +8,18 @@ import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.ValidatorHelper;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.TargetPeriodDetailsValidatorService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.CCA2BaselineAndTargetsValidatorService;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.transform.UnderlyingAgreementVariationContainerMapper;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.EditedUnderlyingAgreementVariationApplicationReasonDataValidator;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.EditedUnderlyingAgreementVariationDetailsValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.EditedUnderlyingAgreementVariationTargetUnitDetailsValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.UnderlyingAgreementVariationReviewDecisionDataValidator;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.UnderlyingAgreementVariationSubmitFacilitiesContextValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSubmitRequestTaskPayload;
 import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
 import java.util.List;
@@ -26,7 +29,8 @@ import java.util.List;
 public class UnderlyingAgreementVariationPayloadValidatorService {
 
     private final UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
-    private final TargetPeriodDetailsValidatorService targetPeriodDetailsValidatorService;
+    private final CCA2BaselineAndTargetsValidatorService cca2BaselineAndTargetsValidatorService;
+    private final UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService underlyingAgreementCca2EndDateValidatorService;
     private final EditedUnderlyingAgreementVariationDetailsValidatorService underlyingAgreementVariationDetailsValidatorService;
     private final EditedUnderlyingAgreementVariationTargetUnitDetailsValidatorService underlyingAgreementVariationTargetUnitDetailsValidatorService;
     private final UnderlyingAgreementVariationSubmitFacilitiesContextValidatorService underlyingAgreementVariationSubmitFacilitiesContextValidatorService;
@@ -37,6 +41,7 @@ public class UnderlyingAgreementVariationPayloadValidatorService {
     public void validate(RequestTask requestTask) {
         UnderlyingAgreementVariationSubmitRequestTaskPayload taskPayload =
                 (UnderlyingAgreementVariationSubmitRequestTaskPayload) requestTask.getPayload();
+        Request request = requestTask.getRequest();
         UnderlyingAgreementContainer unaContainer = UNDERLYING_AGREEMENT_VARIATION_CONTAINER_MAPPER.toUnderlyingAgreementContainer(taskPayload);
         final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
                 .requestCreationDate(requestTask.getRequest().getCreationDate())
@@ -48,10 +53,13 @@ public class UnderlyingAgreementVariationPayloadValidatorService {
                 .getValidationResults(unaContainer, underlyingAgreementValidationContext);
 
         // Validate target period details
-        targetPeriodDetailsValidatorService.validate(unaContainer, taskPayload.getOriginalUnderlyingAgreementContainer());
+        cca2BaselineAndTargetsValidatorService.validate(unaContainer, taskPayload.getOriginalUnderlyingAgreementContainer(), request.getCreationDate().toLocalDate());
 
         // Validate facilities context for variation submission step
         validationResults.add(underlyingAgreementVariationSubmitFacilitiesContextValidatorService.validate(unaContainer));
+        
+        // Validate CCA2 end date related rules for facilities
+        validationResults.add(underlyingAgreementCca2EndDateValidatorService.validate(unaContainer.getUnderlyingAgreement().getFacilities()));
 
         // Validate previous facility ids and application reasons
         validationResults.add(underlyingAgreementVariationApplicationReasonDataValidator.validate(taskPayload));

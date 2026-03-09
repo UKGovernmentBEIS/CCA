@@ -23,6 +23,7 @@ import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -93,8 +94,8 @@ class RequestTaskRecipientsServiceTest {
         expected.add(sectorContact);
 
         when(requestTaskService.findTaskById(taskId)).thenReturn(requestTask);
-        when(underlyingAgreementReviewDefaultNoticeRecipients.getType())
-                .thenReturn(CcaRequestTaskType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW);
+        when(underlyingAgreementReviewDefaultNoticeRecipients.getTypes())
+                .thenReturn(Set.of(CcaRequestTaskType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW));
         when(underlyingAgreementReviewDefaultNoticeRecipients.getRecipients(requestTask)).thenReturn(expected);
 
         // Invoke
@@ -105,7 +106,7 @@ class RequestTaskRecipientsServiceTest {
         verify(requestTaskService, times(1))
                 .findTaskById(taskId);
         verify(underlyingAgreementReviewDefaultNoticeRecipients, times(1))
-                .getType();
+                .getTypes();
         verify(underlyingAgreementReviewDefaultNoticeRecipients, times(1))
                 .getRecipients(requestTask);
         verifyNoInteractions(targetUnitAccountNoticeRecipients);
@@ -147,8 +148,8 @@ class RequestTaskRecipientsServiceTest {
         );
 
         when(requestTaskService.findTaskById(taskId)).thenReturn(requestTask);
-        when(underlyingAgreementReviewDefaultNoticeRecipients.getType())
-                .thenReturn(CcaRequestTaskType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW);
+        when(underlyingAgreementReviewDefaultNoticeRecipients.getTypes())
+                .thenReturn(Set.of(CcaRequestTaskType.UNDERLYING_AGREEMENT_APPLICATION_REVIEW));
         when(targetUnitAccountNoticeRecipients.getNoticeRecipients(accountId))
                 .thenReturn(list);
 
@@ -160,7 +161,7 @@ class RequestTaskRecipientsServiceTest {
         verify(requestTaskService, times(1))
                 .findTaskById(taskId);
         verify(underlyingAgreementReviewDefaultNoticeRecipients, times(1))
-                .getType();
+                .getTypes();
         verify(underlyingAgreementReviewDefaultNoticeRecipients, never())
                 .getRecipients(any());
         verify(targetUnitAccountNoticeRecipients, times(1))

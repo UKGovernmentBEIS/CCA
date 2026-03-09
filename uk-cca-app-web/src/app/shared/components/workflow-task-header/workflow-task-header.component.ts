@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
-import { map, of, switchMap } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 
-import { TargetUnitAccountInfoViewService } from 'cca-api';
+import { FacilityHeaderInfoDTO, TargetUnitAccountHeaderInfoDTO, TasksService } from 'cca-api';
 
 @Component({
   selector: 'cca-workflow-task-header',
@@ -13,14 +13,18 @@ import { TargetUnitAccountInfoViewService } from 'cca-api';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowTaskHeaderComponent {
-  private readonly targetUnitAccountInfoViewService = inject(TargetUnitAccountInfoViewService);
+  private readonly tasksService = inject(TasksService);
   private readonly requestTaskStore = inject(RequestTaskStore);
 
-  protected readonly accountHeaderInfo = toSignal(
+  protected readonly headerInfo: Signal<TargetUnitAccountHeaderInfoDTO | FacilityHeaderInfoDTO> = toSignal(
     toObservable(this.requestTaskStore.select(requestTaskQuery.selectRequestInfo)).pipe(
-      map((requestInfo) => requestInfo?.accountId),
-      switchMap((accountId) =>
-        accountId ? this.targetUnitAccountInfoViewService.getAccountHeaderInfoById(accountId) : of(null),
+      switchMap((requestInfo) =>
+        requestInfo
+          ? this.tasksService.getRequestTaskHeaderInfo(
+              requestInfo?.resourceType,
+              requestInfo?.resources?.[requestInfo?.resourceType],
+            )
+          : of(null),
       ),
     ),
   );

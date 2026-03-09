@@ -15,6 +15,7 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementQueryService;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementSchemeVersionsHelperService;
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
@@ -62,6 +63,9 @@ class UnderlyingAgreementVariationActivatedGenerateDocumentsServiceTest {
 
     @Mock
     private UnderlyingAgreementQueryService underlyingAgreementQueryService;
+    
+    @Mock
+    private UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
 
     @Test
     void generateDocuments() {
@@ -125,6 +129,9 @@ class UnderlyingAgreementVariationActivatedGenerateDocumentsServiceTest {
         when(officialNoticeService.generateActivatedOfficialNotice(requestId))
                 .thenReturn(CompletableFuture.completedFuture(activatedNotice));
         when(underlyingAgreementQueryService.getUnderlyingAgreementByAccountId(accountId)).thenReturn(unaDto);
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3));
 
         // Invoke
         service.generateDocuments(requestId);
@@ -143,6 +150,9 @@ class UnderlyingAgreementVariationActivatedGenerateDocumentsServiceTest {
                 .saveFileDocumentUuid(1L, documentCca2Uuid.toString());
         verify(underlyingAgreementService, times(1))
                 .saveFileDocumentUuid(2L, documentCca3Uuid.toString());
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
+       
         verifyNoMoreInteractions(createDocumentService, officialNoticeService, underlyingAgreementService);
     }
 
@@ -206,6 +216,12 @@ class UnderlyingAgreementVariationActivatedGenerateDocumentsServiceTest {
         when(officialNoticeService.generateTerminationOfficialNotice(requestId, SchemeVersion.CCA_2))
                 .thenReturn(CompletableFuture.completedFuture(terminatedNotice));
         when(underlyingAgreementQueryService.getUnderlyingAgreementByAccountId(accountId)).thenReturn(unaDto);
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(SchemeVersion.CCA_3));
+        when(underlyingAgreementSchemeVersionsHelperService.calculateTerminatedSchemeVersionsFromFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(SchemeVersion.CCA_2));
 
         // Invoke
         service.generateDocuments(requestId);
@@ -221,6 +237,11 @@ class UnderlyingAgreementVariationActivatedGenerateDocumentsServiceTest {
         verify(underlyingAgreementQueryService, times(1)).getUnderlyingAgreementByAccountId(accountId);
         verify(underlyingAgreementService, times(1))
                 .saveFileDocumentUuid(2L, documentCca3Uuid.toString());
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).calculateTerminatedSchemeVersionsFromFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
+        
         verifyNoMoreInteractions(createDocumentService, officialNoticeService, underlyingAgreementService);
     }
 
@@ -262,6 +283,9 @@ class UnderlyingAgreementVariationActivatedGenerateDocumentsServiceTest {
         });
         when(officialNoticeService.generateActivatedOfficialNotice(requestId))
                 .thenReturn(CompletableFuture.completedFuture(activatedNotice));
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(SchemeVersion.CCA_3));
 
         // Invoke
         BusinessException be = assertThrows(BusinessException.class, () -> service.generateDocuments(requestId));
@@ -274,6 +298,9 @@ class UnderlyingAgreementVariationActivatedGenerateDocumentsServiceTest {
         verify(requestService, times(1)).findRequestById(requestId);
         verify(createDocumentService, times(1)).create(requestId, SchemeVersion.CCA_3);
         verify(officialNoticeService, times(1)).generateActivatedOfficialNotice(requestId);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
+        
         verifyNoMoreInteractions(createDocumentService, officialNoticeService);
         verifyNoInteractions(underlyingAgreementService, underlyingAgreementQueryService);
     }
@@ -316,6 +343,9 @@ class UnderlyingAgreementVariationActivatedGenerateDocumentsServiceTest {
         });
         when(officialNoticeService.generateActivatedOfficialNotice(requestId))
                 .thenReturn(CompletableFuture.completedFuture(activatedNotice));
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(SchemeVersion.CCA_3));
 
         // Invoke
         BusinessException be = assertThrows(BusinessException.class, () -> service.generateDocuments(requestId));
@@ -328,6 +358,9 @@ class UnderlyingAgreementVariationActivatedGenerateDocumentsServiceTest {
         verify(requestService, times(1)).findRequestById(requestId);
         verify(createDocumentService, times(1)).create(requestId, SchemeVersion.CCA_3);
         verify(officialNoticeService, times(1)).generateActivatedOfficialNotice(requestId);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
+        
         verifyNoMoreInteractions(createDocumentService, officialNoticeService);
         verifyNoInteractions(underlyingAgreementService, underlyingAgreementQueryService);
     }
@@ -370,6 +403,9 @@ class UnderlyingAgreementVariationActivatedGenerateDocumentsServiceTest {
         });
         when(officialNoticeService.generateActivatedOfficialNotice(requestId))
                 .thenReturn(CompletableFuture.completedFuture(activatedNotice));
+        when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities()))
+				.thenReturn(Set.of(SchemeVersion.CCA_3));
 
         // Invoke
         BusinessException be = assertThrows(BusinessException.class, () -> service.generateDocuments(requestId));
@@ -382,6 +418,9 @@ class UnderlyingAgreementVariationActivatedGenerateDocumentsServiceTest {
         verify(requestService, times(1)).findRequestById(requestId);
         verify(createDocumentService, times(1)).create(requestId, SchemeVersion.CCA_3);
         verify(officialNoticeService, times(1)).generateActivatedOfficialNotice(requestId);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).calculateSchemeVersionsFromActiveFacilities(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities());
+        
         verifyNoMoreInteractions(createDocumentService, officialNoticeService);
         verifyNoInteractions(underlyingAgreementService, underlyingAgreementQueryService);
     }

@@ -4,10 +4,11 @@ import { FormBuilder, FormControl } from '@angular/forms';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-import { underlyingAgreementQuery } from '@requests/common';
 import { textFieldValidators } from '@shared/validators';
 
 import { UnderlyingAgreementTargetUnitDetails } from 'cca-api';
+
+import { underlyingAgreementQuery } from '../+state/underlying-agreement.selectors';
 
 export type CompanyRegistrationNumberFormModel = {
   isCompanyRegistrationNumber: FormControl<UnderlyingAgreementTargetUnitDetails['isCompanyRegistrationNumber']>;

@@ -20,6 +20,7 @@ import uk.gov.cca.api.account.domain.dto.TargetUnitAccountHeaderInfoDTO;
 import uk.gov.cca.api.account.repository.TargetUnitAccountRepository;
 import uk.gov.cca.api.account.transform.AccountAddressMapper;
 import uk.gov.cca.api.account.transform.TargetUnitAccountMapper;
+import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
@@ -40,22 +41,22 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class TargetUnitAccountQueryServiceTest {
 
-	@InjectMocks
+    @InjectMocks
     private TargetUnitAccountQueryService service;
 
     @Mock
     private TargetUnitAccountRepository repository;
-    
-	private static final TargetUnitAccountMapper targetUnitAccountMapper = Mappers.getMapper(TargetUnitAccountMapper.class);
-	private static final AccountAddressMapper accountAddressMapper = Mappers.getMapper(AccountAddressMapper.class);
-    
-	@BeforeEach
+
+    private static final TargetUnitAccountMapper targetUnitAccountMapper = Mappers.getMapper(TargetUnitAccountMapper.class);
+    private static final AccountAddressMapper accountAddressMapper = Mappers.getMapper(AccountAddressMapper.class);
+
+    @BeforeEach
     void init() {
         ReflectionTestUtils.setField(service, "targetUnitAccountMapper", targetUnitAccountMapper);
         ReflectionTestUtils.setField(targetUnitAccountMapper, "accountAddressMapper", accountAddressMapper);
     }
-	
-	@Test
+
+    @Test
     void getAccountsByIds() {
         Long accountId = 1L;
         List<Long> accountIds = List.of(accountId);
@@ -180,7 +181,7 @@ class TargetUnitAccountQueryServiceTest {
 
         verify(repository).findAllIdsBySectorAssociationId(sectorAssociationId);
     }
-    
+
     @Test
     void getAccountName() {
         final Long accountId = 1L;
@@ -195,11 +196,11 @@ class TargetUnitAccountQueryServiceTest {
         assertEquals("Test Account", accountName);
         verify(repository).findById(accountId);
     }
-    
+
     @Test
     void getAccountName_NotFound() {
         final Long accountId = 1L;
-        
+
         when(repository.findById(accountId)).thenReturn(Optional.empty());
 
         BusinessException thrown = assertThrows(
@@ -243,7 +244,7 @@ class TargetUnitAccountQueryServiceTest {
     }
 
     @Test
-    void getTargetUnitHeaderInfoDTO() {
+    void getResourceHeaderInfo() {
         final Long accountId = 1L;
         final String businessId = "AIC/800544";
         final String name = "Test Account";
@@ -253,13 +254,17 @@ class TargetUnitAccountQueryServiceTest {
 
         when(repository.findById(accountId)).thenReturn(Optional.of(targetUnitAccount));
 
-        final TargetUnitAccountHeaderInfoDTO targetUnitAccountHeaderInfoDTO = service.getTargetUnitAccountHeaderInfo(accountId);
+        final TargetUnitAccountHeaderInfoDTO requestTaskHeaderInfo = service.getResourceHeaderInfo(String.valueOf(accountId));
 
-        assertEquals(name, targetUnitAccountHeaderInfoDTO.getName());
-        assertEquals(businessId, targetUnitAccountHeaderInfoDTO.getBusinessId());
-        assertEquals(status, targetUnitAccountHeaderInfoDTO.getStatus());
+        assertEquals(name, requestTaskHeaderInfo.getName());
+        assertEquals(businessId, requestTaskHeaderInfo.getBusinessId());
+        assertEquals(status, requestTaskHeaderInfo.getStatus());
         verify(repository).findById(accountId);
+    }
 
+    @Test
+    void getResourceType() {
+        assertThat(service.getResourceType()).isEqualTo(ResourceType.ACCOUNT);
     }
 
     @Test
@@ -293,29 +298,29 @@ class TargetUnitAccountQueryServiceTest {
 
         verify(repository).findTargetUnitAccountNoticeRecipientsByAccountId(accountId);
     }
-    
+
     @Test
     void findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedDuringActivatedYearOrTerminatedBetween() {
-    	Long sectorAssociationId = 1L;
-    	LocalDateTime acceptedDate = LocalDateTime.now();
-    	LocalDateTime terminatedDateFrom = LocalDateTime.now();
-		LocalDateTime terminatedDateTo = LocalDateTime.now();
-		
-		List<TargetUnitAccountBusinessInfoDTO> accounts = List.of(
-				TargetUnitAccountBusinessInfoDTO.builder().accountId(1L).businessId("1").build()
-				);
-		
-		when(repository.findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedBetween(
-				sectorAssociationId, acceptedDate, terminatedDateFrom, terminatedDateTo)).thenReturn(accounts);
-		
-		var result = service
-				.findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedDuringActivatedYearOrTerminatedBetween(
-						sectorAssociationId, acceptedDate, terminatedDateFrom, terminatedDateTo);
-		
-		assertThat(result).containsExactlyElementsOf(accounts);
-		
-		verify(repository, times(1)).findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedBetween(
-				sectorAssociationId, acceptedDate, terminatedDateFrom, terminatedDateTo);
+        Long sectorAssociationId = 1L;
+        LocalDateTime acceptedDate = LocalDateTime.now();
+        LocalDateTime terminatedDateFrom = LocalDateTime.now();
+        LocalDateTime terminatedDateTo = LocalDateTime.now();
+
+        List<TargetUnitAccountBusinessInfoDTO> accounts = List.of(
+                TargetUnitAccountBusinessInfoDTO.builder().accountId(1L).businessId("1").build()
+        );
+
+        when(repository.findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedBetween(
+                sectorAssociationId, acceptedDate, terminatedDateFrom, terminatedDateTo)).thenReturn(accounts);
+
+        var result = service
+                .findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedDuringActivatedYearOrTerminatedBetween(
+                        sectorAssociationId, acceptedDate, terminatedDateFrom, terminatedDateTo);
+
+        assertThat(result).containsExactlyElementsOf(accounts);
+
+        verify(repository, times(1)).findAllTargetUnitAccountsActivatedBeforeWithStatusActiveOrTerminatedBetween(
+                sectorAssociationId, acceptedDate, terminatedDateFrom, terminatedDateTo);
     }
 
     private TargetUnitAccount buildAccount(Long id, String accountName, String businessId, TargetUnitAccountStatus status, Long sectorAssociationId) {

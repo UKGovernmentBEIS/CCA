@@ -132,6 +132,13 @@ export const TASKS_ROUTES: Routes = [
           ),
       },
       {
+        path: 'underlying-agreement-variation-regulator-led',
+        loadChildren: () =>
+          import('./underlying-agreement-variation-regulator-led/underlying-agreement-variation-regulator-led.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_ROUTES,
+          ),
+      },
+      {
         path: 'underlying-agreement-variation-review',
         loadChildren: () =>
           import('./underlying-agreement-variation-review/underlying-agreement-variation-review.routes').then(
@@ -150,6 +157,20 @@ export const TASKS_ROUTES: Routes = [
         loadChildren: () =>
           import('./underlying-agreement-variation-wait-for-peer-review/underlying-agreement-variation-wait-for-peer-review.routes').then(
             (r) => r.UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW_ROUTES,
+          ),
+      },
+      {
+        path: 'underlying-agreement-variation-regulator-led-await-peer-review',
+        loadChildren: () =>
+          import('./underlying-agreement-variation-regulator-led-wait-for-peer-review/underlying-agreement-variation-regulator-led-wait-for-peer-review.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_WAIT_FOR_PEER_REVIEW_ROUTES,
+          ),
+      },
+      {
+        path: 'underlying-agreement-variation-regulator-led-peer-review',
+        loadChildren: () =>
+          import('./underlying-agreement-variation-regulator-led-peer-review/underlying-agreement-variation-regulator-led-peer-review.routes').then(
+            (r) => r.UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_PEER_REVIEW_ROUTES,
           ),
       },
       {

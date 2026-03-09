@@ -439,6 +439,131 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/mireports/user-defined/{id}:
+    get:
+      tags:
+        - Mi Reports User defined
+      summary: Retrieves the MI report user defined
+      operationId: getMiReportUserDefinedById
+      parameters:
+        - name: id
+          in: path
+          description: The mi Report User Defined Id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiReportUserDefinedDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Mi Reports User defined
+      summary: Update MI report user defined
+      operationId: updateMiReportUserDefined
+      parameters:
+        - name: id
+          in: path
+          description: The mi report user defined id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiReportUserDefinedDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: "Bad Request\t\n Error Code | Description \t\nMIREPORT1001 | The provided MI Report name already exists"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Mi Reports User defined
+      summary: Deletes the MI report user defined with specified id
+      operationId: deleteMiReportUserDefined
+      parameters:
+        - name: id
+          in: path
+          description: The MI report user defined id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/facilities/{facilityId}/audit/:
     get:
       tags:
@@ -2503,17 +2628,141 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/mireports:
+  /v1.0/mireports/user-defined:
+    get:
+      tags:
+        - Mi Reports User defined
+      summary: Retrieves the MI User defined Reports
+      operationId: getAllMiReportsUserDefined
+      parameters:
+        - name: page
+          in: query
+          description: The page number starting from zero
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            format: int32
+        - name: size
+          in: query
+          description: The page size
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiReportUserDefinedResults'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     post:
       tags:
-        - MiReports
-      summary: Generates the report identified by the provided report type
-      operationId: generateReport
+        - Mi Reports User defined
+      summary: Create MI report user defined
+      operationId: createMiReportUserDefined
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MiReportParams'
+              $ref: '#/components/schemas/MiReportUserDefinedDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: "Bad Request\t\n Error Code | Description \t\nMIREPORT1001 | The provided MI Report name already exists"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/mireports/user-defined/{id}/generate:
+    post:
+      tags:
+        - Mi Reports User defined
+      summary: Generate MI report user defined
+      operationId: generateMiReportUserDefined
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiReportUserDefinedResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/mireports/user-defined/generate-custom:
+    post:
+      tags:
+        - Mi Reports User defined
+      summary: Generates custom mi report user defined
+      operationId: generateCustomReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomMiReportQuery'
         required: true
       responses:
         '200':
@@ -2521,7 +2770,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MiReportResult'
+                $ref: '#/components/schemas/MiReportUserDefinedResult'
         '400':
           description: "Bad Request\t\n Error Code | Description \t\nMIREPORT1000 | Invalid MI Report type"
           content:
@@ -2534,17 +2783,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/mireports/custom:
+  /v1.0/mireports/system:
     post:
       tags:
-        - MiReports
-      summary: Generates custom report
-      operationId: generateCustomReport
+        - MiReports system
+      summary: Generates the system report identified by the provided report type
+      operationId: generateReport
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MiReportParams'
+              $ref: '#/components/schemas/MiReportSystemParams'
         required: true
       responses:
         '200':
@@ -2552,7 +2801,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MiReportResult'
+                $ref: '#/components/schemas/MiReportSystemResult'
         '400':
           description: "Bad Request\t\n Error Code | Description \t\nMIREPORT1000 | Invalid MI Report type"
           content:
@@ -4370,6 +4619,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/tasks/header-info/{resourceType}/{resourceId}:
+    get:
+      tags:
+        - Tasks
+      summary: Get the request task header info for the provided resource
+      operationId: getRequestTaskHeaderInfo
+      parameters:
+        - name: resourceType
+          in: path
+          description: The resource type associated with given resource id
+          required: true
+          schema:
+            type: string
+        - name: resourceId
+          in: path
+          description: The resource id for which the available workflows will be retrieved
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceHeaderInfoDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/tasks-assignment/{taskId}/candidate-assignees:
     get:
       tags:
@@ -4496,45 +4789,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileToken'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/target-unit-accounts/{id}/header-info:
-    get:
-      tags:
-        - Target Unit Account info view
-      summary: Get the account header info for the provided account
-      operationId: getAccountHeaderInfoById
-      parameters:
-        - name: id
-          in: path
-          description: The account id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TargetUnitAccountHeaderInfoDTO'
         '403':
           description: Forbidden
           content:
@@ -6090,10 +6344,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/mireports/types:
+  /v1.0/mireports/system/types:
     get:
       tags:
-        - MiReports
+        - MiReports system
       summary: Retrieves the mi report types for current user
       operationId: getCurrentUserMiReports
       responses:
@@ -6104,17 +6358,17 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MiReportSearchResult'
+                  $ref: '#/components/schemas/MiReportSystemSearchResult'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/mireports/request-task-types:
+  /v1.0/mireports/system/request-task-types:
     get:
       tags:
-        - MiReports
+        - MiReports system
       summary: Get regulator related request task types
       operationId: getRegulatorRequestTaskTypes
       responses:
@@ -6517,7 +6771,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FacilityDTO'
+                $ref: '#/components/schemas/FacilityBusinessIdDTO'
         '403':
           description: Forbidden
           content:
@@ -7761,6 +8015,15 @@ components:
         contentLength:
           type: integer
           format: int64
+        connection:
+          type: array
+          items:
+            type: string
+        ifModifiedSince:
+          type: integer
+          format: int64
+        contentType:
+          $ref: '#/components/schemas/MediaType'
         origin:
           type: string
         contentLanguage:
@@ -7811,15 +8074,6 @@ components:
           writeOnly: true
         cacheControl:
           type: string
-        connection:
-          type: array
-          items:
-            type: string
-        ifModifiedSince:
-          type: integer
-          format: int64
-        contentType:
-          $ref: '#/components/schemas/MediaType'
       additionalProperties:
         type: array
         items:
@@ -7895,6 +8149,20 @@ components:
           type: object
           additionalProperties:
             type: string
+    UnderlyingAgreementVariationRegulatorLedSaveRequestTaskActionPayload:
+      type: object
+      properties:
+        payloadType:
+          type: string
+        underlyingAgreement:
+          $ref: >-
+            #/components/schemas/UnderlyingAgreementVariationRegulatorLedSavePayload
+        determination:
+          $ref: '#/components/schemas/VariationRegulatorLedDetermination'
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
     RfiResponseSubmittedRequestActionPayload:
       required:
         - rfiQuestionPayload
@@ -7937,6 +8205,24 @@ components:
           type: boolean
         is3xxRedirection:
           type: boolean
+    MiReportUserDefinedDTO:
+      required:
+        - queryDefinition
+        - reportName
+      type: object
+      properties:
+        reportName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        description:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        queryDefinition:
+          maxLength: 10000
+          minLength: 0
+          type: string
     UnderlyingAgreementVariationReviewSavePayload:
       required:
         - authorisationAndAdditionalEvidence
@@ -7960,6 +8246,17 @@ components:
           $ref: '#/components/schemas/TargetPeriod6Details'
         authorisationAndAdditionalEvidence:
           $ref: '#/components/schemas/AuthorisationAndAdditionalEvidence'
+    Cca2TerminationAccountProcessingSubmittedRequestActionPayload:
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        excludedFacilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityBaseInfoDTO'
     HttpRange:
       type: object
     RoleDTO:
@@ -8094,6 +8391,11 @@ components:
           minLength: 0
           type: string
       description: The data to update the notification template
+    ResourceHeaderInfoDTO:
+      type: object
+      properties:
+        name:
+          type: string
     AccountNoteDto:
       type: object
       properties:
@@ -8415,6 +8717,49 @@ components:
           type: string
       discriminator:
         propertyName: payloadType
+    UnderlyingAgreementVariationRegulatorLedPeerReviewRequestTaskPayload:
+      type: object
+      properties:
+        payloadType:
+          type: string
+        sendEmailNotification:
+          type: boolean
+        workflowSchemeVersion:
+          type: string
+          enum:
+            - CCA_2
+            - CCA_3
+        accountReferenceData:
+          $ref: '#/components/schemas/AccountReferenceData'
+        originalUnderlyingAgreementContainer:
+          $ref: '#/components/schemas/UnderlyingAgreementContainer'
+        underlyingAgreement:
+          $ref: '#/components/schemas/UnderlyingAgreementVariationPayload'
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
+        underlyingAgreementAttachments:
+          type: object
+          additionalProperties:
+            type: string
+        facilityChargeStartDateMap:
+          type: object
+          additionalProperties:
+            type: string
+            format: date
+        determination:
+          $ref: '#/components/schemas/VariationRegulatorLedDetermination'
+        regulatorLedSubmitAttachments:
+          type: object
+          additionalProperties:
+            type: string
+        decision:
+          $ref: '#/components/schemas/CcaPeerReviewDecision'
+        peerReviewAttachments:
+          type: object
+          additionalProperties:
+            type: string
     RequestDetailsDTO:
       type: object
       properties:
@@ -8460,6 +8805,11 @@ components:
         totalEstimateChangeInCarbonEmissionsPercentage:
           type: string
           format: decimal
+    FacilityBusinessIdDTO:
+      type: object
+      properties:
+        facilityBusinessId:
+          type: string
     ErrorResponse:
       type: object
       properties:
@@ -8653,6 +9003,9 @@ components:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/MoaReport'
+        skippedSectors:
+          type: integer
+          format: int64
         sentInvoices:
           type: integer
           format: int64
@@ -9080,14 +9433,6 @@ components:
           format: decimal
         paymentRefNum:
           type: string
-    MiReportParams:
-      type: object
-      properties:
-        reportType:
-          type: string
-      description: The parameters based on which the report will be generated
-      discriminator:
-        propertyName: reportType
     UnderlyingAgreementVariationCompletedRequestActionPayload:
       required:
         - decisionNotification
@@ -9352,20 +9697,6 @@ components:
         submissionDate:
           type: string
           format: date-time
-    MiReportResult:
-      required:
-        - columnNames
-        - reportType
-      type: object
-      properties:
-        reportType:
-          type: string
-        columnNames:
-          type: array
-          items:
-            type: string
-      discriminator:
-        propertyName: reportType
     AccountContactInfoDTO:
       type: object
       properties:
@@ -9896,6 +10227,16 @@ components:
             - DISABLED
             - ACCEPTED
             - TEMP_DISABLED
+    MiReportUserDefinedResults:
+      type: object
+      properties:
+        queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/MiReportUserDefinedInfoDTO'
+        total:
+          type: integer
+          format: int64
     AuditReasonDetails:
       required:
         - comment
@@ -10599,17 +10940,8 @@ components:
           type: string
         type:
           type: string
-        competentAuthority:
+        resourceType:
           type: string
-          enum:
-            - ENGLAND
-            - NORTHERN_IRELAND
-            - OPRED
-            - SCOTLAND
-            - WALES
-        accountId:
-          type: integer
-          format: int64
         requestMetadata:
           $ref: '#/components/schemas/RequestMetadata'
         paymentCompleted:
@@ -10620,6 +10952,10 @@ components:
         creationDate:
           type: string
           format: date-time
+        resources:
+          type: object
+          additionalProperties:
+            type: string
     AuditDetails:
       required:
         - auditDate
@@ -10650,6 +10986,14 @@ components:
           items:
             type: string
             format: uuid
+    MiReportSystemSearchResult:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        miReportType:
+          type: string
     TargetUnitAccountDetails:
       type: object
       properties:
@@ -11202,6 +11546,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SurplusGainedDTO'
+    NonComplianceDetailsSubmitRequestTaskPayload:
+      required:
+        - nonComplianceDetails
+      type: object
+      properties:
+        payloadType:
+          type: string
+        sendEmailNotification:
+          type: boolean
+        nonComplianceDetails:
+          $ref: '#/components/schemas/NonComplianceDetails'
+        allRelevantWorkflows:
+          type: object
+          additionalProperties:
+            type: string
+        allRelevantFacilities:
+          type: object
+          additionalProperties:
+            type: string
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
     TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload:
       required:
         - details
@@ -11528,6 +11895,59 @@ components:
         failedAccounts:
           type: integer
           format: int64
+    UnderlyingAgreementVariationRegulatorLedSubmittedRequestActionPayload:
+      required:
+        - decisionNotification
+        - defaultContacts
+        - determination
+        - officialNotices
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        accountReferenceData:
+          $ref: '#/components/schemas/AccountReferenceData'
+        underlyingAgreement:
+          $ref: '#/components/schemas/UnderlyingAgreementVariationPayload'
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
+        underlyingAgreementAttachments:
+          type: object
+          additionalProperties:
+            type: string
+        facilityChargeStartDateMap:
+          type: object
+          additionalProperties:
+            type: string
+            format: date
+        determination:
+          $ref: '#/components/schemas/VariationRegulatorLedDetermination'
+        decisionNotification:
+          $ref: '#/components/schemas/CcaDecisionNotification'
+        defaultContacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/DefaultNoticeRecipient'
+        usersInfo:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RequestActionUserInfo'
+        underlyingAgreementDocuments:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FileInfoDTO'
+        officialNotices:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileInfoDTO'
+        regulatorLedSubmitAttachments:
+          type: object
+          additionalProperties:
+            type: string
     UnderlyingAgreementVariationActivationRequestTaskPayload:
       type: object
       properties:
@@ -11575,6 +11995,59 @@ components:
             $ref: '#/components/schemas/DefaultNoticeRecipient'
         officialNotice:
           $ref: '#/components/schemas/FileInfoDTO'
+    UnderlyingAgreementVariationRegulatorLedCompletedRequestActionPayload:
+      required:
+        - decisionNotification
+        - defaultContacts
+        - determination
+        - officialNotices
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        accountReferenceData:
+          $ref: '#/components/schemas/AccountReferenceData'
+        underlyingAgreement:
+          $ref: '#/components/schemas/UnderlyingAgreementVariationPayload'
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
+        underlyingAgreementAttachments:
+          type: object
+          additionalProperties:
+            type: string
+        facilityChargeStartDateMap:
+          type: object
+          additionalProperties:
+            type: string
+            format: date
+        determination:
+          $ref: '#/components/schemas/VariationRegulatorLedDetermination'
+        decisionNotification:
+          $ref: '#/components/schemas/CcaDecisionNotification'
+        defaultContacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/DefaultNoticeRecipient'
+        usersInfo:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RequestActionUserInfo'
+        underlyingAgreementDocuments:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FileInfoDTO'
+        officialNotices:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileInfoDTO'
+        regulatorLedSubmitAttachments:
+          type: object
+          additionalProperties:
+            type: string
     FacilityBaselineData:
       required:
         - baselineDate
@@ -11715,15 +12188,6 @@ components:
         total:
           type: integer
           format: int64
-    CustomMiReportParams:
-      required:
-        - sqlQuery
-      type: object
-      properties:
-        reportType:
-          type: string
-        sqlQuery:
-          type: string
     CcaItemDTO:
       type: object
       properties:
@@ -11819,6 +12283,20 @@ components:
           type: integer
           format: int32
       description: The search criteria
+    MiReportSystemResult:
+      required:
+        - columnNames
+        - reportType
+      type: object
+      properties:
+        reportType:
+          type: string
+        columnNames:
+          type: array
+          items:
+            type: string
+      discriminator:
+        propertyName: reportType
     RequestDetailsSearchResults:
       type: object
       properties:
@@ -12358,6 +12836,43 @@ components:
             - CANCELLED
             - TERMINATED
             - REJECTED
+    UnderlyingAgreementVariationRegulatorLedSubmitRequestTaskPayload:
+      type: object
+      properties:
+        payloadType:
+          type: string
+        sendEmailNotification:
+          type: boolean
+        workflowSchemeVersion:
+          type: string
+          enum:
+            - CCA_2
+            - CCA_3
+        accountReferenceData:
+          $ref: '#/components/schemas/AccountReferenceData'
+        originalUnderlyingAgreementContainer:
+          $ref: '#/components/schemas/UnderlyingAgreementContainer'
+        underlyingAgreement:
+          $ref: '#/components/schemas/UnderlyingAgreementVariationPayload'
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
+        underlyingAgreementAttachments:
+          type: object
+          additionalProperties:
+            type: string
+        facilityChargeStartDateMap:
+          type: object
+          additionalProperties:
+            type: string
+            format: date
+        determination:
+          $ref: '#/components/schemas/VariationRegulatorLedDetermination'
+        regulatorLedSubmitAttachments:
+          type: object
+          additionalProperties:
+            type: string
     TP6BuyOutCalculatedAccountProcessingSubmittedRequestActionPayload:
       required:
         - buyOutCalculatedDetails
@@ -12763,6 +13278,19 @@ components:
           maxLength: 255
           minLength: 0
           type: string
+    MiReportUserDefinedResult:
+      type: object
+      properties:
+        columnNames:
+          type: array
+          items:
+            type: string
+        results:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: object
     RegulatorRolePermissionsDTO:
       type: object
       properties:
@@ -13022,21 +13550,27 @@ components:
             enum:
               - AMEND_OPERATOR_OR_ORGANISATION_NAME
               - AMEND_OPERATOR_OR_ORGANISATION_TARGET_UNIT_ADDRESS
-              - AMEND_RESPONSIBLE_PERSON_PERSONAL_DETAILS
+              - AMEND_OPERATOR_OR_ORGANISATION_COMPANY_NUMBER
               - AMEND_ONE_OR_MORE_FACILITIES_NAME
               - ADD_ONE_OR_MORE_FACILITIES_TO_AGREEMENT
               - REMOVE_ONE_OR_MORE_FACILITIES_FROM_AGREEMENT
+              - AMEND_ONE_OR_MORE_FACILITIES_UK_ETS
+              - AMEND_ONE_OR_MORE_IMPROVEMENT_TARGETS
+              - UNEXPECTED_POWER_SUPPLY_DISRUPTION_DURING_TARGET_PERIOD
+              - THROUGHPUT_DROPPING_MORE_THAN_10_PERCENT_DURING_TARGET_PERIOD
+              - AMEND_RESPONSIBLE_PERSON_PERSONAL_DETAILS
+              - AMEND_EVIDENCE_DEFINING_EXTENT_OF_FACILITY_ELIGIBILITY
               - AMEND_70_PERCENT_RULE_EVALUATION
               - STRUCTURAL_CHANGE
               - REVIEW_OF_70_PERCENT_RULE
               - ERROR_DISCOVERY
-              - ADDITION_OR_REMOVAL_ONE_OR_MORE_FACILITIES_FROM_AGREEMENT
               - REPLACING_ESTIMATED_WITH_ACTUAL_VALUES
-              - UNEXPECTED_POWER_SUPPLY_DISRUPTION_DURING_TARGET_PERIOD
-              - THROUGHPUT_DROPPING_MORE_THAN_10_PERCENT_DURING_TARGET_PERIOD
+              - AMEND_FACILITY_BASE_YEAR_CHANGE_ALLOCATION
+              - AMEND_FACILITY_BASE_YEAR_ADD_NEW_PRODUCTS
+              - ANY_CHANGES_NOT_COVERED
+              - ADDITION_OR_REMOVAL_ONE_OR_MORE_FACILITIES_FROM_AGREEMENT
               - CHANGE_BETWEEN_RELATIVE_AND_NOVEM_TARGET_TYPES
               - CHANGE_THROUGHPUT_UNIT
-              - ANY_CHANGES_NOT_COVERED
     FacilityTargets:
       required:
         - improvements
@@ -13243,6 +13777,16 @@ components:
         targetUnitMoasCount:
           type: integer
           format: int64
+    FacilityBaseInfoDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        facilityBusinessId:
+          type: string
+        siteName:
+          type: string
     UnderlyingAgreementVariationSaveReviewGroupDecisionRequestTaskActionPayload:
       required:
         - decision
@@ -13363,6 +13907,50 @@ components:
                 #/components/schemas/BuyOutSurplusTransactionAmountChangedHistoryPayload
             - $ref: >-
                 #/components/schemas/BuyOutSurplusTransactionPaymentStatusChangedHistoryPayload
+    NonComplianceDetails:
+      required:
+        - isEnforcementResponseNoticeRequired
+        - nonComplianceType
+      type: object
+      properties:
+        nonComplianceType:
+          type: string
+          enum:
+            - FAILURE_TO_PROVIDE_TPR
+            - FAILURE_TO_PROVIDE_PR
+            - FAILURE_TO_PROVIDE_OTHER_INFO
+            - FAILURE_TO_NOTIFY_OF_AN_ERROR
+            - FAILURE_TO_NOTIFY_FACILITY_NO_LONGER_ELIGIBLE
+            - FAILURE_TO_NOTIFY_OTHER_REQUIREMENT_UNA
+            - INACCURATE_TPR_INFO
+            - INACCURATE_PR_INFO
+            - INACCURATE_OTHER_INFO
+        nonCompliantDate:
+          type: string
+          format: date
+        compliantDate:
+          type: string
+          format: date
+        comment:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        relevantWorkflows:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        relevantFacilities:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowFacilityDTO'
+        isEnforcementResponseNoticeRequired:
+          type: boolean
+        explanation:
+          maxLength: 10000
+          minLength: 0
+          type: string
     SurplusGainedDTO:
       type: object
       properties:
@@ -13475,14 +14063,6 @@ components:
           items:
             type: string
             format: uuid
-    MiReportSearchResult:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int32
-        miReportType:
-          type: string
     RequestTaskItemDTO:
       type: object
       properties:
@@ -13754,6 +14334,22 @@ components:
         evidenceFile:
           type: string
           format: uuid
+    MiReportUserDefinedInfoDTO:
+      required:
+        - reportName
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        reportName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        description:
+          maxLength: 10000
+          minLength: 0
+          type: string
     SubsistenceFeesMoaFacilitySearchResultInfoDTO:
       type: object
       properties:
@@ -13775,6 +14371,18 @@ components:
           format: date
         hasHistory:
           type: boolean
+    WorkflowFacilityDTO:
+      required:
+        - facilityBusinessId
+        - isHistorical
+      type: object
+      properties:
+        facilityBusinessId:
+          maxLength: 255
+          minLength: 0
+          type: string
+        isHistorical:
+          type: boolean
     SectorAssociationInfoDTO:
       type: object
       properties:
@@ -13791,9 +14399,7 @@ components:
       required:
         - decisionNotification
         - defaultContacts
-        - determination
         - officialNotice
-        - underlyingAgreement
         - underlyingAgreementActivationDetails
         - underlyingAgreementDocuments
       type: object
@@ -13804,12 +14410,6 @@ components:
           type: string
         accountReferenceData:
           $ref: '#/components/schemas/AccountReferenceData'
-        underlyingAgreement:
-          $ref: '#/components/schemas/UnderlyingAgreementPayload'
-        underlyingAgreementAttachments:
-          type: object
-          additionalProperties:
-            type: string
         decisionNotification:
           $ref: '#/components/schemas/CcaDecisionNotification'
         defaultContacts:
@@ -13822,24 +14422,6 @@ components:
             $ref: '#/components/schemas/RequestActionUserInfo'
         officialNotice:
           $ref: '#/components/schemas/FileInfoDTO'
-        determination:
-          $ref: '#/components/schemas/Determination'
-        reviewSectionsCompleted:
-          type: object
-          additionalProperties:
-            type: string
-        reviewGroupDecisions:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UnderlyingAgreementReviewDecision'
-        facilitiesReviewGroupDecisions:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UnderlyingAgreementFacilityReviewDecision'
-        reviewAttachments:
-          type: object
-          additionalProperties:
-            type: string
         underlyingAgreementDocuments:
           type: object
           additionalProperties:
@@ -13967,7 +14549,6 @@ components:
       required:
         - decisionNotification
         - defaultContacts
-        - determination
         - officialNotices
         - underlyingAgreementActivationDetails
         - underlyingAgreementDocuments
@@ -13979,16 +14560,6 @@ components:
           type: string
         accountReferenceData:
           $ref: '#/components/schemas/AccountReferenceData'
-        underlyingAgreement:
-          $ref: '#/components/schemas/UnderlyingAgreementVariationPayload'
-        sectionsCompleted:
-          type: object
-          additionalProperties:
-            type: string
-        underlyingAgreementAttachments:
-          type: object
-          additionalProperties:
-            type: string
         decisionNotification:
           $ref: '#/components/schemas/CcaDecisionNotification'
         defaultContacts:
@@ -14003,25 +14574,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FileInfoDTO'
-        determination:
-          $ref: '#/components/schemas/VariationDetermination'
-        reviewSectionsCompleted:
-          type: object
-          additionalProperties:
-            type: string
-        reviewGroupDecisions:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/UnderlyingAgreementReviewDecision'
-        facilitiesReviewGroupDecisions:
-          type: object
-          additionalProperties:
-            $ref: >-
-              #/components/schemas/UnderlyingAgreementVariationFacilityReviewDecision
-        reviewAttachments:
-          type: object
-          additionalProperties:
-            type: string
         underlyingAgreementDocuments:
           type: object
           additionalProperties:
@@ -14201,11 +14753,6 @@ components:
           type: object
           additionalProperties:
             type: string
-    FacilityDTO:
-      type: object
-      properties:
-        facilityBusinessId:
-          type: string
     UnderlyingAgreementSaveReviewGroupDecisionRequestTaskActionPayload:
       required:
         - decision
@@ -14864,6 +15411,18 @@ components:
           type: object
           additionalProperties:
             type: string
+    FacilityHeaderInfoDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        businessId:
+          type: string
+        status:
+          type: string
+          enum:
+            - LIVE
+            - INACTIVE
     UpdateTargetUnitAccountResponsiblePersonDTO:
       type: object
       properties:
@@ -14951,6 +15510,23 @@ components:
           type: string
         payload:
           $ref: '#/components/schemas/TargetUnitAccountPayload'
+    VariationRegulatorLedDetermination:
+      required:
+        - variationImpactsAgreement
+      type: object
+      properties:
+        variationImpactsAgreement:
+          type: boolean
+        additionalInformation:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        files:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uuid
     Targets:
       required:
         - improvement
@@ -15246,6 +15822,34 @@ components:
             - DISABLED
             - ACCEPTED
             - TEMP_DISABLED
+    UnderlyingAgreementVariationRegulatorLedSavePayload:
+      required:
+        - authorisationAndAdditionalEvidence
+        - facilities
+        - underlyingAgreementTargetUnitDetails
+        - underlyingAgreementVariationDetails
+      type: object
+      properties:
+        underlyingAgreementTargetUnitDetails:
+          $ref: '#/components/schemas/UnderlyingAgreementTargetUnitDetails'
+        underlyingAgreementVariationDetails:
+          $ref: '#/components/schemas/UnderlyingAgreementVariationDetails'
+        facilities:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Facility'
+        facilityChargeStartDateMap:
+          type: object
+          additionalProperties:
+            type: string
+            format: date
+        targetPeriod5Details:
+          $ref: '#/components/schemas/TargetPeriod5Details'
+        targetPeriod6Details:
+          $ref: '#/components/schemas/TargetPeriod6Details'
+        authorisationAndAdditionalEvidence:
+          $ref: '#/components/schemas/AuthorisationAndAdditionalEvidence'
     TermsDTO:
       required:
         - url
@@ -15758,6 +16362,14 @@ components:
           type: object
           additionalProperties:
             $ref: '#/components/schemas/AuditCorrectiveActionResponse'
+    MiReportSystemParams:
+      type: object
+      properties:
+        reportType:
+          type: string
+      description: The parameters based on which the report will be generated
+      discriminator:
+        propertyName: reportType
     SubsectorAssociationSchemeDTO:
       required:
         - targetSet
@@ -15911,6 +16523,14 @@ components:
             - TEMP_DISABLED
         userId:
           type: string
+    CustomMiReportQuery:
+      required:
+        - sqlQuery
+      type: object
+      properties:
+        sqlQuery:
+          type: string
+      description: The custom sql query
     NotificationTemplateInfoDTO:
       type: object
       properties:

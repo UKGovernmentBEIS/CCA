@@ -14,10 +14,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import uk.gov.cca.api.account.domain.AccountAddress;
+import uk.gov.cca.api.account.domain.CcaEmissionTradingScheme;
+import uk.gov.cca.api.account.domain.FinancialIndependenceStatus;
+import uk.gov.cca.api.account.domain.TargetUnitAccount;
+import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
+import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
+import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.FacilityAddress;
 import uk.gov.cca.api.facility.domain.FacilityData;
 import uk.gov.netz.api.common.AbstractContainerBaseTest;
+import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,6 +50,50 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
 
     @BeforeEach
     void setUp() {
+    	AccountAddress addr1 = AccountAddress.builder()
+                .line1("123 Test Street")
+                .city("Test City")
+                .postcode("12345")
+                .country("Test Country")
+                .build();
+            entityManager.persist(addr1);
+
+        AccountAddress addr2 = AccountAddress.builder()
+                .line1("456 Test Avenue")
+                .city("Another City")
+                .postcode("67890")
+                .country("Another Country")
+                .build();
+            entityManager.persist(addr2);
+            
+    	TargetUnitAccount account1 = TargetUnitAccount.builder()
+    			.id(1L)
+    			.businessId("businessId")
+    			.name("name")
+    			.status(TargetUnitAccountStatus.LIVE)
+    			.emissionTradingScheme(CcaEmissionTradingScheme.DUMMY_EMISSION_TRADING_SCHEME)
+    			.competentAuthority(CompetentAuthorityEnum.ENGLAND)
+    			.operatorType(TargetUnitAccountOperatorType.LIMITED_COMPANY)
+                .sectorAssociationId(1L)
+                .address(addr1)
+                .financialIndependenceStatus(FinancialIndependenceStatus.NON_FINANCIALLY_INDEPENDENT)
+    			.build();
+    	entityManager.persist(account1);
+    	
+    	TargetUnitAccount account2 = TargetUnitAccount.builder()
+    			.id(100L)
+    			.businessId("businessId2")
+    			.name("name2")
+    			.status(TargetUnitAccountStatus.LIVE)
+    			.emissionTradingScheme(CcaEmissionTradingScheme.DUMMY_EMISSION_TRADING_SCHEME)
+    			.competentAuthority(CompetentAuthorityEnum.ENGLAND)
+    			.operatorType(TargetUnitAccountOperatorType.LIMITED_COMPANY)
+    			.financialIndependenceStatus(FinancialIndependenceStatus.NON_FINANCIALLY_INDEPENDENT)
+                .sectorAssociationId(1L)
+                .address(addr2)
+    			.build();
+    	entityManager.persist(account2);
+    	
         FacilityAddress address1 = FacilityAddress.builder()
                 .line1("123 Test Street")
                 .city("Test City")
@@ -64,6 +117,14 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
                 .country("Third Country")
                 .build();
         entityManager.persist(address3);
+        
+        FacilityAddress address4 = FacilityAddress.builder()
+                .line1("789 Test Road")
+                .city("Third City")
+                .postcode("54321")
+                .country("Third Country")
+                .build();
+        entityManager.persist(address4);
 
         final FacilityData facility1 = FacilityData.builder()
                 .facilityBusinessId("ADS_1-F00014")
@@ -95,6 +156,16 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
                 .createdDate(LocalDateTime.of(2023, 8, 1, 12, 0))
                 .build();
         entityManager.persist(facility3);
+        
+        final FacilityData facility4 = FacilityData.builder()
+                .facilityBusinessId("ADS_1-F00017")
+                .accountId(100L)
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3))
+                .siteName("terminal3")
+                .address(address4)
+                .createdDate(LocalDateTime.of(2023, 8, 1, 12, 0))
+                .build();
+        entityManager.persist(facility4);
 
         flushAndClear();
     }
@@ -159,6 +230,24 @@ class FacilityDataRepositoryIT extends AbstractContainerBaseTest {
         assertThat(facilityDataOptional.get().getClosedDate()).isNull();
         assertThat(facilityDataOptional.get().getParticipatingSchemeVersions())
                 .isEqualTo(Set.of(SchemeVersion.CCA_2));
+    }
+    
+    @Test
+    void findLiveAccountsWithAtLeastOneFacilityForSchemeVersionOnly() {
+
+    	List<TargetUnitAccountBusinessInfoDTO> accounts = repository.findLiveAccountsWithAtLeastOneFacilityForSchemeVersionOnly(SchemeVersion.CCA_2.name());
+
+        assertThat(accounts).hasSize(1);
+        assertThat(accounts.get(0).getAccountId()).isEqualTo(1L);
+    }
+
+    @Test
+    void findAllByAccountId() {
+
+        List<FacilityData> facilityDataList = repository.findAllByAccountId(1L);
+
+        assertThat(facilityDataList).hasSize(2);
+        assertThat(facilityDataList.getFirst().getAccountId()).isEqualTo(1L);
     }
 
     @AfterEach

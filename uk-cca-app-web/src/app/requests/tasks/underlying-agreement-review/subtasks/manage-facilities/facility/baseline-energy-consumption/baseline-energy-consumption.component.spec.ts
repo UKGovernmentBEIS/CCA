@@ -9,7 +9,12 @@ import { of } from 'rxjs';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { MockType } from '@netz/common/testing';
-import { TasksApiService, underlyingAgreementQuery, underlyingAgreementReviewQuery } from '@requests/common';
+import {
+  BaselineEnergyDraftService,
+  TasksApiService,
+  underlyingAgreementQuery,
+  underlyingAgreementReviewQuery,
+} from '@requests/common';
 
 import { BaselineEnergyConsumptionComponent } from './baseline-energy-consumption.component';
 import { FACILITY_BASELINE_ENERGY_CONSUMPTION_FORM } from './baseline-energy-consumption-form.provider';
@@ -26,10 +31,26 @@ describe('BaselineEnergyConsumptionComponent', () => {
   let fixture: ComponentFixture<BaselineEnergyConsumptionComponent>;
   let store: RequestTaskStore;
   let tasksApiService: MockType<TasksApiService>;
+  let draftService: MockType<BaselineEnergyDraftService>;
 
   beforeEach(() => {
     tasksApiService = {
       saveRequestTaskAction: jest.fn().mockReturnValue(of(mockRequestTaskPayload)),
+    };
+
+    draftService = {
+      initializeFromStore: jest.fn(),
+      draftSignal: jest.fn().mockReturnValue({
+        totalFixedEnergy: '100.1234567',
+        hasVariableEnergy: true,
+        variableEnergyType: 'TOTALS',
+        products: [],
+      }) as any,
+      saveFormSnapshot: jest.fn(),
+      setProducts: jest.fn(),
+      removeProduct: jest.fn(),
+      updateTotalFixedEnergy: jest.fn(),
+      clear: jest.fn(),
     };
 
     const formBuilder = new FormBuilder();
@@ -57,6 +78,7 @@ describe('BaselineEnergyConsumptionComponent', () => {
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: TasksApiService, useValue: tasksApiService },
+        { provide: BaselineEnergyDraftService, useValue: draftService },
         { provide: FACILITY_BASELINE_ENERGY_CONSUMPTION_FORM, useValue: testForm },
       ],
     }).compileComponents();

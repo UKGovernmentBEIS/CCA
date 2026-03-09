@@ -1,18 +1,32 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { EMPTY } from 'rxjs';
+
+import { catchBadRequest, ErrorCodes } from '@error/business-errors';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { ButtonDirective, WarningTextComponent } from '@netz/govuk-components';
-import { TasksApiService } from '@requests/common';
+import { ButtonDirective, ErrorSummaryComponent, WarningTextComponent } from '@netz/govuk-components';
+import {
+  API_ERROR_FORM,
+  ApiErrorFormModel,
+  ApiErrorFormProvider,
+  setApiErrors,
+  TasksApiService,
+} from '@requests/common';
 
 import { createSubmitActionDTO } from '../../transform';
 
 @Component({
   selector: 'cca-una-variation-submit-action',
   template: `
+    @if (isErrorSummaryDisplayed()) {
+      <govuk-error-summary [form]="errorForm" />
+    }
+
     <netz-page-heading size="xl">Send variation application to regulator</netz-page-heading>
 
     <govuk-warning-text assistiveText="">
@@ -33,11 +47,14 @@ import { createSubmitActionDTO } from '../../transform';
   `,
   imports: [
     ButtonDirective,
+    ErrorSummaryComponent,
     PageHeadingComponent,
     PendingButtonDirective,
+    ReactiveFormsModule,
     WarningTextComponent,
     ReturnToTaskOrActionPageComponent,
   ],
+  providers: [ApiErrorFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VariationSubmitActionComponent {
@@ -46,12 +63,22 @@ export class VariationSubmitActionComponent {
   private readonly tasksApiService = inject(TasksApiService);
   private readonly store = inject(RequestTaskStore);
 
+  protected readonly errorForm = inject<ApiErrorFormModel>(API_ERROR_FORM);
+  protected readonly isErrorSummaryDisplayed = signal(false);
+
   submit() {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
     const dto = createSubmitActionDTO(requestTaskId);
 
     this.tasksApiService
       .saveRequestTaskAction(dto)
+      .pipe(
+        catchBadRequest(ErrorCodes.UNAV1001, (res) => {
+          setApiErrors(this.errorForm, res);
+          this.isErrorSummaryDisplayed.set(true);
+          return EMPTY;
+        }),
+      )
       .subscribe(() => this.router.navigate(['confirmation'], { relativeTo: this.activatedRoute, replaceUrl: true }));
   }
 }

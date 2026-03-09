@@ -5,6 +5,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { CheckboxComponent, CheckboxesComponent, TextInputComponent } from '@netz/govuk-components';
 import {
+  FACILITY_CONTACT_DETAILS_FORM,
+  FacilityContactDetailsFormProvider,
+  FacilityContactFormModel,
   FacilityWizardStep,
   isFacilityWizardCompleted,
   OVERALL_DECISION_SUBTASK,
@@ -20,11 +23,6 @@ import { UnderlyingAgreementApplySavePayload, UnderlyingAgreementReviewRequestTa
 
 import { createSaveActionDTO, toUnderlyingAgreementSaveReviewPayload } from '../../../../transform';
 import { resetDetermination } from '../../../../utils';
-import {
-  FACILITY_CONTACT_DETAILS_FORM,
-  facilityContactDetailsFormProvider,
-  FacilityContactFormModel,
-} from './facility-contact-details-form.provider';
 
 @Component({
   selector: 'cca-facility-contact-details',
@@ -39,7 +37,7 @@ import {
     PhoneInputComponent,
     RouterLink,
   ],
-  providers: [facilityContactDetailsFormProvider],
+  providers: [FacilityContactDetailsFormProvider],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FacilityContactDetailsComponent {

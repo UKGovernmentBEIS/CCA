@@ -10,8 +10,8 @@ import uk.gov.cca.api.common.utils.ConcurrencyUtils;
 import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDTO;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementQueryService;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementSchemeVersionsHelperService;
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
-import uk.gov.cca.api.underlyingagreement.utils.UnderlyingAgreementCalculateSchemeVersionsUtil;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.service.UnderlyingAgreementVariationCreateDocumentService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.service.UnderlyingAgreementVariationOfficialNoticeService;
@@ -41,6 +41,7 @@ public class UnderlyingAgreementVariationActivatedGenerateDocumentsService {
     private final UnderlyingAgreementQueryService underlyingAgreementQueryService;
     private final UnderlyingAgreementVariationCreateDocumentService underlyingAgreementVariationCreateDocumentService;
     private final UnderlyingAgreementVariationOfficialNoticeService underlyingAgreementVariationOfficialNoticeService;
+    private final UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
 
     @Transactional
     public void generateDocuments(String requestId) {
@@ -54,7 +55,7 @@ public class UnderlyingAgreementVariationActivatedGenerateDocumentsService {
             final Set<Facility> facilities = requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities();
 
             // Get versions of documents to be generated from proposed
-            Set<SchemeVersion> activeSchemeVersions = UnderlyingAgreementCalculateSchemeVersionsUtil
+            Set<SchemeVersion> activeSchemeVersions = underlyingAgreementSchemeVersionsHelperService
                     .calculateSchemeVersionsFromActiveFacilities(facilities);
             activeSchemeVersions.forEach(version -> underlyingAgreementDocumentFutureMap.put(version,
                     underlyingAgreementVariationCreateDocumentService.create(requestId, version)));
@@ -64,7 +65,7 @@ public class UnderlyingAgreementVariationActivatedGenerateDocumentsService {
                     .generateActivatedOfficialNotice(requestId));
 
             // Find terminated documents from facilities
-            Set<SchemeVersion> terminatedVersions = UnderlyingAgreementCalculateSchemeVersionsUtil
+            Set<SchemeVersion> terminatedVersions = underlyingAgreementSchemeVersionsHelperService
                     .calculateTerminatedSchemeVersionsFromFacilities(facilities);
             terminatedVersions.forEach(version ->
                     officialNoticeFutureList.add(underlyingAgreementVariationOfficialNoticeService

@@ -13,7 +13,7 @@ import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.service.FacilityDataUpdateService;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
-import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
+import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementSchemeService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType;
@@ -54,7 +54,7 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingActivatedServiceTest {
     private RequestService requestService;
 
     @Mock
-    private UnderlyingAgreementService underlyingAgreementService;
+    private UnderlyingAgreementSchemeService underlyingAgreementSchemeService;
 
     @Mock
     private FacilityDataUpdateService facilityDataUpdateService;
@@ -126,7 +126,7 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingActivatedServiceTest {
 
         // Verify
         verify(requestService, times(1)).findRequestById(requestId);
-        verify(underlyingAgreementService, times(1))
+        verify(underlyingAgreementSchemeService, times(1))
                 .migrateUnderlyingAgreementToScheme(underlyingAgreementContainer, accountId, context);
         verify(facilityDataUpdateService, times(1))
                 .updateFacilitiesDataParticipatingScheme(Set.of("facility1"), SchemeVersion.CCA_3);

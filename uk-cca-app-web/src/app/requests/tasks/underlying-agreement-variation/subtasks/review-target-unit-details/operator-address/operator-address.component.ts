@@ -5,8 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import {
-  areEntitiesIdentical,
-  filterFieldsWithFalsyValues,
   isTargetUnitDetailsWizardCompleted,
   OPERATOR_ADDRESS_FORM,
   OperatorAddressFormProvider,
@@ -19,7 +17,10 @@ import { AccountAddressInputComponent, WizardStepComponent } from '@shared/compo
 import { AccountAddressFormModel } from '@shared/components';
 import { produce } from 'immer';
 
-import { UnderlyingAgreementVariationSubmitRequestTaskPayload } from 'cca-api';
+import {
+  UnderlyingAgreementVariationApplySavePayload,
+  UnderlyingAgreementVariationSubmitRequestTaskPayload,
+} from 'cca-api';
 
 import { createRequestTaskActionProcessDTO, toUnderlyingAgreementVariationSavePayload } from '../../../transform';
 import { extractReviewProps } from '../../../utils';
@@ -58,11 +59,7 @@ export default class OperatorAddressComponent {
     )() as UnderlyingAgreementVariationSubmitRequestTaskPayload;
 
     const actionPayload = toUnderlyingAgreementVariationSavePayload(payload);
-
-    // Update the operator address with form data
-    const updatedPayload = produce(actionPayload, (draft) => {
-      draft.underlyingAgreementTargetUnitDetails.operatorAddress = this.form.getRawValue();
-    });
+    const updatedPayload = updateOperatorAddress(actionPayload, this.form);
 
     const currentSectionsCompleted = this.store.select(underlyingAgreementQuery.selectSectionsCompleted)() || {};
 
@@ -78,19 +75,21 @@ export default class OperatorAddressComponent {
       .saveRequestTaskAction(dto)
       .subscribe((payload: UnderlyingAgreementVariationSubmitRequestTaskPayload) => {
         const tuDetails = payload.underlyingAgreement.underlyingAgreementTargetUnitDetails;
-        const completed = isTargetUnitDetailsWizardCompleted(tuDetails);
 
-        const isSameAddress = areEntitiesIdentical(
-          filterFieldsWithFalsyValues(tuDetails.operatorAddress),
-          filterFieldsWithFalsyValues(tuDetails.responsiblePersonDetails.address),
-        );
-
-        const path =
-          completed && isSameAddress
-            ? '../check-your-answers'
-            : `../${ReviewTargetUnitDetailsWizardStep.RESPONSIBLE_PERSON}`;
+        const path = isTargetUnitDetailsWizardCompleted(tuDetails)
+          ? '../check-your-answers'
+          : `../${ReviewTargetUnitDetailsWizardStep.RESPONSIBLE_PERSON}`;
 
         this.router.navigate([path], { relativeTo: this.route });
       });
   }
+}
+
+function updateOperatorAddress(
+  payload: UnderlyingAgreementVariationApplySavePayload,
+  form: FormGroup<AccountAddressFormModel>,
+): UnderlyingAgreementVariationApplySavePayload {
+  return produce(payload, (draft) => {
+    draft.underlyingAgreementTargetUnitDetails.operatorAddress = form.getRawValue();
+  });
 }

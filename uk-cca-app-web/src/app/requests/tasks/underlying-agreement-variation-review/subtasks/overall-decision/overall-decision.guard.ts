@@ -7,6 +7,7 @@ import {
   OverallDecisionWizardStep,
   TaskItemStatus,
   underlyingAgreementReviewQuery,
+  underlyingAgreementVariationReviewQuery,
 } from '@requests/common';
 
 import { reviewSectionsCompleted } from '../../utils';
@@ -23,8 +24,16 @@ export const canActivateVariationOverallDecision: CanActivateFn = (route: Activa
 
   if (!statusPending) return createUrlTreeFromSnapshot(route, ['summary']);
 
-  const determination = store.select(underlyingAgreementReviewQuery.selectDetermination)();
-  return !determination?.type
-    ? createUrlTreeFromSnapshot(route, [OverallDecisionWizardStep.AVAILABLE_ACTIONS])
-    : createUrlTreeFromSnapshot(route, ['check-your-answers']);
+  const determination = store.select(underlyingAgreementVariationReviewQuery.selectDetermination)();
+  if (!determination?.type) return createUrlTreeFromSnapshot(route, [OverallDecisionWizardStep.AVAILABLE_ACTIONS]);
+
+  if (determination.type === 'REJECTED' && !determination.reason) {
+    return createUrlTreeFromSnapshot(route, [OverallDecisionWizardStep.EXPLANATION]);
+  }
+
+  if (determination.type === 'ACCEPTED' && typeof determination.variationImpactsAgreement !== 'boolean') {
+    return createUrlTreeFromSnapshot(route, [OverallDecisionWizardStep.ADDITIONAL_INFO]);
+  }
+
+  return createUrlTreeFromSnapshot(route, ['check-your-answers']);
 };

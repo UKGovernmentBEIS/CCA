@@ -11,12 +11,14 @@ import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.TP6B
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.TP6SurplusCalculatedAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.run.domain.BuyOutSurplusRunCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca2extensionnotice.processing.domain.Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.cca2termination.processing.domain.Cca2TerminationAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivatedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerReviewDecisionSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaGeneratedRequestActionPayload;
@@ -30,6 +32,8 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivatedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationAcceptedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRegulatorLedSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.regulatorledsubmit.domain.UnderlyingAgreementVariationRegulatorLedCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationRejectedRequestActionPayload;
 import uk.gov.netz.api.common.config.jackson.JsonSubTypesProvider;
@@ -37,7 +41,6 @@ import uk.gov.netz.api.common.config.jackson.JsonSubTypesProvider;
 import java.util.List;
 
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.*;
-
 
 @Component
 public class RequestActionPayloadTypesProvider implements JsonSubTypesProvider {
@@ -70,6 +73,9 @@ public class RequestActionPayloadTypesProvider implements JsonSubTypesProvider {
                 new NamedType(UnderlyingAgreementVariationCompletedRequestActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_COMPLETED_PAYLOAD),
                 new NamedType(UnderlyingAgreementVariationActivatedRequestActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_ACTIVATED_PAYLOAD),
                 new NamedType(CcaPeerReviewDecisionSubmittedRequestActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_PEER_REVIEW_SUBMITTED_PAYLOAD),
+                new NamedType(UnderlyingAgreementVariationRegulatorLedSubmittedRequestActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SUBMITTED_PAYLOAD),
+                new NamedType(UnderlyingAgreementVariationRegulatorLedCompletedRequestActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_COMPLETED_PAYLOAD),
+                new NamedType(CcaPeerReviewDecisionSubmittedRequestActionPayload.class, UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_PEER_REVIEW_SUBMITTED_PAYLOAD),
 
                 // Performance data upload
                 new NamedType(PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload.class, PERFORMANCE_DATA_SPREADSHEET_PROCESSING_SUBMITTED_PAYLOAD),
@@ -97,7 +103,13 @@ public class RequestActionPayloadTypesProvider implements JsonSubTypesProvider {
                 new NamedType(AuditTrackCorrectiveActionsSubmittedRequestActionPayload.class, FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED_PAYLOAD),
 
                 // CCA2 Extension Notice
-                new NamedType(Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload.class, CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD)
+                new NamedType(Cca2ExtensionNoticeAccountProcessingSubmittedRequestActionPayload.class, CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD),
+
+                // CCA2 Termination
+                new NamedType(Cca2TerminationAccountProcessingSubmittedRequestActionPayload.class, CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD),
+
+                // Non Compliance
+                new NamedType(NonComplianceDetailsSubmittedRequestActionPayload.class, NON_COMPLIANCE_DETAILS_SUBMITTED_PAYLOAD)
         );
     }
 

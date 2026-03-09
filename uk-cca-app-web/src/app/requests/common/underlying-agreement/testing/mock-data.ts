@@ -936,8 +936,10 @@ export const mockRequestTaskItemDTO: RequestTaskItemDTO = {
   requestInfo: {
     id: 'ADS_53-T00002-UNA',
     type: 'UNDERLYING_AGREEMENT',
-    competentAuthority: 'ENGLAND',
-    accountId: 15,
+    resourceType: 'ACCOUNT',
+    resources: {
+      ACCOUNT: '17',
+    },
     requestMetadata: {
       type: 'UNDERLYING_AGREEMENT',
     },
@@ -965,8 +967,10 @@ export const mockVariationRequestTaskItemDTO: RequestTaskItemDTO = {
   requestInfo: {
     id: 'ADS_53-T00002-UNA',
     type: 'UNDERLYING_AGREEMENT_VARIATION',
-    competentAuthority: 'ENGLAND',
-    accountId: 15,
+    resourceType: 'ACCOUNT',
+    resources: {
+      ACCOUNT: '17',
+    },
     requestMetadata: {
       type: 'UNDERLYING_AGREEMENT_VARIATION',
     },
@@ -997,8 +1001,10 @@ export const mockRequestTaskItemUNAReviewDTO: RequestTaskItemDTO = {
   requestInfo: {
     id: 'ADS_53-T00003-UNA',
     type: 'UNDERLYING_AGREEMENT',
-    competentAuthority: 'ENGLAND',
-    accountId: 3,
+    resourceType: 'ACCOUNT',
+    resources: {
+      ACCOUNT: '17',
+    },
     requestMetadata: {
       type: 'UNDERLYING_AGREEMENT',
     },
@@ -1027,8 +1033,10 @@ export const mockRequestTaskItemDTONOVEM: RequestTaskItemDTO = {
   requestInfo: {
     id: 'ADS_53-T00002-UNA',
     type: 'UNDERLYING_AGREEMENT',
-    competentAuthority: 'ENGLAND',
-    accountId: 15,
+    resourceType: 'ACCOUNT',
+    resources: {
+      ACCOUNT: '17',
+    },
     requestMetadata: {
       type: 'UNDERLYING_AGREEMENT',
     },
@@ -1055,8 +1063,10 @@ export const mockRequestTaskItemDTOABSOLUTE: RequestTaskItemDTO = {
   requestInfo: {
     id: 'ADS_53-T00002-UNA',
     type: 'UNDERLYING_AGREEMENT',
-    competentAuthority: 'ENGLAND',
-    accountId: 15,
+    resourceType: 'ACCOUNT',
+    resources: {
+      ACCOUNT: '17',
+    },
     requestMetadata: {
       type: 'UNDERLYING_AGREEMENT',
     },
@@ -1083,8 +1093,10 @@ export const mockRequestTaskItemDTOABSOLUTENoMeasurement: RequestTaskItemDTO = {
   requestInfo: {
     id: 'ADS_53-T00002-UNA',
     type: 'UNDERLYING_AGREEMENT',
-    competentAuthority: 'ENGLAND',
-    accountId: 15,
+    resourceType: 'ACCOUNT',
+    resources: {
+      ACCOUNT: '17',
+    },
     requestMetadata: {
       type: 'UNDERLYING_AGREEMENT',
     },

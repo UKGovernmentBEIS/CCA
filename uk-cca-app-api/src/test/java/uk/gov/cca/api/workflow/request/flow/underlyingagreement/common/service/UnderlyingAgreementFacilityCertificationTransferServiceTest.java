@@ -6,7 +6,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.facilitycertification.domain.FacilityCertificationStatus;
@@ -50,7 +49,6 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
     @Test
     void copyFacilityCertifications() {
 
-        ReflectionTestUtils.setField(facilityCertificationTransferService, "facilityCertificationNewEntrantsStartDate", "2099-01-01");
         Set<String> facilityIds = Set.of("prevFacilityId");
 
         FacilityBaseInfoDTO prevFacilityData = FacilityBaseInfoDTO.builder()
@@ -110,7 +108,6 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
     @Test
     void copyFacilityCertifications_without_previous_facility_certifications() {
 
-        ReflectionTestUtils.setField(facilityCertificationTransferService, "facilityCertificationNewEntrantsStartDate", "2099-01-01");
         Set<String> facilityIds = Set.of("prevFacilityId");
 
         FacilityBaseInfoDTO prevFacilityData = FacilityBaseInfoDTO.builder()
@@ -158,7 +155,6 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
     @Test
     void processFacilityCertificationsForNewFacilities_without_CHANGE_OF_OWNERSHIP() {
 
-        ReflectionTestUtils.setField(facilityCertificationTransferService, "facilityCertificationNewEntrantsStartDate", "2025-01-01");
         CertificationPeriodInfoDTO currentCP = CertificationPeriodInfoDTO.builder()
                 .id(2L)
                 .startDate(LocalDate.of(2025, 7, 1))
@@ -204,7 +200,6 @@ class UnderlyingAgreementFacilityCertificationTransferServiceTest {
     @Test
     void processFacilityCertificationsForNewFacilities() {
 
-        ReflectionTestUtils.setField(facilityCertificationTransferService, "facilityCertificationNewEntrantsStartDate", "2025-01-01");
 
         FacilityBaseInfoDTO facilityDto = new FacilityBaseInfoDTO();
         facilityDto.setFacilityBusinessId("FAC-123");

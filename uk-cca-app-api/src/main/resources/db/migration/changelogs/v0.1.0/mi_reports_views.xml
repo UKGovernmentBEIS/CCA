@@ -20,6 +20,7 @@
             drop view if exists sch_report_ea.request_note cascade;
             drop view if exists sch_report_ea.au_authority_permission cascade;
             drop view if exists sch_report_ea.au_authority cascade;
+            drop view if exists sch_report_ea.au_authority_details cascade;
             drop view if exists sch_report_ea.au_role cascade;
             drop view if exists sch_report_ea.au_role_permission cascade;
             drop view if exists sch_report_ea.account_contact cascade;
@@ -48,7 +49,7 @@
 
             drop view if exists sch_report_ea.tpr_target_period cascade;
             drop view if exists sch_report_ea.tpr_performance_account_template_data cascade;
-            drop view if exists sch_report_ea.tpr_account_performance_data_status cascade;
+            drop view if exists sch_report_ea.tpr_performance_data_account_status cascade;
             drop view if exists sch_report_ea.tpr_performance_data cascade;
             drop view if exists sch_report_ea.tpr_buy_out_surplus_exclusion cascade;
             drop view if exists sch_report_ea.tpr_buy_out_surplus_transaction cascade;
@@ -69,7 +70,8 @@
             create or replace view sch_report_ea.account as select s.* from account s where s.competent_authority = 'ENGLAND';
             create or replace view sch_report_ea.account_contact as select s.* from account_contact s where exists (select null from account a where a.id = s.account_id and a.competent_authority = 'ENGLAND');
             create or replace view sch_report_ea.account_ca_external_contacts as select s.* from account_ca_external_contacts s where s.competent_authority = 'ENGLAND';
-            create or replace view sch_report_ea.au_authority as select s.* from au_authority s where s.competent_authority = 'ENGLAND' or s.verification_body_id is not null or exists (select null from account a where a.id = s.account_id and a.competent_authority = 'ENGLAND');
+            create or replace view sch_report_ea.au_authority as select s.* from au_authority s where s.competent_authority = 'ENGLAND' or exists (select null from sector_association sa where sa.id = s.sector_association_id and sa.competent_authority = 'ENGLAND') or exists (select null from account a where a.id = s.account_id and a.competent_authority = 'ENGLAND');
+            create or replace view sch_report_ea.au_authority_details as select ad.* from au_authority_details ad where exists (select null from au_authority aa where aa.id = ad.authority_id and (aa.competent_authority = 'ENGLAND' or exists (select null from sector_association s where s.id = aa.sector_association_id and s.competent_authority = 'ENGLAND') or exists (select null from account a where a.id = aa.account_id and a.competent_authority = 'ENGLAND')));
             create or replace view sch_report_ea.au_authority_permission as select s.* from au_authority_permission s where exists (select null from au_authority aa where aa.id = s.authority_id and (aa.competent_authority = 'ENGLAND' or aa.verification_body_id is not null or exists (select null from account a where a.id = aa.account_id and a.competent_authority = 'ENGLAND')));
             create or replace view sch_report_ea.au_role as select s.* from au_role s;
             create or replace view sch_report_ea.au_role_permission as select s.* from au_role_permission s;
@@ -106,7 +108,7 @@
 
         	create or replace view sch_report_ea.tpr_target_period as select tpr.* from tpr_target_period tpr;
             create or replace view sch_report_ea.tpr_performance_account_template_data as select tpatd.* from tpr_performance_account_template_data tpatd where exists (select null from account a where a.id = tpatd.account_id and a.competent_authority = 'ENGLAND');
-        	create or replace view sch_report_ea.tpr_account_performance_data_status as select apds.* from tpr_account_performance_data_status apds where exists (select null from account a where a.id = apds.account_id and a.competent_authority = 'ENGLAND');
+        	create or replace view sch_report_ea.tpr_performance_data_account_status as select apds.* from tpr_performance_data_account_status apds where exists (select null from account a where a.id = apds.account_id and a.competent_authority = 'ENGLAND');
         	create or replace view sch_report_ea.tpr_performance_data as select tpd.* from tpr_performance_data tpd where exists (select null from account a where a.id = tpd.account_id and a.competent_authority = 'ENGLAND');
         	create or replace view sch_report_ea.tpr_buy_out_surplus_exclusion as select tbose.* from tpr_buy_out_surplus_exclusion tbose where exists (select null from account a where a.id = tbose.account_id and a.competent_authority = 'ENGLAND');
         	create or replace view sch_report_ea.tpr_buy_out_surplus_transaction as select tbos.* from tpr_buy_out_surplus_transaction tbos where exists (select null from account a, tpr_performance_data tpd where tpd.id = tbos.performance_data_id and a.id = tpd.account_id and a.competent_authority = 'ENGLAND');

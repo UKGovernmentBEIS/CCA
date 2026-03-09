@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-
-import { map, of, switchMap } from 'rxjs';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -10,7 +8,7 @@ import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
 import { TasksApiService } from '@requests/common';
 
-import { TargetUnitAccountInfoViewService } from 'cca-api';
+import { FacilityHeaderInfoDTO, TasksService } from 'cca-api';
 
 import { createSubmitActionDTO } from '../transform';
 
@@ -27,9 +25,7 @@ import { createSubmitActionDTO } from '../transform';
     </div>
 
     <hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
-    <a class="govuk-link" routerLink="../..">
-      Return to: Track corrective actions {{ targetUnitAccountDetails()?.targetUnitAccountDetails?.businessId }}
-    </a>
+    <a class="govuk-link" routerLink="../.."> Return to: Track corrective actions {{ facilityInfo()?.businessId }} </a>
   `,
   imports: [PageHeadingComponent, RouterLink, ButtonDirective, PendingButtonDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,15 +35,14 @@ export class CompleteTaskComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly tasksApiService = inject(TasksApiService);
-  private readonly targetUnitAccountInfoViewService = inject(TargetUnitAccountInfoViewService);
+  private readonly tasksService = inject(TasksService);
 
-  protected readonly targetUnitAccountDetails = toSignal(
-    toObservable(this.requestTaskStore.select(requestTaskQuery.selectRequestInfo)).pipe(
-      map((requestInfo) => requestInfo?.accountId),
-      switchMap((accountId) =>
-        accountId ? this.targetUnitAccountInfoViewService.getTargetUnitAccountDetailsById(accountId) : of(null),
-      ),
-    ),
+  private readonly requestInfo = this.requestTaskStore.select(requestTaskQuery.selectRequestInfo);
+  private readonly resourceType = computed(() => this.requestInfo()?.resourceType);
+  private readonly resource = computed(() => this.requestInfo()?.resources?.[this.resourceType()]);
+
+  protected readonly facilityInfo: Signal<FacilityHeaderInfoDTO> = toSignal(
+    this.tasksService.getRequestTaskHeaderInfo(this.resourceType(), this.resource()),
   );
 
   onComplete() {
