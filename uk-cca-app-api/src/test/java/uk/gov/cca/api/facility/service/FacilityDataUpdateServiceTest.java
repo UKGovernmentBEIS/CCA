@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.service.SchemeTerminationHelper;
 import uk.gov.cca.api.facility.domain.FacilityAddress;
 import uk.gov.cca.api.facility.domain.FacilityData;
 import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
@@ -45,6 +46,9 @@ class FacilityDataUpdateServiceTest {
 
     @Mock
     FacilityDataQueryService facilityDataQueryService;
+    
+    @Mock
+    SchemeTerminationHelper schemeTerminationHelper;
 
     @Test
     void createFacilities_shouldSaveAllFacilities() {
@@ -175,6 +179,7 @@ class FacilityDataUpdateServiceTest {
                 .facilityBusinessId("facilityId")
                 .createdDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0))
                 .accountId(accountId)
+                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                 .closedDate(null)
                 .schemeExitDate(null)
                 .build(),
@@ -182,6 +187,7 @@ class FacilityDataUpdateServiceTest {
                         .facilityBusinessId("facilityId2")
                         .createdDate(LocalDateTime.of(2024, 1, 1, 0, 0, 0))
                         .accountId(accountId)
+                        .participatingSchemeVersions(Set.of(SchemeVersion.CCA_3))
                         .closedDate(LocalDateTime.of(2030, 1, 1, 2, 32))
                         .schemeExitDate(LocalDate.of(2025, 1, 1))
                         .build());
@@ -189,10 +195,16 @@ class FacilityDataUpdateServiceTest {
 
         when(repository.findFacilityDataByAccountIdAndClosedDateIsNull(accountId))
                 .thenReturn(facilitiesData);
+        when(schemeTerminationHelper.resolveTerminationDate(Set.of(SchemeVersion.CCA_2), terminationDate))
+        		.thenReturn(terminationDate);
+        when(schemeTerminationHelper.resolveTerminationDate(Set.of(SchemeVersion.CCA_3), terminationDate))
+				.thenReturn(terminationDate);
 
         service.terminateActiveFacilities(accountId, terminationDate);
 
         verify(repository, times(1)).saveAll(facilitiesData);
+        verify(schemeTerminationHelper, times(1)).resolveTerminationDate(Set.of(SchemeVersion.CCA_2), terminationDate);
+        verify(schemeTerminationHelper, times(1)).resolveTerminationDate(Set.of(SchemeVersion.CCA_3), terminationDate);
         assertThat(facilitiesData.getFirst().getClosedDate()).isNotNull();
         assertThat(facilitiesData.getFirst().getSchemeExitDate())
                 .isEqualTo(facilitiesData.getFirst().getClosedDate().toLocalDate());

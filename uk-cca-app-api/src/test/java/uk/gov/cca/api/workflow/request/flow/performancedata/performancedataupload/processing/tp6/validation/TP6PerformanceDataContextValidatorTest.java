@@ -7,7 +7,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetComposition;
@@ -41,7 +41,7 @@ class TP6PerformanceDataContextValidatorTest {
                                         .build())
                                 .build())
                         .build())
-                .targetPeriodDetails(TargetPeriodDTO.builder()
+                .targetPeriodDetails(TargetPeriodYearDTO.builder()
                         .performanceDataTemplateVersion("6.0")
                         .buyOutStartDate(LocalDate.of(2025, 1, 1))
                         .secondaryReportingStartDate(LocalDate.of(2025, 5, 1))
@@ -80,7 +80,7 @@ class TP6PerformanceDataContextValidatorTest {
                                         .build())
                                 .build())
                         .build())
-                .targetPeriodDetails(TargetPeriodDTO.builder()
+                .targetPeriodDetails(TargetPeriodYearDTO.builder()
                         .performanceDataTemplateVersion("6.0")
                         .buyOutStartDate(LocalDate.of(2025, 1, 1))
                         .secondaryReportingStartDate(LocalDate.of(2025, 5, 1))
@@ -122,7 +122,7 @@ class TP6PerformanceDataContextValidatorTest {
                                         .build())
                                 .build())
                         .build())
-                .targetPeriodDetails(TargetPeriodDTO.builder()
+                .targetPeriodDetails(TargetPeriodYearDTO.builder()
                         .performanceDataTemplateVersion("6.0")
                         .buyOutStartDate(LocalDate.of(2025, 1, 1))
                         .secondaryReportingStartDate(LocalDate.of(2025, 5, 1))

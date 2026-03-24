@@ -8,8 +8,7 @@ import { of } from 'rxjs';
 
 import { RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
-import userEvent from '@testing-library/user-event';
+import { click, getByTestId, getByText } from '@testing';
 
 import { TasksService } from 'cca-api';
 
@@ -66,9 +65,10 @@ describe('PerformanceDataUploadProcessComponent', () => {
   });
 
   it('should render and expand the govuk-details component', async () => {
-    const details = screen.getByTestId('performance-upload-details');
-    expect(details).toBeInTheDocument();
-    await userEvent.click(details);
-    expect(screen.getByText(/To upload your target period reporting spreadsheets/i)).toBeInTheDocument();
+    const details = getByTestId('performance-upload-details');
+    expect(details).toBeTruthy();
+    click(details);
+    fixture.detectChanges();
+    expect(getByText(/To upload your target period reporting spreadsheets/i)).toBeTruthy();
   });
 });

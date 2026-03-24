@@ -106,12 +106,16 @@ describe('CheckboxesComponent', () => {
     hostComponent.form.disable();
     fixture.detectChanges();
 
-    getAllInputs().forEach((input) => expect(input.disabled).toBeTruthy());
+    getAllInputs().forEach((input) => {
+      expect(input.disabled).toBeTruthy();
+    });
 
     hostComponent.form.enable();
     fixture.detectChanges();
 
-    getAllInputs().forEach((input) => expect(input.disabled).toBeFalsy());
+    getAllInputs().forEach((input) => {
+      expect(input.disabled).toBeFalsy();
+    });
   });
 
   it('should get touched on blur of all checkboxes', () => {
@@ -163,8 +167,7 @@ describe('CheckboxesComponent', () => {
 
     hostComponent.form.get('checkboxes').setValidators(GovukValidators.builder('Error', () => ({ required: true })));
     hostComponent.form.get('checkboxes').updateValueAndValidity();
-    const element: HTMLElement = fixture.nativeElement;
-    element.querySelector('form').submit();
+    fixture.nativeElement.querySelector('form').dispatchEvent(new Event('submit'));
     fixture.detectChanges();
 
     expect(findErrorMessage()).toBeTruthy();

@@ -6,6 +6,7 @@ import { adminTerminationPeerReviewTaskContent } from './admin-termination-peer-
 import { adminTerminationWaitForPeerReviewTaskContent } from './admin-termination-wait-for-peer-review/admin-termination-wait-for-peer-review-task-content';
 import { auditDetailsCorrectiveActionsTaskContent } from './audit-details-corrective-actions/audit-details-corrective-actions-task-content';
 import { cca3MigrationAccountActivationTaskContent } from './cca3-migration-account-activation/cca3-migration-account-activation-task-content';
+import { nonComplianceDetailsTaskContent } from './non-compliance-details/non-compliance-details-task-content';
 import { patUploadTaskContent } from './performance-account-template-upload/pat-upload-task-content';
 import { performanceDataDownloadTaskContent } from './performance-data-download/performance-data-download-task-content';
 import { performanceDataUploadTaskContent } from './performance-data-upload/performance-data-upload-task-content';
@@ -68,4 +69,5 @@ export const tasksContent: RequestTaskPageContentFactoryMap = {
   AUDIT_TRACK_CORRECTIVE_ACTIONS: trackCorrectiveActionsTaskContent,
 
   UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_ACTIVATION: underlyingAgreementVariationActivationTaskContent,
+  NON_COMPLIANCE_DETAILS_SUBMIT: nonComplianceDetailsTaskContent,
 };

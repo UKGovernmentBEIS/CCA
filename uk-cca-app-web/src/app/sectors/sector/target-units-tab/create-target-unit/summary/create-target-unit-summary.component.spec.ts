@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByTestId, getByText } from '@testing';
 
 import { CreateTargetUnitStore } from '../create-target-unit.store';
 import { mockCreateTargetUnitState } from '../specs/fixture/mocks';
@@ -35,15 +35,15 @@ describe('CreateTargetUnitSummaryComponent', () => {
   });
 
   it('should display the correct header and caption', () => {
-    expect(screen.getByText('New target unit')).toBeInTheDocument();
-    expect(screen.getByText('Check your answers')).toBeInTheDocument();
+    expect(getByText('New target unit')).toBeTruthy();
+    expect(getByText('Check your answers')).toBeTruthy();
   });
 
   it('should display the correct data sections', () => {
-    expect(screen.getByTestId('target-unit-details-list')).toBeInTheDocument();
-    expect(screen.getByTestId('operator-address-list')).toBeInTheDocument();
-    expect(screen.getByTestId('responsible-person-list')).toBeInTheDocument();
-    expect(screen.getByTestId('administrative-contact-list')).toBeInTheDocument();
+    expect(getByTestId('target-unit-details-list')).toBeTruthy();
+    expect(getByTestId('operator-address-list')).toBeTruthy();
+    expect(getByTestId('responsible-person-list')).toBeTruthy();
+    expect(getByTestId('administrative-contact-list')).toBeTruthy();
   });
 
   it('should contain 18 change links', () => {

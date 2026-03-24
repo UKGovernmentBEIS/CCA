@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
 import { ControlContainer, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 
 import { ButtonDirective, TagComponent, TextInputComponent } from '@netz/govuk-components';
@@ -10,6 +10,7 @@ import { PasswordStrengthMeterComponent } from '../password-strength-meter/passw
   templateUrl: './password.component.html',
   imports: [TextInputComponent, ReactiveFormsModule, TagComponent, ButtonDirective, PasswordStrengthMeterComponent],
   viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PasswordComponent {
   protected readonly formGroupDirective = inject(FormGroupDirective);

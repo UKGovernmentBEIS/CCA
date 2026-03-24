@@ -50,7 +50,7 @@ public class CCA2BaselineAndTargetsValidatorService {
         final TargetPeriod5Details tp5Details = container.getUnderlyingAgreement().getTargetPeriod5Details();
         final TargetPeriod6Details tp6Details = container.getUnderlyingAgreement().getTargetPeriod6Details();
 
-        final boolean needsTpDetails = underlyingAgreementSchemeVersionsHelperService.shouldShowTp5Tp6(originalContainer, requestCreationDate);
+        final boolean needsTpDetails = underlyingAgreementSchemeVersionsHelperService.shouldShowCCA2BaselineAndTargets(originalContainer, requestCreationDate);
 
         if((needsTpDetails && ObjectUtils.isEmpty(tp5Details))
                 || (!needsTpDetails && ObjectUtils.isNotEmpty(tp5Details))) {

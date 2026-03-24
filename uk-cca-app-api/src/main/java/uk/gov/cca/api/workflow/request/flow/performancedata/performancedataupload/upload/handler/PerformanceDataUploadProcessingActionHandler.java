@@ -1,6 +1,7 @@
 package uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.handler;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,8 @@ import lombok.RequiredArgsConstructor;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.utils.PerformanceDataUtility;
@@ -62,8 +64,10 @@ public class PerformanceDataUploadProcessingActionHandler implements
         final SectorAssociationInfo sectorAssociation = taskPayload.getSectorAssociationInfo();
 
         // Extract target period details
-        TargetPeriodDTO targetPeriodDetails = targetPeriodService
-                .getTargetPeriodByBusinessId(actionPayload.getPerformanceDataUpload().getPerformanceDataTargetPeriodType().getReferenceTargetPeriod());
+        final TargetPeriodType targetPeriodType = actionPayload.getPerformanceDataUpload().getPerformanceDataTargetPeriodType().getReferenceTargetPeriod();
+        final Year targetYear = actionPayload.getPerformanceDataUpload().getPerformanceDataTargetPeriodType().getTargetYear();
+        final TargetPeriodYearDTO targetPeriodDetails = targetPeriodService
+                .getTargetPeriodByTargetPeriodTypeAndTargetYear(targetPeriodType, targetYear);
 
         // Get current date of process initiated for all accounts
         final LocalDate initiatedProcessDate = LocalDate.now();

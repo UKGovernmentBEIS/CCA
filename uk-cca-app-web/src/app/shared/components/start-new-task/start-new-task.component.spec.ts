@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByTestId, getByText } from '@testing';
 
 import { RequestItemsService, RequestsService, UserStateDTO } from 'cca-api';
 
@@ -38,7 +38,7 @@ describe('StartNewTaskComponent', () => {
         provideHttpClientTesting(),
         {
           provide: ActivatedRoute,
-          useValue: new ActivatedRouteStub({ targetUnitId: 1 }, null, {
+          useValue: new ActivatedRouteStub({ targetUnitId: 1, facilityId: 2, sectorId: 3 }, null, {
             targetUnit: {
               targetUnitAccountDetails: { name: 'Target unit account 1' },
             },
@@ -69,13 +69,13 @@ describe('StartNewTaskComponent', () => {
   it('should render the page heading', () => {
     createComponentWithMock({});
     expect(requestService.getAvailableWorkflows).toHaveBeenCalledTimes(1);
-    expect(screen.getByText('Start a new task')).toBeInTheDocument();
+    expect(getByText('Start a new task')).toBeTruthy();
   });
 
   it('should render the page heading', async () => {
     createComponentWithMock({});
-    const noWorkflowsMessage = screen.getByTestId('no-workflows');
-    expect(noWorkflowsMessage).toBeInTheDocument();
+    const noWorkflowsMessage = getByTestId('no-workflows');
+    expect(noWorkflowsMessage).toBeTruthy();
     expect(noWorkflowsMessage.textContent).toBe('No tasks are currently available.');
   });
 
@@ -93,5 +93,18 @@ describe('StartNewTaskComponent', () => {
     expect(headings[0].textContent?.trim()).toBe('Download target period reporting (TPR) spreadsheets');
     expect(headings[1].textContent?.trim()).toBe('Upload target period reporting (TPR) spreadsheets');
     expect(headings[2].textContent?.trim()).toBe('Upload PAT spreadsheets');
+  });
+
+  it('should render non-compliance workflow copy for regulator', () => {
+    authStore.setUserState({ ...userStateDTO, roleType: 'REGULATOR' });
+    createComponentWithMock({
+      NON_COMPLIANCE: { valid: true },
+    });
+
+    expect(getByText('Record non-compliance decisions')).toBeTruthy();
+    expect(
+      getByText('Start a non-compliance task to record enforcement decisions relevant to this target unit.'),
+    ).toBeTruthy();
+    expect(getByText('Start non-compliance task')).toBeTruthy();
   });
 });

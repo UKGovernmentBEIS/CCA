@@ -3,9 +3,10 @@ package uk.gov.cca.api.workflow.request.flow.buyoutsurplus.run.handler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
@@ -49,7 +50,7 @@ public class BuyOutSurplusRunCreateActionHandler implements RequestCACreateActio
                                         .build()));
 
         // Get Target Period details
-        TargetPeriodDTO targetPeriodDetails = targetPeriodService.getTargetPeriodByBusinessId(payload.getTargetPeriodType());
+        TargetPeriodInfoDTO targetPeriodDetails = targetPeriodService.getTargetPeriodInfoByTargetPeriodType(payload.getTargetPeriodType());
 
         // Create process
         CcaRequestParams requestParams = CcaRequestParams.builder()

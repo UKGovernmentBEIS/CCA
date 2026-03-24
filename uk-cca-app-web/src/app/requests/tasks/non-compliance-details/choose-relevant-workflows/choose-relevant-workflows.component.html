@@ -1,0 +1,56 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Non-compliance details"
+  heading="Choose relevant workflows (optional)"
+>
+  <p class="govuk-body">Add one or more workflows related to this non-compliance.</p>
+
+  <div class="govuk-!-width-two-thirds">
+    @if (workflows.length > 0) {
+      <table class="govuk-table non-compliance-items-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header"></th>
+            <th class="govuk-table__header">Item name</th>
+            <th class="govuk-table__header">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" formArrayName="workflows">
+          @for (wf of workflows.controls; let i = $index; track wf) {
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell non-compliance-items-table__index-cell">{{ i + 1 }}.</td>
+              <td class="govuk-table__cell">
+                <div
+                  [formControlName]="i"
+                  govuk-select
+                  [options]="getOptionsForRow(i)"
+                  [widthClass]="'govuk-!-width-full'"
+                ></div>
+              </td>
+              <td class="govuk-table__cell non-compliance-items-table__action-cell">
+                <a class="govuk-link" href="#" (click)="onDeleteItem(wf.value, i); $event.preventDefault()">Delete</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <button
+          type="button"
+          class="govuk-button govuk-button--secondary govuk-!-margin-bottom-9"
+          [disabled]="isAddItemDisabled()"
+          [attr.aria-disabled]="isAddItemDisabled() ? 'true' : null"
+          (click)="onAddItem()"
+        >
+          Add item
+        </button>
+      </div>
+    </div>
+  </div>
+</cca-wizard-step>
+
+<netz-return-to-task-or-action-page />

@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByText } from '@testing';
 
 import { NewSubsistenceFeesPaymentRequestComponent } from './new-subsistence-fees-payment-request.component';
 
@@ -32,14 +32,14 @@ describe('NewSubsistenceFeesPaymentRequestComponent', () => {
   });
 
   it('should contain appropirate content', () => {
-    expect(screen.getByText('New payment request')).toBeInTheDocument();
+    expect(getByText('New payment request')).toBeTruthy();
 
     expect(
-      screen.getByText(
+      getByText(
         'You are about to send payment requests for subsistence fees to all eligible sectors and target units.',
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
 
-    expect(screen.getByText('Send payment requests')).toBeInTheDocument();
+    expect(getByText('Send payment requests')).toBeTruthy();
   });
 });

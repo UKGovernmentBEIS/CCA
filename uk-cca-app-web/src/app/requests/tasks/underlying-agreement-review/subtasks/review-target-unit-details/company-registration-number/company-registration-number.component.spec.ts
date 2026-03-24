@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { mockRequestTaskState } from '@requests/common';
-import { screen } from '@testing-library/dom';
+import { getByLabelText, getByText } from '@testing';
 
 import { CompanyRegistrationNumberComponent } from './company-registration-number.component';
 
@@ -50,13 +50,15 @@ describe('CompanyRegistrationNumberComponent', () => {
   });
 
   it('should display the correct header and caption', () => {
-    expect(screen.getByText('New target unit')).toBeInTheDocument();
-    expect(screen.getByText('Does the applicant have a company number?')).toBeInTheDocument();
+    expect(getByText('Change', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Does the operator have a company number?', fixture.nativeElement)).toBeTruthy();
   });
 
   it('should display the correct form fields', () => {
-    expect(screen.getByLabelText('Company number')).toBeInTheDocument();
-    expect(screen.getByLabelText('Yes, the applicant is registered and has a company number')).toBeInTheDocument();
-    expect(screen.getByLabelText('No, the applicant does not have a company number')).toBeInTheDocument();
+    expect(getByLabelText('Company number', fixture.nativeElement)).toBeTruthy();
+    expect(
+      getByLabelText('Yes, the operator is registered and has a company number', fixture.nativeElement),
+    ).toBeTruthy();
+    expect(getByLabelText('No, the operator does not have a company number', fixture.nativeElement)).toBeTruthy();
   });
 });

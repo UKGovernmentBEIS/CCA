@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByText } from '@testing';
 
 import { ConfirmationComponent } from './confirmation.component';
 
@@ -31,26 +31,22 @@ describe('ConfirmationComponent', () => {
   });
 
   it('should contain appropirate content', () => {
-    expect(screen.getByText('Your reference code is: S2501')).toBeInTheDocument();
+    expect(getByText('Your reference code is: S2501')).toBeTruthy();
 
     expect(
-      screen.getByText(
-        'Your payment requests for subsistence fees is in progress. It may take several minutes to complete.',
-      ),
-    ).toBeInTheDocument();
+      getByText('Your payment requests for subsistence fees is in progress. It may take several minutes to complete.'),
+    ).toBeTruthy();
 
-    expect(screen.getByText('What happens next')).toBeInTheDocument();
+    expect(getByText('What happens next')).toBeTruthy();
 
     expect(
-      screen.getByText(
+      getByText(
         'Once the payment requests for subsistence fees is complete you will be able to view and monitor outstanding amounts through the details of the "Subsistence fees" tab (dedicated tab in subsistence fees main screen).',
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
 
-    expect(
-      screen.getByText('Select "S2501" from your list of sent subsistence fees to find the report.'),
-    ).toBeInTheDocument();
+    expect(getByText('Select "S2501" from your list of sent subsistence fees to find the report.')).toBeTruthy();
 
-    expect(screen.getByText('Return to: Subsistence fees')).toBeInTheDocument();
+    expect(getByText('Return to: Subsistence fees')).toBeTruthy();
   });
 });

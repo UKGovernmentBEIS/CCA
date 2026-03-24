@@ -1,8 +1,8 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import '@testing-library/jest-dom';
 import { PageHeadingComponent } from '@netz/common/components';
 import { GovukDatePipe } from '@netz/common/pipes';
 import {
@@ -13,13 +13,15 @@ import {
   SummaryListRowKeyDirective,
   SummaryListRowValueDirective,
 } from '@netz/govuk-components';
-import { render, screen } from '@testing-library/angular';
+import { getAllByRole, getByText } from '@testing';
 
 import { BuyOutAndSurplusInfoService, SurplusHistoryDTO } from 'cca-api';
 
 import { SurplusHistoryComponent } from './surplus-history.component';
 
 describe('ViewHistoryComponent', () => {
+  let fixture: ComponentFixture<SurplusHistoryComponent>;
+
   const mockSurplusHistoryDTO: SurplusHistoryDTO[] = [
     { surplusGained: '10', comments: 'First', submitter: 'Alice', submissionDate: '2025-04-20T10:00:00Z' },
     { surplusGained: '20', comments: 'Second', submitter: 'Bob', submissionDate: '2025-04-21T11:30:00Z' },
@@ -46,8 +48,9 @@ describe('ViewHistoryComponent', () => {
   };
 
   beforeEach(async () => {
-    await render(SurplusHistoryComponent, {
+    await TestBed.configureTestingModule({
       imports: [
+        SurplusHistoryComponent,
         GovukDatePipe,
         AccordionComponent,
         AccordionItemComponent,
@@ -61,32 +64,35 @@ describe('ViewHistoryComponent', () => {
         { provide: BuyOutAndSurplusInfoService, useValue: mockService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ],
-    });
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(SurplusHistoryComponent);
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
-    expect(screen.getByText(/TP6 surplus gained change history/)).toBeInTheDocument();
+    expect(getByText(/TP6 surplus gained change history/)).toBeTruthy();
   });
 
   it('should display heading with business ID and period', () => {
-    expect(screen.getByText('ADS_1-T00001')).toBeInTheDocument();
-    expect(screen.getByText('TP6 surplus gained change history')).toBeInTheDocument();
+    expect(getByText('ADS_1-T00001')).toBeTruthy();
+    expect(getByText('TP6 surplus gained change history')).toBeTruthy();
   });
 
   it('should render three accordion items', () => {
-    const headers = screen.getAllByRole('button', { name: /Amount changed by/ });
+    const headers = getAllByRole('button', { name: /Amount changed by/ });
     expect(headers.length).toBe(3);
   });
 
   it('should display all surplusGained values', () => {
     mockSurplusHistoryDTO.forEach((h) => {
-      expect(screen.getByText(h.surplusGained!)).toBeInTheDocument();
+      expect(getByText(h.surplusGained!)).toBeTruthy();
     });
   });
 
   it('should display comments for each history entry', () => {
     mockSurplusHistoryDTO.forEach((h) => {
-      expect(screen.getByText(h.comments!)).toBeInTheDocument();
+      expect(getByText(h.comments!)).toBeTruthy();
     });
   });
 });

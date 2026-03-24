@@ -118,6 +118,51 @@ class Cca2TerminationAccountProcessingServiceTest {
     }
     
     @Test
+    void processAccountWithBothAndNoCca2Facilities() throws Exception {
+        final Long accountId = 1L;
+        final String requestId = "requestId";
+        final FacilityData facility1 = FacilityData.builder().id(1L).participatingSchemeVersions(Set.of(SchemeVersion.CCA_3)).build();
+        final FacilityData facility2 = FacilityData.builder().id(2L).participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3)).build();
+        
+        final Cca2TerminationAccountState accountState = Cca2TerminationAccountState.builder()
+        		.accountId(accountId)
+        		.facilityIds(List.of(1L, 2L))
+        		.build();
+        final Request request = Request.builder()
+                .id(requestId)
+                .metadata(Cca2TerminationRunRequestMetadata.builder()
+                        .type(CcaRequestMetadataType.CCA2_TERMINATION_RUN)
+                        .cca2TerminationAccountStates(Map.of(accountId, accountState))
+                        .build())
+                .build();
+        
+        RequestResource accountResource = RequestResource.builder()
+				.resourceType(ResourceType.ACCOUNT)
+				.resourceId("1")
+				.request(request)
+				.build();
+
+        request.getRequestResources().add(accountResource);
+
+        when(requestService.findRequestById(requestId)).thenReturn(request);
+        when(cca2TerminationConfig.getTerminationDate()).thenReturn(LocalDate.now());
+        when(facilityDataQueryService.getFacilityDataByIds(List.of(1L, 2L))).thenReturn(List.of(facility1, facility2));
+
+        // Invoke
+        cca2TerminationAccountProcessingService.doProcess(requestId, accountState);
+
+        // Verify
+        verify(requestService, times(1)).findRequestById(requestId);
+        verify(facilityDataQueryService, times(1)).getFacilityDataByIds(List.of(1L, 2L));
+        verify(underlyingAgreementSchemeService, times(1)).terminateUnaDocumentsForSchemeVersion(
+        		eq(1L), eq(SchemeVersion.CCA_2), any(LocalDateTime.class));
+        verify(requestService, times(1)).addActionToRequest(
+        		request, null, CcaRequestActionType.CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED, null);
+        verifyNoInteractions(facilityDataUpdateService);
+        verifyNoInteractions(terminateAccountAndOpenWorkflowsService);
+    }
+    
+    @Test
     void processAccountWithOnlyCca2Facilities() throws Exception {
         final Long accountId = 1L;
         final String requestId = "requestId";

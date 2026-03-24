@@ -67,7 +67,9 @@ describe('RadioComponent', () => {
 
     const inputs = element.querySelectorAll('input');
 
-    inputs.forEach((input) => expect(input.disabled).toBeTruthy());
+    inputs.forEach((input) => {
+      expect(input.disabled).toBeTruthy();
+    });
   });
 
   it('should assign value', () => {
@@ -96,7 +98,7 @@ describe('RadioComponent', () => {
     expect(hostComponent.form.value).toEqual({ radio: null });
     expect(element.querySelector('.govuk-error-message')).toBeFalsy();
 
-    element.querySelector('form').submit();
+    element.querySelector('form').dispatchEvent(new Event('submit'));
     fixture.detectChanges();
 
     expect(hostComponent.form.get('radio').errors).toBeTruthy();

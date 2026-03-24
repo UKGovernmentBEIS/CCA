@@ -6,6 +6,7 @@ import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSu
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusAccountProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.common.domain.SubsistenceFeesRunRequestMetadata;
 import uk.gov.netz.api.swagger.SwaggerSchemasAbstractProvider;
 
@@ -23,6 +24,8 @@ public class RequestMetadataSchemasProvider extends SwaggerSchemasAbstractProvid
         addResolvedShemas(BuyOutSurplusAccountProcessingRequestMetadata.class.getSimpleName(), BuyOutSurplusAccountProcessingRequestMetadata.class);
         // Performance Account Template Upload
         addResolvedShemas(PerformanceAccountTemplateProcessingRequestMetadata.class.getSimpleName(), PerformanceAccountTemplateProcessingRequestMetadata.class);
+        // Performance Data Facility Digital Form
+        addResolvedShemas(PerformanceDataFacilityDigitalFormRequestMetadata.class.getSimpleName(), PerformanceDataFacilityDigitalFormRequestMetadata.class);
     }
     
 }

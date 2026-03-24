@@ -8,8 +8,8 @@ const simpleImportSort = require('eslint-plugin-simple-import-sort');
 
 module.exports = tseslint.config(
   {
-    files: ['**/*.ts'],
-    ignores: ['projects/**', 'src/environments/version.ts'],
+    files: ['src/**/*.ts'],
+    ignores: ['src/environments/version.ts'],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
@@ -97,6 +97,63 @@ module.exports = tseslint.config(
       ],
       '@typescript-eslint/no-explicit-any': 'off',
       '@angular-eslint/prefer-on-push-component-change-detection': 'off',
+    },
+  },
+  {
+    files: ['projects/common/**/*.ts'],
+    plugins: { 'unused-imports': unusedImports, 'simple-import-sort': simpleImportSort },
+    extends: [
+      eslint.configs.recommended,
+      ...tseslint.configs.recommended,
+      ...tseslint.configs.stylistic,
+      ...angular.configs.tsRecommended,
+    ],
+    processor: angular.processInlineTemplates,
+    rules: {
+      '@angular-eslint/directive-selector': [
+        'error',
+        {
+          type: 'attribute',
+          prefix: 'netz',
+          style: 'camelCase',
+        },
+      ],
+      '@angular-eslint/component-selector': [
+        'error',
+        {
+          type: 'element',
+          prefix: 'netz',
+          style: 'kebab-case',
+        },
+      ],
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/consistent-type-definitions': 'off',
+      '@typescript-eslint/array-type': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      'no-unused-vars': 'off',
+      'unused-imports/no-unused-imports': 'error',
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [
+            ['(@angular)(/.*|$)'],
+            ['(rxjs)(/.*|$)'],
+            ['()(/.*|$)'],
+            ['^govuk-components'],
+            ['^cca-api'],
+            ['(src)(/.*|$)'],
+            ['^[.].*'],
+          ],
+        },
+      ],
     },
   },
   {

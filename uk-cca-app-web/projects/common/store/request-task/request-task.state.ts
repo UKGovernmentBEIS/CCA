@@ -6,7 +6,7 @@ export interface RequestTaskState {
   timeline: RequestActionInfoDTO[];
   taskReassignedTo: string;
   isEditable: boolean;
-  metadata?: { [key: string]: unknown };
+  metadata?: Record<string, unknown>;
 }
 
 export const initialRequestTaskState: RequestTaskState = {

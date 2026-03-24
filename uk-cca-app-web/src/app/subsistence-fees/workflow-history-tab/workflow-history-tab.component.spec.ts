@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByText } from '@testing';
 
 import { SubsistenceFeesStore } from '../subsistence-fees.store';
 import { subsistenceFeesStateMockData } from '../testing/mock-data';
@@ -47,10 +47,8 @@ describe('WorkflowHistoryTabComponent', () => {
 
     fixture.detectChanges();
 
-    expect(screen.getByText('There are no workflow history events yet.')).toBeInTheDocument();
-    expect(
-      screen.getByText('More information will be available when you create a new payment request.'),
-    ).toBeInTheDocument();
+    expect(getByText('There are no workflow history events yet.')).toBeTruthy();
+    expect(getByText('More information will be available when you create a new payment request.')).toBeTruthy();
   });
 
   it('should populate with correct data', () => {

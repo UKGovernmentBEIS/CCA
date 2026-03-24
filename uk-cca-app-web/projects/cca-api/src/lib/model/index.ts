@@ -172,6 +172,8 @@ export * from './miReportUserDefinedResults';
 export * from './moaReport';
 export * from './nonComplianceDetails';
 export * from './nonComplianceDetailsSubmitRequestTaskPayload';
+export * from './nonComplianceDetailsSubmitSaveRequestTaskActionPayload';
+export * from './nonComplianceDetailsSubmittedRequestActionPayload';
 export * from './notAccountRelatedUploadErrorReport';
 export * from './notePayload';
 export * from './noteRequest';

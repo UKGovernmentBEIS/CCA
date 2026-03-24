@@ -74,7 +74,7 @@ const selectUnderlyingAgreementTargetUnitDetails: StateSelector<
   UnderlyingAgreementTargetUnitDetails
 > = createDescendingSelector(
   selectPayload,
-  (payload) => payload.underlyingAgreement.underlyingAgreementTargetUnitDetails,
+  (payload) => payload.underlyingAgreement?.underlyingAgreementTargetUnitDetails,
 );
 
 const selectFacilityItems: StateSelector<RequestTaskState, FacilityItemViewModel[]> = createDescendingSelector(

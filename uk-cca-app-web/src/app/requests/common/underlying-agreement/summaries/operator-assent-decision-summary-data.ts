@@ -25,7 +25,7 @@ export function toOperatorAssentDecisionSummaryData(
       changeLink: `../${OverallDecisionWizardStep.ADDITIONAL_INFO}`,
     })
     .addFileListRow(
-      'Uploaded files',
+      'Uploaded files (optional)',
       fileUtils.toDownloadableFiles(fileUtils.extractAttachments(determination?.files, attachments), downloadUrl),
       {
         change: isEditable,

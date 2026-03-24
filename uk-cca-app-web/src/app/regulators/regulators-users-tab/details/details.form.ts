@@ -81,6 +81,7 @@ export function createForm(
     ),
     MANAGE_FACILITY_AUDIT: fb.control(userPermissions?.MANAGE_FACILITY_AUDIT || 'NONE'),
     FACILITY_AUDIT_SUBMISSION: fb.control(userPermissions?.FACILITY_AUDIT_SUBMISSION || 'NONE'),
+    NON_COMPLIANCE_SUBMISSION: fb.control(userPermissions?.NON_COMPLIANCE_SUBMISSION || 'NONE'),
   });
 
   return fb.group<DetailsForm>({

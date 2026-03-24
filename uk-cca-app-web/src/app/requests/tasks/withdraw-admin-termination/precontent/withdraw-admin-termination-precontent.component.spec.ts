@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
 import { mockReasonForAdminTerminationWithdrawPayload } from '../testing/mock-data';
 import { WithdrawAdminTerminationPrecontentComponent } from './withdraw-admin-termination-precontent.component';
@@ -34,6 +34,6 @@ describe('WithdrawAdminTerminationPrecontentComponent', () => {
   });
 
   it('should display the notify button', () => {
-    expect(screen.getByText('Notify operator of decision')).toBeInTheDocument();
+    expect(getByText('Notify operator of decision', fixture.nativeElement)).toBeTruthy();
   });
 });

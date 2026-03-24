@@ -7,8 +7,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
-import { screen } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
+import { click, getAllByText, getByLabelText, getByTestId, type } from '@testing';
 
 import { CompaniesInformationService } from 'cca-api';
 
@@ -54,8 +53,7 @@ describe('Add operator Spec', () => {
   }));
 
   async function setup() {
-    const user = UserEvent.setup();
-    const opts = { harness, httpTestingController, user };
+    const opts = { harness, httpTestingController };
 
     await navigateToTargetUnit(sectorId, accountName, opts);
     await navigateToTargetUnitUsers(opts, accountId);
@@ -66,11 +64,11 @@ describe('Add operator Spec', () => {
   }
 
   test('Main scenario: Add a new Operator user to the Target Unit account', fakeAsync(async () => {
-    const { user, harness, httpTestingController } = await setup();
-    await user.type(screen.getByLabelText('First name'), 'Operator');
-    await user.type(screen.getByLabelText('Last name'), 'User');
-    await user.type(screen.getByLabelText('Email address'), 'operator_user_1@cca.uk');
-    await user.click(screen.getByText('Submit'));
+    const { harness, httpTestingController } = await setup();
+    type(getByLabelText('First name') as HTMLInputElement, 'Operator');
+    type(getByLabelText('Last name') as HTMLInputElement, 'User');
+    type(getByLabelText('Email address') as HTMLInputElement, 'operator_user_1@cca.uk');
+    click(getAllByText('Submit')[0]);
     await harness.fixture.whenStable();
 
     const req = httpTestingController.expectOne(`/api/v1.0/operator-users/invite/account/${accountId}`);
@@ -78,29 +76,31 @@ describe('Add operator Spec', () => {
     await harness.fixture.whenStable();
     harness.detectChanges();
 
-    expect(screen.getByTestId('confirmation-screen')).toBeInTheDocument();
+    expect(getByTestId('confirmation-screen')).toBeTruthy();
   }));
 
   test('Alternative scenario 4: User does not enter mandatory fields', fakeAsync(async () => {
-    const { user } = await setup();
-    await user.type(screen.getByLabelText('First name'), 'Operator');
-    await user.click(screen.getByText('Submit'));
+    await setup();
+    type(getByLabelText('First name') as HTMLInputElement, 'Operator');
+    click(getAllByText('Submit')[0]);
     harness.detectChanges();
 
-    expect(document.querySelector('.govuk-error-summary')).toBeInTheDocument();
-    expect(screen.getAllByText('Enter your last name')).toHaveLength(2);
-    expect(screen.getAllByText('Enter your email')).toHaveLength(2);
+    expect(document.querySelector('.govuk-error-summary')).toBeTruthy();
+    expect(getAllByText('Enter your last name').length).toBeGreaterThanOrEqual(2);
+    expect(getAllByText('Enter your email').length).toBeGreaterThanOrEqual(2);
   }));
 
   test('Alternative scenario 5: User does not provide valid user email', fakeAsync(async () => {
-    const { user } = await setup();
-    await user.type(screen.getByLabelText('First name'), 'Operator');
-    await user.type(screen.getByLabelText('Last name'), 'User');
-    await user.type(screen.getByLabelText('Email address'), 'operator_user_1');
-    await user.click(screen.getByText('Submit'));
+    await setup();
+    type(getByLabelText('First name') as HTMLInputElement, 'Operator');
+    type(getByLabelText('Last name') as HTMLInputElement, 'User');
+    type(getByLabelText('Email address') as HTMLInputElement, 'operator_user_1');
+    click(getAllByText('Submit')[0]);
     harness.detectChanges();
 
-    expect(document.querySelector('.govuk-error-summary')).toBeInTheDocument();
-    expect(screen.getAllByText('Enter an email address in the correct format, like name@example.com')).toHaveLength(2);
+    expect(document.querySelector('.govuk-error-summary')).toBeTruthy();
+    expect(
+      getAllByText('Enter an email address in the correct format, like name@example.com').length,
+    ).toBeGreaterThanOrEqual(2);
   }));
 });

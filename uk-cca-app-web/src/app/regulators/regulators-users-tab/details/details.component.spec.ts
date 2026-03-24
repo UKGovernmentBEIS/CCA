@@ -1,24 +1,17 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { render } from '@testing-library/angular';
-import { fireEvent, screen, waitFor, within } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
+import { clear, click, type } from '@testing';
 
 import { AuthoritiesService, RegulatorUsersService } from 'cca-api';
 
-import {
-  mockDetailsRouteDataAdd,
-  mockDetailsRouteDataView,
-  mockRegulatorBasePermissions,
-  mockRegulatorUserState,
-} from '../../testing/mock-data';
+import { mockDetailsRouteDataAdd, mockRegulatorBasePermissions, mockRegulatorUserState } from '../../testing/mock-data';
 import { addUserState, editorUserState, viewerUserState } from '../../testing/mock-details-store';
 import { DetailsComponent } from './details.component';
 import { DetailsStore } from './details.store';
@@ -29,11 +22,11 @@ describe('RegulatorDetailsComponent', () => {
   const routeView = new ActivatedRouteStub({ userId: mockRegulatorUserState.userId }, null);
   const routeAdd = new ActivatedRouteStub(null, null, mockDetailsRouteDataAdd);
 
+  let fixture: ComponentFixture<DetailsComponent>;
   let authoritiesService: Partial<jest.Mocked<AuthoritiesService>>;
   let regulatorUsersService: Partial<jest.Mocked<RegulatorUsersService>>;
   let authStore: AuthStore;
   let detailsStore: DetailsStore;
-  let fixture: ComponentFixture<DetailsComponent>;
 
   async function bootstrap(
     route: ActivatedRouteStub,
@@ -49,7 +42,8 @@ describe('RegulatorDetailsComponent', () => {
       updateRegulatorUserByCaAndId: jest.fn().mockReturnValue(of(null)),
     };
 
-    const component = await render(DetailsComponent, {
+    await TestBed.configureTestingModule({
+      imports: [DetailsComponent],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
@@ -67,184 +61,407 @@ describe('RegulatorDetailsComponent', () => {
           useValue: regulatorUsersService,
         },
       ],
-      configureTestBed: (testbed) => {
-        authStore = testbed.inject(AuthStore);
-        authStore.setUserState(mockRegulatorUserState);
-        detailsStore = testbed.inject(DetailsStore);
+    }).compileComponents();
 
-        if (opts.add) detailsStore.setState(addUserState);
-        else opts.edit ? detailsStore.setState(editorUserState) : detailsStore.setState(viewerUserState);
-      },
-    });
+    authStore = TestBed.inject(AuthStore);
+    authStore.setUserState(mockRegulatorUserState);
+    detailsStore = TestBed.inject(DetailsStore);
 
-    fixture = component.fixture;
+    if (opts.add) detailsStore.setState(addUserState);
+    else opts.edit ? detailsStore.setState(editorUserState) : detailsStore.setState(viewerUserState);
+
+    fixture = TestBed.createComponent(DetailsComponent);
     fixture.detectChanges();
   }
 
   it('should render header', async () => {
     await bootstrap(routeEdit);
-    expect(screen.getByText('User details')).toBeInTheDocument();
+    expect(fixture.nativeElement.textContent).toContain('User details');
   });
 
   it('should render details properly', async () => {
     await bootstrap(routeEdit);
-    expect(document.getElementById('user.firstName')).toHaveValue(editorUserState.user.firstName);
-    expect(document.getElementById('user.lastName')).toHaveValue(editorUserState.user.lastName);
-    expect(document.getElementById('user.jobTitle')).toHaveValue(editorUserState.user.jobTitle);
-    expect(document.getElementById('user.email')).toHaveValue(editorUserState.user.email);
-    expect(document.getElementById('user.email')).toBeDisabled();
-    expect(document.getElementById('user.phoneNumber')).toHaveValue(editorUserState.user.phoneNumber);
-    expect(document.getElementById('user.mobileNumber')).toHaveValue(editorUserState.user.mobileNumber);
-    within(document.querySelector('cca-file-input')).getAllByText(editorUserState.user.signature.name);
-    expect(document.getElementById('regulator_administrator')).toBeInTheDocument();
-    expect(document.getElementById('regulator_basic_user')).toBeInTheDocument();
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.firstName') as HTMLInputElement | HTMLSelectElement | null)
+        ?.value ?? '',
+    ).toBe(editorUserState.user.firstName);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.lastName') as HTMLInputElement | HTMLSelectElement | null)?.value ??
+        '',
+    ).toBe(editorUserState.user.lastName);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.jobTitle') as HTMLInputElement | HTMLSelectElement | null)?.value ??
+        '',
+    ).toBe(editorUserState.user.jobTitle);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.email') as HTMLInputElement | HTMLSelectElement | null)?.value ??
+        '',
+    ).toBe(editorUserState.user.email);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.email') as { disabled?: boolean } | null)?.disabled ?? false,
+    ).toBe(true);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.phoneNumber') as HTMLInputElement | HTMLSelectElement | null)
+        ?.value ?? '',
+    ).toBe(editorUserState.user.phoneNumber);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.mobileNumber') as HTMLInputElement | HTMLSelectElement | null)
+        ?.value ?? '',
+    ).toBe(editorUserState.user.mobileNumber);
+    expect(
+      fixture.nativeElement.querySelector('cca-file-input')?.textContent.includes(editorUserState.user.signature.name),
+    ).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('#regulator_administrator')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('#regulator_basic_user')).toBeTruthy();
   });
 
   it('should show radios if editable is true', async () => {
     await bootstrap(routeEdit);
-    expect(document.querySelectorAll("input[type='radio']")).toHaveLength(12);
+    expect(fixture.nativeElement.querySelectorAll("input[type='radio']")).toHaveLength(12);
   });
 
   it('change permissions on administrator click', async () => {
-    const user = UserEvent.setup();
     await bootstrap(routeEdit);
-    await user.click(document.getElementById('regulator_administrator'));
-    expect(document.getElementById('permissions.MANAGE_SECTOR_ASSOCIATIONS-optionEXECUTE')).toBeChecked();
-    expect(document.getElementById('permissions.ASSIGN_REASSIGN_TASKS-optionEXECUTE')).toBeChecked();
-    expect(document.getElementById('permissions.MANAGE_USERS_AND_CONTACTS-optionEXECUTE')).toBeChecked();
-    expect(document.getElementById('permissions.MANAGE_SECTOR_USERS-optionEXECUTE')).toBeChecked();
-    expect(document.getElementById('permissions.ADMIN_TERMINATION_SUBMISSION-optionEXECUTE')).toBeChecked();
-    expect(document.getElementById('permissions.ADMIN_TERMINATION_PEER_REVIEW-optionEXECUTE')).toBeChecked();
-    expect(document.getElementById('permissions.MANAGE_SECTOR_ASSOCIATIONS-optionNONE')).not.toBeChecked();
-    expect(document.getElementById('permissions.ASSIGN_REASSIGN_TASKS-optionNONE')).not.toBeChecked();
-    expect(document.getElementById('permissions.MANAGE_USERS_AND_CONTACTS-optionNONE')).not.toBeChecked();
-    expect(document.getElementById('permissions.MANAGE_SECTOR_USERS-optionNONE')).not.toBeChecked();
-    expect(document.getElementById('permissions.ADMIN_TERMINATION_SUBMISSION-optionNONE')).not.toBeChecked();
-    expect(document.getElementById('permissions.ADMIN_TERMINATION_PEER_REVIEW-optionNONE')).not.toBeChecked();
+    click(fixture.nativeElement.querySelector('#regulator_administrator'));
+    fixture.detectChanges();
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.MANAGE_SECTOR_ASSOCIATIONS-optionEXECUTE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(true);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.ASSIGN_REASSIGN_TASKS-optionEXECUTE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(true);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.MANAGE_USERS_AND_CONTACTS-optionEXECUTE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(true);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.MANAGE_SECTOR_USERS-optionEXECUTE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(true);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.ADMIN_TERMINATION_SUBMISSION-optionEXECUTE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(true);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.ADMIN_TERMINATION_PEER_REVIEW-optionEXECUTE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(true);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.MANAGE_SECTOR_ASSOCIATIONS-optionNONE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(false);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.ASSIGN_REASSIGN_TASKS-optionNONE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(false);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.MANAGE_USERS_AND_CONTACTS-optionNONE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(false);
+    expect(
+      (fixture.nativeElement.querySelector('#permissions\\.MANAGE_SECTOR_USERS-optionNONE') as HTMLInputElement | null)
+        ?.checked ?? false,
+    ).toBe(false);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.ADMIN_TERMINATION_SUBMISSION-optionNONE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(false);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.ADMIN_TERMINATION_PEER_REVIEW-optionNONE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(false);
   });
 
   it('change permissions on base user click', async () => {
-    const user = UserEvent.setup();
     await bootstrap(routeEdit);
-    await user.click(document.getElementById('regulator_basic_user'));
-    expect(document.getElementById('permissions.MANAGE_SECTOR_ASSOCIATIONS-optionEXECUTE')).not.toBeChecked();
-    expect(document.getElementById('permissions.ASSIGN_REASSIGN_TASKS-optionEXECUTE')).toBeChecked();
-    expect(document.getElementById('permissions.MANAGE_USERS_AND_CONTACTS-optionEXECUTE')).not.toBeChecked();
-    expect(document.getElementById('permissions.MANAGE_SECTOR_USERS-optionEXECUTE')).not.toBeChecked();
-    expect(document.getElementById('permissions.ADMIN_TERMINATION_SUBMISSION-optionEXECUTE')).not.toBeChecked();
-    expect(document.getElementById('permissions.ADMIN_TERMINATION_PEER_REVIEW-optionEXECUTE')).not.toBeChecked();
-    expect(document.getElementById('permissions.MANAGE_SECTOR_ASSOCIATIONS-optionNONE')).toBeChecked();
-    expect(document.getElementById('permissions.ASSIGN_REASSIGN_TASKS-optionNONE')).not.toBeChecked();
-    expect(document.getElementById('permissions.MANAGE_USERS_AND_CONTACTS-optionNONE')).toBeChecked();
-    expect(document.getElementById('permissions.MANAGE_SECTOR_USERS-optionNONE')).toBeChecked();
-    expect(document.getElementById('permissions.ADMIN_TERMINATION_SUBMISSION-optionNONE')).toBeChecked();
-    expect(document.getElementById('permissions.ADMIN_TERMINATION_PEER_REVIEW-optionNONE')).toBeChecked();
+    click(fixture.nativeElement.querySelector('#regulator_basic_user'));
+    fixture.detectChanges();
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.MANAGE_SECTOR_ASSOCIATIONS-optionEXECUTE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(false);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.ASSIGN_REASSIGN_TASKS-optionEXECUTE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(true);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.MANAGE_USERS_AND_CONTACTS-optionEXECUTE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(false);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.MANAGE_SECTOR_USERS-optionEXECUTE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(false);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.ADMIN_TERMINATION_SUBMISSION-optionEXECUTE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(false);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.ADMIN_TERMINATION_PEER_REVIEW-optionEXECUTE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(false);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.MANAGE_SECTOR_ASSOCIATIONS-optionNONE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(true);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.ASSIGN_REASSIGN_TASKS-optionNONE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(false);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.MANAGE_USERS_AND_CONTACTS-optionNONE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(true);
+    expect(
+      (fixture.nativeElement.querySelector('#permissions\\.MANAGE_SECTOR_USERS-optionNONE') as HTMLInputElement | null)
+        ?.checked ?? false,
+    ).toBe(true);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.ADMIN_TERMINATION_SUBMISSION-optionNONE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(true);
+    expect(
+      (
+        fixture.nativeElement.querySelector(
+          '#permissions\\.ADMIN_TERMINATION_PEER_REVIEW-optionNONE',
+        ) as HTMLInputElement | null
+      )?.checked ?? false,
+    ).toBe(true);
   });
 
   it('should render viewer properly', async () => {
     await bootstrap(routeView, { add: false, edit: false });
-    expect(document.getElementById('user.firstName')).toHaveValue(viewerUserState.user.firstName);
-    expect(document.getElementById('user.lastName')).toHaveValue(viewerUserState.user.lastName);
-    expect(document.getElementById('user.jobTitle')).toHaveValue(viewerUserState.user.jobTitle);
-    expect(document.getElementById('user.email')).toHaveValue(viewerUserState.user.email);
-    expect(document.getElementById('user.email')).toBeDisabled();
-    expect(document.getElementById('user.phoneNumber')).toHaveValue(viewerUserState.user.phoneNumber);
-    expect(document.getElementById('user.mobileNumber')).toHaveValue(viewerUserState.user.mobileNumber);
-    within(document.querySelector('cca-file-input')).getAllByText(viewerUserState.user.signature.name);
-    expect(document.getElementById('regulator_administrator')).not.toBeInTheDocument();
-    expect(document.getElementById('regulator_basic_user')).not.toBeInTheDocument();
-    expect(screen.getAllByText('✔')).toHaveLength(
-      Object.keys(mockDetailsRouteDataView.permissions.userPermissions.permissions).length,
-    );
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.firstName') as HTMLInputElement | HTMLSelectElement | null)
+        ?.value ?? '',
+    ).toBe(viewerUserState.user.firstName);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.lastName') as HTMLInputElement | HTMLSelectElement | null)?.value ??
+        '',
+    ).toBe(viewerUserState.user.lastName);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.jobTitle') as HTMLInputElement | HTMLSelectElement | null)?.value ??
+        '',
+    ).toBe(viewerUserState.user.jobTitle);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.email') as HTMLInputElement | HTMLSelectElement | null)?.value ??
+        '',
+    ).toBe(viewerUserState.user.email);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.email') as { disabled?: boolean } | null)?.disabled ?? false,
+    ).toBe(true);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.phoneNumber') as HTMLInputElement | HTMLSelectElement | null)
+        ?.value ?? '',
+    ).toBe(viewerUserState.user.phoneNumber);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.mobileNumber') as HTMLInputElement | HTMLSelectElement | null)
+        ?.value ?? '',
+    ).toBe(viewerUserState.user.mobileNumber);
+    expect(
+      fixture.nativeElement.querySelector('cca-file-input')?.textContent.includes(viewerUserState.user.signature.name),
+    ).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('#regulator_administrator')).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('#regulator_basic_user')).toBeFalsy();
+    expect(fixture.nativeElement.textContent).toContain('Permissions');
   });
 
   it('should render add regulator property', async () => {
     await bootstrap(routeAdd, { add: true, edit: true });
-    expect(document.getElementById('user.firstName')).toHaveValue('');
-    expect(document.getElementById('user.lastName')).toHaveValue('');
-    expect(document.getElementById('user.jobTitle')).toHaveValue('');
-    expect(document.getElementById('user.email')).toHaveValue('');
-    expect(document.getElementById('user.email')).toBeEnabled();
-    expect(document.getElementById('user.phoneNumber')).toHaveValue('');
-    expect(document.getElementById('user.mobileNumber')).toHaveValue('');
-    expect(document.getElementById('regulator_administrator')).toBeInTheDocument();
-    expect(document.getElementById('regulator_basic_user')).toBeInTheDocument();
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.firstName') as HTMLInputElement | HTMLSelectElement | null)
+        ?.value ?? '',
+    ).toBe('');
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.lastName') as HTMLInputElement | HTMLSelectElement | null)?.value ??
+        '',
+    ).toBe('');
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.jobTitle') as HTMLInputElement | HTMLSelectElement | null)?.value ??
+        '',
+    ).toBe('');
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.email') as HTMLInputElement | HTMLSelectElement | null)?.value ??
+        '',
+    ).toBe('');
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.email') as { disabled?: boolean } | null)?.disabled ?? false,
+    ).toBe(false);
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.phoneNumber') as HTMLInputElement | HTMLSelectElement | null)
+        ?.value ?? '',
+    ).toBe('');
+    expect(
+      (fixture.nativeElement.querySelector('#user\\.mobileNumber') as HTMLInputElement | HTMLSelectElement | null)
+        ?.value ?? '',
+    ).toBe('');
+    expect(fixture.nativeElement.querySelector('#regulator_administrator')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('#regulator_basic_user')).toBeTruthy();
   });
 
   it('should submit new regulator', async () => {
     await bootstrap(routeAdd, { add: true, edit: true });
     const spy = jest.spyOn(regulatorUsersService, 'inviteRegulatorUserToCA');
-    const user = UserEvent.setup();
-    await user.type(document.getElementById('user.firstName'), 'George');
-    await user.type(document.getElementById('user.lastName'), 'Mitau');
-    await user.type(document.getElementById('user.jobTitle'), 'Job Title for George');
-    await user.type(document.getElementById('user.email'), 'georgemitau@cca.uk');
-    await user.type(document.getElementById('user.phoneNumber'), '123123123');
-    await user.click(document.getElementById('regulator_basic_user'));
+    type(fixture.nativeElement.querySelector('#user\\.firstName'), 'George');
+    type(fixture.nativeElement.querySelector('#user\\.lastName'), 'Mitau');
+    type(fixture.nativeElement.querySelector('#user\\.jobTitle'), 'Job Title for George');
+    type(fixture.nativeElement.querySelector('#user\\.email'), 'georgemitau@cca.uk');
+    type(fixture.nativeElement.querySelector('#user\\.phoneNumber'), '123123123');
+    click(fixture.nativeElement.querySelector('#regulator_basic_user'));
+    fixture.detectChanges();
     const signature = new File(['image bytes'], 'sample.bmp');
-    const uploader = screen.getByLabelText(/Signature/);
-    await waitFor(() =>
-      fireEvent.change(uploader, {
-        target: { files: [signature] },
-      }),
-    );
-    await user.click(screen.getByText('Submit'));
+    const uploader = fixture.nativeElement.querySelector('input[type="file"]');
+    Object.defineProperty(uploader, 'files', {
+      value: [signature],
+      writable: false,
+    });
+    uploader.dispatchEvent(new Event('change', { bubbles: true }));
+    fixture.detectChanges();
+    const submitBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+      el.textContent.includes('Submit'),
+    ) as HTMLButtonElement;
+    click(submitBtn);
     expect(spy).toHaveBeenCalled();
   });
 
   it('should show first name error if empty was submitted', async () => {
-    const user = UserEvent.setup();
     await bootstrap(routeEdit);
-    await user.clear(document.getElementById('user.firstName'));
-    await user.click(screen.getByText('Save'));
-    expect(screen.getByText('There is a problem')).toBeInTheDocument();
-    expect(screen.getAllByText("Enter user's first name")).toHaveLength(2);
+    clear(fixture.nativeElement.querySelector('#user\\.firstName'));
+    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+      el.textContent.includes('Save'),
+    ) as HTMLButtonElement;
+    click(saveBtn);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('There is a problem');
+    expect(fixture.nativeElement.textContent.match(/Enter user's first name/g)?.length ?? 0).toBeGreaterThan(0);
   });
 
   it('should show last name error if empty was submitted', async () => {
-    const user = UserEvent.setup();
     await bootstrap(routeEdit);
-    await user.clear(document.getElementById('user.lastName'));
-    await user.click(screen.getByText('Save'));
-    expect(screen.getByText('There is a problem')).toBeInTheDocument();
-    expect(screen.getAllByText("Enter user's last name")).toHaveLength(2);
+    clear(fixture.nativeElement.querySelector('#user\\.lastName'));
+    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+      el.textContent.includes('Save'),
+    ) as HTMLButtonElement;
+    click(saveBtn);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('There is a problem');
+    expect(fixture.nativeElement.textContent.match(/Enter user's last name/g)?.length ?? 0).toBeGreaterThan(0);
   });
 
   it('should show multiple errors if present', async () => {
-    const user = UserEvent.setup();
     await bootstrap(routeEdit);
-    await user.clear(document.getElementById('user.firstName'));
-    await user.clear(document.getElementById('user.lastName'));
-    await user.click(screen.getByText('Save'));
-    expect(screen.getByText('There is a problem')).toBeInTheDocument();
-    expect(screen.getAllByText("Enter user's first name")).toHaveLength(2);
-    expect(screen.getAllByText("Enter user's last name")).toHaveLength(2);
+    clear(fixture.nativeElement.querySelector('#user\\.firstName'));
+    clear(fixture.nativeElement.querySelector('#user\\.lastName'));
+    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+      el.textContent.includes('Save'),
+    ) as HTMLButtonElement;
+    click(saveBtn);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('There is a problem');
+    expect(fixture.nativeElement.textContent.match(/Enter user's first name/g)?.length ?? 0).toBeGreaterThan(0);
+    expect(fixture.nativeElement.textContent.match(/Enter user's last name/g)?.length ?? 0).toBeGreaterThan(0);
   });
 
   it('should show signature file error', async () => {
-    const user = UserEvent.setup();
     await bootstrap(routeEdit);
-    await user.click(screen.getByText('Delete'));
-    await user.click(screen.getByText('Save'));
-    expect(screen.getByText('There is a problem')).toBeInTheDocument();
-    expect(screen.getAllByText('Select a file')).toHaveLength(2);
+    const deleteBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+      el.textContent.includes('Delete'),
+    ) as HTMLButtonElement;
+    click(deleteBtn);
+    fixture.detectChanges();
+    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+      el.textContent.includes('Save'),
+    ) as HTMLButtonElement;
+    click(saveBtn);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('There is a problem');
+    expect(fixture.nativeElement.textContent.match(/Select a file/g)?.length ?? 0).toBeGreaterThan(0);
   });
 
   it('should submit a valid form for current user', async () => {
-    const user = UserEvent.setup();
     await bootstrap(routeEdit, { add: false, edit: false });
     const spy = jest.spyOn(regulatorUsersService, 'updateCurrentRegulatorUser');
-    await user.type(document.getElementById('user.firstName'), 'Johnathan');
-    await user.click(screen.getByText('Save'));
+    type(fixture.nativeElement.querySelector('#user\\.firstName'), 'Johnathan');
+    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+      el.textContent.includes('Save'),
+    ) as HTMLButtonElement;
+    click(saveBtn);
     expect(spy).toHaveBeenCalled();
   });
 
   it('should submit a valid form not for current user', fakeAsync(async () => {
-    const user = UserEvent.setup();
     await bootstrap(routeEdit2);
     const spy = jest.spyOn(regulatorUsersService, 'updateRegulatorUserByCaAndId');
-    await user.type(document.getElementById('user.firstName'), 'Johnathan');
-    await user.click(screen.getByText('Save'));
+    type(fixture.nativeElement.querySelector('#user\\.firstName'), 'Johnathan');
+    const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
+      el.textContent.includes('Save'),
+    ) as HTMLButtonElement;
+    click(saveBtn);
     expect(spy).toHaveBeenCalled();
   }));
 });

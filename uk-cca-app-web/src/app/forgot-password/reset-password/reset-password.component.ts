@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -17,7 +17,7 @@ import { ResetPasswordStore } from '../+store/reset-password.store';
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        @if (isSummaryDisplayed) {
+        @if (isSummaryDisplayed()) {
           <govuk-error-summary [form]="form" />
         }
 
@@ -41,7 +41,7 @@ export class ResetPasswordComponent implements OnInit {
   private readonly resetPasswordStore = inject(ResetPasswordStore);
   private readonly forgotPasswordService = inject(ForgotPasswordService);
 
-  protected isSummaryDisplayed = false;
+  protected isSummaryDisplayed = signal(false);
   protected readonly passwordLabel = 'New password';
   protected readonly newPasswordLabel = 'Confirm new password';
   protected token: string;
@@ -77,7 +77,7 @@ export class ResetPasswordComponent implements OnInit {
     if (this.form.valid) {
       this.resetPasswordStore.setState({
         ...this.resetPasswordStore.state,
-        password: this.form.get('password').value,
+        password: this.form.controls.password.value,
         token: this.token,
       });
 
@@ -85,7 +85,7 @@ export class ResetPasswordComponent implements OnInit {
         relativeTo: this.route,
       });
     } else {
-      this.isSummaryDisplayed = true;
+      this.isSummaryDisplayed.set(true);
     }
   }
 }

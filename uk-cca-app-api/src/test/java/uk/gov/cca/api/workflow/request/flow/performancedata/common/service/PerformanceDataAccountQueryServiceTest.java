@@ -18,7 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
 
@@ -38,7 +38,7 @@ class PerformanceDataAccountQueryServiceTest {
     void getCandidateAccountsForPerformanceDataReportingBySector() {
         final Long sectorAssociationId = 123L;
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
-        final TargetPeriodDTO targetPeriodDTO = TargetPeriodDTO.builder()
+        final TargetPeriodInfoDTO targetPeriod = TargetPeriodInfoDTO.builder()
                 .id(456L)
                 .build();
 
@@ -49,9 +49,9 @@ class PerformanceDataAccountQueryServiceTest {
                         .build()
         );
 
-        when(targetPeriodService.getTargetPeriodByBusinessId(targetPeriodType)).thenReturn(targetPeriodDTO);
+        when(targetPeriodService.getTargetPeriodInfoByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
         when(accountPerformanceDataStatusQueryService
-                .getAccountsForPerformanceDataReportingBySector(sectorAssociationId, targetPeriodDTO.getId()))
+                .getAccountsForPerformanceDataReportingBySector(sectorAssociationId, targetPeriod.getId()))
                 .thenReturn(mockAccounts);
 
         List<TargetUnitAccountBusinessInfoDTO> result = performanceDataAccountQueryService
@@ -63,9 +63,9 @@ class PerformanceDataAccountQueryServiceTest {
         assertEquals(999L, result.getFirst().getAccountId());
         assertEquals("ADS_1-T00001", result.getFirst().getBusinessId());
 
-        verify(targetPeriodService, times(1)).getTargetPeriodByBusinessId(targetPeriodType);
+        verify(targetPeriodService, times(1)).getTargetPeriodInfoByTargetPeriodType(targetPeriodType);
         verify(accountPerformanceDataStatusQueryService, times(1))
-                .getAccountsForPerformanceDataReportingBySector(sectorAssociationId, targetPeriodDTO.getId());
+                .getAccountsForPerformanceDataReportingBySector(sectorAssociationId, targetPeriod.getId());
         verifyNoMoreInteractions(targetPeriodService, accountPerformanceDataStatusQueryService);
     }
 }

@@ -4,8 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
-import UserEvent from '@testing-library/user-event';
+import { click, getAllByTestId, getByTestId, getByText, getSummaryListData } from '@testing';
 
 import { ReceivedAmountComponent } from './received-amount.component';
 import { ReceivedAmountStore } from './received-amount.store';
@@ -42,14 +41,7 @@ describe('ReceivedAmountComponent', () => {
   });
 
   it('should display the correct amount data', () => {
-    const detailsValues = screen
-      .getAllByText((_, el) => el.tagName.toLowerCase() === 'dl')
-      .map((el) => [
-        Array.from(el.querySelectorAll('dt')).map((dt) => dt.textContent.trim()),
-        Array.from(el.querySelectorAll('dd'))
-          .filter((dt) => dt.textContent.trim() !== 'Change')
-          .map((dt) => dt.textContent.trim()),
-      ]);
+    const detailsValues = getSummaryListData(fixture.nativeElement);
 
     expect(detailsValues).toEqual([
       [
@@ -61,21 +53,19 @@ describe('ReceivedAmountComponent', () => {
   });
 
   it('should contain 2 history entries', () => {
-    const user = UserEvent.setup();
-    user.click(screen.getByTestId('history-details'));
+    click(getByTestId('history-details', fixture.nativeElement));
 
     fixture.detectChanges();
 
-    expect(screen.getAllByTestId('amount-header')).toHaveLength(2);
+    expect(getAllByTestId('amount-header', fixture.nativeElement)).toHaveLength(2);
   });
 
-  it('should not navigate to next step if the form is invalid', async () => {
-    const user = UserEvent.setup();
+  it('should navigate to next step on continue', async () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
 
-    user.click(screen.getByText('Continue'));
+    click(getByText('Continue', fixture.nativeElement));
     fixture.detectChanges();
 
-    expect(navigateSpy).not.toHaveBeenCalled();
+    expect(navigateSpy).toHaveBeenCalledWith(['check-your-answers'], expect.anything());
   });
 });

@@ -4,8 +4,7 @@ import { fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
-import { screen } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
+import { click, getByText } from '@testing';
 
 import { SECTORS_ROUTES } from '../sectors.routes';
 import { mockSectorAuthorities } from './fixtures/mock';
@@ -32,65 +31,89 @@ describe('Update sector user role spec', () => {
 
   it("Main: Update User type from ‘Basic User' to 'Administrator User’", fakeAsync(async () => {
     const sectorId = 231;
-    const user = UserEvent.setup();
 
-    await navigateToContacts(sectorId, { harness, httpTestingController: httpMock, user });
-    expect(document.getElementById('authorities.0.userType')).toHaveValue('1: sector_user_basic_user');
+    await navigateToContacts(sectorId, { harness, httpTestingController: httpMock });
+    expect(
+      (document.getElementById('authorities.0.userType') as HTMLInputElement | HTMLSelectElement | null)?.value ?? '',
+    ).toBe('1: sector_user_basic_user');
 
-    await user.selectOptions(document.getElementById('authorities.0.userType'), '0: sector_user_administrator');
-    expect(document.getElementById('authorities.0.userType')).toHaveValue('0: sector_user_administrator');
+    const typeSelect0 = document.getElementById('authorities.0.userType') as HTMLSelectElement;
+    typeSelect0.value = '0: sector_user_administrator';
+    typeSelect0.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(
+      (document.getElementById('authorities.0.userType') as HTMLInputElement | HTMLSelectElement | null)?.value ?? '',
+    ).toBe('0: sector_user_administrator');
 
-    await user.click(screen.getByText('Save'));
+    click(getByText('Save'));
     const req = httpMock.expectOne(`/api/v1.0/sector-authorities/sector-association/${sectorId}`);
     req.flush(null);
-    expect(document.getElementById('authorities.1.userType')).toHaveValue('0: sector_user_administrator');
+    expect(
+      (document.getElementById('authorities.1.userType') as HTMLInputElement | HTMLSelectElement | null)?.value ?? '',
+    ).toBe('0: sector_user_administrator');
   }));
 
   it('should discard changes', fakeAsync(async () => {
     const sectorId = 231;
-    const user = UserEvent.setup();
-    await navigateToContacts(sectorId, { harness, httpTestingController: httpMock, user });
+    await navigateToContacts(sectorId, { harness, httpTestingController: httpMock });
 
-    expect(document.getElementById('authorities.1.userType')).toHaveValue('0: sector_user_administrator');
-    await user.selectOptions(document.getElementById('authorities.1.userType'), '1: sector_user_basic_user');
-    expect(document.getElementById('authorities.1.userType')).toHaveValue('1: sector_user_basic_user');
+    expect(
+      (document.getElementById('authorities.1.userType') as HTMLInputElement | HTMLSelectElement | null)?.value ?? '',
+    ).toBe('0: sector_user_administrator');
+    const typeSelect1 = document.getElementById('authorities.1.userType') as HTMLSelectElement;
+    typeSelect1.value = '1: sector_user_basic_user';
+    typeSelect1.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(
+      (document.getElementById('authorities.1.userType') as HTMLInputElement | HTMLSelectElement | null)?.value ?? '',
+    ).toBe('1: sector_user_basic_user');
 
-    await user.click(screen.getByText('Discard changes'));
+    click(getByText('Discard changes'));
     await harness.fixture.whenStable();
 
     const req = httpMock.expectOne(`/api/v1.0/sector-authorities/sector-association/${sectorId}`);
     req.flush(JSON.parse(JSON.stringify(mockSectorAuthorities)));
     harness.detectChanges();
-    expect(document.getElementById('authorities.1.userType')).toHaveValue('0: sector_user_administrator');
+    expect(
+      (document.getElementById('authorities.1.userType') as HTMLInputElement | HTMLSelectElement | null)?.value ?? '',
+    ).toBe('0: sector_user_administrator');
   }));
 
   it("Alternative scenario 1: Update User type from ‘Administrator User' (not unique Sector Administrator) to 'Basic User’", fakeAsync(async () => {
     const sectorId = 231;
-    const user = UserEvent.setup();
 
-    await navigateToContacts(sectorId, { harness, httpTestingController: httpMock, user });
-    await user.selectOptions(document.getElementById('authorities.1.userType'), '1: sector_user_basic_user');
-    await user.click(screen.getByText('Save'));
+    await navigateToContacts(sectorId, { harness, httpTestingController: httpMock });
+    const typeSelect1 = document.getElementById('authorities.1.userType') as HTMLSelectElement;
+    typeSelect1.value = '1: sector_user_basic_user';
+    typeSelect1.dispatchEvent(new Event('change', { bubbles: true }));
+    click(getByText('Save'));
 
     const req = httpMock.expectOne(`/api/v1.0/sector-authorities/sector-association/${sectorId}`);
     req.flush(null);
-    expect(document.getElementById('authorities.1.userType')).toHaveValue('1: sector_user_basic_user');
+    expect(
+      (document.getElementById('authorities.1.userType') as HTMLInputElement | HTMLSelectElement | null)?.value ?? '',
+    ).toBe('1: sector_user_basic_user');
   }));
 
   it("Alternative scenario 2: Update User type from ‘Administrator User' (unique Sector Administrator) to 'Basic User’", fakeAsync(async () => {
     const sectorId = 231;
-    const user = UserEvent.setup();
 
-    await navigateToContacts(sectorId, { harness, httpTestingController: httpMock, user });
-    expect(document.getElementById('authorities.1.userType')).toHaveValue('0: sector_user_administrator');
-    expect(document.getElementById('authorities.2.userType')).toHaveValue('0: sector_user_administrator');
+    await navigateToContacts(sectorId, { harness, httpTestingController: httpMock });
+    expect(
+      (document.getElementById('authorities.1.userType') as HTMLInputElement | HTMLSelectElement | null)?.value ?? '',
+    ).toBe('0: sector_user_administrator');
+    expect(
+      (document.getElementById('authorities.2.userType') as HTMLInputElement | HTMLSelectElement | null)?.value ?? '',
+    ).toBe('0: sector_user_administrator');
 
-    await user.selectOptions(document.getElementById('authorities.1.userType'), '1: sector_user_basic_user');
-    await user.selectOptions(document.getElementById('authorities.2.userType'), '1: sector_user_basic_user');
-    await user.click(screen.getByText('Save'));
+    const typeSelect1 = document.getElementById('authorities.1.userType') as HTMLSelectElement;
+    const typeSelect2 = document.getElementById('authorities.2.userType') as HTMLSelectElement;
+    typeSelect1.value = '1: sector_user_basic_user';
+    typeSelect1.dispatchEvent(new Event('change', { bubbles: true }));
+    typeSelect2.value = '1: sector_user_basic_user';
+    typeSelect2.dispatchEvent(new Event('change', { bubbles: true }));
+    click(getByText('Save'));
     await harness.fixture.whenStable();
     harness.detectChanges();
-    expect(document.querySelector('.govuk-error-summary')).toBeVisible();
-    expect(screen.getByText('At least one sector admin should exist in sector association')).toBeVisible();
+    expect(document.querySelector('.govuk-error-summary')).toBeTruthy();
+    expect(getByText('At least one sector admin should exist in sector association')).toBeTruthy();
   }));
 });

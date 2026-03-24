@@ -12,19 +12,11 @@
       </netz-page-heading>
     </div>
 
-    @if (isAllowedToTriggerFacilityAudit()) {
-      <div class="govuk-grid-column-one-quarter" style="text-align: end">
-        <button
-          class="govuk-!-margin-top-3"
-          govukSecondaryButton
-          netzPendingButton
-          type="button"
-          (click)="onAuditTaskStart()"
-        >
-          Start an audit task
-        </button>
-      </div>
-    }
+    <div class="govuk-grid-column-one-quarter" style="text-align: end">
+      <button class="govuk-!-margin-top-6" govukButton type="button" routerLink="./process-actions">
+        Start a facility task
+      </button>
+    </div>
   </div>
 
   <section data-testid="target-unit">

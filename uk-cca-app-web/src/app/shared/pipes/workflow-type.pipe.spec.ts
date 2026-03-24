@@ -60,4 +60,8 @@ describe('WorkflowTypePipe', () => {
   it('should transform "PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING" to "PAT"', () => {
     expect(pipe.transform('PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING')).toBe('PAT');
   });
+
+  it('should transform "NON_COMPLIANCE" to "Non Compliance"', () => {
+    expect(pipe.transform('NON_COMPLIANCE')).toBe('Non Compliance');
+  });
 });

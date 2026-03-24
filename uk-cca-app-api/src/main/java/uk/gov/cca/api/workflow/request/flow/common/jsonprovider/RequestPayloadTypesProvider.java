@@ -11,6 +11,7 @@ import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.FACILITY_CERTIFICATION_RUN_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.NON_COMPLIANCE_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_DOWNLOAD_PAYLOAD;
+import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REQUEST_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_GENERATE_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_PROCESSING_PAYLOAD;
 import static uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType.PERFORMANCE_DATA_SPREADSHEET_GENERATE_PAYLOAD;
@@ -48,6 +49,7 @@ import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownl
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.common.domain.PerformanceDataProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.subsistencefeesrun.domain.SubsistenceFeesRunRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.targetunitmoa.domain.TargetUnitMoaRequestPayload;
@@ -95,7 +97,9 @@ public class RequestPayloadTypesProvider implements JsonSubTypesProvider {
 				new NamedType(Cca2ExtensionNoticeRunRequestPayload.class, CCA2_EXTENSION_NOTICE_RUN_REQUEST_PAYLOAD),
 				new NamedType(Cca2ExtensionNoticeAccountProcessingRequestPayload.class, CCA2_EXTENSION_NOTICE_ACCOUNT_PROCESSING_PAYLOAD),
 
-				new NamedType(NonComplianceRequestPayload.class, NON_COMPLIANCE_REQUEST_PAYLOAD)
+				new NamedType(NonComplianceRequestPayload.class, NON_COMPLIANCE_REQUEST_PAYLOAD),
+
+				new NamedType(PerformanceDataFacilityDigitalFormRequestPayload.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REQUEST_PAYLOAD)
 		);
 	}
 

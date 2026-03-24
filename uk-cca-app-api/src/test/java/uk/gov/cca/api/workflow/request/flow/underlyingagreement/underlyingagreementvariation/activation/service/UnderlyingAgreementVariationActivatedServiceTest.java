@@ -11,9 +11,9 @@ import uk.gov.cca.api.common.domain.SchemeData;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.Cca3FacilityBaselineAndTargets;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.ApplicationReasonType;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityBaselineEnergyConsumption;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
@@ -21,6 +21,7 @@ import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidati
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationDetails;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.UnderlyingAgreementHandleCca2FacilitiesAfterTerminationDateService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.service.UnderlyingAgreementVariationService;
@@ -54,6 +55,9 @@ class UnderlyingAgreementVariationActivatedServiceTest {
 
     @Mock
     private UnderlyingAgreementVariationService underlyingAgreementVariationService;
+    
+    @Mock
+    private UnderlyingAgreementHandleCca2FacilitiesAfterTerminationDateService underlyingAgreementHandleCca2FacilitiesAfterTerminationDateService;
 
     @Test
     void activateUnderlyingAgreementVariation() {
@@ -65,17 +69,20 @@ class UnderlyingAgreementVariationActivatedServiceTest {
         final Facility facility = Facility.builder()
                 .status(FacilityStatus.LIVE)
                 .facilityItem(FacilityItem.builder()
-                        .cca3BaselineAndTargets(Cca3FacilityBaselineAndTargets.builder()
-                                .facilityBaselineEnergyConsumption(FacilityBaselineEnergyConsumption.builder().build())
+                        .facilityDetails(FacilityDetails.builder()
+                                .previousFacilityId("Prv1")
+                                .applicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP)
+                                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_2))
                                 .build())
                         .build())
+                .build();
+        final UnderlyingAgreement una = UnderlyingAgreement.builder()
+                .facilities(Set.of(facility))
                 .build();
         final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
                 .workflowSchemeVersion(schemeVersion)
                 .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
-                        .underlyingAgreement(UnderlyingAgreement.builder()
-                                .facilities(Set.of(facility))
-                                .build())
+                        .underlyingAgreement(una)
                         .build())
                 .build();
         final Request request = Request.builder()
@@ -117,6 +124,7 @@ class UnderlyingAgreementVariationActivatedServiceTest {
                 .updateUnderlyingAgreement(unaContainerFinal, accountId, underlyingAgreementValidationContext, true);
         verify(underlyingAgreementVariationService, times(1))
                 .updateFacilitiesAndAccount(accountId, unaContainerFinal, requestPayload);
+        verify(underlyingAgreementHandleCca2FacilitiesAfterTerminationDateService, times(1)).handleCca2FacilitiesAfterTerminationDate(una);
     }
 
     private void addResourcesToRequest(Long accountId, Request request) {

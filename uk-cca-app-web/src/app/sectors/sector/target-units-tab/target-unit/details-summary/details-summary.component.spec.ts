@@ -6,8 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 
-import { mockTargetUnitAccountDetails, mockUnderlyingAgreementDetails } from 'src/app/sectors/specs/fixtures/mock';
-
+import {
+  mockTargetUnitAccountDetails,
+  mockUnderlyingAgreementDetails,
+} from '../../../../../sectors/specs/fixtures/mock';
 import { ActiveTargetUnitStore } from '../../active-target-unit.store';
 import { DetailsSummaryComponent } from './details-summary.component';
 

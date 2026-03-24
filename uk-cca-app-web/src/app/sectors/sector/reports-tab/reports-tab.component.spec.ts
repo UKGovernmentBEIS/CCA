@@ -6,7 +6,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { screen } from '@testing-library/dom';
+import { getByLabelText, getByText, queryByRole } from '@testing';
 
 import { ReportsTabComponent } from './reports-tab.component';
 
@@ -54,17 +54,17 @@ describe('PerformanceDataReportsComponent', () => {
   });
 
   it('should render the heading "Reports"', () => {
-    const heading = screen.getByText('Reports');
+    const heading = getByText('Reports');
     expect(heading).toBeTruthy();
   });
 
   it('should have a select dropdown for "Report type"', () => {
-    const reportTypeSelect = screen.getByLabelText('Report type');
+    const reportTypeSelect = getByLabelText('Report type');
     expect(reportTypeSelect).toBeTruthy();
   });
 
   it('should have a download button with "Download to spreadsheet"', () => {
-    const downloadButton = screen.queryByRole('button', { name: /Download to spreadsheet/i });
-    expect(downloadButton).toBeInTheDocument();
+    const downloadButton = queryByRole('button', { name: /Download to spreadsheet/i });
+    expect(downloadButton).toBeTruthy();
   });
 });

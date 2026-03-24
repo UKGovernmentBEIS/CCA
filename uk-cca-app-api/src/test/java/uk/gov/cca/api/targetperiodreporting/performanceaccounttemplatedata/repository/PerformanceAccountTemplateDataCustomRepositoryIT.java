@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +40,8 @@ import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domai
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.dto.SectorPerformanceAccountTemplateDataReportItemDTO;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.dto.SectorPerformanceAccountTemplateDataReportListDTO;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.dto.SectorPerformanceAccountTemplateDataReportSearchCriteria;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYearsContainer;
 import uk.gov.netz.api.common.AbstractContainerBaseTest;
 import uk.gov.netz.api.common.domain.PagingRequest;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
@@ -59,8 +62,8 @@ class PerformanceAccountTemplateDataCustomRepositoryIT extends AbstractContainer
 	@Autowired
 	private EntityManager entityManager;
 	
-	private Year targetPeriodYear = Year.of(2024);
-	private Long sectorAssociationId = 1L;
+	private final Year targetPeriodYear = Year.of(2024);
+	private final Long sectorAssociationId = 1L;
 	
 	@BeforeEach
     void setUp() {
@@ -68,25 +71,25 @@ class PerformanceAccountTemplateDataCustomRepositoryIT extends AbstractContainer
 		TargetPeriod targetPeriodAnother = createTargetPeriod(TargetPeriodType.TP5);
 		
 		TargetUnitAccount account1 = createAccount(-1L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2023, 11, 3).atStartOfDay(), null);
-		PerformanceAccountTemplateDataEntity pat1 = createPerformanceAccountTemplateDataEntity(account1.getId(),
+		createPerformanceAccountTemplateDataEntity(account1.getId(),
 				targetPeriod, targetPeriodYear, PerformanceAccountTemplateDataSubmissionType.INTERIM, 1);
 		
 		TargetUnitAccount account2 = createAccount(-2L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2024, 11, 3).atStartOfDay(), null);
-		PerformanceAccountTemplateDataEntity pat2 = createPerformanceAccountTemplateDataEntity(account2.getId(),
+		createPerformanceAccountTemplateDataEntity(account2.getId(),
 				targetPeriodAnother, Year.of(2021), PerformanceAccountTemplateDataSubmissionType.INTERIM, 1);
 		
 		TargetUnitAccount account3 = createAccount(-3L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2025, 2, 3).atStartOfDay(), null);
-		PerformanceAccountTemplateDataEntity pat3 = createPerformanceAccountTemplateDataEntity(account3.getId(),
+		createPerformanceAccountTemplateDataEntity(account3.getId(),
 				targetPeriod, targetPeriodYear, PerformanceAccountTemplateDataSubmissionType.INTERIM, 1);
 		
-		TargetUnitAccount account4 = createAccount(-4L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2018, 11, 3).atStartOfDay(), null);
+		createAccount(-4L, sectorAssociationId, TargetUnitAccountStatus.LIVE, LocalDate.of(2018, 11, 3).atStartOfDay(), null);
         
 		createAccount(-5L, sectorAssociationId, TargetUnitAccountStatus.NEW, LocalDate.of(2023, 11, 3).atStartOfDay(), null);
         
-		createAccount(-6L, -1l, TargetUnitAccountStatus.LIVE, LocalDate.of(2023, 11, 3).atStartOfDay(), null);
+		createAccount(-6L, -1L, TargetUnitAccountStatus.LIVE, LocalDate.of(2023, 11, 3).atStartOfDay(), null);
         
 		TargetUnitAccount account7 = createAccount(-7L, sectorAssociationId, TargetUnitAccountStatus.TERMINATED, LocalDate.of(2024, 11, 3).atStartOfDay(), LocalDate.of(2025, 1, 1).atStartOfDay());
-        PerformanceAccountTemplateDataEntity pat7 = createPerformanceAccountTemplateDataEntity(account7.getId(),
+        createPerformanceAccountTemplateDataEntity(account7.getId(),
 				targetPeriod, targetPeriodYear, PerformanceAccountTemplateDataSubmissionType.FINAL, 1);
         
         createAccount(-8L, sectorAssociationId, TargetUnitAccountStatus.TERMINATED, LocalDate.of(2016, 11, 3).atStartOfDay(), LocalDate.of(2017, 5, 3).atStartOfDay());
@@ -229,17 +232,23 @@ class PerformanceAccountTemplateDataCustomRepositoryIT extends AbstractContainer
 				.name(type.name())
 				.startDate(LocalDate.now())
 				.endDate(LocalDate.now())
-				.performanceDataStartDate(LocalDate.now())
-				.performanceDataEndDate(LocalDate.now())
+				.targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+						.targetPeriodYears(List.of(TargetPeriodYear.builder()
+								.targetYear(Year.now())
+								.startDate(LocalDate.now())
+								.endDate(LocalDate.now())
+								.reportingStartDate(LocalDate.now())
+								.build()))
+						.build())
 				.buyOutStartDate(LocalDate.now())
-				.buyOutEndDate(LocalDate.now())
+				.buyOutPrimaryPaymentDeadline(LocalDate.now())
 				.secondaryReportingStartDate(LocalDate.now())
 				.build();
 		entityManager.persist(targetPeriod);
     	return targetPeriod;
 	}
 	
-	private PerformanceAccountTemplateDataEntity createPerformanceAccountTemplateDataEntity(Long accountId,
+	private void createPerformanceAccountTemplateDataEntity(Long accountId,
 			TargetPeriod targetPeriod, Year targetPeriodYear,
 			PerformanceAccountTemplateDataSubmissionType submissionType, int reportVersion) {
 		
@@ -259,7 +268,6 @@ class PerformanceAccountTemplateDataCustomRepositoryIT extends AbstractContainer
 				.reportVersion(reportVersion)
 				.build();
 		entityManager.persist(pat);
-    	return pat;
 	}
 
     private void flushAndClear() {

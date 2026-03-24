@@ -3,7 +3,6 @@ package uk.gov.cca.api.underlyingagreement.validation;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_AFTER_SCHEME_END_DATE;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_PREVIOUS_FACILITY_ID_CCA2_ONLY;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,8 +15,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import uk.gov.cca.api.common.config.Cca2TerminationConfig;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.service.SchemeTerminationHelper;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.facility.domain.FacilityValidationContext;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
@@ -29,7 +28,7 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 public class UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService {
 
 	private final FacilityDataQueryService facilityDataQueryService;
-	private final Cca2TerminationConfig cca2TerminationConfig;
+	private final SchemeTerminationHelper schemeTerminationHelper;
 	
 	public BusinessValidationResult validate(Set<Facility> facilities) {
         List<UnderlyingAgreementViolation> violations = new ArrayList<>();
@@ -54,9 +53,8 @@ public class UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService {
 	
 	private void validateFacilitySchemeAfterCca2EndDate(List<UnderlyingAgreementViolation> violations,
 			FacilityStatus status, Set<SchemeVersion> schemeVersions) {
-		if (LocalDate.now().isAfter(cca2TerminationConfig.getTerminationDate()) 
-				&& !FacilityStatus.EXCLUDED.equals(status)
-        		&& Set.of(SchemeVersion.CCA_2).equals(schemeVersions)) {
+		if (schemeTerminationHelper.isCca2Terminated(schemeVersions)
+				&& !FacilityStatus.EXCLUDED.equals(status)) {
         	violations.add(new UnderlyingAgreementViolation(Facility.class.getName(), INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_AFTER_SCHEME_END_DATE, schemeVersions));
         }
 	}
@@ -68,13 +66,9 @@ public class UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService {
                 	Set<SchemeVersion> previousFacilityParticipatingSchemeVersions = facilityValidationContextMap.get(id) != null 
                 			? facilityValidationContextMap.get(id).getParticipatingSchemeVersions()
                 					: Collections.emptySet();
-                    if (FacilityStatus.NEW.equals(facility.getStatus()) && previousFacilityIsCca2OnlyAfterEndDate(previousFacilityParticipatingSchemeVersions)) {
+                    if (FacilityStatus.NEW.equals(facility.getStatus()) && schemeTerminationHelper.isCca2Terminated(previousFacilityParticipatingSchemeVersions)) {
                     	violations.add(new UnderlyingAgreementViolation(Facility.class.getName(), INVALID_PREVIOUS_FACILITY_ID_CCA2_ONLY, id));
                     }
                 });
     }
-	
-	private boolean previousFacilityIsCca2OnlyAfterEndDate(Set<SchemeVersion> schemeVersions) {
-		return schemeVersions.equals(Set.of(SchemeVersion.CCA_2)) && LocalDate.now().isAfter(cca2TerminationConfig.getTerminationDate());
-	}
 }

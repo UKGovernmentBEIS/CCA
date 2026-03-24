@@ -72,6 +72,9 @@ export class ItemNamePipe implements PipeTransform {
       case 'AUDIT_TRACK_CORRECTIVE_ACTIONS':
         return 'Track corrective actions';
 
+      case 'NON_COMPLIANCE_DETAILS_SUBMIT':
+        return 'Provide non-compliance details';
+
       default:
         return null;
     }

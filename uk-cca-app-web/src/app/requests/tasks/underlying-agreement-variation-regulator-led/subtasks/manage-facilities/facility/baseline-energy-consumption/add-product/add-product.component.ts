@@ -119,6 +119,7 @@ export class AddProductComponent implements OnInit {
 
       group.controls.productName.setValidators([
         GovukValidators.required(`Product ${productIndex}: Enter a product name`),
+        GovukValidators.maxLength(255, 'Enter up to 255 characters'),
       ]);
 
       group.controls.baselineYear.setValidators([
@@ -138,6 +139,7 @@ export class AddProductComponent implements OnInit {
 
       group.controls.throughputUnit.setValidators([
         GovukValidators.required(`Product ${productIndex}: Enter the throughput unit`),
+        GovukValidators.maxLength(255, 'Enter up to 255 characters'),
       ]);
 
       this.form.updateValueAndValidity();

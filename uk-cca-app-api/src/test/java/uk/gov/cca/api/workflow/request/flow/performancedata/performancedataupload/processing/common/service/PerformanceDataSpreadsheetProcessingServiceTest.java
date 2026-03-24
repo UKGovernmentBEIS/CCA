@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataContainer;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
@@ -106,7 +106,7 @@ class PerformanceDataSpreadsheetProcessingServiceTest {
         final int reportVersion = 2;
         final PerformanceDataSpreadsheetProcessingRequestMetadata metadata =
                 PerformanceDataSpreadsheetProcessingRequestMetadata.builder()
-                        .targetPeriodDetails(TargetPeriodDTO.builder()
+                        .targetPeriodDetails(TargetPeriodYearDTO.builder()
                                 .businessId(TargetPeriodType.TP6)
                                 .build())
                         .performanceDataTargetPeriodType(PerformanceDataTargetPeriodType.TP6)
@@ -136,7 +136,7 @@ class PerformanceDataSpreadsheetProcessingServiceTest {
         final PerformanceDataReferenceDetails referenceDetails = PerformanceDataReferenceDetails.builder()
                 .accountDetails(accountDetails)
                 .underlyingAgreement(underlyingAgreement)
-                .targetPeriodDetails(TargetPeriodDTO.builder()
+                .targetPeriodDetails(TargetPeriodYearDTO.builder()
                         .businessId(TargetPeriodType.TP6)
                         .build())
                 .performanceDataCalculatedMetrics(performanceDataCalculatedMetrics)

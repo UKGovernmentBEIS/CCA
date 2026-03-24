@@ -163,6 +163,12 @@ export const APP_ROUTES: Routes = [
         loadChildren: () => import('./templates/templates.routes').then((r) => r.TEMPLATES_ROUTES),
       },
       {
+        path: 'sector-templates',
+        canActivate: [AuthorizeGuard],
+        loadComponent: () =>
+          import('./templates/sector-templates-container.component').then((c) => c.SectorTemplatesContainerComponent),
+      },
+      {
         path: 'terms',
         data: { pageTitle: 'Accept terms and conditions' },
         component: TermsAndConditionsComponent,

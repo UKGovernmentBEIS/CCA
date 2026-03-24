@@ -19,9 +19,20 @@ import { EmailsComponent } from './emails/emails.component';
       <ng-template govukTabLazy id="documents" label="Documents">
         <cca-documents />
       </ng-template>
+
+      <!-- <ng-template govukTabLazy id="sector-templates" label="Sector templates">
+        <cca-sector-templates />
+      </ng-template> -->
     </govuk-tabs>
   `,
-  imports: [PageHeadingComponent, TabsComponent, TabLazyDirective, EmailsComponent, DocumentsComponent],
+  imports: [
+    PageHeadingComponent,
+    TabsComponent,
+    TabLazyDirective,
+    EmailsComponent,
+    DocumentsComponent,
+    // SectorTemplatesComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TemplatesComponent {}

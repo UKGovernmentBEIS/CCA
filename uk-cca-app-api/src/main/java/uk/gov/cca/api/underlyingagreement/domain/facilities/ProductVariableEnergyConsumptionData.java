@@ -23,6 +23,7 @@ import java.time.Year;
 public class ProductVariableEnergyConsumptionData {
 
     @NotNull
+    @Size(max = 255)
     private String productName;
 
     @NotNull

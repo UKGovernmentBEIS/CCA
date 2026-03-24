@@ -40,8 +40,8 @@ export class ButtonDirective {
   }
 
   @HostListener('keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.code === 'Space') {
+  onKeyDown(event: Event): void {
+    if (event instanceof KeyboardEvent && event.code === 'Space') {
       event.target.dispatchEvent(new MouseEvent('click'));
     }
   }

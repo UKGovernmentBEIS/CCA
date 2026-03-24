@@ -6,7 +6,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.service.SchemeTerminationHelper;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementDocument;
@@ -28,6 +30,7 @@ import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidato
 import uk.gov.netz.api.common.exception.BusinessException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.ArrayList;
@@ -39,6 +42,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,6 +66,9 @@ class UnderlyingAgreementServiceTest {
     
     @Mock
     private UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
+    
+    @Mock
+    private SchemeTerminationHelper schemeTerminationHelper;
 
     @Test
     void submitUnderlyingAgreement() {
@@ -183,6 +191,8 @@ class UnderlyingAgreementServiceTest {
         when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
         		newContainer.getUnderlyingAgreement().getFacilities()))
 				.thenReturn(Set.of(SchemeVersion.CCA_3));
+        when(schemeTerminationHelper.resolveTerminationDate(
+				eq(Set.of(SchemeVersion.CCA_2)), any(LocalDateTime.class))).thenReturn(LocalDateTime.now());
 
         // Invoke
         underlyingAgreementService.updateUnderlyingAgreement(newContainer, accountId, underlyingAgreementValidationContext, false);
@@ -202,6 +212,7 @@ class UnderlyingAgreementServiceTest {
         verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
         verify(underlyingAgreementSchemeVersionsHelperService, times(1))
 				.calculateSchemeVersionsFromActiveFacilities(newContainer.getUnderlyingAgreement().getFacilities());
+        verify(schemeTerminationHelper, times(1)).resolveTerminationDate(eq(Set.of(SchemeVersion.CCA_2)), any(LocalDateTime.class));
     }
 
     @Test
@@ -246,6 +257,8 @@ class UnderlyingAgreementServiceTest {
         when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
         		newContainer.getUnderlyingAgreement().getFacilities()))
 				.thenReturn(Set.of(SchemeVersion.CCA_3));
+        when(schemeTerminationHelper.resolveTerminationDate(
+				eq(Set.of(SchemeVersion.CCA_2)), any(LocalDateTime.class))).thenReturn(LocalDateTime.now());
 
         // Invoke
         underlyingAgreementService
@@ -267,6 +280,7 @@ class UnderlyingAgreementServiceTest {
         verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
         verify(underlyingAgreementSchemeVersionsHelperService, times(1))
 				.calculateSchemeVersionsFromActiveFacilities(newContainer.getUnderlyingAgreement().getFacilities());
+        verify(schemeTerminationHelper, times(1)).resolveTerminationDate(eq(Set.of(SchemeVersion.CCA_2)), any(LocalDateTime.class));
     }
 
     @Test
@@ -384,12 +398,41 @@ class UnderlyingAgreementServiceTest {
         persistentEntity.addUnderlyingAgreementDocument(unaDocument);
 
         when(underlyingAgreementRepository.findByAccountId(accountId)).thenReturn(Optional.of(persistentEntity));
+        when(schemeTerminationHelper.resolveTerminationDate(Set.of(SchemeVersion.CCA_2), terminatedDate)).thenReturn(terminatedDate);
 
         // Invoke
         underlyingAgreementService.terminateActiveUnaDocuments(accountId, terminatedDate);
 
         // Verify
         verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
+        verify(schemeTerminationHelper, times(1)).resolveTerminationDate(Set.of(SchemeVersion.CCA_2), terminatedDate);
+    }
+    
+    @Test
+    void terminateActiveUnaDocuments_after_CCA2_termination_date() {
+        final long underlyingAgreementId = 1L;
+        final long accountId = 2L;
+        final LocalDateTime terminatedDate = LocalDateTime.now();
+        final LocalDate cca2EndDate = LocalDate.now().minusDays(1);
+
+        UnderlyingAgreementDocument unaDocument = UnderlyingAgreementDocument.createUnderlyingAgreementDocument(SchemeVersion.CCA_2);
+        UnderlyingAgreementEntity persistentEntity = UnderlyingAgreementEntity.builder()
+                .id(underlyingAgreementId)
+                .accountId(accountId)
+                .build();
+        persistentEntity.addUnderlyingAgreementDocument(unaDocument);
+
+        when(underlyingAgreementRepository.findByAccountId(accountId)).thenReturn(Optional.of(persistentEntity));
+        when(schemeTerminationHelper.resolveTerminationDate(Set.of(SchemeVersion.CCA_2), terminatedDate)).thenReturn(cca2EndDate.atStartOfDay());
+
+        // Invoke
+        underlyingAgreementService.terminateActiveUnaDocuments(accountId, terminatedDate);
+
+        // Verify
+        assertThat(persistentEntity.getDocumentForSchemeVersion(SchemeVersion.CCA_2).getTerminatedDate())
+        	.isEqualTo(cca2EndDate.atStartOfDay());
+        verify(underlyingAgreementRepository, times(1)).findByAccountId(accountId);
+        verify(schemeTerminationHelper, times(1)).resolveTerminationDate(Set.of(SchemeVersion.CCA_2), terminatedDate);
     }
 
     private void activateFacilities(UnderlyingAgreementContainer container) {

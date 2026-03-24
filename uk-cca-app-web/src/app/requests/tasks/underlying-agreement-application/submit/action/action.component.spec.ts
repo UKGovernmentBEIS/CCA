@@ -7,8 +7,7 @@ import { of } from 'rxjs';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub, MockType } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
-import { screen } from '@testing-library/angular';
-import UserEvent from '@testing-library/user-event';
+import { getByRole, getByText } from '@testing';
 
 import { UnderlyingAgreementSubmitActionComponent } from './action.component';
 
@@ -52,18 +51,19 @@ describe('UnderlyingAgreementSubmitActionComponent', () => {
   });
 
   it('should display the correct header and text', () => {
-    const heading = screen.getByRole('heading', { name: 'Submit to regulator' });
-    expect(heading).toBeInTheDocument();
-    expect(
-      screen.getByText('Your application will be sent directly to your Regulator (Environment Agency).'),
-    ).toBeInTheDocument();
+    const heading = getByRole('heading', { name: 'Submit to regulator' });
+    expect(heading).toBeTruthy();
+    expect(getByText('Your application will be sent directly to your Regulator (Environment Agency).')).toBeTruthy();
   });
 
   it('should submit and navigate to confirmation page', async () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
     const tasksApiServiceSpy = jest.spyOn(tasksApiService, 'saveRequestTaskAction');
-    const user = UserEvent.setup();
-    await user.click(screen.getByText('Confirm and send'));
+    const submitButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find(
+      (button: HTMLButtonElement) => button.textContent?.trim() === 'Confirm and send',
+    ) as HTMLButtonElement;
+    submitButton.click();
+    fixture.detectChanges();
 
     expect(tasksApiServiceSpy).toHaveBeenCalledTimes(1);
     expect(tasksApiServiceSpy).toHaveBeenCalledWith({

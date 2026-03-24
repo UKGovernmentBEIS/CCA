@@ -16,7 +16,7 @@ import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.SurplusCreateHi
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusProcessedDataService;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusTransactionIdentifierService;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusTransactionService;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusResult;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.SurplusDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.SurplusQueryService;
@@ -102,7 +102,7 @@ class BuyOutSurplusManagementServiceTest {
 
     @Test
     void generateTransactionCode() {
-        final TargetPeriodDTO targetPeriodDetails = TargetPeriodDTO.builder()
+        final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(TargetPeriodType.TP6)
                 .build();
 

@@ -107,5 +107,15 @@
             where key = 'ui.features.unaVariationHideStartTask';
         </rollback>
     </changeSet>
+    
+    <changeSet id="0_1_0_hide_non_compliance_start_task" author="loukerip@unisystems.gr">
+        <sql>
+            insert into configuration(key, value, type) values 
+            ('ui.features.nonComplianceHideStartTask', true, 'BOOLEAN')
+        </sql>
+        <rollback>
+            delete from configuration where key IN ('ui.features.nonComplianceHideStartTask');
+        </rollback>
+    </changeSet>
         
 </databaseChangeLog>

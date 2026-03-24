@@ -1,7 +1,7 @@
 import { inject, Injector, runInInjectionContext } from '@angular/core';
 import { CanActivateFn, CanDeactivateFn, Router } from '@angular/router';
 
-import { catchError, concatMap, forkJoin, map, of, switchMap, tap } from 'rxjs';
+import { catchError, forkJoin, map, of, switchMap, tap } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
 

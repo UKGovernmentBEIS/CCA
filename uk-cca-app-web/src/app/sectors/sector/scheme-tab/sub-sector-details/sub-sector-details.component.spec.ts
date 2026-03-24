@@ -1,53 +1,59 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { render } from '@testing-library/angular';
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
 import { mockSubSectorDetails } from '../../../specs/fixtures/mock';
 import { toSubsectorSchemeSummaryData } from '../scheme-summary-data';
 import { SubSectorDetailsComponent } from './sub-sector-details.component';
 
 describe('SubSectorDetailsComponent', () => {
+  let fixture: ComponentFixture<SubSectorDetailsComponent>;
+
   beforeEach(async () => {
-    await render(SubSectorDetailsComponent, {
-      componentProviders: [
+    await TestBed.configureTestingModule({
+      imports: [SubSectorDetailsComponent],
+      providers: [
         {
           provide: ActivatedRoute,
           useValue: new ActivatedRouteStub(null, null, { subSector: mockSubSectorDetails }, ''),
         },
       ],
-    });
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(SubSectorDetailsComponent);
+    fixture.detectChanges();
   });
 
   it('should render the subsector name in the page heading', () => {
     const pageHeading = document.querySelector('netz-page-heading');
-    expect(pageHeading).toHaveTextContent('sub-sector-name');
+    expect((pageHeading as HTMLElement | null)?.textContent ?? '').toContain('sub-sector-name');
   });
 
   it('should render all section titles', () => {
-    expect(screen.getByText('CCA2 (2013-2024)')).toBeInTheDocument();
-    expect(screen.getByText('Details')).toBeInTheDocument();
-    expect(screen.getByText('Sector commitment')).toBeInTheDocument();
+    expect(getByText('CCA2 (2013-2024)')).toBeTruthy();
+    expect(getByText('Details')).toBeTruthy();
+    expect(getByText('Sector commitment')).toBeTruthy();
   });
 
   it('should render target details', () => {
-    expect(screen.getByText('Target type')).toBeInTheDocument();
-    expect(screen.getByText('Relative')).toBeInTheDocument();
-    expect(screen.getByText('Throughput unit')).toBeInTheDocument();
-    expect(screen.getByText('tonne')).toBeInTheDocument();
-    expect(screen.getByText('Energy or Carbon unit')).toBeInTheDocument();
-    expect(screen.getByText('kWh')).toBeInTheDocument();
+    expect(getByText('Target type')).toBeTruthy();
+    expect(getByText('Relative')).toBeTruthy();
+    expect(getByText('Throughput unit')).toBeTruthy();
+    expect(getByText('tonne')).toBeTruthy();
+    expect(getByText('Energy or Carbon unit')).toBeTruthy();
+    expect(getByText('kWh')).toBeTruthy();
   });
 
   it('should render sector commitments', () => {
     // Check that target periods are rendered
-    expect(screen.getByText('2010-2011')).toBeInTheDocument();
-    expect(screen.getByText('2020-2021')).toBeInTheDocument();
+    expect(getByText('2010-2011')).toBeTruthy();
+    expect(getByText('2020-2021')).toBeTruthy();
 
     // Check that percentages are formatted correctly (0.10 becomes 10%, 0.15 becomes 15%)
-    expect(screen.getByText('10%')).toBeInTheDocument();
-    expect(screen.getByText('15%')).toBeInTheDocument();
+    expect(getByText('10%')).toBeTruthy();
+    expect(getByText('15%')).toBeTruthy();
   });
 
   describe('toSubsectorSchemeSummaryData', () => {

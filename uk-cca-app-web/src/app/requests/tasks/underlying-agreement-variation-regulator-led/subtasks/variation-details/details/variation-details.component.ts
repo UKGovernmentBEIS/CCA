@@ -87,7 +87,6 @@ function updateVariationDetails(
       ...draft.underlyingAgreementVariationDetails,
       reason: form.value.reason,
       modifications: [
-        ...(draft.underlyingAgreementVariationDetails?.modifications ?? []),
         ...(form.value?.requireOperatorAssent ?? []),
         ...(form.value?.dontRequireOperatorAssent ?? []),
         ...(form.value?.otherChanges ?? []),

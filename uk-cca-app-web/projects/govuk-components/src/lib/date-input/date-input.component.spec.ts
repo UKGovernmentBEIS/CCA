@@ -25,8 +25,6 @@ describe('DateInputComponent', () => {
   }
 
   let component: DateInputComponent;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let component2: DateInputComponent;
   let hostComponent: TestComponent;
   let fixture: ComponentFixture<TestComponent>;
   let fixture2: ComponentFixture<Test2Component>;
@@ -46,7 +44,6 @@ describe('DateInputComponent', () => {
     fixture2 = TestBed.createComponent(Test2Component);
     hostComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(DateInputComponent)).componentInstance;
-    component2 = fixture2.debugElement.query(By.directive(DateInputComponent)).componentInstance;
     fixture.detectChanges();
     fixture2.detectChanges();
   });

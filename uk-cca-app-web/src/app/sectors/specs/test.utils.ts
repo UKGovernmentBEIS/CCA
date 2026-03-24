@@ -3,8 +3,7 @@ import { HttpTestingController, TestRequest } from '@angular/common/http/testing
 import { TestBed, tick } from '@angular/core/testing';
 import { RouterTestingHarness } from '@angular/router/testing';
 
-import { screen } from '@testing-library/dom';
-import UserEvent, { UserEvent as UE } from '@testing-library/user-event';
+import { clear, click, getByLabelText, getByTestId, getByText, type } from '@testing';
 
 import { SectorComponent } from '../sector/sector.component';
 import {
@@ -19,42 +18,71 @@ import { sectorBasicUserDetailsFixture } from './fixtures/sector-user-details.fi
 type Opts = {
   harness: RouterTestingHarness;
   httpTestingController: HttpTestingController;
-  user: UE;
 };
 
-export async function navigateToAddOperatorUser({ user, harness }: Opts) {
-  expect(document.getElementById('users-and-contacts')).toBeVisible;
-  harness.detectChanges();
-
-  await user.click(screen.getByText('Add a new operator'));
-  expect(screen.getByTestId('add-operator-form')).toBeVisible();
+function normalizedText(value: string | null | undefined): string {
+  return (value ?? '').replace(/\s+/g, ' ').trim();
 }
 
-export async function navigateToTargetUnitUsers({ user, harness, httpTestingController }: Opts, accountId: number) {
-  expect(screen.getByTestId('target-unit')).toBeVisible();
-  await user.click(screen.getByText('Users and contacts'));
+function clickInteractiveByText(text: string) {
+  const candidates = Array.from(document.querySelectorAll<HTMLElement>('a,button,[role="button"]'));
+  const interactive = candidates.find((el) => normalizedText(el.textContent) === text);
+
+  if (interactive) {
+    interactive.click();
+    return;
+  }
+
+  click(getByText(text));
+}
+
+function clickTab(tabId: string, label: string) {
+  const tabControl =
+    (document.querySelector(`a.govuk-tabs__tab[aria-controls="${tabId}"]`) as HTMLElement | null) ??
+    (document.querySelector(`button[aria-controls="${tabId}"]`) as HTMLElement | null) ??
+    (getByText(label).closest('a,button') as HTMLElement | null) ??
+    getByText(label);
+
+  if (tabControl instanceof HTMLAnchorElement || tabControl instanceof HTMLButtonElement) {
+    tabControl.click();
+  } else {
+    click(tabControl);
+  }
+}
+
+export async function navigateToAddOperatorUser({ harness }: Opts) {
+  expect(document.getElementById('users-and-contacts')).toBeTruthy();
   harness.detectChanges();
+
+  clickInteractiveByText('Add a new operator');
+  expect(getByTestId('add-operator-form')).toBeTruthy();
+}
+
+export async function navigateToTargetUnitUsers({ harness, httpTestingController }: Opts, accountId: number) {
+  expect(getByTestId('target-unit')).toBeTruthy();
+  clickTab('users-and-contacts', 'Users and contacts');
+  harness.detectChanges();
+  await harness.fixture.whenStable();
 
   const req = httpTestingController.expectOne(`/api/v1.0/operator-authorities/account/${accountId}`);
   req.flush(mockOperatorAuthorities);
 
-  expect(document.getElementById('users-and-contacts')).toBeVisible();
+  expect(document.getElementById('users-and-contacts')).toBeTruthy();
 }
 
 export async function navigateToTargetUnit(sectorId: number, targetUnitName: string, opts: Opts) {
-  const { user, harness, httpTestingController } = opts;
+  const { harness, httpTestingController } = opts;
   await navigateToTargetUnits(sectorId, opts);
-  await user.click(screen.getByText(targetUnitName));
+  clickInteractiveByText(targetUnitName);
 
   const req = httpTestingController.expectOne('/api/v1.0/target-unit-accounts/1');
   req.flush(mockTargetUnitAccount(sectorId));
   await harness.fixture.whenStable();
   harness.detectChanges();
-  expect(screen.getByTestId('target-unit-details')).toBeVisible();
+  expect(getByTestId('target-unit-details')).toBeTruthy();
 }
 
 export async function navigateToTargetUnits(id: number, { harness, httpTestingController }: Opts) {
-  const user = UserEvent.setup();
   harness.navigateByUrl(`/${id}`, SectorComponent);
   let req: TestRequest | null;
   tick();
@@ -62,7 +90,9 @@ export async function navigateToTargetUnits(id: number, { harness, httpTestingCo
   req.flush(mockSectorDetails);
   await harness.fixture.whenStable();
 
-  await user.click(screen.getByText('Target units'));
+  clickTab('target-units', 'Target units');
+  harness.detectChanges();
+  await harness.fixture.whenStable();
   req = httpTestingController.expectOne(`/api/v1.0/sector-authorities/sector-association/${id}`);
   req.flush(mockSectorAuthorities);
   await harness.fixture.whenStable();
@@ -72,11 +102,10 @@ export async function navigateToTargetUnits(id: number, { harness, httpTestingCo
   await harness.fixture.whenStable();
 
   harness.detectChanges();
-  expect(screen.getByTestId('target-unit-list')).toBeVisible();
+  expect(getByTestId('target-unit-list')).toBeTruthy();
 }
 
 export async function navigateToContacts(id: number, { harness, httpTestingController }: Opts) {
-  const user = UserEvent.setup();
   harness.navigateByUrl(`/${id}`, SectorComponent);
   tick();
   let req: TestRequest | null;
@@ -84,55 +113,55 @@ export async function navigateToContacts(id: number, { harness, httpTestingContr
   req.flush(mockSectorDetails);
   await harness.fixture.whenStable();
 
-  await user.click(screen.getByText('Contacts'));
+  clickTab('contacts', 'Contacts');
+  harness.detectChanges();
+  await harness.fixture.whenStable();
   req = httpTestingController.expectOne(`/api/v1.0/sector-authorities/sector-association/${id}`);
   req.flush(mockSectorAuthorities);
   await harness.fixture.whenStable();
   harness.detectChanges();
-  expect(screen.getByTestId('sector-user-type-form')).toBeVisible();
+  expect(getByTestId('sector-user-type-form')).toBeTruthy();
 }
 
-export async function navigateToAddSector(
-  id: number,
-  roleValue: string,
-  { harness, httpTestingController, user }: Opts,
-) {
-  await user.selectOptions(document.getElementById('userType'), roleValue);
-  await user.click(screen.getByText('Continue'));
+export async function navigateToAddSector(id: number, roleValue: string, { harness, httpTestingController }: Opts) {
+  const selectElement = document.getElementById('userType') as HTMLSelectElement;
+  selectElement.value = roleValue;
+  selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+  clickInteractiveByText('Continue');
 
   const req = httpTestingController.expectOne(`/api/v1.0/sector-authorities/sector-association/${id}`);
   req.flush(mockSectorAuthorities);
   await harness.fixture.whenStable();
 
-  expect(screen.getByTestId('add-sector-user-form')).toBeVisible();
+  expect(getByTestId('add-sector-user-form')).toBeTruthy();
   expect(TestBed.inject(Location).path()).toEqual(`/${id}/sector-user/add?role=sector_user_administrator`);
   harness.fixture.detectChanges();
 }
 
-export async function fillAddSectorUserForm(email: string, { user }: Opts) {
-  await user.type(screen.getByLabelText('Email address'), email);
-  await user.type(screen.getByLabelText('First name'), 'Sector');
-  await user.type(screen.getByLabelText('Last name'), 'User');
+export async function fillAddSectorUserForm(email: string) {
+  type(getByLabelText('Email address') as HTMLInputElement, email);
+  type(getByLabelText('First name') as HTMLInputElement, 'Sector');
+  type(getByLabelText('Last name') as HTMLInputElement, 'User');
 }
 
-export async function submitSectorUserForm({ user, harness }: Opts) {
-  await user.click(screen.getByText('Submit'));
+export async function submitSectorUserForm({ harness }: Opts) {
+  clickInteractiveByText('Submit');
   harness.detectChanges();
   await harness.fixture.whenStable();
 }
 
 export async function assertConfirmationPage() {
-  expect(screen.getByTestId('confirmation-screen')).toBeVisible();
-  expect(screen.getByText('Return to: Contacts')).toBeVisible();
+  expect(getByTestId('confirmation-screen')).toBeTruthy();
+  expect(getByText('Return to: Contacts')).toBeTruthy();
 }
 
 export async function navigateToSectorUserDetails(
   sectorId: number,
   sectorUserId: string,
   name: string,
-  { harness, httpTestingController, user }: Opts,
+  { harness, httpTestingController }: Opts,
 ) {
-  await user.click(screen.getByText(name));
+  clickInteractiveByText(name);
 
   let req = httpTestingController.expectOne(`/api/v1.0/sector-users/sector-association/${sectorId}/${sectorUserId}`);
   req.flush(sectorBasicUserDetailsFixture);
@@ -143,48 +172,43 @@ export async function navigateToSectorUserDetails(
   await harness.fixture.whenStable();
   harness.detectChanges();
 
-  expect(screen.getByTestId('sector-user-details-list')).toBeVisible();
-  expect(screen.getByTestId('sector-user-organisation-details-list')).toBeVisible();
+  expect(getByTestId('sector-user-details-list')).toBeTruthy();
+  expect(getByTestId('sector-user-organisation-details-list')).toBeTruthy();
 }
 
-export async function navigateToEditSectorUserDetails({ harness, user }: Opts) {
-  const changeLink = screen.getAllByText('Change')[0];
-  await user.click(changeLink);
+export async function navigateToEditSectorUserDetails({ harness }: Opts) {
+  clickInteractiveByText('Change');
   await harness.fixture.whenStable();
   harness.detectChanges();
-  expect(screen.getByText('Change user details')).toBeVisible();
+  expect(getByText('Change user details')).toBeTruthy();
 }
 
-export async function changeSectorUserDetailsFormName(
-  newFirstName: string,
-  newLastName: string,
-  { harness, user }: Opts,
-) {
-  const firstNameInput = screen.getByLabelText('First name') as HTMLInputElement;
-  const lastNameInput = screen.getByLabelText('Last name') as HTMLInputElement;
+export async function changeSectorUserDetailsFormName(newFirstName: string, newLastName: string, { harness }: Opts) {
+  const firstNameInput = getByLabelText('First name') as HTMLInputElement;
+  const lastNameInput = getByLabelText('Last name') as HTMLInputElement;
   const contactType = document.getElementsByClassName('govuk-radios__input');
 
-  await user.clear(firstNameInput);
-  await user.type(firstNameInput, newFirstName);
+  clear(firstNameInput);
+  type(firstNameInput, newFirstName);
 
-  await user.clear(lastNameInput);
-  await user.type(lastNameInput, newLastName);
+  clear(lastNameInput);
+  type(lastNameInput, newLastName);
 
-  await user.click(contactType[1]);
+  click(contactType[1] as HTMLElement);
 
   harness.detectChanges();
   await harness.fixture.whenStable();
 
-  expect(firstNameInput).toHaveValue(newFirstName);
-  expect(lastNameInput).toHaveValue(newLastName);
-  expect(contactType[1]).toBeChecked();
+  expect(firstNameInput.value).toBe(newFirstName);
+  expect(lastNameInput.value).toBe(newLastName);
+  expect((contactType[1] as HTMLInputElement).checked).toBe(true);
 }
 
-export async function submitSectorUserDetailsForm({ user, harness }: Opts) {
-  await user.click(screen.getByText('Confirm and continue'));
+export async function submitSectorUserDetailsForm({ harness }: Opts) {
+  clickInteractiveByText('Confirm and continue');
   await harness.fixture.whenStable();
 }
 
 export async function checkThatSectorUserDetailsAreUpdated(newName: string) {
-  expect(screen.getByText(newName)).toBeVisible();
+  expect(getByText(newName)).toBeTruthy();
 }

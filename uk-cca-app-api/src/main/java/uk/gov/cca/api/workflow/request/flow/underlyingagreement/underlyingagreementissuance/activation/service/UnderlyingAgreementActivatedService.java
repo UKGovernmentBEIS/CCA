@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
-import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountUpdateDTO;
 import uk.gov.cca.api.account.service.TargetUnitAccountUpdateService;
 import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
@@ -22,6 +21,7 @@ import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.UnderlyingAgreementFacilityCertificationTransferService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.UnderlyingAgreementHandleCca2FacilitiesAfterTerminationDateService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.transform.UnderlyingAgreementAccountReferenceDataMapper;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementFacilityReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestPayload;
@@ -48,6 +48,7 @@ public class UnderlyingAgreementActivatedService {
     private final AccountSearchAdditionalKeywordService accountSearchAdditionalKeywordService;
     private final TargetUnitAccountUpdateService targetUnitAccountUpdateService;
     private final UnderlyingAgreementFacilityCertificationTransferService facilityTransferService;
+    private final UnderlyingAgreementHandleCca2FacilitiesAfterTerminationDateService underlyingAgreementHandleCca2FacilitiesAfterTerminationDateService;
 
     private static final UnderlyingAgreementContainerMapper UNA_CONTAINER_MAPPER = Mappers.getMapper(UnderlyingAgreementContainerMapper.class);
     private static final UnderlyingAgreementAccountReferenceDataMapper ACCOUNT_DATA_MAPPER = Mappers.getMapper(UnderlyingAgreementAccountReferenceDataMapper.class);
@@ -60,6 +61,10 @@ public class UnderlyingAgreementActivatedService {
 
         UnderlyingAgreementContainer unaContainerFinal =
                 UNA_CONTAINER_MAPPER.toUnderlyingAgreementContainer(requestPayload, accountReferenceData);
+        
+        // Handle potential CCA2 facilities after CCA2 termination date
+        underlyingAgreementHandleCca2FacilitiesAfterTerminationDateService.handleCca2FacilitiesAfterTerminationDate(
+        		unaContainerFinal.getUnderlyingAgreement());
 
         // Save underlying agreement
         UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()

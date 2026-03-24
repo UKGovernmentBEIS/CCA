@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnChanges, SimpleChanges, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { RequestTaskDTO, RequestTaskItemDTO } from 'cca-api';

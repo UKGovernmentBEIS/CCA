@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`TermsAndConditionsComponent should create: terms-and-conditions  1`] = `
-<div
-  id="root0"
->
+<div>
   <netz-page-heading
     size="xl"
   >

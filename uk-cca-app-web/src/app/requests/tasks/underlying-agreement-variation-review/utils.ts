@@ -24,6 +24,43 @@ import {
 type DecisionType = UnderlyingAgreementVariationFacilityReviewDecision['type'];
 type FacilityWithDecision = Facility & { decisionType: 'ACCEPTED' | 'REJECTED' };
 
+const assertCondition: (condition: unknown, message: string) => asserts condition = (condition, message) => {
+  if (!condition) {
+    throw new Error(message);
+  }
+};
+
+const assertFacilityDecisionReferences = (
+  facilitiesReviewGroupDecisions: Record<string, UnderlyingAgreementVariationFacilityReviewDecision>,
+  facilities: Facility[],
+) => {
+  const facilityIds = new Set(facilities.map((facility) => facility.facilityId));
+  const invalidFacilityId = Object.keys(facilitiesReviewGroupDecisions).find(
+    (facilityId) => !facilityIds.has(facilityId),
+  );
+
+  assertCondition(
+    !invalidFacilityId,
+    `Malformed payload: facilitiesReviewGroupDecisions contains unknown facilityId ${invalidFacilityId}`,
+  );
+};
+
+const assertRejectedFacilityExistsInOriginal = (
+  facility: FacilityWithDecision,
+  originalUnderlyingAgreementContainer: UnderlyingAgreementContainer,
+) => {
+  const originalFacility = originalUnderlyingAgreementContainer.underlyingAgreement.facilities.find(
+    (original) => original.facilityId === facility.facilityId,
+  );
+
+  assertCondition(
+    originalFacility,
+    `Malformed payload: originalUnderlyingAgreementContainer is missing facilityId ${facility.facilityId}`,
+  );
+
+  return originalFacility;
+};
+
 const requiredDecisions = (payload: UNAVariationReviewRequestTaskPayload) =>
   payload.underlyingAgreement.targetPeriod5Details
     ? staticVariationGroupDecisions
@@ -50,9 +87,7 @@ const notRejectedAndNew = (f: FacilityWithDecision) => !(f.decisionType === 'REJ
 const rejectedToOriginal =
   (originalUnderlyingAgreementContainer: UnderlyingAgreementContainer) => (facility: FacilityWithDecision) =>
     facility.decisionType === 'REJECTED'
-      ? originalUnderlyingAgreementContainer.underlyingAgreement.facilities.find(
-          (f) => f.facilityId === facility.facilityId,
-        )
+      ? assertRejectedFacilityExistsInOriginal(facility, originalUnderlyingAgreementContainer)
       : toFacility(facility);
 
 const toFacility = (f: FacilityWithDecision) =>
@@ -141,6 +176,35 @@ export const createProposedUnderlyingAgreementVariationPayload = (
     reviewSectionsCompleted,
   } = payload;
 
+  assertCondition(
+    underlyingAgreement && Array.isArray(underlyingAgreement.facilities),
+    'Malformed payload: underlyingAgreement.facilities is required to create proposed underlying agreement payload',
+  );
+
+  assertCondition(
+    reviewSectionsCompleted,
+    'Malformed payload: reviewSectionsCompleted is required to create proposed underlying agreement payload',
+  );
+
+  assertCondition(
+    reviewGroupDecisions,
+    'Malformed payload: reviewGroupDecisions is required to create proposed underlying agreement payload',
+  );
+
+  assertCondition(
+    facilitiesReviewGroupDecisions,
+    'Malformed payload: facilitiesReviewGroupDecisions is required to create proposed underlying agreement payload',
+  );
+
+  assertCondition(
+    originalUnderlyingAgreementContainer &&
+      originalUnderlyingAgreementContainer.underlyingAgreement &&
+      Array.isArray(originalUnderlyingAgreementContainer.underlyingAgreement.facilities),
+    'Malformed payload: originalUnderlyingAgreementContainer.underlyingAgreement.facilities is required to create proposed underlying agreement payload',
+  );
+
+  assertFacilityDecisionReferences(facilitiesReviewGroupDecisions, underlyingAgreement.facilities);
+
   const unchangedFacilities: Facility[] = underlyingAgreement.facilities.filter(
     (f) => reviewSectionsCompleted[f.facilityId] === TaskItemStatus.UNCHANGED,
   );
@@ -155,6 +219,10 @@ export const createProposedUnderlyingAgreementVariationPayload = (
   };
 
   if (reviewGroupDecisions['TARGET_UNIT_DETAILS']?.type === TaskItemStatus.REJECTED) {
+    assertCondition(
+      accountReferenceData,
+      'Malformed payload: accountReferenceData is required when TARGET_UNIT_DETAILS is REJECTED',
+    );
     proposed.underlyingAgreementTargetUnitDetails = transformAccountReferenceData(accountReferenceData);
   }
 

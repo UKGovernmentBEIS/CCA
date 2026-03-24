@@ -1,46 +1,47 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { of } from 'rxjs';
 
 import { AuthService, LatestTermsStore } from '@shared/services';
-import { render } from '@testing-library/angular';
 
 import { UsersService } from 'cca-api';
 
 import { TermsAndConditionsComponent } from './terms-and-conditions.component';
 
 describe('TermsAndConditionsComponent', () => {
+  let fixture: ComponentFixture<TermsAndConditionsComponent>;
   let httpTestingController: HttpTestingController;
   let latestTermsStore: LatestTermsStore;
-  let container: Element;
 
   const authService: Partial<jest.Mocked<AuthService>> = {
     loadUserTerms: jest.fn(() => of({})),
   };
 
   beforeEach(async () => {
-    const renderResult = await render(TermsAndConditionsComponent, {
+    await TestBed.configureTestingModule({
+      imports: [TermsAndConditionsComponent],
       providers: [
         UsersService,
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: AuthService, useValue: authService },
       ],
-      configureTestBed: (testbed) => {
-        latestTermsStore = testbed.inject(LatestTermsStore);
-        latestTermsStore.setLatestTerms({ url: '/test', version: 2 });
+    }).compileComponents();
 
-        httpTestingController = testbed.inject(HttpTestingController);
-      },
-    });
+    latestTermsStore = TestBed.inject(LatestTermsStore);
+    latestTermsStore.setLatestTerms({ url: '/test', version: 2 });
 
-    container = renderResult.container;
+    httpTestingController = TestBed.inject(HttpTestingController);
+
+    fixture = TestBed.createComponent(TermsAndConditionsComponent);
+    fixture.detectChanges();
   });
 
   afterEach(() => httpTestingController.verify());
 
   it('should create', () => {
-    expect(container).toMatchSnapshot('terms-and-conditions ');
+    expect(fixture.nativeElement).toMatchSnapshot('terms-and-conditions ');
   });
 });

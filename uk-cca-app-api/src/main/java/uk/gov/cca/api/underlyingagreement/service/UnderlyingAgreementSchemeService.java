@@ -41,6 +41,8 @@ public class UnderlyingAgreementSchemeService {
     public void terminateUnaForSchemeVersion(Long accountId, SchemeVersion schemeVersion, LocalDateTime terminatedDate) {
         UnderlyingAgreementEntity entity = underlyingAgreementService.findUnderlyingAgreementEntity(accountId);
 
+        terminateUnaDocumentsForSchemeVersion(schemeVersion, terminatedDate, entity);
+        
         // Remove facilities associated with the scheme version
         entity.getUnderlyingAgreementContainer().getUnderlyingAgreement().getFacilities()
         	.removeIf(f ->
@@ -49,12 +51,22 @@ public class UnderlyingAgreementSchemeService {
         	.getParticipatingSchemeVersions()
         	.equals(Set.of(schemeVersion))
         	);
-        
-        // Terminate UNA document for the scheme version
-        entity.getUnderlyingAgreementDocuments()
+    }
+	
+	@Transactional
+    public void terminateUnaDocumentsForSchemeVersion(Long accountId, SchemeVersion schemeVersion, LocalDateTime terminatedDate) {
+        UnderlyingAgreementEntity entity = underlyingAgreementService.findUnderlyingAgreementEntity(accountId);
+
+        terminateUnaDocumentsForSchemeVersion(schemeVersion, terminatedDate, entity);
+    }
+
+	private void terminateUnaDocumentsForSchemeVersion(SchemeVersion schemeVersion, LocalDateTime terminatedDate,
+			UnderlyingAgreementEntity entity) {
+
+		entity.getUnderlyingAgreementDocuments()
                 .stream()
                 .filter(document -> document.getSchemeVersion().equals(schemeVersion) 
                 		&& ObjectUtils.isEmpty(document.getTerminatedDate()))
                 .forEach(document -> underlyingAgreementService.terminateUnderlyingAgreementDocument(document, terminatedDate));
-    }
+	}
 }

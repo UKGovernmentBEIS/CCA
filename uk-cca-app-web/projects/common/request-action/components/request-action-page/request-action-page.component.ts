@@ -3,11 +3,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   Injector,
   runInInjectionContext,
   Signal,
   Type,
-  inject,
 } from '@angular/core';
 
 import { PageHeadingComponent, TaskListComponent } from '@netz/common/components';

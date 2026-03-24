@@ -8,10 +8,10 @@ import { PageHeadingComponent } from '@netz/common/components';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { BackToTopComponent } from '@shared/components';
 import { KeycloakService } from '@shared/services';
-import { screen } from '@testing-library/dom';
 
 import { AuthoritiesService, TermsAndConditionsService, UsersService, UserStateDTO } from 'cca-api';
 
+import { getByText } from '../../testing/angular-jest-test-utils';
 import {
   mockAuthorityService,
   mockKeycloakService,
@@ -73,30 +73,32 @@ describe('LandingPageComponent', () => {
 
     authStore.setIsLoggedIn(true);
     setUser('OPERATOR', 'NO_AUTHORITY');
-    expect(screen.getByText('Contact your administrator to access your account.')).toBeInTheDocument();
+    expect(getByText('Contact your administrator to access your account.', fixture.nativeElement)).toBeTruthy();
 
     setUser('REGULATOR', 'DISABLED');
     expect(
-      screen.getByText(
+      getByText(
         'Your user account has been disabled. Please contact your admin to gain access to your account.',
+        fixture.nativeElement,
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
   });
 
   it(`should show disabled message when role='REGULATOR' and status 'DISABLED'`, () => {
     authStore.setIsLoggedIn(true);
     setUser('REGULATOR', 'DISABLED');
     expect(
-      screen.getByText(
+      getByText(
         'Your user account has been disabled. Please contact your admin to gain access to your account.',
+        fixture.nativeElement,
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
   });
 
   it(`should show ACCEPTED message when user login status is 'ACCEPTED'`, () => {
     authStore.setIsLoggedIn(true);
     setUser('SECTOR_USER', 'ACCEPTED');
-    expect(screen.getByText('Your user account needs activation.')).toBeInTheDocument();
-    expect(screen.getByText('Contact your admin to gain access to your account.')).toBeInTheDocument();
+    expect(getByText('Your user account needs activation.', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Contact your admin to gain access to your account.', fixture.nativeElement)).toBeTruthy();
   });
 });

@@ -8,8 +8,7 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
-import { screen } from '@testing-library/angular';
-import UserEvent from '@testing-library/user-event';
+import { click, getAllByText, getByText } from '@testing';
 
 import { mockRequestTaskState } from '../../../testing/mock-data';
 import AuthorisationAdditionalEvidenceCheckYourAnswersComponent from './authorisation-additional-evidence-check-your-answers.component';
@@ -53,30 +52,31 @@ describe('CheckYourAnswersComponent', () => {
   });
 
   it('should render the page heading', () => {
-    const heading = screen.getByRole('heading', { name: 'Check your answers' });
-    expect(heading).toBeInTheDocument();
+    const heading = getByText('Check your answers');
+    expect(heading).toBeTruthy();
   });
 
   it('should render the summary sections and rows', () => {
-    const authorisationAndAdditionalEvidenceHeadingAndSummaryKey = screen.getAllByText('Authorisation');
+    const authorisationAndAdditionalEvidenceHeadingAndSummaryKey = getAllByText('Authorisation');
     expect(
       authorisationAndAdditionalEvidenceHeadingAndSummaryKey[0] &&
         authorisationAndAdditionalEvidenceHeadingAndSummaryKey[1],
-    ).toBeInTheDocument();
-    const additionalEvidenceHeadingAndSummaryKey = screen.getAllByText('Authorisation');
-    expect(additionalEvidenceHeadingAndSummaryKey[0] && additionalEvidenceHeadingAndSummaryKey[1]).toBeInTheDocument();
-    const noFilesProvided = screen.getAllByText('No files provided');
-    expect(noFilesProvided[0] && noFilesProvided[1]).toHaveTextContent('No files provided');
+    ).toBeTruthy();
+    const additionalEvidenceHeadingAndSummaryKey = getAllByText('Authorisation');
+    expect(additionalEvidenceHeadingAndSummaryKey[0] && additionalEvidenceHeadingAndSummaryKey[1]).toBeTruthy();
+    const noFilesProvided = getAllByText('No files provided');
+    expect(((noFilesProvided[0] && noFilesProvided[1]) as HTMLElement | null)?.textContent ?? '').toContain(
+      'No files provided',
+    );
   });
 
   it('should contain submit button and "return to" link', () => {
-    expect(screen.getByText('Confirm and complete')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Apply to vary the underlying agreement')).toBeInTheDocument();
+    expect(getByText('Confirm and complete')).toBeTruthy();
+    expect(getByText('Return to: Apply to vary the underlying agreement')).toBeTruthy();
   });
 
-  it('should submit form and call submitSubtask method', async () => {
-    const user = UserEvent.setup();
-    await user.click(screen.getByText('Confirm and complete'));
+  it('should submit form and call submitSubtask method', () => {
+    click(getByText('Confirm and complete'));
     expect(submitSubtaskSpy).toHaveBeenCalledTimes(1);
   });
 });

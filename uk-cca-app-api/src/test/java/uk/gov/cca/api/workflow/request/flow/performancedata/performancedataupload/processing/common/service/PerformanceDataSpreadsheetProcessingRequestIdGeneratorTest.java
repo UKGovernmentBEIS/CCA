@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingRequestMetadata;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestParams;
@@ -24,7 +24,7 @@ class PerformanceDataSpreadsheetProcessingRequestIdGeneratorTest {
         final RequestParams params = RequestParams.builder()
                 .requestMetadata(PerformanceDataSpreadsheetProcessingRequestMetadata.builder()
                         .accountBusinessId("ADS_1-T00001")
-                        .targetPeriodDetails(TargetPeriodDTO.builder()
+                        .targetPeriodDetails(TargetPeriodYearDTO.builder()
                                 .businessId(TargetPeriodType.TP6)
                                 .build())
                         .reportVersion(1)

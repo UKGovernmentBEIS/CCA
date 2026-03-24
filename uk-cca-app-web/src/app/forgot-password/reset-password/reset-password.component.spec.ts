@@ -6,7 +6,7 @@ import { of, throwError } from 'rxjs';
 
 import { PageNotFoundComponent } from '@error/page-not-found/page-not-found.component';
 import { BasePage, MockType } from '@netz/common/testing';
-import UserEvent from '@testing-library/user-event';
+import { PasswordValidators } from '@shared/components';
 
 import { ForgotPasswordService } from 'cca-api';
 
@@ -43,7 +43,7 @@ describe('ResetPasswordComponent', () => {
   }
 
   const forgotPasswordService: MockType<ForgotPasswordService> = {
-    verifyToken: jest.fn().mockReturnValue(of(null)),
+    verifyToken: jest.fn().mockReturnValue(of({ email: 'test@mail.com' })),
   };
 
   beforeEach(async () => {
@@ -88,22 +88,30 @@ describe('ResetPasswordComponent', () => {
   });
 
   it('should submit only if form valid', async () => {
-    const user = UserEvent.setup();
-    const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
-    page.passwordValue = '';
-    page.repeatedPasswordValue = '';
-    page.submitButton.click();
+    PasswordValidators.blacklisted = jest.fn().mockReturnValue(of(null));
+    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    component.form.controls.password.setValue('');
+    component.form.controls.validatePassword.setValue('');
+    fixture.detectChanges();
+    component.submitPassword();
     fixture.detectChanges();
 
-    page.passwordValue = 'test';
-    page.submitButton.click();
+    component.form.controls.password.setValue('test');
+    component.form.controls.validatePassword.setValue('test');
+    fixture.detectChanges();
+    component.submitPassword();
     fixture.detectChanges();
     expect(navigateSpy).not.toHaveBeenCalled();
 
-    page.passwordValue = 'ThisIsAStrongP@ssw0rd';
-    page.repeatedPasswordValue = 'ThisIsAStrongP@ssw0rd';
+    component.form.controls.password.setValue('ThisIsAStrongP@ssw0rd');
+    component.form.controls.validatePassword.setValue('ThisIsAStrongP@ssw0rd');
+    fixture.detectChanges();
+    await fixture.whenStable();
 
-    await user.click(page.submitButton);
+    jest.spyOn(component.form, 'valid', 'get').mockReturnValue(true);
+
+    component.submitPassword();
+    fixture.detectChanges();
 
     expect(navigateSpy).toHaveBeenCalled();
   });

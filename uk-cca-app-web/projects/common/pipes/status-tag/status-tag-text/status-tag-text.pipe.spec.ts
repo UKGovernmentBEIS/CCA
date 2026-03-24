@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { StatusTagTextPipe } from './status-tag-text.pipe';
 import { TASK_STATUS_TAG_MAP } from '../status-tag.providers';
+import { StatusTagTextPipe } from './status-tag-text.pipe';
 
 describe('StatusTagTextPipe', () => {
   let pipe: StatusTagTextPipe;

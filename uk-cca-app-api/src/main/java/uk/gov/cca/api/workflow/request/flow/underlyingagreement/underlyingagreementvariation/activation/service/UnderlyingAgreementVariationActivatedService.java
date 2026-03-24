@@ -9,6 +9,7 @@ import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.core.domain.AccountReferenceData;
 import uk.gov.cca.api.workflow.request.core.service.AccountReferenceDetailsService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.UnderlyingAgreementHandleCca2FacilitiesAfterTerminationDateService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.service.UnderlyingAgreementVariationService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.transform.UnderlyingAgreementVariationContainerDeepCloneMapper;
@@ -23,6 +24,7 @@ public class UnderlyingAgreementVariationActivatedService {
     private final AccountReferenceDetailsService accountReferenceDetailsService;
     private final UnderlyingAgreementService underlyingAgreementService;
     private final UnderlyingAgreementVariationService underlyingAgreementVariationService;
+    private final UnderlyingAgreementHandleCca2FacilitiesAfterTerminationDateService underlyingAgreementHandleCca2FacilitiesAfterTerminationDateService;
 
     private static final UnderlyingAgreementVariationContainerDeepCloneMapper UNA_VARIATION_CONTAINER_DEEP_CLONE_MAPPER =
             Mappers.getMapper(UnderlyingAgreementVariationContainerDeepCloneMapper.class);
@@ -33,6 +35,10 @@ public class UnderlyingAgreementVariationActivatedService {
         Long accountId = request.getAccountId();
         AccountReferenceData accountReferenceData = accountReferenceDetailsService.getAccountReferenceData(accountId);
 
+        // Handle potential CCA2 facilities after CCA2 termination date
+        underlyingAgreementHandleCca2FacilitiesAfterTerminationDateService.handleCca2FacilitiesAfterTerminationDate(
+        		requestPayload.getUnderlyingAgreementProposed().getUnderlyingAgreement());
+        
         // Construct active underlying agreement, only live facilities should be included
         UnderlyingAgreementContainer unaContainerFinal = UNA_VARIATION_CONTAINER_DEEP_CLONE_MAPPER
                 .toUnderlyingAgreementContainer(requestPayload, accountReferenceData);

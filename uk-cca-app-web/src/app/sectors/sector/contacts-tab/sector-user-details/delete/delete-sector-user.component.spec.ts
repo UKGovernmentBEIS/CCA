@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { AuthService } from '@shared/services';
-import { screen } from '@testing-library/dom';
+import { getByRole, getByText } from '@testing';
 
 import { mockSectorDetails, mockSectorUserDetails, mockSubSectorDetails } from '../../../../specs/fixtures/mock';
 import { DeleteSectorUserComponent } from './delete-sector-user.component';
@@ -55,32 +55,30 @@ describe('DeleteSectorUserComponent', () => {
   });
 
   it('should display correct header', () => {
-    expect(
-      screen.getByText('Confirm that the user account of sector user will be removed from this sector'),
-    ).toBeInTheDocument();
+    expect(getByText('Confirm that the user account of sector user will be removed from this sector')).toBeTruthy();
   });
 
   it('should display correct warning', () => {
-    expect(screen.getByText('You will not be able to undo this action.')).toBeInTheDocument();
+    expect(getByText('You will not be able to undo this action.')).toBeTruthy();
   });
 
   it('should display correct deletion info', () => {
     expect(
-      screen.getByText(
+      getByText(
         "All tasks currently assigned to this user will be automatically unassigned after you select 'Confirm removal'.",
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
 
     expect(
-      screen.getByText("If you need to reassign any of these tasks before removing this user, select 'Cancel'."),
-    ).toBeInTheDocument();
+      getByText("If you need to reassign any of these tasks before removing this user, select 'Cancel'."),
+    ).toBeTruthy();
   });
 
   it('should display "Confirm removal" button and "Cancel" link', () => {
-    expect(screen.getByRole('button')).toBeInTheDocument();
-    expect(screen.getByRole('button').textContent).toBe('Confirm removal');
+    expect(getByRole('button')).toBeTruthy();
+    expect(getByRole('button').textContent).toBe('Confirm removal');
 
-    expect(screen.getByRole('link')).toBeInTheDocument();
-    expect(screen.getByRole('link').textContent).toBe('Cancel');
+    expect(getByRole('link')).toBeTruthy();
+    expect(getByRole('link').textContent).toBe('Cancel');
   });
 });

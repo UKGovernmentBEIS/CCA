@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'textEllipsis' })
 export class TextEllipsisPipe implements PipeTransform {
-  transform(value: string | null, numOfChars = 100): unknown {
+  transform(value: string | null, numOfChars = 200): unknown {
     if (numOfChars && value?.length > numOfChars) {
       return value.substring(0, numOfChars).concat('...');
     }

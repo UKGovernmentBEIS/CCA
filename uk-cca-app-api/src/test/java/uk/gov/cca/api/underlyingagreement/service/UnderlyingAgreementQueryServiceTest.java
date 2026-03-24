@@ -84,7 +84,7 @@ class UnderlyingAgreementQueryServiceTest {
     void getUnderlyingAgreementByAccountId() {
         final long accountId = 1L;
 
-        UnderlyingAgreementDocument doc = UnderlyingAgreementDocument.builder().build();
+        UnderlyingAgreementDocument doc = new UnderlyingAgreementDocument();
         UnderlyingAgreementEntity entity = UnderlyingAgreementEntity.builder()
                 .accountId(accountId)
                 .underlyingAgreementContainer(UnderlyingAgreementContainer.builder().build())

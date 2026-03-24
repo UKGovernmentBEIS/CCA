@@ -91,7 +91,7 @@ describe('VariationChangesTypePipe', () => {
       'Amend the baseline and target due to the addition or removal of one or more facilities from the agreement',
     );
 
-    expect(pipe.transform('CHANGE_BETWEEN_RELATIVE_AND_NOVEM_TARGET_TYPE')).toEqual(
+    expect(pipe.transform('CHANGE_BETWEEN_RELATIVE_AND_NOVEM_TARGET_TYPES')).toEqual(
       'Amend the target currency to change between relative and Novem target types',
     );
 

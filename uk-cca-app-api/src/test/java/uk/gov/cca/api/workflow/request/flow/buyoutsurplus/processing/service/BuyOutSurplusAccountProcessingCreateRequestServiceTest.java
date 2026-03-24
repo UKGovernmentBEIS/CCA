@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountDetailsDTO;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
@@ -62,9 +62,8 @@ class BuyOutSurplusAccountProcessingCreateRequestServiceTest {
         final String parentRequestBusinessKey = "bk-BS-TP6010";
         final String submitterId = "regulator";
 
-        final TargetPeriodDTO targetPeriodDetails = TargetPeriodDTO.builder()
+        final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
-                .isCurrent(true)
                 .build();
         final Request parentRequest = Request.builder()
                 .payload(BuyOutSurplusRunRequestPayload.builder()

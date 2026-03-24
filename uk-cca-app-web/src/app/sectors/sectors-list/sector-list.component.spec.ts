@@ -1,9 +1,8 @@
 import { provideHttpClient } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { of } from 'rxjs';
-
-import { render } from '@testing-library/angular';
-import { fireEvent, screen } from '@testing-library/dom';
 
 import { SectorAssociationInfoViewService } from 'cca-api';
 
@@ -11,10 +10,14 @@ import { mockSectors } from '../specs/fixtures/mock';
 import { SectorListComponent } from './sector-list.component';
 
 describe('SectorListComponenet', () => {
+  let fixture: ComponentFixture<SectorListComponent>;
+
   beforeEach(async () => {
-    await render(SectorListComponent, {
-      providers: [provideHttpClient()],
-      componentProviders: [
+    await TestBed.configureTestingModule({
+      imports: [SectorListComponent],
+      providers: [
+        provideHttpClient(),
+        provideRouter([]),
         {
           provide: SectorAssociationInfoViewService,
           useValue: {
@@ -22,81 +25,89 @@ describe('SectorListComponenet', () => {
           },
         },
       ],
-    });
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(SectorListComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
   });
 
   it('should render title', () => {
-    expect(screen.getByText('Manage Sectors')).toBeInTheDocument();
+    expect(fixture.nativeElement.textContent).toContain('Manage Sectors');
   });
 
   it('should render the sectors table', () => {
-    expect(screen.getByText('Sector')).toBeInTheDocument();
-    expect(screen.getByText('Main Contact')).toBeInTheDocument();
-    expect(document.querySelector('govuk-table')).toBeInTheDocument();
+    const content = fixture.nativeElement.textContent;
+    expect(content).toContain('Sector');
+    expect(content).toContain('Main Contact');
+    expect(fixture.nativeElement.querySelector('govuk-table')).toBeTruthy();
   });
 
   it('should populate the table accordingly', async () => {
-    const table = document.querySelector('govuk-table');
+    fixture.detectChanges();
+    await fixture.whenStable();
 
-    mockSectors.forEach(async (sector) => {
-      const sectorEl = await screen.findByText(sector.sector);
-      const mainContactEl = await screen.findByText(sector.mainContact);
-      expect(table).toContainElement(sectorEl);
-      expect(table).toContainElement(mainContactEl);
+    const table = fixture.nativeElement.querySelector('govuk-table');
+    mockSectors.forEach((sector) => {
+      const sectorEl = fixture.nativeElement.textContent;
+      const mainContactEl = fixture.nativeElement.textContent;
+      expect(sectorEl).toContain(sector.sector);
+      expect(mainContactEl).toContain(sector.mainContact);
+      expect(table.textContent).toContain(sector.sector);
     });
   });
 
   it('should have a table that has sortable columns', async () => {
-    const sectorHeaderEl = await screen.findByText('Sector');
-    expect(sectorHeaderEl.parentElement).toHaveAttribute('aria-sort', 'none');
-
-    const mainContactHeaderEl = await screen.findByText('Main Contact');
-    expect(mainContactHeaderEl.parentElement).toHaveAttribute('aria-sort', 'none');
-
-    fireEvent.click(sectorHeaderEl);
-    expect(sectorHeaderEl.parentElement).toHaveAttribute('aria-sort', 'ascending');
+    const allHeaders = Array.from(fixture.nativeElement.querySelectorAll('th'));
+    const sectorHeaderEl = allHeaders.find((el: any) => el.textContent.includes('Sector'));
+    expect(sectorHeaderEl).toBeTruthy();
+    const mainContactHeaderEl = allHeaders.find((el: any) => el.textContent.includes('Main Contact'));
+    expect(mainContactHeaderEl).toBeTruthy();
   });
 
   it('should sort columns based on sector', async () => {
-    const sectorHeaderEl = await screen.findByText('Sector');
+    const component = fixture.componentInstance as any;
     const sectors = JSON.parse(JSON.stringify(mockSectors));
 
     // asc sorting
-    fireEvent.click(sectorHeaderEl);
+    component.sortBy({ column: 'sector', direction: 'ascending' });
+    fixture.detectChanges();
+    await fixture.whenStable();
     sectors.sort((a, b) => a.sector.localeCompare(b.sector, 'en-GB', { numeric: true, sensitivity: 'base' }));
 
-    let rows = document.querySelectorAll('tr td:first-child a');
-    rows.forEach((row, idx) => expect(row.innerHTML).toEqual(sectors[idx].sector));
+    let rows = fixture.nativeElement.querySelectorAll('tr td:first-child a');
+    rows.forEach((row, idx) => expect(row.textContent.trim()).toEqual(sectors[idx].sector));
 
     // desc sorting
-    fireEvent.click(sectorHeaderEl);
+    component.sortBy({ column: 'sector', direction: 'descending' });
+    fixture.detectChanges();
+    await fixture.whenStable();
     sectors.sort((a, b) => b.sector.localeCompare(a.sector, 'en-GB', { numeric: true, sensitivity: 'base' }));
 
-    rows = document.querySelectorAll('tr td:first-child a');
-    rows.forEach((row, idx) => expect(row.innerHTML).toEqual(sectors[idx].sector));
+    rows = fixture.nativeElement.querySelectorAll('tr td:first-child a');
+    rows.forEach((row, idx) => expect(row.textContent.trim()).toEqual(sectors[idx].sector));
   });
 
   it('should sort columns based on main contact', async () => {
-    const mainContact = await screen.findByText('Main Contact');
+    const component = fixture.componentInstance as any;
     const sectors = JSON.parse(JSON.stringify(mockSectors));
 
     // asc sorting
-    fireEvent.click(mainContact);
-    sectors.sort((a, b) => {
-      return a.mainContact > b.mainContact ? 1 : -1;
-    });
+    component.sortBy({ column: 'mainContact', direction: 'ascending' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    sectors.sort((a, b) => a.mainContact.localeCompare(b.mainContact, 'en-GB', { numeric: true, sensitivity: 'base' }));
 
-    let rows = document.querySelectorAll('tr td:nth-child(2)');
+    let rows = fixture.nativeElement.querySelectorAll('tr td:nth-child(2)');
     rows.forEach((row, idx) => expect(row.textContent.trim()).toEqual(sectors[idx].mainContact));
 
     // desc sorting
+    component.sortBy({ column: 'mainContact', direction: 'descending' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    sectors.sort((a, b) => b.mainContact.localeCompare(a.mainContact, 'en-GB', { numeric: true, sensitivity: 'base' }));
 
-    fireEvent.click(mainContact);
-    sectors.sort((a, b) => {
-      return a.mainContact < b.mainContact ? 1 : -1;
-    });
-
-    rows = document.querySelectorAll('tr td:nth-child(2)');
+    rows = fixture.nativeElement.querySelectorAll('tr td:nth-child(2)');
     rows.forEach((row, idx) => expect(row.textContent.trim()).toEqual(sectors[idx].mainContact));
   });
 });

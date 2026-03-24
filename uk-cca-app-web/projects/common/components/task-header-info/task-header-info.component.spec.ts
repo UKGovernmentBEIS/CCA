@@ -1,8 +1,8 @@
+import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BasePage } from '../../testing';
 import { TaskHeaderInfoComponent } from './task-header-info.component';
-import { ComponentRef } from '@angular/core';
 
 describe('TaskHeaderInfoComponent', () => {
   let component: TaskHeaderInfoComponent;

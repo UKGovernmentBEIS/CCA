@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ExplanationComponent should match snapshot for AdditionalInfoComponent 1`] = `
-<div
-  id="root0"
->
+exports[`AdditionalInfoComponent should match snapshot for AdditionalInfoComponent 1`] = `
+<div>
   <cca-wizard-step
     class="ng-untouched ng-pristine ng-valid"
     heading="Provide any additional information here to support your decision (optional)"

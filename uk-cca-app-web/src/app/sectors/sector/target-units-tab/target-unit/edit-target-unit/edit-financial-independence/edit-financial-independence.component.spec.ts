@@ -4,12 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { click, getByLabelText, getByText } from '@testing';
 
 import { UpdateTargetUnitAccountService } from 'cca-api';
 
-import { mockTargetUnitAccountDetails } from 'src/app/sectors/specs/fixtures/mock';
-
+import { mockTargetUnitAccountDetails } from '../../../../../specs/fixtures/mock';
 import { ActiveTargetUnitStore } from '../../../active-target-unit.store';
 import { EditFinancialIndependenceComponent } from './edit-financial-independence.component';
 
@@ -46,13 +45,14 @@ describe('EditFinancialIndependenceComponent', () => {
   });
 
   it('should have the correct value prepopulated', () => {
-    expect(screen.getByLabelText('Select whether this target unit will be financially independent.')).toHaveValue(
-      '0: FINANCIALLY_INDEPENDENT',
-    );
+    const select = getByLabelText(
+      'Select whether this target unit will be financially independent.',
+    ) as HTMLSelectElement;
+    expect(select.value).toBe('0: FINANCIALLY_INDEPENDENT');
   });
 
   it('should submit the form', () => {
-    screen.getByText('Confirm and complete').click();
+    click(getByText('Confirm and complete'));
 
     expect(updateTargetUnitAccountService.updateTargetUnitAccountFinancialIndependenceStatusCode).toHaveBeenCalledTimes(
       1,

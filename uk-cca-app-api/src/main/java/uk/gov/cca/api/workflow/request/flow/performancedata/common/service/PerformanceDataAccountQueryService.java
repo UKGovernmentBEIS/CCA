@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.targetperiodreporting.performancedata.service.AccountPerformanceDataStatusQueryService;
 
@@ -22,9 +22,9 @@ public class PerformanceDataAccountQueryService {
     @Transactional(readOnly = true)
     public List<TargetUnitAccountBusinessInfoDTO> getCandidateAccountsForPerformanceDataReportingBySector(
             Long sectorAssociationId, TargetPeriodType targetPeriodType) {
-        TargetPeriodDTO targetPeriodDTO = targetPeriodService.getTargetPeriodByBusinessId(targetPeriodType);
+        TargetPeriodInfoDTO targetPeriod = targetPeriodService.getTargetPeriodInfoByTargetPeriodType(targetPeriodType);
 
         return accountPerformanceDataStatusQueryService.getAccountsForPerformanceDataReportingBySector(
-                sectorAssociationId, targetPeriodDTO.getId());
+                sectorAssociationId, targetPeriod.getId());
     }
 }

@@ -50,8 +50,9 @@ public class Cca2TerminationRunInitiateService {
 		// Validate
         validateCreation();
 
+        // Find all eligible accounts, ie those that contain CCA2 as participation scheme
         Map<Long, Cca2TerminationAccountState> cca2TerminationAccountStates = facilityDataQueryService
-        		.findLiveAccountsWithAtLeastOneFacilityForSchemeVersionOnly(SchemeVersion.CCA_2.name()).stream()
+        		.findLiveAccountsWithActiveFacilityForSchemeVersion(SchemeVersion.CCA_2.name()).stream()
         		.filter(ObjectUtils.isEmpty(accountBusinessIds) ? acc -> true : acc -> accountBusinessIds.contains(acc.getBusinessId()))
         		.collect(Collectors.toMap(
         				TargetUnitAccountBusinessInfoDTO::getAccountId,

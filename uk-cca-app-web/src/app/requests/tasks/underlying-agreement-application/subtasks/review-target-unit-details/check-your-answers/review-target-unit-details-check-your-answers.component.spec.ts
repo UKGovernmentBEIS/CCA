@@ -8,8 +8,7 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { REVIEW_TARGET_UNIT_DETAILS_SUBTASK, TasksApiService } from '@requests/common';
-import { screen, waitFor } from '@testing-library/angular';
-import UserEvent from '@testing-library/user-event';
+import { click, getByRole, getByText } from '@testing';
 
 import { mockRequestTaskState } from '../../../testing/mock-data';
 import { ReviewTargetUnitDetailsCheckYourAnswersComponent } from './review-target-unit-details-check-your-answers.component';
@@ -95,8 +94,8 @@ describe('CheckYourAnswersComponent', () => {
   });
 
   it('should render the page heading', () => {
-    const heading = screen.getByRole('heading', { name: 'Check your answers' });
-    expect(heading).toBeInTheDocument();
+    const heading = getByRole('heading', { name: 'Check your answers' });
+    expect(heading).toBeTruthy();
   });
 
   it('should render the summary sections and rows', () => {
@@ -107,13 +106,11 @@ describe('CheckYourAnswersComponent', () => {
     saveRequestTaskActionSpy.mockClear();
     saveRequestTaskActionSpy.mockReturnValue(of({}));
 
-    const user = UserEvent.setup();
-    const confirmButton = screen.getByText('Confirm and complete');
-    await user.click(confirmButton);
+    const confirmButton = getByText('Confirm and complete');
+    click(confirmButton);
+    await fixture.whenStable();
 
-    await waitFor(() => {
-      expect(saveRequestTaskActionSpy).toHaveBeenCalledTimes(1);
-    });
+    expect(saveRequestTaskActionSpy).toHaveBeenCalledTimes(1);
 
     // Verify the sections completed was updated
     const callArg = saveRequestTaskActionSpy.mock.calls[0][0];

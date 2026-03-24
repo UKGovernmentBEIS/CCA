@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_AFTER_SCHEME_END_DATE;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_PREVIOUS_FACILITY_ID_CCA2_ONLY;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -18,8 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.common.config.Cca2TerminationConfig;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.service.SchemeTerminationHelper;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.facility.domain.FacilityValidationContext;
 import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
@@ -41,7 +40,7 @@ class UnderlyingAgreementFacilityAgainstCca2EndDateValidatorServiceTest {
     private FacilityDataQueryService facilityDataQueryService;
     
     @Mock
-    private Cca2TerminationConfig cca2TerminationConfig;
+    private SchemeTerminationHelper schemeTerminationHelper;
     
     @Test
     void validate_facility_CCA2_excluded_after_end_date_valid() {
@@ -56,14 +55,16 @@ class UnderlyingAgreementFacilityAgainstCca2EndDateValidatorServiceTest {
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(Set.of("previousId")))
         		.thenReturn(facilityValidationContextMap);
-        when(cca2TerminationConfig.getTerminationDate()).thenReturn(LocalDate.now().minusDays(1));
+        when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_2))).thenReturn(true);
+        when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_3))).thenReturn(false);
 
         // Invoke
         BusinessValidationResult result = validatorService.validate(Set.of(facility1, facility2));
 
         // Verify
         assertThat(result.getViolations()).isEmpty();    
-        verify(cca2TerminationConfig, times(2)).getTerminationDate();
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_2));
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_3));
         verify(facilityDataQueryService, times(1))
                 .getFacilityValidationContextByFacilityBusinessIds(Set.of("previousId"));
     }
@@ -80,7 +81,7 @@ class UnderlyingAgreementFacilityAgainstCca2EndDateValidatorServiceTest {
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(Set.of("previousId")))
         		.thenReturn(facilityValidationContextMap);  
-        when(cca2TerminationConfig.getTerminationDate()).thenReturn(LocalDate.now().minusDays(1));
+        when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_2))).thenReturn(true);
         
         // Invoke
         BusinessValidationResult result = validatorService.validate(Set.of(facility));
@@ -90,7 +91,7 @@ class UnderlyingAgreementFacilityAgainstCca2EndDateValidatorServiceTest {
         assertThat(((UnderlyingAgreementViolation) result.getViolations().getFirst()).getMessage()).isEqualTo(INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_AFTER_SCHEME_END_DATE.getMessage());
         verify(facilityDataQueryService, times(1))
                 .getFacilityValidationContextByFacilityBusinessIds(Set.of("previousId"));
-        verify(cca2TerminationConfig, times(1)).getTerminationDate();
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_2));
     }
     
     @Test
@@ -109,7 +110,8 @@ class UnderlyingAgreementFacilityAgainstCca2EndDateValidatorServiceTest {
 
         when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(Set.of("previousFacilityId")))
         		.thenReturn(facilityValidationContextMap);
-        when(cca2TerminationConfig.getTerminationDate()).thenReturn(LocalDate.now().minusDays(1));
+        when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_2))).thenReturn(true);
+        when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_3))).thenReturn(false);
 
         // Invoke
         BusinessValidationResult result = validatorService.validate(Set.of(facility));
@@ -119,7 +121,8 @@ class UnderlyingAgreementFacilityAgainstCca2EndDateValidatorServiceTest {
         assertThat(((UnderlyingAgreementViolation) result.getViolations().getFirst()).getMessage()).isEqualTo(INVALID_PREVIOUS_FACILITY_ID_CCA2_ONLY.getMessage());
         verify(facilityDataQueryService, times(1))
                 .getFacilityValidationContextByFacilityBusinessIds(Set.of("previousFacilityId"));
-        verify(cca2TerminationConfig, times(2)).getTerminationDate();
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_2));
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_3));
     }
     
     private Facility createFacility(FacilityStatus status, Set<SchemeVersion> schemeVersions) {

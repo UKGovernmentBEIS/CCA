@@ -6,7 +6,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { screen } from '@testing-library/dom';
+import { getByLabelText, getByRole, getByText } from '@testing';
 
 import { PerformanceDataReportFormProvider } from '../../performance-data/performance-data-report-form.provider';
 import { PatReportFiltersComponent } from './pat-report-filters.component';
@@ -67,37 +67,37 @@ describe('PatReportFiltersComponent', () => {
   });
 
   it('should render the "Filters" section', () => {
-    const filtersSection = screen.getByText('Filters');
+    const filtersSection = getByText('Filters');
     expect(filtersSection).toBeTruthy();
   });
 
   it('should have a select dropdown for "Status"', () => {
-    const statusSelect = screen.getByLabelText('Status');
+    const statusSelect = getByLabelText('Status');
     expect(statusSelect).toBeTruthy();
   });
 
   it('should have a select dropdown for "Period"', () => {
-    const periodSelect = screen.getByLabelText('Period');
+    const periodSelect = getByLabelText('Period');
     expect(periodSelect).toBeTruthy();
   });
 
   it('should have an input field for "TU ID"', () => {
-    const tuIdInput = screen.getByLabelText('TU ID');
+    const tuIdInput = getByLabelText('TU ID');
     expect(tuIdInput).toBeTruthy();
   });
 
   it('should have a select dropdown for "Type"', () => {
-    const typeSelect = screen.getByLabelText('Type');
+    const typeSelect = getByLabelText('Type');
     expect(typeSelect).toBeTruthy();
   });
 
   it('should have a submit button with "Apply"', () => {
-    const applyButton = screen.getByRole('button', { name: /Apply/i });
+    const applyButton = getByRole('button', { name: /Apply/i });
     expect(applyButton).toBeTruthy();
   });
 
   it('should have a clear button with "Clear"', () => {
-    const clearButton = screen.getByRole('button', { name: /Clear/i });
+    const clearButton = getByRole('button', { name: /Clear/i });
     expect(clearButton).toBeTruthy();
   });
 });

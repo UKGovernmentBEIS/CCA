@@ -2,13 +2,12 @@
   (formSubmit)="onSubmitCompanyRegistrationNumber()"
   [formGroup]="form"
   caption="New target unit"
-  heading="Does the applicant have a company number?"
+  heading="Does the operator have a company number?"
   data-testid="conpany-registration-number-form"
 >
   <div class="govuk-!-width-two-thirds">
     <p class="govuk-hint">
-      If the applicant is registered with Companies House or Mutual Public Register, you must enter their company
-      number.
+      If the operator is registered with Companies House or Mutual Public Register, you must enter their company number.
     </p>
 
     <govuk-details summary="Where you can find the company number">
@@ -28,7 +27,7 @@
       </ul>
 
       <p>
-        If the applicant is registered with the Mutual Public Register, you can find it on the
+        If the operator is registered with the Mutual Public Register, you can find it on the
         <a href="https://mutuals.fca.org.uk/" class="govuk-link" rel="noreferrer noopener">
           Mutual Public Register website </a
         >.
@@ -36,7 +35,7 @@
     </govuk-details>
 
     <div formControlName="isCompanyRegistrationNumber" govuk-radio>
-      <govuk-radio-option [value]="true" label="Yes, the applicant is registered and has a company number">
+      <govuk-radio-option [value]="true" label="Yes, the operator is registered and has a company number">
         <ng-container govukConditionalContent>
           <div
             widthClass="govuk-input--width-10"
@@ -47,7 +46,7 @@
         </ng-container>
       </govuk-radio-option>
 
-      <govuk-radio-option [value]="false" label="No, the applicant does not have a company number">
+      <govuk-radio-option [value]="false" label="No, the operator does not have a company number">
         <ng-container govukConditionalContent>
           <div
             formControlName="registrationNumberMissingReason"

@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByText } from '@testing';
 
 import { SubsistenceFeesMoAViewService } from 'cca-api';
 
@@ -54,7 +54,7 @@ describe('ConfirmationComponent', () => {
   });
 
   it('should display the correct content', () => {
-    expect(screen.getByText('Received amount updated')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Target unit MoA CCATM01206')).toBeInTheDocument();
+    expect(getByText('Received amount updated', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Return to: Target unit MoA CCATM01206', fixture.nativeElement)).toBeTruthy();
   });
 });

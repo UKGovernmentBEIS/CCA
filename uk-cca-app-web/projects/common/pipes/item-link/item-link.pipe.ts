@@ -4,7 +4,7 @@ import { ItemDTO } from 'cca-api';
 
 @Pipe({ name: 'itemLink', pure: true })
 export class ItemLinkPipe implements PipeTransform {
-  transform(value: ItemDTO, path: string = '/'): any[] {
+  transform(value: ItemDTO, path = '/'): any[] {
     return this.transformWorkflowUrl(value, path);
   }
 
@@ -24,6 +24,7 @@ export class ItemLinkPipe implements PipeTransform {
       case 'UNDERLYING_AGREEMENT_VARIATION_WAIT_FOR_PEER_REVIEW':
       case 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING':
       case 'FACILITY_AUDIT':
+      case 'NON_COMPLIANCE':
         return [routerLooks + 'tasks', value.taskId];
 
       default:

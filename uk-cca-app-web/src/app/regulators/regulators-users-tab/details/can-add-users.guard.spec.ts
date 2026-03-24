@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { UrlTree } from '@angular/router';
 
@@ -30,8 +30,8 @@ describe('CanAddUsersGuard', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
+        provideHttpClientTesting(),
         DetailsStore,
         {
           provide: AuthoritiesService,

@@ -2709,4 +2709,18 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_ADD_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM" author="P70383">
+        <sql>
+            INSERT INTO request_type
+            (id, code, description, process_definition_id, history_category, hold_history, displayed_in_progress, cascadable, can_create_manually, resource_type)
+            VALUES(nextval('request_type_seq'), 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM', 'Performance data facility digital form process', 'PROCESS_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM', 'FACILITY', false, true, false, true, 'FACILITY');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_type
+                WHERE code = 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM';
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

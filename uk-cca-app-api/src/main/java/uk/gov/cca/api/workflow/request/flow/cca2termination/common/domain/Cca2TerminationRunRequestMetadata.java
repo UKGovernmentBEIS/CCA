@@ -49,4 +49,11 @@ public class Cca2TerminationRunRequestMetadata extends RequestMetadata {
         		.filter(acc -> acc.getFacilitiesExcluded() == acc.getFacilityIds().size())
                 .count();
     }
+    
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public Long getAccountsWithCca2Terminated() {
+        return cca2TerminationAccountStates.values().stream()
+        		.filter(acc -> acc.isCca2Terminated())
+                .count();
+    }
 }

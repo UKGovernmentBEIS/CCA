@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestActionStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getSummaryListData } from '@testing';
 
 import { SectorMoaGeneratedComponent } from './sector-moa-generated.component';
 import { sectorMoaGeneratedActionStateMock } from './tests/mock-data';
@@ -32,14 +32,7 @@ describe('SectorMoaGeneratedComponent', () => {
   });
 
   it('should display the correct data', () => {
-    const summaryValues = screen
-      .getAllByText((_, el) => el.tagName.toLowerCase() === 'dl')
-      .map((el) => [
-        Array.from(el.querySelectorAll('dt')).map((dt) => dt.textContent.trim()),
-        Array.from(el.querySelectorAll('dd'))
-          .filter((dt) => dt.textContent.trim() !== 'Change')
-          .map((dt) => dt.textContent.trim()),
-      ]);
+    const summaryValues = getSummaryListData(fixture.nativeElement);
 
     expect(summaryValues).toEqual([
       [

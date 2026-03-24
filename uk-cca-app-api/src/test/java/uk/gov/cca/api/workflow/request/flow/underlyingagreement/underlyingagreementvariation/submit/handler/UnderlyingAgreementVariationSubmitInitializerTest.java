@@ -168,7 +168,7 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
                         .build();
 
         when(accountReferenceDetailsService.getAccountReferenceData(accountId)).thenReturn(data);
-        when(underlyingAgreementSchemeVersionsHelperService.shouldShowTp5Tp6(originalData, creationDate.toLocalDate()))
+        when(underlyingAgreementSchemeVersionsHelperService.shouldShowCCA2BaselineAndTargets(originalData, creationDate.toLocalDate()))
         		.thenReturn(true);
 
         // Invoke
@@ -176,7 +176,7 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
 
         // Verify
         verify(accountReferenceDetailsService, times(1)).getAccountReferenceData(accountId);
-        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowTp5Tp6(originalData, creationDate.toLocalDate());
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowCCA2BaselineAndTargets(originalData, creationDate.toLocalDate());
         assertThat(actual).isInstanceOf(UnderlyingAgreementVariationSubmitRequestTaskPayload.class)
                 .isEqualTo(expected);
     }
@@ -303,7 +303,7 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
                         .build();
 
         when(accountReferenceDetailsService.getAccountReferenceData(accountId)).thenReturn(data);
-        when(underlyingAgreementSchemeVersionsHelperService.shouldShowTp5Tp6(originalData, creationDate.toLocalDate()))
+        when(underlyingAgreementSchemeVersionsHelperService.shouldShowCCA2BaselineAndTargets(originalData, creationDate.toLocalDate()))
         		.thenReturn(false);
 
         // Invoke
@@ -311,7 +311,7 @@ class UnderlyingAgreementVariationSubmitInitializerTest {
 
         // Verify
         verify(accountReferenceDetailsService, times(1)).getAccountReferenceData(accountId);
-        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowTp5Tp6(originalData, creationDate.toLocalDate());
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowCCA2BaselineAndTargets(originalData, creationDate.toLocalDate());
         assertThat(actual).isInstanceOf(UnderlyingAgreementVariationSubmitRequestTaskPayload.class)
                 .isEqualTo(expected);
     }

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByLabelText, getByText } from '@testing';
 
 import { CreateTargetUnitStore } from '../create-target-unit.store';
 import { mockCreateTargetUnitState } from '../specs/fixture/mocks';
@@ -35,16 +35,16 @@ describe('OperatorAddressComponent', () => {
   });
 
   it('should display the correct header and caption', () => {
-    expect(screen.getByText('New target unit')).toBeInTheDocument();
-    expect(screen.getByText('Operator address')).toBeInTheDocument();
+    expect(getByText('New target unit')).toBeTruthy();
+    expect(getByText('Operator address')).toBeTruthy();
   });
 
   it('should display the correct form fields', () => {
-    expect(screen.getByLabelText('Address line 1')).toBeInTheDocument();
-    expect(screen.getByLabelText('Address line 2 (optional)')).toBeInTheDocument();
-    expect(screen.getByLabelText('Town or city')).toBeInTheDocument();
-    expect(screen.getByLabelText('County (optional)')).toBeInTheDocument();
-    expect(screen.getByLabelText('Postcode')).toBeInTheDocument();
-    expect(screen.getByLabelText('Country')).toBeInTheDocument();
+    expect(getByLabelText('Address line 1')).toBeTruthy();
+    expect(getByLabelText('Address line 2 (optional)')).toBeTruthy();
+    expect(getByLabelText('Town or city')).toBeTruthy();
+    expect(getByLabelText('County (optional)')).toBeTruthy();
+    expect(getByLabelText('Postcode')).toBeTruthy();
+    expect(getByLabelText('Country')).toBeTruthy();
   });
 });

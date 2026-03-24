@@ -140,7 +140,7 @@ describe('TextInputComponent', () => {
     expect(hostTestComponent.group.value).toEqual({ text: 'abc' });
     expect(formControl.classes['govuk-input--error']).toBeFalsy();
 
-    element.querySelector('form').submit();
+    element.querySelector('form').dispatchEvent(new Event('submit'));
     fixtureTestComponent.detectChanges();
 
     expect(hostTestComponent.group.value).toEqual({ text: 'abc' });

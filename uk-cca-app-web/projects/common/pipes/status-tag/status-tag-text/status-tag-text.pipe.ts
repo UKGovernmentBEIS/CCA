@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, inject } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 
 import { TASK_STATUS_TAG_MAP, TaskStatusTagMap } from '../status-tag.providers';
 

@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { catchError, of, take } from 'rxjs';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
+import { RequestTaskStore } from '@netz/common/store';
 import {
   ConditionalContentDirective,
   DetailsComponent,
@@ -15,6 +16,7 @@ import { WizardStepComponent } from '@shared/components';
 
 import { CompaniesInformationService } from 'cca-api';
 
+import { underlyingAgreementQuery } from '../../+state';
 import {
   COMPANY_REGISTRATION_NUMBER_FORM,
   CompanyRegistrationNumberFormModel,
@@ -40,10 +42,17 @@ import { CompanyNumberState, CompanyRegistrationNumberSubmitEvent } from '../../
 })
 export class CommonCompanyRegistrationNumberComponent {
   private readonly companiesInformationService = inject(CompaniesInformationService);
+  private readonly requestTaskStore = inject(RequestTaskStore);
 
   protected readonly form = inject<FormGroup<CompanyRegistrationNumberFormModel>>(COMPANY_REGISTRATION_NUMBER_FORM);
 
   protected readonly submitted = output<CompanyRegistrationNumberSubmitEvent>();
+
+  private readonly tuDetails = this.requestTaskStore.select(
+    underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails,
+  );
+
+  protected readonly caption = computed(() => (this.tuDetails() ? 'Change' : 'New target unit'));
 
   onSubmitCompanyRegistrationNumber() {
     const registrationNumberState: CompanyNumberState = {

@@ -1,25 +1,39 @@
-import { ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { render } from '@testing-library/angular';
-import { screen } from '@testing-library/dom';
+import { getAllByRole, getByRole, getByText, queryByText } from '@testing';
 
-import { mockTargetUnitOperatorDetails } from 'src/app/sectors/specs/fixtures/mock';
-
+import { mockTargetUnitOperatorDetails } from '../../../../../specs/fixtures/mock';
 import { ActiveOperatorStore } from './active-operator.store';
 import { OperatorDetailsComponent } from './operator-details.component';
 
 describe('OperatorDetailsComponent', () => {
   const operatorUserId = 'e7de58d5-0256-42a7-9501-014d25d5d310';
+  let fixture: ComponentFixture<OperatorDetailsComponent>;
+  let store: ActiveOperatorStore;
+  let authStore: AuthStore;
 
-  const renderComponent = async (
-    currentUserId = '5reg',
-    editable = true,
-  ): Promise<ComponentFixture<OperatorDetailsComponent>> => {
-    const { fixture } = await render(OperatorDetailsComponent, {
+  const setComponentState = (currentUserId = '5reg', editable = true) => {
+    store.setState({
+      details: mockTargetUnitOperatorDetails,
+      editable,
+    });
+
+    authStore.setUserState({
+      status: 'ENABLED',
+      roleType: 'OPERATOR',
+      userId: currentUserId,
+    });
+
+    fixture.detectChanges();
+  };
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [OperatorDetailsComponent],
       providers: [
         ActiveOperatorStore,
         {
@@ -27,39 +41,24 @@ describe('OperatorDetailsComponent', () => {
           useValue: new ActivatedRouteStub({ targetUnitId: 1, userId: operatorUserId }),
         },
       ],
-      configureTestBed: (testbed) => {
-        const store = testbed.inject(ActiveOperatorStore);
-        const authStore = testbed.inject(AuthStore);
+    }).compileComponents();
 
-        store.setState({
-          details: mockTargetUnitOperatorDetails,
-          editable,
-        });
-
-        authStore.setUserState({
-          status: 'ENABLED',
-          roleType: 'OPERATOR',
-          userId: currentUserId,
-        });
-      },
-    });
-
-    return fixture;
-  };
-
-  it('should create', async () => {
-    const componentFixture = await renderComponent();
-    expect(componentFixture.componentInstance).toBeTruthy();
+    store = TestBed.inject(ActiveOperatorStore);
+    authStore = TestBed.inject(AuthStore);
+    fixture = TestBed.createComponent(OperatorDetailsComponent);
+    setComponentState();
   });
 
-  it('should render "Name" and "Organisation details" titles', async () => {
-    await renderComponent();
-    expect(screen.getByText('Name')).toBeTruthy();
-    expect(screen.getByText('Organisation details')).toBeTruthy();
+  it('should create', () => {
+    expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render "Name" section', async () => {
-    await renderComponent();
+  it('should render "Name" and "Organisation details" titles', () => {
+    expect(getByText('Name')).toBeTruthy();
+    expect(getByText('Organisation details')).toBeTruthy();
+  });
+
+  it('should render "Name" section', () => {
     const detailsList = document.querySelectorAll("[data-testid='name-list'] div");
 
     const elements = [];
@@ -76,8 +75,7 @@ describe('OperatorDetailsComponent', () => {
     ]);
   });
 
-  it('should render "Organisation details" section', async () => {
-    await renderComponent();
+  it('should render "Organisation details" section', () => {
     const contactList = document.querySelectorAll("[data-testid='organisation-details-list'] div");
 
     const elements = [];
@@ -94,17 +92,15 @@ describe('OperatorDetailsComponent', () => {
     ]);
   });
 
-  it('should render 6 change links (non-editable contact type)', async () => {
-    await renderComponent();
-    expect(screen.getAllByText(/Change/i)).toHaveLength(6);
+  it('should render 6 change links (non-editable contact type)', () => {
+    expect(getAllByRole('link', { name: /Change/i }, fixture.nativeElement).length).toBe(6);
   });
 
-  it('should render reset 2fa link with operator reset state for non-current editable user', async () => {
-    const componentFixture = await renderComponent();
+  it('should render reset 2fa link with operator reset state for non-current editable user', () => {
+    const resetLink2fa = getByRole('link', { name: 'Reset two-factor authentication' });
+    expect(resetLink2fa.getAttribute('href')).toBe('/2fa/reset-2fa');
 
-    expect(screen.getByText('Reset two-factor authentication')).toHaveAttribute('href', '/2fa/reset-2fa');
-
-    const resetLink = componentFixture.debugElement
+    const resetLink = fixture.debugElement
       .queryAll(By.directive(RouterLink))
       .map((debugElement) => debugElement.injector.get(RouterLink))
       .find((routerLink) => routerLink.href === '/2fa/reset-2fa');
@@ -124,10 +120,11 @@ describe('OperatorDetailsComponent', () => {
     );
   });
 
-  it('should render change 2fa link for current user', async () => {
-    await renderComponent(operatorUserId);
+  it('should render change 2fa link for current user', () => {
+    setComponentState(operatorUserId);
 
-    expect(screen.getByText('Change two factor authentication')).toHaveAttribute('href', '/2fa/change');
-    expect(screen.queryByText('Reset two-factor authentication')).toBeNull();
+    const changeLink = getByRole('link', { name: 'Change two factor authentication' });
+    expect(changeLink.getAttribute('href')).toBe('/2fa/change');
+    expect(queryByText('Reset two-factor authentication')).toBeNull();
   });
 });

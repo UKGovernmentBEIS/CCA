@@ -1,10 +1,10 @@
 package uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.service;
 
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusResult;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataBuyOutSurplusDetailsDTO;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.common.domain.BuyOutSurplusAccountProcessingException;
@@ -35,7 +35,7 @@ public class TP6BuyOutSurplusCalculation {
     private Request request;
     private BuyOutSurplusAccountProcessingRequestPayload requestPayload;
     private BuyOutSurplusAccountProcessingRequestMetadata requestMetadata;
-    private TargetPeriodDTO targetPeriodDetails;
+    private TargetPeriodInfoDTO targetPeriodDetails;
     private PerformanceDataBuyOutSurplusDetailsDTO performanceData;
 
     // Variables

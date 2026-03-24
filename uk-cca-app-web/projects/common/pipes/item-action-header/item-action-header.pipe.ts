@@ -47,6 +47,7 @@ export function getItemActionHeader(item: RequestActionDTO | RequestActionInfoDT
     case 'FACILITY_AUDIT_AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMITTED':
     case 'FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED':
     case 'FACILITY_AUDIT_CANCELLED':
+    case 'NON_COMPLIANCE_DETAILS_SUBMITTED':
       return `${ItemActionEnum[item.type]} by ${item.submitter}`;
 
     case 'UNDERLYING_AGREEMENT_APPLICATION_MIGRATED':

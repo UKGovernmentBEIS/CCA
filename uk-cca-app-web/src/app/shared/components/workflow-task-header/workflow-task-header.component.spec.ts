@@ -1,11 +1,11 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { of } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { render, screen } from '@testing-library/angular';
+import { getByTestId, queryByTestId } from '@testing';
 
 import { TasksService } from 'cca-api';
 
@@ -14,71 +14,87 @@ import { WorkflowTaskHeaderComponent } from './workflow-task-header.component';
 
 describe('WorkflowTaskHeaderComponent', () => {
   describe('with requestTaskStore requestInfo data inside a workflow', () => {
+    let fixture: ComponentFixture<WorkflowTaskHeaderComponent>;
     let requestTaskStore: RequestTaskStore;
     let tasksService: jest.Mocked<Partial<TasksService>>;
 
     beforeEach(async () => {
-      const { fixture } = await render(WorkflowTaskHeaderComponent, {
-        providers: [provideHttpClient(), provideHttpClientTesting()],
-        configureTestBed: (testbed) => {
-          tasksService = {
-            getRequestTaskHeaderInfo: jest.fn().mockReturnValue(of(mockWorkflowTaskHeaderInfo)),
-          };
-          testbed.overrideProvider(TasksService, {
+      tasksService = {
+        getRequestTaskHeaderInfo: jest.fn().mockReturnValue(of(mockWorkflowTaskHeaderInfo)),
+      };
+
+      await TestBed.configureTestingModule({
+        imports: [WorkflowTaskHeaderComponent],
+        providers: [
+          provideHttpClient(),
+          provideHttpClientTesting(),
+          {
+            provide: TasksService,
             useValue: tasksService,
-          });
-        },
-      });
+          },
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(WorkflowTaskHeaderComponent);
 
       requestTaskStore = TestBed.inject(RequestTaskStore);
       requestTaskStore.setRequestTaskItem(mockRequestTaskItem);
-      fixture.detectChanges();
       await fixture.whenStable();
+      fixture.detectChanges();
     });
 
-    it('should send an api call to getRequestTaskHeaderInfo and render header elements in the DOM', async () => {
+    it('should send an api call to getRequestTaskHeaderInfo and render header elements in the DOM', () => {
       expect(tasksService.getRequestTaskHeaderInfo).toHaveBeenCalledTimes(1);
-      const taskHeaderName = screen.getByTestId('name');
-      const taskHeaderBusinessId = screen.getByTestId('businessId');
-      const taskHeaderStatus = screen.getByTestId('status');
+      const taskHeaderName = getByTestId('name');
+      const taskHeaderBusinessId = getByTestId('businessId');
+      const taskHeaderStatus = getByTestId('status');
 
-      expect(taskHeaderName).toBeInTheDocument();
-      expect(taskHeaderBusinessId).toBeInTheDocument();
-      expect(taskHeaderStatus).toBeInTheDocument();
-      expect(taskHeaderName).toHaveTextContent('Target Unit Account 6');
-      expect(taskHeaderBusinessId).toHaveTextContent('ADS_2-T00008');
-      expect(taskHeaderStatus).toHaveTextContent('Status: LIVE');
+      expect(taskHeaderName).toBeTruthy();
+      expect(taskHeaderBusinessId).toBeTruthy();
+      expect(taskHeaderStatus).toBeTruthy();
+      expect((taskHeaderName as HTMLElement | null)?.textContent ?? '').toContain('Target Unit Account 6');
+      expect((taskHeaderBusinessId as HTMLElement | null)?.textContent ?? '').toContain('ADS_2-T00008');
+      expect((taskHeaderStatus as HTMLElement | null)?.textContent ?? '').toContain('Status: LIVE');
     });
   });
 
   describe('without requestTaskStore requestInfo data ', () => {
-    let requestTaskStore;
+    let fixture: ComponentFixture<WorkflowTaskHeaderComponent>;
+    let requestTaskStore: RequestTaskStore;
     let tasksService: jest.Mocked<Partial<TasksService>>;
 
     beforeEach(async () => {
-      const { fixture } = await render(WorkflowTaskHeaderComponent, {
-        providers: [provideHttpClient(), provideHttpClientTesting()],
-        configureTestBed: (testbed) => {
-          tasksService = {
-            getRequestTaskHeaderInfo: jest.fn().mockReturnValue(of(null)),
-          };
-          testbed.overrideProvider(TasksService, {
+      tasksService = {
+        getRequestTaskHeaderInfo: jest.fn().mockReturnValue(of(null)),
+      };
+
+      await TestBed.configureTestingModule({
+        imports: [WorkflowTaskHeaderComponent],
+        providers: [
+          provideHttpClient(),
+          provideHttpClientTesting(),
+          {
+            provide: TasksService,
             useValue: tasksService,
-          });
-        },
-      });
+          },
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(WorkflowTaskHeaderComponent);
 
       requestTaskStore = TestBed.inject(RequestTaskStore);
       requestTaskStore.setRequestTaskItem({});
+      await fixture.whenStable();
 
       fixture.detectChanges();
-      await fixture.whenStable();
     });
 
-    it('should render nothing when the request task store has no value for requestInfo', async () => {
+    it('should render nothing when the request task store has no value for requestInfo', () => {
       requestTaskStore.setRequestTaskItem({});
       expect(tasksService.getRequestTaskHeaderInfo).toHaveBeenCalledTimes(0);
-      expect(screen.queryByRole('div')).toBeNull();
+      expect(queryByTestId('name')).toBeNull();
+      expect(queryByTestId('businessId')).toBeNull();
+      expect(queryByTestId('status')).toBeNull();
     });
   });
 });

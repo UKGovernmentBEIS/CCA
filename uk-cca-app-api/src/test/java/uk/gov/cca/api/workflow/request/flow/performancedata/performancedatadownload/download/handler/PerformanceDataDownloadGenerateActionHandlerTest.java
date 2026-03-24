@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
@@ -81,7 +81,7 @@ class PerformanceDataDownloadGenerateActionHandlerTest {
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .build();
         final FileDTO template = FileDTO.builder().fileName("template").build();
-        final TargetPeriodDTO targetPeriodDTO = TargetPeriodDTO.builder()
+        final TargetPeriodYearDTO targetPeriodDTO = TargetPeriodYearDTO.builder()
                 .secondaryReportingStartDate(LocalDate.of(2025, 5, 2))
                 .performanceDataTemplateVersion("6.0")
                 .build();
@@ -100,7 +100,8 @@ class PerformanceDataDownloadGenerateActionHandlerTest {
         );
 
         when(requestTaskService.findTaskById(requestTaskId)).thenReturn(requestTask);
-        when(targetPeriodService.getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod()))
+        when(targetPeriodService
+                .getTargetPeriodByTargetPeriodTypeAndTargetYear(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod(), PerformanceDataTargetPeriodType.TP6.getTargetYear()))
                 .thenReturn(targetPeriodDTO);
         when(documentTemplateFileService.getFileDocumentTemplateByTypeAndCompetentAuthority(
                 TargetPeriodDocumentTemplate.REPORTING_SPREADSHEETS_DOWNLOAD_TP6.name(), CompetentAuthorityEnum.ENGLAND)).thenReturn(template);
@@ -122,7 +123,7 @@ class PerformanceDataDownloadGenerateActionHandlerTest {
                 .isNull();
         verify(requestTaskService, times(1)).findTaskById(requestTaskId);
         verify(targetPeriodService, times(1))
-                .getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod());
+                .getTargetPeriodByTargetPeriodTypeAndTargetYear(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod(), PerformanceDataTargetPeriodType.TP6.getTargetYear());
         verify(workflowService, times(1))
                 .getVariable(processInstanceId, BpmnProcessConstants.BUSINESS_KEY);
         verify(performanceDataAccountQueryService, times(1))
@@ -146,7 +147,7 @@ class PerformanceDataDownloadGenerateActionHandlerTest {
                 .id(sectorAssociationId)
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .build();
-        final TargetPeriodDTO targetPeriodDTO = TargetPeriodDTO.builder()
+        final TargetPeriodYearDTO targetPeriodDTO = TargetPeriodYearDTO.builder()
                 .secondaryReportingStartDate(LocalDate.of(2025, 5, 2))
                 .performanceDataTemplateVersion("6.0")
                 .build();
@@ -157,7 +158,8 @@ class PerformanceDataDownloadGenerateActionHandlerTest {
                 .build();
 
         when(requestTaskService.findTaskById(requestTaskId)).thenReturn(requestTask);
-        when(targetPeriodService.getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod()))
+        when(targetPeriodService
+                .getTargetPeriodByTargetPeriodTypeAndTargetYear(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod(), PerformanceDataTargetPeriodType.TP6.getTargetYear()))
                 .thenReturn(targetPeriodDTO);
         when(performanceDataAccountQueryService
                 .getCandidateAccountsForPerformanceDataReportingBySector(sectorAssociationId, TargetPeriodType.TP6))
@@ -176,7 +178,7 @@ class PerformanceDataDownloadGenerateActionHandlerTest {
                         .PerformanceDataDownloadViolationMessage.NO_ELIGIBLE_ACCOUNTS_FOR_TPR_REPORTING.name());
         verify(requestTaskService, times(1)).findTaskById(requestTaskId);
         verify(targetPeriodService, times(1))
-                .getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod());
+                .getTargetPeriodByTargetPeriodTypeAndTargetYear(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod(), PerformanceDataTargetPeriodType.TP6.getTargetYear());
         verify(performanceDataAccountQueryService, times(1))
                 .getCandidateAccountsForPerformanceDataReportingBySector(sectorAssociationId, TargetPeriodType.TP6);
         verifyNoInteractions(documentTemplateFileService, workflowService, startProcessRequestService);

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { screen } from '@testing-library/angular';
+import { getByText } from '@testing';
 
 import { UnderlyingAgreementVariationWaitActivationComponent } from './underlying-agreement-variation-wait-activation.component';
 
@@ -23,6 +23,6 @@ describe('UnderlyingAgreementVariationWaitActivationComponent', () => {
   });
 
   it('should show content', () => {
-    expect(screen.getByText('Waiting for the regulator to make a determination')).toBeInTheDocument();
+    expect(getByText('Waiting for the regulator to make a determination', fixture.nativeElement)).toBeTruthy();
   });
 });

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountUpdateDTO;
 import uk.gov.cca.api.account.service.TargetUnitAccountUpdateService;
 import uk.gov.cca.api.common.domain.MeasurementType;
@@ -33,6 +32,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.Un
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.DeterminationType;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.UnderlyingAgreementFacilityCertificationTransferService;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.service.UnderlyingAgreementHandleCca2FacilitiesAfterTerminationDateService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementFacilityReviewDecision;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementRequestPayload;
@@ -82,7 +82,9 @@ class UnderlyingAgreementActivatedServiceTest {
 
     @Mock
     private UnderlyingAgreementFacilityCertificationTransferService facilityCertificationTransferService;
-
+    
+    @Mock
+    private UnderlyingAgreementHandleCca2FacilitiesAfterTerminationDateService underlyingAgreementHandleCca2FacilitiesAfterTerminationDateService;
 
     @Test
     void execute() {
@@ -223,6 +225,7 @@ class UnderlyingAgreementActivatedServiceTest {
         verify(targetUnitAccountUpdateService, times(1)).activateTargetUnitAccount(
                 eq(request.getAccountId()), any(TargetUnitAccountUpdateDTO.class), any(LocalDateTime.class));
         verify(facilityCertificationTransferService, times(1)).processFacilityCertificationsForNewFacilities(createdFacilities, facilityItems);
+        verify(underlyingAgreementHandleCca2FacilitiesAfterTerminationDateService, times(1)).handleCca2FacilitiesAfterTerminationDate(una);
     }
 
     private void addResourcesToRequest(Long accountId, Request request) {

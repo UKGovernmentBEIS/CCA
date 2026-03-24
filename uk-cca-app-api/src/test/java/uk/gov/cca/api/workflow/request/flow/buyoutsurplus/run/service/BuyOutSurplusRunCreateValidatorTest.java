@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.run.domain.BuyOutSurplusRunCreateActionPayload;
@@ -42,14 +42,14 @@ class BuyOutSurplusRunCreateValidatorTest {
         final BuyOutSurplusRunCreateActionPayload payload = BuyOutSurplusRunCreateActionPayload.builder()
                 .targetPeriodType(TargetPeriodType.TP6)
                 .build();
-        final TargetPeriodDTO targetPeriod = TargetPeriodDTO.builder()
+        final TargetPeriodInfoDTO targetPeriod = TargetPeriodInfoDTO.builder()
                 .buyOutStartDate(LocalDate.of(2020, 1, 1))
                 .build();
 
         when(requestQueryService
                 .existByRequestTypeAndRequestStatusAndCompetentAuthority(CcaRequestType.BUY_OUT_SURPLUS_RUN, RequestStatuses.IN_PROGRESS, ca))
                 .thenReturn(false);
-        when(targetPeriodService.getTargetPeriodByBusinessId(TargetPeriodType.TP6))
+        when(targetPeriodService.getTargetPeriodInfoByTargetPeriodType(TargetPeriodType.TP6))
                 .thenReturn(targetPeriod);
 
         // Invoke
@@ -59,7 +59,7 @@ class BuyOutSurplusRunCreateValidatorTest {
         assertThat(result.isValid()).isTrue();
         verify(requestQueryService, times(1))
                 .existByRequestTypeAndRequestStatusAndCompetentAuthority(CcaRequestType.BUY_OUT_SURPLUS_RUN, RequestStatuses.IN_PROGRESS, ca);
-        verify(targetPeriodService, times(1)).getTargetPeriodByBusinessId(TargetPeriodType.TP6);
+        verify(targetPeriodService, times(1)).getTargetPeriodInfoByTargetPeriodType(TargetPeriodType.TP6);
     }
 
     @Test
@@ -104,14 +104,14 @@ class BuyOutSurplusRunCreateValidatorTest {
         final BuyOutSurplusRunCreateActionPayload payload = BuyOutSurplusRunCreateActionPayload.builder()
                 .targetPeriodType(TargetPeriodType.TP6)
                 .build();
-        final TargetPeriodDTO targetPeriod = TargetPeriodDTO.builder()
+        final TargetPeriodInfoDTO targetPeriod = TargetPeriodInfoDTO.builder()
                 .buyOutStartDate(LocalDate.of(3020, 1, 1))
                 .build();
 
         when(requestQueryService
                 .existByRequestTypeAndRequestStatusAndCompetentAuthority(CcaRequestType.BUY_OUT_SURPLUS_RUN, RequestStatuses.IN_PROGRESS, ca))
                 .thenReturn(false);
-        when(targetPeriodService.getTargetPeriodByBusinessId(TargetPeriodType.TP6))
+        when(targetPeriodService.getTargetPeriodInfoByTargetPeriodType(TargetPeriodType.TP6))
                 .thenReturn(targetPeriod);
 
         // Invoke
@@ -121,7 +121,7 @@ class BuyOutSurplusRunCreateValidatorTest {
         assertThat(result.isValid()).isFalse();
         verify(requestQueryService, times(1))
                 .existByRequestTypeAndRequestStatusAndCompetentAuthority(CcaRequestType.BUY_OUT_SURPLUS_RUN, RequestStatuses.IN_PROGRESS, ca);
-        verify(targetPeriodService, times(1)).getTargetPeriodByBusinessId(TargetPeriodType.TP6);
+        verify(targetPeriodService, times(1)).getTargetPeriodInfoByTargetPeriodType(TargetPeriodType.TP6);
     }
 
     @Test

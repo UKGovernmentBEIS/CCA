@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SummaryComponentUnaDetermination should match overall decision summary 1`] = `
-<div
-  id="root0"
->
+<div>
   <div>
     <netz-page-heading>
       <span
@@ -55,7 +53,7 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
           >
             <a
               class="govuk-link"
-              href="/actions?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -94,7 +92,7 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
           >
             <a
               class="govuk-link"
-              href="/explanation?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -133,7 +131,7 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
           >
             <a
               class="govuk-link"
-              href="/additional-info?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -170,7 +168,7 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
           >
             <a
               class="govuk-link"
-              href="/additional-info?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -201,9 +199,7 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
 `;
 
 exports[`SummaryComponentVariationDetermination should match overall decision summary 1`] = `
-<div
-  id="root1"
->
+<div>
   <div>
     <netz-page-heading>
       <span
@@ -255,7 +251,7 @@ exports[`SummaryComponentVariationDetermination should match overall decision su
           >
             <a
               class="govuk-link"
-              href="/actions?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -294,7 +290,7 @@ exports[`SummaryComponentVariationDetermination should match overall decision su
           >
             <a
               class="govuk-link"
-              href="/explanation?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -333,7 +329,7 @@ exports[`SummaryComponentVariationDetermination should match overall decision su
           >
             <a
               class="govuk-link"
-              href="/additional-info?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -370,7 +366,7 @@ exports[`SummaryComponentVariationDetermination should match overall decision su
           >
             <a
               class="govuk-link"
-              href="/additional-info?change=true"
+              href="/?change=true"
             >
               Change
             </a>

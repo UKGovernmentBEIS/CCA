@@ -10,8 +10,6 @@ import { createAccountAddressForm } from './account-address-input-controls';
 describe('AccountAddressInputComponent', () => {
   let component: AccountAddressInputComponent;
   let fixture: ComponentFixture<TestComponent>;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let hostComponent: TestComponent;
 
   @Component({
     template: `
@@ -39,7 +37,6 @@ describe('AccountAddressInputComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);
-    hostComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(AccountAddressInputComponent)).componentInstance;
     fixture.detectChanges();
   });

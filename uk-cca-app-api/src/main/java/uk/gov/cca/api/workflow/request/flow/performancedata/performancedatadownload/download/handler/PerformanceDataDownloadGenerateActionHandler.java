@@ -5,7 +5,8 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.utils.PerformanceDataUtility;
@@ -36,6 +37,7 @@ import uk.gov.netz.api.workflow.request.flow.common.actionhandler.RequestTaskAct
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,8 +66,10 @@ public class PerformanceDataDownloadGenerateActionHandler
         taskPayload.setProcessCompleted(false);
 
         // Extract target period details
-        TargetPeriodDTO targetPeriodDetails = targetPeriodService
-                .getTargetPeriodByBusinessId(actionPayload.getTargetPeriodType().getReferenceTargetPeriod());
+        final TargetPeriodType targetPeriodType = actionPayload.getTargetPeriodType().getReferenceTargetPeriod();
+        final Year targetYear = actionPayload.getTargetPeriodType().getTargetYear();
+        final TargetPeriodYearDTO targetPeriodDetails = targetPeriodService
+                .getTargetPeriodByTargetPeriodTypeAndTargetYear(targetPeriodType, targetYear);
 
         // Get Primary / Secondary
         final PerformanceDataSubmissionType submissionType = PerformanceDataUtility

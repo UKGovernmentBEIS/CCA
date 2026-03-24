@@ -5,7 +5,6 @@ import {
   computed,
   effect,
   inject,
-  Inject,
   Injector,
   runInInjectionContext,
   Signal,
@@ -23,13 +22,13 @@ import {
   TimelineItemComponent,
 } from '@netz/common/components';
 import { TaskSection } from '@netz/common/model';
+import { TimelineItemLinkPipe } from '@netz/common/pipes';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 
 import { ItemDTO, RequestActionInfoDTO, RequestTaskDTO, RequestTaskItemDTO } from 'cca-api';
 
 import { REQUEST_TASK_PAGE_CONTENT } from '../../request-task.providers';
 import { RequestTaskPageContentFactoryMap } from '../../request-task.types';
-import { TimelineItemLinkPipe } from '@netz/common/pipes';
 
 type ViewModel = {
   requestTask: RequestTaskDTO;
@@ -47,7 +46,6 @@ type ViewModel = {
   hasRelatedActions: boolean;
 };
 
-/* eslint-disable @angular-eslint/use-component-view-encapsulation */
 @Component({
   selector: 'netz-request-task-page',
   templateUrl: './request-task-page.component.html',

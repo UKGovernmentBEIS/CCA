@@ -1,4 +1,4 @@
-import { RegulatorUsersAuthoritiesInfoDTO, SectorUsersAuthoritiesInfoDTO, UserStateDTO } from 'cca-api';
+import { RegulatorUsersAuthoritiesInfoDTO, UserStateDTO } from 'cca-api';
 
 export const mockRegulatorPermissionGroups = {
   MANAGE_SECTOR_ASSOCIATIONS: ['NONE', 'EXECUTE'],
@@ -163,27 +163,3 @@ export const mockRegulatorBasePermissions = [
     },
   },
 ];
-
-export const mockUserAuthorities: SectorUsersAuthoritiesInfoDTO = {
-  editable: true,
-  authorities: [
-    {
-      firstName: 'fn 1',
-      lastName: 'ln 1',
-      roleCode: 'sector_user_administrator',
-      roleName: 'Administrator User',
-      contactType: 'contact type 1',
-      status: 'ACTIVE',
-      userId: '1',
-    },
-    {
-      firstName: 'fn 2',
-      lastName: 'ln 2',
-      roleCode: 'sector_user_basic_user',
-      roleName: 'Basic User',
-      contactType: 'contact type 2',
-      status: 'ACTIVE',
-      userId: '2',
-    },
-  ],
-};

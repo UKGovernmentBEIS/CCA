@@ -64,15 +64,21 @@ exports[`OperatorAssentDecisionSubmittedComponent should show summary values 1`]
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Uploaded files
+            Uploaded files (optional)
           </dt>
           <dd
             class="govuk-summary-list__value"
             govuksummarylistrowvalue=""
           >
-            <span>
-              No files provided
-            </span>
+            <cca-summary-download-files>
+              <a
+                class="govuk-link"
+                href="/"
+                target="_blank"
+              >
+                sample_profile1.png
+              </a>
+            </cca-summary-download-files>
           </dd>
         </div>
       </dl>

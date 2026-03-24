@@ -35,7 +35,7 @@ public class ArchUnitTest {
     
     //CCA
     static final String CCA_AUTHORIZATION_PACKAGE = BASE_PACKAGE + ".authorization..";
-    static final String CCA_COMMON_CCA_PACKAGE = BASE_PACKAGE + ".common..";
+    static final String CCA_COMMON_PACKAGE = BASE_PACKAGE + ".common..";
     static final String CCA_NOTIFICATION_PACKAGE = BASE_PACKAGE + ".notification..";
     static final String CCA_USER_PACKAGE = BASE_PACKAGE + ".user..";
     static final String CCA_ACCOUNT_TARGET_UNIT_PACKAGE = BASE_PACKAGE + ".account..";
@@ -56,7 +56,7 @@ public class ArchUnitTest {
     static final List<String> ALL_PACKAGES = List.of(
             TERMS_PACKAGE,
             COMMON_PACKAGE,
-		    CCA_COMMON_CCA_PACKAGE,
+			CCA_COMMON_PACKAGE,
             REFERENCE_DATA_PACKAGE,
             FILES_PACKAGE,
 		    CCA_NOTIFICATION_PACKAGE,
@@ -147,7 +147,7 @@ public class ArchUnitTest {
                     .resideInAnyPackage(except(
 		                    CCA_NOTIFICATION_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
 		                    CCA_AUTHORIZATION_PACKAGE,
                             CA_PACKAGE));
 
@@ -159,7 +159,7 @@ public class ArchUnitTest {
                     .resideInAnyPackage(except(
                             TOKEN_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE));
+							CCA_COMMON_PACKAGE));
 
     @ArchTest
     public static final ArchRule authorizationPackageChecks =
@@ -169,7 +169,7 @@ public class ArchUnitTest {
                     .resideInAnyPackage(except(
 		                    CCA_AUTHORIZATION_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
                             CA_PACKAGE,
                             VERIFICATION_BODY_PACKAGE /* CYCLIC2: due to impact on Verifier authorities on VB status change */));
 
@@ -196,10 +196,10 @@ public class ArchUnitTest {
     @ArchTest
     public static final ArchRule commonCcaPackageChecks =
             noClasses().that()
-                    .resideInAPackage(CCA_COMMON_CCA_PACKAGE)
+                    .resideInAPackage(CCA_COMMON_PACKAGE)
                     .should().dependOnClassesThat()
                     .resideInAnyPackage(except(
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
                             COMMON_PACKAGE,
                             FILES_PACKAGE));
 
@@ -212,7 +212,7 @@ public class ArchUnitTest {
 		                    CCA_USER_PACKAGE,
                             USER_INFO_API_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
                             TOKEN_PACKAGE,
 		                    CCA_AUTHORIZATION_PACKAGE,
 		                    CCA_NOTIFICATION_PACKAGE,
@@ -272,7 +272,7 @@ public class ArchUnitTest {
                     .resideInAnyPackage(except(
 		                    CCA_SECTOR_ASSOCIATION_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
 		                    CCA_AUTHORIZATION_PACKAGE,
                             REFERENCE_DATA_PACKAGE,
                             TOKEN_PACKAGE,
@@ -288,7 +288,7 @@ public class ArchUnitTest {
 		                    CCA_ACCOUNT_TARGET_UNIT_PACKAGE,
                             ACCOUNT_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
 		                    CCA_AUTHORIZATION_PACKAGE,
 		                    CCA_SECTOR_ASSOCIATION_PACKAGE,
                             CA_PACKAGE,
@@ -306,7 +306,7 @@ public class ArchUnitTest {
                             ACCOUNT_PACKAGE,
 		                    CCA_ACCOUNT_TARGET_UNIT_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
 		                    CCA_AUTHORIZATION_PACKAGE,
                             CA_PACKAGE,
                             FILES_PACKAGE,
@@ -324,7 +324,7 @@ public class ArchUnitTest {
                             ACCOUNT_PACKAGE,
 		                    CCA_ACCOUNT_TARGET_UNIT_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
 		                    CCA_AUTHORIZATION_PACKAGE,
                             REFERENCE_DATA_PACKAGE,
                             CA_PACKAGE
@@ -337,7 +337,9 @@ public class ArchUnitTest {
                     .should().dependOnClassesThat()
                     .resideInAnyPackage(except(
 		                    CCA_TARGET_PERIOD_PACKAGE,
-                            COMMON_PACKAGE));
+                            COMMON_PACKAGE,
+							CCA_COMMON_PACKAGE
+					));
     
     @ArchTest
     public static final ArchRule performanceDataPackageChecks =
@@ -351,7 +353,7 @@ public class ArchUnitTest {
 		                    CCA_ACCOUNT_TARGET_UNIT_PACKAGE,
 		                    CCA_SECTOR_ASSOCIATION_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
 		                    CCA_AUTHORIZATION_PACKAGE,
                             REFERENCE_DATA_PACKAGE,
                             CA_PACKAGE,
@@ -371,7 +373,7 @@ public class ArchUnitTest {
 		                    CCA_ACCOUNT_TARGET_UNIT_PACKAGE,
 		                    CCA_SECTOR_ASSOCIATION_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
 		                    CCA_AUTHORIZATION_PACKAGE,
                             REFERENCE_DATA_PACKAGE,
                             CA_PACKAGE,
@@ -390,7 +392,7 @@ public class ArchUnitTest {
 		                    CCA_ACCOUNT_TARGET_UNIT_PACKAGE,
 		                    CCA_SECTOR_ASSOCIATION_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
 		                    CCA_AUTHORIZATION_PACKAGE,
                             REFERENCE_DATA_PACKAGE,
                             CA_PACKAGE,
@@ -411,7 +413,7 @@ public class ArchUnitTest {
 		                    CCA_ACCOUNT_TARGET_UNIT_PACKAGE,
 		                    CCA_SECTOR_ASSOCIATION_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
 		                    CCA_AUTHORIZATION_PACKAGE,
                             REFERENCE_DATA_PACKAGE,
                             CA_PACKAGE,
@@ -428,7 +430,7 @@ public class ArchUnitTest {
                     .resideInAnyPackage(except(
 		                    CCA_FACILITY_CERTIFICATION_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
 		                    CCA_AUTHORIZATION_PACKAGE,
                             CA_PACKAGE,
 		                    CCA_FACILITY_PACKAGE,
@@ -443,7 +445,7 @@ public class ArchUnitTest {
 					.resideInAnyPackage(except(
 							CCA_FACILITY_AUDIT_PACKAGE,
 							COMMON_PACKAGE,
-							CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
 							CCA_AUTHORIZATION_PACKAGE,
 							CA_PACKAGE,
 							CCA_FACILITY_PACKAGE
@@ -458,7 +460,7 @@ public class ArchUnitTest {
 		                    CCA_WORKFLOW_CCA_PACKAGE,
                             WORKFLOW_PACKAGE,
                             COMMON_PACKAGE,
-		                    CCA_COMMON_CCA_PACKAGE,
+							CCA_COMMON_PACKAGE,
                             TOKEN_PACKAGE,
 		                    CCA_AUTHORIZATION_PACKAGE,
                             CA_PACKAGE,

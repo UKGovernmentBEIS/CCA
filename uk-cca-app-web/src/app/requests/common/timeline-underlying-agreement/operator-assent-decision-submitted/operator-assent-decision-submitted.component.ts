@@ -24,7 +24,7 @@ export class OperatorAssentDecisionSubmittedComponent {
   protected readonly summaryData = computed(() =>
     toOperatorAssentDecisionSummaryData(
       this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectDetermination)(),
-      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
+      this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectRegulatorAttachments)(),
       '../../file-download',
       false,
     ),

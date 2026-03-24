@@ -7,12 +7,13 @@ import org.springframework.stereotype.Service;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
 import uk.gov.cca.api.authorization.ccaauth.rules.services.authorityinfo.providers.FacilityAuthorityInfoProvider;
-import uk.gov.cca.api.common.config.Cca2TerminationConfig;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.service.ResourceHeaderInfoProvider;
+import uk.gov.cca.api.common.service.SchemeTerminationHelper;
 import uk.gov.cca.api.facility.domain.FacilityData;
 import uk.gov.cca.api.facility.domain.FacilityValidationContext;
 import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
+import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataDetailsDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityHeaderInfoDTO;
 import uk.gov.cca.api.facility.repository.FacilityDataRepository;
@@ -20,7 +21,6 @@ import uk.gov.cca.api.facility.transform.FacilityDetailsMapper;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,13 +34,19 @@ import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
 public class FacilityDataQueryService implements FacilityAuthorityInfoProvider, ResourceHeaderInfoProvider {
 
     private final FacilityDataRepository facilityDataRepository;
-    private final Cca2TerminationConfig cca2TerminationConfig;
+    private final SchemeTerminationHelper schemeTerminationHelper;
     
     private static final FacilityDetailsMapper FACILITY_DETAILS_MAPPER = Mappers.getMapper(FacilityDetailsMapper.class);
 
     public FacilityDataDetailsDTO getFacilityData(Long facilityId) {
         return facilityDataRepository.findById(facilityId)
                 .map(FACILITY_DETAILS_MAPPER::toFacilityDetailsResult)
+                .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
+    }
+
+    public FacilityDTO getFacilityInfoData(Long facilityId) {
+        return facilityDataRepository.findById(facilityId)
+                .map(FACILITY_DETAILS_MAPPER::toFacilityDTO)
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
     }
 
@@ -105,7 +111,7 @@ public class FacilityDataQueryService implements FacilityAuthorityInfoProvider, 
 
         return facilityDataRepository.findByFacilityBusinessIdAndClosedDateIsNull(facilityBusinessId)
 		        .map(FacilityData::getParticipatingSchemeVersions)
-		        .filter(schemeVersions -> !(schemeVersions.equals(Set.of(SchemeVersion.CCA_2)) && LocalDate.now().isAfter(cca2TerminationConfig.getTerminationDate())))
+		        .filter(schemeVersions -> !(schemeTerminationHelper.isCca2Terminated(schemeVersions)))
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
     }
 
@@ -140,8 +146,8 @@ public class FacilityDataQueryService implements FacilityAuthorityInfoProvider, 
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
     }
     
-    public List<TargetUnitAccountBusinessInfoDTO> findLiveAccountsWithAtLeastOneFacilityForSchemeVersionOnly(String schemeVersion) {
-        return facilityDataRepository.findLiveAccountsWithAtLeastOneFacilityForSchemeVersionOnly(schemeVersion);
+    public List<TargetUnitAccountBusinessInfoDTO> findLiveAccountsWithActiveFacilityForSchemeVersion(String schemeVersion) {
+        return facilityDataRepository.findLiveAccountsWithActiveFacilityForSchemeVersion(schemeVersion);
     }
 
     @Override

@@ -49,7 +49,7 @@ public class UnderlyingAgreementVariationRegulatorLedSubmitInitializer implement
 		final String subsectorAssociationName = accountReferenceData.getSectorAssociationDetails().getSubsectorAssociationName();
 		final UnderlyingAgreementContainer originalUnderlyingAgreementContainer = payload.getOriginalUnderlyingAgreementContainer();
 		final UnderlyingAgreement originalUnderlyingAgreement = originalUnderlyingAgreementContainer.getUnderlyingAgreement();
-		final boolean showTp5Tp6 = underlyingAgreementSchemeVersionsHelperService.shouldShowTp5Tp6(
+		final boolean showTp5Tp6 = underlyingAgreementSchemeVersionsHelperService.shouldShowCCA2BaselineAndTargets(
 				originalUnderlyingAgreementContainer, request.getCreationDate().toLocalDate());
 
 		return UnderlyingAgreementVariationRegulatorLedSubmitRequestTaskPayload.builder()

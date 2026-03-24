@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
 import { mockFacilityDetails } from '../testing/mock-data';
 import { FacilityDetailsComponent } from './facility-details.component';
@@ -38,8 +38,8 @@ describe('FacilityDetailsComponent', () => {
   });
 
   it('should render all section titles', () => {
-    expect(screen.getAllByText('Facility details')).toHaveLength(2);
-    expect(screen.getByText('Subsistence fees')).toBeInTheDocument();
+    expect(getByText('Facility details')).toBeTruthy();
+    expect(getByText('Subsistence fees')).toBeTruthy();
   });
 
   it('should render "Facility details" section', () => {

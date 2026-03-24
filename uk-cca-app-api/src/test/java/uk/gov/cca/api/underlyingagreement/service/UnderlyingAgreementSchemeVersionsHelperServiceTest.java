@@ -14,8 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.common.config.Cca2TerminationConfig;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.service.SchemeTerminationHelper;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod5Details;
@@ -33,7 +33,7 @@ class UnderlyingAgreementSchemeVersionsHelperServiceTest {
     private UnderlyingAgreementSchemeVersionsHelperService service;
 
     @Mock
-    private Cca2TerminationConfig cca2TerminationConfig;
+    private SchemeTerminationHelper schemeTerminationHelper;
     
 	@Test
     void calculateSchemeVersionsFromActiveFacilities_before_end_date() {
@@ -46,14 +46,16 @@ class UnderlyingAgreementSchemeVersionsHelperServiceTest {
 						.build())
 				.build());
 
-		when(cca2TerminationConfig.getTerminationDate()).thenReturn(LocalDate.now().plusDays(1));
+		when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_2))).thenReturn(false);
+		when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_3))).thenReturn(false);
 
         // Invoke
 		Set<SchemeVersion> schemeVersions = service.calculateSchemeVersionsFromActiveFacilities(facilities);
 
         // Verify
         assertThat(schemeVersions).isEqualTo(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3));
-        verify(cca2TerminationConfig, times(2)).getTerminationDate();
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_3));
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_2));
     }
 	
 	@Test
@@ -67,14 +69,16 @@ class UnderlyingAgreementSchemeVersionsHelperServiceTest {
 						.build())
 				.build());
 
-		when(cca2TerminationConfig.getTerminationDate()).thenReturn(LocalDate.now().minusDays(1));
+        when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_2))).thenReturn(true);
+		when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_3))).thenReturn(false);
 
         // Invoke
 		Set<SchemeVersion> schemeVersions = service.calculateSchemeVersionsFromActiveFacilities(facilities);
 
         // Verify
         assertThat(schemeVersions).isEqualTo(Set.of(SchemeVersion.CCA_3));
-        verify(cca2TerminationConfig, times(2)).getTerminationDate();
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_3));
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_2));
     }
 	
 	@Test
@@ -95,18 +99,21 @@ class UnderlyingAgreementSchemeVersionsHelperServiceTest {
 						.build())
 				.build());
 
-		when(cca2TerminationConfig.getTerminationDate()).thenReturn(LocalDate.now().plusDays(1));
+        when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_2))).thenReturn(false);
+		when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_3))).thenReturn(false);
 
         // Invoke
 		Set<SchemeVersion> schemeVersions = service.calculateTerminatedSchemeVersionsFromFacilities(facilities);
 
         // Verify
         assertThat(schemeVersions).isEqualTo(Set.of(SchemeVersion.CCA_2));
-        verify(cca2TerminationConfig, times(1)).getTerminationDate();
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_3));
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_2));
     }
 	
 	@Test
     void shouldShowTp5Tp6() {
+		final LocalDate requestCreationDate = LocalDate.now();
         final Set<Facility> facilities = Set.of(Facility.builder()
 				.status(FacilityStatus.LIVE)
 				.facilityItem(FacilityItem.builder()
@@ -123,18 +130,21 @@ class UnderlyingAgreementSchemeVersionsHelperServiceTest {
 						.build())
 				.build();	
 
-		when(cca2TerminationConfig.getTerminationDate()).thenReturn(LocalDate.now().plusDays(1));
+        when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_2), requestCreationDate)).thenReturn(false);
+		when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_3), requestCreationDate)).thenReturn(false);
 
         // Invoke
-		boolean shouldShowTp5Tp6 = service.shouldShowTp5Tp6(container, LocalDate.now());
+		boolean shouldShowTp5Tp6 = service.shouldShowCCA2BaselineAndTargets(container, requestCreationDate);
 
         // Verify
         assertThat(shouldShowTp5Tp6).isTrue();
-        verify(cca2TerminationConfig, times(2)).getTerminationDate();
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_3), requestCreationDate);
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_2), requestCreationDate);
     }
 	
 	@Test
     void shouldShowTp5Tp6_only_CCA3_after_end_date() {
+		final LocalDate requestCreationDate = LocalDate.now();
         final Set<Facility> facilities = Set.of(Facility.builder()
 				.status(FacilityStatus.LIVE)
 				.facilityItem(FacilityItem.builder()
@@ -151,18 +161,21 @@ class UnderlyingAgreementSchemeVersionsHelperServiceTest {
 						.build())
 				.build();	
 
-		when(cca2TerminationConfig.getTerminationDate()).thenReturn(LocalDate.now().minusDays(1));
+        when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_2), requestCreationDate)).thenReturn(true);
+		when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_3), requestCreationDate)).thenReturn(false);
 
         // Invoke
-		boolean shouldShowTp5Tp6 = service.shouldShowTp5Tp6(container, LocalDate.now());
+		boolean shouldShowTp5Tp6 = service.shouldShowCCA2BaselineAndTargets(container, requestCreationDate);
 
         // Verify
         assertThat(shouldShowTp5Tp6).isFalse();
-        verify(cca2TerminationConfig, times(2)).getTerminationDate();
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_3), requestCreationDate);
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_2), requestCreationDate);
     }
 	
 	@Test
     void shouldShowTp5Tp6_no_existing_tp_data() {
+		final LocalDate requestCreationDate = LocalDate.now();
         final Set<Facility> facilities = Set.of(Facility.builder()
 				.status(FacilityStatus.LIVE)
 				.facilityItem(FacilityItem.builder()
@@ -177,13 +190,15 @@ class UnderlyingAgreementSchemeVersionsHelperServiceTest {
 						.build())
 				.build();	
 
-		when(cca2TerminationConfig.getTerminationDate()).thenReturn(LocalDate.now().plusDays(1));
+        when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_2), requestCreationDate)).thenReturn(false);
+		when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_3), requestCreationDate)).thenReturn(false);
 
         // Invoke
-		boolean shouldShowTp5Tp6 = service.shouldShowTp5Tp6(container, LocalDate.now());
+		boolean shouldShowTp5Tp6 = service.shouldShowCCA2BaselineAndTargets(container, requestCreationDate);
 
         // Verify
         assertThat(shouldShowTp5Tp6).isFalse();
-        verify(cca2TerminationConfig, times(2)).getTerminationDate();
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_3), requestCreationDate);
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_2), requestCreationDate);
     }
 }

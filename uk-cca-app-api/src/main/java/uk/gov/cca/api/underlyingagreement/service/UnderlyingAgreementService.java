@@ -2,11 +2,11 @@ package uk.gov.cca.api.underlyingagreement.service;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.SetUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.service.SchemeTerminationHelper;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementDocument;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementEntity;
@@ -39,6 +39,7 @@ public class UnderlyingAgreementService {
     private final UnderlyingAgreementDocumentRepository underlyingAgreementDocumentRepository;
     private final UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
     private final UnderlyingAgreementSchemeVersionsHelperService underlyingAgreementSchemeVersionsHelperService;
+    private final SchemeTerminationHelper schemeTerminationHelper;
 
     /**
      * Submits a new UNA with new documents.
@@ -109,9 +110,7 @@ public class UnderlyingAgreementService {
         // persistedSchemeVersions - proposedActiveSchemeVersions -> Update as terminated
         SetUtils.difference(persistedSchemeVersions, proposedActiveSchemeVersions).forEach(version -> {
             UnderlyingAgreementDocument doc = entity.getDocumentForSchemeVersion(version);
-            if(doc.getTerminatedDate() == null) {
-                terminateUnderlyingAgreementDocument(doc, LocalDateTime.now());
-            }
+            terminateDocumentWithDate(doc, LocalDateTime.now());
         });
 
         // Update underlying agreement documents
@@ -171,15 +170,11 @@ public class UnderlyingAgreementService {
 
         entity.getUnderlyingAgreementDocuments()
                 .stream()
-                .filter(document -> ObjectUtils.isEmpty(document.getTerminatedDate()))
-                .forEach(document -> terminateUnderlyingAgreementDocument(document, terminatedDate));
+                .forEach(doc -> terminateDocumentWithDate(doc, terminatedDate));
     }
-    
-    public void terminateUnderlyingAgreementDocument(UnderlyingAgreementDocument document, LocalDateTime terminatedDate) {
-        if (document == null) {
-            throw new BusinessException(RESOURCE_NOT_FOUND);
-        }
 
+
+	public void terminateUnderlyingAgreementDocument(UnderlyingAgreementDocument document, LocalDateTime terminatedDate) {
         document.setTerminatedDate(terminatedDate);
     }
 
@@ -208,4 +203,12 @@ public class UnderlyingAgreementService {
         document.setConsolidationNumber(document.getConsolidationNumber() + 1);
         document.setTerminatedDate(null);
     }
+    
+    private void terminateDocumentWithDate(UnderlyingAgreementDocument doc, LocalDateTime terminatedDate) {
+		if(doc != null && doc.getTerminatedDate() == null) {
+			LocalDateTime effectiveTerminationDate = schemeTerminationHelper.resolveTerminationDate(
+					Set.of(doc.getSchemeVersion()), terminatedDate);
+			terminateUnderlyingAgreementDocument(doc, effectiveTerminationDate);
+		}
+	}
 }

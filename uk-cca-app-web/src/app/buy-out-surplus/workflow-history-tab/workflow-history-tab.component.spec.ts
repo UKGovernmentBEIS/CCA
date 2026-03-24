@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByText } from '@testing';
 
 import { BuyoutSurplusStore } from '../buy-out-surplus.store';
 import { buyoutSurplusStateMockData } from '../testing/mock-data';
@@ -47,10 +47,10 @@ describe('WorkflowHistoryTabComponent', () => {
 
     fixture.detectChanges();
 
-    expect(screen.getByText('There are no workflow history events yet.')).toBeInTheDocument();
+    expect(getByText('There are no workflow history events yet.')).toBeTruthy();
     expect(
-      screen.getByText('More information will be available when you create a new buy-out and surplus batch.'),
-    ).toBeInTheDocument();
+      getByText('More information will be available when you create a new buy-out and surplus batch.'),
+    ).toBeTruthy();
   });
 
   it('should populate with correct data', () => {

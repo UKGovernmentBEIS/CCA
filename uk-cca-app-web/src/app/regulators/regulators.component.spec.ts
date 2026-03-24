@@ -1,36 +1,44 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
-import { render } from '@testing-library/angular';
-import { screen } from '@testing-library/dom';
+import { getAllByRole, getByRole, getByText } from '@testing';
 
 import { RegulatorsComponent } from './regulators.component';
 
 describe('RegulatorsComponent', () => {
-  beforeEach(async () =>
-    render(RegulatorsComponent, {
-      imports: [HttpClientTestingModule],
-    }),
-  );
+  let fixture: ComponentFixture<RegulatorsComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [RegulatorsComponent],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(RegulatorsComponent);
+    fixture.detectChanges();
+  });
 
   it('should render', () => {
-    expect(screen.getByText(/Regulator users and contacts/)).toBeInTheDocument();
+    expect(getByText(/Regulator users and contacts/)).toBeTruthy();
   });
 
   it('should render all regulator tabs', () => {
-    expect(screen.getByRole('tablist')).toBeInTheDocument();
+    expect(getByRole('tablist')).toBeTruthy();
 
-    const tabs = screen.getAllByRole('tab');
+    const tabs = getAllByRole('tab');
     expect(tabs).toHaveLength(3);
 
     const tabHeaders = ['Regulator users', 'Site contacts', 'External contacts'];
     tabs.forEach((t, idx) => {
-      expect(t).toContainElement(screen.getByText(tabHeaders[idx]));
+      expect(t.textContent).toContain(tabHeaders[idx]);
     });
   });
 
   it('should render all tabs eagerly', () => {
-    expect(document.getElementById('regulator-users')).toBeVisible();
-    expect(document.querySelector('#site-contacts')).not.toBeInTheDocument();
-    expect(document.querySelector('external-contacts')).not.toBeInTheDocument();
+    expect(document.getElementById('regulator-users')).toBeTruthy();
+    expect(document.querySelector('#site-contacts')).toBeFalsy();
+    expect(document.querySelector('external-contacts')).toBeFalsy();
   });
 });

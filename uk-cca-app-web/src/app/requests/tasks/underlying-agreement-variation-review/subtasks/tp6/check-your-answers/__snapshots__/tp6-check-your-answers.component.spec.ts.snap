@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
-<div
-  id="root0"
->
+<div>
   <div>
     <netz-page-heading
       caption="TP6 (2024)"
@@ -65,7 +63,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -104,7 +102,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -143,7 +141,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -182,7 +180,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -249,7 +247,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -288,7 +286,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -327,7 +325,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -364,7 +362,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -418,7 +416,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -457,7 +455,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -496,7 +494,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -533,7 +531,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -572,7 +570,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -611,7 +609,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -650,7 +648,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -689,7 +687,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -728,7 +726,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -782,7 +780,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-targets?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -821,7 +819,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-targets?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -875,7 +873,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/decision?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -914,7 +912,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/decision?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -951,7 +949,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/decision?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1011,7 +1009,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1050,7 +1048,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1089,7 +1087,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1128,7 +1126,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1195,7 +1193,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1234,7 +1232,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1273,7 +1271,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1310,7 +1308,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/target-composition?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1364,7 +1362,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1403,7 +1401,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1442,7 +1440,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1479,7 +1477,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1518,7 +1516,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1557,7 +1555,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1596,7 +1594,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1635,7 +1633,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1674,7 +1672,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-baseline-data?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1728,7 +1726,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-targets?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1767,7 +1765,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/add-targets?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1821,7 +1819,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/decision?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1860,7 +1858,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/decision?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1897,7 +1895,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
               >
                 <a
                   class="govuk-link"
-                  href="/decision?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -1945,7 +1943,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/target-composition?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -1971,7 +1969,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/target-composition?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -1997,7 +1995,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/target-composition?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2023,7 +2021,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/target-composition?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2065,7 +2063,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/target-composition?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2091,7 +2089,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/target-composition?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2117,7 +2115,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/target-composition?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2143,7 +2141,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/target-composition?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2178,7 +2176,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/add-baseline-data?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2204,7 +2202,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/add-baseline-data?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2230,7 +2228,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/add-baseline-data?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2256,7 +2254,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/add-baseline-data?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2282,7 +2280,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/add-baseline-data?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2308,7 +2306,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/add-baseline-data?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2334,7 +2332,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/add-baseline-data?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2360,7 +2358,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/add-baseline-data?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2386,7 +2384,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/add-baseline-data?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2421,7 +2419,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/add-targets?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2447,7 +2445,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/add-targets?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2482,7 +2480,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/decision?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2508,7 +2506,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/decision?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -2534,7 +2532,7 @@ exports[`TP6CheckYourAnswersComponent should match snapshot 1`] = `
             >
               <a
                 class="govuk-link"
-                href="/decision?change=true"
+                href="/?change=true"
               >
                 Change
               </a>

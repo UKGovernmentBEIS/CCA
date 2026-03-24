@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`AuthorisationAdditionalEvidenceDecisionComponent should match snapshot 1`] = `
-<div
-  id="root0"
->
+<div>
   <div>
     <netz-page-heading>
       
@@ -64,7 +62,7 @@ exports[`AuthorisationAdditionalEvidenceDecisionComponent should match snapshot 
               >
                 <a
                   class="govuk-link"
-                  href="/provide-evidence?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -101,7 +99,7 @@ exports[`AuthorisationAdditionalEvidenceDecisionComponent should match snapshot 
               >
                 <a
                   class="govuk-link"
-                  href="/provide-evidence?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -164,7 +162,7 @@ exports[`AuthorisationAdditionalEvidenceDecisionComponent should match snapshot 
               >
                 <a
                   class="govuk-link"
-                  href="/provide-evidence?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -201,7 +199,7 @@ exports[`AuthorisationAdditionalEvidenceDecisionComponent should match snapshot 
               >
                 <a
                   class="govuk-link"
-                  href="/provide-evidence?change=true"
+                  href="/?change=true"
                 >
                   Change
                 </a>
@@ -248,7 +246,7 @@ exports[`AuthorisationAdditionalEvidenceDecisionComponent should match snapshot 
             >
               <a
                 class="govuk-link"
-                href="/provide-evidence?change=true"
+                href="/?change=true"
               >
                 Change
               </a>
@@ -274,7 +272,7 @@ exports[`AuthorisationAdditionalEvidenceDecisionComponent should match snapshot 
             >
               <a
                 class="govuk-link"
-                href="/provide-evidence?change=true"
+                href="/?change=true"
               >
                 Change
               </a>

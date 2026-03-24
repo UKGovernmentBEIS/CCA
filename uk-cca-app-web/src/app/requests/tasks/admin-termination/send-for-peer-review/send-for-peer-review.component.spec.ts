@@ -6,8 +6,7 @@ import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
-import { screen } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
+import { getByText } from '@testing';
 
 import { TasksService } from 'cca-api';
 
@@ -76,36 +75,40 @@ describe('AdminTerminationSendForPeerReviewComponent', () => {
   });
 
   it('should display the correct header and caption', () => {
-    expect(screen.getByText('Send for peer review')).toBeInTheDocument();
-    expect(screen.getByText('Select peer reviewer')).toBeInTheDocument();
+    expect(getByText('Send for peer review')).toBeTruthy();
+    expect(getByText('Select peer reviewer')).toBeTruthy();
   });
 
   it('should contain submit button and "return to" link', () => {
-    expect(screen.getByText('Confirm and complete')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Admin Termination')).toBeInTheDocument();
+    expect(getByText('Confirm and complete')).toBeTruthy();
+    expect(getByText('Return to: Admin Termination')).toBeTruthy();
   });
 
   it('should display the correct form field', () => {
-    expect(screen.getByText('Select a peer reviewer')).toBeInTheDocument();
+    expect(getByText('Select a peer reviewer')).toBeTruthy();
   });
 
   it('should populate select options with candidate assignees', () => {
-    const selectElement = screen.getByRole('combobox');
-    expect(selectElement).toBeInTheDocument();
+    const selectElement = fixture.nativeElement.querySelector('select') as HTMLSelectElement;
+    expect(selectElement).toBeTruthy();
 
     // Check that options are populated with formatted names
-    expect(screen.getByText('John Smith')).toBeInTheDocument();
-    expect(screen.getByText('Sarah Johnson')).toBeInTheDocument();
-    expect(screen.getByText('Mike Brown')).toBeInTheDocument();
+    expect(getByText('John Smith')).toBeTruthy();
+    expect(getByText('Sarah Johnson')).toBeTruthy();
+    expect(getByText('Mike Brown')).toBeTruthy();
   });
 
   it('should submit form and call processRequestTaskAction method', async () => {
-    const user = UserEvent.setup();
+    const selectElement = fixture.nativeElement.querySelector('select') as HTMLSelectElement;
+    selectElement.value = '0: user1';
+    selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+    fixture.detectChanges();
 
-    const selectElement = screen.getByRole('combobox');
-    await user.selectOptions(selectElement, '0: user1');
-
-    await user.click(screen.getByText('Confirm and complete'));
+    const submitButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find(
+      (button: HTMLButtonElement) => button.textContent?.trim() === 'Confirm and complete',
+    ) as HTMLButtonElement;
+    submitButton.click();
+    fixture.detectChanges();
 
     expect(tasksService.processRequestTaskAction).toHaveBeenCalledTimes(1);
     expect(tasksService.processRequestTaskAction).toHaveBeenCalledWith({

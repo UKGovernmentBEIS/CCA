@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
 import { mockAdminTerminationFinalDecisionPayload } from '../../../testing/mock-data';
 import FinalDecisionReasonDetailsComponent from './final-decision-reason-details.component';
@@ -41,18 +41,18 @@ describe('FinalDecisionReasonDetailsComponent', () => {
   });
 
   it('should display the correct header and caption', () => {
-    expect(screen.getByText('Explain the reason for your decision')).toBeInTheDocument();
-    expect(screen.getByText('Terminate agreement')).toBeInTheDocument();
+    expect(getByText('Explain the reason for your decision', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Terminate agreement', fixture.nativeElement)).toBeTruthy();
   });
 
   it('should contain submit button and "return to" link', () => {
-    expect(screen.getByText('Continue')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Admin termination final decision')).toBeInTheDocument();
+    expect(getByText('Continue', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Return to: Admin termination final decision', fixture.nativeElement)).toBeTruthy();
   });
 
   it('should display the correct form fields', () => {
-    expect(screen.getByText('Explain the reason for your decision')).toBeInTheDocument();
-    expect(screen.getByText('Upload relevant files (optional)')).toBeInTheDocument();
-    expect(screen.getByText('Upload relevant documents to support your explanation.')).toBeInTheDocument();
+    expect(getByText('Explain the reason for your decision', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Upload relevant files (optional)', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Upload relevant documents to support your explanation.', fixture.nativeElement)).toBeTruthy();
   });
 });

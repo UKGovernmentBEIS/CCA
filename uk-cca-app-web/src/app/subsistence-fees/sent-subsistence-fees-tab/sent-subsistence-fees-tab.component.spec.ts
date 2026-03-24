@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByText } from '@testing';
 
 import { SubsistenceFeesStore } from '../subsistence-fees.store';
 import { subsistenceFeesStateMockData } from '../testing/mock-data';
@@ -47,10 +47,10 @@ describe('SentSubsistenceFeesTabComponent', () => {
 
     fixture.detectChanges();
 
-    expect(screen.getByText('No payment requests have been sent yet.')).toBeInTheDocument();
+    expect(getByText('No payment requests have been sent yet.')).toBeTruthy();
     expect(
-      screen.getByText('More information will be available when one or more payment requests have been sent.'),
-    ).toBeInTheDocument();
+      getByText('More information will be available when one or more payment requests have been sent.'),
+    ).toBeTruthy();
   });
 
   it('should populate with correct data', () => {

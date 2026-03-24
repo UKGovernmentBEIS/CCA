@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router, RouterLink } from '@angular/router';
 
 import { map, switchMap, take } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { ItemLinkPipe } from '@netz/common/pipes';
 import { ButtonDirective } from '@netz/govuk-components';
-import { ConfigService } from '@shared/config';
+import { ConfigService, FeatureName } from '@shared/config';
 import { StatusPipe } from '@shared/pipes';
 
 import {
@@ -27,6 +27,11 @@ import {
   WorkflowDisplayContent,
 } from './start-new-task.types';
 
+const HIDDEN_FEATURE_MAP = new Map<string, FeatureName>([
+  ['UNDERLYING_AGREEMENT_VARIATION', 'unaVariationHideStartTask'],
+  ['NON_COMPLIANCE', 'nonComplianceHideStartTask'],
+] as const);
+
 @Component({
   selector: 'cca-start-new-task',
   templateUrl: './start-new-task.component.html',
@@ -41,12 +46,10 @@ export class StartNewTaskComponent {
   private readonly authStore = inject(AuthStore);
   private readonly configService = inject(ConfigService);
 
-  private readonly id =
-    this.activatedRoute.snapshot.paramMap.get('targetUnitId') ?? this.activatedRoute.snapshot.paramMap.get('sectorId');
+  private readonly paramMap = this.activatedRoute.snapshot.paramMap;
 
-  private readonly resourceType = this.activatedRoute.snapshot.paramMap.get('targetUnitId')
-    ? 'ACCOUNT'
-    : 'SECTOR_ASSOCIATION';
+  private readonly id = this.extractParamId(this.paramMap);
+  private readonly resourceType = this.extractResourceType(this.paramMap);
 
   protected readonly returnTo =
     this.activatedRoute.snapshot.data.targetUnit?.targetUnitAccountDetails?.name ??
@@ -58,12 +61,18 @@ export class StartNewTaskComponent {
       .pipe(map((response) => this.mapToWorkflowDisplayContent(response, this.authStore.select(selectUserRoleType)()))),
   );
 
+  protected readonly heading = computed(() =>
+    this.availableWorkflows().some((wf) => wf.type === 'FACILITY_AUDIT') ? 'Start a facility task' : 'Start a new task',
+  );
+
   mapToWorkflowDisplayContent(
     validationResults: Record<string, RequestCreateValidationResult>,
     userRole: UserStateDTO['roleType'],
   ): WorkflowDisplayContent[] {
     const workflowOrder = [
+      'FACILITY_AUDIT',
       'UNDERLYING_AGREEMENT_VARIATION',
+      'NON_COMPLIANCE',
       'PERFORMANCE_DATA_DOWNLOAD',
       'PERFORMANCE_DATA_UPLOAD',
       'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
@@ -81,9 +90,10 @@ export class StartNewTaskComponent {
     return userRoleWorkflowAccessMap[userRole]?.includes(type) ?? false;
   }
 
+  // The isFeatureEnabled logic is inverted, because the API declares the feature as enabled when the config flag is disabled
   isFeatureDisabled(type: string): boolean {
     return (
-      this.configService.isFeatureEnabled('unaVariationHideStartTask') && type === 'UNDERLYING_AGREEMENT_VARIATION'
+      this.configService.isFeatureEnabled(HIDDEN_FEATURE_MAP.get(type) as FeatureName) && HIDDEN_FEATURE_MAP.has(type)
     );
   }
 
@@ -139,5 +149,19 @@ export class StartNewTaskComponent {
 
         this.router.navigate(link, { relativeTo: this.activatedRoute, replaceUrl: true });
       });
+  }
+
+  private extractParamId(paramMap: ParamMap): string {
+    if (paramMap.get('facilityId')) return paramMap.get('facilityId');
+    if (paramMap.get('targetUnitId')) return paramMap.get('targetUnitId');
+    if (paramMap.get('sectorId')) return paramMap.get('sectorId');
+    throw new Error('No param ID found');
+  }
+
+  private extractResourceType(paramMap: ParamMap): string {
+    if (paramMap.get('facilityId')) return 'FACILITY';
+    if (paramMap.get('targetUnitId')) return 'ACCOUNT';
+    if (paramMap.get('sectorId')) return 'SECTOR_ASSOCIATION';
+    throw new Error('No resource type found');
   }
 }

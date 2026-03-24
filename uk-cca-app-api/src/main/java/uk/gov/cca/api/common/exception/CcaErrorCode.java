@@ -8,6 +8,8 @@ import uk.gov.netz.api.common.exception.NetzErrorCode;
 @Getter
 public enum CcaErrorCode implements NetzErrorCode {
 
+    /** Codes for Target period errors. */
+    TARGET_PERIOD_YEAR_NOT_FOUND("TPR1001", HttpStatus.BAD_REQUEST, "Target period year not found", true),
     /** Codes for Authority errors. */
     AUTHORITY_USER_NOT_RELATED_TO_SECTOR_ASSOCIATION("CCAAUTHORITY1001", HttpStatus.BAD_REQUEST, "User is not related to sector association", true),
     AUTHORITY_USER_IS_NOT_SECTOR_USER("CCAAUTHORITY1004", HttpStatus.BAD_REQUEST, "User is not sector user", true),
@@ -83,7 +85,13 @@ public enum CcaErrorCode implements NetzErrorCode {
     /** Codes for CCA2 termination run errors. */
     CCA2_TERMINATION_RUN_EXIST("CCA2END1001", HttpStatus.BAD_REQUEST, "CCA2 termination run already in progress"),
     /** Non Compliance */
-    INVALID_NON_COMPLIANCE("NCOM1001", HttpStatus.BAD_REQUEST, "Invalid Non Compliance")
+    INVALID_NON_COMPLIANCE("NCOM1001", HttpStatus.BAD_REQUEST, "Invalid Non Compliance"),
+    /** Codes for Scheme termination errors. */
+    NO_FACILITIES_FOUND_FOR_CURRENT_SCHEME("SCHEMEEND1001", HttpStatus.BAD_REQUEST, "No facilities found for current scheme"),
+    /** Codes for Performance Data Facility Digital Form. */
+    PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXIST("TPRDF1001", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form for Target Period already in progress"),
+    PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_NOT_ELIGIBLE("TPRDF1002", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form is not eligible for facility"),
+    PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REPORT_NOT_ELIGIBLE("TPRDF1003", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form is not eligible for target period"),
     ;
 
 

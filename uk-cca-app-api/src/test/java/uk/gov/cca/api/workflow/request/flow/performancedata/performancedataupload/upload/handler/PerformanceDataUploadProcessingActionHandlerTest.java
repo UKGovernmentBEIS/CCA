@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
@@ -87,7 +87,7 @@ class PerformanceDataUploadProcessingActionHandlerTest {
                 .competentAuthority(CompetentAuthorityEnum.ENGLAND)
                 .build();
         final String processId = "processId";
-        final TargetPeriodDTO targetPeriodDTO = TargetPeriodDTO.builder()
+        final TargetPeriodYearDTO targetPeriodDTO = TargetPeriodYearDTO.builder()
                 .businessId(TargetPeriodType.TP6)
                 .secondaryReportingStartDate(LocalDate.of(2025, 5, 2))
                 .performanceDataTemplateVersion("6.0")
@@ -117,7 +117,8 @@ class PerformanceDataUploadProcessingActionHandlerTest {
                 .getCandidateAccountsForPerformanceDataReportingBySector(sectorId, TargetPeriodType.TP6))
                 .thenReturn(activeAccounts);
         when(performanceDataUploadService.submit(requestTask, performanceDataUpload, activeAccounts)).thenReturn(accountReportsFiles);
-        when(targetPeriodService.getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod()))
+        when(targetPeriodService
+                .getTargetPeriodByTargetPeriodTypeAndTargetYear(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod(), PerformanceDataTargetPeriodType.TP6.getTargetYear()))
                 .thenReturn(targetPeriodDTO);
         when(workflowService.getVariable(processId, BpmnProcessConstants.BUSINESS_KEY)).thenReturn(uploadRequestBusinessKey);
 
@@ -133,7 +134,7 @@ class PerformanceDataUploadProcessingActionHandlerTest {
         verify(performanceDataUploadService, times(1))
                 .submit(requestTask, performanceDataUpload, activeAccounts);
         verify(targetPeriodService, times(1))
-                .getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod());
+                .getTargetPeriodByTargetPeriodTypeAndTargetYear(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod(), PerformanceDataTargetPeriodType.TP6.getTargetYear());
         verify(workflowService, times(1)).getVariable(processId, BpmnProcessConstants.BUSINESS_KEY);
         verify(startProcessRequestService, times(1)).startProcess(any());
         verifyNoInteractions(performanceDataUploadCompletedService);
@@ -162,7 +163,7 @@ class PerformanceDataUploadProcessingActionHandlerTest {
                         .sectorAssociationInfo(sectorAssociation)
                         .build())
                 .build();
-        final TargetPeriodDTO targetPeriodDTO = TargetPeriodDTO.builder()
+        final TargetPeriodYearDTO targetPeriodDTO = TargetPeriodYearDTO.builder()
                 .businessId(TargetPeriodType.TP6)
                 .secondaryReportingStartDate(LocalDate.of(2025, 5, 2))
                 .performanceDataTemplateVersion("6.0")
@@ -172,7 +173,8 @@ class PerformanceDataUploadProcessingActionHandlerTest {
         when(performanceDataAccountQueryService
                 .getCandidateAccountsForPerformanceDataReportingBySector(sectorId, TargetPeriodType.TP6))
                 .thenReturn(List.of());
-        when(targetPeriodService.getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod()))
+        when(targetPeriodService
+                .getTargetPeriodByTargetPeriodTypeAndTargetYear(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod(), PerformanceDataTargetPeriodType.TP6.getTargetYear()))
                 .thenReturn(targetPeriodDTO);
         when(performanceDataUploadService.submit(requestTask, performanceDataUpload, List.of())).thenReturn(Map.of());
 
@@ -186,7 +188,7 @@ class PerformanceDataUploadProcessingActionHandlerTest {
         verify(performanceDataAccountQueryService, times(1))
                 .getCandidateAccountsForPerformanceDataReportingBySector(sectorId, TargetPeriodType.TP6);
         verify(targetPeriodService, times(1))
-                .getTargetPeriodByBusinessId(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod());
+                .getTargetPeriodByTargetPeriodTypeAndTargetYear(PerformanceDataTargetPeriodType.TP6.getReferenceTargetPeriod(), PerformanceDataTargetPeriodType.TP6.getTargetYear());
         verify(performanceDataUploadService, times(1))
                 .submit(requestTask, performanceDataUpload, List.of());
         verify(performanceDataUploadCompletedService, times(1))

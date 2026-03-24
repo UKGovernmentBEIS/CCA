@@ -53,7 +53,7 @@ export class RequestTaskStore extends SignalStore<RequestTaskState> {
     );
   }
 
-  setMetadata(metadata: { [key: string]: unknown }) {
+  setMetadata(metadata: Record<string, unknown>) {
     this.setState(
       produce(this.state, (state) => {
         state.metadata = metadata;

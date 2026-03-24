@@ -6,7 +6,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByRole, getByTestId, getByText } from '@testing';
 
 import { ActiveTargetUnitStore } from '../../active-target-unit.store';
 import { PerformanceReportStore } from '../performance-report-store';
@@ -51,25 +51,25 @@ describe('TuReportsTabComponent', () => {
   });
 
   it('should render the Reports heading', () => {
-    expect(screen.getByText('Reports')).toBeVisible();
+    expect(getByText('Reports')).toBeTruthy();
   });
 
   it('should have a navigation with Performance and PAT links', () => {
-    expect(screen.getByText('Performance')).toBeTruthy();
-    expect(screen.getByText('PAT')).toBeTruthy();
+    expect(getByText('Performance')).toBeTruthy();
+    expect(getByText('PAT')).toBeTruthy();
   });
 
   it('should have Performance link active by default', () => {
-    const performanceLink = screen.getByText('Performance');
+    const performanceLink = getByRole('link', { name: 'Performance' });
     expect(performanceLink.getAttribute('aria-current')).toBe('location');
   });
 
   it('should not have PAT link active by default', () => {
-    const patLink = screen.getByText('PAT');
+    const patLink = getByRole('link', { name: 'PAT' });
     expect(patLink.getAttribute('aria-current')).toBeNull();
   });
 
   it('should display the performance report component when section is performance', () => {
-    expect(screen.getByTestId('performance-report-component')).toBeTruthy();
+    expect(getByTestId('performance-report-component')).toBeTruthy();
   });
 });

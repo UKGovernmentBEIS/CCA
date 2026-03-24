@@ -7,8 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
+import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
-import { ActivatedRouteStub } from 'projects/common/testing';
 
 import { mockPreAuditReviewState } from '../../../testing/mock-data';
 import { PreAuditReviewAuditReasonComponent } from './pre-audit-review-audit-reason.component';

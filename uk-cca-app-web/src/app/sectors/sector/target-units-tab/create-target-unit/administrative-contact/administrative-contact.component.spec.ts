@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByLabelText, getByText } from '@testing';
 
 import { CreateTargetUnitStore } from '../create-target-unit.store';
 import { mockCreateTargetUnitState } from '../specs/fixture/mocks';
@@ -35,24 +35,22 @@ describe('AdministrativeContactComponent', () => {
   });
 
   it('should display the correct header and caption', () => {
-    expect(screen.getByText('New target unit')).toBeInTheDocument();
-    expect(screen.getByText('Administrative contact details')).toBeInTheDocument();
+    expect(getByText('New target unit')).toBeTruthy();
+    expect(getByText('Administrative contact details')).toBeTruthy();
   });
 
   it('should display the correct form fields', () => {
-    expect(screen.getByLabelText('Email address')).toBeInTheDocument();
-    expect(screen.getByLabelText('First name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Last name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Job title (optional)')).toBeInTheDocument();
-    expect(screen.getByLabelText('Phone number')).toBeInTheDocument();
-    expect(
-      screen.getByText('The administrative contact address is the same as the responsible person address'),
-    ).toBeInTheDocument();
-    expect(screen.getByLabelText('Address line 1')).toBeInTheDocument();
-    expect(screen.getByLabelText('Address line 2 (optional)')).toBeInTheDocument();
-    expect(screen.getByLabelText('Town or city')).toBeInTheDocument();
-    expect(screen.getByLabelText('County (optional)')).toBeInTheDocument();
-    expect(screen.getByLabelText('Postcode')).toBeInTheDocument();
-    expect(screen.getByLabelText('Country')).toBeInTheDocument();
+    expect(getByLabelText('Email address')).toBeTruthy();
+    expect(getByLabelText('First name')).toBeTruthy();
+    expect(getByLabelText('Last name')).toBeTruthy();
+    expect(getByLabelText('Job title (optional)')).toBeTruthy();
+    expect(getByLabelText('Phone number')).toBeTruthy();
+    expect(getByText('The administrative contact address is the same as the responsible person address')).toBeTruthy();
+    expect(getByLabelText('Address line 1')).toBeTruthy();
+    expect(getByLabelText('Address line 2 (optional)')).toBeTruthy();
+    expect(getByLabelText('Town or city')).toBeTruthy();
+    expect(getByLabelText('County (optional)')).toBeTruthy();
+    expect(getByLabelText('Postcode')).toBeTruthy();
+    expect(getByLabelText('Country')).toBeTruthy();
   });
 });

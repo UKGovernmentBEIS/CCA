@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByTestId, getByText } from '@testing';
 
 import { mockRequestActions, mockWorkflowDetails } from './testing/mock-data';
 import { WorkflowHistoryComponent } from './workflow-history.component';
@@ -40,11 +40,11 @@ describe('WorkflowHistoryComponent', () => {
   });
 
   it('should render workflow details heading', () => {
-    expect(screen.getByTestId('page-heading')).toHaveTextContent('BOS-TP6003');
-    expect(screen.getByText('Completed')).toBeVisible();
+    expect(getByTestId('page-heading').textContent).toContain('BOS-TP6003');
+    expect(getByText('Completed')).toBeTruthy();
   });
 
   it('should render timeline events', () => {
-    expect(screen.getAllByTestId('timeline-item')).toHaveLength(2);
+    expect(document.querySelectorAll('[data-testid="timeline-item"]')).toHaveLength(2);
   });
 });

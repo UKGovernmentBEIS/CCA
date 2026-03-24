@@ -1,25 +1,33 @@
-import { render } from '@testing-library/angular';
-import { screen } from '@testing-library/dom';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
+
+import { ActivatedRouteStub } from '@netz/common/testing';
+import { getAllByRole, getByText } from '@testing';
 
 import { mockSectorDetails } from '../../specs/fixtures/mock';
 import { ActiveSectorStore } from '../active-sector.store';
 import { SectorDetailsTabComponent } from './sector-details-tab.component';
 
 describe('SectorDetailsTabComponent', () => {
+  let fixture: ComponentFixture<SectorDetailsTabComponent>;
   let store: ActiveSectorStore;
+
   beforeEach(async () => {
-    await render(SectorDetailsTabComponent, {
-      providers: [ActiveSectorStore],
-      configureTestBed: (testbed) => {
-        store = testbed.inject(ActiveSectorStore);
-        store.setState(mockSectorDetails);
-      },
-    });
+    await TestBed.configureTestingModule({
+      imports: [SectorDetailsTabComponent],
+      providers: [ActiveSectorStore, { provide: ActivatedRoute, useValue: new ActivatedRouteStub() }],
+    }).compileComponents();
+
+    store = TestBed.inject(ActiveSectorStore);
+    store.setState(mockSectorDetails);
+
+    fixture = TestBed.createComponent(SectorDetailsTabComponent);
+    fixture.detectChanges();
   });
 
   it('should render "Sector details" and "Sector contact" titles', () => {
-    expect(screen.getByText('Sector details')).toBeTruthy();
-    expect(screen.getByText('Sector contact')).toBeTruthy();
+    expect(getByText('Sector details')).toBeTruthy();
+    expect(getByText('Sector contact')).toBeTruthy();
   });
 
   it('should render "details" section', () => {
@@ -63,6 +71,6 @@ describe('SectorDetailsTabComponent', () => {
   });
 
   it('should render 11 change links', () => {
-    expect(screen.getAllByText(/Change/i)).toHaveLength(11);
+    expect(getAllByRole('link', { name: /Change/i }, fixture.nativeElement).length).toBe(11);
   });
 });

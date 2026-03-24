@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`SummaryComponentUnaDetermination should match overall decision summary 1`] = `
-<div
-  id="root0"
->
+<div>
   <div>
     <netz-page-heading
       caption="Determine operator assent"
@@ -57,7 +55,7 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
           >
             <a
               class="govuk-link"
-              href="/additional-info?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -96,7 +94,7 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
           >
             <a
               class="govuk-link"
-              href="/additional-info?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -112,7 +110,7 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Uploaded files
+            Uploaded files (optional)
           </dt>
           <dd
             class="govuk-summary-list__value"
@@ -133,7 +131,7 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
           >
             <a
               class="govuk-link"
-              href="/additional-info?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -164,9 +162,7 @@ exports[`SummaryComponentUnaDetermination should match overall decision summary 
 `;
 
 exports[`SummaryComponentVariationDetermination should match overall decision summary 1`] = `
-<div
-  id="root1"
->
+<div>
   <div>
     <netz-page-heading
       caption="Determine operator assent"
@@ -220,7 +216,7 @@ exports[`SummaryComponentVariationDetermination should match overall decision su
           >
             <a
               class="govuk-link"
-              href="/additional-info?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -259,7 +255,7 @@ exports[`SummaryComponentVariationDetermination should match overall decision su
           >
             <a
               class="govuk-link"
-              href="/additional-info?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -275,7 +271,7 @@ exports[`SummaryComponentVariationDetermination should match overall decision su
             class="govuk-summary-list__key"
             govuksummarylistrowkey=""
           >
-            Uploaded files
+            Uploaded files (optional)
           </dt>
           <dd
             class="govuk-summary-list__value"
@@ -296,7 +292,7 @@ exports[`SummaryComponentVariationDetermination should match overall decision su
           >
             <a
               class="govuk-link"
-              href="/additional-info?change=true"
+              href="/?change=true"
             >
               Change
             </a>

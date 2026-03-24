@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { ActivatedRoute, RouterLinkWithHref } from '@angular/router';
 
 import {

@@ -1,5 +1,5 @@
 @if (availableWorkflows(); as availableWorkflows) {
-  <netz-page-heading>Start a new task</netz-page-heading>
+  <netz-page-heading>{{ heading() }}</netz-page-heading>
 
   @if (availableWorkflows?.length > 0) {
     @for (workflow of availableWorkflows; track workflow) {

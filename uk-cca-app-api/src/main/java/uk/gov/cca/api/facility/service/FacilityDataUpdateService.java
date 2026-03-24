@@ -8,7 +8,9 @@ import lombok.AllArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.service.SchemeTerminationHelper;
 import uk.gov.cca.api.facility.domain.FacilityData;
 import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataCreationDTO;
@@ -33,7 +35,7 @@ public class FacilityDataUpdateService {
 
     private final FacilityDataRepository repository;
     private final FacilityDataQueryService facilityDataQueryService;
-
+    private final SchemeTerminationHelper schemeTerminationHelper;
     private static final FacilityAddressMapper FACILITY_ADDRESS_MAPPER = Mappers.getMapper(FacilityAddressMapper.class);
     private static final FacilityDetailsMapper FACILITY_DETAILS_MAPPER = Mappers.getMapper(FacilityDetailsMapper.class);
 
@@ -93,21 +95,23 @@ public class FacilityDataUpdateService {
     
     @Transactional
     public void terminateFacilities(LocalDateTime terminationDateTime, List<FacilityData> activeFacilitiesData) {
-        applyTermination(terminationDateTime, activeFacilitiesData);
+    	applyTermination(terminationDateTime, activeFacilitiesData);
     }
 
 	private void applyTermination(LocalDateTime terminationDateTime, List<FacilityData> activeFacilitiesData) {
 		for (FacilityData facility : activeFacilitiesData) {
-            facility.setClosedDate(terminationDateTime);
+			LocalDateTime effectiveTerminationDate = schemeTerminationHelper.resolveTerminationDate(
+					facility.getParticipatingSchemeVersions(), terminationDateTime);
+            facility.setClosedDate(effectiveTerminationDate);
             if (facility.getSchemeExitDate() == null) {
-                facility.setSchemeExitDate(terminationDateTime.toLocalDate());
+                facility.setSchemeExitDate(effectiveTerminationDate.toLocalDate());
             }
         }
 
         repository.saveAll(activeFacilitiesData);
 	}
 
-    @Transactional
+	@Transactional
     public void updateFacilitiesDataParticipatingScheme(Set<String> facilityBusinessIds, SchemeVersion schemeVersion) {
         List<FacilityData> persistedFacilitiesData = repository.findAllByFacilityBusinessIdIn(facilityBusinessIds);
 
@@ -126,5 +130,4 @@ public class FacilityDataUpdateService {
         FacilityData facility = facilityDataQueryService.getFacilityDataById(facilityId);
         facility.setSchemeExitDate(schemeExitDate);
     }
-
 }

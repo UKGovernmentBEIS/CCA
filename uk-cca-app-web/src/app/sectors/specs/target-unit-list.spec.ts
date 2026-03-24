@@ -5,8 +5,7 @@ import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { transformUsername } from '@netz/common/pipes';
-import { screen } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
+import { click, getByText } from '@testing';
 
 import { SECTORS_ROUTES } from '../sectors.routes';
 import { mockSectorAuthorities } from './fixtures/mock';
@@ -34,34 +33,34 @@ describe('Target Units List Spec', () => {
   test("Main: assign a site contact to an 'Unassigned' Target Unit", fakeAsync(async () => {
     const sectorId = 123;
     const sectorUser = mockSectorAuthorities.authorities[0];
-    const user = UserEvent.setup();
-    const opts = { harness, httpTestingController, user };
+    const opts = { harness, httpTestingController };
 
     await navigateToTargetUnits(sectorId, opts);
 
     const sectorUserId = sectorUser.userId;
-    const select = document.getElementById('targetUnits.1.assignedTo');
-    await user.selectOptions(select, `1: ${sectorUserId}`);
-    await user.click(screen.getByText('Save'));
+    const select = document.getElementById('targetUnits.1.assignedTo') as HTMLSelectElement;
+    select.value = `1: ${sectorUserId}`;
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    click(getByText('Save'));
 
     const req = httpTestingController.expectOne(`/api/v1.0/sector-association/${sectorId}/target-unit-accounts/`);
     req.flush(null);
-    expect(select).toHaveDisplayValue(new RegExp(transformUsername(sectorUser)));
+    expect(select.selectedOptions[0]?.textContent ?? '').toMatch(new RegExp(transformUsername(sectorUser)));
   }));
 
   test('Alternative scenario 1: Un-assign a site contact from a Target Unit', fakeAsync(async () => {
     const sectorId = 123;
-    const user = UserEvent.setup();
-    const opts = { harness, httpTestingController, user };
+    const opts = { harness, httpTestingController };
 
     await navigateToTargetUnits(sectorId, opts);
 
-    const select = document.getElementById('targetUnits.0.assignedTo');
-    await user.selectOptions(select, `0: null`);
-    await user.click(screen.getByText('Save'));
+    const select = document.getElementById('targetUnits.0.assignedTo') as HTMLSelectElement;
+    select.value = '0: null';
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    click(getByText('Save'));
 
     const req = httpTestingController.expectOne(`/api/v1.0/sector-association/${sectorId}/target-unit-accounts/`);
     req.flush(null);
-    expect(select).toHaveDisplayValue(/Unassigned/);
+    expect(select.selectedOptions[0]?.textContent ?? '').toMatch(/Unassigned/);
   }));
 });

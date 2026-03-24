@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
 import { PerformanceDataDownloadGeneratingComponent } from './performance-data-download-generating.component';
 
@@ -30,6 +30,6 @@ describe('PerformanceDataDownloadGeneratingComponent', () => {
   });
 
   it('should show return to link', () => {
-    expect(screen.getByText('Return to: Dashboard')).toBeInTheDocument();
+    expect(getByText('Return to: Dashboard', fixture.nativeElement)).toBeTruthy();
   });
 });

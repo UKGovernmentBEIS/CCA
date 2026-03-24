@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, DestroyRef, Directive, ElementRef, OnInit, Renderer2, inject } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, Directive, ElementRef, inject, OnInit, Renderer2 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { PendingRequestService } from '@netz/common/services';

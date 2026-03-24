@@ -40,7 +40,7 @@ public class UnderlyingAgreementVariationSubmitInitializer implements Initialize
 		final UnderlyingAgreementVariationRequestPayload payload = (UnderlyingAgreementVariationRequestPayload) request.getPayload();
 		final UnderlyingAgreementContainer originalUnderlyingAgreementContainer = payload.getOriginalUnderlyingAgreementContainer();
 		final UnderlyingAgreement originalUnderlyingAgreement = originalUnderlyingAgreementContainer.getUnderlyingAgreement();
-		final boolean showTp5Tp6 = underlyingAgreementSchemeVersionsHelperService.shouldShowTp5Tp6(
+		final boolean showTp5Tp6 = underlyingAgreementSchemeVersionsHelperService.shouldShowCCA2BaselineAndTargets(
 				originalUnderlyingAgreementContainer, request.getCreationDate().toLocalDate());
 
 		return UnderlyingAgreementVariationSubmitRequestTaskPayload.builder()

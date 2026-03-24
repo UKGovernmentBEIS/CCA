@@ -4,8 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
+import { click, getByLabelText, getByText, type } from '@testing';
 
 import { InvitedOperatorUserExtended, OperatorUserInvitationStore } from '../store';
 import { SetPasswordOnlyComponent } from './set-password-only.component';
@@ -56,17 +55,26 @@ describe('SetPasswordOnlyComponent', () => {
   });
 
   it('should display the form with no password information', () => {
-    expect(screen.getByLabelText('Create a password to activate your account')).toHaveValue('');
-    expect(screen.getByLabelText('Re-enter your password')).toHaveValue('');
+    expect(
+      (
+        getByLabelText('Create a password to activate your account', fixture.nativeElement) as
+          | HTMLInputElement
+          | HTMLSelectElement
+          | null
+      )?.value ?? '',
+    ).toBe('');
+    expect(
+      (getByLabelText('Re-enter your password', fixture.nativeElement) as HTMLInputElement | HTMLSelectElement | null)
+        ?.value ?? '',
+    ).toBe('');
   });
 
   it('should show form errors', async () => {
-    const user = UserEvent.setup();
-    await user.type(screen.getByLabelText('Create a password to activate your account'), '123');
-    await user.type(screen.getByLabelText('Re-enter your password'), '456');
+    type(getByLabelText('Create a password to activate your account', fixture.nativeElement), '123');
+    type(getByLabelText('Re-enter your password', fixture.nativeElement), '456');
 
-    await user.click(screen.getByText('Continue'));
+    click(getByText('Continue', fixture.nativeElement));
     fixture.detectChanges();
-    expect(document.querySelector('.govuk-error-summary')).toBeInTheDocument();
+    expect(document.querySelector('.govuk-error-summary')).toBeTruthy();
   });
 });

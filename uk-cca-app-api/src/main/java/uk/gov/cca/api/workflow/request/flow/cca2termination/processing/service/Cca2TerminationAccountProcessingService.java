@@ -2,6 +2,7 @@ package uk.gov.cca.api.workflow.request.flow.cca2termination.processing.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
@@ -55,15 +56,21 @@ public class Cca2TerminationAccountProcessingService {
             // Get CCA2-only facilities
             List<FacilityData> cca2OnlyFacilities = facilityDataQueryService
             		.getFacilityDataByIds(accountState.getFacilityIds()).stream()
-            		.filter(facility -> !facility.getParticipatingSchemeVersions().contains(SchemeVersion.CCA_3))
+            		.filter(facility -> Set.of(SchemeVersion.CCA_2).equals(facility.getParticipatingSchemeVersions()))
             		.toList();
             
-            // Process
+            // Process cca2-only facilities
             if (cca2OnlyFacilities.size() == accountState.getFacilityIds().size()) {
             	processAccountWithOnlyCca2Facilities(request, cca2OnlyFacilities, terminationDate);
             }
-            else {
+            // Process cca2-only and other facilities
+            else if (!cca2OnlyFacilities.isEmpty()) {
             	processAccountWithCca2AndOtherFacilities(request, cca2OnlyFacilities, terminationDate);
+            }
+            // Process BOTH and no cca2-only facilities
+            else {
+            	processAccountWithBothAndNoCca2Facilities(request, terminationDate);
+            	accountState.setCca2Terminated(true);
             }
             
             // Set number of excluded facilities in account state
@@ -95,6 +102,15 @@ public class Cca2TerminationAccountProcessingService {
         createSubmittedRequestAction(request, cca2OnlyFacilities);	
 		
 	}
+	
+	private void processAccountWithBothAndNoCca2Facilities(Request request, LocalDateTime terminationDate) {
+		// Terminate CCA2 UNA document
+		underlyingAgreementSchemeService.terminateUnaDocumentsForSchemeVersion(request.getAccountId(), SchemeVersion.CCA_2, terminationDate);
+				
+		// Create request action
+		createCca2TerminatedRequestAction(request);	
+		
+	}
 
 	private void createSubmittedRequestAction(Request request, List<FacilityData> cca2OnlyFacilities) {
 		Cca2TerminationAccountProcessingSubmittedRequestActionPayload actionPayload = 
@@ -109,6 +125,12 @@ public class Cca2TerminationAccountProcessingService {
                 actionPayload,
                 CcaRequestActionType.CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED,
                 null);
-		
+	}
+	
+	private void createCca2TerminatedRequestAction(Request request) {
+		requestService.addActionToRequest(request,
+                null,
+                CcaRequestActionType.CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED,
+                null);
 	}
 }

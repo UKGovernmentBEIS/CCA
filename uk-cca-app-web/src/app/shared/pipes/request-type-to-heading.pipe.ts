@@ -43,6 +43,9 @@ export class RequestTypeToHeadingPipe implements PipeTransform {
 
       case 'CCA2_TERMINATION_ACCOUNT_PROCESSING':
         return 'CCA2 end';
+
+      case 'NON_COMPLIANCE':
+        return 'Non-Compliance';
     }
   }
 }

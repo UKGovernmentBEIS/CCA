@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.workflow.request.core.domain.RequestPayload;
 
@@ -21,7 +21,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class BuyOutSurplusRunRequestPayload extends RequestPayload {
     private String submitterId;
-    private TargetPeriodDTO targetPeriodDetails;
+    private TargetPeriodInfoDTO targetPeriodDetails;
     private BuyOutSurplusRunSummary runSummary;
     private FileInfoDTO csvFile;
     private BuyOutSurplusErrorType errorType;

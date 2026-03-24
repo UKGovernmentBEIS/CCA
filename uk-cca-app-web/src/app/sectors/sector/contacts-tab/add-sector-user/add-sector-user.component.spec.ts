@@ -1,11 +1,10 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { render } from '@testing-library/angular';
-import { screen } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
+import { click, getAllByText, getByLabelText, getByText, setInputValue } from '@testing';
 
 import { SectorUsersInvitationService } from 'cca-api';
 
@@ -13,25 +12,28 @@ import { RoleCode } from '../../types';
 import { AddSectorUserComponent } from './add-sector-user.component';
 
 describe('AddSectorUserComponent', () => {
+  let fixture: ComponentFixture<AddSectorUserComponent>;
   const adminRole: RoleCode = 'sector_user_administrator';
   const basicUserRole: RoleCode = 'sector_user_basic_user';
 
   async function renderAdmin(role: RoleCode, svc: Partial<SectorUsersInvitationService> = {}) {
-    await render(AddSectorUserComponent, {
-      configureTestBed: (testbed) => {
-        const route = new ActivatedRouteStub({ id: 123 }, { role });
-        testbed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
-        testbed.overrideProvider(ActivatedRoute, { useValue: route });
-        testbed.overrideProvider(SectorUsersInvitationService, { useValue: svc });
-      },
-    });
+    await TestBed.configureTestingModule({
+      imports: [AddSectorUserComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    })
+      .overrideProvider(ActivatedRoute, { useValue: new ActivatedRouteStub({ id: 123 }, { role }) })
+      .overrideProvider(SectorUsersInvitationService, { useValue: svc })
+      .compileComponents();
+
+    fixture = TestBed.createComponent(AddSectorUserComponent);
+    fixture.detectChanges();
   }
 
   function includesForm() {
-    expect(document.querySelector("input[name='firstName']")).toBeInTheDocument();
-    expect(document.querySelector("input[name='lastName']")).toBeInTheDocument();
-    expect(document.querySelector("input[name='email']")).toBeInTheDocument();
-    expect(document.querySelectorAll("input[name='contactType']")).toHaveLength(2);
+    expect(document.querySelector("input[name='firstName']")).toBeTruthy();
+    expect(document.querySelector("input[name='lastName']")).toBeTruthy();
+    expect(document.querySelector("input[name='email']")).toBeTruthy();
+    expect(document.querySelectorAll("input[name='contactType']").length).toBe(2);
   }
 
   it('should render form from administrator user', async () => {
@@ -43,15 +45,15 @@ describe('AddSectorUserComponent', () => {
       'submit target period reporting',
     ];
 
-    expect(screen.getByText('This user will have permission to:')).toBeInTheDocument();
+    expect(getByText('This user will have permission to:')).toBeTruthy();
 
-    adminLis.forEach((li) => expect(screen.getByText(li)).toBeInTheDocument());
+    adminLis.forEach((li) => expect(getByText(li)).toBeTruthy());
 
     expect(
-      screen.getByText(
+      getByText(
         'You should only add a user who has been authorised to perform these actions by the sector association.',
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
 
     includesForm();
   });
@@ -65,45 +67,53 @@ describe('AddSectorUserComponent', () => {
       'submit target period reports',
     ];
 
-    expect(screen.getByText('This user will have permission to:')).toBeInTheDocument();
+    expect(getByText('This user will have permission to:')).toBeTruthy();
 
-    adminLis.forEach((li) => expect(screen.getByText(li)).toBeInTheDocument());
+    adminLis.forEach((li) => expect(getByText(li)).toBeTruthy());
 
-    expect(
-      screen.getByText('They will not be able to add and remove other users from your account.'),
-    ).toBeInTheDocument();
+    expect(getByText('They will not be able to add and remove other users from your account.')).toBeTruthy();
   });
 
   it('should prepopulate contactType control for admin', async () => {
     await renderAdmin(adminRole);
 
-    expect(screen.getByLabelText('Sector association')).toBeChecked();
-    expect(screen.getByLabelText('Consultant')).not.toBeChecked();
+    expect((getByLabelText('Sector association') as HTMLInputElement).checked).toBe(true);
+    expect((getByLabelText('Consultant') as HTMLInputElement).checked).toBe(false);
   });
 
   it('should prepopulate contactType control for basic user', async () => {
     await renderAdmin(basicUserRole);
 
-    expect(screen.getByLabelText('Sector association')).toBeChecked();
-    expect(screen.getByLabelText('Consultant')).not.toBeChecked();
+    expect((getByLabelText('Sector association') as HTMLInputElement).checked).toBe(true);
+    expect((getByLabelText('Consultant') as HTMLInputElement).checked).toBe(false);
   });
 
   it('should show form errors', async () => {
     await renderAdmin(adminRole);
 
-    const user = UserEvent.setup();
-    await user.click(screen.getByText('Submit'));
+    click(getByText('Submit'));
+    fixture.detectChanges();
 
-    expect(document.querySelector('.govuk-error-summary')).toBeInTheDocument();
-    expect(screen.getAllByText('Enter the user’s first name')).toHaveLength(2);
-    expect(screen.getAllByText('Enter the user’s last name')).toHaveLength(2);
-    expect(screen.getAllByText('Enter the user’s email')).toHaveLength(2);
+    expect(document.querySelector('.govuk-error-summary')).toBeTruthy();
+    expect(getAllByText('Enter the user’s first name').length).toBe(2);
+    expect(getAllByText('Enter the user’s last name').length).toBe(2);
+    expect(getAllByText('Enter the user’s email').length).toBe(2);
 
-    await user.type(screen.getByLabelText('Email address'), 'sector_user');
-    await user.type(screen.getByLabelText('First name'), 'Sector');
-    await user.type(screen.getByLabelText('Last name'), 'User');
-    await user.click(screen.getByText('Submit'));
+    setInputValue(getByLabelText('Email address') as HTMLInputElement, 'sector_user');
+    setInputValue(getByLabelText('First name') as HTMLInputElement, 'Sector');
+    setInputValue(getByLabelText('Last name') as HTMLInputElement, 'User');
+    fixture.detectChanges();
+    click(getByText('Submit'));
+    fixture.detectChanges();
 
-    expect(screen.getAllByText('Enter an email address in the correct format, like name@example.com')).toHaveLength(2);
+    const msg = 'Enter an email address in the correct format, like name@example.com';
+    const inline = Array.from(document.querySelectorAll('.govuk-error-message')).filter((el) =>
+      el.textContent?.includes(msg),
+    ).length;
+    const summary = Array.from(document.querySelectorAll('.govuk-error-summary__list a')).filter((el) =>
+      el.textContent?.includes(msg),
+    ).length;
+
+    expect(inline + summary).toBe(2);
   });
 });

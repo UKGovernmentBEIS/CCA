@@ -19,6 +19,7 @@ import { Cca3MigrationCompletedComponent } from './cca3-migration/completed/cca3
 import { DetailsCorrectiveActionsCompletedComponent } from './facility-audit/details-corrective-actions-completed/details-corrective-actions-completed.component';
 import { PreAuditReviewCompletedComponent } from './facility-audit/pre-audit-review-completed/pre-audit-review-completed.component';
 import { TrackCorrectiveActionsCompletedComponent } from './facility-audit/track-corrective-actions-completed/track-corrective-actions-completed.component';
+import { NonComplianceDetailsSubmittedComponent } from './non-compliance-details-submitted/non-compliance-details-submitted.component';
 import { PATUploadSubmittedComponent } from './performance-account-template-upload-submitted/pat-upload-submitted.component';
 import { PerformanceDataUploadSubmittedComponent } from './performance-data-upload-submitted/performance-data-upload-submitted.component';
 import { SectorMoaGeneratedComponent } from './sector-moa-generated/sector-moa-generated.component';
@@ -464,6 +465,16 @@ export const timelineContent: RequestActionPageContentFactoryMap = {
     return {
       header: getItemActionHeader(action),
       component: CcaTerminationProcessingSubmittedComponent,
+    };
+  },
+
+  NON_COMPLIANCE_DETAILS_SUBMITTED: () => {
+    const store = inject(RequestActionStore);
+    const action = store.select(requestActionQuery.selectAction)();
+
+    return {
+      header: getItemActionHeader(action),
+      component: NonComplianceDetailsSubmittedComponent,
     };
   },
 };

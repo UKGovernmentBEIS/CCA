@@ -5,10 +5,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
@@ -68,9 +69,8 @@ class BuyOutSurplusRunCreateActionHandlerTest {
                 .build();
         final Map<Long, BuyOutSurplusAccountState> accountStates = new HashMap<>(Map.of(buyOutSurplusAccountState.getAccountId(), buyOutSurplusAccountState));
 
-        final TargetPeriodDTO targetPeriodDetails = TargetPeriodDTO.builder()
+        final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
-                .isCurrent(true)
                 .build();
         final CcaRequestParams requestParams = CcaRequestParams.builder()
                 .type(CcaRequestType.BUY_OUT_SURPLUS_RUN)
@@ -90,7 +90,7 @@ class BuyOutSurplusRunCreateActionHandlerTest {
                         CcaBpmnProcessConstants.NUMBER_OF_ACCOUNTS_COMPLETED, 0))
                 .build();
 
-        when(targetPeriodService.getTargetPeriodByBusinessId(targetPeriodType)).thenReturn(targetPeriodDetails);
+        when(targetPeriodService.getTargetPeriodInfoByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriodDetails);
         when(startProcessRequestService.startProcess(requestParams))
                 .thenReturn(Request.builder().id("request-id").build());
         when(buyOutSurplusQueryService
@@ -102,7 +102,7 @@ class BuyOutSurplusRunCreateActionHandlerTest {
         handler.process(ca, payload, appUser);
 
         // Verify
-        verify(targetPeriodService, times(1)).getTargetPeriodByBusinessId(targetPeriodType);
+        verify(targetPeriodService, times(1)).getTargetPeriodInfoByTargetPeriodType(targetPeriodType);
         verify(startProcessRequestService, times(1)).startProcess(requestParams);
         verify(buyOutSurplusQueryService, times(1))
                 .getAllEligibleAccountsByTargetPeriod(targetPeriodType);

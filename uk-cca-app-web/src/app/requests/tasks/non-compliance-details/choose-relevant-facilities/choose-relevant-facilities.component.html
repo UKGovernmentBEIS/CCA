@@ -1,0 +1,76 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Non-compliance details"
+  heading="Choose relevant facilities (optional)"
+>
+  <p>Select the relevant facilities that this non-compliance refers to.</p>
+  <p class="govuk-!-width-two-thirds">
+    If this non-compliance doesn't relate to all active facilities in the agreement, you can add one or more specific
+    facilities, including any that have already been excluded from this agreement.
+  </p>
+  <p class="govuk-!-width-two-thirds">
+    Where relevant, you can also enter the identifier of a historic facility that wasn't migrated into MyCCA.
+  </p>
+
+  <div class="govuk-!-width-two-thirds">
+    @if (facilities.length > 0) {
+      <table class="govuk-table non-compliance-items-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header"></th>
+            <th class="govuk-table__header">Facilities</th>
+            <th class="govuk-table__header">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body" formArrayName="facilities">
+          @for (fac of facilities.controls; let i = $index; track fac) {
+            <tr class="govuk-table__row" [formGroupName]="i">
+              <td class="govuk-table__cell non-compliance-items-table__index-cell">{{ i + 1 }}.</td>
+              <td class="govuk-table__cell">
+                @if (fac.value.isHistorical) {
+                  <div formControlName="facilityBusinessId" govuk-text-input [widthClass]="'govuk-!-width-full'"></div>
+                } @else {
+                  <div
+                    formControlName="facilityBusinessId"
+                    govuk-select
+                    [options]="getOptionsForRow(i)"
+                    [widthClass]="'govuk-!-width-full'"
+                  ></div>
+                }
+              </td>
+              <td class="govuk-table__cell non-compliance-items-table__action-cell">
+                <a
+                  class="govuk-link"
+                  href="#"
+                  (click)="
+                    onDeleteItem(fac.controls.facilityBusinessId.value, fac.controls.isHistorical.value, i);
+                    $event.preventDefault()
+                  "
+                  >Delete</a
+                >
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
+    <div class="govuk-button-group">
+      <button
+        type="button"
+        class="govuk-button govuk-button--secondary"
+        [disabled]="isAddFacilityDisabled()"
+        [attr.aria-disabled]="isAddFacilityDisabled() ? 'true' : null"
+        (click)="onAddFacility()"
+      >
+        Add facility
+      </button>
+      <button type="button" class="govuk-button govuk-button--secondary" (click)="onAddHistoricalFacility()">
+        Add historical facility
+      </button>
+    </div>
+  </div>
+</cca-wizard-step>
+
+<netz-return-to-task-or-action-page />

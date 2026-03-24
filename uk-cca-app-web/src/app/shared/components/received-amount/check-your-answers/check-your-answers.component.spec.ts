@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getSummaryListData } from '@testing';
 
 import { SectorMoasReceivedAmountStore } from '../received-amount.store';
 import { mockReceivedAmountStoreState } from '../testing/mock-data';
@@ -39,14 +39,7 @@ describe('CheckYourAnswersComponent', () => {
   });
 
   it('should display the correct amount data', () => {
-    const detailsValues = screen
-      .getAllByText((_, el) => el.tagName.toLowerCase() === 'dl')
-      .map((el) => [
-        Array.from(el.querySelectorAll('dt')).map((dt) => dt.textContent.trim()),
-        Array.from(el.querySelectorAll('dd'))
-          .filter((dt) => dt.textContent.trim() !== 'Change')
-          .map((dt) => dt.textContent.trim()),
-      ]);
+    const detailsValues = getSummaryListData(fixture.nativeElement);
 
     expect(detailsValues).toEqual([
       [

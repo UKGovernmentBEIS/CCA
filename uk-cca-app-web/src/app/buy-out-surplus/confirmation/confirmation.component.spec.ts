@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByText } from '@testing';
 
 import { ConfirmationComponent } from './confirmation.component';
 
@@ -31,26 +31,24 @@ describe('ConfirmationComponent', () => {
   });
 
   it('should contain appropirate content', () => {
-    expect(screen.getByText('Your reference code is: BS-TP6001')).toBeInTheDocument();
+    expect(getByText('Your reference code is: BS-TP6001')).toBeTruthy();
 
     expect(
-      screen.getByText(
+      getByText(
         'You can navigate away from this page. The batch run progress can be monitored via the "Workflow history" section, where you can check its status at any time and review any failed TUs if applicable.',
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
 
-    expect(screen.getByText('What happens next')).toBeInTheDocument();
+    expect(getByText('What happens next')).toBeTruthy();
 
     expect(
-      screen.getByText(
+      getByText(
         'Once the batch is completed you will be able to view and monitor outstanding amounts through the details of the "Transactions tab" (dedicated tab in buy-out and surplus main screen).',
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
 
-    expect(
-      screen.getByText('Select "BS-TP6001" from your "Workflow history" tab to find the report.'),
-    ).toBeInTheDocument();
+    expect(getByText('Select "BS-TP6001" from your "Workflow history" tab to find the report.')).toBeTruthy();
 
-    expect(screen.getByText('Return to: Buy-out and surplus')).toBeInTheDocument();
+    expect(getByText('Return to: Buy-out and surplus')).toBeTruthy();
   });
 });

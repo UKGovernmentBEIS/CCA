@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
 import { CreateTargetUnitStore } from '../create-target-unit.store';
 import { mockCreateTargetUnitState } from '../specs/fixture/mocks';
@@ -34,15 +34,15 @@ describe('ConfirmationComponent', () => {
   });
 
   it('should display the correct success panel message', () => {
-    expect(screen.getByText('Target unit Operator name created')).toBeInTheDocument();
+    expect(getByText('Target unit Operator name created')).toBeTruthy();
   });
 
   it('should display the correct "What happens next" message', () => {
-    expect(screen.getByText('What happens next')).toBeInTheDocument();
-    expect(screen.getByText('You can now apply for an underlying agreement.')).toBeInTheDocument();
+    expect(getByText('What happens next')).toBeTruthy();
+    expect(getByText('You can now apply for an underlying agreement.')).toBeTruthy();
   });
 
   it('should display the correct "return to" link', () => {
-    expect(screen.getByText('Return to: your tasks')).toBeInTheDocument();
+    expect(getByText('Return to: your tasks')).toBeTruthy();
   });
 });

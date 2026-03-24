@@ -29,7 +29,7 @@ export enum VariationChangesEnum {
 
   // DEPRECATED
   ADDITION_OR_REMOVAL_ONE_OR_MORE_FACILITIES_FROM_AGREEMENT = 'Amend the baseline and target due to the addition or removal of one or more facilities from the agreement',
-  CHANGE_BETWEEN_RELATIVE_AND_NOVEM_TARGET_TYPE = 'Amend the target currency to change between relative and Novem target types',
+  CHANGE_BETWEEN_RELATIVE_AND_NOVEM_TARGET_TYPES = 'Amend the target currency to change between relative and Novem target types',
   CHANGE_THROUGHPUT_UNIT = 'Amend the target currency to change the throughput unit',
 }
 

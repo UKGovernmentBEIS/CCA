@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
 import { CaExternalContactsService, NoticeRecipientsService, RegulatorAuthoritiesService, TasksService } from 'cca-api';
 
@@ -74,20 +74,23 @@ describe('AdminTerminationNotifyOperatorComponent', () => {
   });
 
   it('should display the correct header and caption', () => {
-    expect(screen.getByText('Notify operator of decision')).toBeInTheDocument();
-    expect(screen.getByText('Select who should receive the termination notification')).toBeInTheDocument();
+    expect(getByText('Notify operator of decision', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Select who should receive the termination notification', fixture.nativeElement)).toBeTruthy();
   });
 
   it('should contain submit button and "return to" link', () => {
-    expect(screen.getByText('Confirm and complete')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Admin termination')).toBeInTheDocument();
+    expect(getByText('Confirm and complete', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Return to: Admin termination', fixture.nativeElement)).toBeTruthy();
   });
 
   it('should display the correct form fields', () => {
-    expect(screen.getByText('Select any additional users you want to notify')).toBeInTheDocument();
-    expect(screen.getByText('Select the external contacts you want to notify')).toBeInTheDocument();
+    expect(getByText('Select any additional users you want to notify', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Select the external contacts you want to notify', fixture.nativeElement)).toBeTruthy();
     expect(
-      screen.getByText('Select the name and signature that will be shown on the official notice document'),
-    ).toBeInTheDocument();
+      getByText(
+        'Select the name and signature that will be shown on the official notice document',
+        fixture.nativeElement,
+      ),
+    ).toBeTruthy();
   });
 });

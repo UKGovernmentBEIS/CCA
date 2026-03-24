@@ -9,8 +9,10 @@ export interface WorkflowDisplayContent {
 }
 
 export const processActionsDetailsTypesMap: Partial<Record<RequestDetailsDTO['requestType'], string>> = {
+  FACILITY_AUDIT: 'facility audit',
   ADMIN_TERMINATION: 'admin Termination',
   UNDERLYING_AGREEMENT_VARIATION: 'variation',
+  NON_COMPLIANCE: 'non-compliance',
   PERFORMANCE_DATA_DOWNLOAD: 'download performance data',
   PERFORMANCE_DATA_UPLOAD: 'upload performance data',
   PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD: 'upload PAT spreadsheets',
@@ -18,8 +20,8 @@ export const processActionsDetailsTypesMap: Partial<Record<RequestDetailsDTO['re
 };
 
 export const userRoleWorkflowAccessMap: Record<UserStateDTO['roleType'], string[]> = {
-  REGULATOR: ['ADMIN_TERMINATION', 'UNDERLYING_AGREEMENT_VARIATION'],
-  OPERATOR: [],
+  REGULATOR: ['FACILITY_AUDIT', 'ADMIN_TERMINATION', 'UNDERLYING_AGREEMENT_VARIATION', 'NON_COMPLIANCE'],
+  OPERATOR: ['FACILITY_AUDIT'],
   SECTOR_USER: [
     'UNDERLYING_AGREEMENT_VARIATION',
     'PERFORMANCE_DATA_DOWNLOAD',
@@ -30,6 +32,13 @@ export const userRoleWorkflowAccessMap: Record<UserStateDTO['roleType'], string[
 };
 
 export const taskWorkflowContentDisplayMap: Record<RequestDetailsDTO['requestType'], WorkflowDisplayContent> = {
+  FACILITY_AUDIT: {
+    title: 'Audit facility',
+    button: 'Start audit task',
+    hint: 'Start an audit task for this facility',
+    type: 'FACILITY_AUDIT',
+    errors: [],
+  },
   ADMIN_TERMINATION: {
     title: 'Admin termination',
     button: 'Start admin termination',
@@ -41,6 +50,13 @@ export const taskWorkflowContentDisplayMap: Record<RequestDetailsDTO['requestTyp
     title: 'Make a permanent change to the underlying agreement',
     button: 'Start a variation',
     type: 'UNDERLYING_AGREEMENT_VARIATION',
+    errors: [],
+  },
+  NON_COMPLIANCE: {
+    title: 'Record non-compliance decisions',
+    hint: 'Start a non-compliance task to record enforcement decisions relevant to this target unit.',
+    button: 'Start non-compliance task',
+    type: 'NON_COMPLIANCE',
     errors: [],
   },
   PERFORMANCE_DATA_DOWNLOAD: {

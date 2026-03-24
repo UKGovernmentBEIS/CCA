@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 1`] = `
-<div
-  id="root0"
->
+exports[`VariationDetailsDecisionComponent should match snapshot 1`] = `
+<div>
   <div>
     <netz-page-heading>
       
@@ -57,7 +55,7 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
           >
             <a
               class="govuk-link"
-              href="/variation-details?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -96,7 +94,7 @@ exports[`AUthorizationAdditionalEvidenceDecisionComponent should match snapshot 
           >
             <a
               class="govuk-link"
-              href="/variation-details?change=true"
+              href="/?change=true"
             >
               Change
             </a>

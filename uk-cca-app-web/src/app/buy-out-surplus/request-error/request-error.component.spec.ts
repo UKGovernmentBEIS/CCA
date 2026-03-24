@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByTestId } from '@testing';
 
 import { RequestErrorComponent } from './request-error.component';
 
@@ -31,7 +31,7 @@ describe('RequestErrorComponent', () => {
   });
 
   it('should display the `in progress` error', () => {
-    const errorText = screen.getByTestId('in-progress-error');
+    const errorText = getByTestId('in-progress-error');
     expect(errorText.textContent.trim()).toBe(
       'Buy-out and surplus batch is in progress, you cannot initiate a new one until it has finished',
     );

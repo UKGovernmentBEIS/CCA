@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SectorTemplatesComponent should show table values 1`] = `
+<cca-sector-templates
+  tableColumns={[Function Array]}
+  templates={[Function Function]}
+>
+  <govuk-table>
+    <table
+      class="govuk-table"
+    >
+      <thead
+        class="govuk-table__head"
+      >
+        <tr
+          class="govuk-table__row"
+        >
+          <th
+            class="govuk-table__header"
+            scope="col"
+          >
+             Process 
+          </th>
+          <th
+            class="govuk-table__header"
+            scope="col"
+          >
+             Template file 
+          </th>
+          <th
+            class="govuk-table__header"
+            scope="col"
+          >
+             Guidance file 
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="govuk-table__body"
+      >
+        <tr
+          class="govuk-table__row"
+        >
+          <td
+            class="govuk-table__cell"
+          >
+             Target period reporting bulk upload 
+          </td>
+          <td
+            class="govuk-table__cell"
+          >
+            <a
+              class="govuk-link"
+              download=""
+              href="assets/files/sector-templates/tpr-template.csv"
+              target="_blank"
+            >
+               TPR file template.csv 
+            </a>
+          </td>
+          <td
+            class="govuk-table__cell"
+          >
+            <a
+              class="govuk-link"
+              download=""
+              href="assets/files/sector-templates/tpr-guidance.pdf"
+              target="_blank"
+            >
+               Guidance on completing the TPR file.pdf 
+            </a>
+          </td>
+        </tr>
+        <tr
+          class="govuk-table__row"
+        >
+          <td
+            class="govuk-table__cell"
+          >
+             PAT reports 
+          </td>
+          <td
+            class="govuk-table__cell"
+          >
+            <a
+              class="govuk-link"
+              download=""
+              href="assets/files/sector-templates/pat-template.csv"
+              target="_blank"
+            >
+               PAT file template.csv 
+            </a>
+          </td>
+          <td
+            class="govuk-table__cell"
+          >
+            <a
+              class="govuk-link"
+              download=""
+              href="assets/files/sector-templates/pat-guidance.pdf"
+              target="_blank"
+            >
+               Guidance on completing PAT file.pdf 
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </govuk-table>
+</cca-sector-templates>
+`;

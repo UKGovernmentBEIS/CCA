@@ -1,5 +1,6 @@
 package uk.gov.cca.api.targetperiodreporting.targetperiod.domain;
 
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
@@ -18,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 @Getter
 @Setter
@@ -63,24 +66,19 @@ public class TargetPeriod {
   @Size(max = 64)
   private String performanceDataTemplateVersion;
 
-  @Column(name = "performance_data_start_date")
+  @Type(JsonType.class)
+  @Column(name = "target_period_years", columnDefinition = "jsonb")
   @NotNull
-  private LocalDate performanceDataStartDate;
-
-  @Column(name = "performance_data_end_date")
-  @NotNull
-  private LocalDate performanceDataEndDate;
+  @Valid
+  private TargetPeriodYearsContainer targetPeriodYearsContainer;
 
   @Column(name = "buy_out_start_date")
   @NotNull
   private LocalDate buyOutStartDate;
 
-  @Column(name = "buy_out_end_date")
+  @Column(name = "buy_out_primary_payment_deadline")
   @NotNull
-  private LocalDate buyOutEndDate;
-
-  @Column(name = "is_current")
-  private boolean isCurrent;
+  private LocalDate buyOutPrimaryPaymentDeadline;
 
   @Column(name = "secondary_reporting_start_date")
   @NotNull

@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
   protected readonly countyService = inject(CountyService);
 
   private readonly userState = this.authStore.select(selectUserState);
-  private readonly roleType = this.authStore.select(selectUserRoleType);
+  protected readonly roleType = this.authStore.select(selectUserRoleType);
   protected readonly isLoggedIn = this.authStore.select(selectIsLoggedIn);
   protected readonly subsistenceFeesHideMenu = this.configService.isFeatureEnabled('subsistenceFeesHideMenu');
 

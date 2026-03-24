@@ -27,6 +27,12 @@
         <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
           <a class="govuk-header__link" [routerLink]="['/sectors']"> Manage sectors </a>
         </li>
+
+        <!-- @if (roleType() === 'SECTOR_USER') {
+          <li routerLinkActive="govuk-header__navigation-item--active" class="govuk-header__navigation-item">
+            <a routerLinkActive class="govuk-header__link" [routerLink]="['/sector-templates']"> Templates </a>
+          </li>
+        } -->
       }
 
       @if (showRegulators()) {

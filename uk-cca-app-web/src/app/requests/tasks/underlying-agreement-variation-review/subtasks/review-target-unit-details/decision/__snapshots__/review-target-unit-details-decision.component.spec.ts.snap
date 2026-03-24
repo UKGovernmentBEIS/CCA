@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
-<div
-  id="root0"
->
+exports[`Review Target Unit Details Decision should match snapshot 1`] = `
+<div>
   <div>
     <div
       class="govuk-grid-row"
@@ -108,7 +106,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/target-unit-details?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -147,7 +145,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/target-unit-details?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -186,7 +184,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/company-registration-number?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -225,7 +223,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/company-registration-number?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -300,7 +298,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/operator-address?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -354,7 +352,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/responsible-person?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -393,7 +391,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/responsible-person?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -432,7 +430,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/responsible-person?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -506,7 +504,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/responsible-person?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -568,7 +566,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/target-unit-details?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -607,7 +605,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/target-unit-details?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -646,7 +644,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/company-registration-number?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -685,7 +683,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/company-registration-number?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -724,7 +722,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/target-unit-details?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -813,7 +811,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/operator-address?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -867,7 +865,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/responsible-person?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -906,7 +904,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/responsible-person?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -945,7 +943,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/responsible-person?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -1019,7 +1017,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                   >
                     <a
                       class="govuk-link"
-                      href="/responsible-person?change=true"
+                      href="/?change=true"
                     >
                       Change
                     </a>
@@ -1076,7 +1074,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                 >
                   <a
                     class="govuk-link"
-                    href="/target-unit-details?change=true"
+                    href="/?change=true"
                   >
                     Change
                   </a>
@@ -1102,7 +1100,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                 >
                   <a
                     class="govuk-link"
-                    href="/target-unit-details?change=true"
+                    href="/?change=true"
                   >
                     Change
                   </a>
@@ -1137,7 +1135,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                 >
                   <a
                     class="govuk-link"
-                    href="/company-registration-number?change=true"
+                    href="/?change=true"
                   >
                     Change
                   </a>
@@ -1161,7 +1159,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                 >
                   <a
                     class="govuk-link"
-                    href="/company-registration-number?change=true"
+                    href="/?change=true"
                   >
                     Change
                   </a>
@@ -1195,7 +1193,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                 >
                   <a
                     class="govuk-link"
-                    href="/target-unit-details?change=true"
+                    href="/?change=true"
                   >
                     <del
                       class="diffdel"
@@ -1346,7 +1344,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                 >
                   <a
                     class="govuk-link"
-                    href="/operator-address?change=true"
+                    href="/?change=true"
                   >
                     Change
                   </a>
@@ -1401,7 +1399,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                 >
                   <a
                     class="govuk-link"
-                    href="/responsible-person?change=true"
+                    href="/?change=true"
                   >
                     Change
                   </a>
@@ -1447,7 +1445,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                 >
                   <a
                     class="govuk-link"
-                    href="/responsible-person?change=true"
+                    href="/?change=true"
                   >
                     Change
                   </a>
@@ -1473,7 +1471,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                 >
                   <a
                     class="govuk-link"
-                    href="/responsible-person?change=true"
+                    href="/?change=true"
                   >
                     Change
                   </a>
@@ -1640,7 +1638,7 @@ exports[`ReviewTargetUnitDetailsDecisionComponent should match snapshot 1`] = `
                 >
                   <a
                     class="govuk-link"
-                    href="/responsible-person?change=true"
+                    href="/?change=true"
                   >
                     Change
                   </a>

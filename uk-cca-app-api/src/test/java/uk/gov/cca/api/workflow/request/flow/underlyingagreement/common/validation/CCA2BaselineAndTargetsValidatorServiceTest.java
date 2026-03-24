@@ -87,7 +87,7 @@ class CCA2BaselineAndTargetsValidatorServiceTest {
                         .build())
                 .build();
         
-        when(underlyingAgreementSchemeVersionsHelperService.shouldShowTp5Tp6(originalContainer, null))
+        when(underlyingAgreementSchemeVersionsHelperService.shouldShowCCA2BaselineAndTargets(originalContainer, null))
         		.thenReturn(true);
 
         // Invoke
@@ -95,7 +95,7 @@ class CCA2BaselineAndTargetsValidatorServiceTest {
 
         // Verify
         assertThat(result.isValid()).isTrue();
-        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowTp5Tp6(originalContainer, null);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowCCA2BaselineAndTargets(originalContainer, null);
     }
 
     @Test
@@ -121,7 +121,7 @@ class CCA2BaselineAndTargetsValidatorServiceTest {
                         .build())
                 .build();
         
-        when(underlyingAgreementSchemeVersionsHelperService.shouldShowTp5Tp6(originalContainer, null))
+        when(underlyingAgreementSchemeVersionsHelperService.shouldShowCCA2BaselineAndTargets(originalContainer, null))
 				.thenReturn(false);
 
         // Invoke
@@ -130,7 +130,7 @@ class CCA2BaselineAndTargetsValidatorServiceTest {
         // Verify
         assertThat(result.isValid()).isFalse();
         assertThat(result.getViolations()).hasSize(2);
-        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowTp5Tp6(originalContainer, null);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowCCA2BaselineAndTargets(originalContainer, null);
     }
 
     @Test
@@ -154,7 +154,7 @@ class CCA2BaselineAndTargetsValidatorServiceTest {
                         .build())
                 .build();
         
-        when(underlyingAgreementSchemeVersionsHelperService.shouldShowTp5Tp6(originalContainer, null))
+        when(underlyingAgreementSchemeVersionsHelperService.shouldShowCCA2BaselineAndTargets(originalContainer, null))
 				.thenReturn(false);
 
         // Invoke
@@ -163,7 +163,7 @@ class CCA2BaselineAndTargetsValidatorServiceTest {
         // Verify
         assertThat(result.isValid()).isFalse();
         assertThat(result.getViolations()).hasSize(2);
-        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowTp5Tp6(originalContainer, null);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowCCA2BaselineAndTargets(originalContainer, null);
     }
 
     @Test
@@ -186,7 +186,7 @@ class CCA2BaselineAndTargetsValidatorServiceTest {
                         .build())
                 .build();
         
-        when(underlyingAgreementSchemeVersionsHelperService.shouldShowTp5Tp6(originalContainer, null))
+        when(underlyingAgreementSchemeVersionsHelperService.shouldShowCCA2BaselineAndTargets(originalContainer, null))
 				.thenReturn(true);
 
         // Invoke
@@ -195,6 +195,6 @@ class CCA2BaselineAndTargetsValidatorServiceTest {
         // Verify
         assertThat(result.isValid()).isFalse();
         assertThat(result.getViolations()).hasSize(2);
-        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowTp5Tp6(originalContainer, null);
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).shouldShowCCA2BaselineAndTargets(originalContainer, null);
     }
 }

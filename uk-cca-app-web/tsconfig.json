@@ -11,7 +11,6 @@
     "esModuleInterop": true,
     "target": "ES2022",
     "module": "ES2022",
-    "lib": ["ES2022", "dom"],
     "strictPropertyInitialization": false,
     "strictNullChecks": false,
     "paths": {
@@ -32,13 +31,13 @@
       "@shared/errors": ["src/app/shared/errors/index.ts"],
       "@shared/types": ["src/app/shared/types/index.ts"],
       "@shared/validators": ["src/app/shared/validators/index.ts"],
+      "@testing": ["src/testing/index.ts"],
       "cca-api": ["./dist/cca-api"]
     },
     "useDefineForClassFields": false
   },
   "exclude": ["**/node_modules/*", "**/coverage/*", "**/dist/*", "**/node/*"],
   "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
     "strictInjectionParameters": false,
     "strictTemplates": true
   }

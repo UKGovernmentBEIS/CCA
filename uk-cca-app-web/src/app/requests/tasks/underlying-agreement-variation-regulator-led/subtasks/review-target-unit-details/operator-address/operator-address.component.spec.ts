@@ -8,8 +8,7 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { mockRequestTaskState, TasksApiService } from '@requests/common';
-import { screen, waitFor } from '@testing-library/angular';
-import UserEvent from '@testing-library/user-event';
+import { clear, click, getByLabelText, getByRole, getByTestId, getByText, type } from '@testing';
 
 import { OperatorAddressComponent } from './operator-address.component';
 
@@ -83,32 +82,30 @@ describe('OperatorAddressComponent', () => {
   });
 
   it('should render the page heading', async () => {
-    const heading = screen.getByRole('heading', { name: 'Operator address' });
-    expect(heading).toBeInTheDocument();
+    const heading = getByRole('heading', { name: 'Operator address' });
+    expect(heading).toBeTruthy();
   });
 
   it('should render the address input fields', async () => {
-    const addressInput = screen.getByTestId('account-address-input');
-    expect(addressInput).toBeInTheDocument();
-    expect(screen.getByText('Address line 1')).toBeInTheDocument();
-    expect(screen.getByText('Address line 2 (optional)')).toBeInTheDocument();
-    expect(screen.getByText('Town or city')).toBeInTheDocument();
-    expect(screen.getByText('County (optional)')).toBeInTheDocument();
-    expect(screen.getByText('Postcode')).toBeInTheDocument();
-    expect(screen.getByText('Country')).toBeInTheDocument();
+    const addressInput = getByTestId('account-address-input');
+    expect(addressInput).toBeTruthy();
+    expect(getByText('Address line 1')).toBeTruthy();
+    expect(getByText('Address line 2 (optional)')).toBeTruthy();
+    expect(getByText('Town or city')).toBeTruthy();
+    expect(getByText('County (optional)')).toBeTruthy();
+    expect(getByText('Postcode')).toBeTruthy();
+    expect(getByText('Country')).toBeTruthy();
   });
 
   it('should submit form and call saveRequestTaskAction method, then navigate to next step', async () => {
     saveRequestTaskActionSpy.mockClear();
     saveRequestTaskActionSpy.mockReturnValue(of({}));
 
-    const user = UserEvent.setup();
-    const continueButton = screen.getByRole('button', { name: /Continue/i });
-    await user.click(continueButton);
+    const continueButton = getByRole('button', { name: /Continue/i });
+    click(continueButton);
+    await fixture.whenStable();
 
-    await waitFor(() => {
-      expect(saveRequestTaskActionSpy).toHaveBeenCalledTimes(1);
-    });
+    expect(saveRequestTaskActionSpy).toHaveBeenCalledTimes(1);
 
     const callArg = saveRequestTaskActionSpy.mock.calls[0][0];
     expect(callArg.requestTaskActionType).toBe('UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_SAVE_APPLICATION');
@@ -120,30 +117,27 @@ describe('OperatorAddressComponent', () => {
     saveRequestTaskActionSpy.mockClear();
     saveRequestTaskActionSpy.mockReturnValue(of({}));
 
-    const user = UserEvent.setup();
-
     // Get form inputs by label text
-    const addressLine1Input = screen.getByLabelText('Address line 1');
-    const townInput = screen.getByLabelText('Town or city');
-    const postcodeInput = screen.getByLabelText('Postcode');
+    const addressLine1Input = getByLabelText('Address line 1') as HTMLInputElement;
+    const townInput = getByLabelText('Town or city') as HTMLInputElement;
+    const postcodeInput = getByLabelText('Postcode') as HTMLInputElement;
 
     // Clear and fill in new values
-    await user.clear(addressLine1Input);
-    await user.type(addressLine1Input, '456 New Street');
+    clear(addressLine1Input);
+    type(addressLine1Input, '456 New Street');
 
-    await user.clear(townInput);
-    await user.type(townInput, 'New Town');
+    clear(townInput);
+    type(townInput, 'New Town');
 
-    await user.clear(postcodeInput);
-    await user.type(postcodeInput, 'NE1 2WS');
+    clear(postcodeInput);
+    type(postcodeInput, 'NE1 2WS');
 
     // Submit form
-    const continueButton = screen.getByRole('button', { name: /Continue/i });
-    await user.click(continueButton);
+    const continueButton = getByRole('button', { name: /Continue/i });
+    click(continueButton);
+    await fixture.whenStable();
 
-    await waitFor(() => {
-      expect(saveRequestTaskActionSpy).toHaveBeenCalledTimes(1);
-    });
+    expect(saveRequestTaskActionSpy).toHaveBeenCalledTimes(1);
 
     // Verify navigation
     expect(router.navigate).toHaveBeenCalledWith(['../responsible-person'], { relativeTo: route });

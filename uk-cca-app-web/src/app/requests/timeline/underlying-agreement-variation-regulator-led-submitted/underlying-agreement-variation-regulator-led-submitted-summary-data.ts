@@ -30,10 +30,20 @@ export function toUnARegulatorLedVariationSubmittedSummaryData(
       extractSignatoryUserFromUsersInfo(payload?.usersInfo, payload?.decisionNotification.signatory),
     );
 
-  factory.addFileListRow(
-    'Official notice',
-    fileUtils.toDownloadableDocument(payload?.officialNotices, 'file-download'),
-  );
+  if ('underlyingAgreementDocuments' in payload) {
+    factory.addFileListRow(
+      'Official notice',
+      fileUtils.toDownloadableDocument(
+        [...Object.values(payload.underlyingAgreementDocuments), ...Object.values(payload.officialNotices)],
+        'file-download',
+      ),
+    );
+  } else {
+    factory.addFileListRow(
+      'Official notice',
+      fileUtils.toDownloadableDocument([...Object(payload.officialNotices)], 'file-download'),
+    );
+  }
 
   return factory.create();
 }

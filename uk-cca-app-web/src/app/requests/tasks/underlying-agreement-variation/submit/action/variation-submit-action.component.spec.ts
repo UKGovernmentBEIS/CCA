@@ -8,8 +8,7 @@ import { of } from 'rxjs';
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub, MockType } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
-import { screen } from '@testing-library/angular';
-import UserEvent from '@testing-library/user-event';
+import { getByText } from '@testing';
 
 import { VariationSubmitActionComponent } from './variation-submit-action.component';
 
@@ -46,15 +45,16 @@ describe('VariationSubmitActionComponent', () => {
   });
 
   it('should display the correct header and text', () => {
-    const heading = screen.getByRole('heading', { name: 'Send variation application to regulator' });
-    expect(heading).toBeInTheDocument();
+    const heading = getByText('Send variation application to regulator');
+    expect(heading).toBeTruthy();
   });
 
   it('should submit and navigate to confirmation page', async () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
     const apiServiceSpy = jest.spyOn(mockTasksApiService, 'saveRequestTaskAction');
-    const user = UserEvent.setup();
-    await user.click(screen.getByText('Confirm and send'));
+    const submitButton: HTMLButtonElement = fixture.nativeElement.querySelector('button.govuk-button');
+    submitButton.click();
+    fixture.detectChanges();
 
     expect(apiServiceSpy).toHaveBeenCalledTimes(1);
     expect(apiServiceSpy).toHaveBeenCalledWith(

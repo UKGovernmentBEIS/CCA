@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
 import { mockAdminTerminationFinalDecisionPayload } from '../../../testing/mock-data';
 import FinalDecisionReasonActionsComponent from './final-decision-reason-actions.component';
@@ -41,14 +41,14 @@ describe('FinalDecisionReasonActionsComponent', () => {
   });
 
   it('should display the correct header and content', () => {
-    expect(screen.getByText('Admin termination final decision')).toBeInTheDocument();
-    expect(screen.getByText('Available actions')).toBeInTheDocument();
-    expect(screen.getByText('You must select the admin termination final decision.')).toBeInTheDocument();
+    expect(getByText('Admin termination final decision', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Available actions', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('You must select the admin termination final decision.', fixture.nativeElement)).toBeTruthy();
   });
 
   it('should contain "Terminate agreement" and "Withdraw termination" buttons and "return to" link', () => {
-    expect(screen.getByText('Terminate agreement')).toBeInTheDocument();
-    expect(screen.getByText('Withdraw termination')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Admin termination final decision')).toBeInTheDocument();
+    expect(getByText('Terminate agreement', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Withdraw termination', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Return to: Admin termination final decision', fixture.nativeElement)).toBeTruthy();
   });
 });

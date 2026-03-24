@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 
 import { ProductVariableEnergyConsumptionData } from 'cca-api';
 
-export function calculateEnergyConsumedEligible(energyConsumed: string, energyConsumedProvision: string): number {
+export function calculateEnergyConsumedEligible(energyConsumed: number, energyConsumedProvision: number): number {
   const energyConsumedBig = new BigNumber(energyConsumed);
   const energyConsumedProvisionBig = new BigNumber(energyConsumedProvision);
 

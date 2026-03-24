@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
 import { mockSectorUserDetails } from '../../../../specs/fixtures/mock';
 import { ActiveSectorUserStore } from '../../active-sector-user.store';
@@ -41,16 +41,16 @@ describe('EditSectorUserDetailsComponent', () => {
   });
 
   it('should display the correct title', () => {
-    expect(screen.getByText('Change user details')).toBeInTheDocument();
+    expect(getByText('Change user details')).toBeTruthy();
   });
 
   it('should display all form fields', () => {
-    expect(screen.getByText('First name')).toBeInTheDocument();
-    expect(screen.getByText('Last name')).toBeInTheDocument();
-    expect(screen.getByText('Job title (optional)')).toBeInTheDocument();
-    expect(screen.getByText('Email address')).toBeInTheDocument();
-    expect(screen.getByText('Contact type')).toBeInTheDocument();
-    expect(screen.getByText('Organisation name (optional)')).toBeInTheDocument();
-    expect(screen.getByText('Phone number (optional)')).toBeInTheDocument();
+    expect(getByText('First name')).toBeTruthy();
+    expect(getByText('Last name')).toBeTruthy();
+    expect(getByText('Job title (optional)')).toBeTruthy();
+    expect(getByText('Email address')).toBeTruthy();
+    expect(getByText('Contact type')).toBeTruthy();
+    expect(getByText('Organisation name (optional)')).toBeTruthy();
+    expect(getByText('Phone number (optional)')).toBeTruthy();
   });
 });

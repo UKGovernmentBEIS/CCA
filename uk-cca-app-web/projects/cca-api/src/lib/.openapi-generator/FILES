@@ -251,6 +251,8 @@ model/miReportUserDefinedResults.ts
 model/moaReport.ts
 model/nonComplianceDetails.ts
 model/nonComplianceDetailsSubmitRequestTaskPayload.ts
+model/nonComplianceDetailsSubmitSaveRequestTaskActionPayload.ts
+model/nonComplianceDetailsSubmittedRequestActionPayload.ts
 model/notAccountRelatedUploadErrorReport.ts
 model/notePayload.ts
 model/noteRequest.ts

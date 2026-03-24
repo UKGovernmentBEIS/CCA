@@ -34,12 +34,15 @@ import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceRe
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.SurplusBuyOutDetermination;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetPeriodResultType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetsPreviousPerformance;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYearsContainer;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.netz.api.common.AbstractContainerBaseTest;
 import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -147,10 +150,16 @@ class AccountPerformanceDataStatusCustomRepositoryIT extends AbstractContainerBa
                 .name(type.name())
                 .startDate(LocalDate.now())
                 .endDate(LocalDate.now())
-                .performanceDataStartDate(LocalDate.now())
-                .performanceDataEndDate(LocalDate.now())
+                .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                        .targetPeriodYears(List.of(TargetPeriodYear.builder()
+                                .targetYear(Year.now())
+                                .startDate(LocalDate.now())
+                                .endDate(LocalDate.now())
+                                .reportingStartDate(LocalDate.now())
+                                .build()))
+                        .build())
                 .buyOutStartDate(LocalDate.now())
-                .buyOutEndDate(LocalDate.now())
+                .buyOutPrimaryPaymentDeadline(LocalDate.now())
                 .secondaryReportingStartDate(LocalDate.now())
                 .build();
         entityManager.persist(targetPeriod);

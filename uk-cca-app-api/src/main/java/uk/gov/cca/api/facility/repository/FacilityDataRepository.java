@@ -63,8 +63,8 @@ public interface FacilityDataRepository extends JpaRepository<FacilityData, Long
 			"JOIN FacilityData fd ON fd.accountId = tu.id " +
 			"WHERE tu.status = 'LIVE' " +
 			"AND fd.closedDate IS NULL " +
-			"AND fd.participatingSchemeVersions = jsonb_build_array(:schemeVersion) ")
-    List<TargetUnitAccountBusinessInfoDTO> findLiveAccountsWithAtLeastOneFacilityForSchemeVersionOnly(String schemeVersion);
+			"AND function('jsonb_exists', fd.participatingSchemeVersions, :schemeVersion) = true ")
+    List<TargetUnitAccountBusinessInfoDTO> findLiveAccountsWithActiveFacilityForSchemeVersion(String schemeVersion);
 
     List<FacilityData> findAllByAccountId(Long accountId);
 }

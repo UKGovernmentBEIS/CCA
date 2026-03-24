@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
 import { mockAdminTerminationFinalDecisionPayload } from '../../testing/mock-data';
 import ConfirmationComponent from './confirmation.component';
@@ -33,11 +33,11 @@ describe('ConfirmationComponent', () => {
   });
 
   it('should display the correct banner and content', () => {
-    expect(screen.getByText('Admin termination final decision notice sent to operator')).toBeInTheDocument();
-    expect(screen.getByText('The admin termination agreement has been terminated.')).toBeInTheDocument();
+    expect(getByText('Admin termination final decision notice sent to operator', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('The admin termination agreement has been terminated.', fixture.nativeElement)).toBeTruthy();
     expect(
-      screen.getByText('The selected users will receive an email notification of your decision.'),
-    ).toBeInTheDocument();
-    expect(screen.getByText('Return to: Dashboard')).toBeInTheDocument();
+      getByText('The selected users will receive an email notification of your decision.', fixture.nativeElement),
+    ).toBeTruthy();
+    expect(getByText('Return to: Dashboard', fixture.nativeElement)).toBeTruthy();
   });
 });

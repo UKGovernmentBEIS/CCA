@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { screen } from '@testing-library/angular';
+import { getByText } from '@testing';
 
 import { LegislationComponent } from './legislation.component';
 
@@ -23,33 +23,31 @@ describe('LegislationComponent', () => {
   });
 
   it('should display appropriate contents', () => {
-    expect(screen.getByText('Legislation')).toBeInTheDocument();
+    expect(getByText('Legislation')).toBeTruthy();
 
     expect(
-      screen.getByText(
+      getByText(
         'References are made throughout the service to the following pieces of legislation which set out specific terms of the scheme:',
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
 
-    expect(screen.getByText('The Climate Change Agreements (Administration) Regulations 2012')).toBeInTheDocument();
+    expect(getByText('The Climate Change Agreements (Administration) Regulations 2012')).toBeTruthy();
 
-    expect(
-      screen.getByText('The Climate Change Agreements (Eligible Facilities) Regulations 2012'),
-    ).toBeInTheDocument();
+    expect(getByText('The Climate Change Agreements (Eligible Facilities) Regulations 2012')).toBeTruthy();
 
     expect(
-      screen.getByText(
+      getByText(
         'These regulations have been amended several times since their introduction. You should read both the original regulation and their subsequent amendments.',
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
 
-    // This part should be split in order for `screen` of testing library to work.
+    // This part should be split for matching with getByText
     const textToMatch1 =
       /These regulations were made under the powers set out in paragraphs 52D-F of Schedule 6 of the/;
 
     const textToMatch2 = /Finance Act 2000/;
 
-    expect(screen.getByText(textToMatch1)).toBeInTheDocument();
-    expect(screen.getByText(textToMatch2)).toBeInTheDocument();
+    expect(getByText(textToMatch1)).toBeTruthy();
+    expect(getByText(textToMatch2)).toBeTruthy();
   });
 });

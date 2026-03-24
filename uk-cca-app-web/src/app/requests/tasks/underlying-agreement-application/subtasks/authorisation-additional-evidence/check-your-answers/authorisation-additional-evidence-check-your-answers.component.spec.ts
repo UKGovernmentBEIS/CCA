@@ -14,7 +14,7 @@ import {
 } from '@netz/common/store';
 import { ActivatedRouteStub, MockType } from '@netz/common/testing';
 import { TasksApiService, underlyingAgreementQuery } from '@requests/common';
-import { screen } from '@testing-library/angular';
+import { getByRole, getByText } from '@testing';
 
 import AuthorisationAdditionalEvidenceCheckYourAnswersComponent from './authorisation-additional-evidence-check-your-answers.component';
 
@@ -89,17 +89,17 @@ describe('CheckYourAnswersComponent', () => {
   });
 
   it('should render the page heading', () => {
-    const heading = screen.getByRole('heading', { name: 'Check your answers' });
-    expect(heading).toBeInTheDocument();
+    const heading = getByRole('heading', { name: 'Check your answers' }, fixture.nativeElement);
+    expect(heading).toBeTruthy();
   });
 
   it('should render the summary sections and rows', () => {
-    expect(screen.getByText('Authorisation')).toBeInTheDocument();
-    expect(screen.getByText('Additional evidence')).toBeInTheDocument();
+    expect(getByText('Authorisation', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Additional evidence', fixture.nativeElement)).toBeTruthy();
   });
 
   it('should contain submit button and "return to" link', () => {
-    expect(screen.getByText('Confirm and complete')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Apply for an underlying agreement')).toBeInTheDocument();
+    expect(getByText('Confirm and complete', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Return to: Apply for an underlying agreement', fixture.nativeElement)).toBeTruthy();
   });
 });

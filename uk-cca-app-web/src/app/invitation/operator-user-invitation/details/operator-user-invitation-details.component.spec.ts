@@ -1,19 +1,18 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { render } from '@testing-library/angular';
-import { screen } from '@testing-library/dom';
+import { getByLabelText, getByTestId } from '@testing';
 
 import { OperatorUserInvitationFormProvider } from '../form.provider';
 import { InvitedOperatorUserExtended, OperatorUserInvitationStore } from '../store';
 import { OperatorUserInvitationComponent } from './operator-user-invitation-details.component';
 
 describe('SectorUserInvitationComponent', () => {
+  let fixture: ComponentFixture<OperatorUserInvitationComponent>;
   let operatorUserInvitationStore: OperatorUserInvitationStore;
-
-  const route = new ActivatedRouteStub();
 
   const operatorUserStoreState: InvitedOperatorUserExtended = {
     firstName: 'name',
@@ -31,30 +30,38 @@ describe('SectorUserInvitationComponent', () => {
   };
 
   beforeEach(async () => {
-    await render(OperatorUserInvitationComponent, {
+    await TestBed.configureTestingModule({
+      imports: [OperatorUserInvitationComponent],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
         OperatorUserInvitationStore,
         OperatorUserInvitationFormProvider,
+        {
+          provide: ActivatedRoute,
+          useValue: new ActivatedRouteStub(),
+        },
       ],
-      configureTestBed: (testbed) => {
-        testbed.overrideProvider(ActivatedRoute, { useValue: route });
-        operatorUserInvitationStore = testbed.inject(OperatorUserInvitationStore);
-        operatorUserInvitationStore.setState(operatorUserStoreState);
-      },
-    });
+    }).compileComponents();
+
+    operatorUserInvitationStore = TestBed.inject(OperatorUserInvitationStore);
+    operatorUserInvitationStore.setState(operatorUserStoreState);
+
+    fixture = TestBed.createComponent(OperatorUserInvitationComponent);
+
+    fixture.detectChanges();
+    await fixture.whenStable();
   });
 
   it('should create', () => {
-    expect(screen.getByTestId('invited-sector-user-details-form')).toBeInTheDocument();
+    expect(getByTestId('invited-sector-user-details-form')).toBeTruthy();
   });
 
   it('should populate the form with valid information', () => {
-    expect(screen.getByLabelText('First name')).toHaveValue('name');
-    expect(screen.getByLabelText('Last name')).toHaveValue('surname');
-    expect(screen.getByLabelText('Job title (optional)')).toHaveValue('job');
-    expect(screen.getByLabelText('Email address')).toHaveValue('test@example.com');
-    expect(screen.getByLabelText('Consultant')).toBeChecked();
+    expect((getByLabelText('First name') as HTMLInputElement).value).toBe('name');
+    expect((getByLabelText('Last name') as HTMLInputElement).value).toBe('surname');
+    expect((getByLabelText('Job title (optional)') as HTMLInputElement).value).toBe('job');
+    expect((getByLabelText('Email address') as HTMLInputElement).value).toBe('test@example.com');
+    expect((getByLabelText('Consultant') as HTMLInputElement).checked).toBe(true);
   });
 });

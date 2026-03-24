@@ -8,8 +8,7 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
-import { screen } from '@testing-library/angular';
-import UserEvent from '@testing-library/user-event';
+import { click, getByText } from '@testing';
 
 import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import AuthorisationAdditionalEvidenceCheckYourAnswersComponent from './authorisation-additional-evidence-check-your-answers.component';
@@ -53,18 +52,17 @@ describe('AuthorisationAdditionalEvidenceCheckYourAnswersComponent', () => {
   });
 
   it('should render the page heading', () => {
-    const heading = screen.getByRole('heading', { name: 'Check your answers' });
-    expect(heading).toBeInTheDocument();
+    const heading = getByText('Check your answers');
+    expect(heading).toBeTruthy();
   });
 
   it('should contain submit button and "return to" link', () => {
-    expect(screen.getByText('Confirm and complete')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Review underlying agreement variation')).toBeInTheDocument();
+    expect(getByText('Confirm and complete')).toBeTruthy();
+    expect(getByText('Return to: Review underlying agreement variation')).toBeTruthy();
   });
 
   it('should submit form and call submitSubtask method', async () => {
-    const user = UserEvent.setup();
-    await user.click(screen.getByText('Confirm and complete'));
+    await click(getByText('Confirm and complete'));
     expect(submitSubtaskSpy).toHaveBeenCalledTimes(1);
   });
 });

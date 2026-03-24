@@ -8,8 +8,7 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { mockUNAReviewRequestTaskState, TasksApiService } from '@requests/common';
-import { screen } from '@testing-library/angular';
-import UserEvent from '@testing-library/user-event';
+import { click, getAllByText, getByText } from '@testing';
 
 import AuthorisationAdditionalEvidenceCheckYourAnswersComponent from './authorisation-additional-evidence-check-your-answers.component';
 
@@ -52,24 +51,23 @@ describe('CheckYourAnswersComponent', () => {
   });
 
   it('should render the page heading', () => {
-    const heading = screen.getByRole('heading', { name: 'Check your answers' });
-    expect(heading).toBeInTheDocument();
+    const heading = getByText('Check your answers');
+    expect(heading).toBeTruthy();
   });
 
   it('should render the summary sections and rows', () => {
-    expect(screen.getByText('Authorisation')).toBeInTheDocument();
-    expect(screen.getByText('Additional evidence')).toBeInTheDocument();
-    expect(screen.getAllByText('No files provided')).toBeTruthy();
+    expect(getByText('Authorisation')).toBeTruthy();
+    expect(getByText('Additional evidence')).toBeTruthy();
+    expect(getAllByText('No files provided')).toBeTruthy();
   });
 
   it('should contain submit button and "return to" link', () => {
-    expect(screen.getByText('Confirm and complete')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Review application for underlying agreement')).toBeInTheDocument();
+    expect(getByText('Confirm and complete')).toBeTruthy();
+    expect(getByText('Return to: Review application for underlying agreement')).toBeTruthy();
   });
 
-  it('should submit form and call saveRequestTaskAction method', async () => {
-    const user = UserEvent.setup();
-    await user.click(screen.getByText('Confirm and complete'));
+  it('should submit form and call saveRequestTaskAction method', () => {
+    click(getByText('Confirm and complete'));
     expect(saveRequestTaskActionSpy).toHaveBeenCalledTimes(1);
   });
 });

@@ -7,8 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { RequestTaskFileService } from '@shared/services';
-import { screen } from '@testing-library/angular';
-import userEvent from '@testing-library/user-event';
+import { click, getAllByRole, getByLabelText, getByRole } from '@testing';
 
 import { CcaPeerReviewDecision } from 'cca-api';
 
@@ -23,15 +22,12 @@ describe('PeerReviewDecisionComponent', () => {
   let router: Router;
   let store: RequestTaskStore;
   let peerReviewStore: AdminTerminationPeerReviewStore;
-  let user: ReturnType<typeof userEvent.setup>;
 
   const mockRequestTaskFileService = {
     buildFormControl: jest.fn().mockReturnValue(new FormControl([])),
   };
 
   beforeEach(async () => {
-    user = userEvent.setup();
-
     await TestBed.configureTestingModule({
       imports: [PeerReviewDecisionComponent, ReactiveFormsModule],
       providers: [
@@ -61,13 +57,13 @@ describe('PeerReviewDecisionComponent', () => {
   });
 
   it('should display the form elements', () => {
-    const radioButtons = screen.getAllByRole('radio');
+    const radioButtons = getAllByRole('radio');
     expect(radioButtons).toHaveLength(2);
-    expect(radioButtons[0]).toHaveAttribute('value', 'AGREE');
-    expect(radioButtons[1]).toHaveAttribute('value', 'DISAGREE');
+    expect((radioButtons[0] as Element | null)?.getAttribute('value')).toBe('AGREE');
+    expect((radioButtons[1] as Element | null)?.getAttribute('value')).toBe('DISAGREE');
 
-    expect(screen.getByRole('textbox')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Continue' })).toBeInTheDocument();
+    expect(getByRole('textbox')).toBeTruthy();
+    expect(getByRole('button', { name: 'Continue' })).toBeTruthy();
   });
 
   it('should navigate to check-your-answers on valid form submission', () => {
@@ -102,19 +98,19 @@ describe('PeerReviewDecisionComponent', () => {
   });
 
   it('should have return link', () => {
-    const returnLink = screen.getByRole('link', { name: 'Return to: Admin termination peer review' });
-    expect(returnLink).toBeInTheDocument();
-    expect(returnLink).toHaveAttribute('routerLink', '../');
+    const returnLink = getByRole('link', { name: 'Return to: Admin termination peer review' });
+    expect(returnLink).toBeTruthy();
+    expect((returnLink as Element | null)?.getAttribute('routerLink')).toBe('../');
   });
 
   it('should update form when decision changes', async () => {
-    const agreeRadio = screen.getByLabelText('I agree with the determination');
-    const disagreeRadio = screen.getByLabelText('I do not agree with the determination');
+    const agreeRadio = getByLabelText('I agree with the determination');
+    const disagreeRadio = getByLabelText('I do not agree with the determination');
 
-    await user.click(disagreeRadio);
+    click(disagreeRadio);
     expect(component['form'].value.type).toBe('DISAGREE');
 
-    await user.click(agreeRadio);
+    click(agreeRadio);
     expect(component['form'].value.type).toBe('AGREE');
   });
 });

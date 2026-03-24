@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getAllByText, getByText } from '@testing';
 
 import { mockRequestTaskState } from '../../../testing/mock-data';
 import ReviewTargetUnitDetailsSummaryComponent from './review-target-unit-details-summary.component';
@@ -38,8 +38,8 @@ describe('ReviewTargetUnitDetailsSummaryComponent', () => {
   });
 
   it('should display the correct header and caption', () => {
-    const targetUnitDetailsHeading = screen.getAllByText('Target unit details')[0];
-    expect(targetUnitDetailsHeading).toHaveTextContent('Target unit details');
-    expect(screen.getByText('Summary')).toBeInTheDocument();
+    const targetUnitDetailsHeading = getAllByText('Target unit details', fixture.nativeElement)[0];
+    expect((targetUnitDetailsHeading as HTMLElement | null)?.textContent ?? '').toContain('Target unit details');
+    expect(getByText('Summary', fixture.nativeElement)).toBeTruthy();
   });
 });

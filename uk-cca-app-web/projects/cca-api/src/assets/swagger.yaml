@@ -5883,33 +5883,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  $ref: '#/components/schemas/RequestCreateValidationResult'
   /v1.0/request-notes/{requestId}/files:
     get:
       tags:
@@ -6257,34 +6242,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-                    enum:
-                      - NONE
-                      - VIEW_ONLY
-                      - EXECUTE
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-                    enum:
-                      - NONE
-                      - VIEW_ONLY
-                      - EXECUTE
   /v1.0/notification-templates:
     get:
       tags:
@@ -8015,15 +7978,6 @@ components:
         contentLength:
           type: integer
           format: int64
-        connection:
-          type: array
-          items:
-            type: string
-        ifModifiedSince:
-          type: integer
-          format: int64
-        contentType:
-          $ref: '#/components/schemas/MediaType'
         origin:
           type: string
         contentLanguage:
@@ -8074,6 +8028,15 @@ components:
           writeOnly: true
         cacheControl:
           type: string
+        connection:
+          type: array
+          items:
+            type: string
+        ifModifiedSince:
+          type: integer
+          format: int64
+        contentType:
+          $ref: '#/components/schemas/MediaType'
       additionalProperties:
         type: array
         items:
@@ -9540,6 +9503,17 @@ components:
           type: string
         rdeForceDecisionPayload:
           $ref: '#/components/schemas/RdeForceDecisionPayload'
+    NonComplianceDetailsSubmitSaveRequestTaskActionPayload:
+      type: object
+      properties:
+        payloadType:
+          type: string
+        nonComplianceDetails:
+          $ref: '#/components/schemas/NonComplianceDetails'
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
     Cca3ExistingFacilitiesMigrationAccountProcessingActivationRequestTaskPayload:
       type: object
       properties:
@@ -9707,6 +9681,17 @@ components:
           type: string
         userId:
           type: string
+    NonComplianceDetailsSubmittedRequestActionPayload:
+      required:
+        - nonComplianceDetails
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        nonComplianceDetails:
+          $ref: '#/components/schemas/NonComplianceDetails'
     FacilityCertificationDetailsDTO:
       type: object
       properties:
@@ -16166,6 +16151,8 @@ components:
       type: object
       properties:
         productName:
+          maxLength: 255
+          minLength: 0
           type: string
         baselineYear:
           type: integer

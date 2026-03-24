@@ -1,4 +1,4 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { of } from 'rxjs';
@@ -55,12 +55,13 @@ describe('ServiceBannerComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [
+        provideHttpClientTesting(),
         {
           provide: UIConfigurationService,
           useValue: mockUIConfigurationService,
         },
       ],
-      imports: [ServiceBannerComponent, HttpClientTestingModule],
+      imports: [ServiceBannerComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ServiceBannerComponent);

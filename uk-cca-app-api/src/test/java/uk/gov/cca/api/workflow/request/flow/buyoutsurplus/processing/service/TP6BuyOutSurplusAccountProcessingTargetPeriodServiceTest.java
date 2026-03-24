@@ -10,12 +10,12 @@ import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusChargeType;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusContainer;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusResult;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.service.BuyOutSurplusQueryService;
 import uk.gov.cca.api.common.domain.MeasurementType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.TargetPeriodResultType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataBuyOutSurplusDetailsDTO;
@@ -91,10 +91,9 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         final BuyOutSurplusAccountState accountState = BuyOutSurplusAccountState.builder().accountId(accountId).build();
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
         final String submitterId = "regulator";
-        final TargetPeriodDTO targetPeriodDetails = TargetPeriodDTO.builder()
+        final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
-                .buyOutEndDate(LocalDate.of(2025, 7, 1))
-                .isCurrent(true)
+                .buyOutPrimaryPaymentDeadline(LocalDate.of(2025, 7, 1))
                 .build();
         final BuyOutSurplusAccountProcessingRequestMetadata metadata = BuyOutSurplusAccountProcessingRequestMetadata.builder()
                 .parentRequestId("parentRequestId")
@@ -193,10 +192,9 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         final BuyOutSurplusAccountState accountState = BuyOutSurplusAccountState.builder().accountId(accountId).build();
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
         final String submitterId = "regulator";
-        final TargetPeriodDTO targetPeriodDetails = TargetPeriodDTO.builder()
+        final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
-                .buyOutEndDate(LocalDate.of(2025, 7, 1))
-                .isCurrent(true)
+                .buyOutPrimaryPaymentDeadline(LocalDate.of(2025, 7, 1))
                 .build();
         final BuyOutSurplusAccountProcessingRequestMetadata metadata = BuyOutSurplusAccountProcessingRequestMetadata.builder()
                 .parentRequestId("parentRequestId")
@@ -329,10 +327,9 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         final BuyOutSurplusAccountState accountState = BuyOutSurplusAccountState.builder().accountId(accountId).build();
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
         final String submitterId = "regulator";
-        final TargetPeriodDTO targetPeriodDetails = TargetPeriodDTO.builder()
+        final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
-                .buyOutEndDate(LocalDate.of(2025, 7, 1))
-                .isCurrent(true)
+                .buyOutPrimaryPaymentDeadline(LocalDate.of(2025, 7, 1))
                 .build();
         final BuyOutSurplusAccountProcessingRequestMetadata metadata = BuyOutSurplusAccountProcessingRequestMetadata.builder()
                 .parentRequestId("parentRequestId")
@@ -477,10 +474,9 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         final BuyOutSurplusAccountState accountState = BuyOutSurplusAccountState.builder().accountId(accountId).build();
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
         final String submitterId = "regulator";
-        final TargetPeriodDTO targetPeriodDetails = TargetPeriodDTO.builder()
+        final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
-                .buyOutEndDate(LocalDate.of(2025, 7, 1))
-                .isCurrent(true)
+                .buyOutPrimaryPaymentDeadline(LocalDate.of(2025, 7, 1))
                 .build();
         final BuyOutSurplusAccountProcessingRequestMetadata metadata = BuyOutSurplusAccountProcessingRequestMetadata.builder()
                 .parentRequestId("parentRequestId")
@@ -613,10 +609,9 @@ class TP6BuyOutSurplusAccountProcessingTargetPeriodServiceTest {
         final long performanceDataId = 11L;
         final BuyOutSurplusAccountState accountState = BuyOutSurplusAccountState.builder().accountId(accountId).build();
         final TargetPeriodType targetPeriodType = TargetPeriodType.TP6;
-        final TargetPeriodDTO targetPeriodDetails = TargetPeriodDTO.builder()
+        final TargetPeriodInfoDTO targetPeriodDetails = TargetPeriodInfoDTO.builder()
                 .businessId(targetPeriodType)
-                .buyOutEndDate(LocalDate.of(2025, 7, 1))
-                .isCurrent(true)
+                .buyOutPrimaryPaymentDeadline(LocalDate.of(2025, 7, 1))
                 .build();
         final BuyOutSurplusAccountProcessingRequestMetadata metadata = BuyOutSurplusAccountProcessingRequestMetadata.builder()
                 .parentRequestId("parentRequestId")

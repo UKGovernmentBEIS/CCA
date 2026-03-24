@@ -32,7 +32,7 @@ public class Cca2TerminationRunRequestService {
 	private final RequestQueryService requestQueryService;
 	private final WorkflowService workflowService;
 	
-    private static final String TERMINATE_REASON = "Workflow terminated by the CCA2 end date workflow, because it contains CCA2-only facilities.";
+    private static final String TERMINATE_REASON = "Workflow terminated by the CCA2 end date workflow.";
 
 	@Transactional
     public void terminateVariationRequests() {
@@ -43,17 +43,19 @@ public class Cca2TerminationRunRequestService {
 						&& containsCca2OnlyFacility((UnderlyingAgreementVariationRequestPayload) req.getPayload(), req.getRequestTasks()))
 				.toList();
 		
-		requests.stream()
-		.forEach(req -> {
-                    req.setStatus(CcaRequestStatuses.CANCELLED);
-                    requestService.addActionToRequest(req,
-                            null,
-                            CcaRequestActionType.REQUEST_TERMINATED,
-                            null);
-                    workflowService.deleteProcessInstance(req.getProcessInstanceId(), TERMINATE_REASON);
-                }
-        );
-    }	
+		requests.stream().forEach(this::terminateRequestAndAddRequestAction);
+    }
+	
+	@Transactional
+    public void terminateCca3MigrationAccountProcessingRequests() {
+		// Terminate all in progress cca3 migration account processing requests
+		List<Request> requests = requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
+        		CcaRequestType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING, ResourceType.CA, CompetentAuthorityEnum.ENGLAND.name()).stream()
+				.filter(req -> RequestStatuses.IN_PROGRESS.equals(req.getStatus()))
+				.toList();
+		
+		requests.stream().forEach(this::terminateRequestAndAddRequestAction);
+    }
 
 	public long getNumberOfAccountsCompleted(String requestId) {
 		final Request batchRequest = requestService.findRequestById(requestId);
@@ -100,6 +102,14 @@ public class Cca2TerminationRunRequestService {
 		return payload.getUnderlyingAgreementProposed() != null 
 				&& payload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities().stream()
 				.anyMatch(facility -> facility.getFacilityItem().getFacilityDetails().getParticipatingSchemeVersions().equals(Set.of(SchemeVersion.CCA_2)));
+	}
+	
+	private void terminateRequestAndAddRequestAction(Request req) {
+		req.setStatus(CcaRequestStatuses.CANCELLED);
+		
+		requestService.addActionToRequest(req, null, CcaRequestActionType.REQUEST_TERMINATED, null);
+		
+		workflowService.deleteProcessInstance(req.getProcessInstanceId(), TERMINATE_REASON);
 	}
 
 }

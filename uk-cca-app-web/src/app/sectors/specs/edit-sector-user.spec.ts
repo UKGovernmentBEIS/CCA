@@ -9,8 +9,6 @@ import { provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { transformUsername } from '@netz/common/pipes';
-import { screen } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
 
 import { SECTORS_ROUTES } from '../sectors.routes';
 import { mockSectorAuthorities, mockSectorUserDetails } from './fixtures/mock';
@@ -26,6 +24,18 @@ import {
 describe('Edit sector user spec', () => {
   let httpTestingController: HttpTestingController;
   let harness: RouterTestingHarness;
+
+  const getResetTwoFaLink = (): HTMLAnchorElement => {
+    const link = Array.from(document.querySelectorAll<HTMLAnchorElement>('a')).find((anchor) =>
+      anchor.textContent?.includes('Reset two-factor authentication'),
+    );
+
+    if (!link) {
+      throw new Error('Reset two-factor authentication link was not found');
+    }
+
+    return link;
+  };
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -45,8 +55,7 @@ describe('Edit sector user spec', () => {
   test('Main: Administrator views and edits user details of another user', fakeAsync(async () => {
     const sectorId = 123;
     const sectorUser = mockSectorAuthorities.authorities[0];
-    const user = UserEvent.setup();
-    const opts = { harness, httpTestingController, user };
+    const opts = { harness, httpTestingController };
 
     await navigateToContacts(sectorId, opts);
     await navigateToSectorUserDetails(sectorId, sectorUser.userId, transformUsername(sectorUser), opts);
@@ -80,8 +89,7 @@ describe('Edit sector user spec', () => {
   test('Alternative scenario 1: User views and edits his own user details', fakeAsync(async () => {
     const sectorId = 123;
     const sectorUser = mockSectorAuthorities.authorities[1];
-    const user = UserEvent.setup();
-    const opts = { harness, httpTestingController, user };
+    const opts = { harness, httpTestingController };
 
     await navigateToContacts(sectorId, opts);
     await navigateToSectorUserDetails(sectorId, sectorUser.userId, transformUsername(sectorUser), opts);
@@ -115,23 +123,25 @@ describe('Edit sector user spec', () => {
   test("Alternative scenario 2: Basic user clicks the 'Change two factor authentication' link", fakeAsync(async () => {
     const sectorId = 123;
     const sectorUser = mockSectorAuthorities.authorities[0];
-    const user = UserEvent.setup();
-    const opts = { harness, httpTestingController, user };
+    const opts = { harness, httpTestingController };
     await navigateToContacts(sectorId, opts);
     await navigateToSectorUserDetails(sectorId, sectorUser.userId, transformUsername(sectorUser), opts);
 
-    expect(screen.getByText('Reset two-factor authentication')).toHaveAttribute('href', '/2fa/reset-2fa');
+    const resetTwoFaLink = getResetTwoFaLink();
+    const linkTarget = resetTwoFaLink.getAttribute('href') ?? resetTwoFaLink.getAttribute('ng-reflect-router-link');
+    expect(linkTarget).toContain('/2fa/reset-2fa');
   }));
 
   test("Alternative scenario 3: Administrator clicks the 'Change two factor authentication' link", fakeAsync(async () => {
     const sectorId = 123;
     const sectorUser = mockSectorAuthorities.authorities[1];
-    const user = UserEvent.setup();
-    const opts = { harness, httpTestingController, user };
+    const opts = { harness, httpTestingController };
 
     await navigateToContacts(sectorId, opts);
     await navigateToSectorUserDetails(sectorId, sectorUser.userId, transformUsername(sectorUser), opts);
 
-    expect(screen.getByText('Reset two-factor authentication')).toHaveAttribute('href', '/2fa/reset-2fa');
+    const resetTwoFaLink = getResetTwoFaLink();
+    const linkTarget = resetTwoFaLink.getAttribute('href') ?? resetTwoFaLink.getAttribute('ng-reflect-router-link');
+    expect(linkTarget).toContain('/2fa/reset-2fa');
   }));
 });

@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByRole } from '@testing';
 
 import { AssignmentSuccessComponent } from './assignment-success.component';
 
@@ -58,6 +58,6 @@ describe('AssignmentConfirmationComponent', () => {
   });
 
   it('should render link to return to dashboard', () => {
-    expect(screen.getByRole('link', { name: 'Return to dashboard' })).toBeVisible();
+    expect(getByRole('link', { name: 'Return to dashboard' })).toBeTruthy();
   });
 });

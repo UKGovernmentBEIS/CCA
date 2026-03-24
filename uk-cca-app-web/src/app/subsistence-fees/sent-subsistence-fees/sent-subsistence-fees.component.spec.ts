@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { mockSentSubsistenceFeesDetails } from '@shared/components';
-import { screen } from '@testing-library/angular';
+import { getSummaryListData } from '@testing';
 
 import { SubsistenceFeesRunInfoViewService } from 'cca-api';
 
@@ -43,14 +43,7 @@ describe('SentSubsistenceFeesComponent', () => {
   });
 
   it('should display the correct data', () => {
-    const detailsValues = screen
-      .getAllByText((_, el) => el.tagName.toLowerCase() === 'dl')
-      .map((el) => [
-        Array.from(el.querySelectorAll('dt')).map((dt) => dt.textContent.trim()),
-        Array.from(el.querySelectorAll('dd'))
-          .filter((dt) => dt.textContent.trim() !== 'Change')
-          .map((dt) => dt.textContent.trim()),
-      ]);
+    const detailsValues = getSummaryListData(fixture.nativeElement);
 
     expect(detailsValues).toEqual([
       [

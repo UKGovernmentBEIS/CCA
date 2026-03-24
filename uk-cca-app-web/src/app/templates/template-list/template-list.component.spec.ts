@@ -43,7 +43,7 @@ describe('TemplateListComponent', () => {
 
   it('should render table headers correctly', () => {
     const headers = document.querySelectorAll('th');
-    expect(headers[0]).toHaveTextContent('Template name');
-    expect(headers[1]).toHaveTextContent('Workflow');
+    expect((headers[0] as HTMLElement | null)?.textContent ?? '').toContain('Template name');
+    expect((headers[1] as HTMLElement | null)?.textContent ?? '').toContain('Workflow');
   });
 });

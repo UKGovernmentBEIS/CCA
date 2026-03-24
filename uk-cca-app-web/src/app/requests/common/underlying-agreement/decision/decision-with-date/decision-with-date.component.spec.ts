@@ -1,13 +1,12 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
-import { render } from '@testing-library/angular';
-import { screen } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
+import { click, getByLabelText } from '@testing';
 
 import { mockRequestTaskItemUNAReviewDTO } from '../../testing';
 import { DECISION_FORM_PROVIDER, facilityDecisionFormProvider } from '../provider';
@@ -30,6 +29,8 @@ class TestComponent {
 }
 
 describe('decision with date test', () => {
+  let fixture: ComponentFixture<TestComponent>;
+
   const route: any = {
     snapshot: {
       params: {
@@ -40,32 +41,33 @@ describe('decision with date test', () => {
   };
 
   beforeEach(async () => {
-    await render(TestComponent, {
+    await TestBed.configureTestingModule({
+      imports: [TestComponent],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },
       ],
-      configureTestBed: (testbed) => {
-        const store = testbed.inject(RequestTaskStore);
-        store.setRequestTaskItem(mockRequestTaskItemUNAReviewDTO);
-      },
-    });
+    }).compileComponents();
+
+    const store = TestBed.inject(RequestTaskStore);
+    store.setRequestTaskItem(mockRequestTaskItemUNAReviewDTO);
+    fixture = TestBed.createComponent(TestComponent);
+    fixture.detectChanges();
   });
 
   it('should display controls', () => {
-    expect(screen.getByLabelText('Accepted')).toBeInTheDocument();
-    expect(screen.getByLabelText('Rejected')).toBeInTheDocument();
-    expect(screen.getByLabelText('Notes (optional)')).toBeInTheDocument();
-    expect(screen.getByLabelText('Upload evidence (optional)')).toBeInTheDocument();
+    expect(getByLabelText('Accepted')).toBeTruthy();
+    expect(getByLabelText('Rejected')).toBeTruthy();
+    expect(getByLabelText('Notes (optional)')).toBeTruthy();
+    expect(getByLabelText('Upload evidence (optional)')).toBeTruthy();
   });
 
   it('should show checkbox and date input when accepted is clicked', async () => {
-    const user = UserEvent.setup();
-    await user.click(screen.getByLabelText('Accepted'));
-    expect(document.getElementById('changeDate-0')).toBeVisible();
-    await user.click(document.getElementById('changeDate-0'));
-    expect(document.getElementById('startDate')).toBeVisible();
+    click(getByLabelText('Accepted'));
+    expect(document.getElementById('changeDate-0')).toBeTruthy();
+    click(document.getElementById('changeDate-0') as HTMLElement);
+    expect(document.getElementById('startDate')).toBeTruthy();
   });
 });

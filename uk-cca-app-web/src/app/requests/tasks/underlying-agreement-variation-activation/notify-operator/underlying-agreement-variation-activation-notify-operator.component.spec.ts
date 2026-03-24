@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
 import { CaExternalContactsService, NoticeRecipientsService, RegulatorAuthoritiesService } from 'cca-api';
 import { TasksService } from 'cca-api';
@@ -107,21 +107,24 @@ describe('UnderlyingAgreementVariationActivationNotifyOperatorComponent', () => 
   });
 
   it('should display the correct header and caption', () => {
-    expect(screen.getByText('Notify operator')).toBeInTheDocument();
-    expect(screen.getByText('Select who should be notified of the decision')).toBeInTheDocument();
+    expect(getByText('Notify operator', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Select who should be notified of the decision', fixture.nativeElement)).toBeTruthy();
   });
 
   it('should contain submit button and "return to" link', () => {
-    expect(screen.getByText('Confirm and complete')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Upload target unit assent')).toBeInTheDocument();
+    expect(getByText('Confirm and complete', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Return to: Upload target unit assent', fixture.nativeElement)).toBeTruthy();
   });
 
   it('should display the correct form fields', () => {
-    expect(screen.getByText('Users automatically notified')).toBeInTheDocument();
-    expect(screen.getByText('Select any additional users you want to notify')).toBeInTheDocument();
-    expect(screen.getByText('Select the external contacts you want to notify')).toBeInTheDocument();
+    expect(getByText('Users automatically notified', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Select any additional users you want to notify', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Select the external contacts you want to notify', fixture.nativeElement)).toBeTruthy();
     expect(
-      screen.getByText('Select the name and signature that will be shown on the official notice document'),
-    ).toBeInTheDocument();
+      getByText(
+        'Select the name and signature that will be shown on the official notice document',
+        fixture.nativeElement,
+      ),
+    ).toBeTruthy();
   });
 });

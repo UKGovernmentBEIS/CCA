@@ -6,10 +6,10 @@ import org.apache.commons.lang3.ObjectUtils;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusPaymentStatus;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusChargeType;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.BuyOutSurplusContainer;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.processing.domain.BuyOutSurplusResult;
 import uk.gov.cca.api.targetperiodreporting.buyoutsurplus.domain.dto.BuyOutSurplusTransactionInfoDTO;
 import uk.gov.cca.api.common.domain.TriFunction;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.PerformanceDataBuyOutSurplusDetailsDTO;
 
@@ -23,7 +23,7 @@ import java.util.function.Function;
 @UtilityClass
 public class BuyOutSurplusCalculationUtil {
 
-    public BuyOutSurplusResult initializePrimaryResult(PerformanceDataBuyOutSurplusDetailsDTO details, TargetPeriodDTO targetPeriodDetails) {
+    public BuyOutSurplusResult initializePrimaryResult(PerformanceDataBuyOutSurplusDetailsDTO details, TargetPeriodInfoDTO targetPeriodDetails) {
         BuyOutSurplusPaymentStatus paymentStatus = getPaymentStatusByFee(details.getPriBuyOutCost());
         BuyOutSurplusChargeType chargeType = findChargeTypeByPaymentStatus(paymentStatus);
         LocalDate invoicedPaymentDeadline = getPaymentDeadline(PerformanceDataSubmissionType.PRIMARY, details.getPriBuyOutCost(), targetPeriodDetails, null);
@@ -48,7 +48,7 @@ public class BuyOutSurplusCalculationUtil {
     }
 
     public BuyOutSurplusResult initializeSecondaryResult(PerformanceDataBuyOutSurplusDetailsDTO details, List<BuyOutSurplusTransactionInfoDTO> previousPayments,
-                                                         TargetPeriodDTO targetPeriodDetails, LocalDate secondaryDeadline) {
+                                                         TargetPeriodInfoDTO targetPeriodDetails, LocalDate secondaryDeadline) {
         // Secondary Buy-Out Fee = (A - S) x Cost -  B
         // A =  Total target period Buy-out required (tCO2e) (cell E128) which equivalent represents the amount by which the emissions for the target period exceed the target
         // B = Cumulative, marked as PAID, Buy-out fees from all previous Primary and Secondary TPR submissions, as calculated by the previous BUY-OUT Batch Runs related to the specific TP.
@@ -112,13 +112,13 @@ public class BuyOutSurplusCalculationUtil {
     }
 
     private LocalDate getPaymentDeadline(PerformanceDataSubmissionType submissionType, BigDecimal buyOutFee,
-                                         TargetPeriodDTO targetPeriodDetails, LocalDate secondaryDeadline) {
+                                         TargetPeriodInfoDTO targetPeriodDetails, LocalDate secondaryDeadline) {
         if(buyOutFee.compareTo(BigDecimal.ZERO) <= 0) {
             return null;
         }
         else if(submissionType.equals(PerformanceDataSubmissionType.PRIMARY)) {
             // For a primary Buy-out fee, the payment deadline is a predefined/fixed date corresponding to the "Buy-out fee payment deadline"
-            return targetPeriodDetails.getBuyOutEndDate();
+            return targetPeriodDetails.getBuyOutPrimaryPaymentDeadline();
         }
         else {
             // For a secondary Buy-out fee the payment deadline is dynamically calculated - 30 working days after the notice is sent.

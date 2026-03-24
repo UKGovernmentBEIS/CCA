@@ -27,7 +27,7 @@
         <netz.authorization.version>1.13.0</netz.authorization.version>
         <netz.rest-logging.version>1.4.0</netz.rest-logging.version>
         <netz.alert.version>1.1.0</netz.alert.version>
-        <netz.mireport.version>1.8.0</netz.mireport.version>
+        <netz.mireport.version>1.9.0</netz.mireport.version>
         <netz.referencedata.version>1.4.0</netz.referencedata.version>
         <netz.account.version>1.9.0</netz.account.version>
         <netz.verificationbody.version>1.3.0</netz.verificationbody.version>

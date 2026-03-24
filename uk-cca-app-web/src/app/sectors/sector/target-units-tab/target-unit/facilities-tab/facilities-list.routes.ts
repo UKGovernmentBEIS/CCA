@@ -4,6 +4,7 @@ import { Routes } from '@angular/router';
 import { AuthStore, selectUserRoleType } from '@netz/common/auth';
 import { resetCurrentFacility, setCurrentFacility } from '@requests/common';
 import { WORKFLOW_DETAILS_ROUTES } from '@shared/components';
+import { PendingRequestGuard } from '@shared/guards';
 
 import { FacilityAuditStore } from './facility-audit/facility-audit.store';
 import { FacilityDetailsResolver } from './facility-details.resolver';
@@ -54,6 +55,13 @@ export const FACILITIES_LIST_ROUTES: Routes = [
       {
         path: 'workflow-details',
         children: WORKFLOW_DETAILS_ROUTES,
+      },
+      {
+        path: 'process-actions',
+        title: 'Start a facility task',
+        data: { backlink: '../', breadcrumb: false },
+        canDeactivate: [PendingRequestGuard],
+        loadComponent: () => import('@shared/components').then((c) => c.StartNewTaskComponent),
       },
     ],
   },

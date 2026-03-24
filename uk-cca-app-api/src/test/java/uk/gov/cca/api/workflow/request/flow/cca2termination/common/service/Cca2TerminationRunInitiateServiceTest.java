@@ -92,7 +92,7 @@ class Cca2TerminationRunInitiateServiceTest {
 
         when(validator.validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload))
                 .thenReturn(RequestCreateValidationResult.builder().valid(true).build());
-        when(facilityDataQueryService.findLiveAccountsWithAtLeastOneFacilityForSchemeVersionOnly("CCA_2"))
+        when(facilityDataQueryService.findLiveAccountsWithActiveFacilityForSchemeVersion("CCA_2"))
         		.thenReturn(accounts);
         when(startProcessRequestService.startProcess(requestParams)).thenReturn(request);
 
@@ -101,7 +101,7 @@ class Cca2TerminationRunInitiateServiceTest {
 
         // Verify
         verify(validator, times(1)).validateAction(CompetentAuthorityEnum.ENGLAND, requestCreateActionEmptyPayload);
-        verify(facilityDataQueryService, times(1)).findLiveAccountsWithAtLeastOneFacilityForSchemeVersionOnly("CCA_2");
+        verify(facilityDataQueryService, times(1)).findLiveAccountsWithActiveFacilityForSchemeVersion("CCA_2");
         verify(startProcessRequestService, times(1)).startProcess(requestParams);
     }
 

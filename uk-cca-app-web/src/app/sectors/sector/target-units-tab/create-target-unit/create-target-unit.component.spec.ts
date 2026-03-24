@@ -3,10 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
-import { mockSectorDetails, mockSectorScheme, mockSectorUserDetails } from 'src/app/sectors/specs/fixtures/mock';
-
+import { mockSectorDetails, mockSectorScheme, mockSectorUserDetails } from '../../../specs/fixtures/mock';
 import { ActiveSectorStore } from '../../active-sector.store';
 import { CreateTargetUnitComponent } from './create-target-unit.component';
 import { CreateTargetUnitStore } from './create-target-unit.store';
@@ -51,19 +50,19 @@ describe('CreateTargetUnitComponent', () => {
   });
 
   it('should display the correct header and caption', () => {
-    expect(screen.getByText('New target unit')).toBeInTheDocument();
-    expect(screen.getByText('Target unit details')).toBeInTheDocument();
+    expect(getByText('New target unit')).toBeTruthy();
+    expect(getByText('Target unit details')).toBeTruthy();
   });
 
   it('should display the correct form fields', () => {
-    expect(screen.getByText('Operator type')).toBeInTheDocument();
-    expect(screen.getByText('Operator name')).toBeInTheDocument();
-    expect(screen.getByText('Standard Industrial Classification (SIC) codes (optional)')).toBeInTheDocument();
-    expect(screen.getByText('Subsector')).toBeInTheDocument();
+    expect(getByText('Operator type')).toBeTruthy();
+    expect(getByText('Operator name')).toBeTruthy();
+    expect(getByText('Standard Industrial Classification (SIC) codes (optional)')).toBeTruthy();
+    expect(getByText('Subsector')).toBeTruthy();
   });
 
   it('should contain submit button and "return to" link', () => {
-    expect(screen.getByText('Continue')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Sector target units')).toBeInTheDocument();
+    expect(getByText('Continue')).toBeTruthy();
+    expect(getByText('Return to: Sector target units')).toBeTruthy();
   });
 });

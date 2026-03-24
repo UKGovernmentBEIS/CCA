@@ -66,12 +66,13 @@ export const createProposedUnderlyingAgreementPayload = (
     authorisationAndAdditionalEvidence: underlyingAgreement.authorisationAndAdditionalEvidence,
   };
 
-  if (reviewGroupDecisions['TARGET_UNIT_DETAILS'].type === 'REJECTED')
+  if (reviewGroupDecisions['TARGET_UNIT_DETAILS']?.type === TaskItemStatus.REJECTED) {
     proposed.underlyingAgreementTargetUnitDetails = transformAccountReferenceData(accountReferenceData);
+  }
 
   proposed.facilities = Object.entries(facilitiesReviewGroupDecisions)
-    .filter((frg) => frg[1].type === 'ACCEPTED')
-    .map((frg) => underlyingAgreement.facilities.find((f) => f.facilityId === frg[0]));
+    .filter(([_, groupDecision]) => groupDecision?.type === 'ACCEPTED')
+    .map(([key]) => underlyingAgreement.facilities.find((f) => f.facilityId === key));
 
   return proposed;
 };

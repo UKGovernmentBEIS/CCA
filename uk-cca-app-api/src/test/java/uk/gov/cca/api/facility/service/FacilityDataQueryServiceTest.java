@@ -7,11 +7,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
-import uk.gov.cca.api.common.config.Cca2TerminationConfig;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.common.service.SchemeTerminationHelper;
 import uk.gov.cca.api.facility.domain.FacilityData;
 import uk.gov.cca.api.facility.domain.FacilityDataStatus;
 import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
+import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityDataDetailsDTO;
 import uk.gov.cca.api.facility.domain.dto.FacilityHeaderInfoDTO;
 import uk.gov.cca.api.facility.repository.FacilityDataRepository;
@@ -25,7 +26,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -42,7 +42,7 @@ class FacilityDataQueryServiceTest {
     private FacilityDataRepository repository;
     
     @Mock
-    private Cca2TerminationConfig cca2TerminationConfig;
+    private SchemeTerminationHelper schemeTerminationHelper;
     
     @Test
     void getFacilityData() {
@@ -52,6 +52,48 @@ class FacilityDataQueryServiceTest {
         FacilityDataDetailsDTO facilityDetailsDTO = service.getFacilityData(1L);
 
         assertThat(facilityDetailsDTO.getId()).isEqualTo(1L);
+        verify(repository, times(1)).findById(1L);
+    }
+
+    @Test
+    void getFacilityInfoData() {
+        final FacilityData entity = FacilityData.builder()
+                .id(1L)
+                .facilityBusinessId("businessId")
+                .siteName("siteName")
+                .createdDate(LocalDateTime.of(2020, 1, 1, 0, 0, 0))
+                .closedDate(LocalDateTime.of(2022, 1, 1, 0, 0, 0))
+                .build();
+
+        final FacilityDTO expected = FacilityDTO.builder()
+                .id(1L)
+                .facilityBusinessId("businessId")
+                .siteName("siteName")
+                .createdDate(LocalDateTime.of(2020, 1, 1, 0, 0, 0))
+                .closedDate(LocalDate.of(2022, 1, 1))
+                .build();
+
+        when(repository.findById(1L)).thenReturn(Optional.ofNullable(entity));
+
+        // Invoke
+        FacilityDTO facility = service.getFacilityInfoData(1L);
+
+        // Verify
+        assertThat(facility).isEqualTo(expected);
+        verify(repository, times(1)).findById(1L);
+    }
+
+    @Test
+    void getFacilityInfoData_not_found() {
+
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+
+        // Invoke
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> service.getFacilityInfoData(1L));
+
+        // Verify
+        assertThat(ex.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
         verify(repository, times(1)).findById(1L);
     }
 
@@ -145,7 +187,7 @@ class FacilityDataQueryServiceTest {
 
         Set<SchemeVersion> result = service.getActiveFacilityParticipatingSchemeVersions(facilityBusinessId);
 
-        assertEquals(fd.getParticipatingSchemeVersions(), result);
+        assertThat(result).containsExactly(SchemeVersion.CCA_3);
         verify(repository, times(1))
                 .findByFacilityBusinessIdAndClosedDateIsNull(facilityBusinessId);
     }
@@ -164,7 +206,7 @@ class FacilityDataQueryServiceTest {
 
         when(repository.findByFacilityBusinessIdAndClosedDateIsNull(facilityBusinessId))
                 .thenReturn(Optional.ofNullable(fd));
-        when(cca2TerminationConfig.getTerminationDate()).thenReturn(LocalDate.now().minusDays(1));
+        when(schemeTerminationHelper.isCca2Terminated(Set.of(SchemeVersion.CCA_2))).thenReturn(true);
 
         BusinessException businessException = assertThrows(BusinessException.class,
                 () -> service.getActiveFacilityParticipatingSchemeVersions(facilityBusinessId));
@@ -172,7 +214,7 @@ class FacilityDataQueryServiceTest {
         assertThat(businessException.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
         verify(repository, times(1))
                 .findByFacilityBusinessIdAndClosedDateIsNull(facilityBusinessId);
-        verify(cca2TerminationConfig, times(1)).getTerminationDate();
+        verify(schemeTerminationHelper, times(1)).isCca2Terminated(Set.of(SchemeVersion.CCA_2));
     }
     
     @Test
@@ -239,15 +281,15 @@ class FacilityDataQueryServiceTest {
     			TargetUnitAccountBusinessInfoDTO.builder().accountId(2L).build());
 		SchemeVersion version = SchemeVersion.CCA_2;
 
-		when(repository.findLiveAccountsWithAtLeastOneFacilityForSchemeVersionOnly(version.name()))
+		when(repository.findLiveAccountsWithActiveFacilityForSchemeVersion(version.name()))
 				.thenReturn(accounts);
 
 		List<TargetUnitAccountBusinessInfoDTO> result = 
-				service.findLiveAccountsWithAtLeastOneFacilityForSchemeVersionOnly(version.name());
+				service.findLiveAccountsWithActiveFacilityForSchemeVersion(version.name());
 		
 		assertThat(result).isEqualTo(accounts);
 		
-		verify(repository, times(1)).findLiveAccountsWithAtLeastOneFacilityForSchemeVersionOnly(version.name());
+		verify(repository, times(1)).findLiveAccountsWithActiveFacilityForSchemeVersion(version.name());
     }
 
     @Test

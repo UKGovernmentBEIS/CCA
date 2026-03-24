@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { RequestActionStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByTestId, getSummaryListData } from '@testing';
 
 import { mockTargetUnitAccountRequestActionState } from './mocks/mock-target-unit-account-request-action-state';
 import { TargetUnitAccountSubmittedTimelineComponent } from './target-unit-account-submitted-timeline.component';
@@ -38,21 +38,14 @@ describe('TargetUnitAccountSubmittedTimelineComponent', () => {
   });
 
   it('should display the correct data sections', () => {
-    expect(screen.getByTestId('target-unit-details-list')).toBeInTheDocument();
-    expect(screen.getByTestId('operator-address-list')).toBeInTheDocument();
-    expect(screen.getByTestId('responsible-person-list')).toBeInTheDocument();
-    expect(screen.getByTestId('administrative-contact-list')).toBeInTheDocument();
+    expect(getByTestId('target-unit-details-list')).toBeTruthy();
+    expect(getByTestId('operator-address-list')).toBeTruthy();
+    expect(getByTestId('responsible-person-list')).toBeTruthy();
+    expect(getByTestId('administrative-contact-list')).toBeTruthy();
   });
 
   it('should display the correct data', () => {
-    const summaryValues = screen
-      .getAllByText((_, el) => el.tagName.toLowerCase() === 'dl')
-      .map((el) => [
-        Array.from(el.querySelectorAll('dt')).map((dt) => dt.textContent.trim()),
-        Array.from(el.querySelectorAll('dd'))
-          .filter((dt) => dt.textContent.trim() !== 'Change')
-          .map((dt) => dt.textContent.trim()),
-      ]);
+    const summaryValues = getSummaryListData(fixture.nativeElement);
 
     expect(summaryValues).toEqual([
       [

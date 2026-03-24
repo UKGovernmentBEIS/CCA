@@ -8,8 +8,7 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { mockRequestTaskState, TasksApiService } from '@requests/common';
-import { screen, waitFor } from '@testing-library/angular';
-import UserEvent from '@testing-library/user-event';
+import { clear, click, getAllByText, getByLabelText, getByRole, getByText, type } from '@testing';
 
 import { ResponsiblePersonComponent } from './responsible-person.component';
 
@@ -91,26 +90,26 @@ describe('ResponsiblePersonComponent', () => {
   });
 
   it('should render the page heading', () => {
-    const heading = screen.getByRole('heading', { name: 'Responsible person' });
-    expect(heading).toBeInTheDocument();
+    const heading = getByRole('heading', { name: 'Responsible person' });
+    expect(heading).toBeTruthy();
   });
 
   it('should render the responsible person input fields', () => {
-    expect(screen.getByText('Email address')).toBeInTheDocument();
-    expect(screen.getByText('First name')).toBeInTheDocument();
-    expect(screen.getByText('Last name')).toBeInTheDocument();
-    expect(screen.getByText('Job title (optional)')).toBeInTheDocument();
-    expect(screen.getAllByText('Phone number')).toHaveLength(2);
-    expect(screen.getByText('The responsible person address is the same as the operator address')).toBeInTheDocument();
+    expect(getByText('Email address')).toBeTruthy();
+    expect(getByText('First name')).toBeTruthy();
+    expect(getByText('Last name')).toBeTruthy();
+    expect(getByText('Job title (optional)')).toBeTruthy();
+    expect(getAllByText('Phone number')).toHaveLength(2);
+    expect(getByText('The responsible person address is the same as the operator address')).toBeTruthy();
   });
 
   it('should submit form and call saveRequestTaskAction method', async () => {
     saveRequestTaskActionSpy.mockClear();
     saveRequestTaskActionSpy.mockReturnValue(of({}));
 
-    const user = UserEvent.setup();
-    const continueButton = screen.getByRole('button', { name: /Continue/i });
-    await user.click(continueButton);
+    const continueButton = getByRole('button', { name: /Continue/i });
+    click(continueButton);
+    await fixture.whenStable();
 
     expect(saveRequestTaskActionSpy).toHaveBeenCalledTimes(1);
   });
@@ -119,31 +118,27 @@ describe('ResponsiblePersonComponent', () => {
     saveRequestTaskActionSpy.mockClear();
     saveRequestTaskActionSpy.mockReturnValue(of({}));
 
-    const user = UserEvent.setup();
-
     // Properly select form inputs by targeting input elements
-    const emailInput = screen.getByLabelText(/Email address/i);
-    const firstNameInput = screen.getByLabelText(/First name/i);
-    const lastNameInput = screen.getByLabelText(/Last name/i);
+    const emailInput = getByLabelText(/Email address/i) as HTMLInputElement;
+    const firstNameInput = getByLabelText(/First name/i) as HTMLInputElement;
+    const lastNameInput = getByLabelText(/Last name/i) as HTMLInputElement;
 
     // Clear and type into the inputs
-    await user.clear(emailInput);
-    await user.type(emailInput, 'newemail@test.com');
+    clear(emailInput);
+    type(emailInput, 'newemail@test.com');
 
-    await user.clear(firstNameInput);
-    await user.type(firstNameInput, 'NewFirstName');
+    clear(firstNameInput);
+    type(firstNameInput, 'NewFirstName');
 
-    await user.clear(lastNameInput);
-    await user.type(lastNameInput, 'NewLastName');
+    clear(lastNameInput);
+    type(lastNameInput, 'NewLastName');
 
     // Click the continue button
-    const continueButton = screen.getByRole('button', { name: /Continue/i });
-    await user.click(continueButton);
+    const continueButton = getByRole('button', { name: /Continue/i });
+    click(continueButton);
+    await fixture.whenStable();
 
-    // Wait for the async operation to complete
-    await waitFor(() => {
-      expect(saveRequestTaskActionSpy).toHaveBeenCalledTimes(1);
-    });
+    expect(saveRequestTaskActionSpy).toHaveBeenCalledTimes(1);
 
     // Verify the payload contains the expected action type
     const callArg = saveRequestTaskActionSpy.mock.calls[0][0];

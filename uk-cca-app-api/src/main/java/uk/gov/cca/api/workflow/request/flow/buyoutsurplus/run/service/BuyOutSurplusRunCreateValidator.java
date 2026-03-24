@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.buyoutsurplus.run.domain.BuyOutSurplusRunCreateActionPayload;
@@ -41,7 +41,7 @@ public class BuyOutSurplusRunCreateValidator implements RequestCreateByCAValidat
                     .build();
         }
 
-        final TargetPeriodDTO targetPeriod = targetPeriodService.getTargetPeriodByBusinessId(payload.getTargetPeriodType());
+        final TargetPeriodInfoDTO targetPeriod = targetPeriodService.getTargetPeriodInfoByTargetPeriodType(payload.getTargetPeriodType());
         if(LocalDate.now().isBefore(targetPeriod.getBuyOutStartDate())) {
             return RequestCreateValidationResult.builder()
                     .valid(false)

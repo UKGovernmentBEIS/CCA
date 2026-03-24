@@ -45,4 +45,6 @@ public class CcaRequestType {
     public static final String CCA2_TERMINATION_ACCOUNT_PROCESSING = "CCA2_TERMINATION_ACCOUNT_PROCESSING";
 
     public static final String NON_COMPLIANCE = "NON_COMPLIANCE";
+
+    public static final String PERFORMANCE_DATA_FACILITY_DIGITAL_FORM = "PERFORMANCE_DATA_FACILITY_DIGITAL_FORM";
 }

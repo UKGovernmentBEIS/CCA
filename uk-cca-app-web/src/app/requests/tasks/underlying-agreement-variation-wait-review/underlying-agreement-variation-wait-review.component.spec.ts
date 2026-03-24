@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { screen } from '@testing-library/angular';
+import { getByText } from '@testing';
 
 import { UnderlyingAgreementVariationWaitReviewComponent } from './underlying-agreement-variation-wait-review.component';
 
@@ -23,6 +23,6 @@ describe('UnderlyingAgreementVariationWaitReviewComponent', () => {
   });
 
   it('should show content', () => {
-    expect(screen.getByText('Waiting for the regulator to complete the review')).toBeInTheDocument();
+    expect(getByText('Waiting for the regulator to complete the review', fixture.nativeElement)).toBeTruthy();
   });
 });

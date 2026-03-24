@@ -3,7 +3,7 @@ import { provideRouter, Routes } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
-import { screen } from '@testing-library/angular';
+import { getByRole } from '@testing';
 
 import { ReturnToTaskOrActionPageComponent } from './return-to-task-or-action-page.component';
 
@@ -46,7 +46,7 @@ describe('ReturnToTaskOrActionPageComponent', () => {
   });
 
   it('should have correct link and text', () => {
-    const link = screen.getByRole('link') as HTMLAnchorElement;
+    const link = getByRole('link') as HTMLAnchorElement;
     expect(link.href).toEqual('http://localhost/tasks/1');
     expect(link.innerHTML.trim()).toEqual('Return to: TEST RETURN');
   });

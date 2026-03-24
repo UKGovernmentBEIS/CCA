@@ -1,0 +1,44 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    caption="Non-compliance details"
+    heading="Enter details of non-compliance"
+  >
+    <div
+      formControlName="nonComplianceType"
+      govuk-select
+      label="Choose type of non compliance"
+      [options]="nonComplianceTypeOptions"
+    ></div>
+
+    <div
+      formControlName="nonCompliantDate"
+      govuk-date-input
+      label="When did the operator become non-compliant? (optional)"
+      [max]="today"
+    ></div>
+
+    <div
+      formControlName="compliantDate"
+      govuk-date-input
+      label="When did the operator become compliant? (optional)"
+      hint="Leave blank if the operator is still non-compliant"
+      [max]="today"
+    ></div>
+
+    <h2 class="govuk-heading-s">Your comments (optional)</h2>
+    <p class="govuk-body">Provide more details of the breach in the comments below</p>
+
+    <govuk-details summary="Breach details examples">
+      <ul class="govuk-list govuk-list--bullet">
+        <li>"How the non-compliance was identified (audit, operator notification)"</li>
+        <li>"A summary of the evidence you are relying on"</li>
+        <li>"Why you have chosen the non-compliance type"</li>
+      </ul>
+    </govuk-details>
+
+    <div formControlName="comment" govuk-textarea></div>
+  </cca-wizard-step>
+</div>
+<netz-return-to-task-or-action-page />

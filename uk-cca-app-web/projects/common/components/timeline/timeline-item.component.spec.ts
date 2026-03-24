@@ -1,8 +1,8 @@
+import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { TimelineItemComponent } from './timeline-item.component';
-import { ComponentRef } from '@angular/core';
 
 describe('TimelineItemComponent', () => {
   let component: TimelineItemComponent;

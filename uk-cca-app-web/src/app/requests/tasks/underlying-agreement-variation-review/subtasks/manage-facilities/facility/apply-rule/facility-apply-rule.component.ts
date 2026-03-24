@@ -85,13 +85,13 @@ export class FacilityApplyRuleComponent {
   );
 
   protected readonly energyConsumedEligible = computed(() => {
-    const energyConsumed = this.energyConsumedValue();
-    const energyConsumedProvision = this.energyConsumedProvisionValue();
+    const energyConsumed = Number(this.energyConsumedValue());
+    const energyConsumedProvision = Number(this.energyConsumedProvisionValue());
 
-    if (Number(energyConsumed) >= 70) return 100;
-    if (Number(energyConsumed) === 0) return 0;
+    if (energyConsumed >= 70) return 100;
+    if (energyConsumed === 0) return 0;
 
-    if (Number(energyConsumedProvision) >= 0 && Number(energyConsumed) > 0) {
+    if (energyConsumedProvision >= 0 && energyConsumed > 0) {
       return calculateEnergyConsumedEligible(energyConsumed, energyConsumedProvision);
     }
 

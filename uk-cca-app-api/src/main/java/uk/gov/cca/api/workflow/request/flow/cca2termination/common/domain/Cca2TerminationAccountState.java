@@ -30,6 +30,8 @@ public class Cca2TerminationAccountState implements Serializable {
 
     @Builder.Default
     private Long facilitiesExcluded = 0L;
+    
+    private boolean cca2Terminated;
 
     @Builder.Default
     private List<String> errors = new ArrayList<>();

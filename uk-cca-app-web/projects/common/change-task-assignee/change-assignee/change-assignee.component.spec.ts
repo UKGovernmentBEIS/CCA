@@ -9,8 +9,8 @@ import { RequestTaskStore } from '@netz/common/store';
 
 import { TasksAssignmentService, TasksReleaseService } from 'cca-api';
 
-import { ChangeAssigneeComponent } from './change-assignee.component';
 import { BasePage, mockClass } from '../../testing';
+import { ChangeAssigneeComponent } from './change-assignee.component';
 
 describe('ChangeAssigneeComponent', () => {
   let page: Page;

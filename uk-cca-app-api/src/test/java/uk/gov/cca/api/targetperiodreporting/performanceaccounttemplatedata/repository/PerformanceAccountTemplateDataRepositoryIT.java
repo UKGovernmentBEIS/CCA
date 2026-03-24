@@ -4,13 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.Year;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,11 +26,16 @@ import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domai
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.PerformanceAccountTemplateDataEntity;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.PerformanceAccountTemplateDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.TargetUnitIdentityAndPerformance;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYearsContainer;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.netz.api.common.AbstractContainerBaseTest;
 import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @Testcontainers
+@EnableAutoConfiguration
+@EnableJpaAuditing
+@ContextConfiguration(classes = PerformanceAccountTemplateDataRepository.class)
 @DataJpaTest
 @Import(ObjectMapper.class)
 class PerformanceAccountTemplateDataRepositoryIT extends AbstractContainerBaseTest {
@@ -128,6 +137,8 @@ class PerformanceAccountTemplateDataRepositoryIT extends AbstractContainerBaseTe
 		flushAndClear();
 		
 		var result = cut.findTopByAccountIdAndTargetPeriodBusinessIdOrderByIdDesc(accountId, targetPeriodType);
+
+		assertThat(result).isPresent();
 		assertThat(result.get().getId()).isEqualTo(pat2.getId());
 		assertThat(result.get().getTargetPeriod().getBusinessId()).isEqualTo(targetPeriodType);
 		assertThat(result.get().getTargetPeriod().getName()).isEqualTo(targetPeriodType.name());
@@ -139,10 +150,16 @@ class PerformanceAccountTemplateDataRepositoryIT extends AbstractContainerBaseTe
 				.name(targetPeriodType.name())
 				.startDate(LocalDate.now())
 				.endDate(LocalDate.now())
-				.performanceDataStartDate(LocalDate.now())
-				.performanceDataEndDate(LocalDate.now())
+				.targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+						.targetPeriodYears(List.of(TargetPeriodYear.builder()
+								.targetYear(Year.now())
+								.startDate(LocalDate.now())
+								.endDate(LocalDate.now())
+								.reportingStartDate(LocalDate.now())
+								.build()))
+						.build())
 				.buyOutStartDate(LocalDate.now())
-				.buyOutEndDate(LocalDate.now())
+				.buyOutPrimaryPaymentDeadline(LocalDate.now())
 				.secondaryReportingStartDate(LocalDate.now())
 				.build();
 	}

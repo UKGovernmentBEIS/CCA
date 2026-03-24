@@ -1,6 +1,6 @@
 import { RequestTaskPayload } from 'cca-api';
 
-export type GenericRequestTaskPayload = RequestTaskPayload & { [key: string]: any };
+export type GenericRequestTaskPayload = RequestTaskPayload & Record<string, any>;
 
 export interface FormIdentity {
   subtask?: string;

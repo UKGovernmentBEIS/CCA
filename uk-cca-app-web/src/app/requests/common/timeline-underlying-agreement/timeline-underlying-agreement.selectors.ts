@@ -55,6 +55,12 @@ const selectAttachments: StateSelector<RequestActionState, Record<string, string
   (payload) => payload.underlyingAgreementAttachments,
 );
 
+const selectRegulatorAttachments: StateSelector<RequestActionState, Record<string, string>> = createDescendingSelector(
+  selectPayload,
+  (payload) =>
+    (payload as UnderlyingAgreementVariationRegulatorLedCompletedRequestActionPayload).regulatorLedSubmitAttachments,
+);
+
 const selectUnderlyingAgreement: StateSelector<RequestActionState, UnaPayload> = createDescendingSelector(
   selectPayload,
   (payload) => payload.underlyingAgreement,
@@ -146,6 +152,7 @@ export const underlyingAgreementRequestActionQuery = {
   selectAccountReferenceDataSectorAssociationDetails,
   selectSectorAssociationDetailsSchemeData,
   selectAttachments,
+  selectRegulatorAttachments,
   selectTimelineFacilityItems,
   selectUnderlyingAgreement,
   selectUnderlyingAgreementTargetUnitDetails,

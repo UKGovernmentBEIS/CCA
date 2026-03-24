@@ -1,12 +1,10 @@
 package uk.gov.cca.api.workflow.request.flow.common.actionhandler;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,9 @@ import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestCreateValidationResult;
+import uk.gov.netz.api.workflow.request.flow.common.service.RequestCreateByRequestValidator;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @ExtendWith(MockitoExtension.class)
 class RequestCreateActionFacilityResourceTypeHandlerTest {
 
@@ -30,6 +30,9 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
 
     @Mock
     private RequestCreateByFacilityValidator requestCreateByFacilityValidator;
+
+    @Mock
+    private RequestCreateByRequestValidator requestCreateByRequestValidator;
 
     @Mock
     private RequestFacilityCreateActionHandler<CcaTestRequestCreateActionPayload> requestFacilityCreateActionHandler;
@@ -51,6 +54,20 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
             }
         };
 
+        requestCreateByRequestValidator = new RequestCreateByRequestValidator<CcaTestRequestCreateActionPayload>() {
+            @Override
+            public RequestCreateValidationResult validateAction(Long accountId, CcaTestRequestCreateActionPayload payload) {
+                return RequestCreateValidationResult.builder()
+                        .valid(true)
+                        .build();
+            }
+
+            @Override
+            public String getRequestType() {
+                return "requestType1";
+            }
+        };
+
         requestFacilityCreateActionHandler = new RequestFacilityCreateActionHandler<>() {
 
             @Override
@@ -71,14 +88,17 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
         AppUser appUser = AppUser.builder().build();
 
         List<RequestFacilityCreateActionHandler<CcaTestRequestCreateActionPayload>> handlers = List.of(requestFacilityCreateActionHandler);
-        List<RequestCreateByFacilityValidator> validators = List.of(requestCreateByFacilityValidator);
+        List<RequestCreateByFacilityValidator> facilityValidators = List.of(requestCreateByFacilityValidator);
+        List<RequestCreateByRequestValidator<CcaTestRequestCreateActionPayload>> requestValidators = List.of(requestCreateByRequestValidator);
 
         RequestCreateActionFacilityResourceTypeHandler<CcaTestRequestCreateActionPayload> requestCreateActionResourceTypeHandler = 
-        		new RequestCreateActionFacilityResourceTypeHandler<>(validators, handlers, facilityDataQueryService);
+        		new RequestCreateActionFacilityResourceTypeHandler<>(facilityValidators, requestValidators, handlers, facilityDataQueryService);
+
+        // Invoke
         String requestId = requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser);
 
-        assertEquals(requestId, "requestId");
-
+        // Verify
+        assertThat(requestId).isEqualTo("requestId");
         verify(facilityDataQueryService, times(1)).exclusiveLockFacility(1L);
     }
 
@@ -99,6 +119,20 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
             }
         };
 
+        requestCreateByRequestValidator = new RequestCreateByRequestValidator<CcaTestRequestCreateActionPayload>() {
+            @Override
+            public RequestCreateValidationResult validateAction(Long accountId, CcaTestRequestCreateActionPayload payload) {
+                return RequestCreateValidationResult.builder()
+                        .valid(true)
+                        .build();
+            }
+
+            @Override
+            public String getRequestType() {
+                return "requestType2";
+            }
+        };
+
         requestFacilityCreateActionHandler = new RequestFacilityCreateActionHandler<>() {
 
             @Override
@@ -119,14 +153,17 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
         AppUser appUser = AppUser.builder().build();
 
         List<RequestFacilityCreateActionHandler<CcaTestRequestCreateActionPayload>> handlers = List.of(requestFacilityCreateActionHandler);
-        List<RequestCreateByFacilityValidator> validators = List.of(requestCreateByFacilityValidator);
+        List<RequestCreateByFacilityValidator> facilityValidators = List.of(requestCreateByFacilityValidator);
+        List<RequestCreateByRequestValidator<CcaTestRequestCreateActionPayload>> requestValidators = List.of(requestCreateByRequestValidator);
 
         RequestCreateActionFacilityResourceTypeHandler<CcaTestRequestCreateActionPayload> requestCreateActionResourceTypeHandler = 
-        		new RequestCreateActionFacilityResourceTypeHandler<>(validators, handlers, facilityDataQueryService);
+        		new RequestCreateActionFacilityResourceTypeHandler<>(facilityValidators, requestValidators, handlers, facilityDataQueryService);
+
+        // Invoke
         String requestId = requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser);
 
-        assertEquals(requestId, "requestId");
-
+        // Verify
+        assertThat(requestId).isEqualTo("requestId");
         verify(facilityDataQueryService, times(1)).exclusiveLockFacility(1L);
     }
 
@@ -147,6 +184,20 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
             }
         };
 
+        requestCreateByRequestValidator = new RequestCreateByRequestValidator<CcaTestRequestCreateActionPayload>() {
+            @Override
+            public RequestCreateValidationResult validateAction(Long accountId, CcaTestRequestCreateActionPayload payload) {
+                return RequestCreateValidationResult.builder()
+                        .valid(true)
+                        .build();
+            }
+
+            @Override
+            public String getRequestType() {
+                return "requestType1";
+            }
+        };
+
         CcaTestRequestCreateActionPayload testRequestCreateActionPayload = CcaTestRequestCreateActionPayload.builder()
                 .payloadType("PAYLOAD_TYPE")
                 .build();
@@ -154,17 +205,23 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
         AppUser appUser = AppUser.builder().build();
 
         List<RequestFacilityCreateActionHandler<CcaTestRequestCreateActionPayload>> handlers = List.of();
-        List<RequestCreateByFacilityValidator> validators = List.of(requestCreateByFacilityValidator);
+        List<RequestCreateByFacilityValidator> facilityValidators = List.of(requestCreateByFacilityValidator);
+        List<RequestCreateByRequestValidator<CcaTestRequestCreateActionPayload>> requestValidators = List.of(requestCreateByRequestValidator);
 
         RequestCreateActionFacilityResourceTypeHandler<CcaTestRequestCreateActionPayload> requestCreateActionResourceTypeHandler = 
-        		new RequestCreateActionFacilityResourceTypeHandler<>(validators, handlers, facilityDataQueryService);
+        		new RequestCreateActionFacilityResourceTypeHandler<>(facilityValidators, requestValidators, handlers, facilityDataQueryService);
 
-        BusinessException businessException = assertThrows(BusinessException.class, () -> requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser));
+        // Invoke
+        BusinessException businessException = assertThrows(BusinessException.class, () ->
+                requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser));
 
-        assertEquals(ErrorCode.REQUEST_CREATE_ACTION_NOT_ALLOWED, businessException.getErrorCode());
-        assertTrue(Arrays.asList(businessException.getData()).contains(RequestCreateValidationResult.builder()
-                .valid(false)
-                .build()));
+        // Verify
+        assertThat(businessException.getErrorCode()).isEqualTo(ErrorCode.REQUEST_CREATE_ACTION_NOT_ALLOWED);
+        assertThat(businessException.getData()).extracting(List.class::cast)
+                .extracting(List::getFirst)
+                .contains(RequestCreateValidationResult.builder()
+                        .valid(false)
+                        .build());
         verify(facilityDataQueryService, times(1)).exclusiveLockFacility(1L);
     }
 
@@ -186,6 +243,20 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
             }
         };
 
+        requestCreateByRequestValidator = new RequestCreateByRequestValidator<CcaTestRequestCreateActionPayload>() {
+            @Override
+            public RequestCreateValidationResult validateAction(Long accountId, CcaTestRequestCreateActionPayload payload) {
+                return RequestCreateValidationResult.builder()
+                        .valid(true)
+                        .build();
+            }
+
+            @Override
+            public String getRequestType() {
+                return "requestType1";
+            }
+        };
+
         CcaTestRequestCreateActionPayload testRequestCreateActionPayload = CcaTestRequestCreateActionPayload.builder()
                 .payloadType("PAYLOAD_TYPE")
                 .build();
@@ -193,18 +264,24 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
         AppUser appUser = AppUser.builder().build();
 
         List<RequestFacilityCreateActionHandler<CcaTestRequestCreateActionPayload>> handlers = List.of();
-        List<RequestCreateByFacilityValidator> validators = List.of(requestCreateByFacilityValidator);
+        List<RequestCreateByFacilityValidator> facilityValidators = List.of(requestCreateByFacilityValidator);
+        List<RequestCreateByRequestValidator<CcaTestRequestCreateActionPayload>> requestValidators = List.of(requestCreateByRequestValidator);
 
         RequestCreateActionFacilityResourceTypeHandler<CcaTestRequestCreateActionPayload> requestCreateActionResourceTypeHandler = 
-        		new RequestCreateActionFacilityResourceTypeHandler<>(validators, handlers, facilityDataQueryService);
+        		new RequestCreateActionFacilityResourceTypeHandler<>(facilityValidators, requestValidators, handlers, facilityDataQueryService);
 
-        BusinessException businessException = assertThrows(BusinessException.class, () -> requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser));
+        // Invoke
+        BusinessException businessException = assertThrows(BusinessException.class, () ->
+                requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser));
 
-        assertEquals(ErrorCode.REQUEST_CREATE_ACTION_NOT_ALLOWED, businessException.getErrorCode());
-        assertTrue(Arrays.asList(businessException.getData()).contains(RequestCreateValidationResult.builder()
-                .valid(true)
-                .isAvailable(false)
-                .build()));
+        // Verify
+        assertThat(businessException.getErrorCode()).isEqualTo(ErrorCode.REQUEST_CREATE_ACTION_NOT_ALLOWED);
+        assertThat(businessException.getData()).extracting(List.class::cast)
+                .extracting(List::getFirst)
+                .contains(RequestCreateValidationResult.builder()
+                        .valid(true)
+                        .isAvailable(false)
+                        .build());
         verify(facilityDataQueryService, times(1)).exclusiveLockFacility(1L);
     }
 
@@ -222,6 +299,20 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
                 return RequestCreateValidationResult.builder()
                         .valid(true)
                         .build();
+            }
+        };
+
+        requestCreateByRequestValidator = new RequestCreateByRequestValidator<CcaTestRequestCreateActionPayload>() {
+            @Override
+            public RequestCreateValidationResult validateAction(Long accountId, CcaTestRequestCreateActionPayload payload) {
+                return RequestCreateValidationResult.builder()
+                        .valid(true)
+                        .build();
+            }
+
+            @Override
+            public String getRequestType() {
+                return "requestType1";
             }
         };
 
@@ -245,22 +336,29 @@ class RequestCreateActionFacilityResourceTypeHandlerTest {
         AppUser appUser = AppUser.builder().build();
 
         List<RequestFacilityCreateActionHandler<CcaTestRequestCreateActionPayload>> handlers = List.of(requestFacilityCreateActionHandler);
-        List<RequestCreateByFacilityValidator> validators = List.of(requestCreateByFacilityValidator);
+        List<RequestCreateByFacilityValidator> facilityValidators = List.of(requestCreateByFacilityValidator);
+        List<RequestCreateByRequestValidator<CcaTestRequestCreateActionPayload>> requestValidators = List.of(requestCreateByRequestValidator);
 
         RequestCreateActionFacilityResourceTypeHandler<CcaTestRequestCreateActionPayload> requestCreateActionResourceTypeHandler = 
-        		new RequestCreateActionFacilityResourceTypeHandler<>(validators, handlers, facilityDataQueryService);
-        BusinessException businessException = assertThrows(BusinessException.class, () -> requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser));
+        		new RequestCreateActionFacilityResourceTypeHandler<>(facilityValidators, requestValidators, handlers, facilityDataQueryService);
 
-        assertEquals(ErrorCode.RESOURCE_NOT_FOUND, businessException.getErrorCode());
-        assertTrue(Arrays.asList(businessException.getData()).contains("requestType1"));
+        // Invoke
+        BusinessException businessException = assertThrows(BusinessException.class, () ->
+                requestCreateActionResourceTypeHandler.process("1", "requestType1", testRequestCreateActionPayload, appUser));
 
+        // Verify
+        assertThat(businessException.getErrorCode()).isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
+        assertThat(businessException.getData()).contains("requestType1");
         verify(facilityDataQueryService, times(1)).exclusiveLockFacility(1L);
     }
 
     @Test
     void process_resourceId_invalid_type() {
     	RequestCreateActionFacilityResourceTypeHandler<CcaTestRequestCreateActionPayload> requestCreateActionResourceTypeHandler = 
-    			new RequestCreateActionFacilityResourceTypeHandler<>(List.of(), List.of(), facilityDataQueryService);
-        assertThrows(NumberFormatException.class, () -> requestCreateActionResourceTypeHandler.process("abc", "requestType1", null, null));
+    			new RequestCreateActionFacilityResourceTypeHandler<>(List.of(), List.of(), List.of(), facilityDataQueryService);
+
+        // Invoke
+        assertThrows(NumberFormatException.class, () ->
+                requestCreateActionResourceTypeHandler.process("abc", "requestType1", null, null));
     }
 }

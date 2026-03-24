@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`CheckYourAnswersComponent should match snapshot for OverallDecisionCheckYourAnswersComponent 1`] = `
-<div
-  id="root0"
->
+<div>
   <div>
     <netz-page-heading>
       <span
@@ -55,7 +53,7 @@ exports[`CheckYourAnswersComponent should match snapshot for OverallDecisionChec
           >
             <a
               class="govuk-link"
-              href="/actions?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -94,7 +92,7 @@ exports[`CheckYourAnswersComponent should match snapshot for OverallDecisionChec
           >
             <a
               class="govuk-link"
-              href="/explanation?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -133,7 +131,7 @@ exports[`CheckYourAnswersComponent should match snapshot for OverallDecisionChec
           >
             <a
               class="govuk-link"
-              href="/additional-info?change=true"
+              href="/?change=true"
             >
               Change
             </a>
@@ -170,7 +168,7 @@ exports[`CheckYourAnswersComponent should match snapshot for OverallDecisionChec
           >
             <a
               class="govuk-link"
-              href="/additional-info?change=true"
+              href="/?change=true"
             >
               Change
             </a>

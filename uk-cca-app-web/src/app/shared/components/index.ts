@@ -66,3 +66,4 @@ export * from './target-unit-notes/target-unit-notes.component';
 export * from './workflow-details/workflow-details.routes';
 export * from './workflow-details/workflow-details.resolver';
 export * from './notes-tab/notes.routes';
+export * from './sector-templates/sector-templates.component';

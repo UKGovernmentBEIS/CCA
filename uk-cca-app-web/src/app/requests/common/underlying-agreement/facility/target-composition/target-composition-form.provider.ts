@@ -69,7 +69,10 @@ export const TargetCompositionFormProvider: Provider = {
           value: sectorSchemeData?.sectorThroughputUnit ?? null,
           disabled: true,
         }),
-        measurementType: fb.control(targetComposition?.measurementType ?? null, [measurementTypeValidator()]),
+        measurementType: fb.control(targetComposition?.measurementType ?? null, {
+          validators: [measurementTypeValidator()],
+          updateOn: 'change',
+        }),
         agreementCompositionType: fb.control(targetComposition?.agreementCompositionType ?? null),
       },
       {

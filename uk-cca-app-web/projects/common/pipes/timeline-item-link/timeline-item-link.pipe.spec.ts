@@ -179,6 +179,11 @@ describe('TimelineItemLinkPipe', () => {
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 
+  it('should return link for non-compliance details', () => {
+    requestAction.type = 'NON_COMPLIANCE_DETAILS_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+  });
+
   it('should return link for payment', () => {
     requestAction.type = 'PAYMENT_MARKED_AS_PAID';
     expect(pipe.transform(requestAction)).toEqual(['/payment', 'actions', requestAction.id, 'paid']);

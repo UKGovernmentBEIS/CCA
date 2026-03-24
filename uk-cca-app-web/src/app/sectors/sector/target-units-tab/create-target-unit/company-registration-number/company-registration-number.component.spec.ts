@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByLabelText, getByText } from '@testing';
 
 import { CreateTargetUnitStore } from '../create-target-unit.store';
 import { mockCreateTargetUnitState } from '../specs/fixture/mocks';
@@ -38,17 +38,17 @@ describe('CompanyRegistrationNumberComponent', () => {
   });
 
   it('should display the correct header and caption', () => {
-    expect(screen.getByText('New target unit')).toBeInTheDocument();
-    expect(screen.getByText('Does the applicant have a company number?')).toBeInTheDocument();
+    expect(getByText('New target unit')).toBeTruthy();
+    expect(getByText('Does the operator have a company number?')).toBeTruthy();
   });
 
   it('should display the correct form fields', () => {
-    expect(screen.getByLabelText('Company number')).toBeInTheDocument();
-    expect(screen.getByLabelText('Yes, the applicant is registered and has a company number')).toBeInTheDocument();
-    expect(screen.getByLabelText('No, the applicant does not have a company number')).toBeInTheDocument();
+    expect(getByLabelText('Company number')).toBeTruthy();
+    expect(getByLabelText('Yes, the operator is registered and has a company number')).toBeTruthy();
+    expect(getByLabelText('No, the operator does not have a company number')).toBeTruthy();
   });
 
-  it('should update the target unit state when the applicant has no company number', () => {
+  it('should update the target unit state when the operator has no company number', () => {
     const form = component['form'];
 
     form.controls.isCompanyRegistrationNumber.setValue(false);

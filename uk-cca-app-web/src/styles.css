@@ -101,3 +101,13 @@ a[role='button'] {
   border-right: 2px solid lightgrey;
   padding-right: 0.2em;
 }
+
+.non-compliance-items-table .govuk-form-group {
+  margin-bottom: 0;
+}
+
+.non-compliance-items-table .non-compliance-items-table__index-cell,
+.non-compliance-items-table .non-compliance-items-table__action-cell {
+  vertical-align: bottom;
+  padding-bottom: 10px;
+}

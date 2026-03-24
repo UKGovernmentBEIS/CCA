@@ -40,6 +40,9 @@ export class WorkflowTypePipe implements PipeTransform {
       case 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_PROCESSING':
         return 'PAT';
 
+      case 'NON_COMPLIANCE':
+        return 'Non Compliance';
+
       default:
         return '';
     }

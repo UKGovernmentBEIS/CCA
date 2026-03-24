@@ -8,8 +8,7 @@ import { of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
 import { transformUsername } from '@netz/common/pipes';
-import { screen } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
+import { click, getByTestId, queryByText } from '@testing';
 
 import { CompaniesInformationService } from 'cca-api';
 
@@ -56,8 +55,7 @@ describe('Delete operator spec', () => {
   }));
 
   async function setup() {
-    const user = UserEvent.setup();
-    const opts = { harness, httpTestingController, user };
+    const opts = { harness, httpTestingController };
 
     await navigateToTargetUnit(sectorId, accountName, opts);
     await navigateToTargetUnitUsers(opts, accountId);
@@ -66,9 +64,12 @@ describe('Delete operator spec', () => {
   }
 
   test('Main: Delete operator user', fakeAsync(async () => {
-    const { user, harness, httpTestingController } = await setup();
+    const { harness, httpTestingController } = await setup();
     const firstOperator = mockOperatorAuthorities.authorities[0];
-    await user.click(screen.getAllByText('Delete')[0]);
+    const deleteControl = Array.from(document.querySelectorAll<HTMLElement>('a,button')).find(
+      (el) => el.textContent?.trim() === 'Delete',
+    );
+    click(deleteControl as HTMLElement);
 
     let req = httpTestingController.expectOne(`/api/v1.0/operator-users/account/${accountId}/${firstOperator.userId}`);
     req.flush(firstOperator);
@@ -78,8 +79,11 @@ describe('Delete operator spec', () => {
     await harness.fixture.whenStable();
     harness.detectChanges();
 
-    expect(screen.getByTestId('delete-operator-page')).toBeInTheDocument();
-    await user.click(screen.getByText('Confirm removal'));
+    expect(getByTestId('delete-operator-page')).toBeTruthy();
+    const confirmRemovalControl = Array.from(document.querySelectorAll<HTMLElement>('a,button')).find(
+      (el) => el.textContent?.trim() === 'Confirm removal',
+    );
+    click(confirmRemovalControl as HTMLElement);
 
     req = httpTestingController.expectOne(
       `/api/v1.0/operator-authorities/account/${accountId}/${firstOperator.userId}`,
@@ -88,6 +92,6 @@ describe('Delete operator spec', () => {
 
     harness.detectChanges();
 
-    expect(screen.queryByText(transformUsername(firstOperator))).not.toBeInTheDocument();
+    expect(queryByText(transformUsername(firstOperator))).toBeFalsy();
   }));
 });

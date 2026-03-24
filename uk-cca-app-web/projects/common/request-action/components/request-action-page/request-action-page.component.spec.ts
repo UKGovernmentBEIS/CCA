@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { TASK_STATUS_TAG_MAP, TaskStatusTagMap } from '@netz/common/pipes';
 import { requestActionQuery, RequestActionStore } from '@netz/common/store';
-import { screen } from '@testing-library/angular';
+import { getByRole } from '@testing';
 
 import { REQUEST_ACTION_PAGE_CONTENT } from '../../request-action.providers';
 import { RequestActionPageContentFactoryMap } from '../../request-action.types';
@@ -73,14 +73,14 @@ describe('RequestActionComponent', () => {
 
   it('should show content with custom component', () => {
     createTestModule(getContent('component'));
-    expect(screen.getByRole('heading', { name: 'TEST CONTENT' })).toBeVisible();
+    expect(getByRole('heading', { name: 'TEST CONTENT' })).toBeTruthy();
   });
 
   it('should show content with sections', () => {
     createTestModule(getContent('sections'));
-    expect(screen.getByRole('heading', { name: 'TEST_SECTION_1' })).toBeVisible();
-    expect(screen.getByRole('link', { name: 'TEST_SUBTASK_1_1' })).toBeVisible();
-    expect(screen.getByRole('heading', { name: 'TEST_SECTION_2' })).toBeVisible();
-    expect(screen.getByRole('link', { name: 'TEST_SUBTASK_2_1' })).toBeVisible();
+    expect(getByRole('heading', { name: 'TEST_SECTION_1' })).toBeTruthy();
+    expect(getByRole('link', { name: 'TEST_SUBTASK_1_1' })).toBeTruthy();
+    expect(getByRole('heading', { name: 'TEST_SECTION_2' })).toBeTruthy();
+    expect(getByRole('link', { name: 'TEST_SUBTASK_2_1' })).toBeTruthy();
   });
 });

@@ -83,4 +83,9 @@ export const tableRows = [
     task: 'Trigger and complete Audit',
     type: 'Audit',
   },
+  {
+    permission: 'NON_COMPLIANCE_SUBMISSION',
+    task: 'Trigger and complete Non-compliance',
+    type: 'Non-compliance',
+  },
 ];

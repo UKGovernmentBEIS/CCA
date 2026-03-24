@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByText } from '@testing';
 
 import { SubsistenceFeesMoAViewService } from 'cca-api';
 
@@ -54,7 +54,7 @@ describe('ConfirmationComponent', () => {
   });
 
   it('should display the correct content', () => {
-    expect(screen.getByText('Received amount updated')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Sector MoA CCACM1200')).toBeInTheDocument();
+    expect(getByText('Received amount updated')).toBeTruthy();
+    expect(getByText('Return to: Sector MoA CCACM1200')).toBeTruthy();
   });
 });

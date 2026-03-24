@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { AuthStore } from '@netz/common/auth';
-import { screen } from '@testing-library/dom';
+import { getAllByRole, getByText } from '@testing';
 
 import { mockSectorUserDetails } from '../../../specs/fixtures/mock';
 import { ActiveSectorUserStore } from '../active-sector-user.store';
@@ -49,17 +49,17 @@ describe('SectorUserDetailsComponent', () => {
   });
 
   it("should display the user's name as title", () => {
-    expect(screen.getByText('sector user')).toBeInTheDocument();
+    expect(getByText('sector user')).toBeTruthy();
   });
 
   it("should display the sections' titles", () => {
-    expect(screen.getByText('Name')).toBeInTheDocument();
-    expect(screen.getByText('Organisation details')).toBeInTheDocument();
-    expect(screen.getByText('Credentials')).toBeInTheDocument();
+    expect(getByText('Name')).toBeTruthy();
+    expect(getByText('Organisation details')).toBeTruthy();
+    expect(getByText('Credentials')).toBeTruthy();
   });
 
   it('should display available "change" links', () => {
-    const changeLinks = screen.getAllByRole('link').filter((l) => l.textContent === 'Change');
+    const changeLinks = getAllByRole('link').filter((l) => l.textContent === 'Change');
     expect(changeLinks.length).toEqual(7);
   });
 });

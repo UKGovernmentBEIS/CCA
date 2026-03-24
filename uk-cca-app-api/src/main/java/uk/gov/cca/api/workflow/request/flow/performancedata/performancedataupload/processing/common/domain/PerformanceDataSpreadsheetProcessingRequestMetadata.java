@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDTO;
+import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.domain.PerformanceDataTargetPeriodType;
@@ -23,7 +23,7 @@ public class PerformanceDataSpreadsheetProcessingRequestMetadata extends Request
     private String accountBusinessId;
     private SectorAssociationInfo sectorAssociationInfo;
     private PerformanceDataTargetPeriodType performanceDataTargetPeriodType;
-    private TargetPeriodDTO targetPeriodDetails;
+    private TargetPeriodYearDTO targetPeriodDetails;
     private int reportVersion;
     private PerformanceDataSubmissionType submissionType;
     private LocalDate uploadedDate;

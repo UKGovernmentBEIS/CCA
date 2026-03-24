@@ -114,4 +114,22 @@
             </sql>
         </rollback>
     </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_TPR_TARGET_PERIOD_with_target_year_periods" author="P70383">
+        <dropColumn tableName="tpr_target_period">
+            <column name="performance_data_start_date"/>
+        </dropColumn>
+        <dropColumn tableName="tpr_target_period">
+            <column name="performance_data_end_date"/>
+        </dropColumn>
+        <dropColumn tableName="tpr_target_period">
+            <column name="is_current"/>
+        </dropColumn>
+        <renameColumn tableName="tpr_target_period" oldColumnName="buy_out_end_date" newColumnName="buy_out_primary_payment_deadline"/>
+        <addColumn tableName="tpr_target_period">
+            <column name="target_period_years" type="jsonb" defaultValue="{}" remarks="The target years of the target period">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -1,0 +1,297 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CheckYourAnswersComponent should display snapshot 1`] = `
+<cca-non-compliance-check-your-answers
+  activatedRoute={[Function Object]}
+  allRelevantFacilities={[Function Function]}
+  allRelevantWorkflows={[Function Function]}
+  data={[Function Function]}
+  isEditable={[Function Function]}
+  nonComplianceDetails={[Function Function]}
+  requestTaskStore={[Function _RequestTaskStore]}
+  router={[Function _Router]}
+  tasksApiService={[Function Object]}
+>
+  <netz-page-heading
+    caption="Non-compliance details"
+  >
+    <span
+      class="govuk-caption-l"
+    >
+      Non-compliance details
+    </span>
+    <h1
+      class="govuk-heading-l"
+    >
+      Check your answers
+    </h1>
+  </netz-page-heading><cca-summary>
+    <h2
+      class="govuk-heading-m"
+    >
+      Non-compliance details
+    </h2>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Type of non-compliance
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Failure to provide target period report
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          When did the operator become non-compliant?
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            01 Jan 2025
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          When did the operator become compliant?
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            15 Jan 2025
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Comments
+        </dt>
+        <dd
+          class="pre-line govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Operator failed to provide the target period report on time.
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+    </dl>
+    <h2
+      class="govuk-heading-m"
+    >
+      Relevant items of non-compliance
+    </h2>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Relevant workflows
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Workflow 1
+          </span>
+          <br />
+          <span>
+            Workflow 2
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Relevant facilities
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Facility 1
+          </span>
+          <br />
+          <span>
+            HIST-001
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+    </dl>
+    <h2
+      class="govuk-heading-m"
+    >
+      Enforcement details
+    </h2>
+    <dl
+      class="govuk-summary-list govuk-!-margin-bottom-9"
+      govuk-summary-list=""
+    >
+      <div
+        class="govuk-summary-list__row"
+        govuksummarylistrow=""
+      >
+        <dt
+          class="govuk-summary-list__key"
+          govuksummarylistrowkey=""
+        >
+          Will you be issuing an Enforcement Response Notice?
+        </dt>
+        <dd
+          class="govuk-summary-list__value"
+          govuksummarylistrowvalue=""
+        >
+          <span>
+            Yes
+          </span>
+        </dd>
+        <dd
+          class="govuk-summary-list__actions"
+          govuksummarylistrowactions=""
+        >
+          <a
+            class="govuk-link"
+            href="/?change=true"
+          >
+            Change
+          </a>
+        </dd>
+      </div>
+    </dl>
+  </cca-summary><button
+    class="govuk-button"
+    govukbutton=""
+    netzpendingbutton=""
+    type="button"
+  >
+    Confirm and complete
+  </button><div
+    class="govuk-!-margin-top-3"
+  >
+    <netz-return-to-task-or-action-page>
+      <a
+        class="govuk-link"
+        href="/request-task"
+      >
+         Return to: Dashboard 
+      </a>
+    </netz-return-to-task-or-action-page>
+  </div>
+</cca-non-compliance-check-your-answers>
+`;

@@ -1,55 +1,60 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { transformUsername } from '@netz/common/pipes';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { render } from '@testing-library/angular';
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
-import { mockTargetUnitOperatorDetails } from 'src/app/sectors/specs/fixtures/mock';
-
+import { mockTargetUnitOperatorDetails } from '../../../../../../specs/fixtures/mock';
 import { ActiveOperatorStore } from '../active-operator.store';
 import { DeleteOperatorComponent } from './delete-operator.component';
 
 describe('Delete Operator Component', () => {
+  let fixture: ComponentFixture<DeleteOperatorComponent>;
   let store: ActiveOperatorStore;
 
   beforeEach(async () => {
-    await render(DeleteOperatorComponent, {
-      providers: [ActiveOperatorStore, provideHttpClient(), provideHttpClientTesting()],
-      configureTestBed: (testbed) => {
-        testbed.overrideProvider(ActivatedRoute, {
+    await TestBed.configureTestingModule({
+      imports: [DeleteOperatorComponent],
+      providers: [
+        ActiveOperatorStore,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        {
+          provide: ActivatedRoute,
           useValue: new ActivatedRouteStub({ targetUnitId: 1, userId: '1123asd12b4' }),
-        });
+        },
+      ],
+    }).compileComponents();
 
-        store = testbed.inject(ActiveOperatorStore);
-        store.setState({
-          details: mockTargetUnitOperatorDetails,
-          editable: true,
-        });
-      },
+    store = TestBed.inject(ActiveOperatorStore);
+    store.setState({
+      details: mockTargetUnitOperatorDetails,
+      editable: true,
     });
+
+    fixture = TestBed.createComponent(DeleteOperatorComponent);
+    fixture.detectChanges();
   });
 
   it('should render contexnt appropriately', () => {
     expect(
-      screen.getByText(
-        `Confirm that the user account of ${transformUsername(mockTargetUnitOperatorDetails)} will be removed`,
-      ),
-    ).toBeInTheDocument();
+      getByText(`Confirm that the user account of ${transformUsername(mockTargetUnitOperatorDetails)} will be removed`),
+    ).toBeTruthy();
 
     expect(
-      screen.getByText(
+      getByText(
         "All tasks currently assigned to this user will be automatically unassigned after you select 'Confirm removal'.",
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
 
     expect(
-      screen.getByText("If you need to reassign any of these tasks before removing this user, select 'Cancel'."),
-    ).toBeInTheDocument();
+      getByText("If you need to reassign any of these tasks before removing this user, select 'Cancel'."),
+    ).toBeTruthy();
 
-    expect(screen.getByText('Confirm removal')).toBeInTheDocument();
-    expect(screen.getByText('Cancel')).toBeInTheDocument();
+    expect(getByText('Confirm removal')).toBeTruthy();
+    expect(getByText('Cancel')).toBeTruthy();
   });
 });

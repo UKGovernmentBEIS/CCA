@@ -8,8 +8,7 @@ import { of } from 'rxjs';
 
 import { RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
-import userEvent from '@testing-library/user-event';
+import { click, getByTestId, getByText } from '@testing';
 
 import { TasksService } from 'cca-api';
 
@@ -61,13 +60,13 @@ describe('PatAccountTemplateUploadComponent', () => {
   });
 
   it('should render and expand the govuk-details component', async () => {
-    const details = screen.getByTestId('pat-upload-details');
-    expect(details).toBeInTheDocument();
+    const details = getByTestId('pat-upload-details');
+    expect(details).toBeTruthy();
 
-    await userEvent.click(details);
+    click(details);
     fixture.detectChanges();
 
-    expect(screen.getByText(/To upload your Performance Account Template \(PAT\) spreadsheets:/i)).toBeInTheDocument();
+    expect(getByText(/To upload your Performance Account Template \(PAT\) spreadsheets:/i)).toBeTruthy();
   });
 
   it('should render the processing component when processingStatus is IN_PROGRESS', () => {
@@ -89,7 +88,7 @@ describe('PatAccountTemplateUploadComponent', () => {
 
     fixture.detectChanges();
 
-    const banner = screen.getByTestId('upload-processing-banner');
-    expect(banner).toBeInTheDocument();
+    const banner = getByTestId('upload-processing-banner');
+    expect(banner).toBeTruthy();
   });
 });

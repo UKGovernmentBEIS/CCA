@@ -114,7 +114,54 @@ class UnderlyingAgreementSchemeServiceTest {
         assertThat(persistentEntity.getUnderlyingAgreementContainer().getUnderlyingAgreement().getFacilities()).hasSize(1);
         assertThat(persistentEntity.getUnderlyingAgreementContainer().getUnderlyingAgreement().getFacilities().iterator().next()
         		.getFacilityItem().getFacilityDetails().getParticipatingSchemeVersions()).isEqualTo(Set.of(schemeVersion, SchemeVersion.CCA_3));
-        verify(underlyingAgreementService).terminateUnderlyingAgreementDocument(unaDocument, terminatedDate);
+        verify(underlyingAgreementService, times(1)).terminateUnderlyingAgreementDocument(unaDocument, terminatedDate);
+        verify(underlyingAgreementService, times(1)).findUnderlyingAgreementEntity(accountId);
+    }
+	
+	@Test
+    void terminateUnaDocumentsForSchemeVersion() {
+        final long underlyingAgreementId = 1L;
+        final long accountId = 2L;
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_2;
+        final LocalDateTime terminatedDate = LocalDateTime.now();
+
+        UnderlyingAgreementDocument unaDocument = UnderlyingAgreementDocument.createUnderlyingAgreementDocument(schemeVersion);
+        UnderlyingAgreementDocument unaDocument2 = UnderlyingAgreementDocument.createUnderlyingAgreementDocument(SchemeVersion.CCA_3);
+        UnderlyingAgreementEntity persistentEntity = UnderlyingAgreementEntity.builder()
+        		.id(underlyingAgreementId)
+        		.accountId(accountId)
+        		.underlyingAgreementContainer(UnderlyingAgreementContainer.builder()
+        				.underlyingAgreement(
+        						UnderlyingAgreement.builder()
+        						.facilities(new HashSet<>(Arrays.asList(
+        								Facility.builder()
+        								.facilityItem(
+        										FacilityItem.builder()
+        										.facilityDetails(FacilityDetails.builder()
+        												.participatingSchemeVersions(Set.of(schemeVersion, SchemeVersion.CCA_3)).build())
+        										.build())
+        								.build(),Facility.builder()
+        								.facilityItem(
+        										FacilityItem.builder()
+                                                .facilityDetails(FacilityDetails.builder()
+                                                		.participatingSchemeVersions(Set.of(schemeVersion))
+                                                		.build())
+                                                .build())
+        								.build())))
+        						.build())
+        				.build())
+        		.build();
+
+        persistentEntity.addUnderlyingAgreementDocument(unaDocument);
+        persistentEntity.addUnderlyingAgreementDocument(unaDocument2);
+
+        when(underlyingAgreementService.findUnderlyingAgreementEntity(accountId)).thenReturn(persistentEntity);
+
+        // Invoke
+        underlyingAgreementSchemeService.terminateUnaForSchemeVersion(accountId, schemeVersion, terminatedDate);
+
+        // Verify
+        verify(underlyingAgreementService, times(1)).terminateUnderlyingAgreementDocument(unaDocument, terminatedDate);
         verify(underlyingAgreementService, times(1)).findUnderlyingAgreementEntity(accountId);
     }
 }

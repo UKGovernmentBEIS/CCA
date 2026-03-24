@@ -1,0 +1,22 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Non-compliance details"
+  heading="Will you be issuing an Enforcement Response Notice?"
+>
+  <div formControlName="isEnforcementResponseNoticeRequired" govuk-radio>
+    <govuk-radio-option [value]="true" label="Yes" />
+
+    <govuk-radio-option [value]="false" label="No">
+      <ng-container govukConditionalContent>
+        <div
+          formControlName="explanation"
+          govuk-textarea
+          label="Explain why you will not be issuing an Enforcement Response Notice"
+        ></div>
+      </ng-container>
+    </govuk-radio-option>
+  </div>
+</cca-wizard-step>
+
+<netz-return-to-task-or-action-page />

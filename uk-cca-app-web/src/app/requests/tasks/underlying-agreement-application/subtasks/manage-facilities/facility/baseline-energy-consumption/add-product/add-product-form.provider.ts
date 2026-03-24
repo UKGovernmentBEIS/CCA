@@ -58,7 +58,10 @@ export function createProductFormGroup(
   const baselineYearValue = value?.baselineYear != null ? Number(value.baselineYear) : null;
 
   const productGroup = fb.group({
-    productName: fb.control(value?.productName ?? null, [GovukValidators.required('Enter a product name')]),
+    productName: fb.control(value?.productName ?? null, [
+      GovukValidators.required('Enter a product name'),
+      GovukValidators.maxLength(255, 'Enter up to 255 characters'),
+    ]),
     baselineYear: fb.control(baselineYearValue, [GovukValidators.required('Select baseline year')]),
     baselineVariableEnergy: fb.control(normaliseNumber(value?.energy)?.toString(), [
       GovukValidators.required('Enter the baseline variable energy'),
@@ -69,7 +72,10 @@ export function createProductFormGroup(
       GovukValidators.maxDecimalsValidator(7),
       GovukValidators.positiveNumber('Enter a number greater than zero'),
     ]),
-    throughputUnit: fb.control(value?.throughputUnit ?? null, [GovukValidators.required('Enter the throughput unit')]),
+    throughputUnit: fb.control(value?.throughputUnit ?? null, [
+      GovukValidators.required('Enter the throughput unit'),
+      GovukValidators.maxLength(255, 'Enter up to 255 characters'),
+    ]),
     energyIntensity: fb.control({ value: value?.energyIntensity ?? null, disabled: true }),
   });
 

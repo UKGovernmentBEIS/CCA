@@ -1,5 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of } from 'rxjs';
@@ -7,53 +8,52 @@ import { of } from 'rxjs';
 import { RequestTaskStore } from '@netz/common/store';
 import { mockClass } from '@netz/common/testing';
 import { mockUNAReviewRequestTaskState } from '@requests/common';
-import { render } from '@testing-library/angular';
-import { screen } from '@testing-library/dom';
-import UserEvent from '@testing-library/user-event';
+import { click, getByText } from '@testing';
 
 import { UnderlyingAgreementVariationReviewPrecontentComponent } from './underlying-agreement-variation-review-precontent.component';
 
 describe('UnderlyingAgreementReviewPrecontentComponent', () => {
+  let fixture: ComponentFixture<UnderlyingAgreementVariationReviewPrecontentComponent>;
   let router: Router;
 
   const mockRoute = mockClass(ActivatedRoute);
   const mockRouter: jest.Mocked<Partial<Router>> = { navigate: jest.fn().mockReturnValue(of(null)) };
 
   beforeEach(async () => {
-    await render(UnderlyingAgreementVariationReviewPrecontentComponent, {
+    await TestBed.configureTestingModule({
+      imports: [UnderlyingAgreementVariationReviewPrecontentComponent],
       providers: [provideHttpClient(), provideHttpClientTesting(), RequestTaskStore, provideRouter([])],
-      configureTestBed: (testbed) => {
-        testbed.overrideProvider(Router, { useValue: mockRouter });
-        testbed.overrideProvider(ActivatedRoute, { useValue: mockRoute });
+    })
+      .overrideProvider(Router, { useValue: mockRouter })
+      .overrideProvider(ActivatedRoute, { useValue: mockRoute })
+      .compileComponents();
 
-        const store = testbed.inject(RequestTaskStore);
-        store.setState(mockUNAReviewRequestTaskState);
-        store.setState({ ...store.state, isEditable: true });
+    const store = TestBed.inject(RequestTaskStore);
+    store.setState(mockUNAReviewRequestTaskState);
+    store.setState({ ...store.state, isEditable: true });
 
-        router = testbed.inject(Router);
-      },
-    });
+    router = TestBed.inject(Router);
+    fixture = TestBed.createComponent(UnderlyingAgreementVariationReviewPrecontentComponent);
+    fixture.detectChanges();
   });
 
   it('should render notify button and navigate to correct url', async () => {
-    expect(screen.getByText('Notify operator of decision')).toBeVisible();
+    expect(getByText('Notify operator of decision')).toBeTruthy();
 
     const spy = jest.spyOn(router, 'navigate');
-    const user = UserEvent.setup();
 
-    await user.click(screen.getByText('Notify operator of decision'));
+    click(getByText('Notify operator of decision'));
     expect(spy).toHaveBeenCalledWith(['underlying-agreement-variation-review', 'notify-operator'], {
       relativeTo: mockRoute,
     });
   });
 
   it('should render peer review button and navigate to correct url', async () => {
-    expect(screen.getByText('Send for peer review')).toBeVisible();
+    expect(getByText('Send for peer review')).toBeTruthy();
 
     const spy = jest.spyOn(router, 'navigate');
-    const user = UserEvent.setup();
 
-    await user.click(screen.getByText('Send for peer review'));
+    click(getByText('Send for peer review'));
     expect(spy).toHaveBeenCalledWith(['underlying-agreement-variation-review', 'send-for-peer-review'], {
       relativeTo: mockRoute,
     });

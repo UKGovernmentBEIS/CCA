@@ -6,7 +6,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { TaskSection } from '@netz/common/model';
 import { TASK_STATUS_TAG_MAP, TaskStatusTagMap } from '@netz/common/pipes';
 import { RequestTaskStore } from '@netz/common/store';
-import { screen } from '@testing-library/angular';
+import { getByRole, getByText } from '@testing';
 
 import { REQUEST_TASK_PAGE_CONTENT } from '../../request-task.providers';
 import { RequestTaskPageContentFactory, RequestTaskPageContentFactoryMap } from '../../request-task.types';
@@ -109,7 +109,7 @@ describe('RequestTaskPageComponent', () => {
     });
 
     store = TestBed.inject(RequestTaskStore);
-    store.setRequestTaskItem({ requestTask: { type: 'TEST_TYPE' as any } });
+    store.setRequestTaskItem({ requestTask: { type: 'TEST_TYPE' } });
 
     harness = await RouterTestingHarness.create();
     component = await harness.navigateByUrl('/', RequestTaskPageComponent);
@@ -127,14 +127,14 @@ describe('RequestTaskPageComponent', () => {
 
   it('should show sections provided', async () => {
     await createModule(contentWithSections);
-    expect(screen.getByText('SECTION_A_TITLE')).toBeVisible();
+    expect(getByText('SECTION_A_TITLE')).toBeTruthy();
   });
 
   it('should show components provided', async () => {
     await createModule(contentWithComponent);
-    expect(screen.getByRole('heading', { name: 'Test content component' })).toBeVisible();
-    expect(screen.getByRole('heading', { name: 'Test pre content' })).toBeVisible();
-    expect(screen.getByRole('heading', { name: 'Test post content' })).toBeVisible();
+    expect(getByRole('heading', { name: 'Test content component' })).toBeTruthy();
+    expect(getByRole('heading', { name: 'Test pre content' })).toBeTruthy();
+    expect(getByRole('heading', { name: 'Test post content' })).toBeTruthy();
   });
 
   it('should show changed sections for same task type after navigation', async () => {
@@ -142,6 +142,6 @@ describe('RequestTaskPageComponent', () => {
     await harness.navigateByUrl('subtask', TestSubtaskComponent);
     dynamicSectionsFlag = false;
     await harness.navigateByUrl('', RequestTaskPageComponent);
-    expect(screen.getByText('SECTION_B_TITLE')).toBeVisible();
+    expect(getByText('SECTION_B_TITLE')).toBeTruthy();
   });
 });

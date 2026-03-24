@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/dom';
+import { getByText } from '@testing';
 
 import { mockReasonForAdminTerminationWithdrawPayload } from '../../../testing/mock-data';
 import ReasonForWithdrawAdminTerminationComponent from './reason-for-withdraw-admin-termination.component';
@@ -41,18 +41,18 @@ describe('ReasonForWithdrawAdminTerminationComponent', () => {
   });
 
   it('should display the correct header and caption', () => {
-    expect(screen.getByText('Withdraw admin termination')).toBeInTheDocument();
-    expect(screen.getByText('Reason for withdrawing the admin termination')).toBeInTheDocument();
+    expect(getByText('Withdraw admin termination', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Reason for withdrawing the admin termination', fixture.nativeElement)).toBeTruthy();
   });
 
   it('should contain submit button and "return to" link', () => {
-    expect(screen.getByText('Continue')).toBeInTheDocument();
-    expect(screen.getByText('Return to: Withdraw admin termination')).toBeInTheDocument();
+    expect(getByText('Continue', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Return to: Withdraw admin termination', fixture.nativeElement)).toBeTruthy();
   });
 
   it('should display the correct form fields', () => {
-    expect(screen.getByText('Explain why you are withdrawing the admin termination')).toBeInTheDocument();
-    expect(screen.getByText('Upload relevant files (optional)')).toBeInTheDocument();
-    expect(screen.getByText('Upload relevant documents to support your explanation.')).toBeInTheDocument();
+    expect(getByText('Explain why you are withdrawing the admin termination', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Upload relevant files (optional)', fixture.nativeElement)).toBeTruthy();
+    expect(getByText('Upload relevant documents to support your explanation.', fixture.nativeElement)).toBeTruthy();
   });
 });

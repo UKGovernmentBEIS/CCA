@@ -27,6 +27,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.core.domain.constants.CcaRequestStatuses;
 import uk.gov.cca.api.workflow.request.flow.cca2termination.common.domain.Cca2TerminationAccountState;
 import uk.gov.cca.api.workflow.request.flow.cca2termination.common.domain.Cca2TerminationRunRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestTaskPayload;
@@ -57,7 +58,7 @@ class Cca2TerminationRunRequestServiceTest {
     @Mock
     private WorkflowService workflowService;
     
-    private static final String TERMINATE_REASON = "Workflow terminated by the CCA2 end date workflow, because it contains CCA2-only facilities.";
+    private static final String TERMINATE_REASON = "Workflow terminated by the CCA2 end date workflow.";
 	
     @Test
     void terminateVariationRequests() {
@@ -144,6 +145,40 @@ class Cca2TerminationRunRequestServiceTest {
 		
 		verify(workflowService, times(1)).deleteProcessInstance("processInstanceId1", TERMINATE_REASON);
 		verify(workflowService, times(1)).deleteProcessInstance("processInstanceId3", TERMINATE_REASON);
+    }
+    
+    @Test
+    void terminateCca3MigrationAccountProcessingRequests() {
+    	String requestId1 = "1";
+    	String requestId2 = "2";
+		final Request requestCompleted = Request.builder()
+				.id(requestId1)
+				.processInstanceId("processInstanceId1")
+				.type(RequestType.builder().code(CcaRequestType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING).build())
+				.status(RequestStatuses.COMPLETED)
+				.payload(Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload.builder().build())
+				.build();
+		addCaResourceToRequest(requestCompleted);
+		
+		final Request requestInProgress = Request.builder()
+				.id(requestId2)
+				.processInstanceId("processInstanceId2")
+				.type(RequestType.builder().code(CcaRequestType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING).build())
+				.status(RequestStatuses.IN_PROGRESS)
+				.payload(Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload.builder().build())
+				.build();
+		addCaResourceToRequest(requestInProgress);
+		
+		when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
+				CcaRequestType.CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING, ResourceType.CA, CompetentAuthorityEnum.ENGLAND.name()))
+				.thenReturn(List.of(requestCompleted, requestInProgress));
+		
+		cca2TerminationRunRequestService.terminateCca3MigrationAccountProcessingRequests();
+		
+		verify(requestService, never()).addActionToRequest(requestCompleted, null, CcaRequestActionType.REQUEST_TERMINATED, null);
+		verify(requestService, times(1)).addActionToRequest(requestInProgress, null, CcaRequestActionType.REQUEST_TERMINATED, null);
+		
+		verify(workflowService, times(1)).deleteProcessInstance("processInstanceId2", TERMINATE_REASON);
     }
     
     @Test

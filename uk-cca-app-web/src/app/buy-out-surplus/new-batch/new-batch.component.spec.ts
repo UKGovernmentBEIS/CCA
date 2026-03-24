@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { screen } from '@testing-library/angular';
+import { getByText } from '@testing';
 
 import { BuyOutAndSurplusInfoService } from 'cca-api';
 
@@ -47,23 +47,23 @@ describe('NewBatchComponent', () => {
   });
 
   it('should contain appropirate content', () => {
-    expect(screen.getByText('New buy-out and surplus batch')).toBeInTheDocument();
+    expect(getByText('New buy-out and surplus batch')).toBeTruthy();
 
-    expect(screen.getByText('Target units on hold')).toBeInTheDocument();
+    expect(getByText('Target units on hold')).toBeTruthy();
 
     expect(
-      screen.getByText(
+      getByText(
         'Target units below will not be included in this batch. In case you want to change their status, you can do so from the respective target unit account page on the "Buy-out and surplus" tab.',
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
 
     expect(
-      screen.getByText(
+      getByText(
         'This list represents a current snapshot. Any immediate changes to the "On Hold" status before you click the "Send buy-out and surplus batch button" will not be automatically reflected in this list, but they will take effect during the batch processing.',
       ),
-    ).toBeInTheDocument();
+    ).toBeTruthy();
 
-    expect(screen.getByText('Send buy-out and surplus batch')).toBeInTheDocument();
+    expect(getByText('Send buy-out and surplus batch')).toBeTruthy();
   });
 
   it('should populate with correct data', () => {

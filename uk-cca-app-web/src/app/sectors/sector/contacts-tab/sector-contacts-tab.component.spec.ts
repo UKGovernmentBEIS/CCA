@@ -5,11 +5,33 @@ import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 
-import { SectorAssociationAuthoritiesService } from 'cca-api';
-
-import { mockUserAuthorities } from 'src/app/regulators/testing/mock-data';
+import { SectorAssociationAuthoritiesService, SectorUsersAuthoritiesInfoDTO } from 'cca-api';
 
 import { SectorContactsTabComponent } from './sector-contacts-tab.component';
+
+const mockUserAuthorities: SectorUsersAuthoritiesInfoDTO = {
+  editable: true,
+  authorities: [
+    {
+      firstName: 'fn 1',
+      lastName: 'ln 1',
+      roleCode: 'sector_user_administrator',
+      roleName: 'Administrator User',
+      contactType: 'contact type 1',
+      status: 'ACTIVE',
+      userId: '1',
+    },
+    {
+      firstName: 'fn 2',
+      lastName: 'ln 2',
+      roleCode: 'sector_user_basic_user',
+      roleName: 'Basic User',
+      contactType: 'contact type 2',
+      status: 'ACTIVE',
+      userId: '2',
+    },
+  ],
+};
 
 describe('SectorContactsTabComponent', () => {
   let component: SectorContactsTabComponent;
@@ -43,7 +65,7 @@ describe('SectorContactsTabComponent', () => {
   });
 
   it('should render authorities form', () => {
-    expect(document.getElementById('authorities-form')).toBeInTheDocument();
+    expect(document.getElementById('authorities-form')).toBeTruthy();
   });
 
   it("should have as many rows as users' authorities", async () => {
@@ -80,7 +102,7 @@ describe('SectorContactsTabComponent non editable', () => {
   });
 
   it('should render authorities form', () => {
-    expect(document.getElementById('authorities-form')).toBeInTheDocument();
+    expect(document.getElementById('authorities-form')).toBeTruthy();
   });
 
   it('should not allow user to change status or user type', async () => {

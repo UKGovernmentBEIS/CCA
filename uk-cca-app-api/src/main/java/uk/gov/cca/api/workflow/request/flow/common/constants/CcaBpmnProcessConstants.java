@@ -98,4 +98,7 @@ public class CcaBpmnProcessConstants {
     public static final String IS_NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_NEEDED = "isNonComplianceEnforcementResponseNoticeNeeded";
     public static final String IS_NON_COMPLIANCE_PENALTY_NOTICE_NEEDED = "isNonCompliancePenaltyNoticeNeeded";
     public static final String IS_NON_COMPLIANCE_REISSUE_PENALTY_NEEDED = "isNonComplianceReissuePenaltyNeeded";
+
+    // Performance Data Facility Digital Form
+    public static final String PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_OUTCOME = "performanceDataFacilityDigitalFormOutcome";
 }
