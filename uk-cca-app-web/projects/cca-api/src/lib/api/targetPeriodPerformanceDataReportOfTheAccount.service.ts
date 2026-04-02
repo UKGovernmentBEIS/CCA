@@ -94,12 +94,12 @@ export class TargetPeriodPerformanceDataReportOfTheAccountService {
    */
   public generateGetAccountPerformanceDataReportAttachmentToken(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     fileAttachmentUuid: string,
   ): Observable<FileToken>;
   public generateGetAccountPerformanceDataReportAttachmentToken(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     fileAttachmentUuid: string,
     observe: 'response',
     reportProgress?: boolean,
@@ -107,7 +107,7 @@ export class TargetPeriodPerformanceDataReportOfTheAccountService {
   ): Observable<HttpResponse<FileToken>>;
   public generateGetAccountPerformanceDataReportAttachmentToken(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     fileAttachmentUuid: string,
     observe: 'events',
     reportProgress?: boolean,
@@ -115,7 +115,7 @@ export class TargetPeriodPerformanceDataReportOfTheAccountService {
   ): Observable<HttpEvent<FileToken>>;
   public generateGetAccountPerformanceDataReportAttachmentToken(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     fileAttachmentUuid: string,
     observe: 'body',
     reportProgress?: boolean,
@@ -123,7 +123,7 @@ export class TargetPeriodPerformanceDataReportOfTheAccountService {
   ): Observable<FileToken>;
   public generateGetAccountPerformanceDataReportAttachmentToken(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     fileAttachmentUuid: string,
     observe: any = 'body',
     reportProgress = false,
@@ -198,32 +198,32 @@ export class TargetPeriodPerformanceDataReportOfTheAccountService {
    */
   public getAccountPerformanceDataReportDetails(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
   ): Observable<AccountPerformanceDataReportDetailsDTO>;
   public getAccountPerformanceDataReportDetails(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<AccountPerformanceDataReportDetailsDTO>>;
   public getAccountPerformanceDataReportDetails(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<AccountPerformanceDataReportDetailsDTO>>;
   public getAccountPerformanceDataReportDetails(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<AccountPerformanceDataReportDetailsDTO>;
   public getAccountPerformanceDataReportDetails(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: any = 'body',
     reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
@@ -289,32 +289,32 @@ export class TargetPeriodPerformanceDataReportOfTheAccountService {
    */
   public getAccountPerformanceDataStatus(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
   ): Observable<AccountPerformanceDataStatusInfoDTO>;
   public getAccountPerformanceDataStatus(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<AccountPerformanceDataStatusInfoDTO>>;
   public getAccountPerformanceDataStatus(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<AccountPerformanceDataStatusInfoDTO>>;
   public getAccountPerformanceDataStatus(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<AccountPerformanceDataStatusInfoDTO>;
   public getAccountPerformanceDataStatus(
     accountId: number,
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: any = 'body',
     reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },

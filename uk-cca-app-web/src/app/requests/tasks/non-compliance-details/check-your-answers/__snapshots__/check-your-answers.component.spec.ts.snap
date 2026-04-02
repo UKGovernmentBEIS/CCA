@@ -50,7 +50,7 @@ exports[`CheckYourAnswersComponent should display snapshot 1`] = `
           govuksummarylistrowvalue=""
         >
           <span>
-            Failure to provide target period report
+            failure to provide the Target Period Report or Interim Target Period Report
           </span>
         </dd>
         <dd

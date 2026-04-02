@@ -18,7 +18,7 @@ export interface PerformanceAccountTemplateProcessingRequestMetadata {
   sectorUserAssignee?: string;
   accountId?: number;
   accountBusinessId?: string;
-  targetPeriodType?: 'TP5' | 'TP6';
+  targetPeriodType?: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   targetPeriodYear?: number;
   reportVersion?: number;
 }

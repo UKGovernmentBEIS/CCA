@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
+import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.ApplicationReasonType;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
@@ -62,7 +63,9 @@ class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider
                         .build())
                 .build();
         final int version = 1;
-        final Map<SchemeVersion, Integer> consolidationNumberMap = Map.of(SchemeVersion.CCA_2, version, SchemeVersion.CCA_3, version);
+        final Map<SchemeVersion, Integer> consolidationNumberMap = new HashMap<>(
+        		Map.of(SchemeVersion.CCA_2, version, SchemeVersion.CCA_3, version)
+        		);
         final FacilityItem facilityItem1 = FacilityItem.builder()
                 .facilityDetails(FacilityDetails.builder()
                         .previousFacilityId("Prv1")
@@ -82,8 +85,10 @@ class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider
                         .build())
                 .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                         .underlyingAgreementTargetUnitDetails(targetUnitDetails)
-                        .underlyingAgreement(UnderlyingAgreement.builder().facilities(Set.of(facility)).build())
                         .build())
+                .originalUnderlyingAgreementContainer(UnderlyingAgreementContainer.builder()
+                		.underlyingAgreement(UnderlyingAgreement.builder().facilities(Set.of(facility)).build())
+                		.build() )
                 .underlyingAgreementVersionMap(consolidationNumberMap)
                 .build();
 
@@ -92,7 +97,7 @@ class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider
         when(documentTemplateTransformationMapper.constructVersionMap(Map.of(SchemeVersion.CCA_3, version)))
                 .thenReturn(Map.of("CCA3", "1"));
         when(underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(Set.of(facility)))
-        		.thenReturn(Set.of(SchemeVersion.CCA_3));
+				.thenReturn(Set.of(SchemeVersion.CCA_3));
 
         // Invoke
         Map<String, Object> actual = paramsProvider.constructParams(requestPayload);
@@ -107,7 +112,6 @@ class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsProvider
                 .constructTargetUnitDetailsTemplateParams(targetUnitDetails);
         verify(documentTemplateTransformationMapper, times(1))
                 .constructVersionMap(Map.of(SchemeVersion.CCA_3, version));
-        verify(underlyingAgreementSchemeVersionsHelperService, times(1))
-        		.calculateSchemeVersionsFromActiveFacilities(Set.of(facility));
+        verify(underlyingAgreementSchemeVersionsHelperService, times(1)).calculateSchemeVersionsFromActiveFacilities(Set.of(facility));
     }
 }

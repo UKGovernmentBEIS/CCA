@@ -18,7 +18,9 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerRevi
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceClosedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaGeneratedRequestActionPayload;
@@ -109,7 +111,9 @@ public class RequestActionPayloadTypesProvider implements JsonSubTypesProvider {
                 new NamedType(Cca2TerminationAccountProcessingSubmittedRequestActionPayload.class, CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_PAYLOAD),
 
                 // Non Compliance
-                new NamedType(NonComplianceDetailsSubmittedRequestActionPayload.class, NON_COMPLIANCE_DETAILS_SUBMITTED_PAYLOAD)
+                new NamedType(NonComplianceDetailsSubmittedRequestActionPayload.class, NON_COMPLIANCE_DETAILS_SUBMITTED_PAYLOAD),
+                new NamedType(NonComplianceClosedRequestActionPayload.class, NON_COMPLIANCE_CLOSED_PAYLOAD),
+                new NamedType(NonComplianceNoticeOfIntentSubmittedRequestActionPayload.class, NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED_PAYLOAD)
         );
     }
 

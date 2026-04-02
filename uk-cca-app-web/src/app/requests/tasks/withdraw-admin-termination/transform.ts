@@ -26,7 +26,7 @@ export function createNotifyOperatorActionDTO(
     requestTaskId,
     requestTaskActionType: 'ADMIN_TERMINATION_WITHDRAW_NOTIFY_OPERATOR_FOR_DECISION',
     requestTaskActionPayload: {
-      payloadType: 'NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD',
+      payloadType: 'CCA_NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD',
       decisionNotification,
     },
   };

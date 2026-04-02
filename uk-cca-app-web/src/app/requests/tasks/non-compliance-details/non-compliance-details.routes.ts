@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { nonComplianceDetailsRedirectGuard } from './non-compliance-details.guard';
+import { nonComplianceDetailsEditableGuard, nonComplianceDetailsRedirectGuard } from './non-compliance-details.guard';
 
 export const NON_COMPLIANCE_DETAILS_ROUTES: Routes = [
   {
@@ -15,6 +15,7 @@ export const NON_COMPLIANCE_DETAILS_ROUTES: Routes = [
       {
         path: 'provide-details',
         title: 'Enter details of non-compliance',
+        canActivate: [nonComplianceDetailsEditableGuard],
         data: { backlink: '../../', breadcrumb: false },
         loadComponent: () =>
           import('./provide-details/provide-details.component').then((c) => c.ProvideDetailsComponent),
@@ -22,6 +23,7 @@ export const NON_COMPLIANCE_DETAILS_ROUTES: Routes = [
       {
         path: 'choose-relevant-workflows',
         title: 'Choose relevant workflows (optional)',
+        canActivate: [nonComplianceDetailsEditableGuard],
         data: { backlink: '../provide-details', breadcrumb: false },
         loadComponent: () =>
           import('./choose-relevant-workflows/choose-relevant-workflows.component').then(
@@ -31,6 +33,7 @@ export const NON_COMPLIANCE_DETAILS_ROUTES: Routes = [
       {
         path: 'choose-relevant-facilities',
         title: 'Choose relevant facilities (optional)',
+        canActivate: [nonComplianceDetailsEditableGuard],
         data: { backlink: '../choose-relevant-workflows', breadcrumb: false },
         loadComponent: () =>
           import('./choose-relevant-facilities/choose-relevant-facilities.component').then(
@@ -40,6 +43,7 @@ export const NON_COMPLIANCE_DETAILS_ROUTES: Routes = [
       {
         path: 'issue-enforcement',
         title: 'Will you be issuing an Enforcement Response Notice?',
+        canActivate: [nonComplianceDetailsEditableGuard],
         data: { backlink: '../choose-relevant-facilities', breadcrumb: false },
         loadComponent: () =>
           import('./issue-enforcement/issue-enforcement.component').then((c) => c.IssueEnforcementComponent),

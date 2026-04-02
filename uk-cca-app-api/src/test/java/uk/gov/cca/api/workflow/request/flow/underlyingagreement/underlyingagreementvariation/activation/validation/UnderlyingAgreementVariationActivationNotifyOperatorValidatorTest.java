@@ -10,7 +10,7 @@ import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaNotifyOperatorForDecisionRequestTaskActionPayload;
-import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.DecisionNotificationValidator;
+import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.CcaDecisionNotificationValidator;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivationRequestTaskPayload;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
@@ -35,7 +35,7 @@ class UnderlyingAgreementVariationActivationNotifyOperatorValidatorTest {
     private UnderlyingAgreementVariationActivationSubmitValidator underlyingAgreementActivationSubmitValidator;
 
     @Mock
-    private DecisionNotificationValidator decisionNotificationValidator;
+    private CcaDecisionNotificationValidator decisionNotificationValidator;
 
     @Test
     void validate() {

@@ -31,6 +31,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationSaveReviewRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSaveRequestTaskActionPayload;
 import uk.gov.netz.api.swagger.SwaggerSchemasAbstractProvider;
+import uk.gov.netz.api.workflow.request.flow.common.domain.NotifyOperatorForDecisionRequestTaskActionPayload;
 import uk.gov.netz.api.workflow.request.flow.common.domain.PeerReviewRequestTaskActionPayload;
 import uk.gov.netz.api.workflow.request.flow.common.domain.RequestTaskActionEmptyPayload;
 import uk.gov.netz.api.workflow.request.flow.payment.domain.PaymentCancelRequestTaskActionPayload;
@@ -60,6 +61,7 @@ public class RequestTaskActionPayloadSchemasProvider extends SwaggerSchemasAbstr
         addResolvedShemas(RequestTaskActionEmptyPayload.class.getSimpleName(), RequestTaskActionEmptyPayload.class);
 
         addResolvedShemas(CcaNotifyOperatorForDecisionRequestTaskActionPayload.class.getSimpleName(), CcaNotifyOperatorForDecisionRequestTaskActionPayload.class);
+        addResolvedShemas(NotifyOperatorForDecisionRequestTaskActionPayload.class.getSimpleName(), NotifyOperatorForDecisionRequestTaskActionPayload.class);
 
         addResolvedShemas(PeerReviewRequestTaskActionPayload.class.getSimpleName(), PeerReviewRequestTaskActionPayload.class);
         addResolvedShemas(CcaPeerReviewDecisionRequestTaskActionPayload.class.getSimpleName(), CcaPeerReviewDecisionRequestTaskActionPayload.class);

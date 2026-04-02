@@ -14,7 +14,7 @@ import { PerformanceAccountTemplateDataContainer } from './performanceAccountTem
 export interface PerformanceAccountTemplateProcessingSubmittedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
-  targetPeriodType?: 'TP5' | 'TP6';
+  targetPeriodType?: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   targetPeriodYear?: number;
   data?: PerformanceAccountTemplateDataContainer;
 }

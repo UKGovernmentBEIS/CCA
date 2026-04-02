@@ -12,6 +12,6 @@
 
 export interface PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload {
   payloadType?: string;
-  targetPeriodType: 'TP5' | 'TP6';
+  targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   reportPackages: string[];
 }

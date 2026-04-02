@@ -35,7 +35,7 @@ export function createNotifyOperatorActionDTO(
     requestTaskActionType:
       'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_NOTIFY_OPERATOR_FOR_DECISION',
     requestTaskActionPayload: {
-      payloadType: 'NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD',
+      payloadType: 'CCA_NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD',
       decisionNotification,
     },
   };

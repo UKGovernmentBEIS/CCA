@@ -11,7 +11,6 @@ import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementV
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_FOR_CURRENT_SCHEME;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_ON_OWNERSHIP_CHANGE;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_TARGETS;
-import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_PREVIOUS_FACILITY_ID;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_TARGET_UNIT_TYPE;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_UNIQUE_PRODUCT_NAME;
 
@@ -222,50 +221,6 @@ class UnderlyingAgreementFacilityValidatorServiceTest {
 
         // Verify
         assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(INVALID_FACILITY_ID.getMessage());
-        verify(facilityDataQueryService, times(1))
-                .getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds);
-        verifyNoMoreInteractions(facilityDataQueryService);
-    }
-
-    @Test
-    void validate_previous_facility_not_active_not_valid() {
-        final SchemeVersion currentSchemeVersion = SchemeVersion.CCA_3;
-        final UUID evidenceFile = UUID.randomUUID();
-        final UUID calculatorFile = UUID.randomUUID();
-        final String previousFacilityId = "previousFacilityId";
-        final Facility facility = createFacility(FacilityStatus.NEW, evidenceFile, calculatorFile, Set.of(SchemeVersion.CCA_3));
-        facility.getFacilityItem().getFacilityDetails().setApplicationReason(ApplicationReasonType.CHANGE_OF_OWNERSHIP);
-        facility.getFacilityItem().getFacilityDetails().setPreviousFacilityId(previousFacilityId);
-        final UnderlyingAgreementValidationContext underlyingAgreementValidationContext = UnderlyingAgreementValidationContext.builder()
-                .schemeVersion(currentSchemeVersion)
-                .requestCreationDate(LocalDateTime.of(2025, 1, 1, 0, 0))
-                .build();
-
-        final UnderlyingAgreementContainer container = UnderlyingAgreementContainer.builder()
-                .schemeDataMap(Map.of(SchemeVersion.CCA_3, SchemeData.builder().sectorMeasurementType(MeasurementType.ENERGY_KWH).build()))
-                .underlyingAgreement(UnderlyingAgreement.builder()
-                        .facilities(Set.of(facility))
-                        .build())
-                .build();
-        List<UnderlyingAgreementViolation> violations = new ArrayList<>();
-        
-        Set<String> facilityBusinessIds = getFacilityAndPreviousFacilityBusinessIds(facility);
-        Map<String, FacilityValidationContext> facilityValidationContextMap = new HashMap<>();
-		facilityValidationContextMap.put(facility.getFacilityItem().getFacilityDetails().getPreviousFacilityId(),
-				FacilityValidationContext.builder()
-						.facilityBusinessId(facility.getFacilityItem().getFacilityDetails().getPreviousFacilityId())
-						.closedDate(LocalDate.of(2022, 01, 01))
-						.participatingSchemeVersions(Set.of(SchemeVersion.CCA_3))
-						.build());
-
-        when(facilityDataQueryService.getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds)).thenReturn(facilityValidationContextMap);
-        when(underlyingAgreementConfig.getSchemeParticipationFlagCutOffDate()).thenReturn(LocalDate.now().minusDays(1));
-
-        // Invoke
-        validatorService.validate(facility, container, underlyingAgreementValidationContext, violations);
-
-        // Verify
-        assertThat(violations).extracting(UnderlyingAgreementViolation::getMessage).containsExactly(INVALID_PREVIOUS_FACILITY_ID.getMessage());
         verify(facilityDataQueryService, times(1))
                 .getFacilityValidationContextByFacilityBusinessIds(facilityBusinessIds);
         verifyNoMoreInteractions(facilityDataQueryService);

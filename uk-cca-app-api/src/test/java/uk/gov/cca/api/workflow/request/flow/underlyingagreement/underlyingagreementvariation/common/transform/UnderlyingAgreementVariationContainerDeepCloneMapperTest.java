@@ -114,6 +114,12 @@ class UnderlyingAgreementVariationContainerDeepCloneMapperTest {
                                 .build())
                         .build())
                 .build();
+        Facility excludedFacility5 = Facility.builder()
+                .status(FacilityStatus.EXCLUDED)
+                .facilityItem(FacilityItem.builder()
+                        .facilityId("id5")
+                        .build())
+                .build();
         UnderlyingAgreement proposedUna = UnderlyingAgreement.builder()
                 .targetPeriod5Details(TargetPeriod5Details.builder().exist(false).build())
                 .targetPeriod6Details(TargetPeriod6Details.builder()
@@ -136,6 +142,7 @@ class UnderlyingAgreementVariationContainerDeepCloneMapperTest {
         UnderlyingAgreementVariationRequestPayload payload = UnderlyingAgreementVariationRequestPayload.builder()
                 .originalUnderlyingAgreementContainer(UnderlyingAgreementContainer.builder()
                         .underlyingAgreement(originalUna)
+                        .excludedFacilities(Set.of(excludedFacility5))
                         .build())
                 .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                         .underlyingAgreement(proposedUna)
@@ -158,5 +165,7 @@ class UnderlyingAgreementVariationContainerDeepCloneMapperTest {
                 .isEqualTo(proposedUna.getTargetPeriod6Details());
         assertThat(unaContainer.getUnderlyingAgreement().getFacilities())
                 .containsExactlyInAnyOrder(facility1, facility2, updatedFacility4);
+        assertThat(unaContainer.getExcludedFacilities())
+                .containsExactlyInAnyOrder(excludedFacility5, updatedFacility3);
     }
 }

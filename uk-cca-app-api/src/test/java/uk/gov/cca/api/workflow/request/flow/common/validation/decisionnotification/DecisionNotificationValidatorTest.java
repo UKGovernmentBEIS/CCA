@@ -6,13 +6,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
-import uk.gov.cca.api.common.validation.BusinessViolation;
 import uk.gov.cca.api.common.validation.DataValidator;
-import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.flow.common.domain.DecisionNotification;
+import uk.gov.netz.api.workflow.request.flow.common.validation.DecisionNotificationUsersValidator;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,50 +27,52 @@ class DecisionNotificationValidatorTest {
     private DecisionNotificationValidator decisionNotificationValidator;
 
     @Mock
-    private DataValidator<CcaDecisionNotification> ccaDecisionNotificationDataValidator;
+    private DataValidator<DecisionNotification> decisionNotificationDataValidator;
 
     @Mock
-    private CcaDecisionNotificationUsersValidator ccaDecisionNotificationUsersValidator;
+    private DecisionNotificationUsersValidator decisionNotificationUsersValidator;
 
     @Test
-    void validateDecisionNotification() {
+    void validate_valid() {
         final AppUser appUser = AppUser.builder().userId("userId").build();
         final RequestTask requestTask = RequestTask.builder().id(1L).build();
-        final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
-                .sectorUsers(Set.of("sector1", "sector2"))
+        final DecisionNotification decisionNotification = DecisionNotification.builder()
+                .operators(Set.of("operator1"))
+                .externalContacts(Set.of(1L))
+                .signatory("99afc062-5760-4a6f-b1f7-a07d02019882")
                 .build();
 
-        when(ccaDecisionNotificationDataValidator.validate(decisionNotification)).thenReturn(Optional.empty());
-        when(ccaDecisionNotificationUsersValidator.validate(requestTask, decisionNotification, appUser))
-                .thenReturn(List.of());
+        when(decisionNotificationDataValidator.validate(decisionNotification)).thenReturn(Optional.empty());
+        when(decisionNotificationUsersValidator.areUsersValid(requestTask, decisionNotification, appUser)).thenReturn(true);
 
-        BusinessValidationResult result = decisionNotificationValidator
-                .validateDecisionNotification(requestTask, decisionNotification, appUser);
+        // invoke
+        BusinessValidationResult result = decisionNotificationValidator.validate(requestTask, decisionNotification, appUser);
 
+        // verify
         assertThat(result.isValid()).isTrue();
-        verify(ccaDecisionNotificationDataValidator, times(1)).validate(decisionNotification);
-        verify(ccaDecisionNotificationUsersValidator, times(1))
-                .validate(requestTask, decisionNotification, appUser);
+        verify(decisionNotificationDataValidator, times(1)).validate(decisionNotification);
+        verify(decisionNotificationUsersValidator, times(1)).areUsersValid(requestTask, decisionNotification, appUser);
     }
 
     @Test
-    void validateDecisionNotification_not_valid() {
+    void validate_not_valid() {
         final AppUser appUser = AppUser.builder().userId("userId").build();
         final RequestTask requestTask = RequestTask.builder().id(1L).build();
-        final CcaDecisionNotification decisionNotification = CcaDecisionNotification.builder()
-                .sectorUsers(Set.of("sector1", "sector2"))
+        final DecisionNotification decisionNotification = DecisionNotification.builder()
+                .operators(Set.of("operator1"))
+                .externalContacts(Set.of(1L))
+                .signatory("99afc062-5760-4a6f-b1f7-a07d02019882")
                 .build();
 
-        when(ccaDecisionNotificationDataValidator.validate(decisionNotification)).thenReturn(Optional.of(new BusinessViolation()));
-        when(ccaDecisionNotificationUsersValidator.validate(requestTask, decisionNotification, appUser))
-                .thenReturn(List.of(new BusinessViolation("", Set.of("sector1"))));
+        when(decisionNotificationDataValidator.validate(decisionNotification)).thenReturn(Optional.empty());
+        when(decisionNotificationUsersValidator.areUsersValid(requestTask, decisionNotification, appUser)).thenReturn(false);
 
-        BusinessValidationResult result = decisionNotificationValidator
-                .validateDecisionNotification(requestTask, decisionNotification, appUser);
+        // invoke
+        BusinessValidationResult result = decisionNotificationValidator.validate(requestTask, decisionNotification, appUser);
 
+        // verify
         assertThat(result.isValid()).isFalse();
-        verify(ccaDecisionNotificationDataValidator, times(1)).validate(decisionNotification);
-        verify(ccaDecisionNotificationUsersValidator, times(1))
-                .validate(requestTask, decisionNotification, appUser);
+        verify(decisionNotificationDataValidator, times(1)).validate(decisionNotification);
+        verify(decisionNotificationUsersValidator, times(1)).areUsersValid(requestTask, decisionNotification, appUser);
     }
 }

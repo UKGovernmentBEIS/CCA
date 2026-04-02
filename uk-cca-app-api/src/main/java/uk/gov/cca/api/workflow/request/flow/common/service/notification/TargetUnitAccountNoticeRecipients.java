@@ -26,6 +26,16 @@ public class TargetUnitAccountNoticeRecipients {
     private static final TargetUnitDetailsMapper TARGET_UNIT_DETAILS_MAPPER = Mappers.getMapper(TargetUnitDetailsMapper.class);
 
     public List<NoticeRecipientDTO> getNoticeRecipients(final Long accountId) {
+        List<NoticeRecipientDTO> defaultNoticeRecipients = this.getAccountNoticeRecipients(accountId);
+
+        SectorAssociationContactDTO sectorContact = accountReferenceDetailsService
+                .getSectorAssociationContactByAccountId(accountId);
+        defaultNoticeRecipients.add(TARGET_UNIT_DETAILS_MAPPER.toSectorAssociationNoticeRecipientDTO(sectorContact));
+
+        return defaultNoticeRecipients;
+    }
+
+    public List<NoticeRecipientDTO> getAccountNoticeRecipients(final Long accountId) {
         List<NoticeRecipientDTO> defaultNoticeRecipients = new ArrayList<>();
 
         TargetUnitAccountDetailsDTO accountDetails = accountReferenceDetailsService
@@ -37,15 +47,21 @@ public class TargetUnitAccountNoticeRecipients {
         TargetUnitAccountContactDTO administrative = accountDetails.getAdministrativeContactDetails();
         defaultNoticeRecipients.add(TARGET_UNIT_DETAILS_MAPPER.toNoticeRecipientDTO(administrative, ADMINISTRATIVE_CONTACT));
 
-        SectorAssociationContactDTO sectorContact = accountReferenceDetailsService
-                .getSectorAssociationContactByAccountId(accountId);
-        defaultNoticeRecipients.add(TARGET_UNIT_DETAILS_MAPPER.toSectorAssociationNoticeRecipientDTO(sectorContact));
-
         return defaultNoticeRecipients;
     }
 
     public List<DefaultNoticeRecipient> getDefaultNoticeRecipients(final Long accountId) {
         return this.getNoticeRecipients(accountId).stream().map(recipient ->
+                DefaultNoticeRecipient.builder()
+                        .name(recipient.getFirstName() + " " + recipient.getLastName())
+                        .email(recipient.getEmail())
+                        .recipientType(recipient.getType())
+                        .build()
+        ).collect(Collectors.toList());
+    }
+
+    public List<DefaultNoticeRecipient> getDefaultAccountNoticeRecipients(final Long accountId) {
+        return this.getAccountNoticeRecipients(accountId).stream().map(recipient ->
                 DefaultNoticeRecipient.builder()
                         .name(recipient.getFirstName() + " " + recipient.getLastName())
                         .email(recipient.getEmail())

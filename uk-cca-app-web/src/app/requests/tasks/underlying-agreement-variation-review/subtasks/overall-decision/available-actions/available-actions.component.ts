@@ -53,8 +53,12 @@ export class AvailableActionsComponent {
     const updatedDetermination = produce(
       this.requestTaskStore.select(underlyingAgreementReviewQuery.selectDetermination)(),
       (draft) => {
-        draft.type = type;
-        draft.reason = null;
+        if (draft.type !== type) {
+          draft.type = type;
+          draft.reason = null;
+          draft.additionalInformation = null;
+          draft.files = [];
+        }
       },
     );
 

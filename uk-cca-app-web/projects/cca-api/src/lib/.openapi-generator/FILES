@@ -249,6 +249,8 @@ model/miReportUserDefinedInfoDTO.ts
 model/miReportUserDefinedResult.ts
 model/miReportUserDefinedResults.ts
 model/moaReport.ts
+model/nonComplianceCloseJustification.ts
+model/nonComplianceClosedRequestActionPayload.ts
 model/nonComplianceDetails.ts
 model/nonComplianceDetailsSubmitRequestTaskPayload.ts
 model/nonComplianceDetailsSubmitSaveRequestTaskActionPayload.ts
@@ -263,6 +265,7 @@ model/notificationTemplateInfoDTO.ts
 model/notificationTemplateSearchResults.ts
 model/notificationTemplateUpdateDTO.ts
 model/notificationTemplateViewDTO.ts
+model/notifyOperatorForDecisionRequestTaskActionPayload.ts
 model/oneTimePasswordDTO.ts
 model/operatorAuthoritiesInfoDTO.ts
 model/operatorAuthorityInfoDTO.ts
@@ -287,6 +290,8 @@ model/performanceAccountTemplateProcessingSubmittedRequestActionPayload.ts
 model/performanceData.ts
 model/performanceDataCalculatedMetrics.ts
 model/performanceDataDownloadSubmitRequestTaskPayload.ts
+model/performanceDataFacilityDigitalFormRequestCreateActionPayload.ts
+model/performanceDataFacilityDigitalFormRequestMetadata.ts
 model/performanceDataGenerateRequestTaskActionPayload.ts
 model/performanceDataSpreadsheetProcessingRequestMetadata.ts
 model/performanceDataSpreadsheetProcessingSubmittedRequestActionPayload.ts
@@ -430,8 +435,8 @@ model/targetCommitmentDTO.ts
 model/targetComposition.ts
 model/targetPeriod5Details.ts
 model/targetPeriod6Details.ts
-model/targetPeriodDTO.ts
 model/targetPeriodPerformanceResult.ts
+model/targetPeriodYearDTO.ts
 model/targetSetDTO.ts
 model/targetUnitAccountBusinessInfoDTO.ts
 model/targetUnitAccountContactDTO.ts

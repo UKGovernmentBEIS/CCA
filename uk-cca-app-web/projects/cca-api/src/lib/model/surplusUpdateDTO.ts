@@ -14,7 +14,7 @@
  * Updates Surplus info
  */
 export interface SurplusUpdateDTO {
-  targetPeriodType: 'TP5' | 'TP6';
+  targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   newSurplusGained: string;
   comments: string;
 }

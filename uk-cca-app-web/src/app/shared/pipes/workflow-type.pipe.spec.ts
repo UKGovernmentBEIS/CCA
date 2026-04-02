@@ -64,4 +64,8 @@ describe('WorkflowTypePipe', () => {
   it('should transform "NON_COMPLIANCE" to "Non Compliance"', () => {
     expect(pipe.transform('NON_COMPLIANCE')).toBe('Non Compliance');
   });
+
+  it('should transform "CCA2_TERMINATION_ACCOUNT_PROCESSING" to "CCA2 End"', () => {
+    expect(pipe.transform('CCA2_TERMINATION_ACCOUNT_PROCESSING')).toBe('CCA2 End');
+  });
 });

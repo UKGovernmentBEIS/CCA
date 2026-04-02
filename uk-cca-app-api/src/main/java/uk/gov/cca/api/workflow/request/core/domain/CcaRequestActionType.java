@@ -88,5 +88,8 @@ public class CcaRequestActionType {
 
     // Non Compliance
     public static final String NON_COMPLIANCE_CANCELLED = "NON_COMPLIANCE_CANCELLED";
+    public static final String NON_COMPLIANCE_CLOSED = "NON_COMPLIANCE_CLOSED";
     public static final String NON_COMPLIANCE_DETAILS_SUBMITTED = "NON_COMPLIANCE_DETAILS_SUBMITTED";
+    public static final String NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED = "NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED";
+
 }

@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 public class CcaRequestTaskActionPayloadType {
 
     // Common
+    public static final String CCA_NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD = "CCA_NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD";
     public static final String NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD = "NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD";
 
     // Underlying Agreement
@@ -57,5 +58,8 @@ public class CcaRequestTaskActionPayloadType {
     public static final String FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMIT_PAYLOAD = "FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMIT_PAYLOAD";
 
     // Non Compliance
+    public static final String NON_COMPLIANCE_PEER_REVIEW_REQUEST_PAYLOAD = "NON_COMPLIANCE_PEER_REVIEW_REQUEST_PAYLOAD";
     public static final String NON_COMPLIANCE_DETAILS_SAVE_PAYLOAD = "NON_COMPLIANCE_DETAILS_SAVE_PAYLOAD";
+    public static final String NON_COMPLIANCE_NOTICE_OF_INTENT_SAVE_PAYLOAD = "NON_COMPLIANCE_NOTICE_OF_INTENT_SAVE_PAYLOAD";
+    public static final String NON_COMPLIANCE_CLOSE_TASK_PAYLOAD = "NON_COMPLIANCE_CLOSE_TASK_PAYLOAD";
 }

@@ -8,6 +8,7 @@ import { TasksService } from 'cca-api';
 
 import { AdminTerminationCancelTaskComponent } from './admin-termination/admin-termination-cancel.component';
 import { cancelTaskActionsMap } from './cancel-task-type';
+import { NonComplianceDetailsCancelTaskComponent } from './non-compliance-details/non-compliance-details-cancel.component';
 import { UnderlyingAgreementCancelTaskComponent } from './underlying-agreement/underlying-agreement-application-cancel.component';
 import { UnderlyingAgreementVariationCancelTaskComponent } from './underlying-agreement-variation/underlying-agreement-variation-cancel.component';
 
@@ -18,6 +19,7 @@ import { UnderlyingAgreementVariationCancelTaskComponent } from './underlying-ag
     UnderlyingAgreementCancelTaskComponent,
     CancelComponent,
     AdminTerminationCancelTaskComponent,
+    NonComplianceDetailsCancelTaskComponent,
     UnderlyingAgreementVariationCancelTaskComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

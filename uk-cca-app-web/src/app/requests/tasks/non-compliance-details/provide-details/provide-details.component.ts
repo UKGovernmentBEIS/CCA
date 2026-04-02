@@ -51,13 +51,11 @@ export class ProvideDetailsComponent {
 
   protected readonly form = inject<ProvideDetailsFormModel>(PROVIDE_DETAILS_FORM);
 
-  protected readonly nonComplianceTypeOptions: GovukSelectOption<NonComplianceDetails['nonComplianceType'] | null>[] = [
-    { value: null, text: '' },
-    ...Object.entries(NON_COMPLIANCE_TYPE_LABELS).map(([value, text]) => ({
+  protected readonly nonComplianceTypeOptions: GovukSelectOption<NonComplianceDetails['nonComplianceType']>[] =
+    Object.entries(NON_COMPLIANCE_TYPE_LABELS).map(([value, text]) => ({
       value: value as NonComplianceDetails['nonComplianceType'],
       text,
-    })),
-  ];
+    }));
 
   onSubmit() {
     const payload = this.requestTaskStore.select(

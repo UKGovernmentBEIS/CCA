@@ -14,7 +14,7 @@ export const mockReasonForAdminTerminationPayload: AdminTerminationSubmitRequest
 };
 
 export const mockNotifyOperatorOfDecisionPayload: CcaNotifyOperatorForDecisionRequestTaskActionPayload = {
-  payloadType: 'NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD',
+  payloadType: 'CCA_NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD',
   decisionNotification: {
     signatory: 'reg-userid',
     externalContacts: [1],

@@ -5,7 +5,7 @@ import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
 import {
   isCCA3Scheme,
-  toFacilityWizardSummaryDataWithDecision,
+  toFacilityWizardSummaryDataWithDecisionAndStatus,
   underlyingAgreementRequestActionQuery,
 } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
@@ -51,7 +51,7 @@ export class FacilityComponent {
   );
 
   protected readonly summaryData = computed(() =>
-    toFacilityWizardSummaryDataWithDecision(
+    toFacilityWizardSummaryDataWithDecisionAndStatus(
       this.facility(),
       this.sectorSchemeData(),
       this.participatingSchemeVersions(),

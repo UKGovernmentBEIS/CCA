@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.service.NonComplianceCloseService;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 
 import static org.mockito.Mockito.times;
@@ -19,9 +20,11 @@ class NonComplianceClosedHandlerFlowableTest {
     private NonComplianceClosedHandlerFlowable handler;
 
     @Mock
+    private NonComplianceCloseService nonComplianceCloseService;
+
+    @Mock
     private DelegateExecution execution;
 
-    // TODO: add services
     @Test
     void execute() {
         String requestId = "1";
@@ -32,6 +35,7 @@ class NonComplianceClosedHandlerFlowableTest {
 
         // Verify
         verify(execution, times(1)).getVariable(BpmnProcessConstants.REQUEST_ID);
+        verify(nonComplianceCloseService, times(1)).close(requestId);
     }
 
 }

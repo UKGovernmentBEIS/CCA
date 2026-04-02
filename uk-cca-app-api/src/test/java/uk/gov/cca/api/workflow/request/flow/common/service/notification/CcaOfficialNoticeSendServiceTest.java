@@ -47,7 +47,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({"unchecked", "rawtypes"})
 @ExtendWith(MockitoExtension.class)
 class CcaOfficialNoticeSendServiceTest {
 
@@ -67,7 +67,7 @@ class CcaOfficialNoticeSendServiceTest {
     private NotificationProperties notificationProperties;
 
     @Spy
-    private ArrayList<RequestDefaultNoticeRecipients> requestDefaultNoticeRecipients;
+    private List<RequestDefaultNoticeRecipients> requestDefaultNoticeRecipients = new ArrayList<>();
 
     @Mock
     private TargetUnitAccountNoticeRecipients targetUnitAccountNoticeRecipients;
@@ -77,7 +77,6 @@ class CcaOfficialNoticeSendServiceTest {
 
     @Mock
     private SectorReferenceDetailsService sectorReferenceDetailsService;
-
 
     @BeforeEach
     void setUp() {

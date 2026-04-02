@@ -40,4 +40,6 @@ public class CcaPermission {
 	public static final String PERM_FACILITY_AUDIT_EDIT = "PERM_FACILITY_AUDIT_EDIT";
 
     public static final String PERM_NON_COMPLIANCE_SUBMISSION  = "PERM_NON_COMPLIANCE_SUBMISSION";
+
+    public static final String PERM_NON_COMPLIANCE_PEER_REVIEW = "PERM_NON_COMPLIANCE_PEER_REVIEW";
 }

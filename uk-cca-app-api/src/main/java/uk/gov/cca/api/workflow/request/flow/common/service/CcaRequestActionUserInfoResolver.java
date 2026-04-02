@@ -11,6 +11,7 @@ import uk.gov.netz.api.authorization.core.domain.dto.AuthorityRoleDTO;
 import uk.gov.netz.api.authorization.operator.service.OperatorAuthorityQueryService;
 import uk.gov.netz.api.user.core.service.auth.UserAuthService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.flow.common.domain.DecisionNotification;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestActionUserInfo;
 
 import java.util.Collection;
@@ -32,6 +33,16 @@ public class CcaRequestActionUserInfoResolver {
     @Transactional(readOnly = true)
     public String getUserFullName(final String userId) {
         return userAuthService.getUserByUserId(userId).getFullName();
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, RequestActionUserInfo> getUsersInfo(final DecisionNotification decisionNotification, final Request request) {
+        final Set<String> userIds = Stream.of(
+                decisionNotification.getOperators(),
+                Set.of(decisionNotification.getSignatory())
+        ).flatMap(Collection::stream).collect(Collectors.toSet());
+
+        return getUsersInfo(userIds, request.getAccountId());
     }
 
     @Transactional(readOnly = true)

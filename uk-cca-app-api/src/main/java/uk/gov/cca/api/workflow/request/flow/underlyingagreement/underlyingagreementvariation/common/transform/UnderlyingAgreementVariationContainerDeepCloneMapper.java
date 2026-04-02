@@ -35,10 +35,17 @@ public interface UnderlyingAgreementVariationContainerDeepCloneMapper {
     Facility cloneFacility(Facility facility);
 
     @AfterMapping
-    default void setActiveFacilities(@MappingTarget UnderlyingAgreementContainer unaContainer) {
+    default void setFacilities(@MappingTarget UnderlyingAgreementContainer unaContainer, UnderlyingAgreementVariationRequestPayload payload) {
+        // Get excluded facilities from proposed UnA and original
+        Set<Facility> excludedFacilities = unaContainer.getUnderlyingAgreement().getFacilities().stream()
+                .filter(facility -> facility.getStatus().equals(FacilityStatus.EXCLUDED))
+                .collect(Collectors.toSet());
+
+        excludedFacilities.addAll(payload.getOriginalUnderlyingAgreementContainer().getExcludedFacilities());
+        unaContainer.setExcludedFacilities(excludedFacilities);
+
         // Get active facilities from proposed UnA
-        Set<Facility> activeFacilities = unaContainer.getUnderlyingAgreement().getFacilities()
-                .stream()
+        Set<Facility> activeFacilities = unaContainer.getUnderlyingAgreement().getFacilities().stream()
                 .filter(facility -> !facility.getStatus().equals(FacilityStatus.EXCLUDED))
                 .collect(Collectors.toSet());
 
@@ -56,5 +63,4 @@ public interface UnderlyingAgreementVariationContainerDeepCloneMapper {
 
         unaContainer.getUnderlyingAgreement().setFacilities(activeFacilities);
     }
-
 }

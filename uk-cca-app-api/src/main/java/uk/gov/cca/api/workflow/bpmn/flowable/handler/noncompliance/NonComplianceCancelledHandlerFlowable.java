@@ -1,6 +1,6 @@
 package uk.gov.cca.api.workflow.bpmn.flowable.handler.noncompliance;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,7 @@ import uk.gov.cca.api.workflow.request.flow.noncompliance.common.service.NonComp
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class NonComplianceCancelledHandlerFlowable implements JavaDelegate {
 
     private final NonComplianceCancelledService nonComplianceCancelledService;

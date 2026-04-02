@@ -16,7 +16,7 @@ export interface BuyOutSurplusTransactionDetailsDTO {
   transactionCode?: string;
   accountBusinessId?: string;
   operatorName?: string;
-  targetPeriodType?: 'TP5' | 'TP6';
+  targetPeriodType?: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   targetPeriodResultType?:
     | 'TARGET_MET'
     | 'BUY_OUT_REQUIRED'

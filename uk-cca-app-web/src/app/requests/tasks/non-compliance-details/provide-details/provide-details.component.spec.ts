@@ -55,6 +55,12 @@ describe('ProvideDetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should not include a blank non-compliance type option', () => {
+    const options = (component as any).nonComplianceTypeOptions;
+
+    expect(options.some((option) => option.value == null || option.text === '')).toBe(false);
+  });
+
   it('should submit and call saveRequestTaskAction', () => {
     component.onSubmit();
 

@@ -29,7 +29,7 @@ export function createNotifyOperatorActionDTO(
     requestTaskId,
     requestTaskActionType: 'ADMIN_TERMINATION_FINAL_DECISION_NOTIFY_OPERATOR_FOR_DECISION',
     requestTaskActionPayload: {
-      payloadType: 'NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD',
+      payloadType: 'CCA_NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD',
       decisionNotification,
     },
   };

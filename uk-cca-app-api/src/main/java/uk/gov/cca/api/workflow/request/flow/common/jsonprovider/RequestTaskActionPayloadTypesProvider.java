@@ -13,7 +13,9 @@ import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrective
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceCloseRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntentSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataGenerateRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadProcessingRequestTaskActionPayload;
@@ -33,6 +35,7 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationSaveReviewRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.submit.domain.UnderlyingAgreementVariationSaveRequestTaskActionPayload;
 import uk.gov.netz.api.common.config.jackson.JsonSubTypesProvider;
+import uk.gov.netz.api.workflow.request.flow.common.domain.NotifyOperatorForDecisionRequestTaskActionPayload;
 import uk.gov.netz.api.workflow.request.flow.common.domain.PeerReviewRequestTaskActionPayload;
 
 import java.util.List;
@@ -47,7 +50,8 @@ public class RequestTaskActionPayloadTypesProvider implements JsonSubTypesProvid
     public List<NamedType> getTypes() {
         return List.of(
                 // Common
-                new NamedType(CcaNotifyOperatorForDecisionRequestTaskActionPayload.class, NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD),
+                new NamedType(CcaNotifyOperatorForDecisionRequestTaskActionPayload.class, CCA_NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD),
+                new NamedType(NotifyOperatorForDecisionRequestTaskActionPayload.class, NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD),
                 // Underlying Agreement
                 new NamedType(UnderlyingAgreementSaveRequestTaskActionPayload.class, UNDERLYING_AGREEMENT_APPLICATION_SAVE_PAYLOAD),
                 new NamedType(UnderlyingAgreementSaveReviewRequestTaskActionPayload.class, UNDERLYING_AGREEMENT_SAVE_APPLICATION_REVIEW_PAYLOAD),
@@ -97,8 +101,10 @@ public class RequestTaskActionPayloadTypesProvider implements JsonSubTypesProvid
                 new NamedType(AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload.class, FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMIT_PAYLOAD),
 
                 // Non Compliance
-                new NamedType(NonComplianceDetailsSubmitSaveRequestTaskActionPayload.class, NON_COMPLIANCE_DETAILS_SAVE_PAYLOAD)
-        );
+                new NamedType(PeerReviewRequestTaskActionPayload.class, NON_COMPLIANCE_PEER_REVIEW_REQUEST_PAYLOAD),
+                new NamedType(NonComplianceDetailsSubmitSaveRequestTaskActionPayload.class, NON_COMPLIANCE_DETAILS_SAVE_PAYLOAD),
+                new NamedType(NoticeOfIntentSubmitSaveRequestTaskActionPayload.class, NON_COMPLIANCE_NOTICE_OF_INTENT_SAVE_PAYLOAD),
+                new NamedType(NonComplianceCloseRequestTaskActionPayload.class, NON_COMPLIANCE_CLOSE_TASK_PAYLOAD));
     }
 
 }

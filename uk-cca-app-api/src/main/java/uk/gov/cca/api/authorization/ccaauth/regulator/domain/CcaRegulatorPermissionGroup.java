@@ -29,4 +29,5 @@ public class CcaRegulatorPermissionGroup {
 
     /** Add permission to Regulator for Non Compliance Work Flow */
     public static final String NON_COMPLIANCE_SUBMISSION = "NON_COMPLIANCE_SUBMISSION";
+    public static final String NON_COMPLIANCE_PEER_REVIEW = "NON_COMPLIANCE_PEER_REVIEW";
 }

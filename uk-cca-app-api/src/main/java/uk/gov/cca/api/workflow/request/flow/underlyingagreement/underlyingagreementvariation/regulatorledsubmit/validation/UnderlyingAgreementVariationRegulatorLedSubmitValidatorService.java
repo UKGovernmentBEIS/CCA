@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
-import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilitiesFinalizationValidatorService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.CCA2BaselineAndTargetsValidatorService;
@@ -23,7 +23,7 @@ import java.util.List;
 public class UnderlyingAgreementVariationRegulatorLedSubmitValidatorService {
 
     private final UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
-    private final UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService underlyingAgreementCca2EndDateValidatorService;
+    private final UnderlyingAgreementFacilitiesFinalizationValidatorService underlyingAgreementFacilitiesFinalizationValidatorService;
     private final UnderlyingAgreementVariationRegulatorLedSubmitFacilitiesContextValidatorService underlyingAgreementVariationRegulatorLedSubmitFacilitiesContextValidatorService;
     private final UnderlyingAgreementVariationRegulatorLedSubmitApplicationReasonDataValidator underlyingAgreementVariationRegulatorLedSubmitApplicationReasonDataValidator;
     private final CCA2BaselineAndTargetsValidatorService cca2BaselineAndTargetsValidatorService;
@@ -51,8 +51,8 @@ public class UnderlyingAgreementVariationRegulatorLedSubmitValidatorService {
         validationResults.addAll(underlyingAgreementVariationRegulatorLedSubmitFacilitiesContextValidatorService
                 .validate(unaContainer, taskPayload.getFacilityChargeStartDateMap()));
 
-        // Validate CCA2 end date related rules for facilities
-        validationResults.add(underlyingAgreementCca2EndDateValidatorService.validate(unaContainer.getUnderlyingAgreement().getFacilities()));
+        // Validate rules for active (proposed) facilities
+        validationResults.add(underlyingAgreementFacilitiesFinalizationValidatorService.validate(unaContainer.getUnderlyingAgreement().getFacilities()));
         
         // Validate previous facility ids and application reasons
         validationResults.add(underlyingAgreementVariationRegulatorLedSubmitApplicationReasonDataValidator.validate(taskPayload));

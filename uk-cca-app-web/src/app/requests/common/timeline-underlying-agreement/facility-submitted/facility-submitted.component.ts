@@ -6,7 +6,7 @@ import { RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
 import { SchemeVersion } from '@shared/types';
 
-import { toFacilityWizardSummaryData } from '../../underlying-agreement/summaries/facility-summary-data';
+import { toFacilitySummaryDataWithStatus } from '../../underlying-agreement/summaries/facility-summary-data';
 import { isCCA3Scheme } from '../../utils';
 import { underlyingAgreementRequestActionQuery } from '../timeline-underlying-agreement.selectors';
 
@@ -48,7 +48,7 @@ export class FacilitySubmittedComponent {
   );
 
   protected readonly summaryData = computed(() =>
-    toFacilityWizardSummaryData(
+    toFacilitySummaryDataWithStatus(
       this.facility(),
       this.sectorSchemeData(),
       this.participatingSchemeVersions(),

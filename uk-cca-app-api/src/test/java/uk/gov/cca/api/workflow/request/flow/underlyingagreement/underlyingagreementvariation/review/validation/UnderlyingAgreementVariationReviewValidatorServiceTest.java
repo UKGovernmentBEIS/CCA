@@ -14,7 +14,7 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
-import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilitiesFinalizationValidatorService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.CCA2BaselineAndTargetsValidatorService;
@@ -71,7 +71,7 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
     private ProposedUnderlyingAgreementVariationApplicationReasonDataValidator proposedUnderlyingAgreementVariationApplicationReasonDataValidator;
 
     @Mock
-    private UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService underlyingAgreementCca2EndDateValidatorService;
+    private UnderlyingAgreementFacilitiesFinalizationValidatorService underlyingAgreementFacilitiesFinalizationValidatorService;
     
     @Test
     void validateEditedUnderlyingAgreement() {
@@ -300,7 +300,7 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
         when(proposedVariationDetailsValidator.validate(taskPayload)).thenReturn(BusinessValidationResult.valid());
         when(proposedUnderlyingAgreementVariationApplicationReasonDataValidator.validate(taskPayload))
                 .thenReturn(BusinessValidationResult.valid());
-        when(underlyingAgreementCca2EndDateValidatorService.validate(facilities))
+        when(underlyingAgreementFacilitiesFinalizationValidatorService.validate(facilities))
 				.thenReturn(BusinessValidationResult.valid());
 
         // Invoke
@@ -316,6 +316,6 @@ class UnderlyingAgreementVariationReviewValidatorServiceTest {
                 .validate(taskPayload);
         verify(proposedUnderlyingAgreementVariationApplicationReasonDataValidator, times(1))
                 .validate(taskPayload);
-        verify(underlyingAgreementCca2EndDateValidatorService, times(1)).validate(facilities);
+        verify(underlyingAgreementFacilitiesFinalizationValidatorService, times(1)).validate(facilities);
     }
 }

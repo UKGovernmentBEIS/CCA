@@ -43,6 +43,9 @@ export class WorkflowTypePipe implements PipeTransform {
       case 'NON_COMPLIANCE':
         return 'Non Compliance';
 
+      case 'CCA2_TERMINATION_ACCOUNT_PROCESSING':
+        return 'CCA2 End';
+
       default:
         return '';
     }

@@ -45,7 +45,6 @@ public class UnderlyingAgreementFacilityValidatorService {
     	Map<String, FacilityValidationContext> facilityValidationContextMap = getFacilityValidationContextMap(facility);
     	
         validateStatus(facility, facilityValidationContextMap.get(facility.getFacilityItem().getFacilityId()), violations);
-        validateExistingFacilityIds(facility, facilityValidationContextMap, violations);
         validateCca3BaselineAndTargets(facility, container, violations);
         validateFacilityParticipatingSchemeVersions(facility, facilityValidationContextMap, underlyingAgreementValidationContext, violations);
     }
@@ -69,18 +68,6 @@ public class UnderlyingAgreementFacilityValidatorService {
                 || (List.of(FacilityStatus.LIVE, FacilityStatus.EXCLUDED).contains(facility.getStatus()) && !active)) {
             violations.add(new UnderlyingAgreementViolation(SECTION_NAME, INVALID_FACILITY_ID, facilityBusinessId));
         }
-    }
-
-    private void validateExistingFacilityIds(final Facility facility, Map<String, FacilityValidationContext> facilityValidationContextMap, List<UnderlyingAgreementViolation> violations) {
-        // Validate previousFacilityId
-        Optional.ofNullable(facility.getFacilityItem().getFacilityDetails().getPreviousFacilityId())
-                .ifPresent(id -> {
-                	boolean previousFacilityActive = (facilityValidationContextMap.get(id) != null && facilityValidationContextMap.get(id).getClosedDate() == null);
-                    
-                	if (FacilityStatus.NEW.equals(facility.getStatus()) && !previousFacilityActive) {
-                    	violations.add(new UnderlyingAgreementViolation(SECTION_NAME, INVALID_PREVIOUS_FACILITY_ID, id));
-                    }
-                });
     }
 
 	public void validateCca3BaselineAndTargets(final Facility facility, final UnderlyingAgreementContainer container,

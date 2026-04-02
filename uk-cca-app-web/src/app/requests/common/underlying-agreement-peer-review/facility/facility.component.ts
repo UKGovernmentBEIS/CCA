@@ -6,7 +6,7 @@ import { RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
 import { SchemeVersion } from '@shared/types';
 
-import { toFacilityWizardSummaryDataWithDecision } from '../../underlying-agreement';
+import { toFacilityWizardSummaryDataWithDecisionAndStatus } from '../../underlying-agreement';
 import { isCCA3Scheme } from '../../utils';
 import { underlyingAgreementPeerReviewQuery } from '../underlying-agreement-peer-review.selectors';
 
@@ -50,7 +50,7 @@ export class FacilityComponent {
   );
 
   protected readonly summaryData = computed(() =>
-    toFacilityWizardSummaryDataWithDecision(
+    toFacilityWizardSummaryDataWithDecisionAndStatus(
       this.facility(),
       this.sectorSchemeData(),
       this.participatingSchemeVersions(),

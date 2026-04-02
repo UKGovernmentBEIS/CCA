@@ -1,6 +1,7 @@
 package uk.gov.cca.api.underlyingagreement.validation;
 
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_FACILITY_PARTICIPATING_SCHEME_VERSIONS_AFTER_SCHEME_END_DATE;
+import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_PREVIOUS_FACILITY_ID;
 import static uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementViolation.UnderlyingAgreementViolationMessage.INVALID_PREVIOUS_FACILITY_ID_CCA2_ONLY;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
 
 @Service
 @RequiredArgsConstructor
-public class UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService {
+public class UnderlyingAgreementFacilitiesFinalizationValidatorService {
 
 	private final FacilityDataQueryService facilityDataQueryService;
 	private final SchemeTerminationHelper schemeTerminationHelper;
@@ -60,15 +61,21 @@ public class UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService {
 	}
 	
 	private void validateExistingFacilityIds(Facility facility, Map<String, FacilityValidationContext> facilityValidationContextMap, List<UnderlyingAgreementViolation> violations) {
-        
+		
 		Optional.ofNullable(facility.getFacilityItem().getFacilityDetails().getPreviousFacilityId())
-                .ifPresent(id -> {
-                	Set<SchemeVersion> previousFacilityParticipatingSchemeVersions = facilityValidationContextMap.get(id) != null 
-                			? facilityValidationContextMap.get(id).getParticipatingSchemeVersions()
-                					: Collections.emptySet();
-                    if (FacilityStatus.NEW.equals(facility.getStatus()) && schemeTerminationHelper.isCca2Terminated(previousFacilityParticipatingSchemeVersions)) {
-                    	violations.add(new UnderlyingAgreementViolation(Facility.class.getName(), INVALID_PREVIOUS_FACILITY_ID_CCA2_ONLY, id));
-                    }
-                });
+        .ifPresent(id -> {
+        	boolean previousFacilityActive = (facilityValidationContextMap.get(id) != null && facilityValidationContextMap.get(id).getClosedDate() == null);
+        	Set<SchemeVersion> previousFacilityParticipatingSchemeVersions = facilityValidationContextMap.get(id) != null 
+        			? facilityValidationContextMap.get(id).getParticipatingSchemeVersions()
+        					: Collections.emptySet();
+            if (FacilityStatus.NEW.equals(facility.getStatus())) {
+            	if (!previousFacilityActive) {
+                	violations.add(new UnderlyingAgreementViolation(Facility.class.getName(), INVALID_PREVIOUS_FACILITY_ID, id));
+                }
+            	else if (schemeTerminationHelper.isCca2Terminated(previousFacilityParticipatingSchemeVersions)) {
+            		violations.add(new UnderlyingAgreementViolation(Facility.class.getName(), INVALID_PREVIOUS_FACILITY_ID_CCA2_ONLY, id));
+            	}
+            }	
+        });
     }
 }

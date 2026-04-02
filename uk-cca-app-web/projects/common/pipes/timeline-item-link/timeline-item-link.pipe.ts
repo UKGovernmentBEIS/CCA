@@ -103,6 +103,7 @@ export class TimelineItemLinkPipe implements PipeTransform {
         return [routerLooks + 'rfi', 'action', value.id, 'rfi-submitted'];
 
       case 'REQUEST_TERMINATED':
+      case 'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED':
       case 'VERIFICATION_STATEMENT_CANCELLED':
         return null;
 

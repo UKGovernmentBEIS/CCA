@@ -11,7 +11,7 @@
  */
 
 export interface AccountPerformanceAccountTemplateDataReportInfoDTO {
-  targetPeriodType?: 'TP5' | 'TP6';
+  targetPeriodType?: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   targetPeriodName?: string;
   targetPeriodYear?: number;
 }

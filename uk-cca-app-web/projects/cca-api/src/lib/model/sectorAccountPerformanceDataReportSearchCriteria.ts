@@ -16,7 +16,7 @@
 export interface SectorAccountPerformanceDataReportSearchCriteria {
   accountId?: number;
   targetUnitAccountBusinessId?: string;
-  targetPeriodType: 'TP5' | 'TP6';
+  targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   performanceOutcome?:
     | 'TARGET_MET'
     | 'BUY_OUT_REQUIRED'

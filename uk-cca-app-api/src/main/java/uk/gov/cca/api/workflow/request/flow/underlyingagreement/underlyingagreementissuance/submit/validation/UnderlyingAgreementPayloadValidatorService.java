@@ -10,7 +10,7 @@ import uk.gov.cca.api.common.validation.ValidatorHelper;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.CCA2BaselineAndTargetsValidatorService;
-import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilitiesFinalizationValidatorService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.transform.UnderlyingAgreementContainerMapper;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.validation.EditedUnderlyingAgreementTargetUnitDetailsValidatorService;
@@ -26,7 +26,7 @@ public class UnderlyingAgreementPayloadValidatorService {
 
     private final UnderlyingAgreementValidatorService underlyingAgreementValidatorService;
     private final CCA2BaselineAndTargetsValidatorService cca2BaselineAndTargetsValidatorService;
-    private final UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService underlyingAgreementCca2EndDateValidatorService;
+    private final UnderlyingAgreementFacilitiesFinalizationValidatorService underlyingAgreementFacilitiesFinalizationValidatorService;
     private final EditedUnderlyingAgreementTargetUnitDetailsValidatorService underlyingAgreementTargetUnitDetailsValidatorService;
     private static final UnderlyingAgreementContainerMapper UNDERLYING_AGREEMENT_CONTAINER_MAPPER = Mappers.getMapper(UnderlyingAgreementContainerMapper.class);
 
@@ -50,7 +50,7 @@ public class UnderlyingAgreementPayloadValidatorService {
         validationResults.add(underlyingAgreementTargetUnitDetailsValidatorService.validate(requestTask));
         
         // Validate CCA2 end date related rules for facilities
-        validationResults.add(underlyingAgreementCca2EndDateValidatorService.validate(unaContainer.getUnderlyingAgreement().getFacilities()));
+        validationResults.add(underlyingAgreementFacilitiesFinalizationValidatorService.validate(unaContainer.getUnderlyingAgreement().getFacilities()));
 
         boolean isValid = validationResults.stream().allMatch(BusinessValidationResult::isValid);
 

@@ -9,8 +9,8 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { TargetPeriodYearDTO } from './targetPeriodYearDTO';
 import { SectorAssociationInfo } from './sectorAssociationInfo';
-import { TargetPeriodDTO } from './targetPeriodDTO';
 
 export interface PerformanceDataSpreadsheetProcessingRequestMetadata {
   type?: string;
@@ -18,7 +18,7 @@ export interface PerformanceDataSpreadsheetProcessingRequestMetadata {
   accountBusinessId?: string;
   sectorAssociationInfo?: SectorAssociationInfo;
   performanceDataTargetPeriodType?: 'TP6';
-  targetPeriodDetails?: TargetPeriodDTO;
+  targetPeriodDetails?: TargetPeriodYearDTO;
   reportVersion?: number;
   submissionType?: 'PRIMARY' | 'SECONDARY';
   uploadedDate?: string;

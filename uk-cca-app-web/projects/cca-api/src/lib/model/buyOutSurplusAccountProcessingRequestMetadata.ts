@@ -14,7 +14,7 @@ export interface BuyOutSurplusAccountProcessingRequestMetadata {
   type?: string;
   parentRequestId?: string;
   accountBusinessId?: string;
-  targetPeriodType?: 'TP5' | 'TP6';
+  targetPeriodType?: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   performanceDataId?: number;
   performanceDataReportVersion?: number;
   tpOutcome?: 'TARGET_MET' | 'BUY_OUT_REQUIRED' | 'SURPLUS_USED_BUY_OUT_REQUIRED' | 'SURPLUS_USED' | 'OUTSTANDING';

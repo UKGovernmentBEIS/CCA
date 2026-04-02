@@ -11062,4 +11062,381 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_create_view_scope_permission_for_NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT_request_task_type" author="P70311">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            values (nextval('au_rule_seq'), 'REQUEST_TASK' , 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT', 'requestTaskAccessHandler', 'REGULATOR', 'REQUEST_TASK_VIEW');
+        </sql>
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('assignTask', 'releaseTask', 'getTaskItemInfoById', 'generateRequestTaskGetFileAttachmentToken', 'getCandidateAssigneesByTaskId', 'getDefaultNoticeRecipients')
+              and r.resource_type = 'REQUEST_TASK'
+              and r.resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT'
+              and r.handler = 'requestTaskAccessHandler'
+              and r.role_type = 'REGULATOR'
+              and r.scope = 'REQUEST_TASK_VIEW';
+        </sql>
+        <sql>
+            insert into au_resource_scope_permission(id, resource_type, resource_sub_type, scope, permission, role_type)
+                (select nextval('au_resource_scope_permission_seq'),
+                        'REQUEST_TASK',
+                        'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT',
+                        'REQUEST_TASK_VIEW',
+                        'PERM_NON_COMPLIANCE_SUBMISSION',
+                        'REGULATOR');
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_resource_scope_permission
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT'
+                and scope = 'REQUEST_TASK_VIEW'
+                and permission = 'PERM_NON_COMPLIANCE_SUBMISSION'
+                and role_type = 'REGULATOR';
+
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('assignTask', 'releaseTask', 'getTaskItemInfoById', 'generateRequestTaskGetFileAttachmentToken', 'getCandidateAssigneesByTaskId', 'getDefaultNoticeRecipients')
+                and r.resource_type = 'REQUEST_TASK'
+                and r.resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT'
+                and r.handler = 'requestTaskAccessHandler'
+                and r.role_type = 'REGULATOR'
+                and r.scope = 'REQUEST_TASK_VIEW';
+
+                delete from au_rule
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT'
+                and handler = 'requestTaskAccessHandler'
+                and role_type = 'REGULATOR'
+                and scope = 'REQUEST_TASK_VIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_execute_scope_permission_for_NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT_request_task_type" author="P70311">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            values (nextval('au_rule_seq'), 'REQUEST_TASK' , 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT', 'requestTaskAccessHandler', 'REGULATOR', 'REQUEST_TASK_EXECUTE');
+        </sql>
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('processRequestTaskAction', 'uploadRequestTaskAttachment', 'getCandidateAssigneesByTaskType')
+              and r.resource_type = 'REQUEST_TASK'
+              and r.resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT'
+              and r.handler = 'requestTaskAccessHandler'
+              and r.role_type = 'REGULATOR'
+              and r.scope = 'REQUEST_TASK_EXECUTE';
+        </sql>
+        <sql>
+            insert into au_resource_scope_permission(id, resource_type, resource_sub_type, scope, permission, role_type)
+                (select nextval('au_resource_scope_permission_seq'),
+                        'REQUEST_TASK',
+                        'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT',
+                        'REQUEST_TASK_EXECUTE',
+                        'PERM_NON_COMPLIANCE_SUBMISSION',
+                        'REGULATOR');
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_resource_scope_permission
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT'
+                and scope = 'REQUEST_TASK_EXECUTE'
+                and permission = 'PERM_NON_COMPLIANCE_SUBMISSION'
+                and role_type = 'REGULATOR';
+
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('processRequestTaskAction', 'getCandidateAssigneesByTaskType')
+                and r.resource_type = 'REQUEST_TASK'
+                and r.resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT'
+                and r.handler = 'requestTaskAccessHandler'
+                and r.role_type = 'REGULATOR'
+                and r.scope = 'REQUEST_TASK_EXECUTE';
+
+                delete from au_rule
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT'
+                and handler = 'requestTaskAccessHandler'
+                and role_type = 'REGULATOR'
+                and scope = 'REQUEST_TASK_EXECUTE';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rules_for_request_action_type_NON_COMPLIANCE_CLOSED" author="P70311">
+        <sql>
+            INSERT INTO au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'NON_COMPLIANCE_CLOSED', 'requestActionViewHandler', 'REGULATOR', NULL);
+
+            INSERT INTO au_service_rule(service_id, rule_id) SELECT aus.id, aur.id FROM au_service aus, au_rule aur WHERE aus.name = 'getRequestActionById' AND aur.role_type = 'REGULATOR' AND aur.resource_type = 'REQUEST_ACTION' AND aur.resource_sub_type = 'NON_COMPLIANCE_CLOSED' AND aur.handler = 'requestActionViewHandler' AND aur.scope IS NULL;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule
+                WHERE (service_id, rule_id) IN (
+                SELECT aus.id, aur.id
+                FROM au_service aus,
+                au_rule aur
+                WHERE aus.name = 'getRequestActionById'
+                AND aur.role_type = 'REGULATOR'
+                AND aur.resource_type = 'REQUEST_ACTION'
+                AND aur.resource_sub_type = 'NON_COMPLIANCE_CLOSED'
+                AND aur.handler = 'requestActionViewHandler'
+                AND aur.scope IS NULL);
+
+                DELETE FROM au_rule
+                WHERE resource_type = 'REQUEST_ACTION'
+                AND resource_sub_type = 'NON_COMPLIANCE_CLOSED'
+                AND handler = 'requestActionViewHandler'
+                AND role_type = 'REGULATOR'
+                AND scope IS NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_rules_for_request_action_type_NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED" author="P70311">
+        <sql>
+            INSERT INTO au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            VALUES (nextval('au_rule_seq'), 'REQUEST_ACTION', 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED', 'requestActionViewHandler', 'REGULATOR', NULL),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION', 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED', 'requestActionViewHandler', 'OPERATOR', NULL);
+
+            INSERT INTO au_service_rule(service_id, rule_id) SELECT aus.id, aur.id FROM au_service aus, au_rule aur WHERE aus.name = 'getRequestActionById' AND aur.role_type in ('REGULATOR', 'OPERATOR') AND aur.resource_type = 'REQUEST_ACTION' AND aur.resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED' AND aur.handler = 'requestActionViewHandler' AND aur.scope IS NULL;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule
+                WHERE (service_id, rule_id) IN (
+                SELECT aus.id, aur.id
+                FROM au_service aus,
+                au_rule aur
+                WHERE aus.name = 'getRequestActionById'
+                AND aur.role_type in ('REGULATOR', 'OPERATOR')
+                AND aur.resource_type = 'REQUEST_ACTION'
+                AND aur.resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED'
+                AND aur.handler = 'requestActionViewHandler'
+                AND aur.scope IS NULL);
+
+                DELETE FROM au_rule
+                WHERE resource_type = 'REQUEST_ACTION'
+                AND resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED'
+                AND handler = 'requestActionViewHandler'
+                AND role_type in ('REGULATOR', 'OPERATOR')
+                AND scope IS NULL;
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_add_rule_for_request_action_type_CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED_for_all_roles" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type)
+            values (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED', 'requestActionViewHandler', 'OPERATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED', 'requestActionViewHandler', 'REGULATOR'),
+                   (nextval('au_rule_seq'), 'REQUEST_ACTION' , 'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED', 'requestActionViewHandler', 'SECTOR_USER');
+        </sql>
+        <rollback>
+            <sql>
+                delete
+                from au_rule
+                where resource_type = 'REQUEST_ACTION'
+                and resource_sub_type = 'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED'
+                and handler = 'requestActionViewHandler'
+                and scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_associate_services_with_request_action_type_CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name = 'getRequestActionById'
+              and r.resource_type = 'REQUEST_ACTION'
+              and r.resource_sub_type = 'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED'
+              and r.handler = 'requestActionViewHandler'
+              and r.role_type in ('REGULATOR', 'OPERATOR', 'SECTOR_USER')
+              and r.scope is null;
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name = 'getRequestActionById'
+                and r.resource_type = 'REQUEST_ACTION'
+                and r.resource_sub_type = 'CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED'
+                and r.handler = 'requestActionViewHandler'
+                and r.scope is null;
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_view_scope_for_request_task_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT_and_role_SECTOR_USER" author="P70383">
+        <sql>
+            insert into au_resource_scope_permission(id, resource_type, resource_sub_type, scope, permission, role_type)
+                (select nextval('au_resource_scope_permission_seq'),
+                        'REQUEST_TASK',
+                        'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT',
+                        'REQUEST_TASK_VIEW',
+                        'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD',
+                        'SECTOR_USER');
+
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            values (nextval('au_rule_seq'),
+                    'REQUEST_TASK' ,
+                    'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT',
+                    'requestTaskAccessHandler',
+                    'SECTOR_USER',
+                    'REQUEST_TASK_VIEW');
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name in ('assignTask', 'getCandidateAssigneesByTaskId', 'releaseTask', 'getTaskItemInfoById')
+              and r.resource_type = 'REQUEST_TASK'
+              and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT'
+              and r.handler = 'requestTaskAccessHandler'
+              and r.role_type = 'SECTOR_USER'
+              and r.scope = 'REQUEST_TASK_VIEW';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name in ('assignTask', 'getCandidateAssigneesByTaskId', 'releaseTask', 'getTaskItemInfoById')
+                and r.resource_type = 'REQUEST_TASK'
+                and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT'
+                and r.handler = 'requestTaskAccessHandler'
+                and r.role_type = 'SECTOR_USER'
+                and r.scope = 'REQUEST_TASK_VIEW';
+
+                delete from au_rule
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT'
+                and handler = 'requestTaskAccessHandler'
+                and role_type = 'SECTOR_USER'
+                and scope = 'REQUEST_TASK_VIEW';
+
+                delete from au_resource_scope_permission
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT'
+                and scope = 'REQUEST_TASK_VIEW'
+                and permission = 'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD'
+                and role_type = 'SECTOR_USER';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_create_execute_scope_for_request_task_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT_and_role_SECTOR_USER" author="P70383">
+        <sql>
+            insert into au_resource_scope_permission(id, resource_type, resource_sub_type, scope, permission, role_type)
+                (select nextval('au_resource_scope_permission_seq'),
+                        'REQUEST_TASK',
+                        'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT',
+                        'REQUEST_TASK_EXECUTE',
+                        'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD',
+                        'SECTOR_USER');
+
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            values (nextval('au_rule_seq'),
+                    'REQUEST_TASK' ,
+                    'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT',
+                    'requestTaskAccessHandler',
+                    'SECTOR_USER',
+                    'REQUEST_TASK_EXECUTE');
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name = 'processRequestTaskAction'
+              and r.resource_type = 'REQUEST_TASK'
+              and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT'
+              and r.handler = 'requestTaskAccessHandler'
+              and r.role_type = 'SECTOR_USER'
+              and r.scope = 'REQUEST_TASK_EXECUTE';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name = 'processRequestTaskAction'
+                and r.resource_type = 'REQUEST_TASK'
+                and r.resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT'
+                and r.handler = 'requestTaskAccessHandler'
+                and r.role_type = 'SECTOR_USER'
+                and r.scope = 'REQUEST_TASK_EXECUTE';
+
+                delete from au_rule
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT'
+                and handler = 'requestTaskAccessHandler'
+                and role_type = 'SECTOR_USER'
+                and scope = 'REQUEST_TASK_EXECUTE';
+
+                delete from au_resource_scope_permission
+                where resource_type = 'REQUEST_TASK'
+                and resource_sub_type = 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT'
+                and scope = 'REQUEST_TASK_EXECUTE'
+                and permission = 'PERM_PERFORMANCE_REPORTING_DOWNLOAD_UPLOAD'
+                and role_type = 'SECTOR_USER';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_add_service_rule_for_request_action_type_NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED" author="P70311">
+        <sql>
+            INSERT INTO au_service_rule(service_id, rule_id) SELECT aus.id, aur.id FROM au_service aus, au_rule aur
+            WHERE aus.name = 'generateRequestActionGetFileAttachmentToken'
+            AND aur.role_type in ('REGULATOR', 'OPERATOR')
+            AND aur.resource_type = 'REQUEST_ACTION'
+            AND aur.resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED'
+            AND aur.handler = 'requestActionViewHandler'
+            AND aur.scope IS NULL;
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM au_service_rule
+                WHERE (service_id, rule_id) IN (
+                SELECT aus.id, aur.id
+                FROM au_service aus,
+                au_rule aur
+                WHERE aus.name = 'generateRequestActionGetFileAttachmentToken'
+                AND aur.role_type in ('REGULATOR', 'OPERATOR')
+                AND aur.resource_type = 'REQUEST_ACTION'
+                AND aur.resource_sub_type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED'
+                AND aur.handler = 'requestActionViewHandler'
+                AND aur.scope IS NULL);
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

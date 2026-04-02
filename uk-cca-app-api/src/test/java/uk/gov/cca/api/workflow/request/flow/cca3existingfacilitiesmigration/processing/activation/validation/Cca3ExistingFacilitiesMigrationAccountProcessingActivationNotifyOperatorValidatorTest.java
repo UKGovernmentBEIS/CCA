@@ -12,7 +12,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.activation.domain.Cca3ExistingFacilitiesMigrationAccountProcessingActivationRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaNotifyOperatorForDecisionRequestTaskActionPayload;
-import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.DecisionNotificationValidator;
+import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.CcaDecisionNotificationValidator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
@@ -36,7 +36,7 @@ class Cca3ExistingFacilitiesMigrationAccountProcessingActivationNotifyOperatorVa
     private Cca3ExistingFacilitiesMigrationAccountProcessingActivationSubmitValidator cca3ExistingFacilitiesMigrationAccountProcessingActivationSubmitValidator;
 
     @Mock
-    private DecisionNotificationValidator decisionNotificationValidator;
+    private CcaDecisionNotificationValidator decisionNotificationValidator;
 
     @Test
     void validate() {

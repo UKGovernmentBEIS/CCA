@@ -13,8 +13,16 @@ import { Improvement, SchemeVersions } from '@shared/types';
 import { fileUtils, transformPhoneNumber } from '@shared/utils';
 
 import {
+  Apply70Rule,
+  EligibilityDetailsAndAuthorisation,
   Facility,
+  FacilityBaselineData,
+  FacilityBaselineEnergyConsumption,
+  FacilityExtent,
+  FacilityTargetComposition,
+  FacilityTargets,
   SchemeData,
+  TargetUnitAccountContactDTO,
   UnderlyingAgreementFacilityReviewDecision,
   UnderlyingAgreementVariationFacilityReviewDecision,
 } from 'cca-api';
@@ -31,66 +39,48 @@ import {
 import { FacilityWizardStep } from '../types';
 import { addFacilityDecisionSummaryData } from './decision-summary-data';
 
-function toFacilityWizardSummaryFactory(
+const decimalPipe = new DecimalPipe('en-GB');
+const datePipe = new GovukDatePipe();
+
+function formatNumber(value: string | number | null | undefined): string {
+  if (value === null || value === undefined || value === '') {
+    return '';
+  }
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? (decimalPipe.transform(parsed, '1.0-7') ?? '') : '';
+}
+
+function toSchemeParticipationString(schemeVersions: SchemeVersions): string {
+  if (!schemeVersions || schemeVersions.length === 0) return '';
+  return schemeVersions.length > 1 ? 'Both' : schemeVersions[0].replace('_', '');
+}
+
+function addStatusSection(factory: SummaryFactory, facility: Facility): SummaryFactory {
+  const statusPipe = new StatusPipe();
+
+  factory.addSection('').addRow('Facility status', statusPipe.transform(facility?.status) ?? '');
+
+  if (facility?.excludedDate) {
+    const datePipe = new GovukDatePipe();
+    factory.addRow('Exclusion date', datePipe.transform(facility?.excludedDate));
+  }
+
+  return factory;
+}
+
+function addDetailsSection(
+  factory: SummaryFactory,
   facility: Facility,
-  sectorSchemeData: SchemeData,
   schemeVersions: SchemeVersions,
-  attachments: Record<string, string>,
+  changeName: boolean,
   isEditable: boolean,
-  downloadUrl: string,
-  opts: { changeName?: boolean; factory?: SummaryFactory; productsLink?: string } = {},
 ): SummaryFactory {
   const facilityDetails = facility?.facilityDetails;
-  const facilityContact = facility?.facilityContact;
-  const eligibility = facility?.eligibilityDetailsAndAuthorisation;
-  const facilityExtent = facility?.facilityExtent;
-  const applyRule = facility?.apply70Rule;
-  const targetComposition = facility?.cca3BaselineAndTargets?.targetComposition;
-  const baselineData = facility?.cca3BaselineAndTargets?.baselineData;
-  const facilityTargets = facility?.cca3BaselineAndTargets?.facilityTargets;
-
-  const decimalPipe = new DecimalPipe('en-GB');
-  const datePipe = new GovukDatePipe();
-  const measurementTypeToOptionTextPipe = new MeasurementTypeToOptionTextPipe();
-  const agreementTypePipe = new AgreementCompositionTypePipe();
-  const measurementTypeToUnitPipe = new MeasurementTypeToUnitPipe();
-
-  const formatNumber = (value: string | number | null | undefined) => {
-    if (value === null || value === undefined || value === '') {
-      return '';
-    }
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? (decimalPipe.transform(parsed, '1.0-7') ?? '') : '';
-  };
-
-  const baselineEnergy = facility?.cca3BaselineAndTargets?.facilityBaselineEnergyConsumption;
-  const baselineEnergyProducts = baselineEnergy?.variableEnergyConsumptionDataByProduct ?? [];
-  const includedBaselineEnergyProducts = baselineEnergyProducts.filter(
-    (product) => (product.productStatus ?? '').toUpperCase() !== 'EXCLUDED',
-  );
-  const baselineYear = baselineData?.baselineDate ? new Date(baselineData.baselineDate).getFullYear() : null;
-  const fixedEnergyValue = calculateFixedEnergy(baselineEnergy?.totalFixedEnergy);
-  const variableEnergyValue = calculateVariableEnergy(
-    baselineEnergy?.hasVariableEnergy,
-    baselineEnergy?.variableEnergyType,
-    baselineEnergy?.baselineVariableEnergy,
-    includedBaselineEnergyProducts,
-    baselineYear,
-  );
-  const totalEnergyValue = calculateTotalEnergy(fixedEnergyValue, variableEnergyValue);
-  const otherYearsVariableEnergy = calculateOtherYearsVariableEnergy(
-    includedBaselineEnergyProducts,
-    baselineYear,
-    baselineEnergy?.variableEnergyType,
-  );
-
-  const factory = opts?.factory ?? new SummaryFactory();
 
   factory
-    // FACILITY DETAILS SECTION
     .addSection('Facility Details', `../${FacilityWizardStep.DETAILS}`)
     .addRow('Facility ID', facility?.facilityId)
-    .addRow('Site name', facility?.facilityDetails.name, { change: opts.changeName && isEditable })
+    .addRow('Site name', facilityDetails.name, { change: changeName && isEditable })
     .addRow(
       'Are the activities carried out in this facility included in the UK ETS?',
       boolToString(facilityDetails?.isCoveredByUkets),
@@ -124,9 +114,17 @@ function toFacilityWizardSummaryFactory(
     })
     .addTextAreaRow('Facility address', transformAddress(facilityDetails?.facilityAddress), {
       change: isEditable,
-    })
+    });
 
-    // FACILITY CONTACT DETAILS SECTION
+  return factory;
+}
+
+function addContactDetailsSection(
+  factory: SummaryFactory,
+  facilityContact: TargetUnitAccountContactDTO,
+  isEditable: boolean,
+): SummaryFactory {
+  return factory
     .addSection('Facility contact details', `../${FacilityWizardStep.CONTACT_DETAILS}`)
     .addRow('First name', facilityContact?.firstName, {
       change: isEditable,
@@ -142,9 +140,17 @@ function toFacilityWizardSummaryFactory(
     })
     .addRow('Phone number', transformPhoneNumber(facilityContact?.phoneNumber), {
       change: isEditable,
-    })
+    });
+}
 
-    // ELIGIBILITY DETAILS AND AUTHORISATION SECTION
+function addElegibilityDetailsSection(
+  factory: SummaryFactory,
+  eligibility: EligibilityDetailsAndAuthorisation,
+  attachments: Record<string, string>,
+  downloadUrl: string,
+  isEditable: boolean,
+): SummaryFactory {
+  return factory
     .addSection('CCA eligibility details and authorisation', `../${FacilityWizardStep.ELIGIBILITY_DETAILS}`)
     .addRow(
       'Is the facility adjacent to or connected to an existing CCA facility?',
@@ -176,9 +182,17 @@ function toFacilityWizardSummaryFactory(
       'Attach a copy of the permit',
       fileUtils.toDownloadableFiles(fileUtils.extractAttachments([eligibility?.permitFile], attachments), downloadUrl),
       { change: isEditable },
-    )
+    );
+}
 
-    // EXTENT OF THE FACILITY SECTION
+function addExtentSection(
+  factory: SummaryFactory,
+  facilityExtent: FacilityExtent,
+  attachments: Record<string, string>,
+  downloadUrl: string,
+  isEditable: boolean,
+): SummaryFactory {
+  return factory
     .addSection('Extent of the facility', `../${FacilityWizardStep.EXTENT}`)
     .addFileListRow(
       'Manufacturing process description',
@@ -222,9 +236,17 @@ function toFacilityWizardSummaryFactory(
         downloadUrl,
       ),
       { change: isEditable },
-    )
+    );
+}
 
-    // 70% RULE SECTION
+function add70RuleSection(
+  factory: SummaryFactory,
+  applyRule: Apply70Rule,
+  attachments: Record<string, string>,
+  downloadUrl: string,
+  isEditable: boolean,
+): SummaryFactory {
+  return factory
     .addSection('70% rule', `../${FacilityWizardStep.APPLY_RULE}`)
     .addRow(
       'Energy consumed in the installation',
@@ -259,220 +281,335 @@ function toFacilityWizardSummaryFactory(
       fileUtils.toDownloadableFiles(fileUtils.extractAttachments([applyRule?.evidenceFile], attachments), downloadUrl),
       { change: isEditable },
     );
+}
+
+function addTargetCompositionSection(
+  factory: SummaryFactory,
+  targetComposition: FacilityTargetComposition,
+  sectorSchemeData: SchemeData,
+  attachments: Record<string, string>,
+  downloadUrl: string,
+  isEditable: boolean,
+): SummaryFactory {
+  const measurementTypeToOptionTextPipe = new MeasurementTypeToOptionTextPipe();
+  const agreementTypePipe = new AgreementCompositionTypePipe();
+
+  return factory
+    .addSection('Target composition', `../${FacilityWizardStep.TARGET_COMPOSITION}`)
+    .addFileListRow(
+      'Target calculator file',
+      fileUtils.toDownloadableFiles(
+        fileUtils.extractAttachments([targetComposition?.calculatorFile], attachments),
+        downloadUrl,
+      ),
+      { change: isEditable },
+    )
+    .addRow(
+      'Energy or carbon units used by the sector',
+      measurementTypeToOptionTextPipe.transform(sectorSchemeData?.sectorMeasurementType),
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    )
+    .addRow(
+      'Energy or carbon units used by the facility',
+      measurementTypeToOptionTextPipe.transform(targetComposition?.measurementType),
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    )
+    .addRow(
+      'Target type for agreement composition',
+      agreementTypePipe.transform(targetComposition?.agreementCompositionType),
+    );
+}
+
+function addBaselineDataSection(
+  factory: SummaryFactory,
+  baselineData: FacilityBaselineData,
+  attachments: Record<string, string>,
+  downloadUrl: string,
+  isEditable: boolean,
+): SummaryFactory {
+  factory
+    .addSection('Details of baseline data', `../${FacilityWizardStep.BASELINE_DATA}`)
+    .addRow(
+      'Is at least 12 months of consecutive baseline data available?',
+      boolToString(baselineData?.isTwelveMonths),
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    )
+    .addRow(
+      baselineData?.isTwelveMonths === true
+        ? 'Start date of baseline'
+        : 'Enter the date that 12 months of data will be available.',
+      datePipe.transform(baselineData?.baselineDate),
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    )
+    .addTextAreaRow(
+      baselineData?.isTwelveMonths === true
+        ? 'Explain why you are using a different baseline year'
+        : 'Explain how the target unit fits the greenfield criteria',
+      baselineData?.explanation,
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    );
+
+  if (baselineData?.isTwelveMonths === false) {
+    factory.addFileListRow(
+      'Evidence',
+      fileUtils.toDownloadableFiles(
+        fileUtils.extractAttachments(baselineData?.greenfieldEvidences, attachments),
+        downloadUrl,
+      ),
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    );
+  }
+
+  factory
+    .addRow(
+      'Must the Special Reporting Methodology be applied for this facility?',
+      boolToString(baselineData?.usedReportingMechanism),
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    )
+    .addRow(
+      'Baseline energy to carbon factor (kgC/kWh)',
+      decimalPipe.transform(baselineData?.energyCarbonFactor, '1.0-7'),
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    );
+
+  return factory;
+}
+
+function addBaselineEnergySection(
+  factory: SummaryFactory,
+  baselineEnergy: FacilityBaselineEnergyConsumption,
+  baselineYear: number,
+  targetComposition: FacilityTargetComposition,
+  isEditable: boolean,
+  productsLink?: string,
+): SummaryFactory {
+  const measurementTypeToUnitPipe = new MeasurementTypeToUnitPipe();
+
+  const baselineEnergyProducts = baselineEnergy?.variableEnergyConsumptionDataByProduct ?? [];
+  const includedBaselineEnergyProducts = baselineEnergyProducts.filter(
+    (product) => (product.productStatus ?? '').toUpperCase() !== 'EXCLUDED',
+  );
+
+  const fixedEnergyValue = calculateFixedEnergy(baselineEnergy?.totalFixedEnergy);
+
+  const variableEnergyValue = calculateVariableEnergy(
+    baselineEnergy?.hasVariableEnergy,
+    baselineEnergy?.variableEnergyType,
+    baselineEnergy?.baselineVariableEnergy,
+    includedBaselineEnergyProducts,
+    baselineYear,
+  );
+
+  const totalEnergyValue = calculateTotalEnergy(fixedEnergyValue, variableEnergyValue);
+
+  const otherYearsVariableEnergy = calculateOtherYearsVariableEnergy(
+    includedBaselineEnergyProducts,
+    baselineYear,
+    baselineEnergy?.variableEnergyType,
+  );
+
+  factory
+    .addSection(
+      'Details of baseline energy or carbon consumption',
+      `../${FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION}`,
+    )
+    .addRow(
+      `Fixed baseline energy for the facility (${measurementTypeToUnitPipe.transform(targetComposition?.measurementType)})`,
+      formatNumber(fixedEnergyValue),
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    );
+
+  factory.addRow('Is there a variable energy amount?', boolToString(baselineEnergy?.hasVariableEnergy), {
+    change: isEditable,
+    appendChangeParam: true,
+  });
+
+  if (baselineEnergy?.hasVariableEnergy) {
+    factory.addRow(
+      'Indicate how you want to account for the portion of variable energy used (or carbon emitted) for your facility',
+      baselineEnergy.variableEnergyType === 'TOTALS'
+        ? 'Totals only'
+        : baselineEnergy.variableEnergyType === 'BY_PRODUCT'
+          ? 'Split by product'
+          : '',
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    );
+
+    if (baselineEnergy.variableEnergyType === 'TOTALS') {
+      factory.addRow(
+        `Total baseline variable energy (${measurementTypeToUnitPipe.transform(targetComposition?.measurementType)})`,
+        formatNumber(baselineEnergy.baselineVariableEnergy),
+        {
+          change: isEditable,
+          appendChangeParam: true,
+        },
+      );
+    }
+
+    if (baselineEnergy.variableEnergyType === 'BY_PRODUCT') {
+      const productCount = includedBaselineEnergyProducts.length;
+      const productLabel =
+        productCount === 0 ? 'No products added' : `${productCount} ${productCount === 1 ? 'Product' : 'Products'}`;
+
+      factory.addRow('Products submitted', productLabel, {
+        change: isEditable,
+        appendChangeParam: true,
+        link: `${productsLink ?? '../products'}`,
+      });
+    }
+  }
+
+  // Show throughput fields when hasVariableEnergy is false or when variableEnergyType is TOTALS
+  if (
+    baselineEnergy?.hasVariableEnergy === false ||
+    (baselineEnergy?.hasVariableEnergy && baselineEnergy.variableEnergyType === 'TOTALS')
+  ) {
+    factory
+      .addRow('Total baseline throughput', formatNumber(baselineEnergy.totalThroughput), {
+        change: isEditable,
+        appendChangeParam: true,
+      })
+      .addRow('Throughput unit', baselineEnergy.throughputUnit ?? '', {
+        change: isEditable,
+        appendChangeParam: true,
+      });
+  }
+
+  factory
+    .addRow(
+      `Variable baseline energy for the facility (${measurementTypeToUnitPipe.transform(targetComposition?.measurementType)})`,
+      formatNumber(variableEnergyValue),
+    )
+    .addRow(
+      `Total baseline energy for the facility (${measurementTypeToUnitPipe.transform(targetComposition?.measurementType)})`,
+      formatNumber(totalEnergyValue),
+    );
+
+  if (otherYearsVariableEnergy) {
+    factory.addRow(
+      `Other years - variable baseline energy (${measurementTypeToUnitPipe.transform(targetComposition?.measurementType)})`,
+      formatNumber(otherYearsVariableEnergy),
+    );
+  }
+
+  return factory;
+}
+
+function addTargetsSection(
+  factory: SummaryFactory,
+  facilityTargets: FacilityTargets,
+  isEditable: boolean,
+): SummaryFactory {
+  return factory
+    .addSection('Targets', `../${FacilityWizardStep.TARGETS}`)
+    .addRow(
+      'TP7 (2026) improvement (%)',
+      decimalPipe.transform(facilityTargets?.improvements[Improvement.TP7], '1.0-7'),
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    )
+    .addRow(
+      'TP8 (2027 to 2028) improvement (%)',
+      decimalPipe.transform(facilityTargets?.improvements[Improvement.TP8], '1.0-7'),
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    )
+    .addRow(
+      'TP9 (2029 to 2030) improvement (%)',
+      decimalPipe.transform(facilityTargets?.improvements[Improvement.TP9], '1.0-7'),
+      {
+        change: isEditable,
+        appendChangeParam: true,
+      },
+    );
+}
+
+function toFacilityWizardSummaryFactory(
+  facility: Facility,
+  sectorSchemeData: SchemeData,
+  schemeVersions: SchemeVersions,
+  attachments: Record<string, string>,
+  isEditable: boolean,
+  downloadUrl: string,
+  opts: { changeName?: boolean; factory?: SummaryFactory; productsLink?: string } = {},
+): SummaryFactory {
+  const targetComposition = facility?.cca3BaselineAndTargets?.targetComposition;
+  const baselineData = facility?.cca3BaselineAndTargets?.baselineData;
+
+  const baselineYear = baselineData?.baselineDate ? new Date(baselineData.baselineDate).getFullYear() : null;
+
+  let factory = opts?.factory ?? new SummaryFactory();
+
+  factory = addDetailsSection(factory, facility, schemeVersions, opts.changeName, isEditable);
+  factory = addContactDetailsSection(factory, facility?.facilityContact, isEditable);
+
+  factory = addElegibilityDetailsSection(
+    factory,
+    facility?.eligibilityDetailsAndAuthorisation,
+    attachments,
+    downloadUrl,
+    isEditable,
+  );
+
+  factory = addExtentSection(factory, facility?.facilityExtent, attachments, downloadUrl, isEditable);
+  factory = add70RuleSection(factory, facility?.apply70Rule, attachments, downloadUrl, isEditable);
 
   if (isCCA3Scheme(schemeVersions) && facility?.cca3BaselineAndTargets) {
-    // TARGET COMPOSITION SECTION
-    factory
-      .addSection('Target composition', `../${FacilityWizardStep.TARGET_COMPOSITION}`)
-      .addFileListRow(
-        'Target calculator file',
-        fileUtils.toDownloadableFiles(
-          fileUtils.extractAttachments([targetComposition?.calculatorFile], attachments),
-          downloadUrl,
-        ),
-        { change: isEditable },
-      )
-      .addRow(
-        'Energy or carbon units used by the sector',
-        measurementTypeToOptionTextPipe.transform(sectorSchemeData?.sectorMeasurementType),
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      )
-      .addRow(
-        'Energy or carbon units used by the facility',
-        measurementTypeToOptionTextPipe.transform(targetComposition?.measurementType),
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      )
-      .addRow(
-        'Target type for agreement composition',
-        agreementTypePipe.transform(targetComposition?.agreementCompositionType),
-      )
+    factory = addTargetCompositionSection(
+      factory,
+      targetComposition,
+      sectorSchemeData,
+      attachments,
+      downloadUrl,
+      isEditable,
+    );
 
-      // BASELINE DATA SECTION
-      .addSection('Details of baseline data', `../${FacilityWizardStep.BASELINE_DATA}`)
-      .addRow(
-        'Is at least 12 months of consecutive baseline data available?',
-        boolToString(baselineData?.isTwelveMonths),
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      )
-      .addRow(
-        baselineData?.isTwelveMonths === true
-          ? 'Start date of baseline'
-          : 'Enter the date that 12 months of data will be available.',
-        datePipe.transform(baselineData?.baselineDate),
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      )
-      .addTextAreaRow(
-        baselineData?.isTwelveMonths === true
-          ? 'Explain why you are using a different baseline year'
-          : 'Explain how the target unit fits the greenfield criteria',
-        baselineData?.explanation,
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      );
+    factory = addBaselineDataSection(factory, baselineData, attachments, downloadUrl, isEditable);
 
-    if (baselineData?.isTwelveMonths === false) {
-      factory.addFileListRow(
-        'Evidence',
-        fileUtils.toDownloadableFiles(
-          fileUtils.extractAttachments(baselineData?.greenfieldEvidences, attachments),
-          downloadUrl,
-        ),
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      );
-    }
+    factory = addBaselineEnergySection(
+      factory,
+      facility?.cca3BaselineAndTargets?.facilityBaselineEnergyConsumption,
+      baselineYear,
+      targetComposition,
+      isEditable,
+      opts?.productsLink,
+    );
 
-    factory
-      .addRow(
-        'Must the Special Reporting Methodology be applied for this facility?',
-        boolToString(baselineData?.usedReportingMechanism),
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      )
-      .addRow(
-        'Baseline energy to carbon factor (kgC/kWh)',
-        decimalPipe.transform(baselineData?.energyCarbonFactor, '1.0-7'),
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      )
-
-      //BASELINE ENERGY CONSUMPTION SECTION
-      .addSection(
-        'Details of baseline energy or carbon consumption',
-        `../${FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION}`,
-      )
-      .addRow(
-        `Fixed baseline energy for the facility (${measurementTypeToUnitPipe.transform(targetComposition?.measurementType)})`,
-        formatNumber(fixedEnergyValue),
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      );
-
-    factory.addRow('Is there a variable energy amount?', boolToString(baselineEnergy?.hasVariableEnergy), {
-      change: isEditable,
-      appendChangeParam: true,
-    });
-
-    if (baselineEnergy?.hasVariableEnergy) {
-      factory.addRow(
-        'Indicate how you want to account for the portion of variable energy used (or carbon emitted) for your facility',
-        baselineEnergy.variableEnergyType === 'TOTALS'
-          ? 'Totals only'
-          : baselineEnergy.variableEnergyType === 'BY_PRODUCT'
-            ? 'Split by product'
-            : '',
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      );
-
-      if (baselineEnergy.variableEnergyType === 'TOTALS') {
-        factory.addRow(
-          `Total baseline variable energy (${measurementTypeToUnitPipe.transform(targetComposition?.measurementType)})`,
-          formatNumber(baselineEnergy.baselineVariableEnergy),
-          {
-            change: isEditable,
-            appendChangeParam: true,
-          },
-        );
-      }
-
-      if (baselineEnergy.variableEnergyType === 'BY_PRODUCT') {
-        const productCount = includedBaselineEnergyProducts.length;
-        const productLabel =
-          productCount === 0 ? 'No products added' : `${productCount} ${productCount === 1 ? 'Product' : 'Products'}`;
-
-        factory.addRow('Products submitted', productLabel, {
-          change: isEditable,
-          appendChangeParam: true,
-          link: `${opts?.productsLink ?? '../products'}`,
-        });
-      }
-    }
-
-    // Show throughput fields when hasVariableEnergy is false or when variableEnergyType is TOTALS
-    if (
-      baselineEnergy?.hasVariableEnergy === false ||
-      (baselineEnergy?.hasVariableEnergy && baselineEnergy.variableEnergyType === 'TOTALS')
-    ) {
-      factory
-        .addRow('Total baseline throughput', formatNumber(baselineEnergy.totalThroughput), {
-          change: isEditable,
-          appendChangeParam: true,
-        })
-        .addRow('Throughput unit', baselineEnergy.throughputUnit ?? '', {
-          change: isEditable,
-          appendChangeParam: true,
-        });
-    }
-
-    factory
-      .addRow(
-        `Variable baseline energy for the facility (${measurementTypeToUnitPipe.transform(targetComposition?.measurementType)})`,
-        formatNumber(variableEnergyValue),
-      )
-      .addRow(
-        `Total baseline energy for the facility (${measurementTypeToUnitPipe.transform(targetComposition?.measurementType)})`,
-        formatNumber(totalEnergyValue),
-      );
-
-    if (otherYearsVariableEnergy) {
-      factory.addRow(
-        `Other years - variable baseline energy (${measurementTypeToUnitPipe.transform(targetComposition?.measurementType)})`,
-        formatNumber(otherYearsVariableEnergy),
-      );
-    }
-
-    factory
-      // TARGETS SECTION
-      .addSection('Targets', `../${FacilityWizardStep.TARGETS}`)
-      .addRow(
-        'TP7 (2026) improvement (%)',
-        decimalPipe.transform(facilityTargets?.improvements[Improvement.TP7], '1.0-7'),
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      )
-      .addRow(
-        'TP8 (2027 to 2028) improvement (%)',
-        decimalPipe.transform(facilityTargets?.improvements[Improvement.TP8], '1.0-7'),
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      )
-      .addRow(
-        'TP9 (2029 to 2030) improvement (%)',
-        decimalPipe.transform(facilityTargets?.improvements[Improvement.TP9], '1.0-7'),
-        {
-          change: isEditable,
-          appendChangeParam: true,
-        },
-      );
+    factory = addTargetsSection(factory, facility?.cca3BaselineAndTargets?.facilityTargets, isEditable);
   }
 
   return factory;
@@ -533,20 +670,13 @@ export function toFacilitySummaryDataWithStatus(
   attachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
-  opts: { changeName?: boolean } = {},
+  opts: { factory?: SummaryFactory; changeName?: boolean; productsLink?: string } = {},
 ): SummaryData {
-  const statusPipe = new StatusPipe();
+  let factory = new SummaryFactory();
 
-  const factory = new SummaryFactory()
-    .addSection('')
-    .addRow('Facility status', statusPipe.transform(facility?.status) ?? '');
+  factory = addStatusSection(factory, facility);
 
-  if (facility?.excludedDate) {
-    const datePipe = new GovukDatePipe();
-    factory.addRow('Exclusion date', datePipe.transform(facility?.excludedDate));
-  }
-
-  return toFacilityWizardSummaryFactory(
+  factory = toFacilityWizardSummaryFactory(
     facility,
     sectorSchemeData,
     schemeVersions,
@@ -556,11 +686,42 @@ export function toFacilitySummaryDataWithStatus(
     {
       ...opts,
       factory: factory,
+      productsLink: opts.productsLink,
     },
-  ).create();
+  );
+
+  return factory.create();
 }
 
-function toSchemeParticipationString(schemeVersions: SchemeVersions): string {
-  if (!schemeVersions || schemeVersions.length === 0) return '';
-  return schemeVersions.length > 1 ? 'Both' : schemeVersions[0].replace('_', '');
+export function toFacilityWizardSummaryDataWithDecisionAndStatus(
+  facility: Facility,
+  sectorSchemeData: SchemeData,
+  schemeVersions: SchemeVersions,
+  decision: UnderlyingAgreementFacilityReviewDecision | UnderlyingAgreementVariationFacilityReviewDecision,
+  attachments: { submit: Record<string, string>; review: Record<string, string> },
+  isEditable: boolean,
+  downloadUrl: string,
+  opts: { factory?: SummaryFactory; changeName?: boolean; productsLink?: string } = {},
+): SummaryData {
+  let factory = new SummaryFactory();
+
+  factory = addStatusSection(factory, facility);
+
+  factory = toFacilityWizardSummaryFactory(
+    facility,
+    sectorSchemeData,
+    schemeVersions,
+    attachments.submit,
+    isEditable,
+    downloadUrl,
+    {
+      factory,
+      changeName: opts.changeName ?? true,
+      productsLink: opts.productsLink,
+    },
+  );
+
+  if (!decision?.type) return factory.create();
+
+  return addFacilityDecisionSummaryData(factory, decision, attachments.review, isEditable, downloadUrl).create();
 }

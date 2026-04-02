@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -46,8 +48,19 @@ public abstract class UnderlyingAgreementVariationBaseRequestTaskPayload extends
 
     @Override
     public Set<UUID> getReferencedAttachmentIds() {
-        return getUnderlyingAgreement() != null ?
-                getUnderlyingAgreement().getUnderlyingAgreement().getUnderlyingAgreementSectionAttachmentIds() :
-                Collections.emptySet();
+        Set<UUID> excludedFacilitiesAttachmentIds = getOriginalUnderlyingAgreementContainer() != null
+                ? getOriginalUnderlyingAgreementContainer()
+                    .getExcludedFacilities().stream()
+                    .map(facility -> facility.getFacilityItem().getAttachmentIds())
+                    .flatMap(Set::stream)
+                    .collect(Collectors.toSet())
+                : Collections.emptySet();
+        Set<UUID> underlyingAgreementAttachmentIds = getUnderlyingAgreement() != null
+                ? getUnderlyingAgreement().getUnderlyingAgreement().getUnderlyingAgreementSectionAttachmentIds()
+                : Collections.emptySet();
+
+        return Stream.of(excludedFacilitiesAttachmentIds, underlyingAgreementAttachmentIds)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
     }
 }

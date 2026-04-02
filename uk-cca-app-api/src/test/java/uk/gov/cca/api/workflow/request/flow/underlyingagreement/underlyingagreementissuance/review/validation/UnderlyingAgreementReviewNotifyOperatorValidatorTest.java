@@ -11,7 +11,7 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotificatio
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaNotifyOperatorForDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.Determination;
 import uk.gov.cca.api.workflow.request.flow.common.domain.review.DeterminationType;
-import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.DecisionNotificationValidator;
+import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.CcaDecisionNotificationValidator;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.review.domain.UnderlyingAgreementReviewRequestTaskPayload;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -33,7 +33,7 @@ class UnderlyingAgreementReviewNotifyOperatorValidatorTest {
     private UnderlyingAgreementReviewNotifyOperatorValidator underlyingAgreementSubmitNotifyOperatorValidator;
 
     @Mock
-    private DecisionNotificationValidator decisionNotificationValidator;
+    private CcaDecisionNotificationValidator decisionNotificationValidator;
 
     @Mock
     private UnderlyingAgreementReviewValidatorService underlyingAgreementReviewValidatorService;

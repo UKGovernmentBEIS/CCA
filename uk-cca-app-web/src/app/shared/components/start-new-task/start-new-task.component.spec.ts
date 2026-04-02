@@ -101,7 +101,7 @@ describe('StartNewTaskComponent', () => {
       NON_COMPLIANCE: { valid: true },
     });
 
-    expect(getByText('Record non-compliance decisions')).toBeTruthy();
+    expect(getByText('Non-compliance')).toBeTruthy();
     expect(
       getByText('Start a non-compliance task to record enforcement decisions relevant to this target unit.'),
     ).toBeTruthy();

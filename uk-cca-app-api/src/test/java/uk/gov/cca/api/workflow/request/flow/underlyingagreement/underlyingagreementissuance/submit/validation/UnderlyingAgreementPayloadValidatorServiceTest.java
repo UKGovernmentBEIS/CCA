@@ -13,7 +13,7 @@ import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.authorisation.AuthorisationAndAdditionalEvidence;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.CCA2BaselineAndTargetsValidatorService;
-import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilitiesFinalizationValidatorService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.domain.UnderlyingAgreementTargetUnitDetails;
@@ -51,7 +51,7 @@ class UnderlyingAgreementPayloadValidatorServiceTest {
     private EditedUnderlyingAgreementTargetUnitDetailsValidatorService underlyingAgreementTargetUnitDetailsValidatorService;
     
     @Mock
-    private UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService underlyingAgreementCca2EndDateValidatorService;
+    private UnderlyingAgreementFacilitiesFinalizationValidatorService underlyingAgreementFacilitiesFinalizationValidatorService;
 
 
     @Test
@@ -97,7 +97,7 @@ class UnderlyingAgreementPayloadValidatorServiceTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(underlyingAgreementTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
-        when(underlyingAgreementCca2EndDateValidatorService.validate(container.getUnderlyingAgreement().getFacilities()))
+        when(underlyingAgreementFacilitiesFinalizationValidatorService.validate(container.getUnderlyingAgreement().getFacilities()))
         		.thenReturn(BusinessValidationResult.valid());
 
         // Invoke
@@ -107,7 +107,7 @@ class UnderlyingAgreementPayloadValidatorServiceTest {
         verify(underlyingAgreementValidatorService, times(1)).getValidationResults(container, context);
         verify(cca2BaselineAndTargetsValidatorService, times(1)).validateEmpty(container);
         verify(underlyingAgreementTargetUnitDetailsValidatorService, times(1)).validate(requestTask);
-        verify(underlyingAgreementCca2EndDateValidatorService, times(1))
+        verify(underlyingAgreementFacilitiesFinalizationValidatorService, times(1))
         		.validate(container.getUnderlyingAgreement().getFacilities());
     }
 
@@ -154,7 +154,7 @@ class UnderlyingAgreementPayloadValidatorServiceTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(underlyingAgreementTargetUnitDetailsValidatorService.validate(requestTask))
                 .thenReturn(BusinessValidationResult.valid());
-        when(underlyingAgreementCca2EndDateValidatorService.validate(container.getUnderlyingAgreement().getFacilities()))
+        when(underlyingAgreementFacilitiesFinalizationValidatorService.validate(container.getUnderlyingAgreement().getFacilities()))
 				.thenReturn(BusinessValidationResult.valid());
 
         // Invoke
@@ -166,7 +166,7 @@ class UnderlyingAgreementPayloadValidatorServiceTest {
         verify(underlyingAgreementValidatorService, times(1)).getValidationResults(container, context);
         verify(cca2BaselineAndTargetsValidatorService, times(1)).validateEmpty(container);
         verify(underlyingAgreementTargetUnitDetailsValidatorService, times(1)).validate(requestTask);
-        verify(underlyingAgreementCca2EndDateValidatorService, times(1))
+        verify(underlyingAgreementFacilitiesFinalizationValidatorService, times(1))
 				.validate(container.getUnderlyingAgreement().getFacilities());
     }
 }

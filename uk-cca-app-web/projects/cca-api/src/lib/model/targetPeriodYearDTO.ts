@@ -10,9 +10,9 @@
  * Do not edit the class manually.
  */
 
-export interface TargetPeriodDTO {
+export interface TargetPeriodYearDTO {
   id?: number;
-  businessId?: 'TP5' | 'TP6';
+  businessId?: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   name?: string;
   startDate?: string;
   endDate?: string;

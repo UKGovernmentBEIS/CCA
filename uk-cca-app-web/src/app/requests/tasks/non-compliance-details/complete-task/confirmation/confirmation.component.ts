@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
-import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
 import { PanelComponent } from '@netz/govuk-components';
 
@@ -16,9 +16,9 @@ import { nonComplianceDetailsQuery } from '../../non-compliance-details.selector
       <p>A new task has been created to allow you to upload and send the Notice of Intent</p>
     }
 
-    <netz-return-to-task-or-action-page />
+    <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true"> Return to: dashboard </a>
   `,
-  imports: [PanelComponent, ReturnToTaskOrActionPageComponent],
+  imports: [PanelComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NonComplianceConfirmationComponent {

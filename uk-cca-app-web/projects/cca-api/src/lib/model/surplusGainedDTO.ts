@@ -11,7 +11,7 @@
  */
 
 export interface SurplusGainedDTO {
-  targetPeriod?: 'TP5' | 'TP6';
+  targetPeriod?: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   surplusGained?: string;
   hasHistory?: boolean;
 }

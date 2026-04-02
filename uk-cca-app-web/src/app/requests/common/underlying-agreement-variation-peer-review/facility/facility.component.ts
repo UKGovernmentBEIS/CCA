@@ -6,7 +6,7 @@ import { RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
 import { SchemeVersion } from '@shared/types';
 
-import { toFacilityWizardSummaryDataWithDecision } from '../../underlying-agreement';
+import { toFacilityWizardSummaryDataWithDecisionAndStatus } from '../../underlying-agreement';
 import { isCCA3Scheme } from '../../utils';
 import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agreement-variation-peer-review.selectors';
 
@@ -47,7 +47,7 @@ export class FacilityComponent {
       underlyingAgreementVariationPeerReviewQuery.selectSectorAssociationDetailsSchemeData(this.schemeVersion()),
     )();
 
-    return toFacilityWizardSummaryDataWithDecision(
+    return toFacilityWizardSummaryDataWithDecisionAndStatus(
       this.facility(),
       sectorSchemeData,
       this.participatingSchemeVersions(),

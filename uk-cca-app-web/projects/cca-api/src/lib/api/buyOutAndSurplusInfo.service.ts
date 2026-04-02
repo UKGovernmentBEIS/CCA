@@ -166,32 +166,32 @@ export class BuyOutAndSurplusInfoService {
    */
   public getAllSurplusHistoryByTargetPeriodAndAccountId(
     accountId: number,
-    targetPeriod: 'TP5' | 'TP6',
+    targetPeriod: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
   ): Observable<SurplusHistoryDTO[]>;
   public getAllSurplusHistoryByTargetPeriodAndAccountId(
     accountId: number,
-    targetPeriod: 'TP5' | 'TP6',
+    targetPeriod: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<SurplusHistoryDTO[]>>;
   public getAllSurplusHistoryByTargetPeriodAndAccountId(
     accountId: number,
-    targetPeriod: 'TP5' | 'TP6',
+    targetPeriod: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<SurplusHistoryDTO[]>>;
   public getAllSurplusHistoryByTargetPeriodAndAccountId(
     accountId: number,
-    targetPeriod: 'TP5' | 'TP6',
+    targetPeriod: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<SurplusHistoryDTO[]>;
   public getAllSurplusHistoryByTargetPeriodAndAccountId(
     accountId: number,
-    targetPeriod: 'TP5' | 'TP6',
+    targetPeriod: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: any = 'body',
     reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },
@@ -327,28 +327,28 @@ export class BuyOutAndSurplusInfoService {
    * @param reportProgress flag to report request and response progress.
    */
   public getExcludedAccountsForBuyOutSurplusRun(
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
   ): Observable<TargetUnitAccountBusinessInfoDTO[]>;
   public getExcludedAccountsForBuyOutSurplusRun(
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: 'response',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpResponse<TargetUnitAccountBusinessInfoDTO[]>>;
   public getExcludedAccountsForBuyOutSurplusRun(
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: 'events',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<HttpEvent<TargetUnitAccountBusinessInfoDTO[]>>;
   public getExcludedAccountsForBuyOutSurplusRun(
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: 'body',
     reportProgress?: boolean,
     options?: { httpHeaderAccept?: 'application/json' },
   ): Observable<TargetUnitAccountBusinessInfoDTO[]>;
   public getExcludedAccountsForBuyOutSurplusRun(
-    targetPeriodType: 'TP5' | 'TP6',
+    targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9',
     observe: any = 'body',
     reportProgress = false,
     options?: { httpHeaderAccept?: 'application/json' },

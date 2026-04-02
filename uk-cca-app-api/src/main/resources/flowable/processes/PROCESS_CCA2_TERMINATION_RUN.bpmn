@@ -35,7 +35,7 @@
         <design:stencilsuperid>Task</design:stencilsuperid>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="ServiceTask_10" name="Terminate in progress CCA3 existing facilities migration account processing requests" flowable:delegateExpression="#{cca2TerminationRunTerminateCca3MigrationAccountProcessingRequestsHandlerFlowable}">
+    <serviceTask id="ServiceTask_10" name="Terminate in progress CCA3 existing facilities migration account processing requests" flowable:async="true" flowable:delegateExpression="#{cca2TerminationRunTerminateCca3MigrationAccountProcessingRequestsHandlerFlowable}">
       <extensionElements>
         <design:stencilid>ServiceTask</design:stencilid>
         <design:stencilsuperid>Task</design:stencilsuperid>

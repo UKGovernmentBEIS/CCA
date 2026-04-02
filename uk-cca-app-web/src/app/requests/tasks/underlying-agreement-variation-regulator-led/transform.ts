@@ -58,7 +58,7 @@ export function createNotifyOperatorActionDTO(
     requestTaskId,
     requestTaskActionType: 'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_NOTIFY_OPERATOR_FOR_DECISION',
     requestTaskActionPayload: {
-      payloadType: 'NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD',
+      payloadType: 'CCA_NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD',
       decisionNotification,
     },
   };

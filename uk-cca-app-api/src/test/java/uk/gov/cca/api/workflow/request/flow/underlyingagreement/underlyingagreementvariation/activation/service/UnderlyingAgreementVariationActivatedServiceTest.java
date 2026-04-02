@@ -81,6 +81,7 @@ class UnderlyingAgreementVariationActivatedServiceTest {
                 .build();
         final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
                 .workflowSchemeVersion(schemeVersion)
+                .originalUnderlyingAgreementContainer(UnderlyingAgreementContainer.builder().build())
                 .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                         .underlyingAgreement(una)
                         .build())

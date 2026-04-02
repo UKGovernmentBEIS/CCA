@@ -42,7 +42,7 @@ describe('NonComplianceDetailsSubmittedComponent', () => {
           'When did the operator become compliant?',
           'Comments',
         ],
-        ['Failure to provide performance report', '3 Mar 2020', '2 Feb 2020', 'sgfxcfb'],
+        ['failure to provide the Performance Report', '3 Mar 2020', '2 Feb 2020', 'sgfxcfb'],
       ],
       [
         ['Relevant tasks or workflows', 'Relevant facilities'],

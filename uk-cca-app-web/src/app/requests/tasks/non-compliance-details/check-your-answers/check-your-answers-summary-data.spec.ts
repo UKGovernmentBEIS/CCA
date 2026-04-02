@@ -63,6 +63,20 @@ describe('toNonComplianceSummaryData', () => {
     expect(enforcementSection?.data.some((row) => row.key.includes('Explain why you will not be issuing'))).toBe(false);
   });
 
+  it('should use the updated non-compliance type label text', () => {
+    const summaryData = toNonComplianceSummaryData(
+      mockNonComplianceDetails,
+      allRelevantWorkflows,
+      allRelevantFacilities,
+      true,
+    );
+
+    const detailsSection = summaryData.find((section) => section.header === 'Non-compliance details');
+    const typeRow = detailsSection?.data.find((row) => row.key === 'Type of non-compliance');
+
+    expect(typeRow?.value).toEqual(['failure to provide the Target Period Report or Interim Target Period Report']);
+  });
+
   it('should map workflow IDs to labels using allRelevantWorkflows', () => {
     const summaryData = toNonComplianceSummaryData(
       {

@@ -32,4 +32,5 @@ export const taskRelatedActionsMap: RelatedActionsMap = {
     path: ['cancel'],
   },
   FACILITY_AUDIT_CANCEL_APPLICATION: { text: 'Cancel task', path: ['cancel'] },
+  NON_COMPLIANCE_CANCEL_APPLICATION: { text: 'Cancel task', path: ['cancel'] },
 };

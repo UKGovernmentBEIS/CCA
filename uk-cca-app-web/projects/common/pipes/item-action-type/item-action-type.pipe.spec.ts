@@ -126,6 +126,10 @@ describe('ItemActionTypePipe', () => {
 
     expect(pipe.transform('REQUEST_TERMINATED')).toEqual('Workflow terminated by the system');
 
+    expect(pipe.transform('CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED')).toEqual(
+      'CCA2 Underlying agreement terminated',
+    );
+
     expect(pipe.transform(undefined)).toEqual('Approved Application');
   });
 });

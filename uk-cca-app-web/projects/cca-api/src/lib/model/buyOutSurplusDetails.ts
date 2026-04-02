@@ -12,7 +12,7 @@
 import { FileInfoDTO } from './fileInfoDTO';
 
 export interface BuyOutSurplusDetails {
-  targetPeriodType: 'TP5' | 'TP6';
+  targetPeriodType: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   performanceDataReportVersion: number;
   submissionType: 'PRIMARY' | 'SECONDARY';
   tpOutcome: 'TARGET_MET' | 'BUY_OUT_REQUIRED' | 'SURPLUS_USED_BUY_OUT_REQUIRED' | 'SURPLUS_USED' | 'OUTSTANDING';

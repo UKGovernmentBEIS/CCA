@@ -8,7 +8,7 @@ import { TransactionsCriteria } from '../utils';
 
 export type TransactionReportFormModel = FormGroup<{
   term: FormControl<TransactionsCriteria['term']>;
-  targetPeriodType: FormControl<'TP5' | 'TP6'>;
+  targetPeriodType: FormControl<'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9'>;
   buyOutSurplusPaymentStatus: FormControl<TransactionsCriteria['buyOutSurplusPaymentStatus']>;
 }>;
 

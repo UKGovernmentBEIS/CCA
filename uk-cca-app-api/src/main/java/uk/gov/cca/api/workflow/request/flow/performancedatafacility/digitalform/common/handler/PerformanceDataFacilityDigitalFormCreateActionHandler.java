@@ -8,6 +8,8 @@ import uk.gov.cca.api.targetperiodreporting.performancedatafacility.util.Perform
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
+import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
+import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
@@ -30,6 +32,7 @@ public class PerformanceDataFacilityDigitalFormCreateActionHandler
         implements RequestFacilityCreateActionHandler<PerformanceDataFacilityDigitalFormRequestCreateActionPayload> {
 
     private final TargetPeriodService targetPeriodService;
+    private final FacilityDataQueryService facilityDataQueryService;
     private final RequestCreateFacilityAndAccountAndSectorResourcesService requestCreateFacilityAndAccountAndSectorResourcesService;
     private final StartProcessRequestService startProcessRequestService;
 
@@ -38,15 +41,18 @@ public class PerformanceDataFacilityDigitalFormCreateActionHandler
         final TargetPeriodDetailsDTO targetPeriod = targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(payload.getTargetPeriodType());
         final TargetPeriodYear targetPeriodYear = PerformanceDataFacilityUtil.getTargetPeriodYearBySubmissionDate(targetPeriod, LocalDate.now())
                 .orElseThrow(() -> new BusinessException(CcaErrorCode.TARGET_PERIOD_YEAR_NOT_FOUND));
+        final FacilityDTO facility = facilityDataQueryService.getFacilityInfoData(facilityId);
 
         CcaRequestParams requestParams = CcaRequestParams.builder()
                 .type(CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM)
                 .requestResources(requestCreateFacilityAndAccountAndSectorResourcesService.createRequestResources(facilityId))
                 .requestPayload(PerformanceDataFacilityDigitalFormRequestPayload.builder()
                         .payloadType(CcaRequestPayloadType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REQUEST_PAYLOAD)
+                        .sectorUserAssignee(appUser.getUserId())
                         .targetPeriodType(payload.getTargetPeriodType())
                         .reportType(payload.getReportType())
                         .targetPeriodYear(targetPeriodYear.getTargetYear())
+                        .facility(facility)
                         .build())
                 .requestMetadata(PerformanceDataFacilityDigitalFormRequestMetadata.builder()
                         .type(CcaRequestMetadataType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM)

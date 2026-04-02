@@ -15,7 +15,7 @@ export interface SectorPerformanceAccountTemplateDataReportItemDTO {
   targetUnitAccountBusinessId?: string;
   operatorName?: string;
   submissionDate?: string;
-  targetPeriodType?: 'TP5' | 'TP6';
+  targetPeriodType?: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   targetPeriodYear?: number;
   status?: 'SUBMITTED' | 'OUTSTANDING';
   submissionType?: 'INTERIM' | 'FINAL';

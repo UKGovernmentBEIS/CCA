@@ -13,7 +13,7 @@ import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.baselinetargets.TargetPeriod5Details;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityStatus;
-import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService;
+import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementFacilitiesFinalizationValidatorService;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidationContext;
 import uk.gov.cca.api.underlyingagreement.validation.UnderlyingAgreementValidatorService;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.common.validation.CCA2BaselineAndTargetsValidatorService;
@@ -68,7 +68,7 @@ class UnderlyingAgreementVariationRegulatorLedSubmitValidatorServiceTest {
     private UnderlyingAgreementVariationRegulatorLedSubmitAttachmentsExistValidatorService underlyingAgreementVariationRegulatorLedSubmitAttachmentsExistValidatorService;
     
     @Mock
-    private UnderlyingAgreementFacilityAgainstCca2EndDateValidatorService underlyingAgreementCca2EndDateValidatorService;
+    private UnderlyingAgreementFacilitiesFinalizationValidatorService underlyingAgreementFacilitiesFinalizationValidatorService;
 
     @Test
     void validateSubmit() {
@@ -134,7 +134,7 @@ class UnderlyingAgreementVariationRegulatorLedSubmitValidatorServiceTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(underlyingAgreementVariationRegulatorLedSubmitAttachmentsExistValidatorService.validate(taskPayload))
                 .thenReturn(BusinessValidationResult.valid());
-        when(underlyingAgreementCca2EndDateValidatorService.validate(unaContainer.getUnderlyingAgreement().getFacilities()))
+        when(underlyingAgreementFacilitiesFinalizationValidatorService.validate(unaContainer.getUnderlyingAgreement().getFacilities()))
 				.thenReturn(BusinessValidationResult.valid());
 
         // Invoke
@@ -158,7 +158,7 @@ class UnderlyingAgreementVariationRegulatorLedSubmitValidatorServiceTest {
                 .validate(determination);
         verify(underlyingAgreementVariationRegulatorLedSubmitAttachmentsExistValidatorService, times(1))
                 .validate(taskPayload);
-        verify(underlyingAgreementCca2EndDateValidatorService, times(1))
+        verify(underlyingAgreementFacilitiesFinalizationValidatorService, times(1))
 				.validate(unaContainer.getUnderlyingAgreement().getFacilities());
     }
 
@@ -226,7 +226,7 @@ class UnderlyingAgreementVariationRegulatorLedSubmitValidatorServiceTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(underlyingAgreementVariationRegulatorLedSubmitAttachmentsExistValidatorService.validate(taskPayload))
                 .thenReturn(BusinessValidationResult.invalid(List.of()));
-        when(underlyingAgreementCca2EndDateValidatorService.validate(unaContainer.getUnderlyingAgreement().getFacilities()))
+        when(underlyingAgreementFacilitiesFinalizationValidatorService.validate(unaContainer.getUnderlyingAgreement().getFacilities()))
 				.thenReturn(BusinessValidationResult.valid());
 
         // Invoke
@@ -250,7 +250,7 @@ class UnderlyingAgreementVariationRegulatorLedSubmitValidatorServiceTest {
                 .validate(determination);
         verify(underlyingAgreementVariationRegulatorLedSubmitAttachmentsExistValidatorService, times(1))
                 .validate(taskPayload);
-        verify(underlyingAgreementCca2EndDateValidatorService, times(1))
+        verify(underlyingAgreementFacilitiesFinalizationValidatorService, times(1))
 				.validate(unaContainer.getUnderlyingAgreement().getFacilities());
     }
 }

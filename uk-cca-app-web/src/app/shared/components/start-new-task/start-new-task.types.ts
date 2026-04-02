@@ -53,7 +53,7 @@ export const taskWorkflowContentDisplayMap: Record<RequestDetailsDTO['requestTyp
     errors: [],
   },
   NON_COMPLIANCE: {
-    title: 'Record non-compliance decisions',
+    title: 'Non-compliance',
     hint: 'Start a non-compliance task to record enforcement decisions relevant to this target unit.',
     button: 'Start non-compliance task',
     type: 'NON_COMPLIANCE',

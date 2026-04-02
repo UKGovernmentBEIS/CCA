@@ -71,6 +71,7 @@ class UnderlyingAgreementVariationCompletedServiceTest {
                 .build();
         final UnderlyingAgreementVariationRequestPayload requestPayload = UnderlyingAgreementVariationRequestPayload.builder()
                 .workflowSchemeVersion(schemeVersion)
+                .originalUnderlyingAgreementContainer(UnderlyingAgreementContainer.builder().build())
                 .underlyingAgreementProposed(UnderlyingAgreementVariationPayload.builder()
                         .underlyingAgreement(UnderlyingAgreement.builder()
                                 .facilities(Set.of(facility))

@@ -59,6 +59,24 @@ describe('CheckYourAnswersComponent', () => {
     expect(fixture).toMatchSnapshot();
   });
 
+  it('should hide confirm and complete button when task is not editable', () => {
+    store.setState({ ...mockNonComplianceDetailsState, isEditable: false });
+
+    fixture.detectChanges();
+
+    const button = fixture.nativeElement.querySelector('button');
+    expect(button).toBeFalsy();
+  });
+
+  it('should not submit when task is not editable', () => {
+    store.setState({ ...mockNonComplianceDetailsState, isEditable: false });
+
+    fixture.detectChanges();
+    component.onSubmit();
+
+    expect(mockTasksApiService.saveRequestTaskAction).not.toHaveBeenCalled();
+  });
+
   it('should submit with COMPLETED status and navigate to summary', () => {
     const navigateSpy = jest.spyOn(router, 'navigate');
 

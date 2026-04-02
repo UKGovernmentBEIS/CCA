@@ -6,7 +6,7 @@ import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.ValidatorHelper;
 import uk.gov.cca.api.workflow.request.flow.common.domain.CcaNotifyOperatorForDecisionRequestTaskActionPayload;
-import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.DecisionNotificationValidator;
+import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.CcaDecisionNotificationValidator;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.validation.UnderlyingAgreementVariationReviewDecisionDataValidator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UnderlyingAgreementVariationReviewNotifyOperatorValidator {
 
-    private final DecisionNotificationValidator decisionNotificationValidator;
+    private final CcaDecisionNotificationValidator decisionNotificationValidator;
     private final UnderlyingAgreementVariationReviewDecisionDataValidator underlyingAgreementVariationReviewDecisionDataValidator;
     private final UnderlyingAgreementVariationReviewValidatorService underlyingAgreementVariationReviewValidatorService;
 

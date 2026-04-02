@@ -4869,6 +4869,9 @@ paths:
             enum:
               - TP5
               - TP6
+              - TP7
+              - TP8
+              - TP9
       responses:
         '200':
           description: OK
@@ -4919,6 +4922,9 @@ paths:
             enum:
               - TP5
               - TP6
+              - TP7
+              - TP8
+              - TP9
       responses:
         '200':
           description: OK
@@ -4969,6 +4975,9 @@ paths:
             enum:
               - TP5
               - TP6
+              - TP7
+              - TP8
+              - TP9
         - name: fileAttachmentUuid
           in: query
           description: The attachment uuid
@@ -5024,6 +5033,9 @@ paths:
             enum:
               - TP5
               - TP6
+              - TP7
+              - TP8
+              - TP9
       responses:
         '200':
           description: OK
@@ -5067,6 +5079,9 @@ paths:
             enum:
               - TP5
               - TP6
+              - TP7
+              - TP8
+              - TP9
       responses:
         '200':
           description: OK
@@ -5116,6 +5131,9 @@ paths:
             enum:
               - TP5
               - TP6
+              - TP7
+              - TP8
+              - TP9
         - name: fileAttachmentUuid
           in: query
           description: The attachment uuid
@@ -5171,6 +5189,9 @@ paths:
             enum:
               - TP5
               - TP6
+              - TP7
+              - TP8
+              - TP9
       responses:
         '200':
           description: OK
@@ -5883,18 +5904,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/RequestCreateValidationResult'
   /v1.0/request-notes/{requestId}/files:
     get:
       tags:
@@ -6242,12 +6278,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - NONE
+                      - VIEW_ONLY
+                      - EXECUTE
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - NONE
+                      - VIEW_ONLY
+                      - EXECUTE
   /v1.0/notification-templates:
     get:
       tags:
@@ -7397,6 +7455,9 @@ paths:
             enum:
               - TP5
               - TP6
+              - TP7
+              - TP8
+              - TP9
       responses:
         '200':
           description: OK
@@ -8255,6 +8316,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         targetPeriodResultType:
           type: string
           enum:
@@ -8969,11 +9033,11 @@ components:
         skippedSectors:
           type: integer
           format: int64
-        sentInvoices:
+        failedInvoices:
           type: integer
           format: int64
           readOnly: true
-        failedInvoices:
+        sentInvoices:
           type: integer
           format: int64
           readOnly: true
@@ -9048,6 +9112,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
     TargetUnitAccountSiteContactDTO:
       required:
         - accountId
@@ -9453,6 +9520,15 @@ components:
           type: object
           additionalProperties:
             type: string
+    NotifyOperatorForDecisionRequestTaskActionPayload:
+      required:
+        - decisionNotification
+      type: object
+      properties:
+        payloadType:
+          type: string
+        decisionNotification:
+          $ref: '#/components/schemas/DecisionNotification'
     PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload:
       required:
         - reportPackages
@@ -9468,6 +9544,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         reportPackages:
           uniqueItems: true
           type: array
@@ -9606,6 +9685,27 @@ components:
         priBuyOutCost:
           type: string
           format: decimal
+    PerformanceDataFacilityDigitalFormRequestCreateActionPayload:
+      required:
+        - reportType
+        - targetPeriodType
+      type: object
+      properties:
+        payloadType:
+          type: string
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        reportType:
+          type: string
+          enum:
+            - INTERIM
+            - FINAL
     PeerReviewDecision:
       required:
         - notes
@@ -9658,6 +9758,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
     SurplusHistoryDTO:
       type: object
       properties:
@@ -9923,6 +10026,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         targetPeriodName:
           type: string
         locked:
@@ -9940,6 +10046,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         targetPeriodName:
           type: string
         targetPeriodYear:
@@ -10028,6 +10137,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         reportPackages:
           uniqueItems: true
           type: array
@@ -10279,44 +10391,6 @@ components:
             - IN_PROGRESS
             - COMPLETED
             - CANCELLED
-    TargetPeriodDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        businessId:
-          type: string
-          enum:
-            - TP5
-            - TP6
-        name:
-          type: string
-        startDate:
-          type: string
-          format: date
-        endDate:
-          type: string
-          format: date
-        performanceDataTemplateVersion:
-          type: string
-        performanceDataStartDate:
-          type: string
-          format: date
-        performanceDataEndDate:
-          type: string
-          format: date
-        buyOutStartDate:
-          type: string
-          format: date
-        buyOutEndDate:
-          type: string
-          format: date
-        secondaryReportingStartDate:
-          type: string
-          format: date
-        current:
-          type: boolean
     RequestTaskAssignmentDTO:
       required:
         - taskId
@@ -10621,6 +10695,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         performanceDataReportVersion:
           type: integer
           format: int32
@@ -10845,6 +10922,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         performanceOutcome:
           type: string
           enum:
@@ -11636,6 +11716,35 @@ components:
         requestTaskActionType:
           type: string
       description: The request task attachment properties
+    PerformanceDataFacilityDigitalFormRequestMetadata:
+      type: object
+      properties:
+        type:
+          type: string
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        reportType:
+          type: string
+          enum:
+            - INTERIM
+            - FINAL
+        submissionType:
+          type: string
+          enum:
+            - PRIMARY
+            - SECONDARY
+        reportVersion:
+          type: integer
+          format: int32
+        submittedDate:
+          type: string
+          format: date
     UnderlyingAgreementAcceptedRequestActionPayload:
       required:
         - decisionNotification
@@ -11874,6 +11983,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         totalAccounts:
           type: integer
           format: int64
@@ -12136,6 +12248,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         targetPeriodYear:
           type: integer
           format: int16
@@ -12460,6 +12575,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         buyOutSurplusPaymentStatus:
           type: string
           enum:
@@ -12969,6 +13087,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         targetPeriodYear:
           type: integer
           format: int16
@@ -13334,7 +13455,7 @@ components:
           enum:
             - TP6
         targetPeriodDetails:
-          $ref: '#/components/schemas/TargetPeriodDTO'
+          $ref: '#/components/schemas/TargetPeriodYearDTO'
         reportVersion:
           type: integer
           format: int32
@@ -13842,6 +13963,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         status:
           type: string
           enum:
@@ -13944,6 +14068,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         surplusGained:
           type: string
           format: decimal
@@ -14009,6 +14136,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         targetPeriodYear:
           type: integer
           format: int16
@@ -14170,6 +14300,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         newSurplusGained:
           type: string
           format: decimal
@@ -14791,6 +14924,47 @@ components:
         currentTotalAmount:
           type: string
           format: decimal
+    TargetPeriodYearDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        businessId:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        name:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        performanceDataTemplateVersion:
+          type: string
+        performanceDataStartDate:
+          type: string
+          format: date
+        performanceDataEndDate:
+          type: string
+          format: date
+        buyOutStartDate:
+          type: string
+          format: date
+        buyOutEndDate:
+          type: string
+          format: date
+        secondaryReportingStartDate:
+          type: string
+          format: date
+        current:
+          type: boolean
     RequestNoteResponse:
       type: object
       properties:
@@ -15119,6 +15293,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         reportPackages:
           uniqueItems: true
           type: array
@@ -15539,6 +15716,21 @@ components:
           type: object
           additionalProperties:
             type: string
+    NonComplianceCloseJustification:
+      required:
+        - reason
+      type: object
+      properties:
+        reason:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        files:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uuid
     OneTimePasswordDTO:
       required:
         - password
@@ -15835,6 +16027,29 @@ components:
           $ref: '#/components/schemas/TargetPeriod6Details'
         authorisationAndAdditionalEvidence:
           $ref: '#/components/schemas/AuthorisationAndAdditionalEvidence'
+    NonComplianceClosedRequestActionPayload:
+      required:
+        - reason
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        reason:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        files:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uuid
+        nonComplianceAttachments:
+          type: object
+          additionalProperties:
+            type: string
     TermsDTO:
       required:
         - url
@@ -16759,6 +16974,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         targetPeriodName:
           type: string
         targetPeriodYear:
@@ -16815,6 +17033,9 @@ components:
           enum:
             - TP5
             - TP6
+            - TP7
+            - TP8
+            - TP9
         performanceDataId:
           type: integer
           format: int64

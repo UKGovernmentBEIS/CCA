@@ -20,7 +20,9 @@ import { toNonComplianceSummaryData } from './check-your-answers-summary-data';
   template: `
     <netz-page-heading caption="Non-compliance details">Check your answers</netz-page-heading>
     <cca-summary [data]="data()" />
-    <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
+    @if (isEditable()) {
+      <button netzPendingButton govukButton type="button" (click)="onSubmit()">Confirm and complete</button>
+    }
     <div class="govuk-!-margin-top-3">
       <netz-return-to-task-or-action-page />
     </div>
@@ -48,7 +50,7 @@ export class CheckYourAnswersComponent {
   private readonly allRelevantFacilities = this.requestTaskStore.select(
     nonComplianceDetailsQuery.selectAllRelevantFacilities,
   );
-  private readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
+  protected readonly isEditable = this.requestTaskStore.select(requestTaskQuery.selectIsEditable);
 
   protected readonly data = computed(() =>
     toNonComplianceSummaryData(
@@ -60,6 +62,10 @@ export class CheckYourAnswersComponent {
   );
 
   onSubmit() {
+    if (!this.isEditable()) {
+      return;
+    }
+
     const payload = this.requestTaskStore.select(
       nonComplianceDetailsQuery.selectPayload,
     )() as NonComplianceDetailsPayload;

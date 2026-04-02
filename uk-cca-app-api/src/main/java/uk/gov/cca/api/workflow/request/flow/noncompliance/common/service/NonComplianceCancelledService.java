@@ -1,13 +1,13 @@
 package uk.gov.cca.api.workflow.request.flow.noncompliance.common.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class NonComplianceCancelledService {
 
     private final RequestService requestService;

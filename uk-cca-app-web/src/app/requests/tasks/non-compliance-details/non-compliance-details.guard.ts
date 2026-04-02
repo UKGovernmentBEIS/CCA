@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, createUrlTreeFromSnapshot } from '@angular/router';
 
-import { RequestTaskStore } from '@netz/common/store';
+import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { TaskItemStatus } from '@requests/common';
 
 import { NonComplianceDetails } from 'cca-api';
@@ -11,6 +11,12 @@ import { NON_COMPLIANCE_DETAILS_SUBTASK } from './types';
 
 export const nonComplianceDetailsRedirectGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const store = inject(RequestTaskStore);
+  const isEditable = store.select(requestTaskQuery.selectIsEditable)();
+
+  if (!isEditable) {
+    return createUrlTreeFromSnapshot(route, ['check-your-answers']);
+  }
+
   const sectionsCompleted = store.select(nonComplianceDetailsQuery.selectSectionsCompleted)() ?? {};
   const status = sectionsCompleted[NON_COMPLIANCE_DETAILS_SUBTASK];
   const details = store.select(nonComplianceDetailsQuery.selectNonComplianceDetails)();
@@ -26,6 +32,17 @@ export const nonComplianceDetailsRedirectGuard: CanActivateFn = (route: Activate
   }
 
   return false;
+};
+
+export const nonComplianceDetailsEditableGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+  const store = inject(RequestTaskStore);
+  const isEditable = store.select(requestTaskQuery.selectIsEditable)();
+
+  if (isEditable) {
+    return true;
+  }
+
+  return createUrlTreeFromSnapshot(route.parent ?? route, ['check-your-answers']);
 };
 
 export function isNonComplianceWizardCompleted(details: NonComplianceDetails): boolean {

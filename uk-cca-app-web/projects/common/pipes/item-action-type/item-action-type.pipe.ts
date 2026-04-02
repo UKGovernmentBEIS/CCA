@@ -52,6 +52,7 @@ export const ItemActionEnum: Partial<Record<RequestActionInfoDTO['type'], string
   FACILITY_AUDIT_TRACK_CORRECTIVE_ACTIONS_SUBMITTED: 'Track corrective actions completed',
   FACILITY_AUDIT_CANCELLED: 'Audit facility cancelled',
   REQUEST_TERMINATED: 'Workflow terminated by the system',
+  CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED: 'CCA2 Underlying agreement terminated',
   NON_COMPLIANCE_DETAILS_SUBMITTED: 'Non-compliance details provided',
 };
 

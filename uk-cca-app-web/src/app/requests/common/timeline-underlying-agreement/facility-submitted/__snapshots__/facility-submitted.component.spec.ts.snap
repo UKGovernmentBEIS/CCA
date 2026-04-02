@@ -25,6 +25,30 @@ exports[`FacilityComponent should show summary values: facility-summary 1`] = `
       </h1>
     </netz-page-heading>
     <cca-summary>
+      <dl
+        class="govuk-summary-list govuk-!-margin-bottom-9"
+        govuk-summary-list=""
+      >
+        <div
+          class="govuk-summary-list__row"
+          govuksummarylistrow=""
+        >
+          <dt
+            class="govuk-summary-list__key"
+            govuksummarylistrowkey=""
+          >
+            Facility status
+          </dt>
+          <dd
+            class="govuk-summary-list__value"
+            govuksummarylistrowvalue=""
+          >
+            <span>
+              New
+            </span>
+          </dd>
+        </div>
+      </dl>
       <h2
         class="govuk-heading-m"
       >

@@ -34,13 +34,12 @@ public class UnderlyingAgreementVariationRejectedDocumentTemplateWorkflowParamsP
         Map<String, Object> params = documentTemplateUnderlyingAgreementParamsProvider
                 .constructTargetUnitDetailsTemplateParams(payload.getUnderlyingAgreementProposed().getUnderlyingAgreementTargetUnitDetails());
 
-        // Find applicable scheme versions
         final Map<SchemeVersion, Integer> versionMap = payload.getUnderlyingAgreementVersionMap();
         Map<SchemeVersion, Integer> activeVersionMap = new EnumMap<>(SchemeVersion.class);
         underlyingAgreementSchemeVersionsHelperService.calculateSchemeVersionsFromActiveFacilities(
-        		payload.getUnderlyingAgreementProposed().getUnderlyingAgreement().getFacilities())
+        		payload.getOriginalUnderlyingAgreementContainer().getUnderlyingAgreement().getFacilities())
                 	.forEach(version -> activeVersionMap.put(version, versionMap.get(version)));
-        
+
         params.putAll(Map.of(
         		"reason", payload.getDetermination().getDetermination().getReason(),
         		"versionMap", documentTemplateTransformationMapper.constructVersionMap(activeVersionMap))

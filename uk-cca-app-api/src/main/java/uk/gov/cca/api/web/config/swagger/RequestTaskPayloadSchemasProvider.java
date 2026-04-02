@@ -14,6 +14,7 @@ import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComp
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataDownloadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.activation.domain.UnderlyingAgreementActivationRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.review.domain.UnderlyingAgreementReviewRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.review.peerreview.domain.UnderlyingAgreementPeerReviewRequestTaskPayload;
@@ -88,6 +89,9 @@ public class RequestTaskPayloadSchemasProvider extends SwaggerSchemasAbstractPro
 
 		// Non Compliance
 		addResolvedShemas(NonComplianceDetailsSubmitRequestTaskPayload.class.getSimpleName(), NonComplianceDetailsSubmitRequestTaskPayload.class);
+
+		// Performance Data Facility Digital Form
+		addResolvedShemas(PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.class.getSimpleName(), PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.class);
 	}
 
 }

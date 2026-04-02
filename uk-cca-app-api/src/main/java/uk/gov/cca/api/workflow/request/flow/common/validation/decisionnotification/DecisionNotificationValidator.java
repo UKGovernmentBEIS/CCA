@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.DataValidator;
-import uk.gov.cca.api.workflow.request.flow.common.domain.CcaDecisionNotification;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.flow.common.domain.DecisionNotification;
+import uk.gov.netz.api.workflow.request.flow.common.validation.DecisionNotificationUsersValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,31 +16,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DecisionNotificationValidator {
 
-    private final DataValidator<CcaDecisionNotification> ccaDecisionNotificationDataValidator;
-    private final CcaDecisionNotificationUsersValidator ccaDecisionNotificationUsersValidator;
+    private final DataValidator<DecisionNotification> decisionNotificationDataValidator;
+    private final DecisionNotificationUsersValidator decisionNotificationUsersValidator;
 
-    public BusinessValidationResult validateDecisionNotification(final RequestTask requestTask,
-                                                                 final CcaDecisionNotification decisionNotification,
-                                                                 final AppUser appUser) {
+
+    public BusinessValidationResult validate(final RequestTask requestTask,
+                                             final DecisionNotification decisionNotification,
+                                             final AppUser appUser) {
         List<DecisionNotificationViolation> violations = new ArrayList<>();
 
         // Validate data
-        ccaDecisionNotificationDataValidator.validate(decisionNotification)
+        decisionNotificationDataValidator.validate(decisionNotification)
                 .map(businessViolation ->
-                        new DecisionNotificationViolation(CcaDecisionNotification.class.getName(),
+                        new DecisionNotificationViolation(DecisionNotification.class.getName(),
                                 DecisionNotificationViolation.DecisionNotificationViolationMessage.INVALID_DECISION_NOTIFICATION_DATA,
                                 businessViolation.getData()))
                 .ifPresent(violations::add);
 
         // Validate users
-        List<DecisionNotificationViolation> decisionNotificationViolations = ccaDecisionNotificationUsersValidator
-                .validate(requestTask, decisionNotification, appUser).stream()
-                .map(businessViolation ->
-                        new DecisionNotificationViolation(CcaDecisionNotificationUsersValidator.class.getName(),
-                                DecisionNotificationViolation.DecisionNotificationViolationMessage.INVALID_NOTIFICATION_USERS,
-                                businessViolation.getData()))
-                .toList();
-        violations.addAll(decisionNotificationViolations);
+        if (!decisionNotificationUsersValidator
+                .areUsersValid(requestTask, decisionNotification, appUser)) {
+            violations.add(new DecisionNotificationViolation(DecisionNotificationUsersValidator.class.getName(),
+                    DecisionNotificationViolation.DecisionNotificationViolationMessage.INVALID_NOTIFICATION_USERS));
+        }
 
         return BusinessValidationResult.builder()
                 .valid(violations.isEmpty())
