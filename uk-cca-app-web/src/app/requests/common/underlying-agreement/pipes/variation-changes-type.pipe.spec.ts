@@ -45,7 +45,7 @@ describe('VariationChangesTypePipe', () => {
     );
 
     expect(pipe.transform('THROUGHPUT_DROPPING_MORE_THAN_10_PERCENT_DURING_TARGET_PERIOD')).toEqual(
-      'Amend the improvement targets for one or more facilities due to throughput dropping by more than 10% during a target period',
+      'Amend the improvement targets for one or more facilities that have assigned 100% of base year energy to FIXED consumption and where throughput drops by more  than 10% during a target period',
     );
 
     // Don't require operator's assent
@@ -54,7 +54,7 @@ describe('VariationChangesTypePipe', () => {
     );
 
     expect(pipe.transform('AMEND_EVIDENCE_DEFINING_EXTENT_OF_FACILITY_ELIGIBILITY')).toEqual(
-      "Amend the evidence defining the extend of a facility's eligibility",
+      "Amend the evidence defining the extent of a facility's eligibility",
     );
 
     expect(pipe.transform('AMEND_70_PERCENT_RULE_EVALUATION')).toEqual(

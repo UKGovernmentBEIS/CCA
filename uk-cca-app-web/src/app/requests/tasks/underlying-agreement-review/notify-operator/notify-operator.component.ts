@@ -18,7 +18,7 @@ import {
   NotifyOperatorOfDecisionFormProvider,
   setApiErrors,
   TasksApiService,
-  toDecisionNotification,
+  toCcaDecisionNotification,
   transformAccountReferenceData,
   underlyingAgreementQuery,
   underlyingAgreementReviewQuery,
@@ -153,7 +153,7 @@ export class NotifyOperatorComponent {
   onSubmit() {
     const payload = this.store.select(underlyingAgreementQuery.selectPayload)();
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
-    const notification = toDecisionNotification(this.form.value);
+    const notification = toCcaDecisionNotification(this.form.value);
     const proposedUnderlyingAgreement = createProposedUnderlyingAgreementPayload(payload);
 
     const dto = createNotifyOperatorActionDTO(requestTaskId, notification, proposedUnderlyingAgreement);

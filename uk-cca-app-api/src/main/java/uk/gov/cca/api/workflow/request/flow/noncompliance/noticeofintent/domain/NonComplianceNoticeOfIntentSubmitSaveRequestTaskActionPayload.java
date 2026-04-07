@@ -16,7 +16,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class NoticeOfIntentSubmitSaveRequestTaskActionPayload extends RequestTaskActionPayload {
+public class NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload extends RequestTaskActionPayload {
 
     private NoticeOfIntent noticeOfIntent;
 

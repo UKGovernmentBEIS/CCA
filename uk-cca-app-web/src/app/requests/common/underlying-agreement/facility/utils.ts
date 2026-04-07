@@ -19,8 +19,8 @@ export function normaliseNumber(field: string | number | null | undefined): numb
   return Number.isNaN(Number(field)) ? null : Number(field);
 }
 
-export function calculateFixedEnergy(totalFixedEnergy: string | number | null | undefined): string {
-  return normaliseNumber(totalFixedEnergy)?.toString();
+export function calculateFixedEnergy(totalFixedEnergy: string | number | null | undefined): string | null {
+  return normaliseNumber(totalFixedEnergy)?.toString() ?? null;
 }
 
 export function calculateVariableEnergy(
@@ -29,11 +29,11 @@ export function calculateVariableEnergy(
   baselineVariableEnergy?: string | number | null | undefined,
   products?: ProductVariableEnergyConsumptionData[] | null | undefined,
   facilityBaselineYear?: number | null | undefined,
-): string {
+): string | null {
   if (!hasVariableEnergy) return '0';
 
   if (variableEnergyType === 'TOTALS') {
-    return normaliseNumber(baselineVariableEnergy).toString();
+    return normaliseNumber(baselineVariableEnergy)?.toString() ?? null;
   }
 
   if (variableEnergyType === 'BY_PRODUCT') {
@@ -51,10 +51,11 @@ export function calculateVariableEnergy(
 export function calculateTotalEnergy(
   totalFixedEnergy: string | number | null | undefined,
   totalVariableEnergy: string | number | null | undefined,
-): string {
+): string | null {
+  if (totalFixedEnergy == null || totalVariableEnergy == null) return null;
   const fixed = normaliseNumber(totalFixedEnergy);
   const variable = normaliseNumber(totalVariableEnergy);
-
+  if (fixed === null || variable === null) return null;
   return (fixed + variable).toString();
 }
 

@@ -98,6 +98,17 @@ describe('ChooseRelevantFacilitiesComponent', () => {
     expect(component.facilities.at(initialLength).controls.isHistorical.value).toBe(false);
   });
 
+  it('should format facility option labels with the facility id and name', () => {
+    const options = component.getOptionsForRow(0);
+
+    expect(options).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ value: 'FAC-001', text: 'FAC-001 / Facility 1' }),
+        expect.objectContaining({ value: 'FAC-002', text: 'FAC-002 / Facility 2' }),
+      ]),
+    );
+  });
+
   it('should disable Add facility button when all facility options are selected', () => {
     component.onAddFacility();
     component.facilities.at(2).controls.facilityBusinessId.setValue('FAC-002');

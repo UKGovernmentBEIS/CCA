@@ -52,7 +52,7 @@ export class ChooseRelevantFacilitiesComponent {
       facilityId,
       {
         value: facilityId,
-        text: this.allFacilities[facilityId],
+        text: `${facilityId} / ${this.allFacilities[facilityId]}`,
       },
     ]),
   );

@@ -2842,5 +2842,20 @@
             </sql>
         </rollback>
     </changeSet>
+    
+    <changeSet id="0_1_0_UPDATE_CCA2_TERMINATION_RUN_CAN_CREATE_MANUALLY" author="apostolouk@unisystems.gr">
+        <sql>
+            UPDATE request_type
+            SET can_create_manually = true
+            WHERE code = 'CCA2_TERMINATION_RUN';
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE request_type
+            SET can_create_manually = false
+            WHERE code = 'CCA2_TERMINATION_RUN';
+            </sql>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>

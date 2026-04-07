@@ -47,7 +47,7 @@ export class ChooseRelevantWorkflowsComponent {
       workflowId,
       {
         value: workflowId,
-        text: transformWorkflowLabel(this.allWorkflows[workflowId]),
+        text: `${workflowId} - ${transformWorkflowLabel(this.allWorkflows[workflowId])}`,
       },
     ]),
   );
@@ -132,5 +132,9 @@ export class ChooseRelevantWorkflowsComponent {
       .filter((workflowId): workflowId is string => !!workflowId && this.workflowIdsSet.has(workflowId));
 
     return new Set(selectedWorkflowIds).size >= this.workflowIds.length;
+  }
+
+  get addItemLabel(): string {
+    return this.workflows.length > 0 ? 'Add another item' : 'Add Item';
   }
 }

@@ -12,6 +12,7 @@ import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataGenerateRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadProcessingRequestTaskActionPayload;
@@ -112,6 +113,7 @@ public class RequestTaskActionPayloadSchemasProvider extends SwaggerSchemasAbstr
 
         // Non Compliance
         addResolvedShemas(NonComplianceDetailsSubmitSaveRequestTaskActionPayload.class.getSimpleName(), NonComplianceDetailsSubmitSaveRequestTaskActionPayload.class);
+        addResolvedShemas(NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload.class.getSimpleName(), NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload.class);
     }
 
 }

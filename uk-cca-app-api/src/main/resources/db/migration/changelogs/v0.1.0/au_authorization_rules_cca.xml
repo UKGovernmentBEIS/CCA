@@ -11438,5 +11438,47 @@
             </sql>
         </rollback>
     </changeSet>
+    
+    <changeSet id="0_1_0_add_rule_and_service_association_for_CA_resource_and_CCA2_TERMINATION_RUN_subresource_and_REQUEST_CREATE_handler_for_REGULATOR_USER" author="apostolouk@unisystems.gr">
+        <sql>
+            insert into au_rule(id, resource_type, resource_sub_type, handler, role_type, scope)
+            values (nextval('au_rule_seq'), 'CA', 'CCA2_TERMINATION_RUN', 'caRequestCreateHandler', 'REGULATOR', 'REQUEST_CREATE');
+
+            insert into au_service_rule(service_id, rule_id)
+            select s.id, r.id
+            from au_service s
+                     cross join au_rule r
+            where s.name = 'processRequestCreateAction'
+              and r.resource_type = 'CA'
+              and r.resource_sub_type = 'CCA2_TERMINATION_RUN'
+              and r.handler = 'caRequestCreateHandler'
+              and r.role_type = 'REGULATOR'
+              and r.scope = 'REQUEST_CREATE';
+        </sql>
+        <rollback>
+            <sql>
+                delete from au_service_rule sr
+                using
+                au_rule r,
+                au_service s
+                where r.id = sr.rule_id
+                and s.id = sr.service_id
+                and s.name = 'processRequestCreateAction'
+                and r.resource_type = 'CA'
+                and r.resource_sub_type = 'CCA2_TERMINATION_RUN'
+                and r.handler = 'caRequestCreateHandler'
+                and r.role_type = 'REGULATOR'
+                and r.scope = 'REQUEST_CREATE';
+
+                delete
+                from au_rule
+                where resource_type = 'CA'
+                and resource_sub_type = 'CCA2_TERMINATION_RUN'
+                and handler = 'caRequestCreateHandler'
+                and role_type = 'REGULATOR'
+                and scope = 'REQUEST_CREATE';
+            </sql>
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>

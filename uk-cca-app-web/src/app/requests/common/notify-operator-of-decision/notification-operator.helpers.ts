@@ -4,7 +4,7 @@ import { CcaDecisionNotification, DefaultNoticeRecipient, RequestActionUserInfo 
 
 import { NotifyOperatorOfDecisionFormModel } from './notify-operator-of-decision-form.provider';
 
-export function toDecisionNotification(
+export function toCcaDecisionNotification(
   notifyPayload: NotifyOperatorOfDecisionFormModel['value'],
 ): CcaDecisionNotification {
   const operators = notifyPayload.additionalUsersNotified.filter((u) => u.type === 'OPERATOR');
@@ -15,6 +15,18 @@ export function toDecisionNotification(
     externalContacts: notifyPayload.externalContactsNotified,
     signatory: notifyPayload.signatory,
     sectorUsers: sectorUsers.map((u) => u.userId),
+  };
+}
+
+export function toNonComplianceDecisionNotification(
+  notifyPayload: NotifyOperatorOfDecisionFormModel['value'],
+): CcaDecisionNotification {
+  const operators = notifyPayload.additionalUsersNotified.filter((u) => u.type === 'OPERATOR');
+
+  return {
+    operators: operators.map((u) => u.userId),
+    externalContacts: notifyPayload.externalContactsNotified,
+    signatory: notifyPayload.signatory,
   };
 }
 

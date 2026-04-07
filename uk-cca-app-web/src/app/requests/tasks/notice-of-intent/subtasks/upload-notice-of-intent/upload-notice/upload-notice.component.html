@@ -1,0 +1,34 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Upload notice of intent"
+  heading="Upload notice"
+  data-testid="upload-notice-of-intent-form"
+>
+  <div class="govuk-!-width-two-thirds">
+    <p>Upload the notice of intent to be sent to the operator.</p>
+
+    <p>
+      Remember to review your uploaded notice before proceeding with the "Notify Operator" action, as any referenced
+      dates may no longer be current.
+    </p>
+
+    <cca-file-input
+      [downloadUrl]="getDownloadUrl"
+      formControlName="noticeOfIntentFile"
+      label="Upload file"
+      labelSize="small"
+    />
+
+    <div
+      formControlName="comments"
+      govuk-textarea
+      label="Comments (optional)"
+      hint="Operators with access to the service may be able to read these comments."
+      labelSize="medium"
+    ></div>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

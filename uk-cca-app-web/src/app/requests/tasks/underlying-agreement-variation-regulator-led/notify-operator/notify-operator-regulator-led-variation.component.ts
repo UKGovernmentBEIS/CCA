@@ -18,7 +18,7 @@ import {
   NotifyOperatorOfDecisionFormProvider,
   setApiErrors,
   TasksApiService,
-  toDecisionNotification,
+  toCcaDecisionNotification,
   underlyingAgreementQuery,
 } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
@@ -132,7 +132,7 @@ export class NotifyOperatorRegulatorLedVariationComponent {
 
   onSubmit() {
     const requestTaskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
-    const notification = toDecisionNotification(this.form.value);
+    const notification = toCcaDecisionNotification(this.form.value);
     const dto = createNotifyOperatorActionDTO(requestTaskId, notification);
 
     this.tasksApiService

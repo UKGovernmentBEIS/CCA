@@ -10,7 +10,7 @@ import {
   NotifyOperatorOfDecisionFormModel,
   NotifyOperatorOfDecisionFormProvider,
   TasksApiService,
-  toDecisionNotification,
+  toCcaDecisionNotification,
 } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 
@@ -52,7 +52,7 @@ export default class Cca3MigrationAccountActivationNotifyOperatorComponent {
 
   onSubmit() {
     const requestTaskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
-    const decisionNotification = toDecisionNotification(this.form.value);
+    const decisionNotification = toCcaDecisionNotification(this.form.value);
     const dto = createNotifyOperatorActionDTO(requestTaskId, decisionNotification);
 
     this.tasksApiService.saveRequestTaskAction(dto).subscribe(() => {

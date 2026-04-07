@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 import { SchemeData } from './schemeData';
+import { Facility } from './facility';
 import { UnderlyingAgreement } from './underlyingAgreement';
 
 export interface UnderlyingAgreementContainer {
   schemeDataMap: Record<string, SchemeData>;
   underlyingAgreement: UnderlyingAgreement;
+  excludedFacilities?: Facility[];
   underlyingAgreementAttachments?: Record<string, string>;
 }

@@ -11,6 +11,8 @@ import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrective
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.domain.NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataDownloadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadSubmitRequestTaskPayload;
@@ -89,6 +91,8 @@ public class RequestTaskPayloadSchemasProvider extends SwaggerSchemasAbstractPro
 
 		// Non Compliance
 		addResolvedShemas(NonComplianceDetailsSubmitRequestTaskPayload.class.getSimpleName(), NonComplianceDetailsSubmitRequestTaskPayload.class);
+		addResolvedShemas(NonComplianceNoticeOfIntentSubmitRequestTaskPayload.class.getSimpleName(), NonComplianceNoticeOfIntentSubmitRequestTaskPayload.class);
+		addResolvedShemas(NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload.class.getSimpleName(), NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload.class);
 
 		// Performance Data Facility Digital Form
 		addResolvedShemas(PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.class.getSimpleName(), PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.class);

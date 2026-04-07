@@ -7,7 +7,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntent;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitRequestTaskPayload;
-import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntentSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
@@ -33,7 +33,7 @@ class NoticeOfIntentSubmitServiceTest {
                 .noticeOfIntentFile(fileUuid)
                 .comments("bla bla bla")
                 .build();
-        final NoticeOfIntentSubmitSaveRequestTaskActionPayload requestTaskActionPayload = NoticeOfIntentSubmitSaveRequestTaskActionPayload.builder()
+        final NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload requestTaskActionPayload = NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload.builder()
                 .noticeOfIntent(noticeOfIntent)
                 .sectionsCompleted(sectionsCompleted)
                 .build();

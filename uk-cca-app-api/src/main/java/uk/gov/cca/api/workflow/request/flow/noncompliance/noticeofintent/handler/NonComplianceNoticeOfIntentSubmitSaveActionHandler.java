@@ -3,7 +3,7 @@ package uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.handle
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
-import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntentSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.service.NoticeOfIntentSubmitService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
@@ -15,13 +15,13 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
-public class NonComplianceNoticeOfIntentSubmitSaveActionHandler implements RequestTaskActionHandler<NoticeOfIntentSubmitSaveRequestTaskActionPayload> {
+public class NonComplianceNoticeOfIntentSubmitSaveActionHandler implements RequestTaskActionHandler<NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload> {
 
     private final RequestTaskService requestTaskService;
     private final NoticeOfIntentSubmitService noticeOfIntentSubmitService;
 
     @Override
-    public RequestTaskPayload process(Long requestTaskId, String requestTaskActionType, AppUser appUser, NoticeOfIntentSubmitSaveRequestTaskActionPayload payload) {
+    public RequestTaskPayload process(Long requestTaskId, String requestTaskActionType, AppUser appUser, NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload payload) {
         RequestTask requestTask = requestTaskService.findTaskById(requestTaskId);
         noticeOfIntentSubmitService.applySaveAction(payload, requestTask);
         return requestTask.getPayload();

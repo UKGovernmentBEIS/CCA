@@ -11,11 +11,11 @@ export enum VariationChangesEnum {
   AMEND_ONE_OR_MORE_FACILITIES_UK_ETS = 'Amend the UK ETS identifiers for one or more facilities',
   AMEND_ONE_OR_MORE_IMPROVEMENT_TARGETS = 'Amend the improvement targets for one or more facilities due to an error',
   UNEXPECTED_POWER_SUPPLY_DISRUPTION_DURING_TARGET_PERIOD = 'Amend the improvement targets for one or more facilities due to an unexpected power supply disruption during a target period',
-  THROUGHPUT_DROPPING_MORE_THAN_10_PERCENT_DURING_TARGET_PERIOD = 'Amend the improvement targets for one or more facilities due to throughput dropping by more than 10% during a target period',
+  THROUGHPUT_DROPPING_MORE_THAN_10_PERCENT_DURING_TARGET_PERIOD = 'Amend the improvement targets for one or more facilities that have assigned 100% of base year energy to FIXED consumption and where throughput drops by more  than 10% during a target period',
 
   // don't require operator's assent
   AMEND_RESPONSIBLE_PERSON_PERSONAL_DETAILS = 'Amend the personal information (name, postal address, email address) for the Responsible person',
-  AMEND_EVIDENCE_DEFINING_EXTENT_OF_FACILITY_ELIGIBILITY = "Amend the evidence defining the extend of a facility's eligibility",
+  AMEND_EVIDENCE_DEFINING_EXTENT_OF_FACILITY_ELIGIBILITY = "Amend the evidence defining the extent of a facility's eligibility",
   AMEND_70_PERCENT_RULE_EVALUATION = 'Amend the 70% rule evaluation for one or more facilities',
   STRUCTURAL_CHANGE = "Amend a facility's base year data due to a structural change",
   REVIEW_OF_70_PERCENT_RULE = "Amend a facility's base year data due to a review of the 70% rule",

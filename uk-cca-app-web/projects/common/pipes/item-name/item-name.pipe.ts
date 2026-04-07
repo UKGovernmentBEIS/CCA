@@ -75,6 +75,9 @@ export class ItemNamePipe implements PipeTransform {
       case 'NON_COMPLIANCE_DETAILS_SUBMIT':
         return 'Provide non-compliance details';
 
+      case 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT':
+        return 'Upload notice of intent';
+
       default:
         return null;
     }

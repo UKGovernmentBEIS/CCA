@@ -93,6 +93,7 @@ describe('ItemNamePipe', () => {
     expect(pipe.transform('AUDIT_TRACK_CORRECTIVE_ACTIONS')).toEqual('Track corrective actions');
 
     expect(pipe.transform('NON_COMPLIANCE_DETAILS_SUBMIT')).toEqual('Provide non-compliance details');
+    expect(pipe.transform('NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT')).toEqual('Upload notice of intent');
 
     expect(pipe.transform(null)).toBeNull();
   });

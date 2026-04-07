@@ -19,6 +19,7 @@ import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceClosedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaGeneratedRequestActionPayload;
@@ -124,6 +125,7 @@ public class RequestActionPayloadSchemasProvider extends SwaggerSchemasAbstractP
 		// Non Compliance
 		addResolvedShemas(NonComplianceDetailsSubmittedRequestActionPayload.class.getSimpleName(), NonComplianceDetailsSubmittedRequestActionPayload.class);
 		addResolvedShemas(NonComplianceClosedRequestActionPayload.class.getSimpleName(), NonComplianceClosedRequestActionPayload.class);
+		addResolvedShemas(NonComplianceNoticeOfIntentSubmittedRequestActionPayload.class.getSimpleName(), NonComplianceNoticeOfIntentSubmittedRequestActionPayload.class);
 	}
 
 }

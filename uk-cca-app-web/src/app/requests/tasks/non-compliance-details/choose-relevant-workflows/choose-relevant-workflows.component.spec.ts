@@ -94,6 +94,31 @@ describe('ChooseRelevantWorkflowsComponent', () => {
     expect(component.workflows.length).toBe(initialLength + 1);
   });
 
+  it('should format workflow option labels with the workflow id and name', () => {
+    component.workflows.clear();
+    component.onAddItem();
+
+    const options = component.getOptionsForRow(0);
+
+    expect(options).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ value: 'WF-001', text: 'WF-001 - Workflow 1' }),
+        expect.objectContaining({ value: 'WF-002', text: 'WF-002 - Workflow 2' }),
+      ]),
+    );
+  });
+
+  it('should show Add another item when at least one workflow row exists', () => {
+    const addButton = fixture.nativeElement.querySelector('button.govuk-button--secondary') as HTMLButtonElement;
+
+    expect(addButton.textContent?.trim()).toBe('Add another item');
+
+    component.workflows.clear();
+    fixture.detectChanges();
+
+    expect(addButton.textContent?.trim()).toBe('Add Item');
+  });
+
   it('should disable Add item button when all workflow options are selected', () => {
     component.onAddItem();
     component.workflows.at(2).setValue('WF-003');

@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
-import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntentSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.service.NoticeOfIntentSubmitService;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
@@ -35,8 +35,8 @@ class NonComplianceNoticeOfIntentSubmitSaveActionHandlerTest {
         final AppUser appUser = AppUser.builder().build();
         final long requestTaskId = 1L;
         final String requestTaskActionType = CcaRequestTaskActionType.NON_COMPLIANCE_NOTICE_OF_INTENT_SAVE_APPLICATION;
-        final NoticeOfIntentSubmitSaveRequestTaskActionPayload taskActionPayload =
-                NoticeOfIntentSubmitSaveRequestTaskActionPayload.builder()
+        final NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload taskActionPayload =
+                NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload.builder()
                         .payloadType(CcaRequestTaskActionPayloadType.NON_COMPLIANCE_NOTICE_OF_INTENT_SAVE_PAYLOAD)
                         .build();
 

@@ -15,7 +15,7 @@ import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveac
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceCloseRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmitSaveRequestTaskActionPayload;
-import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntentSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataGenerateRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadProcessingRequestTaskActionPayload;
@@ -103,7 +103,7 @@ public class RequestTaskActionPayloadTypesProvider implements JsonSubTypesProvid
                 // Non Compliance
                 new NamedType(PeerReviewRequestTaskActionPayload.class, NON_COMPLIANCE_PEER_REVIEW_REQUEST_PAYLOAD),
                 new NamedType(NonComplianceDetailsSubmitSaveRequestTaskActionPayload.class, NON_COMPLIANCE_DETAILS_SAVE_PAYLOAD),
-                new NamedType(NoticeOfIntentSubmitSaveRequestTaskActionPayload.class, NON_COMPLIANCE_NOTICE_OF_INTENT_SAVE_PAYLOAD),
+                new NamedType(NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload.class, NON_COMPLIANCE_NOTICE_OF_INTENT_SAVE_PAYLOAD),
                 new NamedType(NonComplianceCloseRequestTaskActionPayload.class, NON_COMPLIANCE_CLOSE_TASK_PAYLOAD));
     }
 

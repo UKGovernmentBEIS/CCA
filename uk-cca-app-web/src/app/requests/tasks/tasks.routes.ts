@@ -221,6 +221,10 @@ export const TASKS_ROUTES: Routes = [
           import('./non-compliance-details/non-compliance-details.routes').then((r) => r.NON_COMPLIANCE_DETAILS_ROUTES),
       },
       {
+        path: 'notice-of-intent',
+        loadChildren: () => import('./notice-of-intent/notice-of-intent.routes').then((r) => r.NOTICE_OF_INTENT_ROUTES),
+      },
+      {
         path: 'file-download/:uuid',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },

@@ -206,6 +206,7 @@ model/facilityBaselineEnergyConsumption.ts
 model/facilityBusinessIdDTO.ts
 model/facilityCertificationDetailsDTO.ts
 model/facilityCertificationStatusUpdateDTO.ts
+model/facilityDTO.ts
 model/facilityDetails.ts
 model/facilityExtent.ts
 model/facilityHeaderInfoDTO.ts
@@ -255,9 +256,14 @@ model/nonComplianceDetails.ts
 model/nonComplianceDetailsSubmitRequestTaskPayload.ts
 model/nonComplianceDetailsSubmitSaveRequestTaskActionPayload.ts
 model/nonComplianceDetailsSubmittedRequestActionPayload.ts
+model/nonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload.ts
+model/nonComplianceNoticeOfIntentSubmitRequestTaskPayload.ts
+model/nonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload.ts
+model/nonComplianceNoticeOfIntentSubmittedRequestActionPayload.ts
 model/notAccountRelatedUploadErrorReport.ts
 model/notePayload.ts
 model/noteRequest.ts
+model/noticeOfIntent.ts
 model/noticeRecipientDTO.ts
 model/notificationAlertDTO.ts
 model/notificationTemplateDTO.ts
@@ -292,6 +298,7 @@ model/performanceDataCalculatedMetrics.ts
 model/performanceDataDownloadSubmitRequestTaskPayload.ts
 model/performanceDataFacilityDigitalFormRequestCreateActionPayload.ts
 model/performanceDataFacilityDigitalFormRequestMetadata.ts
+model/performanceDataFacilityDigitalFormSubmitRequestTaskPayload.ts
 model/performanceDataGenerateRequestTaskActionPayload.ts
 model/performanceDataSpreadsheetProcessingRequestMetadata.ts
 model/performanceDataSpreadsheetProcessingSubmittedRequestActionPayload.ts
