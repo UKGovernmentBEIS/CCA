@@ -30,7 +30,7 @@
         <design:stencilid>StartTimerEvent</design:stencilid>
       </extensionElements>
       <timerEventDefinition>
-        <timeCycle>0 30 00 1/1 * ? *</timeCycle>
+        <timeCycle>0 00 01 1/1 * ? *</timeCycle>
       </timerEventDefinition>
     </startEvent>
     <endEvent id="Event_1xbvtyg">

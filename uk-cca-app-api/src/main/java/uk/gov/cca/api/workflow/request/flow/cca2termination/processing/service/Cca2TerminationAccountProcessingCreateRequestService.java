@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestMetadataType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
@@ -20,6 +21,7 @@ import uk.gov.netz.api.workflow.request.core.service.RequestService;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 import uk.gov.netz.api.workflow.request.flow.common.domain.dto.RequestParams;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class Cca2TerminationAccountProcessingCreateRequestService {
@@ -31,12 +33,22 @@ public class Cca2TerminationAccountProcessingCreateRequestService {
 
     @Transactional
     public void createRequest(Long accountId, String parentRequestId, String parentRequestBusinessKey) {
-        final Request parentRequest = requestService.findRequestById(parentRequestId);
-        final Cca2TerminationRunRequestMetadata metadata = (Cca2TerminationRunRequestMetadata) parentRequest.getMetadata();
-        final Cca2TerminationAccountState accountState = metadata.getCca2TerminationAccountStates().get(accountId);
+    	
+    	Cca2TerminationRunRequestMetadata metadata = null;
+    	Cca2TerminationAccountState accountState;
+    	log.info("Trigger request for account with id {} and parent request id {}", accountId, parentRequestId);
+    	try {
+    		final Request parentRequest = requestService.findRequestById(parentRequestId);
+            metadata = (Cca2TerminationRunRequestMetadata) parentRequest.getMetadata();
+            accountState = metadata.getCca2TerminationAccountStates().get(accountId);
 
-        // Update accountState with facilityIds
-        accountState.setFacilityIds(facilityDataQueryService.getAllActiveFacilityIdsByAccount(accountId));
+            // Update accountState with facilityIds
+            accountState.setFacilityIds(facilityDataQueryService.getAllActiveFacilityIdsByAccount(accountId));
+    	} catch (Exception e) {
+    		log.error(e.getMessage(), e);
+    		log.error(metadata);
+            throw e;
+    	}
         
         final RequestParams requestParams = RequestParams.builder()
                 .type(CcaRequestType.CCA2_TERMINATION_ACCOUNT_PROCESSING)
