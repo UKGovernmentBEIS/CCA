@@ -43,6 +43,7 @@ public class Cca2TerminationRunCreateActionHandlerTest {
         handler.process(ca, payload, appUser);
 
         // Verify
+        verify(cca2TerminationRunInitiateService, times(1)).validateCca2TerminationRunStartDate();
         verify(cca2TerminationRunInitiateService, times(1)).createCca2TerminationRun(List.of());
         verify(cca2TerminationWorkflowConfig, times(1)).getAccountBusinessIds();
     }

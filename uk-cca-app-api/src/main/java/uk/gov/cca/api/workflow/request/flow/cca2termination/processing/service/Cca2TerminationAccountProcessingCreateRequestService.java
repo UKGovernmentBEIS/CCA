@@ -34,21 +34,13 @@ public class Cca2TerminationAccountProcessingCreateRequestService {
     @Transactional
     public void createRequest(Long accountId, String parentRequestId, String parentRequestBusinessKey) {
     	
-    	Cca2TerminationRunRequestMetadata metadata = null;
-    	Cca2TerminationAccountState accountState;
     	log.info("Trigger request for account with id {} and parent request id {}", accountId, parentRequestId);
-    	try {
-    		final Request parentRequest = requestService.findRequestById(parentRequestId);
-            metadata = (Cca2TerminationRunRequestMetadata) parentRequest.getMetadata();
-            accountState = metadata.getCca2TerminationAccountStates().get(accountId);
+		final Request parentRequest = requestService.findRequestById(parentRequestId);
+		Cca2TerminationRunRequestMetadata metadata = (Cca2TerminationRunRequestMetadata) parentRequest.getMetadata();
+		Cca2TerminationAccountState accountState = metadata.getCca2TerminationAccountStates().get(accountId);
 
-            // Update accountState with facilityIds
-            accountState.setFacilityIds(facilityDataQueryService.getAllActiveFacilityIdsByAccount(accountId));
-    	} catch (Exception e) {
-    		log.error(e.getMessage(), e);
-    		log.error(metadata);
-            throw e;
-    	}
+        // Update accountState with facilityIds
+        accountState.setFacilityIds(facilityDataQueryService.getAllActiveFacilityIdsByAccount(accountId));
         
         final RequestParams requestParams = RequestParams.builder()
                 .type(CcaRequestType.CCA2_TERMINATION_ACCOUNT_PROCESSING)

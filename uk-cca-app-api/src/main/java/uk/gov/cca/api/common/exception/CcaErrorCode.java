@@ -84,6 +84,7 @@ public enum CcaErrorCode implements NetzErrorCode {
     CCA2_EXTENSION_NOTICE_RUN_EXIST("CCA2EXT1001", HttpStatus.BAD_REQUEST, "Cca2 extension notice run already in progress"),
     /** Codes for CCA2 termination run errors. */
     CCA2_TERMINATION_RUN_EXIST("CCA2END1001", HttpStatus.BAD_REQUEST, "CCA2 termination run already in progress"),
+    CCA2_TERMINATION_RUN_CANNOT_START_YET("CCA2END1001", HttpStatus.BAD_REQUEST, "CCA2 termination run cannot start yet"),
     /** Non Compliance */
     INVALID_NON_COMPLIANCE("NCOM1001", HttpStatus.BAD_REQUEST, "Invalid Non Compliance"),
     /** Codes for Scheme termination errors. */

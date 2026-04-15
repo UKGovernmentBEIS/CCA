@@ -1,6 +1,7 @@
 package uk.gov.cca.api.workflow.request.flow.cca2termination.run.handler;
 
 import org.springframework.stereotype.Component;
+
 import lombok.RequiredArgsConstructor;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.cca2termination.common.config.Cca2TerminationWorkflowConfig;
@@ -19,6 +20,7 @@ public class Cca2TerminationRunCreateActionHandler implements RequestCACreateAct
 
     @Override
 	public String process(CompetentAuthorityEnum ca, RequestCreateActionEmptyPayload payload, AppUser appUser) {
+    	cca2TerminationRunInitiateService.validateCca2TerminationRunStartDate();
     	cca2TerminationRunInitiateService.createCca2TerminationRun(cca2TerminationWorkflowConfig.getAccountBusinessIds());
         return "";
 	}

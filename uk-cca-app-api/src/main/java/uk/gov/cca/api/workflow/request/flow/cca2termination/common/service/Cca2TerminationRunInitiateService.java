@@ -40,6 +40,15 @@ public class Cca2TerminationRunInitiateService {
     private final StartProcessRequestService startProcessRequestService;
     private final FacilityDataQueryService facilityDataQueryService;
 	private final Cca2TerminationWorkflowConfig cca2TerminationWorkflowConfig;
+	
+	public void validateCca2TerminationRunStartDate() {
+		LocalDate currentDate = LocalDate.now();
+		LocalDate triggerDate = cca2TerminationWorkflowConfig.getTriggerDate();
+
+		if (currentDate.isBefore(triggerDate)) {
+			throw new BusinessException(CcaErrorCode.CCA2_TERMINATION_RUN_CANNOT_START_YET);
+		}
+	}
 
 	public boolean isValidForCca2TerminationRun() {
         LocalDate currentDate = LocalDate.now();

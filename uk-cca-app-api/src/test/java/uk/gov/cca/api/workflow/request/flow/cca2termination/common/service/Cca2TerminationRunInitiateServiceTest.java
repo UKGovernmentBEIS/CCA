@@ -122,4 +122,18 @@ class Cca2TerminationRunInitiateServiceTest {
         verifyNoInteractions(facilityDataQueryService);
         verifyNoInteractions(startProcessRequestService);
     }
+
+    @Test
+    void validateCca2TerminationRunStartDate_cannot_start_yet() {
+        when(cca2TerminationWorkflowConfig.getTriggerDate()).thenReturn(LocalDate.now().plusDays(1));
+
+        // Invoke
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> cca2TerminationRunInitiateService.validateCca2TerminationRunStartDate());
+
+        // Verify
+        assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.CCA2_TERMINATION_RUN_CANNOT_START_YET);
+        verify(cca2TerminationWorkflowConfig, times(1)).getTriggerDate();
+        
+    }
 }
