@@ -10,6 +10,7 @@ import {
   underlyingAgreementVariationQuery,
   VARIATION_DETAILS_SUBTASK,
 } from '@requests/common';
+import { Mocked } from 'vitest';
 
 import {
   extractReviewProps,
@@ -23,7 +24,7 @@ import {
 
 describe('Utils', () => {
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('resetReviewSection', () => {
@@ -98,12 +99,12 @@ describe('Utils', () => {
   });
 
   describe('extractReviewProps', () => {
-    let mockStore: jest.Mocked<RequestTaskStore>;
+    let mockStore: Mocked<RequestTaskStore>;
 
     beforeEach(() => {
       mockStore = {
-        select: jest.fn(),
-      } as unknown as jest.Mocked<RequestTaskStore>;
+        select: vi.fn(),
+      } as unknown as Mocked<RequestTaskStore>;
     });
 
     it('should extract review props from store', () => {

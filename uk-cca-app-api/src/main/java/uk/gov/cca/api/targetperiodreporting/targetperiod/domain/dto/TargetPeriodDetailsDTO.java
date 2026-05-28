@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYearsContainer;
 
@@ -22,4 +23,5 @@ public class TargetPeriodDetailsDTO {
     private LocalDate buyOutStartDate;
     private LocalDate buyOutPrimaryPaymentDeadline;
     private LocalDate secondaryReportingStartDate;
+    private SchemeVersion schemeVersion;
 }

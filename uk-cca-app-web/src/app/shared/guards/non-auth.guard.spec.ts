@@ -15,7 +15,7 @@ describe('NonAuthGuard', () => {
   let authStore: AuthStore;
 
   const authService: MockType<AuthService> = {
-    checkUser: jest.fn(() => of(undefined)),
+    checkUser: vi.fn(() => of(undefined)),
   };
 
   beforeEach(() => {
@@ -40,7 +40,7 @@ describe('NonAuthGuard', () => {
 
   it('should redirect to main route if the user is logged in', async () => {
     authStore.setIsLoggedIn(true);
-    const navigateSpy = jest.spyOn(router, 'parseUrl').mockImplementation();
+    const navigateSpy = vi.spyOn(router, 'parseUrl').mockReturnValue({} as UrlTree);
 
     await lastValueFrom(guard);
 

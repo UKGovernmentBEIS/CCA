@@ -77,20 +77,6 @@
             }}
           </h2>
 
-          <div
-            widthClass="govuk-!-width-one-half"
-            formControlName="energy"
-            [suffix]="targetComposition.measurementType | measurementTypeToUnit"
-            [label]="
-              'Enter the baseline ' +
-              (targetComposition.measurementType | measurementTypeToUnit) +
-              ' for the target unit'
-            "
-            hint="Enter a number up to 7 decimals, without alpha or special characters"
-            inputType="number"
-            govuk-text-input
-          ></div>
-
           <div class="govuk-!-margin-bottom-2">
             Must the Special Reporting Methodology be applied for this facility?
           </div>
@@ -115,8 +101,8 @@
           <div
             widthClass="govuk-!-width-one-half"
             formControlName="energyCarbonFactor"
-            suffix="kgC/kWh"
-            label="Baseline energy to carbon factor (kgC/kWh)"
+            suffix="kgCO2e/kWh"
+            label="Baseline energy to carbon dioxide conversion factor (kgCO2e/kWh)"
             inputType="number"
             govuk-text-input
           ></div>

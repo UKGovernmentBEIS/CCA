@@ -5,9 +5,10 @@ import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { RequestTaskStore } from '@netz/common/store';
+import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
+import { Mocked } from 'vitest';
 
 import { mockRequestTaskItemDTO } from '../../../testing/mock-data';
 import VariationDetailsCheckYourAnswersComponent from './variation-details-check-your-answers.component';
@@ -19,8 +20,8 @@ describe('VariationDetailsCheckYourAnswersComponent', () => {
   let page: Page;
 
   const route = new ActivatedRouteStub();
-  const mockTasksApiService: Partial<jest.Mocked<TasksApiService>> = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+  const mockTasksApiService: Partial<Mocked<TasksApiService>> = {
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   class Page extends BasePage<VariationDetailsCheckYourAnswersComponent> {
@@ -46,9 +47,10 @@ describe('VariationDetailsCheckYourAnswersComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },
         { provide: TasksApiService, useValue: mockTasksApiService },
+        { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
+        { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Dashboard' },
       ],
     }).compileComponents();
 
@@ -87,7 +89,7 @@ describe('VariationDetailsCheckYourAnswersComponent', () => {
   });
 
   it('should submit', () => {
-    const apiServiceSpy = jest.spyOn(mockTasksApiService, 'saveRequestTaskAction');
+    const apiServiceSpy = vi.spyOn(mockTasksApiService, 'saveRequestTaskAction');
 
     page.submitButton.click();
     fixture.detectChanges();

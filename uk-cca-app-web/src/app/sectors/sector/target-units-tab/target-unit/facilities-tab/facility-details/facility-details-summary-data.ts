@@ -2,10 +2,15 @@ import { DatePipe } from '@angular/common';
 
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { DurationPipe, StatusPipe, transformAddress } from '@shared/pipes';
+import { Country } from '@shared/types';
 
 import { FacilityInfoDTO } from 'cca-api';
 
-export function toFacilityDetailsSummaryData(info: FacilityInfoDTO, roleType: string): SummaryData {
+export function toFacilityDetailsSummaryData(
+  info: FacilityInfoDTO,
+  roleType: string,
+  countries: Country[],
+): SummaryData {
   const statusPipe = new StatusPipe();
   const durationPipe = new DurationPipe();
   const datePipe = new DatePipe('en-GB');
@@ -13,7 +18,7 @@ export function toFacilityDetailsSummaryData(info: FacilityInfoDTO, roleType: st
   const factory = new SummaryFactory()
     .addSection('Facility details', null, { testid: 'facility-details' })
     .addRow('Site name', info.siteName)
-    .addTextAreaRow('Address', transformAddress(info.address))
+    .addTextAreaRow('Address', transformAddress(info.address, countries))
 
     .addSection('Subsistence fees', 'edit', { testid: 'subsistence-fees' })
     .addRow('Subsistence fees start date', datePipe.transform(info.chargeStartDate, 'dd/MM/yyyy') ?? 'Not provided')

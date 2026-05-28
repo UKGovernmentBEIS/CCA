@@ -9,13 +9,16 @@ import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.application.taskview.RequestInfoDTO;
+import uk.gov.netz.api.workflow.request.core.domain.RequestType;
+import uk.gov.netz.api.workflow.request.core.repository.RequestTypeRepository;
 import uk.gov.netz.api.workflow.request.core.service.RequestQueryService;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,20 +33,31 @@ class NonComplianceInfoServiceTest {
     @Mock
     private RequestQueryService requestQueryService;
 
+    @Mock
+    private RequestTypeRepository requestTypeRepository;
+
     @Test
     void getAllRelevantWorkflows() {
 
         final Long accountId = 1L;
         final String requestId = "ADS_1-T00003-NCOM-2";
         final String relevantRequestId = "ADS_1-F00007-AUDT-3";
-        final RequestInfoDTO relevantRequest = RequestInfoDTO.builder()
+        final RequestInfoDTO accountRelevantRequest = RequestInfoDTO.builder()
                 .id(relevantRequestId)
                 .type("FACILITY_AUDIT")
                 .resources(Map.of("1", "ACCOUNT"))
                 .build();
 
-        when(requestQueryService.findByResourceTypeAndResourceIdAndTypeNotIn(Collections.emptyList(), ResourceType.ACCOUNT, String.valueOf(accountId)))
-                .thenReturn(List.of(relevantRequest));
+        final RequestType excludedRequestType = RequestType.builder()
+                .id(1L)
+                .code("PROCESS_PERFORMANCE_DATA_SPREADSHEET_GENERATE")
+                .resourceType("ACCOUNT")
+                .historyCategory("SYSTEM")
+                .build();
+
+        when(requestTypeRepository.findAll()).thenReturn(List.of(excludedRequestType));
+        when(requestQueryService.findByResourceTypeAndResourceIdAndTypeNotIn(List.of("PROCESS_PERFORMANCE_DATA_SPREADSHEET_GENERATE"), ResourceType.ACCOUNT, String.valueOf(accountId)))
+                .thenReturn(List.of(accountRelevantRequest));
 
         // invoke
         Map<String, String> result = nonComplianceInfoService.getAllRelevantWorkflows(accountId, requestId);
@@ -51,6 +65,8 @@ class NonComplianceInfoServiceTest {
         // verify
         assertThat(result).hasSize(1);
         assertThat(result.containsKey(relevantRequestId)).isTrue();
+        verify(requestTypeRepository, times(1)).findAll();
+        verify(requestQueryService, times(1)).findByResourceTypeAndResourceIdAndTypeNotIn(List.of("PROCESS_PERFORMANCE_DATA_SPREADSHEET_GENERATE"), ResourceType.ACCOUNT, String.valueOf(accountId));
     }
 
     @Test
@@ -69,5 +85,6 @@ class NonComplianceInfoServiceTest {
         // verify
         assertThat(result).hasSize(1);
         assertThat(result.get(facility.getFacilityBusinessId())).isEqualTo(facility.getSiteName());
+        verify(facilityDataQueryService, times(1)).getFacilitiesByAccountId(accountId);
     }
 }

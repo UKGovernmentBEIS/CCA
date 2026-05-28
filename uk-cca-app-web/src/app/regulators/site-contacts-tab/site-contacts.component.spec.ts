@@ -1,8 +1,10 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject, of } from 'rxjs';
+
+import { Mocked, MockInstance } from 'vitest';
 
 import {
   RegulatorAuthoritiesService,
@@ -16,8 +18,8 @@ import { SiteContactsComponent } from './site-contacts.component';
 describe('SiteContactsComponent', () => {
   let component: SiteContactsComponent;
   let fixture: ComponentFixture<SiteContactsComponent>;
-  let siteContactsService: jest.Mocked<SectorAssociationsSiteContactsService>;
-  let routerNavigateSpy: jest.SpyInstance;
+  let siteContactsService: Mocked<SectorAssociationsSiteContactsService>;
+  let routerNavigateSpy: MockInstance;
 
   const mockSiteContacts: SectorAssociationSiteContactInfoResponse = {
     siteContacts: [
@@ -41,7 +43,7 @@ describe('SiteContactsComponent', () => {
   };
 
   const createQueryParamMock = (page = '1', pageSize = '20') => ({
-    get: jest.fn().mockImplementation((param) => {
+    get: vi.fn().mockImplementation((param) => {
       if (param === 'page') return page;
       if (param === 'pageSize') return pageSize;
       return null;
@@ -50,12 +52,12 @@ describe('SiteContactsComponent', () => {
 
   const setupComponent = async (siteContactsData = mockSiteContacts) => {
     const siteContactsServiceMock = {
-      getSectorAssociationSiteContacts: jest.fn().mockReturnValue(of(siteContactsData)),
-      updateSectorAssociationSiteContacts: jest.fn().mockReturnValue(of(null)),
+      getSectorAssociationSiteContacts: vi.fn().mockReturnValue(of(siteContactsData)),
+      updateSectorAssociationSiteContacts: vi.fn().mockReturnValue(of(null)),
     };
 
     const regulatorServiceMock = {
-      getCaRegulators: jest.fn().mockReturnValue(of(mockRegulators)),
+      getCaRegulators: vi.fn().mockReturnValue(of(mockRegulators)),
     };
 
     const queryParamMock = createQueryParamMock();
@@ -80,10 +82,10 @@ describe('SiteContactsComponent', () => {
     fixture = TestBed.createComponent(SiteContactsComponent);
     component = fixture.componentInstance;
 
-    routerNavigateSpy = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    routerNavigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
     siteContactsService = TestBed.inject(
       SectorAssociationsSiteContactsService,
-    ) as jest.Mocked<SectorAssociationsSiteContactsService>;
+    ) as Mocked<SectorAssociationsSiteContactsService>;
   };
 
   afterEach(() => {
@@ -93,9 +95,8 @@ describe('SiteContactsComponent', () => {
   describe('when editable', () => {
     beforeEach(() => setupComponent(mockSiteContacts));
 
-    it('should load data and update state when effect triggers', fakeAsync(() => {
+    it('should load data and update state when effect triggers', () => {
       fixture.detectChanges();
-      tick();
 
       expect(siteContactsService.getSectorAssociationSiteContacts).toHaveBeenCalledWith(0, 20);
 
@@ -107,15 +108,14 @@ describe('SiteContactsComponent', () => {
       expect(component.state().isEditable).toBe(true);
       expect(component.state().totalItems).toBe(2);
       expect(component.state().siteContacts.length).toBe(2);
-    }));
+    });
 
-    it('should have reactive currentPage and pageSize computed properties', fakeAsync(() => {
+    it('should have reactive currentPage and pageSize computed properties', () => {
       fixture.detectChanges();
-      tick();
 
       expect(component.currentPage()).toBe(1);
       expect(component.pageSize()).toBe(20);
-    }));
+    });
 
     it('should handle navigation and pagination correctly', () => {
       component.onPageChange(2);
@@ -136,25 +136,23 @@ describe('SiteContactsComponent', () => {
       expect(routerNavigateSpy).not.toHaveBeenCalled();
     });
 
-    it('should create correct assignee options', fakeAsync(() => {
+    it('should create correct assignee options', () => {
       fixture.detectChanges();
-      tick();
 
       const options = component.assigneeOptions();
       expect(options.length).toBe(2);
       expect(options[0]).toEqual({ text: 'Unassigned', value: null });
       expect(options[1].value).toBe('user-1');
-    }));
+    });
   });
 
   describe('when not editable', () => {
     beforeEach(() => setupComponent(mockSiteContactsNotEditable));
 
-    it('should handle non-editable state correctly', fakeAsync(() => {
+    it('should handle non-editable state correctly', () => {
       fixture.detectChanges();
-      tick();
 
       expect(component.state().isEditable).toBe(false);
-    }));
+    });
   });
 });

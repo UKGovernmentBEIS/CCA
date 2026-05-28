@@ -17,4 +17,5 @@ export interface ProductVariableEnergyConsumptionData {
   energy: string;
   throughput: string;
   throughputUnit: string;
+  readonly energyCarbonIntensity?: string;
 }

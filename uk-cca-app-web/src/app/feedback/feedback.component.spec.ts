@@ -16,7 +16,7 @@ describe('FeedbackComponent', () => {
 
   let page: Page;
   const usersService: MockType<UsersService> = {
-    provideUserFeedback: jest.fn().mockReturnValue(of(null)),
+    provideUserFeedback: vi.fn().mockReturnValue(of(null)),
   };
 
   class Page extends BasePage<FeedbackComponent> {
@@ -120,7 +120,7 @@ describe('FeedbackComponent', () => {
 
   afterEach(() => {
     fixture.destroy();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {

@@ -9,6 +9,7 @@ public class CcaRegulatorPermissionGroup {
     public static final String MANAGE_SECTOR_USERS = "MANAGE_SECTOR_USERS";
     public static final String MANAGE_OPERATOR_USERS = "MANAGE_OPERATOR_USERS";
     public static final String MANAGE_FACILITY_AUDIT = "MANAGE_FACILITY_AUDIT";
+    public static final String MANAGE_SECTOR_ADVANCED_DETAILS = "MANAGE_SECTOR_ADVANCED_DETAILS";
 
     /** Add permission to Regulator for Admin Termination Work Flow */
     public static final String ADMIN_TERMINATION_SUBMISSION = "ADMIN_TERMINATION_SUBMISSION";

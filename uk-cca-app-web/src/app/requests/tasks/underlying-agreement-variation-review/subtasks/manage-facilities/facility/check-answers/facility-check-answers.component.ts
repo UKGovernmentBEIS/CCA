@@ -19,6 +19,7 @@ import {
 } from '@requests/common';
 import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
@@ -45,6 +46,8 @@ export default class FacilityCheckAnswersComponent {
   private readonly tasksApiService = inject(TasksApiService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+
+  private readonly countries = inject(CountryService).countries;
 
   private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
 
@@ -84,6 +87,7 @@ export default class FacilityCheckAnswersComponent {
       this.sectorSchemeData(),
       this.participatingSchemeVersions(),
       this.decision,
+      this.countries(),
       {
         submit:
           this.facility().status === 'NEW'
@@ -102,6 +106,7 @@ export default class FacilityCheckAnswersComponent {
       this.sectorSchemeData(),
       this.participatingSchemeVersions(),
       this.decision,
+      this.countries(),
       {
         submit: this.store.select(underlyingAgreementQuery.selectAttachments)(),
         review: this.store.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),

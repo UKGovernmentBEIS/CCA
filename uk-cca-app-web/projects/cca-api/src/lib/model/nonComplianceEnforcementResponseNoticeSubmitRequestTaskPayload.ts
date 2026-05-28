@@ -10,11 +10,14 @@
  * Do not edit the class manually.
  */
 import { NonComplianceCloseJustification } from './nonComplianceCloseJustification';
+import { NonComplianceEnforcementResponseNotice } from './nonComplianceEnforcementResponseNotice';
 
 export interface NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload {
   payloadType?: string;
   sendEmailNotification?: boolean;
+  enforcementResponseNotice?: NonComplianceEnforcementResponseNotice;
   closeJustification?: NonComplianceCloseJustification;
+  penaltyReissue?: boolean;
   sectionsCompleted?: Record<string, string>;
   nonComplianceAttachments?: Record<string, string>;
 }

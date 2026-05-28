@@ -11,7 +11,7 @@ import { KeycloakService } from '@shared/services';
 
 import { AuthoritiesService, TermsAndConditionsService, UsersService, UserStateDTO } from 'cca-api';
 
-import { getByText } from '../../testing/angular-jest-test-utils';
+import { getByText } from '../../testing/angular-test-utils';
 import {
   mockAuthorityService,
   mockKeycloakService,

@@ -36,10 +36,10 @@ export const buyoutFeeCalculated: TP6BuyOutCalculatedAccountProcessingSubmittedR
     },
   ],
   buyOutCalculatedDetails: {
-    priBuyOutCarbon: 1,
-    priBuyOutCost: 25,
-    previousPaidFees: 0,
-    buyOutFee: 25,
+    priBuyOutCarbon: '1',
+    priBuyOutCost: '25',
+    previousPaidFees: '0',
+    buyOutFee: '25',
   },
 };
 

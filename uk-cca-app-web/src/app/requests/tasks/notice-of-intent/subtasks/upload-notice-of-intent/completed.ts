@@ -1,5 +1,5 @@
-import { NoticeOfIntent } from 'cca-api';
+import { NonComplianceNoticeOfIntent } from 'cca-api';
 
-export const isWizardCompleted = (noticeOfIntent?: NoticeOfIntent): boolean => {
-  return !!noticeOfIntent?.noticeOfIntentFile;
+export const isWizardCompleted = (noticeOfIntent?: NonComplianceNoticeOfIntent): boolean => {
+  return !!noticeOfIntent?.file;
 };

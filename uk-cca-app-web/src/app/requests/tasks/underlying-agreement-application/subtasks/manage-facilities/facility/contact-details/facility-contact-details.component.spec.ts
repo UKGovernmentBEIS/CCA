@@ -33,6 +33,6 @@ describe('FacilityContactDetailsComponent', () => {
   });
 
   it('should show form values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

@@ -12,13 +12,13 @@
 import { RequestActionUserInfo } from './requestActionUserInfo';
 import { DefaultNoticeRecipient } from './defaultNoticeRecipient';
 import { DecisionNotification } from './decisionNotification';
-import { NoticeOfIntent } from './noticeOfIntent';
+import { NonComplianceNoticeOfIntent } from './nonComplianceNoticeOfIntent';
 
 export interface NonComplianceNoticeOfIntentSubmittedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
-  noticeOfIntent?: NoticeOfIntent;
-  decisionNotification?: DecisionNotification;
+  noticeOfIntent: NonComplianceNoticeOfIntent;
+  decisionNotification: DecisionNotification;
   nonComplianceAttachments?: Record<string, string>;
   usersInfo?: Record<string, RequestActionUserInfo>;
   defaultContacts: DefaultNoticeRecipient[];

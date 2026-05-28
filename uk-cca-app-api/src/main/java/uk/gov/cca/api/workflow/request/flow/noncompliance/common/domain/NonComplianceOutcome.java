@@ -4,5 +4,7 @@ public enum NonComplianceOutcome {
 
     CANCELLED,
     PEER_REVIEW_REQUIRED,
-    CLOSED;
+    APPEAL_OUTCOME_REQUIRED,
+    CLOSED,
+    SUBMITTED;
 }

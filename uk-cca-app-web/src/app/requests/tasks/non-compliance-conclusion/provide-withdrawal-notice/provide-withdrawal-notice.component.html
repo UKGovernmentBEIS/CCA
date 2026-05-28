@@ -1,0 +1,15 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Provide conclusion of non-compliance"
+  heading="Provide withdrawal notice"
+>
+  <div class="govuk-!-width-two-thirds">
+    <cca-file-input [downloadUrl]="getDownloadUrl" formControlName="file" label="Upload file" labelSize="small" />
+
+    <div formControlName="comments" govuk-textarea label="Comments" labelSize="medium" [maxLength]="10000"></div>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

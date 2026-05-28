@@ -3,7 +3,10 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { of } from 'rxjs';
+
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { PasswordValidators } from '@shared/components';
 import { click, getByLabelText, getByText, type } from '@testing';
 
 import { InvitedOperatorUserExtended, OperatorUserInvitationStore } from '../store';
@@ -31,6 +34,14 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
       number: '1234567890',
     },
   };
+
+  beforeAll(() => {
+    vi.spyOn(PasswordValidators, 'blacklisted').mockImplementation(() => of(null));
+  });
+
+  afterAll(() => {
+    vi.restoreAllMocks();
+  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -65,6 +76,7 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
           | null
       )?.value ?? '',
     ).toBe('');
+
     expect(
       (getByLabelText('Re-enter your password', fixture.nativeElement) as HTMLInputElement | HTMLSelectElement | null)
         ?.value ?? '',
@@ -76,24 +88,32 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
       getByLabelText('Create a password to activate your account', fixture.nativeElement) as HTMLInputElement,
       '123',
     );
+
     type(getByLabelText('Re-enter your password', fixture.nativeElement) as HTMLInputElement, '456');
 
     click(getByText('Continue', fixture.nativeElement));
+
     fixture.detectChanges();
+    await fixture.whenStable();
+
     expect(document.querySelector('.govuk-error-summary')).toBeTruthy();
   });
 
   it('should submit the form', async () => {
-    const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
-    const stateSpy = jest.spyOn(operatorUserInvitationStore, 'updateState');
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    const stateSpy = vi.spyOn(operatorUserInvitationStore, 'updateState');
+
     type(
       getByLabelText('Create a password to activate your account', fixture.nativeElement) as HTMLInputElement,
       'ThisIsAStrongP@ssw0rd',
     );
+
     type(getByLabelText('Re-enter your password', fixture.nativeElement) as HTMLInputElement, 'ThisIsAStrongP@ssw0rd');
 
     click(getByText('Continue', fixture.nativeElement));
+
     fixture.detectChanges();
+    await fixture.whenStable();
 
     expect(navigateSpy).toHaveBeenCalledTimes(1);
     expect(stateSpy).toHaveBeenCalledTimes(1);

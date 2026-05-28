@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { RequestNoteDto, RequestNotesService } from 'cca-api';
 
@@ -15,7 +16,7 @@ import { WorkflowEditNoteComponent } from './edit-note.component';
 describe('WorkflowEditNoteComponent', () => {
   let component: WorkflowEditNoteComponent;
   let fixture: ComponentFixture<WorkflowEditNoteComponent>;
-  let requestNotesService: jest.Mocked<RequestNotesService>;
+  let requestNotesService: Mocked<RequestNotesService>;
   let router: Router;
 
   const mockNote: RequestNoteDto = {
@@ -33,8 +34,8 @@ describe('WorkflowEditNoteComponent', () => {
 
   beforeEach(async () => {
     const mockRequestNotesService = mockClass(RequestNotesService);
-    mockRequestNotesService.updateRequestNote = jest.fn().mockReturnValue(of({}));
-    mockRequestNotesService.uploadRequestNoteFile = jest.fn().mockReturnValue(
+    mockRequestNotesService.updateRequestNote = vi.fn().mockReturnValue(of({}));
+    mockRequestNotesService.uploadRequestNoteFile = vi.fn().mockReturnValue(
       of({
         type: 4,
         body: { uuid: 'test-uuid' },
@@ -42,7 +43,7 @@ describe('WorkflowEditNoteComponent', () => {
     );
 
     const mockActivatedRoute = new ActivatedRouteStub({ workflowId: '456', noteId: '1' });
-    mockActivatedRoute.snapshot.data = { note: mockNote };
+    (mockActivatedRoute.snapshot as any).data = { note: mockNote };
 
     await TestBed.configureTestingModule({
       imports: [WorkflowEditNoteComponent],
@@ -55,9 +56,9 @@ describe('WorkflowEditNoteComponent', () => {
       ],
     }).compileComponents();
 
-    requestNotesService = TestBed.inject(RequestNotesService) as jest.Mocked<RequestNotesService>;
+    requestNotesService = TestBed.inject(RequestNotesService) as Mocked<RequestNotesService>;
     router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate');
 
     fixture = TestBed.createComponent(WorkflowEditNoteComponent);
     component = fixture.componentInstance;
@@ -85,7 +86,7 @@ describe('WorkflowEditNoteComponent', () => {
   });
 
   it('should not submit if noteId is missing', () => {
-    component['noteId'] = null as any;
+    component.noteId = null;
     component['form'].patchValue({ note: 'Valid note' });
 
     component.onSubmit();

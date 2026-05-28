@@ -1,0 +1,57 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Provide target period throughput details"
+  heading="Target period throughput details"
+>
+  <div class="govuk-!-width-two-thirds">
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
+      Facility's way of accounting for the portion of variable energy used (or carbon emitted)
+    </h3>
+
+    <p class="govuk-hint govuk-!-margin-top-1">This has been selected when applied for your underlying agreement</p>
+
+    <p>{{ variableEnergyType() }}</p>
+  </div>
+
+  @if (referenceData()?.baselineAndTargets?.variableEnergyType !== 'BY_PRODUCT') {
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
+      Baseline {{ hasEnergyMeasurement() ? 'energy' : 'carbon dioxide (C02)' }} intensity
+    </h3>
+    <p class="govuk-!-margin-top-1">
+      {{ baselineEnergyIntensity() | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}/{{
+        referenceData()?.baselineAndTargets?.throughputUnit
+      }}
+    </p>
+  }
+
+  <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Improvement target</h3>
+  <p class="govuk-!-margin-top-1">{{ improvementTarget() | percent: '1.0-3' }}</p>
+
+  <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Actual throughput</h3>
+  <div cca-text-input formControlName="actualThroughput" class="govuk-!-width-one-third"></div>
+
+  <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Adjusted throughput</h3>
+  <p class="govuk-!-margin-top-1">{{ adjustedThroughput() | number }}</p>
+
+  <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Throughput unit</h3>
+  <p class="govuk-!-margin-top-1">
+    {{ referenceData()?.baselineAndTargets?.throughputUnit }}
+  </p>
+
+  @if (referenceData()?.baselineAndTargets?.baselineVariableEnergy) {
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Total target variable energy</h3>
+    <p class="govuk-!-margin-top-1">
+      {{ targetVariableEnergy() | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}
+    </p>
+  }
+
+  <div class="govuk-!-width-three-quarters">
+    <govuk-details summary="View baseline details">
+      <cca-summary [data]="baselineDetails()" />
+    </govuk-details>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

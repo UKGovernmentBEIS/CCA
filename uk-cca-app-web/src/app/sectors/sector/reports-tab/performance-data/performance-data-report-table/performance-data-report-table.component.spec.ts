@@ -5,6 +5,8 @@ import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
+import { Mocked, MockInstance } from 'vitest';
+
 import { SectorLevelPerformanceDataViewPagesService } from 'cca-api';
 
 import { mockSectorAccountsPerformanceReport } from '../testing/mock-data';
@@ -12,13 +14,13 @@ import { PerformanceDataReportTableComponent } from './performance-data-report-t
 
 describe('PerformanceDataReportTableComponent', () => {
   let component: PerformanceDataReportTableComponent;
-  let mockService: Partial<jest.Mocked<SectorLevelPerformanceDataViewPagesService>>;
+  let mockService: Partial<Mocked<SectorLevelPerformanceDataViewPagesService>>;
   let router: Router;
-  let navigateSpy: jest.SpyInstance;
+  let navigateSpy: MockInstance;
 
   beforeEach(async () => {
     mockService = {
-      getSectorAccountPerformanceDataReportList: jest.fn().mockReturnValue(of(mockSectorAccountsPerformanceReport)),
+      getSectorAccountPerformanceDataReportList: vi.fn().mockReturnValue(of(mockSectorAccountsPerformanceReport)),
     };
 
     await TestBed.configureTestingModule({
@@ -45,7 +47,7 @@ describe('PerformanceDataReportTableComponent', () => {
     }).compileComponents();
 
     router = TestBed.inject(Router);
-    navigateSpy = jest.spyOn(router, 'navigate');
+    navigateSpy = vi.spyOn(router, 'navigate');
 
     component = TestBed.createComponent(PerformanceDataReportTableComponent).componentInstance;
   });

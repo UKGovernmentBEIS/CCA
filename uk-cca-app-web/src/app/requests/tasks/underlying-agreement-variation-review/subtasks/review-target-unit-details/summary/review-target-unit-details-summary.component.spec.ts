@@ -35,6 +35,6 @@ describe('ReviewTargetUnitDetailsSummaryComponent', () => {
   });
 
   it('should render the summary sections and rows', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

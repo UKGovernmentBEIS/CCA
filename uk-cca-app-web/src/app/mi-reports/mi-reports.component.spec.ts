@@ -30,9 +30,7 @@ describe('MiReportsComponent', () => {
 
   beforeEach(async () => {
     const mockMiReportsUserDefinedService = mockClass(MiReportsUserDefinedService);
-    mockMiReportsUserDefinedService.getAllMiReportsUserDefined = jest
-      .fn()
-      .mockReturnValue(of({ queries: [], total: 0 }));
+    mockMiReportsUserDefinedService.getAllMiReportsUserDefined = vi.fn().mockReturnValue(of({ queries: [], total: 0 }));
 
     const mockMiReportsExportService = mockClass(MiReportsExportService);
 

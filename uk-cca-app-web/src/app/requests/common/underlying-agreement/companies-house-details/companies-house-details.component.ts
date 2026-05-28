@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { SummaryListComponent, SummaryListRowDirective, SummaryListRowValueDirective } from '@netz/govuk-components';
 import { UtilityPanelComponent } from '@shared/components';
 import { transformAddress } from '@shared/pipes';
+import { Country } from '@shared/types';
 import { equalAddressFields, equalFields } from '@shared/utils';
 
 import { CompanyProfileDTO, UnderlyingAgreementTargetUnitDetails } from 'cca-api';
@@ -22,20 +23,22 @@ export class CompaniesHouseDetailsComponent {
   protected readonly toggleCompaniesHouseDetails = input.required<boolean>();
   protected readonly companiesHouseState = input.required<CompaniesHouseState>();
   protected readonly tuDetails = input.required<UnderlyingAgreementTargetUnitDetails>();
+  protected readonly countries = input.required<Country[]>();
 
   protected readonly fieldDiffs = computed(() => {
     const companiesHouse = this.companiesHouseState().details;
     if (!companiesHouse) return {};
 
     const tuDetails = this.tuDetails();
+    const countries = this.countries();
 
     return {
       name: equalFields(tuDetails.operatorName, companiesHouse.name),
       operatorType: equalFields(tuDetails.operatorType, companiesHouse.operatorType),
       companyRegistrationNumber: equalFields(tuDetails.companyRegistrationNumber, companiesHouse.registrationNumber),
       address: equalAddressFields(
-        transformAddress(tuDetails.operatorAddress),
-        transformAddress(companiesHouse.address),
+        transformAddress(tuDetails.operatorAddress, countries),
+        transformAddress(companiesHouse.address, countries),
       ),
     };
   });

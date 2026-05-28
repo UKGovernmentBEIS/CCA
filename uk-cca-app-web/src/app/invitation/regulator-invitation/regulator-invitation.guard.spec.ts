@@ -5,6 +5,7 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { lastValueFrom, of, throwError } from 'rxjs';
 
 import { ActivatedRouteSnapshotStub, mockClass } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { InvitedUserInfoDTO, RegulatorUsersRegistrationService } from 'cca-api';
 
@@ -14,7 +15,7 @@ import { RegulatorInvitationGuard } from './regulator-invitation.guard';
 describe('RegulatorInvitationGuard', () => {
   let router: Router;
   let store: InvitedRegulatorUserStore;
-  let regulatorUsersRegistrationService: jest.Mocked<RegulatorUsersRegistrationService>;
+  let regulatorUsersRegistrationService: Mocked<RegulatorUsersRegistrationService>;
 
   beforeEach(() => {
     regulatorUsersRegistrationService = mockClass(RegulatorUsersRegistrationService);
@@ -28,6 +29,7 @@ describe('RegulatorInvitationGuard', () => {
 
     router = TestBed.inject(Router);
     store = TestBed.inject(InvitedRegulatorUserStore);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
   });
 
   function getGuard(route: ActivatedRouteSnapshot) {
@@ -43,7 +45,7 @@ describe('RegulatorInvitationGuard', () => {
   });
 
   it('should navigate to invalid link for all 400 errors', async () => {
-    const navigateSpy = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
 
     regulatorUsersRegistrationService.acceptRegulatorInvitation.mockReturnValue(
       throwError(() => new HttpErrorResponse({ error: { code: 'testCode' }, status: 400 })),
@@ -77,7 +79,7 @@ describe('RegulatorInvitationGuard', () => {
   });
 
   it('should resolved the invited user and navigate to confirmed when invitation status is already registered', async () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
     const invitedUser: InvitedUserInfoDTO = { email: 'user@pmrv.uk', invitationStatus: 'ALREADY_REGISTERED' };
     const route = new ActivatedRouteSnapshotStub(undefined, { token: 'token' });
 

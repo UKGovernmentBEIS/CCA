@@ -6,6 +6,7 @@ import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { MiReportsUserDefinedService, MiReportUserDefinedDTO } from 'cca-api';
 
@@ -15,7 +16,7 @@ import { MiReportFormComponent } from './mi-report-form.component';
 describe('MiReportFormComponent', () => {
   let component: MiReportFormComponent;
   let fixture: ComponentFixture<MiReportFormComponent>;
-  let miReportsUserDefinedService: jest.Mocked<MiReportsUserDefinedService>;
+  let miReportsUserDefinedService: Mocked<MiReportsUserDefinedService>;
   let router: Router;
 
   const mockQuery: MiReportUserDefinedDTO = {
@@ -26,12 +27,12 @@ describe('MiReportFormComponent', () => {
 
   const createComponent = async (isEditMode: boolean) => {
     const mockMiReportsUserDefinedService = mockClass(MiReportsUserDefinedService);
-    mockMiReportsUserDefinedService.createMiReportUserDefined = jest.fn().mockReturnValue(of({}));
-    mockMiReportsUserDefinedService.updateMiReportUserDefined = jest.fn().mockReturnValue(of({}));
-    mockMiReportsUserDefinedService.generateCustomReport = jest.fn().mockReturnValue(of({ results: [] }));
+    mockMiReportsUserDefinedService.createMiReportUserDefined = vi.fn().mockReturnValue(of({}));
+    mockMiReportsUserDefinedService.updateMiReportUserDefined = vi.fn().mockReturnValue(of({}));
+    mockMiReportsUserDefinedService.generateCustomReport = vi.fn().mockReturnValue(of({ results: [] }));
 
     const mockMiReportsExportService = {
-      exportToExcel: jest.fn(),
+      exportToExcel: vi.fn(),
     };
 
     const mockActivatedRoute = isEditMode
@@ -50,11 +51,9 @@ describe('MiReportFormComponent', () => {
       ],
     }).compileComponents();
 
-    miReportsUserDefinedService = TestBed.inject(
-      MiReportsUserDefinedService,
-    ) as jest.Mocked<MiReportsUserDefinedService>;
+    miReportsUserDefinedService = TestBed.inject(MiReportsUserDefinedService) as Mocked<MiReportsUserDefinedService>;
     router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate');
 
     fixture = TestBed.createComponent(MiReportFormComponent);
     component = fixture.componentInstance;
@@ -63,7 +62,7 @@ describe('MiReportFormComponent', () => {
 
   afterEach(() => {
     TestBed.resetTestingModule();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('Create mode', () => {

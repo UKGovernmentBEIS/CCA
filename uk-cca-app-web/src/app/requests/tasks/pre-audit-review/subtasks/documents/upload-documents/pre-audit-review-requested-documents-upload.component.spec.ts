@@ -27,13 +27,13 @@ describe('PreAuditReviewRequestedDocumentsUploadComponent', () => {
   const route: any = {
     snapshot: {
       params: {},
-      paramMap: { get: jest.fn().mockReturnValue(123) },
+      paramMap: { get: vi.fn().mockReturnValue(123) },
       pathFromRoot: [],
     },
   };
 
   const mockTasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -68,8 +68,8 @@ describe('PreAuditReviewRequestedDocumentsUploadComponent', () => {
   });
 
   it('should submit form and navigate to check-your-answers', () => {
-    const onSubmitSpy = jest.spyOn(component, 'onSubmit');
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const onSubmitSpy = vi.spyOn(component, 'onSubmit');
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
     const continueButton = fixture.debugElement.query(By.css('button[type="submit"]'));
     continueButton.nativeElement.click();

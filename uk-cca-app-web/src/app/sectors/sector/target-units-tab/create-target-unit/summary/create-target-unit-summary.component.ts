@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { BusinessErrorService } from '@error/business-error/business-error.service';
@@ -7,9 +7,10 @@ import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { ButtonDirective } from '@netz/govuk-components';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 import { toTargetUnitCreateSummaryData } from '@shared/utils';
 
-import { CcaRequestsService } from 'cca-api';
+import { CcaRequestsService, SectorAssociationSchemesDTO } from 'cca-api';
 
 import { targetUnitCreationError } from '../../error/business-error';
 import { CreateTargetUnitStore } from '../create-target-unit.store';
@@ -27,7 +28,14 @@ export class CreateTargetUnitSummaryComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly createTargetUnitStore = inject(CreateTargetUnitStore);
 
-  protected readonly summaryData = toTargetUnitCreateSummaryData(this.createTargetUnitStore.state);
+  private readonly countries = inject(CountryService).countries;
+
+  private readonly subSectors = (this.activatedRoute.snapshot.data?.subSectorScheme as SectorAssociationSchemesDTO)
+    ?.subsectorAssociations;
+
+  protected readonly summaryData = computed(() =>
+    toTargetUnitCreateSummaryData(this.createTargetUnitStore.state, this.subSectors, this.countries()),
+  );
 
   onSubmitTargetUnitAccountCreation() {
     this.ccaRequestsService

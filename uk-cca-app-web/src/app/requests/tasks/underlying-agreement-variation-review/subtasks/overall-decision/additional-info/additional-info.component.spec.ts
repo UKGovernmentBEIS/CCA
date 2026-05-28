@@ -10,13 +10,14 @@ import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } f
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText, queryByText } from '@testing';
 import { produce } from 'immer';
+import { Mocked } from 'vitest';
 
 import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import { AdditionalInfoComponent } from './additional-info.component';
 
 describe('AdditionalInfoComponent', () => {
-  const unaTaskService: Partial<jest.Mocked<TaskService>> = {
-    saveSubtask: jest.fn().mockReturnValue(of({})),
+  const unaTaskService: Partial<Mocked<TaskService>> = {
+    saveSubtask: vi.fn().mockReturnValue(of({})),
   };
 
   let store: RequestTaskStore;
@@ -44,7 +45,7 @@ describe('AdditionalInfoComponent', () => {
 
   describe('when determination type is REJECTED', () => {
     it('should match snapshot', () => {
-      expect(fixture.nativeElement).toMatchSnapshot();
+      expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
     });
 
     it('should not show variation impacts agreement question', async () => {
@@ -74,7 +75,7 @@ describe('AdditionalInfoComponent', () => {
     });
 
     it('should match snapshot', () => {
-      expect(fixture.nativeElement).toMatchSnapshot();
+      expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
     });
 
     it('should show variation impacts agreement question', async () => {
@@ -112,7 +113,7 @@ describe('AdditionalInfoComponent', () => {
     });
 
     it('should match snapshot', () => {
-      expect(fixture.nativeElement).toMatchSnapshot();
+      expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
     });
 
     it('should not show description examples details', async () => {

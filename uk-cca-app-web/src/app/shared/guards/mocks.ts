@@ -1,48 +1,47 @@
 import { signal } from '@angular/core';
 
 import { KeycloakService } from '@shared/services';
-
-import Mock = jest.Mock;
 import { AuthService } from '@shared/services';
+import { Mock } from 'vitest';
 
 import { AuthoritiesService, TermsAndConditionsService, UsersService } from 'cca-api';
 
 export const mockKeycloakService: Record<keyof KeycloakService, any> = {
-  login: jest.fn(),
-  logout: jest.fn(),
-  isLoggedIn: jest.fn(),
-  loadUserProfile: jest.fn(),
-  init: jest.fn(),
-  getKeycloakInstance: jest.fn(),
-  getToken: jest.fn(),
-  updateToken: jest.fn(),
-  getUserProfile: jest.fn(),
-  isTokenExpired: jest.fn(),
-  getTokenParsed: jest.fn(),
-  getRefreshTokenParsed: jest.fn(),
+  login: vi.fn(),
+  logout: vi.fn(),
+  isLoggedIn: vi.fn(),
+  loadUserProfile: vi.fn(),
+  init: vi.fn(),
+  getKeycloakInstance: vi.fn(),
+  getToken: vi.fn(),
+  updateToken: vi.fn(),
+  getUserProfile: vi.fn(),
+  isTokenExpired: vi.fn(),
+  getTokenParsed: vi.fn(),
+  getRefreshTokenParsed: vi.fn(),
   keycloakEvents: signal(null),
 } as any;
 
 export const mockAuthService: Record<keyof AuthService, Mock> = {
-  checkUser: jest.fn(),
-  login: jest.fn(),
-  logout: jest.fn(),
-  loadUser: jest.fn(),
-  loadUserState: jest.fn(),
-  loadUserProfile: jest.fn(),
-  loadIsLoggedIn: jest.fn(),
-  loadUserTerms: jest.fn(),
+  checkUser: vi.fn(),
+  login: vi.fn(),
+  logout: vi.fn(),
+  loadUser: vi.fn(),
+  loadUserState: vi.fn(),
+  loadUserProfile: vi.fn(),
+  loadIsLoggedIn: vi.fn(),
+  loadUserTerms: vi.fn(),
 };
 
 export const mockUsersService: Record<keyof UsersService, Mock> = {
-  getCurrentUser: jest.fn(),
-  registerUserLastLoginDomain: jest.fn(),
+  getCurrentUser: vi.fn(),
+  registerUserLastLoginDomain: vi.fn(),
 } as any;
 
 export const mockAuthorityService: Record<keyof AuthoritiesService, Mock> = {
-  getCurrentUserState: jest.fn(),
+  getCurrentUserState: vi.fn(),
 } as any;
 
 export const mockTermsAndConditionsService: Record<keyof TermsAndConditionsService, Mock> = {
-  getLatestTerms: jest.fn(),
+  getLatestTerms: vi.fn(),
 } as any;

@@ -1,0 +1,67 @@
+<div class="govuk-!-width-two-thirds">
+  <cca-wizard-step
+    (formSubmit)="onSubmit()"
+    [formGroup]="form"
+    caption="Provide conclusion of non-compliance"
+    heading="Provide conclusion details"
+  >
+    <div formControlName="complianceRestored" govuk-radio legend="Has compliance been restored?">
+      <govuk-radio-option [value]="true" label="Yes">
+        <ng-container govukConditionalContent>
+          <div
+            formControlName="complianceRestoredDate"
+            govuk-date-input
+            label="When did the operator become compliant?"
+            hint="This date cannot be in the future"
+            [max]="today"
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+      <govuk-radio-option [value]="false" label="No" />
+    </div>
+
+    <div formControlName="penaltyPaid" govuk-radio legend="Has the operator paid the penalty?">
+      <govuk-radio-option [value]="true" label="Yes">
+        <ng-container govukConditionalContent>
+          <div
+            formControlName="penaltyPaymentDate"
+            govuk-date-input
+            label="When did the operator pay?"
+            hint="This date cannot be in the future"
+            [max]="today"
+          ></div>
+        </ng-container>
+      </govuk-radio-option>
+      <govuk-radio-option [value]="false" label="No" />
+    </div>
+
+    <div
+      formControlName="comment"
+      govuk-textarea
+      label="Your comments on the status of compliance"
+      [maxLength]="10000"
+    ></div>
+
+    <div formControlName="penaltyOutcome" govuk-radio legend="Would you like to reissue or withdraw the penalty?">
+      <govuk-radio-option
+        value="REISSUE"
+        label="Reissue"
+        hint="This will start a new task to upload a replacement penalty notice allowing you to reduce the penalty amount and extend the time for payment"
+      />
+      <govuk-radio-option
+        value="WITHDRAW"
+        label="Withdraw"
+        hint="This will require you to upload a withdrawal notice"
+      />
+      <govuk-radio-option
+        [divider]="true"
+        value="NONE"
+        label="None of the above"
+        hint="You must allow at least 28 calendar days for the operator to appeal the penalty notice before concluding this non-compliance task"
+      />
+    </div>
+  </cca-wizard-step>
+</div>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

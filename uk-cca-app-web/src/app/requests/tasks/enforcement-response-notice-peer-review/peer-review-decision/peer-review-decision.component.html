@@ -1,0 +1,30 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  heading="Peer review decision"
+  data-testid="peer-review-decision-form"
+>
+  <div class="govuk-!-margin-top-9 govuk-!-width-two-thirds">
+    <h2 class="govuk-heading-m">What is your assessment of this determination?</h2>
+
+    <div formControlName="type" govuk-radio>
+      <govuk-radio-option label="I agree with the determination" value="AGREE" />
+      <govuk-radio-option label="I do not agree with the determination" value="DISAGREE" />
+    </div>
+
+    <h2 class="govuk-heading-m">Add notes to support your decision</h2>
+    <p class="govuk-hint">This cannot be viewed by the operator</p>
+
+    <div govuk-textarea formControlName="notes" widthClass="govuk-!-width-two-thirds"></div>
+
+    <cca-multiple-file-input
+      formControlName="files"
+      [baseDownloadUrl]="downloadUrl()"
+      widthClass="govuk-!-width-two-thirds"
+      label="Upload a file (optional)"
+    />
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

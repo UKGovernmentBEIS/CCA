@@ -5,6 +5,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
     <changeSet id="0_1_0_INSERT_TPR_TARGET_PERIOD" author="vvitzilaios">
+    	<validCheckSum>1:any</validCheckSum>
         <sql>
             INSERT INTO tpr_target_period
             (id,
@@ -13,22 +14,16 @@
              start_date,
              end_date,
              performance_data_template_version,
-             performance_data_start_date,
-             performance_data_end_date,
              buy_out_start_date,
-             buy_out_end_date,
-             is_current)
+             buy_out_primary_payment_deadline)
             VALUES (nextval('tpr_target_period_seq'),
                     'TP5',
                     'TP5 (2021-2022)',
                     '2021-01-01',
                     '2022-12-31',
                     null,
-                    '2023-01-01',
-                    '2023-05-01',
                     '2023-05-05',
-                    '2023-07-01',
-                    false);
+                    '2023-07-01');
 
             INSERT INTO tpr_target_period
             (id,
@@ -37,22 +32,16 @@
              start_date,
              end_date,
              performance_data_template_version,
-             performance_data_start_date,
-             performance_data_end_date,
              buy_out_start_date,
-             buy_out_end_date,
-             is_current)
+             buy_out_primary_payment_deadline)
             VALUES (nextval('tpr_target_period_seq'),
                     'TP6',
                     'TP6 (2024)',
                     '2024-01-01',
                     '2024-12-31',
                     '6.0',
-                    '2025-01-01',
                     '2025-05-01',
-                    '2025-05-01',
-                    '2025-07-01',
-                    true);
+                    '2025-07-01');
         </sql>
         <rollback>
             <sql>
@@ -171,6 +160,14 @@
                     '2031-05-01',
                     '2031-07-01',
                     '2031-07-02');
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_TP7_TP8_TP9_TPR_TARGET_PERIOD_with_Scheme_Version_CCA_3" author="P70383">
+        <sql>
+            UPDATE tpr_target_period
+            SET scheme_version = 'CCA_3'
+            WHERE business_id in ('TP7', 'TP8', 'TP9');
         </sql>
     </changeSet>
 

@@ -4,6 +4,8 @@ import { UrlTree } from '@angular/router';
 
 import { firstValueFrom, Observable, of } from 'rxjs';
 
+import { Mocked } from 'vitest';
+
 import { AuthoritiesService, RegulatorAuthoritiesService } from 'cca-api';
 
 import {
@@ -16,17 +18,17 @@ import { CanAddUsers } from './can-add-users.guard';
 import { DetailsStore } from './details.store';
 
 describe('CanAddUsersGuard', () => {
-  let authoritiesService: Partial<jest.Mocked<AuthoritiesService>>;
-  let regulatorAuthoritiesService: Partial<jest.Mocked<RegulatorAuthoritiesService>>;
+  let authoritiesService: Partial<Mocked<AuthoritiesService>>;
+  let regulatorAuthoritiesService: Partial<Mocked<RegulatorAuthoritiesService>>;
 
   beforeEach(() => {
     authoritiesService = {
-      getRegulatorRoles: jest.fn().mockReturnValue(of(regulatorRoles)),
+      getRegulatorRoles: vi.fn().mockReturnValue(of(regulatorRoles)),
     };
 
     regulatorAuthoritiesService = {
-      getRegulatorPermissionGroupLevels: jest.fn().mockReturnValue(of(permissionGroupLevels)),
-      getCurrentRegulatorUserPermissionsByCa: jest.fn().mockReturnValue(of(null)),
+      getRegulatorPermissionGroupLevels: vi.fn().mockReturnValue(of(permissionGroupLevels)),
+      getCurrentRegulatorUserPermissionsByCa: vi.fn().mockReturnValue(of(null)),
     };
 
     TestBed.configureTestingModule({
@@ -50,7 +52,7 @@ describe('CanAddUsersGuard', () => {
   }
 
   it('should not let a user with no execute perms navigate to the route', async () => {
-    regulatorAuthoritiesService.getCurrentRegulatorUserPermissionsByCa = jest
+    regulatorAuthoritiesService.getCurrentRegulatorUserPermissionsByCa = vi
       .fn()
       .mockReturnValue(of(readonlyRegulatorPermissions));
 
@@ -59,7 +61,7 @@ describe('CanAddUsersGuard', () => {
   });
 
   it('should patch state appropriately if given correct permissions', async () => {
-    regulatorAuthoritiesService.getCurrentRegulatorUserPermissionsByCa = jest
+    regulatorAuthoritiesService.getCurrentRegulatorUserPermissionsByCa = vi
       .fn()
       .mockReturnValue(of(executeRegulatorPermissions));
 

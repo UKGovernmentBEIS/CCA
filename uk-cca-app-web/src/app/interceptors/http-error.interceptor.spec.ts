@@ -1,7 +1,7 @@
-import { HttpHandlerFn, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpEvent, HttpHandlerFn, HttpRequest, HttpResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 
-import { map, timer } from 'rxjs';
+import { of } from 'rxjs';
 
 import { mockClass } from '@netz/common/testing';
 import { GlobalErrorHandlingService } from '@shared/services';
@@ -22,8 +22,15 @@ describe(`HttpErrorInterceptor`, () => {
   });
 
   it('should be created', () => {
-    const next = () => timer(1000).pipe(map(() => new HttpResponse()));
+    const next = vi.fn().mockReturnValue(of(new HttpResponse()));
     const req = new HttpRequest<unknown>('POST', 'http://localhost', {});
-    expect(intercept(req, next)).toBeDefined();
+    let result: HttpEvent<unknown> | undefined;
+
+    intercept(req, next).subscribe((res) => {
+      result = res;
+    });
+
+    expect(result).toBeDefined();
+    expect(next).toHaveBeenCalled();
   });
 });

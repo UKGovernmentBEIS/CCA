@@ -21,7 +21,7 @@ describe('FacilitySummaryComponent', () => {
         facilityId: 'ADS_1-F00001',
       },
       paramMap: {
-        get: jest.fn().mockReturnValue(mockRequestTaskItemDTO.requestTask.id),
+        get: vi.fn().mockReturnValue(mockRequestTaskItemDTO.requestTask.id),
       },
       pathFromRoot: [],
     },

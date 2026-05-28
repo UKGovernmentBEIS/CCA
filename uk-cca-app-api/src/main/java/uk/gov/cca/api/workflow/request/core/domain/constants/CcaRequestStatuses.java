@@ -8,5 +8,6 @@ public class CcaRequestStatuses {
     public final String CANCELLED = "CANCELLED";
     public final String MIGRATED = "MIGRATED";
     public final String COMPLETED_WITH_FAILURES = "COMPLETED_WITH_FAILURES";
-
+    public final String EXPIRED = "EXPIRED";
+    public final String CLOSED = "CLOSED";
 }

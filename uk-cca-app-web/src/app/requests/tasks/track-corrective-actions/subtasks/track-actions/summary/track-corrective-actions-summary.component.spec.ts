@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
+import { Mocked } from 'vitest';
 
 import { TasksService } from 'cca-api';
 
@@ -14,14 +15,14 @@ import { TrackCorrectiveActionsSummaryComponent } from './track-corrective-actio
 describe('TrackCorrectiveActionsSummaryComponent', () => {
   let component: TrackCorrectiveActionsSummaryComponent;
   let fixture: ComponentFixture<TrackCorrectiveActionsSummaryComponent>;
-  let tasksService: jest.Mocked<Partial<TasksService>>;
+  let tasksService: Mocked<Partial<TasksService>>;
   let store: RequestTaskStore;
 
   const route = { snapshot: { params: { actionId: '1' } } };
 
   beforeEach(async () => {
     tasksService = {
-      getRequestTaskHeaderInfo: jest.fn().mockReturnValue(of({})),
+      getRequestTaskHeaderInfo: vi.fn().mockReturnValue(of({})),
     };
 
     await TestBed.configureTestingModule({
@@ -46,6 +47,6 @@ describe('TrackCorrectiveActionsSummaryComponent', () => {
   });
 
   it('should display the correct content', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

@@ -36,6 +36,6 @@ describe('FinalDecisionReasonSummaryComponent', () => {
   });
 
   it('should show proper summary values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

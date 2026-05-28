@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 import { SchemeVersion } from '@shared/types';
 
 import { toFacilitySummaryDataWithStatus } from '../../underlying-agreement/summaries/facility-summary-data';
@@ -26,6 +27,8 @@ import { underlyingAgreementRequestActionQuery } from '../timeline-underlying-ag
 export class FacilitySubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);
   private readonly activatedRoute = inject(ActivatedRoute);
+
+  private readonly countries = inject(CountryService).countries;
 
   private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
 
@@ -52,6 +55,7 @@ export class FacilitySubmittedComponent {
       this.facility(),
       this.sectorSchemeData(),
       this.participatingSchemeVersions(),
+      this.countries(),
       this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
       false,
       '../../../file-download',

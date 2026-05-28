@@ -22,7 +22,6 @@ const mockCompaniesHouseState = {
       country: 'United Kingdom',
     },
   },
-  error: null,
   address: {
     line1: 'Companies House',
     line2: 'Crownway',
@@ -69,6 +68,7 @@ describe('CompaniesHouseDetailsComponent', () => {
     componentRef.setInput('toggleCompaniesHouseDetails', true);
     componentRef.setInput('companiesHouseState', mockCompaniesHouseState);
     componentRef.setInput('tuDetails', mockTargetUnitDetails);
+    componentRef.setInput('countries', [{ code: 'GB', name: 'United Kingdom' }]);
     fixture.detectChanges();
   });
 
@@ -77,6 +77,6 @@ describe('CompaniesHouseDetailsComponent', () => {
   });
 
   it('should display correct view', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

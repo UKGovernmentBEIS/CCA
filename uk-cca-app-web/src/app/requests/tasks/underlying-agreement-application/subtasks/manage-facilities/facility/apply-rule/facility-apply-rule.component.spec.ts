@@ -21,7 +21,7 @@ describe('FacilityApplyRuleComponent', () => {
 
   beforeEach(() => {
     tasksApiService = {
-      saveRequestTaskAction: jest.fn().mockReturnValue(
+      saveRequestTaskAction: vi.fn().mockReturnValue(
         of({
           underlyingAgreement: {
             facilities: [
@@ -56,7 +56,7 @@ describe('FacilityApplyRuleComponent', () => {
     store = TestBed.inject(RequestTaskStore);
 
     // Mock store select methods
-    jest.spyOn(store, 'select').mockImplementation((selector) => {
+    vi.spyOn(store, 'select').mockImplementation((selector) => {
       if (selector === requestTaskQuery.selectRequestTaskPayload) {
         return signal({
           underlyingAgreement: {
@@ -109,6 +109,6 @@ describe('FacilityApplyRuleComponent', () => {
   });
 
   it('should show form values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

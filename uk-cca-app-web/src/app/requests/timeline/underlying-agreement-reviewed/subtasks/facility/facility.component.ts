@@ -9,6 +9,7 @@ import {
   underlyingAgreementRequestActionQuery,
 } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 import { SchemeVersion } from '@shared/types';
 
 import { underlyingAgreementReviewedRequestActionQuery } from '../../+state/underlying-agreement-reviewed-request-action.selectors';
@@ -29,6 +30,8 @@ import { underlyingAgreementReviewedRequestActionQuery } from '../../+state/unde
 export class FacilityComponent {
   private readonly requestActionStore = inject(RequestActionStore);
   private readonly activatedRoute = inject(ActivatedRoute);
+
+  private readonly countries = inject(CountryService).countries;
 
   private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
 
@@ -58,6 +61,7 @@ export class FacilityComponent {
       this.requestActionStore.select(
         underlyingAgreementReviewedRequestActionQuery.selectFacilitySubtaskDecision(this.facilityId),
       )(),
+      this.countries(),
       {
         submit: this.requestActionStore.select(underlyingAgreementRequestActionQuery.selectAttachments)(),
         review: this.requestActionStore.select(underlyingAgreementReviewedRequestActionQuery.selectReviewAttachments)(),

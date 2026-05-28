@@ -6,27 +6,27 @@ import { ActivatedRoute } from '@angular/router';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getSummaryListData } from '@testing';
 
-import { SectorMoasReceivedAmountStore } from '../received-amount.store';
+import { ReceivedAmountStore } from '../received-amount.store';
 import { mockReceivedAmountStoreState } from '../testing/mock-data';
 import { HistoryDetailsComponent } from './history-details.component';
 
 describe('HistoryDetailsComponent', () => {
   let component: HistoryDetailsComponent;
   let fixture: ComponentFixture<HistoryDetailsComponent>;
-  let sectorMoasReceivedAmountStore: SectorMoasReceivedAmountStore;
+  let sectorMoasReceivedAmountStore: ReceivedAmountStore;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HistoryDetailsComponent],
       providers: [
-        SectorMoasReceivedAmountStore,
+        ReceivedAmountStore,
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub({ detailsId: 1 }) },
       ],
     }).compileComponents();
 
-    sectorMoasReceivedAmountStore = TestBed.inject(SectorMoasReceivedAmountStore);
+    sectorMoasReceivedAmountStore = TestBed.inject(ReceivedAmountStore);
     sectorMoasReceivedAmountStore.setState(mockReceivedAmountStoreState);
 
     fixture = TestBed.createComponent(HistoryDetailsComponent);

@@ -25,7 +25,7 @@ import java.util.UUID;
 @SuperBuilder
 public class NonComplianceNoticeOfIntentSubmitRequestTaskPayload extends RequestTaskPayload implements NonComplianceRequestTaskClosable {
 
-    private NoticeOfIntent noticeOfIntent;
+    private NonComplianceNoticeOfIntent noticeOfIntent;
 
     private NonComplianceCloseJustification closeJustification;
 
@@ -46,7 +46,7 @@ public class NonComplianceNoticeOfIntentSubmitRequestTaskPayload extends Request
             return this.closeJustification.getFiles();
         } else {
             return Optional.ofNullable(this.noticeOfIntent)
-                    .map(n -> n.getNoticeOfIntentFile() != null ? Set.of(n.getNoticeOfIntentFile()) : new HashSet<UUID>())
+                    .map(n -> n.getFile() != null ? Set.of(n.getFile()) : new HashSet<UUID>())
                     .orElseGet(Collections::emptySet);
         }
     }

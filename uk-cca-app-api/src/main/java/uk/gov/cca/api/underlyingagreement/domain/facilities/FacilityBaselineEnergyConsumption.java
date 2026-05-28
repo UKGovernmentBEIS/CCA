@@ -10,9 +10,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import uk.gov.netz.api.common.validation.SpELExpression;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,15 @@ public class FacilityBaselineEnergyConsumption {
 
     @Builder.Default
     private List<@Valid ProductVariableEnergyConsumptionData> variableEnergyConsumptionDataByProduct = new ArrayList<>();
+
+    @JsonIgnore
+    public BigDecimal getBaselineEnergyCarbonIntensity() {
+        if(!ObjectUtils.isEmpty(baselineVariableEnergy) && !ObjectUtils.isEmpty(totalThroughput)) {
+            return baselineVariableEnergy.divide(totalThroughput, 7, RoundingMode.HALF_UP);
+        }
+
+        return null;
+    }
 
     @JsonIgnore
     public Optional<BigDecimal> getTotalBaselineVariableEnergy(LocalDate baselineStartDate) {

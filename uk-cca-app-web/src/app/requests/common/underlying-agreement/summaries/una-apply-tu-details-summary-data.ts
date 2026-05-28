@@ -1,5 +1,6 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { OperatorTypePipe, transformAddress } from '@shared/pipes';
+import { Country } from '@shared/types';
 import { equalAddressFields, equalFields } from '@shared/utils';
 
 import { AccountReferenceData, UnderlyingAgreementTargetUnitDetails } from 'cca-api';
@@ -9,6 +10,7 @@ import { ReviewTargetUnitDetailsWizardStep } from '../types';
 
 export function toReviewTargetUnitDetailsSummaryData(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
+  countries: Country[],
   isEditable: boolean,
   companiesHouseState?: CompaniesHouseState,
   toggleCompaniesHouseDetails?: boolean,
@@ -51,13 +53,13 @@ export function toReviewTargetUnitDetailsSummaryData(
 
   factory
     .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep.OPERATOR_ADDRESS)
-    .addRow('Address', transformAddress(targetUnitDetails?.operatorAddress), {
+    .addRow('Address', transformAddress(targetUnitDetails?.operatorAddress, countries), {
       change: isEditable,
       fieldDiff:
         toggleCompaniesHouseDetails &&
         equalAddressFields(
-          transformAddress(targetUnitDetails?.operatorAddress),
-          transformAddress(companiesHouseState?.details?.address),
+          transformAddress(targetUnitDetails?.operatorAddress, countries),
+          transformAddress(companiesHouseState?.details?.address, countries),
         ) === false,
     })
 
@@ -71,7 +73,7 @@ export function toReviewTargetUnitDetailsSummaryData(
     .addRow('Email address', targetUnitDetails?.responsiblePersonDetails?.email, {
       change: isEditable,
     })
-    .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address), {
+    .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address, countries), {
       change: isEditable,
     });
 
@@ -80,6 +82,7 @@ export function toReviewTargetUnitDetailsSummaryData(
 
 export function toReviewTargetUnitDetailsSummaryDataOriginal(
   accountReferenceData: AccountReferenceData,
+  countries: Country[],
   isEditable: boolean,
   companiesHouseState?: CompaniesHouseState,
   toggleCompaniesHouseDetails?: boolean,
@@ -138,13 +141,13 @@ export function toReviewTargetUnitDetailsSummaryDataOriginal(
 
   factory
     .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep.OPERATOR_ADDRESS)
-    .addRow('Address', transformAddress(accountReferenceData?.targetUnitAccountDetails?.address), {
+    .addRow('Address', transformAddress(accountReferenceData?.targetUnitAccountDetails?.address, countries), {
       change: isEditable,
       fieldDiff:
         toggleCompaniesHouseDetails &&
         equalAddressFields(
-          transformAddress(accountReferenceData?.targetUnitAccountDetails?.address),
-          transformAddress(companiesHouseState?.details?.address),
+          transformAddress(accountReferenceData?.targetUnitAccountDetails?.address, countries),
+          transformAddress(companiesHouseState?.details?.address, countries),
         ) === false,
     })
 
@@ -158,9 +161,13 @@ export function toReviewTargetUnitDetailsSummaryDataOriginal(
     .addRow('Email address', accountReferenceData?.targetUnitAccountDetails?.responsiblePerson?.email, {
       change: isEditable,
     })
-    .addRow('Address', transformAddress(accountReferenceData?.targetUnitAccountDetails?.responsiblePerson?.address), {
-      change: isEditable,
-    });
+    .addRow(
+      'Address',
+      transformAddress(accountReferenceData?.targetUnitAccountDetails?.responsiblePerson?.address, countries),
+      {
+        change: isEditable,
+      },
+    );
 
   return factory.create();
 }

@@ -22,8 +22,8 @@ describe('AuditComponent', () => {
       reasons: [],
       comments: '',
     },
-    updateAudit: jest.fn().mockReturnValue(of({ auditRequired: false, reasons: [], comments: '' })),
-    init: jest.fn(),
+    updateAudit: vi.fn().mockReturnValue(of({ auditRequired: false, reasons: [], comments: '' })),
+    init: vi.fn(),
   };
 
   beforeEach(async () => {
@@ -51,7 +51,7 @@ describe('AuditComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
@@ -59,6 +59,6 @@ describe('AuditComponent', () => {
   });
 
   it('should display correct view', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

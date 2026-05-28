@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.account.domain.dto.AccountAddressDTO;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountContactDTO;
+import uk.gov.cca.api.common.domain.AgreementType;
 import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.facility.domain.dto.FacilityAddressDTO;
 

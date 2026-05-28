@@ -31,7 +31,6 @@ const mockRequestTaskItemDTOPerformanceDataDL: RequestTaskItemDTO = {
   requestInfo: {
     id: 'ADS_2-TPR-DWN-5',
     type: 'PERFORMANCE_DATA_DOWNLOAD',
-    competentAuthority: 'ENGLAND',
   },
 };
 

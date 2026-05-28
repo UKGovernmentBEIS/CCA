@@ -74,9 +74,26 @@ export class ItemNamePipe implements PipeTransform {
 
       case 'NON_COMPLIANCE_DETAILS_SUBMIT':
         return 'Provide non-compliance details';
-
       case 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT':
         return 'Upload notice of intent';
+      case 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT':
+        return 'Upload enforcement response notice';
+      case 'NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW':
+        return 'Peer review notice of intent';
+      case 'NON_COMPLIANCE_NOTICE_OF_INTENT_WAIT_FOR_PEER_REVIEW':
+        return 'Notice of intent sent for peer review';
+      case 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW':
+        return 'Peer review enforcement response notice';
+      case 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_WAIT_FOR_PEER_REVIEW':
+        return 'Enforcement response notice sent for peer review';
+
+      case 'NON_COMPLIANCE_CONCLUSION_SUBMIT':
+        return 'Provide non-compliance conclusion';
+      case 'NON_COMPLIANCE_APPEAL_OUTCOME_SUBMIT':
+        return 'Provide appeal outcome';
+
+      case 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT':
+        return 'Target period reporting (TPR) form';
 
       default:
         return null;

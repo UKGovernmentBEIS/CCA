@@ -1,3 +1,4 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -108,7 +109,7 @@ describe('UsersTableDirective', () => {
         </govuk-table>
       </form>
     `,
-    imports: [TableComponent, ReactiveFormsModule, UsersTableDirective],
+    imports: [TableComponent, ReactiveFormsModule, UsersTableDirective, TitleCasePipe],
   })
   class TestComponent {
     users$: Observable<UsersTableItem[]> = of(mockRegulatorsRouteData.regulators.caUsers);

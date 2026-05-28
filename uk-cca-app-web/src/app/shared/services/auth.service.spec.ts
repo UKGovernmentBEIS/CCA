@@ -14,6 +14,7 @@ import {
 } from '@netz/common/auth';
 import { ActivatedRouteSnapshotStub, ActivatedRouteStub, mockClass } from '@netz/common/testing';
 import { KeycloakService } from '@shared/services';
+import { Mocked } from 'vitest';
 
 import {
   AuthoritiesService,
@@ -48,20 +49,20 @@ describe('AuthService', () => {
     userId: 'opTestId',
   };
 
-  const usersService: Partial<jest.Mocked<UsersService>> = {
-    getCurrentUser: jest.fn().mockReturnValue(of(user)),
+  const usersService: Partial<Mocked<UsersService>> = {
+    getCurrentUser: vi.fn().mockReturnValue(of(user)),
   };
 
-  const authoritiesService: Partial<jest.Mocked<AuthoritiesService>> = {
-    getCurrentUserState: jest.fn().mockReturnValue(of(userState)),
+  const authoritiesService: Partial<Mocked<AuthoritiesService>> = {
+    getCurrentUserState: vi.fn().mockReturnValue(of(userState)),
   };
 
   const latestTerms: TermsDTO = { url: '/test', version: 1 };
   const userTerms: UserTermsVersionDTO = { termsVersion: 1 };
 
-  const termsService: Partial<jest.Mocked<TermsAndConditionsService>> = {
-    getLatestTerms: jest.fn().mockReturnValue(of(latestTerms)),
-    getUserTerms: jest.fn().mockReturnValue(of(userTerms)),
+  const termsService: Partial<Mocked<TermsAndConditionsService>> = {
+    getLatestTerms: vi.fn().mockReturnValue(of(latestTerms)),
+    getUserTerms: vi.fn().mockReturnValue(of(userTerms)),
   };
 
   beforeEach(() => {
@@ -84,7 +85,7 @@ describe('AuthService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be created', () => {
@@ -138,7 +139,7 @@ describe('AuthService', () => {
 
   it('should not update user info if logged in is already determined', async () => {
     authStore.setIsLoggedIn(false);
-    const spy = jest.spyOn(service, 'loadUserState');
+    const spy = vi.spyOn(service, 'loadUserState');
 
     await expect(firstValueFrom(service.checkUser())).resolves.toBeNull();
     expect(spy).not.toHaveBeenCalled();

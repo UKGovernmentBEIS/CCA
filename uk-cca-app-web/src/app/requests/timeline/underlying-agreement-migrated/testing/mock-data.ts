@@ -38,6 +38,7 @@ const facilityDetails: FacilityDetails = {
   isCoveredByUkets: false,
   applicationReason: 'NEW_AGREEMENT',
   facilityAddress: operatorAddress,
+  participatingSchemeVersions: ['CCA_2'],
 };
 
 const facilityContact = {
@@ -69,8 +70,8 @@ const facilities: Array<Facility> = [
       areActivitiesClaimed: false,
     },
     apply70Rule: {
-      energyConsumed: 75,
-      energyConsumedEligible: 100,
+      energyConsumed: '75',
+      energyConsumedEligible: '100',
       evidenceFile: '3ca25915-bbb5-4f03-9ecf-3a8ad583443e',
     },
   },
@@ -95,15 +96,15 @@ const underlyingAgreement: UnderlyingAgreementPayload = {
       baselineDate: '2020-02-02',
       explanation: 'test',
       greenfieldEvidences: [],
-      energy: 1,
+      energy: '1',
       usedReportingMechanism: true,
-      throughput: 1,
-      performance: 1,
-      energyCarbonFactor: 1,
+      throughput: '1',
+      performance: '1',
+      energyCarbonFactor: '1',
     },
     targets: {
-      improvement: 1,
-      target: 0.99,
+      improvement: '1',
+      target: '0.99',
     },
   },
   authorisationAndAdditionalEvidence: {

@@ -3,7 +3,12 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
+import { of } from 'rxjs';
+
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
+import { Mocked } from 'vitest';
+
+import { ReferenceDataService } from 'cca-api';
 
 import { mockVariationReviewRequestTaskState } from '../../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import FacilitySummaryComponent from './facility-summary.component';
@@ -15,6 +20,10 @@ describe('FacilitySummaryComponent', () => {
 
   const route: any = { snapshot: { params: { facilityId: 'ADS_1-F00001' }, pathFromRoot: [] } };
 
+  const referenceDataService: Partial<Mocked<ReferenceDataService>> = {
+    getReferenceData: vi.fn().mockReturnValue(of({ COUNTRIES: [] })),
+  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FacilitySummaryComponent],
@@ -23,6 +32,7 @@ describe('FacilitySummaryComponent', () => {
         provideHttpClientTesting(),
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },
+        { provide: ReferenceDataService, useValue: referenceDataService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Review underlying agreement variation' },
       ],
@@ -41,6 +51,6 @@ describe('FacilitySummaryComponent', () => {
   });
 
   it('should show summary values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

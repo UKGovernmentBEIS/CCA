@@ -36,9 +36,9 @@ export const surplusCalculated: TP6SurplusCalculatedAccountProcessingSubmittedRe
     },
   ],
   surplusCalculatedDetails: {
-    surplusGained: 0,
-    previousPaidFees: 0,
-    overPaymentFee: 25,
+    surplusGained: '0',
+    previousPaidFees: '0',
+    overPaymentFee: '25',
   },
 };
 

@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
+import { Mocked } from 'vitest';
+
 import { NotificationTemplatesService } from 'cca-api';
 
 import { TemplateSearchComponent } from '../template-search';
@@ -15,12 +17,12 @@ import { EmailsComponent } from './emails.component';
 describe('EmailsComponent', () => {
   let component: EmailsComponent;
   let fixture: ComponentFixture<EmailsComponent>;
-  let notificationTemplatesService: jest.Mocked<Partial<NotificationTemplatesService>>;
+  let notificationTemplatesService: Mocked<Partial<NotificationTemplatesService>>;
   let routerMock: any;
 
   beforeEach(async () => {
     notificationTemplatesService = {
-      getCurrentUserNotificationTemplates: jest.fn().mockReturnValue(of(mockNotificationTemplateSearchResults)),
+      getCurrentUserNotificationTemplates: vi.fn().mockReturnValue(of(mockNotificationTemplateSearchResults)),
     };
 
     await TestBed.configureTestingModule({
@@ -34,7 +36,7 @@ describe('EmailsComponent', () => {
     }).compileComponents();
 
     routerMock = TestBed.inject(Router);
-    jest.spyOn(routerMock, 'navigate').mockResolvedValue(true);
+    vi.spyOn(routerMock, 'navigate').mockResolvedValue(true);
 
     fixture = TestBed.createComponent(EmailsComponent);
     component = fixture.componentInstance;

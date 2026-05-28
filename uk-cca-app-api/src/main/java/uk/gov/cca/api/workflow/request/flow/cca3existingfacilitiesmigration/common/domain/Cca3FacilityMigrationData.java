@@ -12,7 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import uk.gov.cca.api.common.converters.CsvBigDecimalConverter;
+import uk.gov.cca.api.common.converters.CsvBigDecimalScale7Converter;
 import uk.gov.cca.api.common.converters.CsvBooleanConverter;
 import uk.gov.cca.api.common.converters.CsvLocalDateConverter;
 import uk.gov.cca.api.common.converters.CsvMeasurementTypeConverter;
@@ -85,7 +85,7 @@ public class Cca3FacilityMigrationData implements Serializable {
     private MeasurementType measurementType;
 
     // Baseline energy to carbon factor (kgC/kWh)
-    @CsvCustomBindByPosition(position = 7, converter = CsvBigDecimalConverter.class)
+    @CsvCustomBindByPosition(position = 7, converter = CsvBigDecimalScale7Converter.class)
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal energyCarbonFactor;
 
@@ -94,35 +94,35 @@ public class Cca3FacilityMigrationData implements Serializable {
     private Boolean usedReportingMechanism;
 
     // TP7 improvement target
-    @CsvCustomBindByPosition(position = 9, converter = CsvBigDecimalConverter.class)
+    @CsvCustomBindByPosition(position = 9, converter = CsvBigDecimalScale7Converter.class)
     @DecimalMax(value = "100")
     @Digits(integer = 3, fraction = 7)
     private BigDecimal tp7Improvement;
 
     // TP8 improvement target
-    @CsvCustomBindByPosition(position = 10, converter = CsvBigDecimalConverter.class)
+    @CsvCustomBindByPosition(position = 10, converter = CsvBigDecimalScale7Converter.class)
     @DecimalMax(value = "100")
     @Digits(integer = 3, fraction = 7)
     private BigDecimal tp8Improvement;
 
     // TP9 improvement target
-    @CsvCustomBindByPosition(position = 11, converter = CsvBigDecimalConverter.class)
+    @CsvCustomBindByPosition(position = 11, converter = CsvBigDecimalScale7Converter.class)
     @DecimalMax(value = "100")
     @Digits(integer = 3, fraction = 7)
     private BigDecimal tp9Improvement;
 
     // Baseline total fixed energy (or carbon) value
-    @CsvCustomBindByPosition(position = 12, converter = CsvBigDecimalConverter.class)
+    @CsvCustomBindByPosition(position = 12, converter = CsvBigDecimalScale7Converter.class)
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal totalFixedEnergy;
 
     // Baseline total variable energy (or carbon)
-    @CsvCustomBindByPosition(position = 13, converter = CsvBigDecimalConverter.class)
+    @CsvCustomBindByPosition(position = 13, converter = CsvBigDecimalScale7Converter.class)
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal totalVariableEnergy;
 
     // Baseline Total Throughput
-    @CsvCustomBindByPosition(position = 14, converter = CsvBigDecimalConverter.class)
+    @CsvCustomBindByPosition(position = 14, converter = CsvBigDecimalScale7Converter.class)
     @Positive
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal totalThroughput;

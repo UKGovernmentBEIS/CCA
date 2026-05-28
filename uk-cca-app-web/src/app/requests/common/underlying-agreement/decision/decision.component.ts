@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { RadioComponent, RadioOptionComponent, TextareaComponent } from '@netz/govuk-components';
@@ -23,14 +23,7 @@ import { generateDownloadUrl } from '@shared/utils';
       label="Upload evidence (optional)"
     />
   `,
-  imports: [
-    RadioComponent,
-    TextareaComponent,
-    RadioOptionComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    MultipleFileInputComponent,
-  ],
+  imports: [RadioComponent, TextareaComponent, RadioOptionComponent, ReactiveFormsModule, MultipleFileInputComponent],
   viewProviders: [existingControlContainer],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

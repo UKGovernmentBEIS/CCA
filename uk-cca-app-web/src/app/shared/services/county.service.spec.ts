@@ -26,7 +26,7 @@ describe('CountyService', () => {
   let service: CountyService;
 
   const mockReferenceDataService = {
-    getReferenceData: jest.fn().mockReturnValue(of({ COUNTIES: mockCounties })),
+    getReferenceData: vi.fn().mockReturnValue(of({ COUNTIES: mockCounties })),
   };
 
   beforeEach(() => {

@@ -19,7 +19,7 @@ import {
 import { MultipleFileInputComponent, WizardStepComponent } from '@shared/components';
 import { fileUtils } from '@shared/utils';
 
-import { SectorMoasReceivedAmountStore } from './received-amount.store';
+import { ReceivedAmountStore } from './received-amount.store';
 import {
   RECEIVED_AMOUNT_FORM,
   ReceivedAmountFormModel,
@@ -53,7 +53,7 @@ import {
 export class ReceivedAmountComponent implements OnInit {
   protected readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly receivedAmountStore = inject(SectorMoasReceivedAmountStore);
+  private readonly receivedAmountStore = inject(ReceivedAmountStore);
 
   protected readonly state = this.receivedAmountStore.stateAsSignal;
   protected readonly moaId = +this.activatedRoute.snapshot.paramMap.get('moaId');
@@ -63,7 +63,7 @@ export class ReceivedAmountComponent implements OnInit {
     { text: 'Subtract', value: 'subtract' },
   ];
 
-  protected readonly form = inject<ReceivedAmountFormModel>(RECEIVED_AMOUNT_FORM);
+  readonly form = inject<ReceivedAmountFormModel>(RECEIVED_AMOUNT_FORM);
 
   ngOnInit() {
     this.receivedAmountStore.getAndSetReceivedAmount(this.moaId);

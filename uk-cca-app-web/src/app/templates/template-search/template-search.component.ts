@@ -3,7 +3,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { combineLatest, map, Observable, switchMap, tap } from 'rxjs';
+import { catchError, combineLatest, map, Observable, of, switchMap, tap } from 'rxjs';
 
 import { PendingButtonDirective } from '@netz/common/directives';
 import { ButtonDirective, GovukValidators, TextInputComponent } from '@netz/govuk-components';
@@ -89,6 +89,7 @@ export class TemplateSearchComponent {
           this.searchForm.get('term')?.setValue(term);
         }),
         switchMap(({ term, page, pageSize, fetchFn }) => fetchFn(page - 1, pageSize, term)),
+        catchError(() => of({ templates: [], total: 0 })),
         tap(({ templates, total }) => {
           this.state.set({
             templates: templates || [],

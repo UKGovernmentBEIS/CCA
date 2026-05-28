@@ -18,11 +18,16 @@ import uk.gov.cca.api.workflow.request.flow.common.domain.peerreview.CcaPeerRevi
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.appealoutcome.domain.NonComplianceAppealOutcomeSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceAppealDetailsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceClosedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.conclusion.domain.NonComplianceConclusionSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.domain.NonComplianceEnforcementResponseNoticeSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.processing.domain.PerformanceAccountTemplateProcessingSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.processing.common.domain.PerformanceDataSpreadsheetProcessingSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilitySubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.sectormoa.domain.SectorMoaGeneratedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.subsistencefeesrun.domain.SubsistenceFeesRunCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.subsistencefees.targetunitmoa.domain.TargetUnitMoaGeneratedRequestActionPayload;
@@ -33,8 +38,8 @@ import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreem
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.review.domain.UnderlyingAgreementRejectedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.activation.domain.UnderlyingAgreementVariationActivatedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationAcceptedRequestActionPayload;
-import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRegulatorLedSubmittedRequestActionPayload;
+import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.regulatorledsubmit.domain.UnderlyingAgreementVariationRegulatorLedCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationCompletedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.review.domain.UnderlyingAgreementVariationRejectedRequestActionPayload;
@@ -113,7 +118,16 @@ public class RequestActionPayloadTypesProvider implements JsonSubTypesProvider {
                 // Non Compliance
                 new NamedType(NonComplianceDetailsSubmittedRequestActionPayload.class, NON_COMPLIANCE_DETAILS_SUBMITTED_PAYLOAD),
                 new NamedType(NonComplianceClosedRequestActionPayload.class, NON_COMPLIANCE_CLOSED_PAYLOAD),
-                new NamedType(NonComplianceNoticeOfIntentSubmittedRequestActionPayload.class, NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED_PAYLOAD)
+                new NamedType(NonComplianceNoticeOfIntentSubmittedRequestActionPayload.class, NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED_PAYLOAD),
+                new NamedType(CcaPeerReviewDecisionSubmittedRequestActionPayload.class, NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW_SUBMITTED_PAYLOAD),
+                new NamedType(NonComplianceEnforcementResponseNoticeSubmittedRequestActionPayload.class, NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMITTED_PAYLOAD),
+                new NamedType(CcaPeerReviewDecisionSubmittedRequestActionPayload.class, NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEW_SUBMITTED_PAYLOAD),
+                new NamedType(NonComplianceConclusionSubmittedRequestActionPayload.class, NON_COMPLIANCE_CONCLUSION_SUBMITTED_PAYLOAD),
+                new NamedType(NonComplianceAppealDetailsSubmittedRequestActionPayload.class, NON_COMPLIANCE_APPEAL_DETAILS_SUBMITTED_PAYLOAD),
+                new NamedType(NonComplianceAppealOutcomeSubmittedRequestActionPayload.class, NON_COMPLIANCE_APPEAL_OUTCOME_SUBMITTED_PAYLOAD),
+
+                // Performance Data Facility Digital Form
+                new NamedType(PerformanceDataFacilitySubmittedRequestActionPayload.class, PERFORMANCE_DATA_FACILITY_SUBMITTED_PAYLOAD)
         );
     }
 

@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -41,27 +41,37 @@ describe('TabDirective', () => {
       }).compileComponents();
     });
 
-    beforeEach(() => {
+    const initializeFixture = () => {
       fixture = TestBed.createComponent(TestComponent);
       component = fixture.debugElement.query(By.directive(TabsComponent)).componentInstance;
       fixture.detectChanges();
+    };
+
+    beforeEach(() => {
+      vi.useFakeTimers();
+      initializeFixture();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
     });
 
     it('should create', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should render tabs content asynchronously', fakeAsync(async () => {
+    it('should render tabs content asynchronously', () => {
       const tabsElement: HTMLElement = fixture.debugElement.query(By.directive(TabsComponent)).nativeElement;
       expect(tabsElement.querySelector('#paragraph').textContent).toContain('This is a paragraph');
-    }));
+    });
 
     it('should show only the content of the active tab', async () => {
-      await fixture.whenStable();
+      vi.advanceTimersByTime(200);
       fixture.detectChanges();
       const tabsElement: HTMLElement = fixture.debugElement.query(By.directive(TabsComponent)).nativeElement;
       const tabLinks = tabsElement.querySelectorAll<HTMLAnchorElement>('a.govuk-tabs__tab');
 
+      vi.useRealTimers();
       tabLinks[0].click();
       await fixture.whenStable();
       fixture.detectChanges();

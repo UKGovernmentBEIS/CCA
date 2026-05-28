@@ -11,7 +11,12 @@ export const ACCORDION = new InjectionToken<Accordion>('Accordion');
 
 export const accordionFactory: FactoryProvider = {
   provide: ACCORDION,
-  useFactory: () => ({ id: 'accordion', itemCount: 0 }),
+  useFactory: (): Accordion => ({
+    id: 'accordion',
+    itemCount: 0,
+    openIndexes: [],
+    cacheDisabled: false,
+  }),
 };
 
 export const isSessionStorageAvailable: () => boolean = () => {

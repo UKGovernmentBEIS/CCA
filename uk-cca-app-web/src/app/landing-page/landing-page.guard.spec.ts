@@ -17,7 +17,7 @@ describe('LandingPageGuard', () => {
   let configStore: ConfigStore;
 
   const authService: MockType<AuthService> = {
-    checkUser: jest.fn(() => of(undefined)),
+    checkUser: vi.fn(() => of(undefined)),
   };
 
   beforeEach(() => {

@@ -18,14 +18,16 @@ import BigNumber from 'bignumber.js';
 
 import { SubsistenceFeesMoaReceivedAmountDetailsDTO } from 'cca-api';
 
-import { SectorMoasReceivedAmountStore } from './received-amount.store';
+import { ReceivedAmountStore } from './received-amount.store';
 
 export const RECEIVED_AMOUNT_FORM = new InjectionToken('Received amount form');
 
 const negativeTotalAmountValidator = (): AsyncValidatorFn => {
-  const state = inject(SectorMoasReceivedAmountStore).stateAsSignal;
+  const state = inject(ReceivedAmountStore).stateAsSignal;
 
   return (group: AbstractControl): Observable<ValidationErrors | null> => {
+    if (!state().receivedAmount || !group.value.transactionAmount) return of(null);
+
     const bigReceivedAmount = new BigNumber(state().receivedAmount);
     const bigTransactionAmount = new BigNumber(group.value.transactionAmount);
 
@@ -53,8 +55,8 @@ export type ReceivedAmountFormModel = FormGroup<{
 
 export const ReceivedAmountFormProvider: Provider = {
   provide: RECEIVED_AMOUNT_FORM,
-  deps: [FormBuilder, SectorMoasReceivedAmountStore],
-  useFactory: (fb: FormBuilder, receivedAmountStore: SectorMoasReceivedAmountStore) => {
+  deps: [FormBuilder, ReceivedAmountStore],
+  useFactory: (fb: FormBuilder, receivedAmountStore: ReceivedAmountStore) => {
     const fileEvidenceUploadService = inject(FileEvidenceUploadService);
     const state = receivedAmountStore.stateAsSignal;
 

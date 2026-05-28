@@ -1,5 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -20,8 +21,6 @@ describe('EditResponsiblePersonComponent', () => {
   let page: Page;
   let activatedRoute: ActivatedRouteStub;
   let store: ActiveTargetUnitStore;
-
-  const countryService = mockClass(CountryService);
 
   const updateTargetUnitAccountService = mockClass(UpdateTargetUnitAccountService);
   updateTargetUnitAccountService.updateTargetUnitAccountResponsiblePerson.mockReturnValue(of({}));
@@ -47,6 +46,22 @@ describe('EditResponsiblePersonComponent', () => {
   beforeEach(async () => {
     activatedRoute = new ActivatedRouteStub({ targetUnitId: '1' });
 
+    const mockCountryService = {
+      countries: signal([
+        {
+          code: 'PT',
+          name: 'Portugal',
+          officialName: 'The Portuguese Republic',
+        },
+        {
+          code: 'PW',
+          name: 'Palau',
+          officialName: 'The Republic of Palau',
+        },
+      ]),
+      ukCountries: signal([{ code: 'GB', name: 'United Kingdom', officialName: 'United Kingdom' }]),
+    };
+
     await TestBed.configureTestingModule({
       imports: [EditResponsiblePersonComponent],
       providers: [
@@ -54,7 +69,7 @@ describe('EditResponsiblePersonComponent', () => {
         provideHttpClientTesting(),
         ActiveTargetUnitStore,
         { provide: UpdateTargetUnitAccountService, useValue: updateTargetUnitAccountService },
-        { provide: CountryService, useValue: countryService },
+        { provide: CountryService, useValue: mockCountryService },
         { provide: ActivatedRoute, useValue: activatedRoute },
       ],
     }).compileComponents();

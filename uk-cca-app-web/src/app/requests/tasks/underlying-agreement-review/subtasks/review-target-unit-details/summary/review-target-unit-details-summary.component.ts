@@ -8,6 +8,7 @@ import {
   underlyingAgreementReviewQuery,
 } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 import { generateDownloadUrl } from '@shared/utils';
 
 @Component({
@@ -27,6 +28,8 @@ import { generateDownloadUrl } from '@shared/utils';
 export default class ReviewTargetUnitDetailsSummaryComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
+  private readonly countries = inject(CountryService).countries;
+
   private readonly downloadUrl = generateDownloadUrl(
     this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
   );
@@ -36,6 +39,7 @@ export default class ReviewTargetUnitDetailsSummaryComponent {
   protected readonly summaryData = toReviewTargetUnitDetailsSummaryDataWithDecision(
     this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
     this.requestTaskStore.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
+    this.countries(),
     this.attachments,
     this.downloadUrl,
     this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),

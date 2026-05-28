@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
+import uk.gov.cca.api.account.domain.dto.AdditionalNoticeRecipientDTO;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountHeaderInfoDTO;
@@ -212,6 +213,57 @@ class RequestTaskControllerTest {
 
         verify(appSecurityComponent, times(1)).getAuthenticatedUser();
         verify(requestTaskRecipientsService, never()).getDefaultNoticeRecipients(anyLong());
+    }
+
+    @Test
+    void getAdditionalNoticeRecipients() throws Exception {
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.REGULATOR).build();
+        final long requestTaskId = 1L;
+
+        List<AdditionalNoticeRecipientDTO> list = Collections.singletonList(
+                AdditionalNoticeRecipientDTO.builder()
+                        .userId("id")
+                        .firstName("fn")
+                        .lastName("ln")
+                        .email("email")
+                        .type(NoticeRecipientType.OPERATOR)
+                        .build());
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+        when(requestTaskRecipientsService.getAdditionalNoticeRecipients(requestTaskId, user))
+                .thenReturn(list);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + requestTaskId + "/additional-recipients")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(jsonPath("$[0].userId").value("id"))
+                .andExpect(jsonPath("$[0].email").value("email"))
+                .andExpect(jsonPath("$[0].firstName").value("fn"))
+                .andExpect(jsonPath("$[0].lastName").value("ln"))
+                .andExpect(jsonPath("$[0].type").value(NoticeRecipientType.OPERATOR.name()));
+
+        verify(appSecurityComponent, times(1)).getAuthenticatedUser();
+        verify(requestTaskRecipientsService, times(1))
+                .getAdditionalNoticeRecipients(requestTaskId, user);
+    }
+
+    @Test
+    void getAdditionalNoticeRecipients_forbidden() throws Exception {
+        final AppUser user = AppUser.builder().roleType(RoleTypeConstants.OPERATOR).build();
+        final long requestTaskId = 1L;
+
+        when(appSecurityComponent.getAuthenticatedUser()).thenReturn(user);
+        doThrow(new BusinessException(ErrorCode.FORBIDDEN))
+                .when(appUserAuthorizationService)
+                .authorize(user, "getAdditionalNoticeRecipients", String.valueOf(requestTaskId), null, null);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_PATH + "/" + requestTaskId + "/additional-recipients")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+
+        verify(appSecurityComponent, times(1)).getAuthenticatedUser();
+        verify(requestTaskRecipientsService, never()).getAdditionalNoticeRecipients(requestTaskId, user);
     }
 
     @Test

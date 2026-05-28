@@ -67,4 +67,5 @@ public interface FacilityDataRepository extends JpaRepository<FacilityData, Long
     List<TargetUnitAccountBusinessInfoDTO> findLiveAccountsWithActiveFacilityForSchemeVersion(String schemeVersion);
 
     List<FacilityData> findAllByAccountId(Long accountId);
+    
 }

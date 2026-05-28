@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 
 import { RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { TasksService } from 'cca-api';
 
@@ -19,8 +20,8 @@ describe('PatProcessedComponent', () => {
   let fixture: ComponentFixture<PatUploadProcessedComponent>;
   let store: RequestTaskStore;
 
-  const tasksService: Partial<jest.Mocked<TasksService>> = {
-    processRequestTaskAction: jest.fn().mockReturnValue(of(mockRequestTaskPATState)),
+  const tasksService: Partial<Mocked<TasksService>> = {
+    processRequestTaskAction: vi.fn().mockReturnValue(of(mockRequestTaskPATState)),
   };
 
   beforeEach(async () => {
@@ -74,7 +75,7 @@ describe('PatProcessedComponent', () => {
             uploadAttachments: {
               'b78c03fa-70bd-4c63-8ddb-b1ffd08310b0': 'ADS_1-T00001_PAT_TP6.zip',
             },
-          },
+          } as any,
         },
       },
     });
@@ -100,7 +101,7 @@ describe('PatProcessedComponent', () => {
             targetPeriodType: 'TP6',
             processingStatus: 'COMPLETED',
             errorType: 'CSV_GENERATION_FAILED',
-          },
+          } as any,
         },
       },
     });

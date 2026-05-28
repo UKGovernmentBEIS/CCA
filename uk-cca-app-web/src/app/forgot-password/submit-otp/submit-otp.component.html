@@ -1,4 +1,4 @@
-@if (!isPasswordReset) {
+@if (!isPasswordReset()) {
   @if (isSummaryDisplayed()) {
     <govuk-error-summary [form]="form" />
   }
@@ -23,7 +23,7 @@
         <div class="govuk-panel__body">You have successfully reset your password</div>
       </div>
 
-      <p>We have sent a confirmation email to {{ email }}</p>
+      <p>We have sent a confirmation email to {{ email() }}</p>
       <h2 class="govuk-heading-m">What happens next</h2>
       <p>
         You can

@@ -7,6 +7,7 @@ import {
   underlyingAgreementRequestActionQuery,
 } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 
 import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+state/underlying-agreement-variation-reviewed-request-action.selectors';
 
@@ -24,6 +25,8 @@ import { underlyingAgreementVariationReviewedRequestActionQuery } from '../../+s
 export class ReviewTargetUnitDetailsComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
+  private readonly countries = inject(CountryService).countries;
+
   protected readonly summaryData = computed(() =>
     toReviewTargetUnitDetailsSummaryDataWithDecision(
       this.requestActionStore.select(
@@ -32,6 +35,7 @@ export class ReviewTargetUnitDetailsComponent {
       this.requestActionStore.select(
         underlyingAgreementVariationReviewedRequestActionQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'),
       )(),
+      this.countries(),
       this.requestActionStore.select(underlyingAgreementVariationReviewedRequestActionQuery.selectReviewAttachments)(),
       '../../file-download',
       false,

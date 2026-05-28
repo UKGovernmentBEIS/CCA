@@ -54,12 +54,9 @@ export class BuyoutAndSurplusTabComponent {
   protected readonly userIsRegulator = this.roleType() === 'REGULATOR';
 
   constructor() {
-    effect(
-      () => {
-        const surplusInfo = this.buyOutSurplusInfo();
-        if (surplusInfo) this.buyoutAndSurplusTabStore.setState({ surplusInfo });
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      const surplusInfo = this.buyOutSurplusInfo();
+      if (surplusInfo) this.buyoutAndSurplusTabStore.setState({ surplusInfo });
+    });
   }
 }

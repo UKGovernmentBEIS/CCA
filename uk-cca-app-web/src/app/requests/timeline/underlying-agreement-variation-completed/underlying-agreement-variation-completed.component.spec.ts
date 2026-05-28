@@ -32,6 +32,6 @@ describe('UnderlyingAgreementVariationCompletedComponent', () => {
   });
 
   it('should match snapshot', () => {
-    expect(fixture.nativeElement).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

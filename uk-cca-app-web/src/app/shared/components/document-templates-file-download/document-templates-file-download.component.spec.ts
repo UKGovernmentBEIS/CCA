@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { defer, firstValueFrom, of, take } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass, testSchedulerFactory } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { DocumentTemplateFilesService } from 'cca-api';
 
@@ -14,10 +15,10 @@ import { DocumentTemplatesFileDownloadComponent } from './document-templates-fil
 describe('DocumentTemplatesFileDownloadComponent', () => {
   let component: DocumentTemplatesFileDownloadComponent;
   let fixture: ComponentFixture<DocumentTemplatesFileDownloadComponent>;
-  let documentTemplateFilesService: jest.Mocked<DocumentTemplateFilesService>;
+  let documentTemplateFilesService: Mocked<DocumentTemplateFilesService>;
 
   beforeEach(async () => {
-    Object.defineProperty(window, 'onfocus', { set: jest.fn() });
+    Object.defineProperty(window, 'onfocus', { set: vi.fn() });
 
     documentTemplateFilesService = mockClass(DocumentTemplateFilesService);
     documentTemplateFilesService.generateGetDocumentTemplateFileToken.mockReturnValue(

@@ -32,9 +32,9 @@ export class CsvErrorSummaryComponent implements OnChanges, AfterViewInit {
 
   protected readonly container = viewChild('container', { read: ElementRef });
 
-  protected errorList$: Observable<NestedMessageValidationError[]>;
-
   private formControl: UntypedFormGroup;
+
+  errorList$: Observable<NestedMessageValidationError[]>;
 
   ngOnChanges(): void {
     const form = this.form();

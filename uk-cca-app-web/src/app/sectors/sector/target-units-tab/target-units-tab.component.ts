@@ -90,8 +90,8 @@ export class SectorTargetUnitsTabComponent {
     totalItems: 0,
   });
 
-  protected readonly currentPage = signal(DEFAULT_PAGE);
-  protected readonly pageSize = signal(DEFAULT_PAGE_SIZE);
+  readonly currentPage = signal(DEFAULT_PAGE);
+  readonly pageSize = signal(DEFAULT_PAGE_SIZE);
   protected readonly editable = computed(() => this.state().editable);
   protected readonly targetUnits = computed(() => this.state().targetUnits);
 

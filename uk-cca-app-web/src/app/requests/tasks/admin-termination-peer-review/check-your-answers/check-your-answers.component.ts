@@ -3,13 +3,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
+import { peerReviewDecisionToSummaryData } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
-import { generateDownloadUrl } from '@shared/utils';
 
 import { AdminTerminationPeerReviewRequestTaskPayload, TasksService } from 'cca-api';
 
 import { AdminTerminationPeerReviewStore } from '../+state';
-import { peerReviewDecisionToSummaryData } from './peer-review-decision-to-summary-data';
 
 @Component({
   selector: 'cca-peer-review-decision-check-your-answers',
@@ -36,9 +35,6 @@ export class CheckYourAnswersComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly tasksService = inject(TasksService);
 
-  private readonly taskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
-  private readonly downloadUrl = generateDownloadUrl(this.taskId.toString());
-
   protected readonly summaryData = computed(() => {
     const state = this.peerReviewStore.state;
     const decision = state.decision;
@@ -48,9 +44,7 @@ export class CheckYourAnswersComponent {
       return [];
     }
 
-    const summaryDataWithUrl = peerReviewDecisionToSummaryData(decision, attachments);
-
-    return summaryDataWithUrl;
+    return peerReviewDecisionToSummaryData(decision, attachments);
   });
 
   onSubmit() {

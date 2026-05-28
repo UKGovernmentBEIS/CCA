@@ -11,11 +11,15 @@ import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrective
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceCloseRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.conclusion.domain.NonComplianceConclusionSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.domain.NonComplianceEnforcementResponseNoticeSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataGenerateRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadProcessingRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.activation.domain.UnderlyingAgreementActivationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementNotifyOperatorForDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.review.domain.UnderlyingAgreementSaveFacilityReviewGroupDecisionRequestTaskActionPayload;
@@ -114,6 +118,12 @@ public class RequestTaskActionPayloadSchemasProvider extends SwaggerSchemasAbstr
         // Non Compliance
         addResolvedShemas(NonComplianceDetailsSubmitSaveRequestTaskActionPayload.class.getSimpleName(), NonComplianceDetailsSubmitSaveRequestTaskActionPayload.class);
         addResolvedShemas(NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload.class.getSimpleName(), NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload.class);
+        addResolvedShemas(NonComplianceEnforcementResponseNoticeSaveRequestTaskActionPayload.class.getSimpleName(), NonComplianceEnforcementResponseNoticeSaveRequestTaskActionPayload.class);
+        addResolvedShemas(NonComplianceCloseRequestTaskActionPayload.class.getSimpleName(), NonComplianceCloseRequestTaskActionPayload.class);
+        addResolvedShemas(NonComplianceConclusionSaveRequestTaskActionPayload.class.getSimpleName(), NonComplianceConclusionSaveRequestTaskActionPayload.class);
+
+        // Performance Data Facility Digital Form
+        addResolvedShemas(PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload.class.getSimpleName(), PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload.class);
     }
 
 }

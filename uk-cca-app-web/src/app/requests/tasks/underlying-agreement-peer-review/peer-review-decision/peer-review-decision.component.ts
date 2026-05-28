@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
@@ -18,7 +18,6 @@ import {
   selector: 'cca-peer-review-decision',
   templateUrl: './peer-review-decision.component.html',
   imports: [
-    FormsModule,
     ReactiveFormsModule,
     WizardStepComponent,
     RadioComponent,

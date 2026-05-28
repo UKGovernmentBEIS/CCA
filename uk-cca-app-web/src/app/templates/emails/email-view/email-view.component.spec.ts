@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
+import { Mocked } from 'vitest';
+
 import { NotificationTemplatesService } from 'cca-api';
 
 import { mockNotificationTemplateViewDTO } from '../../testing/mock-data';
@@ -11,11 +13,11 @@ import { EmailViewComponent } from './email-view.component';
 describe('EmailViewComponent', () => {
   let component: EmailViewComponent;
   let fixture: ComponentFixture<EmailViewComponent>;
-  let notificationTemplatesService: jest.Mocked<Partial<NotificationTemplatesService>>;
+  let notificationTemplatesService: Mocked<Partial<NotificationTemplatesService>>;
 
   beforeEach(async () => {
     notificationTemplatesService = {
-      getNotificationTemplateById: jest.fn().mockReturnValue(of(mockNotificationTemplateViewDTO)),
+      getNotificationTemplateById: vi.fn().mockReturnValue(of(mockNotificationTemplateViewDTO)),
     };
 
     await TestBed.configureTestingModule({
@@ -32,7 +34,7 @@ describe('EmailViewComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {

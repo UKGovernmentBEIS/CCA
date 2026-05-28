@@ -35,6 +35,20 @@ public class NonComplianceDetailsSubmitValidator {
                     .ifPresent(violations::add);
         }
 
+        taskPayload.getNonComplianceDetails().getRelevantWorkflows().stream()
+                .filter(wft -> !taskPayload.getAllRelevantWorkflows().containsKey(wft))
+                .map(invalidWorkflow -> new NonComplianceViolation(NonComplianceDetails.class.getName(),
+                        NonComplianceViolation.NonComplianceViolationMessage.INVALID_NON_COMPLIANCE_DETAILS_DATA,
+                        invalidWorkflow))
+                .forEach(violations::add);
+
+        taskPayload.getNonComplianceDetails().getRelevantFacilities().stream()
+                .filter(f -> f.getIsHistorical().equals(false) && !taskPayload.getAllRelevantFacilities().containsKey(f.getFacilityBusinessId()))
+                .map(invalidFacility -> new NonComplianceViolation(NonComplianceDetails.class.getName(),
+                        NonComplianceViolation.NonComplianceViolationMessage.INVALID_NON_COMPLIANCE_DETAILS_DATA,
+                        invalidFacility.getFacilityBusinessId()))
+                .forEach(violations::add);
+
         boolean isValid = violations.isEmpty();
 
         if (!isValid) {

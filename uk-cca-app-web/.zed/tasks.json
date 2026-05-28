@@ -1,8 +1,8 @@
 [
   {
     "label": "Test Current File",
-    "command": "node",
-    "args": ["./node_modules/.bin/jest", "${ZED_FILE}", "-c", "./src/jest.config.js"],
+    "command": "yarn",
+    "args": ["test:frontend", "--", "--include=${ZED_FILE}"],
     "reveal": "always",
     "hide": "never"
   }

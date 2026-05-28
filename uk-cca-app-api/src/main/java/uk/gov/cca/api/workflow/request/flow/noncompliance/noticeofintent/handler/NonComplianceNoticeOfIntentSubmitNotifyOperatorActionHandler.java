@@ -3,6 +3,8 @@ package uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.handle
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
+import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceOutcome;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.service.NoticeOfIntentSubmitService;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.validation.NoticeOfIntentSubmitNotifyOperatorValidator;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -41,7 +43,8 @@ public class NonComplianceNoticeOfIntentSubmitNotifyOperatorActionHandler implem
         // Complete task
         workflowService.completeTask(
                 requestTask.getProcessTaskId(),
-                Map.of(BpmnProcessConstants.REQUEST_ID, requestTask.getRequest().getId()));
+                Map.of(CcaBpmnProcessConstants.NON_COMPLIANCE_OUTCOME, NonComplianceOutcome.SUBMITTED,
+                        BpmnProcessConstants.REQUEST_ID, requestTask.getRequest().getId()));
 
         return requestTask.getPayload();
     }

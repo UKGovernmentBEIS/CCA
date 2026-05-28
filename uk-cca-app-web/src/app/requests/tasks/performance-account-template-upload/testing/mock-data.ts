@@ -8,6 +8,7 @@ export const patUploadPayload_NOT_STARTED_YET: PATUploadPayload = {
   payloadType: 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD_SUBMIT_PAYLOAD',
   sendEmailNotification: true,
   targetPeriodType: 'TP6',
+  reportPackages: [],
   processingStatus: 'NOT_STARTED_YET',
 };
 
@@ -30,7 +31,6 @@ export const mockRequestTaskItemDTOPATUpload: RequestTaskItemDTO = {
   requestInfo: {
     id: 'ADS_1-PATUL-7',
     type: 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
-    competentAuthority: 'ENGLAND',
   },
 };
 

@@ -1,0 +1,86 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Provide target period throughput details"
+  heading="Target period throughput details"
+>
+  <div class="govuk-!-width-two-thirds">
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">
+      Facility's way of accounting for the portion of variable energy used (or carbon emitted)
+    </h3>
+
+    <p class="govuk-hint govuk-!-margin-top-1">This has been selected when applied for your underlying agreement</p>
+
+    <p>{{ variableEnergyType() }}</p>
+
+    <p>
+      The variable energy and total energy amounts will be calculated based on your products' "Baseline energy
+      intensity".
+    </p>
+
+    <govuk-details summary="View more details about energy calculations">
+      <p>
+        The target energy for each product is calculated from each product's baseline energy intensity, improvement
+        target and its throughput in the reporting period.
+        <br />
+        The total energy amount is the sum of the target energy for each product made during the reporting period.
+      </p>
+    </govuk-details>
+  </div>
+
+  <div class="x-scroll">
+    <!-- <div class="max-content-width"> -->
+    <div class="overflow-auto overflow-auto-table">
+      <govuk-table [columns]="tableColumns()" [data]="baselineProducts()">
+        <ng-template let-column="column" let-row="row" let-index="index">
+          <ng-container formArrayName="products">
+            <div [formGroupName]="index">
+              @switch (column.field) {
+                @case ('throughput') {
+                  <div cca-text-input formControlName="actualThroughput" class="govuk-!-margin-bottom-0"></div>
+                }
+
+                @case ('energy') {
+                  {{ row[column.field] }} {{ measurementUnit() | measurementTypeToUnit }}/{{ row['throughputUnit'] }}
+                }
+
+                @case ('improvementTarget') {
+                  {{ productCalculations()[index]?.improvementTarget | percent: '1.0-3' }}
+                }
+
+                @case ('adjustedThroughput') {
+                  {{ productCalculations()[index]?.adjustedThroughput | number: '1.0-3' }}
+                }
+
+                @case ('targetEnergy') {
+                  {{ productCalculations()[index]?.targetEnergy | number: '1.0-3' }}
+                }
+
+                @default {
+                  {{ row[column.field] }}
+                }
+              }
+            </div>
+          </ng-container>
+        </ng-template>
+      </govuk-table>
+    </div>
+    <!-- </div> -->
+  </div>
+
+  <div class="govuk-!-width-three-quarters">
+    <govuk-details summary="View baseline details">
+      <cca-summary [data]="baselineDetails()" />
+    </govuk-details>
+  </div>
+
+  <div class="govuk-!-margin-top-9 govuk-!-margin-bottom-9">
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Total target variable energy</h3>
+    <p class="govuk-body govuk-!-margin-top-1">
+      {{ totalTargetVariableEnergy() | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}
+    </p>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

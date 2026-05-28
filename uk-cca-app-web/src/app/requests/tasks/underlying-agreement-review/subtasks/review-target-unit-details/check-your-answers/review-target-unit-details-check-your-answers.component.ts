@@ -14,6 +14,7 @@ import {
   underlyingAgreementReviewQuery,
 } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
 
@@ -47,6 +48,8 @@ export default class ReviewTargetUnitDetailsCheckYourAnswersComponent {
   private readonly tasksApiService = inject(TasksApiService);
   private readonly requestTaskStore = inject(RequestTaskStore);
 
+  private readonly countries = inject(CountryService).countries;
+
   private readonly downloadUrl = generateDownloadUrl(
     this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
   );
@@ -56,6 +59,7 @@ export default class ReviewTargetUnitDetailsCheckYourAnswersComponent {
   protected readonly summaryData = toReviewTargetUnitDetailsSummaryDataWithDecision(
     this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
     this.requestTaskStore.select(underlyingAgreementReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
+    this.countries(),
     this.attachments,
     this.downloadUrl,
     this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),

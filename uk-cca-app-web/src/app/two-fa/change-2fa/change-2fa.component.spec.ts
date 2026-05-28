@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
@@ -9,6 +10,9 @@ import { ActivatedRouteStub, BasePage, mockClass } from '@netz/common/testing';
 import { UsersSecuritySetupService } from 'cca-api';
 
 import { Change2faComponent } from './change-2fa.component';
+
+@Component({ template: '' })
+class DummyComponent {}
 
 describe('Change2faComponent', () => {
   let component: Change2faComponent;
@@ -46,12 +50,12 @@ describe('Change2faComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Change2faComponent],
+      imports: [Change2faComponent, DummyComponent],
       providers: [
+        provideRouter([{ path: '2fa/invalid-code', component: DummyComponent }]),
         { provide: UsersSecuritySetupService, useValue: usersSecuritySetupService },
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
       ],
-      declarations: [],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Change2faComponent);
@@ -59,7 +63,10 @@ describe('Change2faComponent', () => {
     page = new Page(fixture);
     router = TestBed.inject(Router);
     fixture.detectChanges();
-    jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
@@ -104,7 +111,7 @@ describe('Change2faComponent', () => {
   });
 
   it('on returning error should navigate to invalid code error page', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
     usersSecuritySetupService.requestTwoFactorAuthChange.mockReturnValue(
       throwError(() => new HttpErrorResponse({ status: 400, error: { code: 'OTP1001' } })),
     );

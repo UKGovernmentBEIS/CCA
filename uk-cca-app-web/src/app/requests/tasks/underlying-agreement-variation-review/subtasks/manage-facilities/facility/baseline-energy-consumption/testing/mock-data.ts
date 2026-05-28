@@ -127,7 +127,7 @@ export const mockActivatedRouteWithProductParams = {
   snapshot: {
     params: { facilityId: mockFacilityId },
     paramMap: {
-      get: jest.fn((key: string) => {
+      get: vi.fn((key: string) => {
         if (key === 'productIndex') return '0';
         if (key === 'productName') return 'Product 1';
         return null;

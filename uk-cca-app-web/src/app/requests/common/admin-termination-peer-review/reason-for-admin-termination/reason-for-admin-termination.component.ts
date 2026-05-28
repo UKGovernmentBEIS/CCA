@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
@@ -8,15 +8,20 @@ import { toReasonForAdminTerminationDetailsSummaryData } from './to-reason-for-a
 
 @Component({
   selector: 'cca-reason-for-admin-termination',
-  template: `<cca-summary [data]="summaryData" />`,
+  template: `<cca-summary [data]="summaryData()" />`,
   imports: [SummaryComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReasonForAdminTerminationComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
+
   private readonly payload = this.requestTaskStore.select(
     adminTerminationPeerReviewQuery.selectPeerReviewAdminTerminationReasonDetails,
-  )();
-  private readonly attachments = this.requestTaskStore.select(adminTerminationPeerReviewQuery.selectAttachments)();
-  protected readonly summaryData = toReasonForAdminTerminationDetailsSummaryData(this.payload, this.attachments);
+  );
+
+  private readonly attachments = this.requestTaskStore.select(adminTerminationPeerReviewQuery.selectAttachments);
+
+  protected readonly summaryData = computed(() =>
+    toReasonForAdminTerminationDetailsSummaryData(this.payload(), this.attachments()),
+  );
 }

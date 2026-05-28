@@ -4619,6 +4619,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/tasks/{id}/additional-recipients:
+    get:
+      tags:
+        - Tasks
+      summary: >-
+        Retrieves the additional recipients for the notify operator workflow
+        step
+      operationId: getAdditionalNoticeRecipients
+      parameters:
+        - name: id
+          in: path
+          description: The task id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdditionalNoticeRecipientDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/tasks/header-info/{resourceType}/{resourceId}:
     get:
       tags:
@@ -5251,6 +5294,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccountSearchResults'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/target-period-reporting/performance-data/available-target-periods:
+    get:
+      tags:
+        - Performance data reporting view info
+      summary: Retrieves the eligible target periods for performance data reporting
+      operationId: getAvailableTargetPeriodsForPerformanceDataReporting
+      parameters:
+        - name: scheme
+          in: query
+          description: The CCA Scheme
+          required: true
+          schema:
+            type: string
+            enum:
+              - CCA_2
+              - CCA_3
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PerformanceDataReportTypeDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Internal Server Error
           content:
@@ -7560,47 +7640,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /v1.0/account-notice/{accountId}/additional-recipients:
-    get:
-      tags:
-        - Notice recipients
-      summary: Retrieves the additional Operators and the Sector users
-      operationId: getAdditionalNoticeRecipients
-      parameters:
-        - name: accountId
-          in: path
-          description: The target unit account id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AdditionalNoticeRecipientDTO'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/account-notes/{accountId}/files:
     get:
       tags:
@@ -8173,6 +8212,15 @@ components:
           type: object
           additionalProperties:
             type: string
+    NonComplianceConclusion:
+      required:
+        - details
+      type: object
+      properties:
+        details:
+          $ref: '#/components/schemas/NonComplianceConclusionDetails'
+        withdrawNotice:
+          $ref: '#/components/schemas/NonComplianceWithdrawNotice'
     UnderlyingAgreementVariationRegulatorLedSaveRequestTaskActionPayload:
       type: object
       properties:
@@ -8214,20 +8262,42 @@ components:
         total:
           type: integer
           format: int64
+    PerformanceDataFacilityThroughputDetails:
+      required:
+        - totalTargetVariableEnergy
+      type: object
+      properties:
+        actualThroughput:
+          type: string
+          format: decimal
+        targetImprovement:
+          type: string
+          format: decimal
+        adjustedThroughput:
+          type: string
+          format: decimal
+        totalTargetVariableEnergy:
+          type: string
+          format: decimal
+        variableEnergyConsumptionDataByProduct:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/PerformanceDataFacilityProductVariableEnergyData
     HttpStatusCode:
       type: object
       properties:
         error:
+          type: boolean
+        is4xxClientError:
+          type: boolean
+        is5xxServerError:
           type: boolean
         is1xxInformational:
           type: boolean
         is2xxSuccessful:
           type: boolean
         is3xxRedirection:
-          type: boolean
-        is4xxClientError:
-          type: boolean
-        is5xxServerError:
           type: boolean
     MiReportUserDefinedDTO:
       required:
@@ -8247,6 +8317,32 @@ components:
           maxLength: 10000
           minLength: 0
           type: string
+    NonComplianceAppealDetailsSubmittedRequestActionPayload:
+      required:
+        - registrationDate
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        registrationDate:
+          type: string
+          format: date
+        files:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uuid
+        comments:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        nonComplianceAttachments:
+          type: object
+          additionalProperties:
+            type: string
     UnderlyingAgreementVariationReviewSavePayload:
       required:
         - authorisationAndAdditionalEvidence
@@ -8289,6 +8385,35 @@ components:
         name:
           type: string
         code:
+          type: string
+    PerformanceDataFacilityReferenceData:
+      type: object
+      properties:
+        baselineAndTargets:
+          $ref: '#/components/schemas/PerformanceDataFacilityBaselineAndTargets'
+        tpMultiplier:
+          type: string
+          format: decimal
+    NonComplianceAppealOutcomeDetails:
+      required:
+        - appealOutcomeDate
+        - tribunalDecision
+      type: object
+      properties:
+        tribunalDecision:
+          type: string
+          enum:
+            - APPEAL_ALLOWED
+            - APPEAL_DISMISSED
+        appealOutcomeDate:
+          type: string
+          format: date
+        file:
+          type: string
+          format: uuid
+        comments:
+          maxLength: 10000
+          minLength: 0
           type: string
     RfiResponseSubmitRequestTaskActionPayload:
       required:
@@ -8612,6 +8737,34 @@ components:
         receivedDate:
           type: string
           format: date
+    NonComplianceConclusionDetails:
+      required:
+        - comment
+        - complianceRestored
+        - penaltyOutcome
+        - penaltyPaid
+      type: object
+      properties:
+        complianceRestored:
+          type: boolean
+        complianceRestoredDate:
+          type: string
+          format: date
+        penaltyPaid:
+          type: boolean
+        penaltyPaymentDate:
+          type: string
+          format: date
+        comment:
+          maxLength: 10000
+          minLength: 0
+          type: string
+        penaltyOutcome:
+          type: string
+          enum:
+            - REISSUE
+            - WITHDRAW
+            - NONE
     CcaDecisionNotification:
       required:
         - signatory
@@ -8888,6 +9041,57 @@ components:
         lastUpdatedDate:
           type: string
           format: date-time
+    PerformanceDataFacilityCalculatedResults:
+      required:
+        - actualCo2Emissions
+        - actualEnergyCarbon
+        - actualImprovement
+        - co2EmissionsDifference
+        - energyCarbonDifference
+        - targetCo2Emissions
+        - targetEnergyCarbon
+        - targetImprovement
+        - weightedConversionFactor
+      type: object
+      properties:
+        actualEnergyCarbon:
+          type: string
+          format: decimal
+        targetEnergyCarbon:
+          type: string
+          format: decimal
+        energyCarbonDifference:
+          type: string
+          format: decimal
+        targetImprovement:
+          type: string
+          format: decimal
+        weightedConversionFactor:
+          type: string
+          format: decimal
+        targetCo2Emissions:
+          type: string
+          format: decimal
+        actualCo2Emissions:
+          type: string
+          format: decimal
+        co2EmissionsDifference:
+          type: string
+          format: decimal
+        actualImprovement:
+          type: string
+          format: decimal
+        targetPeriodResultType:
+          type: string
+          enum:
+            - TARGET_MET
+            - TARGET_NOT_MET
+        surplusGained:
+          type: string
+          format: decimal
+        buyOutRequired:
+          type: string
+          format: decimal
     AuthorityManagePermissionDTO:
       type: object
       properties:
@@ -9211,6 +9415,21 @@ components:
           $ref: '#/components/schemas/TargetUnitAccountContactDTO'
         administrativeContactDetails:
           $ref: '#/components/schemas/TargetUnitAccountContactDTO'
+    NonComplianceAppealOutcomeSubmittedRequestActionPayload:
+      required:
+        - appealOutcome
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        appealOutcome:
+          $ref: '#/components/schemas/NonComplianceAppealOutcomeDetails'
+        nonComplianceAttachments:
+          type: object
+          additionalProperties:
+            type: string
     UnderlyingAgreementVariationFacilityReviewDecision:
       required:
         - facilityStatus
@@ -9235,6 +9454,20 @@ components:
             - NEW
             - LIVE
             - EXCLUDED
+    PerformanceDataFacilitySubmittedRequestActionPayload:
+      required:
+        - details
+        - performanceData
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        details:
+          $ref: '#/components/schemas/PerformanceDataFacilitySubmissionDetails'
+        performanceData:
+          $ref: '#/components/schemas/PerformanceDataFacilityContainer'
     UnderlyingAgreementSubmittedRequestActionPayload:
       required:
         - underlyingAgreement
@@ -9463,6 +9696,39 @@ components:
           format: decimal
         paymentRefNum:
           type: string
+    PerformanceDataFacilityNonStandardFuel:
+      required:
+        - conversionFactor
+        - deliveredEnergy
+        - name
+        - primaryEnergy
+      type: object
+      properties:
+        name:
+          maxLength: 255
+          minLength: 0
+          type: string
+        conversionFactor:
+          type: string
+          format: decimal
+        deliveredEnergy:
+          type: string
+          format: decimal
+        primaryEnergy:
+          type: string
+          format: decimal
+    NonComplianceFacilityDTO:
+      required:
+        - facilityBusinessId
+        - isHistorical
+      type: object
+      properties:
+        facilityBusinessId:
+          maxLength: 255
+          minLength: 0
+          type: string
+        isHistorical:
+          type: boolean
     UnderlyingAgreementVariationCompletedRequestActionPayload:
       required:
         - decisionNotification
@@ -9526,7 +9792,7 @@ components:
         payloadType:
           type: string
         noticeOfIntent:
-          $ref: '#/components/schemas/NoticeOfIntent'
+          $ref: '#/components/schemas/NonComplianceNoticeOfIntent'
         sectionsCompleted:
           type: object
           additionalProperties:
@@ -9806,6 +10072,26 @@ components:
           type: string
         nonComplianceDetails:
           $ref: '#/components/schemas/NonComplianceDetails'
+        allRelevantWorkflows:
+          type: object
+          additionalProperties:
+            type: string
+        allRelevantFacilities:
+          type: object
+          additionalProperties:
+            type: string
+    NonComplianceNoticeOfIntent:
+      required:
+        - file
+      type: object
+      properties:
+        file:
+          type: string
+          format: uuid
+        comments:
+          maxLength: 10000
+          minLength: 0
+          type: string
     FacilityCertificationDetailsDTO:
       type: object
       properties:
@@ -9879,6 +10165,17 @@ components:
           format: int64
         isNew:
           type: boolean
+    NonComplianceConclusionSaveRequestTaskActionPayload:
+      type: object
+      properties:
+        payloadType:
+          type: string
+        nonComplianceConclusion:
+          $ref: '#/components/schemas/NonComplianceConclusion'
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
     AccountSearchResultInfoDTO:
       type: object
       properties:
@@ -9939,6 +10236,19 @@ components:
           maxLength: 255
           minLength: 0
           type: string
+    NonComplianceWithdrawNotice:
+      required:
+        - comments
+        - file
+      type: object
+      properties:
+        file:
+          type: string
+          format: uuid
+        comments:
+          maxLength: 10000
+          minLength: 0
+          type: string
     RequestTaskPayload:
       type: object
       properties:
@@ -9987,6 +10297,22 @@ components:
             - SECONDARY
         locked:
           type: boolean
+    PerformanceDataReportTypeDTO:
+      type: object
+      properties:
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        reportType:
+          type: string
+          enum:
+            - INTERIM
+            - FINAL
     BuyOutSurplusTransactionSummaryDTO:
       type: object
       properties:
@@ -10157,6 +10483,33 @@ components:
           items:
             type: string
             format: uuid
+    NonComplianceEnforcementResponseNoticeSubmittedRequestActionPayload:
+      required:
+        - decisionNotification
+        - defaultContacts
+        - enforcementResponseNotice
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        enforcementResponseNotice:
+          $ref: '#/components/schemas/NonComplianceEnforcementResponseNotice'
+        decisionNotification:
+          $ref: '#/components/schemas/DecisionNotification'
+        nonComplianceAttachments:
+          type: object
+          additionalProperties:
+            type: string
+        usersInfo:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RequestActionUserInfo'
+        defaultContacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/DefaultNoticeRecipient'
     UpdateFacilitySchemeExitDateDTO:
       type: object
       properties:
@@ -10316,6 +10669,17 @@ components:
           $ref: '#/components/schemas/FileInfoDTO'
         underlyingAgreementDocument:
           $ref: '#/components/schemas/FileInfoDTO'
+    PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload:
+      type: object
+      properties:
+        payloadType:
+          type: string
+        performanceData:
+          $ref: '#/components/schemas/PerformanceDataFacilityInputData'
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
     AccountOperatorAuthorityUpdateDTO:
       required:
         - authorityStatus
@@ -10546,18 +10910,6 @@ components:
           type: object
           additionalProperties:
             type: string
-    NoticeOfIntent:
-      required:
-        - noticeOfIntentFile
-      type: object
-      properties:
-        noticeOfIntentFile:
-          type: string
-          format: uuid
-        comments:
-          maxLength: 10000
-          minLength: 0
-          type: string
     UnderlyingAgreementPayload:
       required:
         - authorisationAndAdditionalEvidence
@@ -10825,6 +11177,23 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CorrectiveAction'
+    PerformanceDataFacilityEnergyFuelDetails:
+      required:
+        - atLeastSeventyPercentEnergyUsed
+      type: object
+      properties:
+        fuels:
+          type: array
+          items:
+            $ref: '#/components/schemas/PerformanceDataFacilityFuel'
+        atLeastSeventyPercentEnergyUsed:
+          type: boolean
+        electricitySuppliedFromCHP:
+          type: string
+          format: decimal
+        throughputAdjustmentFactor:
+          type: string
+          format: decimal
     RegulatorCurrentUserDTO:
       required:
         - email
@@ -11202,6 +11571,24 @@ components:
         buyOutFee:
           type: string
           format: decimal
+    NonComplianceEnforcementResponseNotice:
+      required:
+        - file
+        - type
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - PENALTY
+            - PENALTY_WAIVER
+        file:
+          type: string
+          format: uuid
+        comments:
+          maxLength: 10000
+          minLength: 0
+          type: string
     AdminTerminationWithdrawRequestTaskPayload:
       type: object
       properties:
@@ -11511,6 +11898,29 @@ components:
           type: string
         uuid:
           type: string
+    NonComplianceEnforcementResponseNoticeSaveRequestTaskActionPayload:
+      type: object
+      properties:
+        payloadType:
+          type: string
+        enforcementResponseNotice:
+          $ref: '#/components/schemas/NonComplianceEnforcementResponseNotice'
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
+    PerformanceDataFacilityFuelEnergyConsumption:
+      required:
+        - deliveredEnergy
+        - primaryEnergy
+      type: object
+      properties:
+        deliveredEnergy:
+          type: string
+          format: decimal
+        primaryEnergy:
+          type: string
+          format: decimal
     RdeResponsePayload:
       required:
         - currentDueDate
@@ -11746,8 +12156,12 @@ components:
           type: string
         sendEmailNotification:
           type: boolean
+        enforcementResponseNotice:
+          $ref: '#/components/schemas/NonComplianceEnforcementResponseNotice'
         closeJustification:
           $ref: '#/components/schemas/NonComplianceCloseJustification'
+        penaltyReissue:
+          type: boolean
         sectionsCompleted:
           type: object
           additionalProperties:
@@ -11908,7 +12322,7 @@ components:
         sendEmailNotification:
           type: boolean
         noticeOfIntent:
-          $ref: '#/components/schemas/NoticeOfIntent'
+          $ref: '#/components/schemas/NonComplianceNoticeOfIntent'
         closeJustification:
           $ref: '#/components/schemas/NonComplianceCloseJustification'
         sectionsCompleted:
@@ -12233,6 +12647,11 @@ components:
         energyCarbonFactor:
           type: string
           format: decimal
+        carbonConversionFactorMeasurement:
+          type: string
+          enum:
+            - kgCe/kWh
+            - kgCO2e/kWh
     FacilitySearchResultExtendedDTO:
       type: object
       properties:
@@ -12606,6 +13025,29 @@ components:
             - ACCEPTED
             - TEMP_DISABLED
             - NO_AUTHORITY
+    PerformanceDataFacilityInputEnergyFuelDetails:
+      required:
+        - atLeastSeventyPercentEnergyUsed
+      type: object
+      properties:
+        standardFuels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/PerformanceDataFacilityFuelEnergyConsumption'
+        nonStandardFuels:
+          maxItems: 10
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/PerformanceDataFacilityNonStandardFuel'
+        atLeastSeventyPercentEnergyUsed:
+          type: boolean
+        electricitySuppliedFromCHP:
+          type: string
+          format: decimal
+        throughputAdjustmentFactor:
+          type: string
+          format: decimal
     TargetCommitmentDTO:
       required:
         - targetPeriod
@@ -13869,6 +14311,55 @@ components:
         startDate:
           type: string
           format: date-time
+    PerformanceDataFacilityBaselineAndTargets:
+      type: object
+      properties:
+        baselineDate:
+          type: string
+          format: date
+        isTwelveMonths:
+          type: boolean
+        energyCarbonFactor:
+          type: string
+          format: decimal
+        measurementType:
+          type: string
+          enum:
+            - ENERGY_KWH
+            - ENERGY_MWH
+            - ENERGY_GJ
+            - CARBON_KG
+            - CARBON_TONNE
+        usedReportingMechanism:
+          type: boolean
+        improvements:
+          type: object
+          additionalProperties:
+            type: string
+            format: decimal
+        totalFixedEnergy:
+          type: string
+          format: decimal
+        variableEnergyType:
+          type: string
+          enum:
+            - TOTALS
+            - BY_PRODUCT
+        baselineVariableEnergy:
+          type: string
+          format: decimal
+        totalThroughput:
+          type: string
+          format: decimal
+        throughputUnit:
+          type: string
+        baselineEnergyCarbonIntensity:
+          type: string
+          format: decimal
+        variableEnergyConsumptionDataByProduct:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductVariableEnergyConsumptionData'
     UnderlyingAgreementSubmitRequestTaskPayload:
       type: object
       properties:
@@ -14068,13 +14559,17 @@ components:
           type: integer
           format: int16
         facility:
-          $ref: '#/components/schemas/FacilityDTO'
-        originalBaselineData:
-          $ref: '#/components/schemas/Cca3FacilityBaselineAndTargets'
+          $ref: '#/components/schemas/FacilityBaseInfoDTO'
+        referenceData:
+          $ref: '#/components/schemas/PerformanceDataFacilityReferenceData'
+        performanceData:
+          $ref: '#/components/schemas/PerformanceDataFacilityInputData'
         sectionsCompleted:
           type: object
           additionalProperties:
             type: string
+        expired:
+          type: boolean
     NotAccountRelatedUploadErrorReport:
       type: object
       properties:
@@ -14143,7 +14638,7 @@ components:
           uniqueItems: true
           type: array
           items:
-            $ref: '#/components/schemas/WorkflowFacilityDTO'
+            $ref: '#/components/schemas/NonComplianceFacilityDTO'
         isEnforcementResponseNoticeRequired:
           type: boolean
         explanation:
@@ -14281,6 +14776,31 @@ components:
           type: boolean
         requestInfo:
           $ref: '#/components/schemas/RequestInfoDTO'
+    PerformanceDataFacilityProductVariableEnergyData:
+      required:
+        - actualThroughput
+        - adjustedThroughput
+        - productName
+        - targetEnergy
+        - targetImprovement
+      type: object
+      properties:
+        productName:
+          maxLength: 255
+          minLength: 0
+          type: string
+        targetImprovement:
+          type: string
+          format: decimal
+        actualThroughput:
+          type: string
+          format: decimal
+        adjustedThroughput:
+          type: string
+          format: decimal
+        targetEnergy:
+          type: string
+          format: decimal
     ActualTargetPeriodPerformance:
       required:
         - actualThroughput
@@ -14520,6 +15040,46 @@ components:
             paymentDate:
               type: string
               format: date
+    PerformanceDataFacilitySubmissionDetails:
+      required:
+        - creationDate
+        - reportType
+        - reportVersion
+        - submissionDate
+        - targetPeriodType
+        - targetPeriodYear
+      type: object
+      properties:
+        targetPeriodType:
+          type: string
+          enum:
+            - TP5
+            - TP6
+            - TP7
+            - TP8
+            - TP9
+        reportType:
+          type: string
+          enum:
+            - INTERIM
+            - FINAL
+        targetPeriodYear:
+          type: integer
+          format: int16
+        submissionType:
+          type: string
+          enum:
+            - PRIMARY
+            - SECONDARY
+        reportVersion:
+          type: integer
+          format: int32
+        creationDate:
+          type: string
+          format: date-time
+        submissionDate:
+          type: string
+          format: date-time
     Apply70Rule:
       required:
         - energyConsumed
@@ -14579,18 +15139,33 @@ components:
           format: date
         hasHistory:
           type: boolean
-    WorkflowFacilityDTO:
-      required:
-        - facilityBusinessId
-        - isHistorical
+    NonComplianceEnforcementResponseNoticePeerReviewRequestTaskPayload:
       type: object
       properties:
-        facilityBusinessId:
-          maxLength: 255
-          minLength: 0
+        payloadType:
           type: string
-        isHistorical:
+        sendEmailNotification:
           type: boolean
+        enforcementResponseNotice:
+          $ref: '#/components/schemas/NonComplianceEnforcementResponseNotice'
+        closeJustification:
+          $ref: '#/components/schemas/NonComplianceCloseJustification'
+        penaltyReissue:
+          type: boolean
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
+        nonComplianceAttachments:
+          type: object
+          additionalProperties:
+            type: string
+        decision:
+          $ref: '#/components/schemas/CcaPeerReviewDecision'
+        peerReviewAttachments:
+          type: object
+          additionalProperties:
+            type: string
     SectorAssociationInfoDTO:
       type: object
       properties:
@@ -14716,6 +15291,15 @@ components:
         energyCarbonFactor:
           type: string
           format: decimal
+    NonComplianceCloseRequestTaskActionPayload:
+      required:
+        - closeJustification
+      type: object
+      properties:
+        payloadType:
+          type: string
+        closeJustification:
+          $ref: '#/components/schemas/NonComplianceCloseJustification'
     SectorUserRegistrationWithCredentialsDTO:
       required:
         - emailToken
@@ -14961,22 +15545,27 @@ components:
           type: object
           additionalProperties:
             type: string
-    FacilityDTO:
+    NonComplianceConclusionSubmitRequestTaskPayload:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-        facilityBusinessId:
+        payloadType:
           type: string
-        siteName:
-          type: string
-        createdDate:
-          type: string
-          format: date-time
-        closedDate:
-          type: string
-          format: date
+        sendEmailNotification:
+          type: boolean
+        nonComplianceConclusion:
+          $ref: '#/components/schemas/NonComplianceConclusion'
+        appealDetails:
+          $ref: '#/components/schemas/NonComplianceAppealDetails'
+        closeJustification:
+          $ref: '#/components/schemas/NonComplianceCloseJustification'
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
+        nonComplianceAttachments:
+          type: object
+          additionalProperties:
+            type: string
     UnderlyingAgreementSaveReviewGroupDecisionRequestTaskActionPayload:
       required:
         - decision
@@ -15081,6 +15670,44 @@ components:
         totalItems:
           type: integer
           format: int64
+    NonComplianceNoticeOfIntentPeerReviewRequestTaskPayload:
+      type: object
+      properties:
+        payloadType:
+          type: string
+        sendEmailNotification:
+          type: boolean
+        noticeOfIntent:
+          $ref: '#/components/schemas/NonComplianceNoticeOfIntent'
+        closeJustification:
+          $ref: '#/components/schemas/NonComplianceCloseJustification'
+        sectionsCompleted:
+          type: object
+          additionalProperties:
+            type: string
+        nonComplianceAttachments:
+          type: object
+          additionalProperties:
+            type: string
+        decision:
+          $ref: '#/components/schemas/CcaPeerReviewDecision'
+        peerReviewAttachments:
+          type: object
+          additionalProperties:
+            type: string
+    PerformanceDataFacilityInputData:
+      required:
+        - calculatedResults
+        - energyFuelDetails
+        - throughputDetails
+      type: object
+      properties:
+        energyFuelDetails:
+          $ref: '#/components/schemas/PerformanceDataFacilityInputEnergyFuelDetails'
+        throughputDetails:
+          $ref: '#/components/schemas/PerformanceDataFacilityThroughputDetails'
+        calculatedResults:
+          $ref: '#/components/schemas/PerformanceDataFacilityCalculatedResults'
     SubsistenceFeesMoaFacilityMarkingStatusDTO:
       required:
         - filterResourceIds
@@ -15250,6 +15877,24 @@ components:
           type: integer
           format: int64
       description: The request task action body
+    NonComplianceAppealDetails:
+      required:
+        - registrationDate
+      type: object
+      properties:
+        registrationDate:
+          type: string
+          format: date
+        files:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+            format: uuid
+        comments:
+          maxLength: 10000
+          minLength: 0
+          type: string
     RdeDecisionForcedRequestActionPayload:
       required:
         - rdeForceDecisionPayload
@@ -15593,6 +16238,31 @@ components:
           $ref: '#/components/schemas/AccountAddressDTO'
         phoneNumber:
           $ref: '#/components/schemas/PhoneNumberDTO'
+    NonComplianceConclusionSubmittedRequestActionPayload:
+      required:
+        - nonComplianceConclusion
+      type: object
+      properties:
+        payloadType:
+          type: string
+        businessId:
+          type: string
+        nonComplianceConclusion:
+          $ref: '#/components/schemas/NonComplianceConclusion'
+        decisionNotification:
+          $ref: '#/components/schemas/DecisionNotification'
+        nonComplianceAttachments:
+          type: object
+          additionalProperties:
+            type: string
+        usersInfo:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/RequestActionUserInfo'
+        defaultContacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/DefaultNoticeRecipient'
     FacilityDetails:
       required:
         - applicationReason
@@ -15701,6 +16371,22 @@ components:
         phoneNumber:
           $ref: '#/components/schemas/PhoneNumberDTO'
       description: The updated data for responsible person
+    PerformanceDataFacilityContainer:
+      required:
+        - baselineAndTargets
+        - calculatedResults
+        - energyFuelDetails
+        - throughputDetails
+      type: object
+      properties:
+        baselineAndTargets:
+          $ref: '#/components/schemas/PerformanceDataFacilityBaselineAndTargets'
+        energyFuelDetails:
+          $ref: '#/components/schemas/PerformanceDataFacilityEnergyFuelDetails'
+        throughputDetails:
+          $ref: '#/components/schemas/PerformanceDataFacilityThroughputDetails'
+        calculatedResults:
+          $ref: '#/components/schemas/PerformanceDataFacilityCalculatedResults'
     RegulatorUserDTO:
       required:
         - email
@@ -16499,6 +17185,10 @@ components:
           maxLength: 255
           minLength: 0
           type: string
+        energyCarbonIntensity:
+          type: string
+          format: decimal
+          readOnly: true
     UnderlyingAgreementSaveReviewDeterminationRequestTaskActionPayload:
       type: object
       properties:
@@ -16814,7 +17504,9 @@ components:
           type: string
     NonComplianceNoticeOfIntentSubmittedRequestActionPayload:
       required:
+        - decisionNotification
         - defaultContacts
+        - noticeOfIntent
       type: object
       properties:
         payloadType:
@@ -16822,7 +17514,7 @@ components:
         businessId:
           type: string
         noticeOfIntent:
-          $ref: '#/components/schemas/NoticeOfIntent'
+          $ref: '#/components/schemas/NonComplianceNoticeOfIntent'
         decisionNotification:
           $ref: '#/components/schemas/DecisionNotification'
         nonComplianceAttachments:
@@ -16837,6 +17529,50 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DefaultNoticeRecipient'
+    PerformanceDataFacilityFuel:
+      required:
+        - conversionFactor
+        - deliveredEnergy
+        - name
+        - primaryConversionFactor
+        - primaryEnergy
+      type: object
+      properties:
+        name:
+          maxLength: 255
+          minLength: 0
+          type: string
+        fixedConversionFactorCode:
+          type: string
+          enum:
+            - GRID_ELECTRICITY
+            - NON_GRID_ELECTRICITY
+            - NATURAL_GAS
+            - LPG
+            - GAS_DIESEL_OIL
+            - FUEL_OIL
+            - KEROSENE
+            - COAL
+            - COKE
+            - PETROL
+            - NITROGEN_COOLING
+            - CARBON_DIOXIDE_COOLING
+            - ETHANE
+            - NAPHTHA
+            - PETROLEUM_COKE
+            - REFINERY_GAS
+        conversionFactor:
+          type: string
+          format: decimal
+        deliveredEnergy:
+          type: string
+          format: decimal
+        primaryConversionFactor:
+          type: string
+          format: decimal
+        primaryEnergy:
+          type: string
+          format: decimal
     SectorUserAuthorityInfoDTO:
       type: object
       properties:

@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -50,12 +50,21 @@ describe('TabsComponent', () => {
     }).compileComponents();
   });
 
-  beforeEach(() => {
+  const initializeFixture = () => {
     fixture = TestBed.createComponent(TestComponent);
     hostComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(TabsComponent)).componentInstance;
     router = TestBed.inject(Router);
     fixture.detectChanges();
+  };
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    initializeFixture();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('should create', () => {
@@ -67,13 +76,13 @@ describe('TabsComponent', () => {
     expect(tabs).toBeTruthy();
   });
 
-  it('should render async tabs', fakeAsync(async () => {
+  it('should render async tabs', async () => {
     const tabsElement: HTMLElement = fixture.debugElement.query(By.directive(TabsComponent)).nativeElement;
 
     let anchors = tabsElement.querySelectorAll<HTMLAnchorElement>('a.govuk-tabs__tab');
     expect(anchors.length).toEqual(2);
 
-    await fixture.whenStable();
+    vi.advanceTimersByTime(200);
     fixture.detectChanges();
 
     anchors = tabsElement.querySelectorAll<HTMLAnchorElement>('a.govuk-tabs__tab');
@@ -87,7 +96,7 @@ describe('TabsComponent', () => {
 
     const anchor3 = tabsElement.querySelector<HTMLAnchorElement>('#tab_span');
     expect(anchor3.textContent).toContain('A span');
-  }));
+  });
 
   it('should set a clicked anchor as the active one', async () => {
     const tabsElement: HTMLElement = fixture.debugElement.query(By.directive(TabsComponent)).nativeElement;
@@ -95,7 +104,7 @@ describe('TabsComponent', () => {
 
     expect(anchors[0].parentElement.classList).toContain('govuk-tabs__list-item--selected');
 
-    await fixture.whenStable();
+    vi.advanceTimersByTime(200);
     fixture.detectChanges();
 
     anchors = tabsElement.querySelectorAll<HTMLAnchorElement>('a.govuk-tabs__tab');
@@ -104,6 +113,8 @@ describe('TabsComponent', () => {
     expect(anchors[1].parentElement.classList).not.toContain('govuk-tabs__list-item--selected');
     expect(anchors[2].parentElement.classList).not.toContain('govuk-tabs__list-item--selected');
     expect(anchors[3].parentElement.classList).toContain('govuk-tabs__list-item--selected');
+
+    vi.useRealTimers();
 
     anchors[1].click();
     await fixture.whenStable();
@@ -124,10 +135,12 @@ describe('TabsComponent', () => {
     expect(anchors[3].parentElement.classList).toContain('govuk-tabs__list-item--selected');
   });
 
-  it('should navigate with arrows', fakeAsync(async () => {
+  it('should navigate with arrows', async () => {
     const tabsElement: HTMLElement = fixture.debugElement.query(By.directive(TabsComponent)).nativeElement;
-    await fixture.whenStable();
+    vi.advanceTimersByTime(200);
     fixture.detectChanges();
+
+    vi.useRealTimers();
 
     const anchors = tabsElement.querySelectorAll<HTMLAnchorElement>('a.govuk-tabs__tab');
     anchors[0].focus();
@@ -151,15 +164,19 @@ describe('TabsComponent', () => {
     expect(router.url).toEqual('/#paragraph');
     expect(anchors[0]).toEqual(document.activeElement);
     expect(anchors[1]).not.toEqual(document.activeElement);
-  }));
+  });
 
   it('should change the tab label', () => {
     const element: HTMLElement = fixture.nativeElement;
     const getAnchorTexts = () => Array.from(element.querySelectorAll('a')).map((anchor) => anchor.textContent.trim());
     expect(getAnchorTexts()).toContain('A static link');
 
+    vi.advanceTimersByTime(200);
+    fixture.detectChanges();
+
     hostComponent.syncTab.label = 'Another static link';
 
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect(getAnchorTexts()).toContain('Another static link');

@@ -1,18 +1,18 @@
 export const mockPatReportState = {
   reportInfo: {
-    targetPeriodType: 'TP6',
+    targetPeriodType: 'TP6' as const,
     targetPeriodName: 'TP6 (2024)',
     targetPeriodYear: null,
   },
   reportDetails: {
     targetPeriodName: 'TP6 (2024)',
-    targetPeriodType: 'TP6',
+    targetPeriodType: 'TP6' as const,
     targetPeriodYear: null,
     data: {
       targetUnitIdentityAndPerformance: {
-        improvementAccountedPercentage: -0.0215,
-        improvementAchievedPercentage: -1.99,
-        targetType: 'NOVEM_CARBON',
+        improvementAccountedPercentage: '-0.0215',
+        improvementAchievedPercentage: '-1.99',
+        targetType: 'NOVEM_CARBON' as const,
         performanceImpactedByAnyImplementedMeasures: 'Yes',
         performanceImpactedByAnyImplementedMeasuresSupportingText: null,
       },

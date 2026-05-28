@@ -6,6 +6,7 @@ import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { MiReportsUserDefinedService, MiReportUserDefinedInfoDTO, MiReportUserDefinedResults } from 'cca-api';
 
@@ -16,8 +17,8 @@ import { MiReportsListComponent } from './mi-reports-list.component';
 describe('MiReportsListComponent', () => {
   let component: MiReportsListComponent;
   let fixture: ComponentFixture<MiReportsListComponent>;
-  let miReportsUserDefinedService: jest.Mocked<MiReportsUserDefinedService>;
-  let miReportsExportService: jest.Mocked<MiReportsExportService>;
+  let miReportsUserDefinedService: Mocked<MiReportsUserDefinedService>;
+  let miReportsExportService: Mocked<MiReportsExportService>;
   let router: Router;
 
   const mockReports: MiReportUserDefinedInfoDTO[] = [
@@ -32,14 +33,14 @@ describe('MiReportsListComponent', () => {
 
   beforeEach(async () => {
     const mockMiReportsUserDefinedService = mockClass(MiReportsUserDefinedService);
-    mockMiReportsUserDefinedService.getAllMiReportsUserDefined = jest.fn().mockReturnValue(of(mockResults));
-    mockMiReportsUserDefinedService.getMiReportUserDefinedById = jest
+    mockMiReportsUserDefinedService.getAllMiReportsUserDefined = vi.fn().mockReturnValue(of(mockResults));
+    mockMiReportsUserDefinedService.getMiReportUserDefinedById = vi
       .fn()
       .mockReturnValue(of({ reportName: 'Report One', queryDefinition: 'SELECT * FROM test' }));
-    mockMiReportsUserDefinedService.generateCustomReport = jest.fn().mockReturnValue(of(mockCustomMiReportResult));
+    mockMiReportsUserDefinedService.generateCustomReport = vi.fn().mockReturnValue(of(mockCustomMiReportResult));
 
     const mockMiReportsExportService = mockClass(MiReportsExportService);
-    mockMiReportsExportService.exportToExcel = jest.fn();
+    mockMiReportsExportService.exportToExcel = vi.fn();
 
     const mockActivatedRoute = new ActivatedRouteStub(null, {});
 
@@ -55,12 +56,10 @@ describe('MiReportsListComponent', () => {
       ],
     }).compileComponents();
 
-    miReportsUserDefinedService = TestBed.inject(
-      MiReportsUserDefinedService,
-    ) as jest.Mocked<MiReportsUserDefinedService>;
-    miReportsExportService = TestBed.inject(MiReportsExportService) as jest.Mocked<MiReportsExportService>;
+    miReportsUserDefinedService = TestBed.inject(MiReportsUserDefinedService) as Mocked<MiReportsUserDefinedService>;
+    miReportsExportService = TestBed.inject(MiReportsExportService) as Mocked<MiReportsExportService>;
     router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate');
 
     fixture = TestBed.createComponent(MiReportsListComponent);
     component = fixture.componentInstance;

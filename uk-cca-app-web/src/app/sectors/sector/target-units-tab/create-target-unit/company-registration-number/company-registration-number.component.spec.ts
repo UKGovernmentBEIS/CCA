@@ -24,7 +24,7 @@ describe('CompanyRegistrationNumberComponent', () => {
     }).compileComponents();
 
     router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate');
     createTargetUnitStore = TestBed.inject(CreateTargetUnitStore);
     createTargetUnitStore.setState(mockCreateTargetUnitState);
 

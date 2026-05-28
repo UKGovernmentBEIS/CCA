@@ -1,10 +1,11 @@
 import { provideHttpClient } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { RequestTaskStore } from '@netz/common/store';
+import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { TasksApiService } from '@requests/common';
 
 import { mockNonComplianceDetailsState } from '../testing/mock-data';
@@ -13,19 +14,20 @@ import { ChooseRelevantWorkflowsComponent } from './choose-relevant-workflows.co
 describe('ChooseRelevantWorkflowsComponent', () => {
   let component: ChooseRelevantWorkflowsComponent;
   let fixture: ComponentFixture<ChooseRelevantWorkflowsComponent>;
+  let cdr: ChangeDetectorRef;
   let store: RequestTaskStore;
   let router: Router;
 
   const route = {
     snapshot: {
       params: {},
-      paramMap: { get: jest.fn() },
+      paramMap: { get: vi.fn() },
       pathFromRoot: [],
     },
   };
 
   const mockTasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -33,9 +35,10 @@ describe('ChooseRelevantWorkflowsComponent', () => {
       imports: [ChooseRelevantWorkflowsComponent],
       providers: [
         provideHttpClient(),
-        RequestTaskStore,
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },
+        { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
+        { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Dashboard' },
       ],
     }).compileComponents();
 
@@ -46,6 +49,7 @@ describe('ChooseRelevantWorkflowsComponent', () => {
 
     fixture = TestBed.createComponent(ChooseRelevantWorkflowsComponent);
     component = fixture.componentInstance;
+    cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
     fixture.detectChanges();
 
     mockTasksApiService.saveRequestTaskAction.mockClear();
@@ -62,7 +66,7 @@ describe('ChooseRelevantWorkflowsComponent', () => {
   });
 
   it('should navigate after submit to check your answers when wizard is already completed', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
     component.onSubmit();
 
@@ -114,6 +118,7 @@ describe('ChooseRelevantWorkflowsComponent', () => {
     expect(addButton.textContent?.trim()).toBe('Add another item');
 
     component.workflows.clear();
+    cdr.markForCheck();
     fixture.detectChanges();
 
     expect(addButton.textContent?.trim()).toBe('Add Item');
@@ -121,11 +126,12 @@ describe('ChooseRelevantWorkflowsComponent', () => {
 
   it('should disable Add item button when all workflow options are selected', () => {
     component.onAddItem();
+    fixture.detectChanges();
     component.workflows.at(2).setValue('WF-003');
+    cdr.markForCheck();
     fixture.detectChanges();
 
     const addButton = fixture.nativeElement.querySelector('button.govuk-button--secondary') as HTMLButtonElement;
-
     expect(addButton.disabled).toBe(true);
   });
 

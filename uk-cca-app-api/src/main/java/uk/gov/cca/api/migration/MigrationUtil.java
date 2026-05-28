@@ -5,8 +5,8 @@ import java.math.RoundingMode;
 import java.util.Arrays;
 
 import lombok.experimental.UtilityClass;
+import uk.gov.cca.api.common.domain.AgreementType;
 import uk.gov.cca.api.common.domain.MeasurementType;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.AgreementType;
 
 @UtilityClass
 public class MigrationUtil {

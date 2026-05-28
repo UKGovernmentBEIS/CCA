@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -8,12 +8,12 @@ import { BackLinkComponent } from './back-link.component';
 describe('BackLinkComponent', () => {
   @Component({
     imports: [BackLinkComponent],
-    template: '<govuk-back-link [link]="link" [route]="route"  [inverse]="inverse"></govuk-back-link>',
+    template: '<govuk-back-link [link]="link()" [route]="route"  [inverse]="inverse()"></govuk-back-link>',
   })
   class MockParentComponent {
-    link = '../back';
+    link = signal('../back');
     route = inject(ActivatedRoute).snapshot;
-    inverse = false;
+    inverse = signal(false);
   }
 
   let fixture: ComponentFixture<MockParentComponent>;
@@ -23,10 +23,7 @@ describe('BackLinkComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, BackLinkComponent, MockParentComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
-    TestBed.createComponent(MockParentComponent);
     fixture = TestBed.createComponent(MockParentComponent);
     parentComponent = fixture.componentInstance;
     fixture.detectChanges();
@@ -36,12 +33,12 @@ describe('BackLinkComponent', () => {
     expect(parentComponent).toBeTruthy();
   });
 
-  it('should have inverse color class', () => {
+  it('should have inverse color class', async () => {
     const hostElement: HTMLElement = fixture.nativeElement;
     const backlinkDiv = hostElement.querySelector<HTMLElement>('.govuk-back-link');
     expect(backlinkDiv.classList).not.toContain('govuk-back-link--inverse');
 
-    fixture.componentInstance.inverse = true;
+    fixture.componentInstance.inverse.set(true);
     fixture.detectChanges();
 
     expect(backlinkDiv.classList).toContain('govuk-back-link--inverse');

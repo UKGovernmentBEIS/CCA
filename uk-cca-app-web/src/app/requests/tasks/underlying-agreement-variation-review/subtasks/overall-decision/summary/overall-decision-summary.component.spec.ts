@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import { OverallDecisionSummaryComponent } from './overall-decision-summary.component';
@@ -16,8 +17,8 @@ describe('SummaryComponentUnaDetermination', () => {
   let fixture: ComponentFixture<OverallDecisionSummaryComponent>;
   let store: RequestTaskStore;
 
-  const unaTaskService: Partial<jest.Mocked<TaskService>> = {
-    saveSubtask: jest.fn().mockReturnValue(of({})),
+  const unaTaskService: Partial<Mocked<TaskService>> = {
+    saveSubtask: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -42,7 +43,7 @@ describe('SummaryComponentUnaDetermination', () => {
   });
 
   it('should match overall decision summary', () => {
-    expect(fixture.nativeElement).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });
 
@@ -50,8 +51,8 @@ describe('SummaryComponentVariationDetermination', () => {
   let fixture: ComponentFixture<OverallDecisionSummaryComponent>;
   let store: RequestTaskStore;
 
-  const unaTaskService: Partial<jest.Mocked<TaskService>> = {
-    saveSubtask: jest.fn().mockReturnValue(of({})),
+  const unaTaskService: Partial<Mocked<TaskService>> = {
+    saveSubtask: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -76,6 +77,6 @@ describe('SummaryComponentVariationDetermination', () => {
   });
 
   it('should match overall decision summary', () => {
-    expect(fixture.nativeElement).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

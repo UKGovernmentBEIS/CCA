@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { TasksApiService } from '@requests/common';
+import { Mocked } from 'vitest';
 
 import { TasksService } from 'cca-api';
 
@@ -20,7 +21,7 @@ describe('TrackCorrectiveActionsDetailsComponent', () => {
   let store: RequestTaskStore;
   let router: Router;
   let tasksApiService: TasksApiService;
-  let tasksService: jest.Mocked<Partial<TasksService>>;
+  let tasksService: Mocked<Partial<TasksService>>;
 
   const route: any = {
     snapshot: {
@@ -31,7 +32,7 @@ describe('TrackCorrectiveActionsDetailsComponent', () => {
   };
 
   const mockTasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   const mockForm = new FormGroup({
@@ -42,7 +43,7 @@ describe('TrackCorrectiveActionsDetailsComponent', () => {
 
   beforeEach(async () => {
     tasksService = {
-      getRequestTaskHeaderInfo: jest.fn().mockReturnValue(of({})),
+      getRequestTaskHeaderInfo: vi.fn().mockReturnValue(of({})),
     };
 
     await TestBed.configureTestingModule({
@@ -77,8 +78,8 @@ describe('TrackCorrectiveActionsDetailsComponent', () => {
   });
 
   it('should submit form and navigate to check-your-answers', () => {
-    const onSubmitSpy = jest.spyOn(component, 'onSubmit');
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const onSubmitSpy = vi.spyOn(component, 'onSubmit');
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
     const continueButton = fixture.debugElement.query(By.css('button[type="submit"]'));
     continueButton.nativeElement.click();

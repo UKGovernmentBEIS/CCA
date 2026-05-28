@@ -42,4 +42,6 @@ public class CcaPermission {
     public static final String PERM_NON_COMPLIANCE_SUBMISSION  = "PERM_NON_COMPLIANCE_SUBMISSION";
 
     public static final String PERM_NON_COMPLIANCE_PEER_REVIEW = "PERM_NON_COMPLIANCE_PEER_REVIEW";
+
+    public static final String PERM_SECTOR_ADVANCED_DETAILS_EDIT = "PERM_SECTOR_ADVANCED_DETAILS_EDIT";
 }

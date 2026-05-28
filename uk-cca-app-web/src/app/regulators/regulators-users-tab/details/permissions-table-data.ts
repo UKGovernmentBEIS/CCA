@@ -14,6 +14,11 @@ export const tableRows = [
     type: 'Manage sector details',
   },
   {
+    permission: 'MANAGE_SECTOR_ADVANCED_DETAILS',
+    task: 'Manage Sectors Advanced details',
+    type: 'Manage sector details',
+  },
+  {
     permission: 'ASSIGN_REASSIGN_TASKS',
     task: 'Assign/re-assign tasks',
     type: 'Task assignment',
@@ -86,6 +91,11 @@ export const tableRows = [
   {
     permission: 'NON_COMPLIANCE_SUBMISSION',
     task: 'Trigger and complete Non-compliance',
+    type: 'Non-compliance',
+  },
+  {
+    permission: 'NON_COMPLIANCE_PEER_REVIEW',
+    task: 'Peer Review Non-compliance',
     type: 'Non-compliance',
   },
 ];

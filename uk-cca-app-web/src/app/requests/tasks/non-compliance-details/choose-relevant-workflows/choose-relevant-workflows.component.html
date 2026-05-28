@@ -21,12 +21,11 @@
             <tr class="govuk-table__row">
               <td class="govuk-table__cell non-compliance-items-table__index-cell">{{ i + 1 }}.</td>
               <td class="govuk-table__cell">
-                <div
+                <cca-combobox
                   [formControlName]="i"
-                  govuk-select
                   [options]="getOptionsForRow(i)"
                   [widthClass]="'govuk-!-width-full'"
-                ></div>
+                />
               </td>
               <td class="govuk-table__cell non-compliance-items-table__action-cell">
                 <a class="govuk-link" href="#" (click)="onDeleteItem(wf.value, i); $event.preventDefault()">Delete</a>

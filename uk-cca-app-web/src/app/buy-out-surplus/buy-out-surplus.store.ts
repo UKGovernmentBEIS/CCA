@@ -1,4 +1,5 @@
-import { computed, effect, inject, Injectable } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { EMPTY, map, Observable, switchMap, take, timer } from 'rxjs';
 
@@ -30,6 +31,7 @@ const INITIAL_STATE: BuyoutSurplusState = {
 
 @Injectable()
 export class BuyoutSurplusStore extends SignalStore<BuyoutSurplusState> {
+  private readonly destroyRef = inject(DestroyRef);
   private readonly requestsService = inject(RequestsService);
 
   private readonly interval = 10000; // ms
@@ -54,6 +56,7 @@ export class BuyoutSurplusStore extends SignalStore<BuyoutSurplusState> {
   initProgressUpdatePolling(): Observable<unknown> {
     return timer(this.interval).pipe(
       take(1),
+      takeUntilDestroyed(this.destroyRef),
       switchMap(() => this.checkForPendingBatchRun()),
       switchMap((requestInProgress) => {
         if (requestInProgress) return this.initProgressUpdatePolling();
@@ -90,7 +93,7 @@ export class BuyoutSurplusStore extends SignalStore<BuyoutSurplusState> {
    */
   fetchAndSetWorkflows() {
     this.fetchWorkflows()
-      .pipe(take(1))
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (details) => {
           const isInProgress = details.requestDetails.some((item) => item.requestStatus === 'IN_PROGRESS');
@@ -123,5 +126,9 @@ export class BuyoutSurplusStore extends SignalStore<BuyoutSurplusState> {
 
   private fetchRequestDetails(requestSearchCriteria: RequestSearchCriteria) {
     return this.requestsService.getRequestDetailsByResource(requestSearchCriteria);
+  }
+
+  override reset() {
+    this.setState(INITIAL_STATE);
   }
 }

@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
+import { Mocked } from 'vitest';
+
 import { NotificationTemplatesService } from 'cca-api';
 
 import { mockNotificationTemplateViewDTO } from '../../testing/mock-data';
@@ -11,13 +13,13 @@ import { EmailEditComponent } from './email-edit.component';
 describe('EmailEditComponent', () => {
   let component: EmailEditComponent;
   let fixture: ComponentFixture<EmailEditComponent>;
-  let notificationTemplatesService: jest.Mocked<Partial<NotificationTemplatesService>>;
+  let notificationTemplatesService: Mocked<Partial<NotificationTemplatesService>>;
   let router: Router;
 
   beforeEach(async () => {
     notificationTemplatesService = {
-      getNotificationTemplateById: jest.fn().mockReturnValue(of(mockNotificationTemplateViewDTO)),
-      updateNotificationTemplate: jest.fn().mockReturnValue(of(null)),
+      getNotificationTemplateById: vi.fn().mockReturnValue(of(mockNotificationTemplateViewDTO)),
+      updateNotificationTemplate: vi.fn().mockReturnValue(of(null)),
     };
 
     await TestBed.configureTestingModule({
@@ -36,7 +38,7 @@ describe('EmailEditComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
@@ -83,7 +85,7 @@ describe('EmailEditComponent', () => {
   });
 
   it('should navigate back with notification state after successful update', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
     component.onSubmit();
 
     expect(navigateSpy).toHaveBeenCalledWith(['..'], {

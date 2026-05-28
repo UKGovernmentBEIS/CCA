@@ -1,5 +1,6 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { OperatorTypePipe, transformAddress } from '@shared/pipes';
+import { Country } from '@shared/types';
 
 import { AccountReferenceData, UnderlyingAgreementTargetUnitDetails } from 'cca-api';
 
@@ -7,6 +8,7 @@ import { ReviewTargetUnitDetailsWizardStep } from '../types';
 
 export function toVariationTargetUnitDetailsSummaryData(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
+  countries: Country[],
   isEditable: boolean,
   prefix = '../',
 ): SummaryData {
@@ -27,7 +29,7 @@ export function toVariationTargetUnitDetailsSummaryData(
 
   factory
     .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep?.OPERATOR_ADDRESS)
-    .addRow('Address', transformAddress(targetUnitDetails?.operatorAddress), {
+    .addRow('Address', transformAddress(targetUnitDetails?.operatorAddress, countries), {
       change: isEditable,
     })
 
@@ -41,7 +43,7 @@ export function toVariationTargetUnitDetailsSummaryData(
     .addRow('Email address', targetUnitDetails?.responsiblePersonDetails?.email, {
       change: isEditable,
     })
-    .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address), {
+    .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address, countries), {
       change: isEditable,
     });
 
@@ -50,6 +52,7 @@ export function toVariationTargetUnitDetailsSummaryData(
 
 export function toVariationTargetUnitDetailsOriginalSummaryData(
   accountReferenceData: AccountReferenceData,
+  countries: Country[],
   isEditable: boolean,
   prefix = '../',
 ): SummaryData {
@@ -73,7 +76,7 @@ export function toVariationTargetUnitDetailsOriginalSummaryData(
 
   factory
     .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep?.OPERATOR_ADDRESS)
-    .addRow('Address', transformAddress(accountReferenceData.targetUnitAccountDetails.address), {
+    .addRow('Address', transformAddress(accountReferenceData.targetUnitAccountDetails.address, countries), {
       change: isEditable,
     })
     .addSection('Responsible Person', prefix + ReviewTargetUnitDetailsWizardStep?.RESPONSIBLE_PERSON)
@@ -86,9 +89,13 @@ export function toVariationTargetUnitDetailsOriginalSummaryData(
     .addRow('Email address', accountReferenceData.targetUnitAccountDetails.responsiblePerson.email, {
       change: isEditable,
     })
-    .addRow('Address', transformAddress(accountReferenceData.targetUnitAccountDetails.responsiblePerson.address), {
-      change: isEditable,
-    });
+    .addRow(
+      'Address',
+      transformAddress(accountReferenceData.targetUnitAccountDetails.responsiblePerson.address, countries),
+      {
+        change: isEditable,
+      },
+    );
 
   return factory.create();
 }

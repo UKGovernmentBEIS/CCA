@@ -48,7 +48,7 @@ describe('UnlockPerformanceReportComponent', () => {
   });
 
   it('should call onSubmit when form is submitted', () => {
-    jest.spyOn(component, 'onSubmit');
+    vi.spyOn(component, 'onSubmit');
     const formElement = fixture.nativeElement.querySelector('form');
     formElement.dispatchEvent(new Event('submit'));
     fixture.detectChanges();

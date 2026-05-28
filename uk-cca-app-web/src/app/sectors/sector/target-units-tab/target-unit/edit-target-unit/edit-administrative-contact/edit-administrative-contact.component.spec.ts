@@ -4,7 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, BasePage, mockClass } from '@netz/common/testing';
-import { COUNTRIES } from '@shared/services';
+import { CountryService } from '@shared/services';
+import { Country } from '@shared/types';
 
 import { ReferenceDataService, UpdateTargetUnitAccountService } from 'cca-api';
 
@@ -21,7 +22,7 @@ const mockCountries = [
 ];
 
 const mockReferenceDataService = {
-  getReferenceData: jest.fn().mockReturnValue(of({ COUNTRIES: mockCountries })),
+  getReferenceData: vi.fn().mockReturnValue(of({ COUNTRIES: mockCountries })),
 };
 
 describe('EditAdministrativeContactComponent', () => {
@@ -113,8 +114,8 @@ describe('EditAdministrativeContactComponent', () => {
 
   beforeEach(async () => {
     // Set the countries before creating the component
-    COUNTRIES.length = 0; // Clear the array
-    COUNTRIES.push(...mockCountries); // Add mock data
+    const countries: Country[] = [];
+    countries.push(...mockCountries); // Add mock data
 
     activatedRoute = new ActivatedRouteStub({ targetUnitId: '1' });
 
@@ -127,6 +128,8 @@ describe('EditAdministrativeContactComponent', () => {
         { provide: ReferenceDataService, useValue: mockReferenceDataService },
       ],
     }).compileComponents();
+
+    TestBed.inject(CountryService).load().subscribe();
 
     store = TestBed.inject(ActiveTargetUnitStore);
     store.setState({ targetUnitAccountDetails: mockTargetUnitAccountDetails });

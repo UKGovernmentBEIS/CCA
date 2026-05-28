@@ -22,6 +22,7 @@ import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
 import uk.gov.cca.api.common.domain.AgreementCompositionType;
 import uk.gov.cca.api.common.domain.MeasurementType;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.AccountPerformanceDataInfo;
@@ -161,6 +162,7 @@ class AccountPerformanceDataStatusCustomRepositoryIT extends AbstractContainerBa
                 .buyOutStartDate(LocalDate.now())
                 .buyOutPrimaryPaymentDeadline(LocalDate.now())
                 .secondaryReportingStartDate(LocalDate.now())
+                .schemeVersion(SchemeVersion.CCA_2)
                 .build();
         entityManager.persist(targetPeriod);
         return targetPeriod;

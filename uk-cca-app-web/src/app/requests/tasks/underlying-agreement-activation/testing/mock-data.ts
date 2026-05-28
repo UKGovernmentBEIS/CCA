@@ -1,13 +1,15 @@
-import { RequestTaskItemDTO, UnderlyingAgreementActivationDetails } from 'cca-api';
-
-import { UNAActivationRequestTaskPayload } from '../types';
+import {
+  RequestTaskItemDTO,
+  UnderlyingAgreementActivationDetails,
+  UnderlyingAgreementActivationRequestTaskPayload,
+} from 'cca-api';
 
 const mockUnderlyingAgreementActivation: UnderlyingAgreementActivationDetails = {
   evidenceFiles: ['evidenceFile'],
   comments: 'My comments',
 };
 
-const mockUnaRequestTaskPayload: UNAActivationRequestTaskPayload = {
+const mockUnaRequestTaskPayload: UnderlyingAgreementActivationRequestTaskPayload = {
   payloadType: 'UNDERLYING_AGREEMENT_APPLICATION_SUBMIT_PAYLOAD',
   underlyingAgreementActivationDetails: mockUnderlyingAgreementActivation,
   sectionsCompleted: {
@@ -37,8 +39,6 @@ export const mockRequestTaskItemDTO: RequestTaskItemDTO = {
   requestInfo: {
     id: 'ADS_53-T00002-UNA',
     type: 'UNDERLYING_AGREEMENT',
-    competentAuthority: 'ENGLAND',
-    accountId: 15,
     requestMetadata: {
       type: 'UNDERLYING_AGREEMENT',
     },

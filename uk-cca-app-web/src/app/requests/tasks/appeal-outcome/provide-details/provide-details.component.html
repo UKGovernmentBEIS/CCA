@@ -1,0 +1,39 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Appeal outcome details"
+  heading="Provide the appeal outcome details"
+>
+  <div class="govuk-!-width-two-thirds">
+    <div formControlName="tribunalDecision" govuk-radio legend="What was the appeals outcome?">
+      <govuk-radio-option value="APPEAL_ALLOWED" label="Appeal allowed" />
+      <govuk-radio-option value="APPEAL_DISMISSED" label="Appeal dismissed" />
+    </div>
+
+    <div
+      formControlName="appealOutcomeDate"
+      govuk-date-input
+      label="Date of appeal outcome?"
+      hint="This should be a current or past date"
+      [max]="today"
+    ></div>
+
+    <cca-multiple-file-input
+      formControlName="file"
+      [baseDownloadUrl]="downloadUrl()"
+      label="Upload a file (optional)"
+      listTitle="Uploaded files"
+    />
+
+    <div
+      formControlName="comments"
+      govuk-textarea
+      label="Comments (optional)"
+      labelSize="medium"
+      [maxLength]="10000"
+    ></div>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

@@ -5,6 +5,7 @@ import { PageHeadingComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { isCCA3Scheme, toFacilityWizardSummaryData, underlyingAgreementQuery } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 
@@ -25,6 +26,8 @@ import { generateDownloadUrl } from '@shared/utils';
 export default class FacilitySummaryComponent {
   private readonly store = inject(RequestTaskStore);
   private readonly activatedRoute = inject(ActivatedRoute);
+
+  private readonly countries = inject(CountryService).countries;
 
   private readonly taskId = this.activatedRoute.snapshot.params.taskId;
   private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
@@ -51,6 +54,7 @@ export default class FacilitySummaryComponent {
       this.facility(),
       this.sectorSchemeData(),
       this.participatingSchemeVersions(),
+      this.countries(),
       this.store.select(underlyingAgreementQuery.selectAttachments)(),
       this.store.select(requestTaskQuery.selectIsEditable)(),
       this.downloadUrl,

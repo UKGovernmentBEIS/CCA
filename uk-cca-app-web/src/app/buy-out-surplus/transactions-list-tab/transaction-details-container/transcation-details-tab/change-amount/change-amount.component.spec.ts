@@ -17,10 +17,10 @@ describe('ChangeAmountComponent (dumb tests)', () => {
   let fixture: ComponentFixture<ChangeAmountComponent>;
 
   const mockUpdateService = {
-    updateBuyOutSurplusTransactionAmount: jest.fn().mockReturnValue(of({})),
+    updateBuyOutSurplusTransactionAmount: vi.fn().mockReturnValue(of({})),
   };
 
-  const mockRouter = { navigate: jest.fn() };
+  const mockRouter = { navigate: vi.fn() };
 
   const activatedRouteStub = {
     snapshot: {

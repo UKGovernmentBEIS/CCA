@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { FileType } from '@shared/components';
+import { Mocked } from 'vitest';
 
 import { DocumentTemplatesService } from 'cca-api';
 
@@ -13,13 +14,13 @@ import { DocumentEditComponent } from './document-edit.component';
 describe('DocumentEditComponent', () => {
   let component: DocumentEditComponent;
   let fixture: ComponentFixture<DocumentEditComponent>;
-  let documentTemplatesService: jest.Mocked<Partial<DocumentTemplatesService>>;
+  let documentTemplatesService: Mocked<Partial<DocumentTemplatesService>>;
   let router: Router;
 
   beforeEach(async () => {
     documentTemplatesService = {
-      getDocumentTemplateById: jest.fn().mockReturnValue(of(mockDocumentTemplateViewDTO)),
-      updateDocumentTemplate: jest.fn().mockReturnValue(of(null)),
+      getDocumentTemplateById: vi.fn().mockReturnValue(of(mockDocumentTemplateViewDTO)),
+      updateDocumentTemplate: vi.fn().mockReturnValue(of(null)),
     };
 
     await TestBed.configureTestingModule({
@@ -38,7 +39,7 @@ describe('DocumentEditComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
@@ -89,9 +90,9 @@ describe('DocumentEditComponent', () => {
   });
 
   it('should not submit form when invalid', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
     const form = component.form();
-    jest.spyOn(form, 'invalid', 'get').mockReturnValue(true);
+    vi.spyOn(form, 'invalid', 'get').mockReturnValue(true);
 
     component.onSubmit();
 
@@ -120,7 +121,7 @@ describe('DocumentEditComponent', () => {
   });
 
   it('should navigate back with notification state after successful update', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
     const mockFile = new File(['test content'], 'test.docx', {
       type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',

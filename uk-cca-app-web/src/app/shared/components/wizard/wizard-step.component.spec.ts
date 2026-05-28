@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PageHeadingComponent } from '@netz/common/components';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TextInputComponent } from '@netz/govuk-components';
+import { Mock } from 'vitest';
 
 import { WizardStepComponent } from './wizard-step.component';
 
@@ -35,7 +36,7 @@ describe('WizardStepComponent', () => {
       date: new FormControl('', [Validators.required]),
       text: new FormControl(''),
     });
-    onSubmit: (form: FormGroup) => any | jest.SpyInstance<void, [FormGroup]>;
+    onSubmit: ((form: FormGroup) => any) | Mock<(form: FormGroup) => void>;
   }
 
   beforeEach(async () => {
@@ -48,7 +49,7 @@ describe('WizardStepComponent', () => {
     element = fixture.nativeElement;
     hostComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(WizardStepComponent)).componentInstance;
-    hostComponent.onSubmit = jest.fn();
+    hostComponent.onSubmit = vi.fn();
     fixture.detectChanges();
   });
 

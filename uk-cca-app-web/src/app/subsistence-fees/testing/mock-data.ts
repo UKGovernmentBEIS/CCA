@@ -12,7 +12,7 @@ export const subsistenceFeesStateMockData: SubsistenceFeesState = {
       creationDate: '2025-02-10',
       requestMetadata: {
         type: 'SUBSISTENCE_FEES_RUN',
-        chargingYear: '2025',
+        chargingYear: 2025,
         sectorsReports: {
           '1': {
             moaType: 'SECTOR_MOA',
@@ -35,7 +35,7 @@ export const subsistenceFeesStateMockData: SubsistenceFeesState = {
       creationDate: '2025-02-10',
       requestMetadata: {
         type: 'SUBSISTENCE_FEES_RUN',
-        chargingYear: '2025',
+        chargingYear: 2025,
         sectorsReports: {
           '1': {
             moaType: 'SECTOR_MOA',

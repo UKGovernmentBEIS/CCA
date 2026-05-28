@@ -13,12 +13,17 @@ import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrective
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsSubmitRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.appealoutcome.domain.NonComplianceAppealOutcomeSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceProvideAppealDetailsRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceCloseRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.conclusion.domain.NonComplianceConclusionSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmitSaveRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.domain.NonComplianceEnforcementResponseNoticeSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadProcessingRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataGenerateRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadProcessingRequestTaskActionPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.submit.domain.PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.activation.domain.UnderlyingAgreementActivationSaveRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.common.domain.UnderlyingAgreementNotifyOperatorForDecisionRequestTaskActionPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.review.domain.UnderlyingAgreementSaveFacilityReviewGroupDecisionRequestTaskActionPayload;
@@ -104,7 +109,17 @@ public class RequestTaskActionPayloadTypesProvider implements JsonSubTypesProvid
                 new NamedType(PeerReviewRequestTaskActionPayload.class, NON_COMPLIANCE_PEER_REVIEW_REQUEST_PAYLOAD),
                 new NamedType(NonComplianceDetailsSubmitSaveRequestTaskActionPayload.class, NON_COMPLIANCE_DETAILS_SAVE_PAYLOAD),
                 new NamedType(NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload.class, NON_COMPLIANCE_NOTICE_OF_INTENT_SAVE_PAYLOAD),
-                new NamedType(NonComplianceCloseRequestTaskActionPayload.class, NON_COMPLIANCE_CLOSE_TASK_PAYLOAD));
+                new NamedType(CcaPeerReviewDecisionRequestTaskActionPayload.class, NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW_DECISION_PAYLOAD),
+                new NamedType(NonComplianceCloseRequestTaskActionPayload.class, NON_COMPLIANCE_CLOSE_TASK_PAYLOAD),
+                new NamedType(NonComplianceEnforcementResponseNoticeSaveRequestTaskActionPayload.class, NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SAVE_PAYLOAD),
+                new NamedType(CcaPeerReviewDecisionRequestTaskActionPayload.class, NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEW_DECISION_PAYLOAD),
+                new NamedType(NonComplianceConclusionSaveRequestTaskActionPayload.class, NON_COMPLIANCE_CONCLUSION_SAVE_PAYLOAD),
+                new NamedType(NonComplianceProvideAppealDetailsRequestTaskActionPayload.class, NON_COMPLIANCE_PROVIDE_APPEAL_DETAILS_PAYLOAD),
+                new NamedType(NonComplianceAppealOutcomeSaveRequestTaskActionPayload.class, NON_COMPLIANCE_APPEAL_OUTCOME_SAVE_PAYLOAD),
+
+                // Performance Data Facility Digital Form
+                new NamedType(PerformanceDataFacilityDigitalFormSaveRequestTaskActionPayload.class, PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SAVE_PAYLOAD)
+        );
     }
 
 }

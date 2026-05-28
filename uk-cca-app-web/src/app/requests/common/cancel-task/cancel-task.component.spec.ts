@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { TasksService } from 'cca-api';
 
@@ -19,8 +20,8 @@ describe('CancelTaskComponent', () => {
   let router: Router;
 
   const route = new ActivatedRouteStub();
-  const tasksService: Partial<jest.Mocked<TasksService>> = {
-    processRequestTaskAction: jest.fn().mockReturnValue(of({})),
+  const tasksService: Partial<Mocked<TasksService>> = {
+    processRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -39,7 +40,7 @@ describe('CancelTaskComponent', () => {
     store.setState(mockNonComplianceDetailsState);
 
     router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate');
 
     fixture = TestBed.createComponent(CancelTaskComponent);
     component = fixture.componentInstance;

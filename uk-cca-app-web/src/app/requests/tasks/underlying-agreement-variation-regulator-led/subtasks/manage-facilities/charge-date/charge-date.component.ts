@@ -45,7 +45,7 @@ export class ChargeDateComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  protected readonly form = inject<FormGroup<ChargeDateFormModel>>(CHARGE_DATE_FORM);
+  readonly form = inject<FormGroup<ChargeDateFormModel>>(CHARGE_DATE_FORM);
   protected readonly facilityId = this.route.snapshot.params.facilityId;
 
   onSubmit() {

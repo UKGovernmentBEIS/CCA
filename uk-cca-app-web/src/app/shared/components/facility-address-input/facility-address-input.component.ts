@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { SelectComponent, TextInputComponent } from '@netz/govuk-components';
 import { existingControlContainer } from '@shared/providers';
-import { UK_COUNTRIES } from '@shared/services';
+import { CountryService } from '@shared/services';
 
 @Component({
   selector: 'cca-facility-address-input',
@@ -12,5 +12,9 @@ import { UK_COUNTRIES } from '@shared/services';
   viewProviders: [existingControlContainer],
 })
 export class FacilityAddressInputComponent {
-  protected readonly ukCountriesOptions = UK_COUNTRIES.map((c) => ({ text: c.name, value: c.code }));
+  private readonly countryService = inject(CountryService);
+
+  protected readonly ukCountriesOptions = computed(() =>
+    this.countryService.ukCountries().map((c) => ({ text: c.name, value: c.code })),
+  );
 }

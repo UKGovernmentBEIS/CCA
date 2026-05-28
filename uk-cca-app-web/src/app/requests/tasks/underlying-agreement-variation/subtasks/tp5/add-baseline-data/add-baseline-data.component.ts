@@ -1,7 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { distinct } from 'rxjs';
@@ -46,7 +46,6 @@ import {
   templateUrl: './add-baseline-data.component.html',
   imports: [
     WizardStepComponent,
-    FormsModule,
     RadioComponent,
     RadioOptionComponent,
     ReactiveFormsModule,

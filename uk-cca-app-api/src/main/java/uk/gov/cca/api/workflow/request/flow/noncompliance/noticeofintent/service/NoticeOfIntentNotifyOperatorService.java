@@ -45,7 +45,7 @@ public class NoticeOfIntentNotifyOperatorService {
         final List<DefaultNoticeRecipient> defaultContacts =
                 ccaOfficialNoticeSendService.getOfficialNoticeToDefaultRecipients(request);
 
-        final UUID noticeOfIntentUUID = requestPayload.getNoticeOfIntent().getNoticeOfIntentFile();
+        final UUID noticeOfIntentUUID = requestPayload.getNoticeOfIntent().getFile();
         final FileInfoDTO noticeOfIntent = FileInfoDTO.builder()
                 .name(requestPayload.getNonComplianceAttachments().get(noticeOfIntentUUID))
                 .uuid(noticeOfIntentUUID.toString())

@@ -1,6 +1,6 @@
 import { createDescendingSelector, requestTaskQuery, RequestTaskState, StateSelector } from '@netz/common/store';
 
-import { NonComplianceNoticeOfIntentSubmitRequestTaskPayload, NoticeOfIntent } from 'cca-api';
+import { NonComplianceNoticeOfIntent, NonComplianceNoticeOfIntentSubmitRequestTaskPayload } from 'cca-api';
 
 const selectPayload: StateSelector<RequestTaskState, NonComplianceNoticeOfIntentSubmitRequestTaskPayload> =
   createDescendingSelector(
@@ -8,7 +8,7 @@ const selectPayload: StateSelector<RequestTaskState, NonComplianceNoticeOfIntent
     (payload) => payload as NonComplianceNoticeOfIntentSubmitRequestTaskPayload,
   );
 
-const selectNoticeOfIntent: StateSelector<RequestTaskState, NoticeOfIntent> = createDescendingSelector(
+const selectNoticeOfIntent: StateSelector<RequestTaskState, NonComplianceNoticeOfIntent> = createDescendingSelector(
   selectPayload,
   (payload) => payload?.noticeOfIntent,
 );

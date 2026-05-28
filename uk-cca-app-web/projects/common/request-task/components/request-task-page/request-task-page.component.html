@@ -5,7 +5,12 @@
         {{ vm.header }}
 
         @if (vm.requestTask; as rt) {
-          <netz-task-header-info [assignee]="rt.assigneeFullName" [daysRemaining]="rt.daysRemaining" />
+          <netz-task-header-info
+            [assignee]="rt.assigneeFullName"
+            [daysRemaining]="rt.daysRemaining"
+            [startDate]="rt.startDate"
+            [payload]="rt.payload"
+          />
         }
       </netz-page-heading>
 
@@ -42,6 +47,7 @@
           [allowedRequestTaskActions]="vm.relatedActions"
           [showReassignAction]="vm.showAssignAction"
           [taskId]="vm.requestTask.id"
+          [taskType]="vm.requestTask.type"
         />
       </div>
     }

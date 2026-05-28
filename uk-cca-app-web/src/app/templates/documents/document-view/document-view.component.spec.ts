@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
+import { Mocked } from 'vitest';
+
 import { DocumentTemplatesService } from 'cca-api';
 
 import { mockDocumentTemplateViewDTO } from '../../testing/mock-data';
@@ -11,11 +13,11 @@ import { DocumentViewComponent } from './document-view.component';
 describe('DocumentViewComponent', () => {
   let component: DocumentViewComponent;
   let fixture: ComponentFixture<DocumentViewComponent>;
-  let documentTemplatesService: jest.Mocked<Partial<DocumentTemplatesService>>;
+  let documentTemplatesService: Mocked<Partial<DocumentTemplatesService>>;
 
   beforeEach(async () => {
     documentTemplatesService = {
-      getDocumentTemplateById: jest.fn().mockReturnValue(of(mockDocumentTemplateViewDTO)),
+      getDocumentTemplateById: vi.fn().mockReturnValue(of(mockDocumentTemplateViewDTO)),
     };
 
     await TestBed.configureTestingModule({
@@ -32,7 +34,7 @@ describe('DocumentViewComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {

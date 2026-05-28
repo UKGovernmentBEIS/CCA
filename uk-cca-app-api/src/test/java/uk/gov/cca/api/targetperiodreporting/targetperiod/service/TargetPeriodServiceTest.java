@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYearsContainer;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
@@ -35,6 +37,36 @@ class TargetPeriodServiceTest {
 
     @Mock
     private TargetPeriodRepository repository;
+
+    @Test
+    void getTargetPeriodDetailsBySchemeVersion() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
+        final TargetPeriod targetPeriod = TargetPeriod.builder().id(1L).build();
+
+        when(repository.findAllBySchemeVersion(schemeVersion)).thenReturn(List.of(targetPeriod));
+
+        // Invoke
+        List<TargetPeriodDetailsDTO> result = service.getTargetPeriodDetailsBySchemeVersion(schemeVersion);
+
+        // Verify
+        assertThat(result).containsExactly(TargetPeriodDetailsDTO.builder().id(1L).build());
+        verify(repository).findAllBySchemeVersion(schemeVersion);
+    }
+
+    @Test
+    void getTargetPeriodDetailsByTargetPeriodTypes() {
+        final Set<TargetPeriodType> targetPeriodTypes = Set.of(TargetPeriodType.TP7);
+        final TargetPeriod targetPeriod = TargetPeriod.builder().id(1L).build();
+
+        when(repository.findByBusinessIdIn(targetPeriodTypes)).thenReturn(List.of(targetPeriod));
+
+        // Invoke
+        List<TargetPeriodDetailsDTO> result = service.getTargetPeriodDetailsByTargetPeriodTypes(targetPeriodTypes);
+
+        // Verify
+        assertThat(result).containsExactly(TargetPeriodDetailsDTO.builder().id(1L).build());
+        verify(repository).findByBusinessIdIn(targetPeriodTypes);
+    }
 
     @Test
     void getTargetPeriodDetailsByTargetPeriodType() {

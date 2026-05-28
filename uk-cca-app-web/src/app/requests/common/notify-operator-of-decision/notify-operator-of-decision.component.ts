@@ -7,7 +7,7 @@ import { CheckboxComponent, CheckboxesComponent, SelectComponent } from '@netz/g
 import { NoticeRecipientsTypePipe } from '@shared/pipes';
 import { existingControlContainer } from '@shared/providers';
 
-import { CaExternalContactsService, NoticeRecipientsService, RegulatorAuthoritiesService, TasksService } from 'cca-api';
+import { CaExternalContactsService, RegulatorAuthoritiesService, TasksService } from 'cca-api';
 
 @Component({
   selector: 'cca-notify-operator-of-decision',
@@ -18,21 +18,13 @@ import { CaExternalContactsService, NoticeRecipientsService, RegulatorAuthoritie
 export class NotifyOperatorOfDecisionComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly caExternalContactsService = inject(CaExternalContactsService);
-  private readonly noticeRecipientsService = inject(NoticeRecipientsService);
   private readonly tasksService = inject(TasksService);
   private readonly regulatorAuthoritiesService = inject(RegulatorAuthoritiesService);
-
-  private readonly requestInfo = this.requestTaskStore.select(requestTaskQuery.selectRequestInfo);
-  private readonly resourceType = computed(() => this.requestInfo()?.resourceType);
-  private readonly resource = computed(() => this.requestInfo()?.resources?.[this.resourceType()]);
 
   private readonly taskId = this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)();
 
   protected readonly defaultUsers = toSignal(this.tasksService.getDefaultNoticeRecipients(this.taskId));
-
-  protected readonly additionalUsers = toSignal(
-    this.noticeRecipientsService.getAdditionalNoticeRecipients(+this.resource()),
-  );
+  protected readonly additionalUsers = toSignal(this.tasksService.getAdditionalNoticeRecipients(this.taskId));
 
   private readonly externalContacts = toSignal(this.caExternalContactsService.getCaExternalContacts());
   protected readonly caExternalContacts = computed(() => this.externalContacts()?.caExternalContacts);

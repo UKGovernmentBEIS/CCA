@@ -1,5 +1,6 @@
 package uk.gov.cca.api.underlyingagreement.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementDocument;
 
 @Repository
@@ -16,6 +18,8 @@ import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementDocument;
 public interface UnderlyingAgreementDocumentRepository extends JpaRepository<UnderlyingAgreementDocument, Long> {
 
     Optional<UnderlyingAgreementDocument> findById(Long id);
+    
+    List<UnderlyingAgreementDocument> findBySchemeVersionAndTerminatedDateIsNull(SchemeVersion schemeVersion);
 
 	@Transactional
     @Modifying

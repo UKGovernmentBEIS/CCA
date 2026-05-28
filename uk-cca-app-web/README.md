@@ -111,7 +111,7 @@ will be generated inside the parent folder of each project.
 
 ## Snapshot testing
 
-Due to the nature of the deadlines we decided to use [Snapshot testing](https://jestjs.io/docs/snapshot-testing). Snapshot testing does a good test on the rendered mark up but does not test http action and we currently don't use it after any mutations on the
+Due to the nature of the deadlines we decided to use [Snapshot testing](https://vitest.dev/guide/snapshot). Snapshot testing does a good test on the rendered mark up but does not test http action and we currently don't use it after any mutations on the
 DOM. It's a suboptimal for of testing for us right now, but it will provide _some_ coverage.
 
 ## Release plan and changelog generation

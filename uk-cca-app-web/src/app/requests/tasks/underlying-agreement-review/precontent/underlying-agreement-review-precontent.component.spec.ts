@@ -9,6 +9,7 @@ import { RequestTaskStore } from '@netz/common/store';
 import { mockClass } from '@netz/common/testing';
 import { mockUNAReviewRequestTaskState } from '@requests/common';
 import { click, getByText } from '@testing';
+import { Mocked } from 'vitest';
 
 import { UnderlyingAgreementReviewPrecontentComponent } from './underlying-agreement-review-precontent.component';
 
@@ -17,7 +18,7 @@ describe('UnderlyingAgreementReviewPrecontentComponent', () => {
   let router: Router;
 
   const mockRoute = mockClass(ActivatedRoute);
-  const mockRouter: jest.Mocked<Partial<Router>> = { navigate: jest.fn().mockReturnValue(of(null)) };
+  const mockRouter: Mocked<Partial<Router>> = { navigate: vi.fn().mockReturnValue(of(null)) };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -41,7 +42,7 @@ describe('UnderlyingAgreementReviewPrecontentComponent', () => {
   });
 
   it('should navigate to correct url', async () => {
-    const spy = jest.spyOn(router, 'navigate');
+    const spy = vi.spyOn(router, 'navigate');
 
     await click(getByText('Notify operator of decision'));
     expect(spy).toHaveBeenCalledWith(['underlying-agreement-review', 'notify-operator'], { relativeTo: mockRoute });

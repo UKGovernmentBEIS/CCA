@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { mockReasonForAdminTerminationWithdrawPayload } from '../../../testing/mock-data';
 import ReasonForWithdrawAdminTerminationCheckYourAnswersComponent from './reason-for-withdraw-admin-termination-check-your-answers.component';
@@ -17,8 +18,8 @@ describe('ReasonForWithdrawAdminTerminationCheckYourAnswersComponent', () => {
   let fixture: ComponentFixture<ReasonForWithdrawAdminTerminationCheckYourAnswersComponent>;
   let store: RequestTaskStore;
 
-  const withdrawAdminTerminationTaskService: Partial<jest.Mocked<TaskService>> = {
-    submitSubtask: jest.fn().mockReturnValue(of({})),
+  const withdrawAdminTerminationTaskService: Partial<Mocked<TaskService>> = {
+    submitSubtask: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -48,6 +49,6 @@ describe('ReasonForWithdrawAdminTerminationCheckYourAnswersComponent', () => {
   });
 
   it('should show proper summary values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

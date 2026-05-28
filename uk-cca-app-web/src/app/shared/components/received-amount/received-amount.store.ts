@@ -10,7 +10,7 @@ import {
   SubsistenceFeesMoaReceivedAmountHistoryDTO,
 } from 'cca-api';
 
-export type SectorMoasReceivedAmountState = {
+export type ReceivedAmountState = {
   transactionId: string;
   businessId: string;
   name: string;
@@ -21,7 +21,7 @@ export type SectorMoasReceivedAmountState = {
   changeType: 'add' | 'subtract';
 };
 
-const INITIAL_STATE: SectorMoasReceivedAmountState = {
+const INITIAL_STATE: ReceivedAmountState = {
   transactionId: null,
   businessId: null,
   name: null,
@@ -33,7 +33,7 @@ const INITIAL_STATE: SectorMoasReceivedAmountState = {
 };
 
 @Injectable()
-export class SectorMoasReceivedAmountStore extends SignalStore<SectorMoasReceivedAmountState> {
+export class ReceivedAmountStore extends SignalStore<ReceivedAmountState> {
   private readonly subsistenceFeesMoAReceivedAmountControllerService = inject(
     SubsistenceFeesMoAReceivedAmountControllerService,
   );
@@ -42,7 +42,7 @@ export class SectorMoasReceivedAmountStore extends SignalStore<SectorMoasReceive
     super(INITIAL_STATE);
   }
 
-  updateState(state: Partial<SectorMoasReceivedAmountState>) {
+  updateState(state: Partial<ReceivedAmountState>) {
     this.setState({ ...this.state, ...state });
   }
 

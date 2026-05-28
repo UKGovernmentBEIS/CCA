@@ -35,6 +35,6 @@ describe('SummaryComponent', () => {
   });
 
   it('should display the correct header and caption', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

@@ -70,8 +70,11 @@ describe('SetPasswordOnlyComponent', () => {
   });
 
   it('should show form errors', async () => {
-    type(getByLabelText('Create a password to activate your account', fixture.nativeElement), '123');
-    type(getByLabelText('Re-enter your password', fixture.nativeElement), '456');
+    type(
+      getByLabelText('Create a password to activate your account', fixture.nativeElement) as HTMLInputElement,
+      '123',
+    );
+    type(getByLabelText('Re-enter your password', fixture.nativeElement) as HTMLInputElement, '456');
 
     click(getByText('Continue', fixture.nativeElement));
     fixture.detectChanges();

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceRequestPayload;
-import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntent;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntent;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
@@ -29,8 +29,8 @@ class NoticeOfIntentSubmitServiceTest {
     void applySaveAction() {
         final UUID fileUuid = UUID.randomUUID();
         final Map<String, String> sectionsCompleted = Map.of("subtask", "in_progress");
-        final NoticeOfIntent noticeOfIntent = NoticeOfIntent.builder()
-                .noticeOfIntentFile(fileUuid)
+        final NonComplianceNoticeOfIntent noticeOfIntent = NonComplianceNoticeOfIntent.builder()
+                .file(fileUuid)
                 .comments("bla bla bla")
                 .build();
         final NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload requestTaskActionPayload = NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload.builder()
@@ -59,8 +59,8 @@ class NoticeOfIntentSubmitServiceTest {
         final DecisionNotification decisionNotification = DecisionNotification.builder()
                 .operators(Set.of("operator"))
                 .build();
-        final NoticeOfIntent noticeOfIntent = NoticeOfIntent.builder()
-                .noticeOfIntentFile(fileUuid)
+        final NonComplianceNoticeOfIntent noticeOfIntent = NonComplianceNoticeOfIntent.builder()
+                .file(fileUuid)
                 .comments("bla bla bla")
                 .build();
         final Request request = Request.builder()
@@ -95,8 +95,8 @@ class NoticeOfIntentSubmitServiceTest {
         final String requestId = "requestId";
         final Map<UUID, String> nonComplianceAttachments = Map.of(fileUuid, "notice");
         final Map<String, String> sectionsCompleted = Map.of("subtask", "in_progress");
-        final NoticeOfIntent noticeOfIntent = NoticeOfIntent.builder()
-                .noticeOfIntentFile(fileUuid)
+        final NonComplianceNoticeOfIntent noticeOfIntent = NonComplianceNoticeOfIntent.builder()
+                .file(fileUuid)
                 .comments("bla bla bla")
                 .build();
         final Request request = Request.builder()

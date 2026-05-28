@@ -7,10 +7,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
+import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.Cca3FacilityBaselineAndTargets;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityInputData;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.domain.PerformanceDataFacilityReferenceData;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 
 import java.time.Year;
@@ -30,9 +31,13 @@ public class PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload extends 
 
     private Year targetPeriodYear;
 
-    private FacilityDTO facility;
+    private FacilityBaseInfoDTO facility;
 
-    private Cca3FacilityBaselineAndTargets originalBaselineData;
+    private PerformanceDataFacilityReferenceData referenceData;
+
+    private PerformanceDataFacilityInputData performanceData;
+
+    private boolean isExpired;
 
     @Builder.Default
     private Map<String, String> sectionsCompleted = new HashMap<>();

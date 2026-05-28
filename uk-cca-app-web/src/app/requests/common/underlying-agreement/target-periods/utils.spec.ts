@@ -20,7 +20,7 @@ describe('Baseline and Targets calculations', () => {
     ];
 
     performanceTestCases.forEach(({ energy, throughput, expectedPerformance }) => {
-      expect(calculatePerformance(energy, throughput)).toEqual(expectedPerformance);
+      expect(calculatePerformance(String(energy), String(throughput))).toEqual(expectedPerformance);
     });
   });
 
@@ -46,7 +46,9 @@ describe('Baseline and Targets calculations', () => {
     ];
 
     testCases.forEach(({ energyOrCarbon, improvement, extendedPeriod, expectedTarget }) => {
-      expect(calculateAbsoluteTarget(energyOrCarbon, improvement, extendedPeriod)).toEqual(expectedTarget);
+      expect(calculateAbsoluteTarget(String(energyOrCarbon), String(improvement), extendedPeriod)).toEqual(
+        expectedTarget,
+      );
     });
   });
 
@@ -75,7 +77,9 @@ describe('Baseline and Targets calculations', () => {
     ];
 
     testCases.forEach(({ energyOrCarbon, throughput, improvement, expectedTarget }) => {
-      expect(calculateRelativeTarget(energyOrCarbon, throughput, improvement)).toEqual(expectedTarget);
+      expect(calculateRelativeTarget(String(energyOrCarbon), String(throughput), String(improvement))).toEqual(
+        expectedTarget,
+      );
     });
   });
 });

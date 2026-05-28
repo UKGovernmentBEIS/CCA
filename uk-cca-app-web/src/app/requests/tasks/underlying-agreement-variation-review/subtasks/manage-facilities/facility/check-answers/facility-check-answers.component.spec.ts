@@ -7,6 +7,9 @@ import { of } from 'rxjs';
 
 import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
+import { Mocked } from 'vitest';
+
+import { ReferenceDataService } from 'cca-api';
 
 import { mockVariationReviewRequestTaskState } from '../../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import FacilityCheckAnswersComponent from './facility-check-answers.component';
@@ -17,8 +20,12 @@ describe('FacilityCheckAnswersComponent', () => {
   let store: RequestTaskStore;
 
   const route: any = { snapshot: { params: { facilityId: 'ADS_1-F00001' }, pathFromRoot: [] } };
-  const unaTaskService: Partial<jest.Mocked<TaskService>> = {
-    submitSubtask: jest.fn().mockReturnValue(of({})),
+  const unaTaskService: Partial<Mocked<TaskService>> = {
+    submitSubtask: vi.fn().mockReturnValue(of({})),
+  };
+
+  const referenceDataService: Partial<Mocked<ReferenceDataService>> = {
+    getReferenceData: vi.fn().mockReturnValue(of({ COUNTRIES: [] })),
   };
 
   beforeEach(() => {
@@ -30,6 +37,7 @@ describe('FacilityCheckAnswersComponent', () => {
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: route },
         { provide: TaskService, useValue: unaTaskService },
+        { provide: ReferenceDataService, useValue: referenceDataService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Review underlying agreement variation' },
       ],
@@ -48,6 +56,6 @@ describe('FacilityCheckAnswersComponent', () => {
   });
 
   it('should show summary values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

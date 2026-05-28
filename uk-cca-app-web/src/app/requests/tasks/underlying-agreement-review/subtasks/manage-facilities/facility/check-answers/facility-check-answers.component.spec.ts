@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { mockUNAReviewRequestTaskState } from '@requests/common';
+import { Mocked } from 'vitest';
 
 import FacilityCheckAnswersComponent from './facility-check-answers.component';
 
@@ -17,8 +18,8 @@ describe('FacilityCheckAnswersComponent', () => {
   let store: RequestTaskStore;
 
   const route: any = { snapshot: { params: { facilityId: 'ADS_53-F00007' }, pathFromRoot: [] } };
-  const unaTaskService: Partial<jest.Mocked<TaskService>> = {
-    submitSubtask: jest.fn().mockReturnValue(of({})),
+  const unaTaskService: Partial<Mocked<TaskService>> = {
+    submitSubtask: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(() => {
@@ -48,6 +49,6 @@ describe('FacilityCheckAnswersComponent', () => {
   });
 
   it('should show summary values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

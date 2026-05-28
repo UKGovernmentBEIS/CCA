@@ -39,10 +39,10 @@ describe('OperatorAddressComponent', () => {
   let router: Router;
 
   const tasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
-  const saveRequestTaskActionSpy = jest.spyOn(tasksApiService, 'saveRequestTaskAction');
+  const saveRequestTaskActionSpy = vi.spyOn(tasksApiService, 'saveRequestTaskAction');
 
   const route = new ActivatedRouteStub();
 
@@ -57,7 +57,7 @@ describe('OperatorAddressComponent', () => {
         {
           provide: Router,
           useValue: {
-            navigate: jest.fn(),
+            navigate: vi.fn(),
             url: '/test/operator-address',
             events: of({}),
             createUrlTree: () => ({}),

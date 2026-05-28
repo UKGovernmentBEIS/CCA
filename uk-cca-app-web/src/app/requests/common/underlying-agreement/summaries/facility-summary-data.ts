@@ -9,7 +9,7 @@ import {
 } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { StatusPipe, transformAddress } from '@shared/pipes';
-import { Improvement, SchemeVersions } from '@shared/types';
+import { Country, Improvement, SchemeVersions } from '@shared/types';
 import { fileUtils, transformPhoneNumber } from '@shared/utils';
 
 import {
@@ -72,6 +72,7 @@ function addDetailsSection(
   factory: SummaryFactory,
   facility: Facility,
   schemeVersions: SchemeVersions,
+  countries: Country[],
   changeName: boolean,
   isEditable: boolean,
 ): SummaryFactory {
@@ -112,7 +113,7 @@ function addDetailsSection(
     .addRow('Scheme participation', toSchemeParticipationString(facilityDetails?.participatingSchemeVersions), {
       change: isEditable,
     })
-    .addTextAreaRow('Facility address', transformAddress(facilityDetails?.facilityAddress), {
+    .addTextAreaRow('Facility address', transformAddress(facilityDetails?.facilityAddress, countries), {
       change: isEditable,
     });
 
@@ -122,6 +123,7 @@ function addDetailsSection(
 function addContactDetailsSection(
   factory: SummaryFactory,
   facilityContact: TargetUnitAccountContactDTO,
+  countries: Country[],
   isEditable: boolean,
 ): SummaryFactory {
   return factory
@@ -135,7 +137,7 @@ function addContactDetailsSection(
     .addRow('Email address', facilityContact?.email, {
       change: isEditable,
     })
-    .addTextAreaRow('Contact address', transformAddress(facilityContact?.address), {
+    .addTextAreaRow('Contact address', transformAddress(facilityContact?.address, countries), {
       change: isEditable,
     })
     .addRow('Phone number', transformPhoneNumber(facilityContact?.phoneNumber), {
@@ -388,7 +390,9 @@ function addBaselineDataSection(
       },
     )
     .addRow(
-      'Baseline energy to carbon factor (kgC/kWh)',
+      `Baseline energy to ${
+        baselineData?.carbonConversionFactorMeasurement === 'kgCe/kWh' ? 'carbon' : 'carbon dioxide'
+      } conversion factor (${baselineData?.carbonConversionFactorMeasurement})`,
       decimalPipe.transform(baselineData?.energyCarbonFactor, '1.0-7'),
       {
         change: isEditable,
@@ -402,6 +406,7 @@ function addBaselineDataSection(
 function addBaselineEnergySection(
   factory: SummaryFactory,
   baselineEnergy: FacilityBaselineEnergyConsumption,
+  carbonConversionFactorMeasurement: string,
   baselineYear: number,
   targetComposition: FacilityTargetComposition,
   isEditable: boolean,
@@ -433,10 +438,7 @@ function addBaselineEnergySection(
   );
 
   factory
-    .addSection(
-      'Details of baseline energy or carbon consumption',
-      `../${FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION}`,
-    )
+    .addSection('Details of baseline energy or carbon', `../${FacilityWizardStep.BASELINE_ENERGY_CONSUMPTION}`)
     .addRow(
       `Fixed baseline energy for the facility (${measurementTypeToUnitPipe.transform(targetComposition?.measurementType)})`,
       formatNumber(fixedEnergyValue),
@@ -453,7 +455,9 @@ function addBaselineEnergySection(
 
   if (baselineEnergy?.hasVariableEnergy) {
     factory.addRow(
-      'Indicate how you want to account for the portion of variable energy used (or carbon emitted) for your facility',
+      `Indicate how you want to account for the portion of variable energy used (or ${
+        carbonConversionFactorMeasurement === 'kgCe/kWh' ? 'carbon' : 'carbon dioxide'
+      } emitted) for your facility`,
       baselineEnergy.variableEnergyType === 'TOTALS'
         ? 'Totals only'
         : baselineEnergy.variableEnergyType === 'BY_PRODUCT'
@@ -562,6 +566,7 @@ function toFacilityWizardSummaryFactory(
   facility: Facility,
   sectorSchemeData: SchemeData,
   schemeVersions: SchemeVersions,
+  countries: Country[],
   attachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
@@ -569,13 +574,15 @@ function toFacilityWizardSummaryFactory(
 ): SummaryFactory {
   const targetComposition = facility?.cca3BaselineAndTargets?.targetComposition;
   const baselineData = facility?.cca3BaselineAndTargets?.baselineData;
+  const carbonConversionFactorMeasurement =
+    facility?.cca3BaselineAndTargets?.baselineData?.carbonConversionFactorMeasurement;
 
   const baselineYear = baselineData?.baselineDate ? new Date(baselineData.baselineDate).getFullYear() : null;
 
   let factory = opts?.factory ?? new SummaryFactory();
 
-  factory = addDetailsSection(factory, facility, schemeVersions, opts.changeName, isEditable);
-  factory = addContactDetailsSection(factory, facility?.facilityContact, isEditable);
+  factory = addDetailsSection(factory, facility, schemeVersions, countries, opts.changeName, isEditable);
+  factory = addContactDetailsSection(factory, facility?.facilityContact, countries, isEditable);
 
   factory = addElegibilityDetailsSection(
     factory,
@@ -603,6 +610,7 @@ function toFacilityWizardSummaryFactory(
     factory = addBaselineEnergySection(
       factory,
       facility?.cca3BaselineAndTargets?.facilityBaselineEnergyConsumption,
+      carbonConversionFactorMeasurement,
       baselineYear,
       targetComposition,
       isEditable,
@@ -619,6 +627,7 @@ export function toFacilityWizardSummaryData(
   facility: Facility,
   sectorSchemeData: SchemeData,
   schemeVersions: SchemeVersions,
+  countries: Country[],
   attachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
@@ -628,6 +637,7 @@ export function toFacilityWizardSummaryData(
     facility,
     sectorSchemeData,
     schemeVersions,
+    countries,
     attachments,
     isEditable,
     downloadUrl,
@@ -640,6 +650,7 @@ export function toFacilityWizardSummaryDataWithDecision(
   sectorSchemeData: SchemeData,
   schemeVersions: SchemeVersions,
   decision: UnderlyingAgreementFacilityReviewDecision | UnderlyingAgreementVariationFacilityReviewDecision,
+  countries: Country[],
   attachments: { submit: Record<string, string>; review: Record<string, string> },
   isEditable: boolean,
   downloadUrl: string,
@@ -649,6 +660,7 @@ export function toFacilityWizardSummaryDataWithDecision(
     facility,
     sectorSchemeData,
     schemeVersions,
+    countries,
     attachments.submit,
     isEditable,
     downloadUrl,
@@ -667,6 +679,7 @@ export function toFacilitySummaryDataWithStatus(
   facility: Facility,
   sectorSchemeData: SchemeData,
   schemeVersions: SchemeVersions,
+  countries: Country[],
   attachments: Record<string, string>,
   isEditable: boolean,
   downloadUrl: string,
@@ -680,6 +693,7 @@ export function toFacilitySummaryDataWithStatus(
     facility,
     sectorSchemeData,
     schemeVersions,
+    countries,
     attachments,
     isEditable,
     downloadUrl,
@@ -698,6 +712,7 @@ export function toFacilityWizardSummaryDataWithDecisionAndStatus(
   sectorSchemeData: SchemeData,
   schemeVersions: SchemeVersions,
   decision: UnderlyingAgreementFacilityReviewDecision | UnderlyingAgreementVariationFacilityReviewDecision,
+  countries: Country[],
   attachments: { submit: Record<string, string>; review: Record<string, string> },
   isEditable: boolean,
   downloadUrl: string,
@@ -711,6 +726,7 @@ export function toFacilityWizardSummaryDataWithDecisionAndStatus(
     facility,
     sectorSchemeData,
     schemeVersions,
+    countries,
     attachments.submit,
     isEditable,
     downloadUrl,

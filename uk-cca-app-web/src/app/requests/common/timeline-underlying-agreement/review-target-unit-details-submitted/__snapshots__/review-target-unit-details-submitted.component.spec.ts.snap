@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ReviewTargetUnitDetailsComponent should show summary values 1`] = `
+exports[`ReviewTargetUnitDetailsComponent > should show summary values 1`] = `
 [
   [
     "Operator name",

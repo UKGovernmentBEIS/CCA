@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { HttpTestingController, TestRequest } from '@angular/common/http/testing';
-import { TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RouterTestingHarness } from '@angular/router/testing';
 
 import { clear, click, getByLabelText, getByTestId, getByText, type } from '@testing';
@@ -53,14 +53,20 @@ function clickTab(tabId: string, label: string) {
 export async function navigateToAddOperatorUser({ harness }: Opts) {
   expect(document.getElementById('users-and-contacts')).toBeTruthy();
   harness.detectChanges();
-
   clickInteractiveByText('Add a new operator');
+  harness.detectChanges();
+  await new Promise((resolve) => setTimeout(resolve));
+  harness.detectChanges();
+  await harness.fixture.whenStable();
+  harness.detectChanges();
   expect(getByTestId('add-operator-form')).toBeTruthy();
 }
 
 export async function navigateToTargetUnitUsers({ harness, httpTestingController }: Opts, accountId: number) {
   expect(getByTestId('target-unit')).toBeTruthy();
   clickTab('users-and-contacts', 'Users and contacts');
+  harness.detectChanges();
+  await new Promise((resolve) => setTimeout(resolve));
   harness.detectChanges();
   await harness.fixture.whenStable();
 
@@ -74,6 +80,9 @@ export async function navigateToTargetUnit(sectorId: number, targetUnitName: str
   const { harness, httpTestingController } = opts;
   await navigateToTargetUnits(sectorId, opts);
   clickInteractiveByText(targetUnitName);
+  harness.detectChanges();
+  await new Promise((resolve) => setTimeout(resolve));
+  harness.detectChanges();
 
   const req = httpTestingController.expectOne('/api/v1.0/target-unit-accounts/1');
   req.flush(mockTargetUnitAccount(sectorId));
@@ -84,13 +93,17 @@ export async function navigateToTargetUnit(sectorId: number, targetUnitName: str
 
 export async function navigateToTargetUnits(id: number, { harness, httpTestingController }: Opts) {
   harness.navigateByUrl(`/${id}`, SectorComponent);
+  harness.detectChanges();
+  await new Promise((resolve) => setTimeout(resolve));
+  harness.detectChanges();
   let req: TestRequest | null;
-  tick();
   req = httpTestingController.expectOne(`/api/v1.0/sector-association/${id}`);
   req.flush(mockSectorDetails);
   await harness.fixture.whenStable();
 
   clickTab('target-units', 'Target units');
+  harness.detectChanges();
+  await new Promise((resolve) => setTimeout(resolve));
   harness.detectChanges();
   await harness.fixture.whenStable();
   req = httpTestingController.expectOne(`/api/v1.0/sector-authorities/sector-association/${id}`);
@@ -107,13 +120,17 @@ export async function navigateToTargetUnits(id: number, { harness, httpTestingCo
 
 export async function navigateToContacts(id: number, { harness, httpTestingController }: Opts) {
   harness.navigateByUrl(`/${id}`, SectorComponent);
-  tick();
+  harness.detectChanges();
+  await new Promise((resolve) => setTimeout(resolve));
+  harness.detectChanges();
   let req: TestRequest | null;
   req = httpTestingController.expectOne(`/api/v1.0/sector-association/${id}`);
   req.flush(mockSectorDetails);
   await harness.fixture.whenStable();
 
   clickTab('contacts', 'Contacts');
+  harness.detectChanges();
+  await new Promise((resolve) => setTimeout(resolve));
   harness.detectChanges();
   await harness.fixture.whenStable();
   req = httpTestingController.expectOne(`/api/v1.0/sector-authorities/sector-association/${id}`);
@@ -127,7 +144,11 @@ export async function navigateToAddSector(id: number, roleValue: string, { harne
   const selectElement = document.getElementById('userType') as HTMLSelectElement;
   selectElement.value = roleValue;
   selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+  harness.detectChanges();
   clickInteractiveByText('Continue');
+  harness.detectChanges();
+  await new Promise((resolve) => setTimeout(resolve));
+  harness.detectChanges();
 
   const req = httpTestingController.expectOne(`/api/v1.0/sector-authorities/sector-association/${id}`);
   req.flush(mockSectorAuthorities);
@@ -162,6 +183,7 @@ export async function navigateToSectorUserDetails(
   { harness, httpTestingController }: Opts,
 ) {
   clickInteractiveByText(name);
+  await new Promise((resolve) => setTimeout(resolve));
 
   let req = httpTestingController.expectOne(`/api/v1.0/sector-users/sector-association/${sectorId}/${sectorUserId}`);
   req.flush(sectorBasicUserDetailsFixture);
@@ -178,6 +200,7 @@ export async function navigateToSectorUserDetails(
 
 export async function navigateToEditSectorUserDetails({ harness }: Opts) {
   clickInteractiveByText('Change');
+  harness.detectChanges();
   await harness.fixture.whenStable();
   harness.detectChanges();
   expect(getByText('Change user details')).toBeTruthy();

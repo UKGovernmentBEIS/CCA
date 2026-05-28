@@ -9,7 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { WorkflowFacilityDTO } from './workflowFacilityDTO';
+import { NonComplianceFacilityDTO } from './nonComplianceFacilityDTO';
 
 export interface NonComplianceDetails {
   nonComplianceType:
@@ -26,7 +26,7 @@ export interface NonComplianceDetails {
   compliantDate?: string;
   comment?: string;
   relevantWorkflows?: string[];
-  relevantFacilities?: WorkflowFacilityDTO[];
+  relevantFacilities?: NonComplianceFacilityDTO[];
   isEnforcementResponseNoticeRequired: boolean;
   explanation?: string;
 }

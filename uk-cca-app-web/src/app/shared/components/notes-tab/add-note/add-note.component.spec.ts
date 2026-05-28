@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { RequestNotesService } from 'cca-api';
 
@@ -15,13 +16,13 @@ import { WorkflowAddNoteComponent } from './add-note.component';
 describe('WorkflowAddNoteComponent', () => {
   let component: WorkflowAddNoteComponent;
   let fixture: ComponentFixture<WorkflowAddNoteComponent>;
-  let requestNotesService: jest.Mocked<RequestNotesService>;
+  let requestNotesService: Mocked<RequestNotesService>;
   let router: Router;
 
   beforeEach(async () => {
     const mockRequestNotesService = mockClass(RequestNotesService);
-    mockRequestNotesService.createRequestNote = jest.fn().mockReturnValue(of({}));
-    mockRequestNotesService.uploadRequestNoteFile = jest.fn().mockReturnValue(
+    mockRequestNotesService.createRequestNote = vi.fn().mockReturnValue(of({}));
+    mockRequestNotesService.uploadRequestNoteFile = vi.fn().mockReturnValue(
       of({
         type: 4,
         body: { uuid: 'test-uuid' },
@@ -41,9 +42,9 @@ describe('WorkflowAddNoteComponent', () => {
       ],
     }).compileComponents();
 
-    requestNotesService = TestBed.inject(RequestNotesService) as jest.Mocked<RequestNotesService>;
+    requestNotesService = TestBed.inject(RequestNotesService) as Mocked<RequestNotesService>;
     router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate');
 
     fixture = TestBed.createComponent(WorkflowAddNoteComponent);
     component = fixture.componentInstance;

@@ -6,6 +6,7 @@ import { ActivatedRoute, convertToParamMap, provideRouter, Router } from '@angul
 import { of } from 'rxjs';
 
 import { mockClass } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { RequestNoteDto, RequestNotesService } from 'cca-api';
 
@@ -14,7 +15,7 @@ import { WorkflowNotesComponent } from './workflow-notes.component';
 describe('WorkflowNotesComponent', () => {
   let component: WorkflowNotesComponent;
   let fixture: ComponentFixture<WorkflowNotesComponent>;
-  let requestNotesService: jest.Mocked<RequestNotesService>;
+  let requestNotesService: Mocked<RequestNotesService>;
   let router: Router;
 
   const mockNotes: RequestNoteDto[] = [
@@ -42,7 +43,7 @@ describe('WorkflowNotesComponent', () => {
   ];
 
   const mockRequestNotesService = mockClass(RequestNotesService);
-  mockRequestNotesService.getNotesByRequestId = jest.fn().mockReturnValue(
+  mockRequestNotesService.getNotesByRequestId = vi.fn().mockReturnValue(
     of({
       requestNotes: mockNotes,
       totalItems: 2,
@@ -69,9 +70,9 @@ describe('WorkflowNotesComponent', () => {
       ],
     }).compileComponents();
 
-    requestNotesService = TestBed.inject(RequestNotesService) as jest.Mocked<RequestNotesService>;
+    requestNotesService = TestBed.inject(RequestNotesService) as Mocked<RequestNotesService>;
     router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate');
 
     fixture = TestBed.createComponent(WorkflowNotesComponent);
     component = fixture.componentInstance;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlContainer, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -18,8 +18,8 @@ describe('TextInputComponent', () => {
   @Component({
     imports: [TextInputComponent, ReactiveFormsModule, LabelDirective],
     template: `
-      <div govuk-text-input [formControl]="control" [prefix]="prefix" [suffix]="suffix" label="First control"></div>
-      <div govuk-text-input [formControl]="control" [prefix]="prefix" [suffix]="suffix">
+      <div govuk-text-input [formControl]="control" [prefix]="prefix()" [suffix]="suffix()" label="First control"></div>
+      <div govuk-text-input [formControl]="control" [prefix]="prefix()" [suffix]="suffix()">
         <ng-container govukLabel>Second control <span class="govuk-visually-hidden">hidden</span></ng-container>
       </div>
       <form [formGroup]="group">
@@ -34,17 +34,17 @@ describe('TextInputComponent', () => {
       { text: new FormControl(null, { validators: GovukValidators.minLength(5, 'Enter a value') }) },
       { updateOn: 'submit' },
     );
-    prefix: string;
-    suffix: string;
+    prefix = signal<string | null>(null);
+    suffix = signal<string | null>(null);
   }
 
   @Component({
     imports: [TextInputComponent, ReactiveFormsModule],
-    template: '<div govuk-text-input [formControl]="control" inputType="number" [numberFormat]="format"></div>',
+    template: '<div govuk-text-input [formControl]="control" inputType="number" [numberFormat]="format()"></div>',
   })
   class TestNumericComponent {
     control = new FormControl(null, GovukValidators.max(5, 'Max test'));
-    format: string;
+    format = signal<string | null>(null);
   }
 
   beforeEach(async () => {
@@ -148,7 +148,7 @@ describe('TextInputComponent', () => {
   });
 
   it('should format on blur and revert on focus', () => {
-    hostNumericComponent.format = '1.0-0';
+    hostNumericComponent.format.set('1.0-0');
     fixtureNumericComponent.detectChanges();
     const input = fixtureNumericComponent.debugElement.query(By.css('input'));
     hostNumericComponent.control.patchValue('2000');
@@ -169,19 +169,19 @@ describe('TextInputComponent', () => {
     expect(getPrefix()).toBeNull();
     expect(getSuffix()).toBeNull();
 
-    hostTestComponent.prefix = 'Eur';
+    hostTestComponent.prefix.set('Eur');
     fixtureTestComponent.detectChanges();
 
     expect(getPrefix().textContent).toEqual('Eur');
     expect(getSuffix()).toBeNull();
 
-    hostTestComponent.suffix = '%';
+    hostTestComponent.suffix.set('%');
     fixtureTestComponent.detectChanges();
 
     expect(getPrefix().textContent).toEqual('Eur');
     expect(getSuffix().textContent).toEqual('%');
 
-    hostTestComponent.prefix = undefined;
+    hostTestComponent.prefix.set(null);
     fixtureTestComponent.detectChanges();
 
     expect(getPrefix()).toBeNull();

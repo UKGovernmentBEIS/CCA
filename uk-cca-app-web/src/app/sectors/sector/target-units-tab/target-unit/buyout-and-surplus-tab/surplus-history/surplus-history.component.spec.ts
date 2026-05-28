@@ -29,7 +29,7 @@ describe('ViewHistoryComponent', () => {
   ];
 
   const mockService = {
-    getAllSurplusHistoryByTargetPeriodAndAccountId: jest.fn().mockReturnValue(of(mockSurplusHistoryDTO)),
+    getAllSurplusHistoryByTargetPeriodAndAccountId: vi.fn().mockReturnValue(of(mockSurplusHistoryDTO)),
   };
 
   const mockActivatedRoute = {

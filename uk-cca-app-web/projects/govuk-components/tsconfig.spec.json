@@ -3,7 +3,7 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "outDir": "../../out-tsc/spec",
-    "types": ["jest", "node"]
+    "types": ["vitest/globals", "node"]
   },
   "include": ["**/*.spec.ts", "**/*.d.ts"]
 }

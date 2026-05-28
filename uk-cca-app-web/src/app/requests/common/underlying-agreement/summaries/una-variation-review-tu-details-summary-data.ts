@@ -1,5 +1,6 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { OperatorTypePipe, transformAddress } from '@shared/pipes';
+import { Country } from '@shared/types';
 
 import { UnderlyingAgreementReviewDecision, UnderlyingAgreementTargetUnitDetails } from 'cca-api';
 
@@ -8,6 +9,7 @@ import { addDecisionSummaryData } from './decision-summary-data';
 
 function toVariationReviewTargetUnitDetailsSummaryFactory(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
+  countries: Country[],
   isEditable: boolean,
   prefix = '../',
 ): SummaryFactory {
@@ -38,7 +40,7 @@ function toVariationReviewTargetUnitDetailsSummaryFactory(
 
   factory
     .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep?.OPERATOR_ADDRESS)
-    .addRow('Address', transformAddress(targetUnitDetails?.operatorAddress), {
+    .addRow('Address', transformAddress(targetUnitDetails?.operatorAddress, countries), {
       change: isEditable,
     })
 
@@ -52,7 +54,7 @@ function toVariationReviewTargetUnitDetailsSummaryFactory(
     .addRow('Email address', targetUnitDetails?.responsiblePersonDetails?.email, {
       change: isEditable,
     })
-    .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address), {
+    .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address, countries), {
       change: isEditable,
     });
 
@@ -61,27 +63,31 @@ function toVariationReviewTargetUnitDetailsSummaryFactory(
 
 export function toVariationReviewTargetUnitDetailsSummaryData(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
+  countries: Country[],
+
   isEditable: boolean,
   prefix = '../',
 ): SummaryData {
-  return toVariationReviewTargetUnitDetailsSummaryFactory(targetUnitDetails, isEditable, prefix).create();
+  return toVariationReviewTargetUnitDetailsSummaryFactory(targetUnitDetails, countries, isEditable, prefix).create();
 }
 
 export function toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
   decision: UnderlyingAgreementReviewDecision,
+  countries: Country[],
   attachments: Record<string, string>,
   downloadUrl: string,
   isEditable: boolean,
   prefix = '../',
 ): SummaryData {
-  const factory = toVariationReviewTargetUnitDetailsSummaryFactory(targetUnitDetails, isEditable, prefix);
+  const factory = toVariationReviewTargetUnitDetailsSummaryFactory(targetUnitDetails, countries, isEditable, prefix);
   if (!decision?.type) return factory.create();
   return addDecisionSummaryData(factory, decision, attachments, isEditable, downloadUrl).create();
 }
 
 function toVariationReviewTargetUnitDetailsOriginalSummaryFactory(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
+  countries: Country[],
   isEditable: boolean,
   prefix = '../',
 ): SummaryFactory {
@@ -110,7 +116,7 @@ function toVariationReviewTargetUnitDetailsOriginalSummaryFactory(
 
   factory
     .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep?.OPERATOR_ADDRESS)
-    .addRow('Address', transformAddress(targetUnitDetails.operatorAddress), {
+    .addRow('Address', transformAddress(targetUnitDetails.operatorAddress, countries), {
       change: isEditable,
     })
     .addSection('Responsible Person', prefix + ReviewTargetUnitDetailsWizardStep?.RESPONSIBLE_PERSON)
@@ -123,7 +129,7 @@ function toVariationReviewTargetUnitDetailsOriginalSummaryFactory(
     .addRow('Email address', targetUnitDetails.responsiblePersonDetails.email, {
       change: isEditable,
     })
-    .addRow('Address', transformAddress(targetUnitDetails.responsiblePersonDetails.address), {
+    .addRow('Address', transformAddress(targetUnitDetails.responsiblePersonDetails.address, countries), {
       change: isEditable,
     });
 
@@ -132,8 +138,14 @@ function toVariationReviewTargetUnitDetailsOriginalSummaryFactory(
 
 export function toVariationReviewTargetUnitDetailsOriginalSummaryData(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
+  countries: Country[],
   isEditable: boolean,
   prefix = '../',
 ): SummaryData {
-  return toVariationReviewTargetUnitDetailsOriginalSummaryFactory(targetUnitDetails, isEditable, prefix).create();
+  return toVariationReviewTargetUnitDetailsOriginalSummaryFactory(
+    targetUnitDetails,
+    countries,
+    isEditable,
+    prefix,
+  ).create();
 }

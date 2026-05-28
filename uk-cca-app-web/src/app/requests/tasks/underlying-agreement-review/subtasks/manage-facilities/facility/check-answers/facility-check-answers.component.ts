@@ -14,6 +14,7 @@ import {
   underlyingAgreementReviewQuery,
 } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
@@ -43,6 +44,8 @@ export default class FacilityCheckAnswersComponent {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly store = inject(RequestTaskStore);
+
+  private readonly countries = inject(CountryService).countries;
 
   private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
 
@@ -76,6 +79,7 @@ export default class FacilityCheckAnswersComponent {
       this.sectorSchemeData(),
       this.participatingSchemeVersions(),
       this.decision,
+      this.countries(),
       {
         submit: this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)(),
         review: this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),

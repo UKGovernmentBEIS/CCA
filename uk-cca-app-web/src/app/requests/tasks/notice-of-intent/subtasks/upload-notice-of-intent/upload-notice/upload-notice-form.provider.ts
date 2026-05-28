@@ -6,13 +6,13 @@ import { GovukValidators } from '@netz/govuk-components';
 import { UuidFilePair } from '@shared/components';
 import { RequestTaskFileService } from '@shared/services';
 
-import { NoticeOfIntent } from 'cca-api';
+import { NonComplianceNoticeOfIntent } from 'cca-api';
 
 import { noticeOfIntentQuery } from '../../../notice-of-intent.selectors';
 
 export type UploadNoticeOfIntentFormModel = FormGroup<{
-  noticeOfIntentFile: FormControl<UuidFilePair>;
-  comments: FormControl<NoticeOfIntent['comments']>;
+  file: FormControl<UuidFilePair>;
+  comments: FormControl<NonComplianceNoticeOfIntent['comments']>;
 }>;
 
 export const UPLOAD_NOTICE_OF_INTENT_FORM = new InjectionToken<UploadNoticeOfIntentFormModel>(
@@ -27,9 +27,9 @@ export const UploadNoticeOfIntentFormProvider: Provider = {
     const attachments = requestTaskStore.select(noticeOfIntentQuery.selectNonComplianceAttachments)();
 
     return fb.group({
-      noticeOfIntentFile: requestTaskFileService.buildFormControl(
+      file: requestTaskFileService.buildFormControl(
         requestTaskStore.select(requestTaskQuery.selectRequestTaskId)(),
-        noticeOfIntent?.noticeOfIntentFile,
+        noticeOfIntent?.file,
         attachments ?? {},
         'NON_COMPLIANCE_UPLOAD_ATTACHMENT',
         true,

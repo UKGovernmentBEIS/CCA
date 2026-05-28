@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { startWith } from 'rxjs';
@@ -51,7 +51,6 @@ import {
   selector: 'cca-target-composition',
   templateUrl: './target-composition.component.html',
   imports: [
-    FormsModule,
     RadioComponent,
     RadioOptionComponent,
     ReactiveFormsModule,

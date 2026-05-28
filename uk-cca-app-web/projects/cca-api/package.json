@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "peerDependencies": {
-    "@angular/common": "^21.2.3",
-    "@angular/core": "^21.2.3",
-    "@openapitools/openapi-generator-cli": "^2.30.2",
+    "@angular/common": "^21.2.6",
+    "@angular/core": "^21.2.6",
+    "@openapitools/openapi-generator-cli": "^2.31.0",
     "barrelsby": "^2.8.1",
     "rimraf": "~6.1.3"
   },

@@ -1,0 +1,55 @@
+<div class="row-flex space-between">
+  <h2 class="govuk-heading-m">Target period throughput details</h2>
+
+  @if (isEditable()) {
+    <a class="govuk-link" [routerLink]="[detailsLink()]">Change</a>
+  }
+</div>
+
+<div class="x-scroll">
+  <div class="overflow-auto overflow-auto-table">
+    <govuk-table [columns]="tableColumns()" [data]="paginatedTableRows()">
+      <ng-template let-column="column" let-row="row">
+        @switch (column.field) {
+          @case ('energy') {
+            {{ row.energy | number: '1.0-7' }} {{ measurementUnit() | measurementTypeToUnit }}/{{ row.throughputUnit }}
+          }
+
+          @case ('improvementTarget') {
+            {{ row.improvementTarget | percent: '1.0-3' }}
+          }
+
+          @case ('adjustedThroughput') {
+            {{ row.adjustedThroughput | number: '1.0-3' }}
+          }
+
+          @case ('targetEnergy') {
+            {{ row.targetEnergy | number: '1.0-3' }}
+          }
+
+          @default {
+            {{ row[column.field] }}
+          }
+        }
+      </ng-template>
+    </govuk-table>
+  </div>
+</div>
+
+@if (shouldShowPagination()) {
+  <cca-pagination
+    [count]="tableRows().length"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  />
+}
+
+<h2 class="govuk-heading-m govuk-!-margin-top-6">Calculated energy amounts</h2>
+<dl govuk-summary-list>
+  <div govukSummaryListRow>
+    <dt govukSummaryListRowKey>Total target variable energy ({{ measurementUnit() | measurementTypeToUnit }})</dt>
+    <dd govukSummaryListRowValue>{{ totalTargetVariableEnergy() | number: '1.0-7' }}</dd>
+  </div>
+</dl>

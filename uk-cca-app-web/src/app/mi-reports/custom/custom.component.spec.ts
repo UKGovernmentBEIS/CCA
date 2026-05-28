@@ -57,7 +57,7 @@ describe('CustomComponent', () => {
     component = fixture.componentInstance;
     page = new Page(fixture);
     fixture.detectChanges();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
@@ -85,7 +85,7 @@ describe('CustomComponent', () => {
   });
 
   it('should display error message when submitting an invalid sql', () => {
-    jest.spyOn(miReportsUserDefinedService, 'generateCustomReport').mockReturnValue(
+    vi.spyOn(miReportsUserDefinedService, 'generateCustomReport').mockReturnValue(
       throwError(
         () =>
           new HttpErrorResponse({

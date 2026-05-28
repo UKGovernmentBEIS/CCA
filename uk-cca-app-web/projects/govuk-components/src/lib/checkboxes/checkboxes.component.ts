@@ -38,7 +38,7 @@ export class CheckboxesComponent<T> extends FormInput implements AfterContentIni
       option.index = index;
       option.registerOnChange(() => {
         this.currentValue = this.options()
-          .filter((option) => option.isChecked)
+          .filter((option) => option.isChecked())
           .map((option) => option.value());
         this.onChange(this.currentValue);
       });
@@ -69,7 +69,7 @@ export class CheckboxesComponent<T> extends FormInput implements AfterContentIni
 
   onInputBlur(): void {
     const options = this.options();
-    if (!options || Array.from(options).every((option) => option.isTouched)) {
+    if (!options || Array.from(options).every((option) => option.isTouched())) {
       this.onBlur();
     }
   }

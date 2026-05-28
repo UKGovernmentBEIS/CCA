@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Directive, inject, OnInit } from '@angular/core';
 import { map, of } from 'rxjs';
 
 import { SelectComponent } from '@netz/govuk-components';
-import { COUNTIES } from '@shared/services';
+import { CountyService } from '@shared/services';
 import { County } from '@shared/types';
 
 @Directive({
@@ -12,9 +12,10 @@ import { County } from '@shared/types';
 export class CountiesDirective implements OnInit {
   private readonly selectComponent = inject(SelectComponent);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly countyService = inject(CountyService);
 
   ngOnInit() {
-    of(COUNTIES)
+    of(this.countyService.counties())
       .pipe(
         map((counties: County[]) =>
           counties

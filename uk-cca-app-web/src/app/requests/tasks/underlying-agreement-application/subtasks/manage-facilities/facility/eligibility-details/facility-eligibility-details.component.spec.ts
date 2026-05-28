@@ -9,12 +9,6 @@ import { underlyingAgreementQuery } from '@requests/common';
 
 import { FacilityEligibilityDetailsComponent } from './facility-eligibility-details.component';
 
-// Mock transform functions
-jest.mock('../../../../transform', () => ({
-  createRequestTaskActionProcessDTO: jest.fn().mockReturnValue({}),
-  toUnderlyingAgreementSavePayload: jest.fn().mockReturnValue({}),
-}));
-
 describe('FacilityEligibilityDetailsComponent', () => {
   let fixture: ComponentFixture<FacilityEligibilityDetailsComponent>;
   let store: RequestTaskStore;
@@ -42,7 +36,7 @@ describe('FacilityEligibilityDetailsComponent', () => {
     store = TestBed.inject(RequestTaskStore);
 
     // Mock store select methods
-    jest.spyOn(store, 'select').mockImplementation((selector) => {
+    vi.spyOn(store, 'select').mockImplementation((selector) => {
       if (selector === requestTaskQuery.selectRequestTaskPayload) {
         return signal({
           underlyingAgreement: {
@@ -95,6 +89,6 @@ describe('FacilityEligibilityDetailsComponent', () => {
   });
 
   it('should test that the form renders properly', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

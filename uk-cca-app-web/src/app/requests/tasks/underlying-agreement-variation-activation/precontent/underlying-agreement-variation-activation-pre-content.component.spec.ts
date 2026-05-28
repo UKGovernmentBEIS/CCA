@@ -49,7 +49,7 @@ describe('UnderlyingAgreementVariationActivationPreContentComponent', () => {
   });
 
   it('should redirect to notify operator', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
     page.notifyButton.click();
     fixture.detectChanges();

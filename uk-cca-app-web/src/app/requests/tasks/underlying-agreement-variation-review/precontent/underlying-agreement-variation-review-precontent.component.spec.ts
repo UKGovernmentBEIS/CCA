@@ -9,6 +9,7 @@ import { RequestTaskStore } from '@netz/common/store';
 import { mockClass } from '@netz/common/testing';
 import { mockUNAReviewRequestTaskState } from '@requests/common';
 import { click, getByText } from '@testing';
+import { Mocked } from 'vitest';
 
 import { UnderlyingAgreementVariationReviewPrecontentComponent } from './underlying-agreement-variation-review-precontent.component';
 
@@ -17,7 +18,7 @@ describe('UnderlyingAgreementReviewPrecontentComponent', () => {
   let router: Router;
 
   const mockRoute = mockClass(ActivatedRoute);
-  const mockRouter: jest.Mocked<Partial<Router>> = { navigate: jest.fn().mockReturnValue(of(null)) };
+  const mockRouter: Mocked<Partial<Router>> = { navigate: vi.fn().mockReturnValue(of(null)) };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -40,7 +41,7 @@ describe('UnderlyingAgreementReviewPrecontentComponent', () => {
   it('should render notify button and navigate to correct url', async () => {
     expect(getByText('Notify operator of decision')).toBeTruthy();
 
-    const spy = jest.spyOn(router, 'navigate');
+    const spy = vi.spyOn(router, 'navigate');
 
     click(getByText('Notify operator of decision'));
     expect(spy).toHaveBeenCalledWith(['underlying-agreement-variation-review', 'notify-operator'], {
@@ -51,7 +52,7 @@ describe('UnderlyingAgreementReviewPrecontentComponent', () => {
   it('should render peer review button and navigate to correct url', async () => {
     expect(getByText('Send for peer review')).toBeTruthy();
 
-    const spy = jest.spyOn(router, 'navigate');
+    const spy = vi.spyOn(router, 'navigate');
 
     click(getByText('Send for peer review'));
     expect(spy).toHaveBeenCalledWith(['underlying-agreement-variation-review', 'send-for-peer-review'], {

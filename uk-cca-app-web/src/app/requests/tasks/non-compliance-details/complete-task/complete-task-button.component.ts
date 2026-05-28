@@ -4,9 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
-import { TaskItemStatus } from '@requests/common';
+import { nonComplianceDetailsQuery, TaskItemStatus } from '@requests/common';
 
-import { nonComplianceDetailsQuery } from '../non-compliance-details.selectors';
 import { NON_COMPLIANCE_DETAILS_SUBTASK } from '../types';
 
 @Component({

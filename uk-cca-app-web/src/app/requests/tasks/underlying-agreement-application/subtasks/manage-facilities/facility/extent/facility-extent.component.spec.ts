@@ -22,7 +22,7 @@ describe('FacilityExtentComponent', () => {
 
   beforeEach(() => {
     tasksApiService = {
-      saveRequestTaskAction: jest.fn().mockReturnValue(
+      saveRequestTaskAction: vi.fn().mockReturnValue(
         of({
           underlyingAgreement: {
             facilities: [
@@ -42,7 +42,7 @@ describe('FacilityExtentComponent', () => {
 
     // Mock RequestTaskStore with pre-configured data
     const mockStore = {
-      select: jest.fn().mockImplementation((selector) => {
+      select: vi.fn().mockImplementation((selector) => {
         if (selector === requestTaskQuery.selectRequestTaskPayload) {
           return signal({
             underlyingAgreement: {
@@ -154,6 +154,6 @@ describe('FacilityExtentComponent', () => {
   });
 
   it('should show form values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

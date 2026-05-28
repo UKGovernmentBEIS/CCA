@@ -33,7 +33,6 @@ export const mockRequestTaskItemDTOPerformanceDataUpload: RequestTaskItemDTO = {
   requestInfo: {
     id: 'ADS_2-TPRUL-6',
     type: 'PERFORMANCE_DATA_UPLOAD',
-    competentAuthority: 'ENGLAND',
   },
 };
 

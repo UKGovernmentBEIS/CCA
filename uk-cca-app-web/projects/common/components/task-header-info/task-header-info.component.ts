@@ -1,3 +1,4 @@
+import { DatePipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { DaysRemainingPipe } from '@netz/common/pipes';
@@ -6,19 +7,37 @@ import { DaysRemainingPipe } from '@netz/common/pipes';
   selector: 'netz-task-header-info',
   template: `
     <div class="govuk-!-margin-top-2">
-      <p class="govuk-body"><strong>Assigned to:</strong> {{ assignee() }}</p>
+      <p class="govuk-body govuk-!-margin-bottom-1"><strong>Assigned to:</strong> {{ assignee() }}</p>
     </div>
 
     @if (daysRemaining() !== undefined && daysRemaining() !== null) {
-      <div class="govuk-!-margin-top-2">
-        <p class="govuk-body"><strong>Days Remaining:</strong> {{ daysRemaining() | daysRemaining }}</p>
-      </div>
+      <p class="govuk-body govuk-!-margin-bottom-1">
+        <strong>Days Remaining:</strong> {{ daysRemaining() | daysRemaining }}
+      </p>
+    }
+
+    @if (startDate() !== undefined && startDate() !== null) {
+      <p class="govuk-body govuk-!-margin-bottom-1">
+        <strong>Date initiated:</strong> {{ startDate() | date: 'dd/MM/yyyy' }}
+      </p>
+    }
+
+    @if (payload()?.targetPeriodType) {
+      <p class="govuk-body govuk-!-margin-bottom-1">
+        <strong>Target period:</strong> {{ payload()?.targetPeriodType }}
+      </p>
+    }
+
+    @if (payload()?.reportType) {
+      <p class="govuk-body"><strong>Target period report type:</strong> {{ payload()?.reportType | titlecase }}</p>
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DaysRemainingPipe],
+  imports: [DaysRemainingPipe, DatePipe, TitleCasePipe],
 })
 export class TaskHeaderInfoComponent {
   protected readonly assignee = input<string>();
   protected readonly daysRemaining = input<number>();
+  protected readonly startDate = input<string>();
+  protected readonly payload = input<any>();
 }

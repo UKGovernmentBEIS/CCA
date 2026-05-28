@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText } from '@testing';
+import { Mocked } from 'vitest';
 
 import { BuyOutAndSurplusInfoService } from 'cca-api';
 
@@ -15,7 +16,7 @@ import { NewBatchComponent } from './new-batch.component';
 describe('NewBatchComponent', () => {
   let component: NewBatchComponent;
   let fixture: ComponentFixture<NewBatchComponent>;
-  let buyOutAndSurplusInfoService: Partial<jest.Mocked<BuyOutAndSurplusInfoService>>;
+  let buyOutAndSurplusInfoService: Partial<Mocked<BuyOutAndSurplusInfoService>>;
 
   const mockExcludedAccounts = [
     { accountId: 1, businessId: 'ADS_1-T00001', name: 'tu1-oper1' },
@@ -24,7 +25,7 @@ describe('NewBatchComponent', () => {
 
   beforeEach(async () => {
     buyOutAndSurplusInfoService = {
-      getExcludedAccountsForBuyOutSurplusRun: jest.fn().mockReturnValue(of(mockExcludedAccounts)),
+      getExcludedAccountsForBuyOutSurplusRun: vi.fn().mockReturnValue(of(mockExcludedAccounts)),
     };
 
     await TestBed.configureTestingModule({

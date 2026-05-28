@@ -1,4 +1,4 @@
-import { DetailsStoreType } from '../details/details.store';
+import { DetailsStoreType } from '../regulators-users-tab/details/details.store';
 
 export const editorUserState: DetailsStoreType = {
   isAdd: false,
@@ -111,7 +111,6 @@ export const viewerUserState: DetailsStoreType = {
     email: 'regulator_user_2@cca.uk',
     firstName: 'Regulator3',
     lastName: 'User3',
-    status: 'REGISTERED',
     jobTitle: 'some job title 3',
     phoneNumber: '123',
     mobileNumber: '12123123123365',

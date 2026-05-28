@@ -1,8 +1,9 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
+import { ReceivedAmountStore } from '@shared/components';
+
 import { canActivateMarkFacilitiesGuard } from './mark-facilities/mark-facilities.guard';
-import { ReceivedAmountStore } from './received-amount/received-amount.store';
 
 export const TARGET_UNIT_MOA_DETAILS_ROUTES: Routes = [
   {
@@ -18,7 +19,7 @@ export const TARGET_UNIT_MOA_DETAILS_ROUTES: Routes = [
         return true;
       },
     ],
-    loadChildren: () => import('./received-amount/received-amount.routes').then((r) => r.RECEIVED_AMOUNT_ROUTES),
+    loadChildren: () => import('@shared/components').then((r) => r.RECEIVED_AMOUNT_ROUTES),
   },
   {
     path: 'mark-facilities',

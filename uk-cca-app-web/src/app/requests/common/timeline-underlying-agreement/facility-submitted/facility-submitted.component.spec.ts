@@ -33,6 +33,6 @@ describe('FacilityComponent', () => {
   });
 
   it('should show summary values', () => {
-    expect(fixture).toMatchSnapshot('facility-summary');
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot('facility-summary');
   });
 });

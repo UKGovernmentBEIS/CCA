@@ -5,6 +5,8 @@ import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
+import { Mocked, MockInstance } from 'vitest';
+
 import { SectorLevelPerformanceAccountTemplateDataViewPagesService } from 'cca-api';
 
 import { ReportingExportService } from '../../services/reporting-export.service';
@@ -14,19 +16,19 @@ import { PatReportTableComponent } from './pat-report-table.component';
 describe('PatReportTableComponent', () => {
   let component: PatReportTableComponent;
   let fixture: ComponentFixture<PatReportTableComponent>;
-  let mockService: Partial<jest.Mocked<SectorLevelPerformanceAccountTemplateDataViewPagesService>>;
+  let mockService: Partial<Mocked<SectorLevelPerformanceAccountTemplateDataViewPagesService>>;
   let router: Router;
-  let navigateSpy: jest.SpyInstance;
-  let mockExportService: jest.Mocked<ReportingExportService>;
+  let navigateSpy: MockInstance;
+  let mockExportService: Mocked<ReportingExportService>;
 
   beforeEach(async () => {
     mockService = {
-      getSectorPerformanceAccountTemplateDataReportList: jest.fn().mockReturnValue(of(mockPatData)),
+      getSectorPerformanceAccountTemplateDataReportList: vi.fn().mockReturnValue(of(mockPatData)),
     };
 
     mockExportService = {
-      exportPatData: jest.fn(),
-    } as unknown as jest.Mocked<ReportingExportService>;
+      exportPatData: vi.fn(),
+    } as unknown as Mocked<ReportingExportService>;
 
     const mockActivatedRoute = {
       snapshot: {
@@ -72,7 +74,7 @@ describe('PatReportTableComponent', () => {
     }).compileComponents();
 
     router = TestBed.inject(Router);
-    navigateSpy = jest.spyOn(router, 'navigate');
+    navigateSpy = vi.spyOn(router, 'navigate');
 
     fixture = TestBed.createComponent(PatReportTableComponent);
     component = fixture.componentInstance;

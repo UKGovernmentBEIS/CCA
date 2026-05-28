@@ -31,6 +31,6 @@ describe('Cca2ExtensionComponent', () => {
   });
 
   it('should show proper view', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

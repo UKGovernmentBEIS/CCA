@@ -12,7 +12,14 @@ import { provideRouter, withInMemoryScrolling, withRouterConfig } from '@angular
 import { firstValueFrom } from 'rxjs';
 
 import { ConfigService } from '@shared/config';
-import { AuthService, GlobalErrorHandlingService, KeycloakService, LatestTermsService } from '@shared/services';
+import {
+  AuthService,
+  CountryService,
+  CountyService,
+  GlobalErrorHandlingService,
+  KeycloakService,
+  LatestTermsService,
+} from '@shared/services';
 import type { KeycloakConfig } from 'keycloak-js';
 
 import { ApiModule, Configuration } from 'cca-api';
@@ -33,6 +40,8 @@ export const appConfig: ApplicationConfig = {
         inject(ConfigService),
         inject(KeycloakService),
         inject(LatestTermsService),
+        inject(CountryService),
+        inject(CountyService),
       );
       return initializerFn();
     }),
@@ -58,6 +67,8 @@ function init(
   configService: ConfigService,
   keycloakService: KeycloakService,
   latestTermsService: LatestTermsService,
+  countryService: CountryService,
+  countyService: CountyService,
 ) {
   return () =>
     firstValueFrom(configService.initConfigState())
@@ -72,5 +83,6 @@ function init(
       .catch((error) => console.error(error))
       .then(() => firstValueFrom(authService.checkUser()))
       .then(() => firstValueFrom(latestTermsService.initLatestTerms()))
+      .then(() => Promise.all([firstValueFrom(countryService.load()), firstValueFrom(countyService.load())]))
       .catch((error) => console.error('[APP_INITIALIZE] init Keycloak failed', error));
 }

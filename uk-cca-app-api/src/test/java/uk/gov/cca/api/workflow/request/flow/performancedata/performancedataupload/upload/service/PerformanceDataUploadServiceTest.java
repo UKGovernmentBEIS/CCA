@@ -9,11 +9,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.common.utils.ZipUtils;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.files.attachments.service.CcaFileAttachmentService;
 import uk.gov.cca.api.workflow.request.core.domain.SectorAssociationInfo;
+import uk.gov.cca.api.workflow.request.flow.common.validation.performancedata.PerformanceDataCreateSchemeValidator;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.domain.PerformanceDataTargetPeriodType;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.common.domain.TargetUnitAccountUploadReport;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.common.validation.PerformanceDataUploadViolation;
@@ -65,6 +67,9 @@ class PerformanceDataUploadServiceTest {
 
     @Mock
     private PerformanceDataUploadExcelFileNameValidator performanceDataUploadExcelFileNameValidator;
+    
+    @Mock
+    private PerformanceDataCreateSchemeValidator performanceDataCreateSchemeValidator;
 
     @Test
     void submit() throws IOException {
@@ -109,6 +114,8 @@ class PerformanceDataUploadServiceTest {
                 .thenReturn(excel.toString());
         when(performanceDataUploadExcelFileNameValidator.validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap))
                 .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataCreateSchemeValidator.isAvailableForScheme(eq(SchemeVersion.CCA_2), any()))
+        		.thenReturn(true);
 
         // Invoke
         Map<Long, TargetUnitAccountUploadReport> result = performanceDataUploadService
@@ -135,6 +142,8 @@ class PerformanceDataUploadServiceTest {
                 .createFileAttachment(excelFile, FileStatus.SUBMITTED, sectorUserAssignee);
         verify(performanceDataUploadExcelFileNameValidator, times(1))
                 .validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap);
+        verify(performanceDataCreateSchemeValidator, times(1))
+        		.isAvailableForScheme(eq(SchemeVersion.CCA_2), any());
         verifyNoMoreInteractions(fileAttachmentService);
     }
 
@@ -180,6 +189,8 @@ class PerformanceDataUploadServiceTest {
                 .thenReturn(BusinessValidationResult.invalid(List.of(
                         new PerformanceDataUploadViolation(PerformanceDataUploadViolation.PerformanceDataUploadViolationMessage.FILE_NAME_NOT_VALID)
                 )));
+        when(performanceDataCreateSchemeValidator.isAvailableForScheme(eq(SchemeVersion.CCA_2), any()))
+				.thenReturn(true);
 
         // Invoke
         Map<Long, TargetUnitAccountUploadReport> result = performanceDataUploadService
@@ -202,6 +213,8 @@ class PerformanceDataUploadServiceTest {
         verify(performanceDataUploadExcelFileNameValidator, times(1))
                 .validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap);
         verify(fileAttachmentService, never()).createFileAttachment(any(), any(), anyString());
+        verify(performanceDataCreateSchemeValidator, times(1))
+				.isAvailableForScheme(eq(SchemeVersion.CCA_2), any());
         verifyNoMoreInteractions(fileAttachmentService);
     }
 
@@ -247,6 +260,8 @@ class PerformanceDataUploadServiceTest {
                 .thenThrow(new IOException("test"));
         when(performanceDataUploadExcelFileNameValidator.validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap))
                 .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataCreateSchemeValidator.isAvailableForScheme(eq(SchemeVersion.CCA_2), any()))
+				.thenReturn(true);
 
         // Invoke
         Map<Long, TargetUnitAccountUploadReport> result = performanceDataUploadService
@@ -268,6 +283,8 @@ class PerformanceDataUploadServiceTest {
                 .createFileAttachment(excelFile, FileStatus.SUBMITTED, sectorUserAssignee);
         verify(performanceDataUploadExcelFileNameValidator, times(1))
                 .validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap);
+        verify(performanceDataCreateSchemeValidator, times(1))
+				.isAvailableForScheme(eq(SchemeVersion.CCA_2), any());
         verifyNoMoreInteractions(fileAttachmentService);
     }
 
@@ -323,6 +340,8 @@ class PerformanceDataUploadServiceTest {
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataUploadExcelFileNameValidator.validate(fileName2, sectorAssociationInfo, performanceDataUpload, accountsMap))
                 .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataCreateSchemeValidator.isAvailableForScheme(eq(SchemeVersion.CCA_2), any()))
+				.thenReturn(true);
 
         // Invoke
         Map<Long, TargetUnitAccountUploadReport> result = performanceDataUploadService
@@ -350,6 +369,8 @@ class PerformanceDataUploadServiceTest {
                 .validate(fileName, sectorAssociationInfo, performanceDataUpload, accountsMap);
         verify(performanceDataUploadExcelFileNameValidator, times(1))
                 .validate(fileName2, sectorAssociationInfo, performanceDataUpload, accountsMap);
+        verify(performanceDataCreateSchemeValidator, times(1))
+				.isAvailableForScheme(eq(SchemeVersion.CCA_2), any());
         verify(fileAttachmentService, times(1))
                 .deleteFileAttachments(Set.of(excel2.toString()));
     }
@@ -383,6 +404,8 @@ class PerformanceDataUploadServiceTest {
                 .thenReturn(BusinessValidationResult.invalid(List.of(new PerformanceDataUploadViolation(
                         PerformanceDataUploadViolation.PerformanceDataUploadViolationMessage.ATTACHMENT_NOT_FOUND
                 ))));
+        when(performanceDataCreateSchemeValidator.isAvailableForScheme(eq(SchemeVersion.CCA_2), any()))
+				.thenReturn(true);
 
         // Invoke
         BusinessException ex = Assertions.assertThrows(BusinessException.class, () ->
@@ -392,7 +415,51 @@ class PerformanceDataUploadServiceTest {
         assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.INVALID_PERFORMANCE_DATA_UPLOAD);
         verify(performanceDataUploadAttachmentsExistValidatorService, times(1))
                 .validate((PerformanceDataUploadSubmitRequestTaskPayload) requestTask.getPayload());
+        verify(performanceDataCreateSchemeValidator, times(1))
+				.isAvailableForScheme(eq(SchemeVersion.CCA_2), any());
         verifyNoInteractions(fileAttachmentService, performanceDataUploadExcelFileNameValidator);
+    }
+    
+    @Test
+    void submit_after_cca2_end_date() {
+        final UUID zip = UUID.randomUUID();
+        final String sectorUserAssignee = "sectorUserAssignee";
+        final SectorAssociationInfo sectorAssociationInfo = SectorAssociationInfo.builder().id(22L).build();
+        RequestTask requestTask = RequestTask.builder()
+                .payload(PerformanceDataUploadSubmitRequestTaskPayload.builder()
+                        .sectorAssociationInfo(sectorAssociationInfo)
+                        .totalFilesUploaded(0)
+                        .build())
+                .request(Request.builder()
+                        .payload(PerformanceDataUploadRequestPayload.builder()
+                                .sectorUserAssignee(sectorUserAssignee)
+                                .build())
+                        .build())
+                .build();
+        final PerformanceDataUpload performanceDataUpload = PerformanceDataUpload.builder()
+                .performanceDataTargetPeriodType(PerformanceDataTargetPeriodType.TP6)
+                .reportPackages(Set.of(zip))
+                .build();
+        final List<TargetUnitAccountBusinessInfoDTO> accounts = List.of(
+                TargetUnitAccountBusinessInfoDTO.builder().accountId(1L).businessId("ADS_1-T00001").build()
+        );
+
+        when(performanceDataCreateSchemeValidator.isAvailableForScheme(eq(SchemeVersion.CCA_2), any()))
+				.thenReturn(false);
+
+        // Invoke
+        Map<Long, TargetUnitAccountUploadReport> result = performanceDataUploadService.submit(requestTask, performanceDataUpload, accounts);
+
+        // Verify
+        assertThat(result).isEmpty();
+        assertThat(((PerformanceDataUploadSubmitRequestTaskPayload) requestTask.getPayload()).getErrors())
+                .containsExactlyEntriesOf(Map.of(
+                        "",
+                        PerformanceDataUploadViolation.PerformanceDataUploadViolationMessage.INVALID_SUBMISSION_CCA2_END_DATE.getMessage()
+                ));
+        verify(performanceDataCreateSchemeValidator, times(1))
+				.isAvailableForScheme(eq(SchemeVersion.CCA_2), any());
+        verifyNoInteractions(performanceDataUploadAttachmentsExistValidatorService, fileAttachmentService, performanceDataUploadExcelFileNameValidator);
     }
 
     @Test

@@ -1,0 +1,165 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Provide energy/fuel amount consumed"
+  heading="Enter energy/fuel amount consumed"
+>
+  <div class="govuk-!-width-two-thirds">
+    <p>
+      Fill in the delivered energy (excluding UK ETS) amounts that you consumed for each fuel type during the period.<br />You
+      can also add a new fuel type if it's not included in the current list.
+    </p>
+
+    <govuk-details summary="I need help with the energy terms">
+      <ul class="govuk-list govuk-list--bullet">
+        <li>
+          Delivered energy
+          <p class="govuk-hint">
+            This is the amount of usable energy that is consumed by a facility, expressed in energy units. This would
+            include the metered amounts of electricity, natural gas and other fuels supplied to and used by a facility.
+          </p>
+        </li>
+
+        <li>
+          Primary energy
+          <p class="govuk-hint">
+            This is the amount of energy expressed in its original unconverted form and before considering any
+            transmission and distribution losses. E.g. electricity from the grid has to be generated from the combustion
+            of natural gas, oil, renewables, etc., and then transmitted and distributed to consumers through the supply
+            grid.
+          </p>
+        </li>
+
+        <li>
+          Carbon dioxide (CO2e) conversion factor
+          <p class="govuk-hint">
+            This is the amount of greenhouse gases emitted (carbon dioxide, methane and nitrous oxides), expressed as
+            total carbon dioxide equivalent (CO2e), for each unit of energy consumed.
+          </p>
+        </li>
+
+        <li>
+          Primary energy conversion factor
+          <p class="govuk-hint">
+            This is the amount of primary energy consumed to produce each unit of delivered energy. For most fuel types,
+            the primary conversion factor is 1. For electricity from the grid, the primary conversion factor accounts
+            for the efficiency of generating, transmitting and distributing each delivered unit of energy. The factor is
+            calculated based on UK energy data from 2022 and reflects the average mix of UK electricity generation and
+            the typical transmission and distribution losses.
+          </p>
+        </li>
+      </ul>
+    </govuk-details>
+  </div>
+
+  <div class="x-scroll">
+    <div class="overflow-auto overflow-auto-table">
+      <govuk-table [columns]="tableColumns()" [data]="tableData()">
+        <ng-template let-column="column" let-row="row" let-index="index">
+          <ng-container formArrayName="fuels">
+            <div [formGroupName]="index">
+              @switch (column.field) {
+                @case ('fuelType') {
+                  @if (row.value.isCustom) {
+                    <div cca-text-input formControlName="fuelType" class="govuk-!-margin-bottom-0"></div>
+                  } @else {
+                    {{ row.value[column.field] }}
+                  }
+                }
+
+                @case ('co2ConversionFactor') {
+                  @if (row.value.isCustom) {
+                    <div cca-text-input formControlName="co2ConversionFactor" class="govuk-!-margin-bottom-0"></div>
+                  } @else {
+                    {{ row.value[column.field] | number: '1.0-7' }}
+                  }
+                }
+
+                @case ('deliveredEnergy') {
+                  <div
+                    cca-text-input
+                    formControlName="deliveredEnergy"
+                    [suffix]="measurementUnit()"
+                    class="govuk-!-margin-bottom-0"
+                  ></div>
+                }
+
+                @case ('primaryEnergy') {
+                  @if (isCarbonPrimaryOutput()) {
+                    {{
+                      calculatePrimaryCarbon(
+                        row.value.deliveredEnergy,
+                        row.value.primaryEnergyConversionFactor,
+                        row.value.co2ConversionFactor
+                      ) | number: '1.0-7'
+                    }}
+                  } @else {
+                    {{
+                      calculatePrimaryEnergy(row.value.deliveredEnergy, row.value.primaryEnergyConversionFactor)
+                        | number: '1.0-7'
+                    }}
+                  }
+                }
+
+                @case ('primaryEnergyConversionFactor') {
+                  {{ row.value[column.field] | number: '1.1-1' }}
+                }
+
+                @case ('actions') {
+                  @if (row.value.isCustom) {
+                    <div class="govuk-!-text-align-center">
+                      <a class="govuk-!-padding-left-1 govuk-link" [routerLink]="[]" (click)="onRemoveFuel(index)">
+                        Delete
+                      </a>
+                    </div>
+                  }
+                }
+
+                @default {
+                  {{ row.value[column.field] }}
+                }
+              }
+            </div>
+          </ng-container>
+        </ng-template>
+      </govuk-table>
+    </div>
+  </div>
+
+  @if (nonStandardCount() < 10) {
+    <div class="flex-baseline">
+      <button type="button" govukSecondaryButton (click)="onAddFuel()">Add a fuel type</button>
+      <span class="govuk-hint">You can add up to {{ 10 - nonStandardCount() }} more fuel types</span>
+    </div>
+  }
+
+  <div
+    formControlName="atLeastSeventyPercentEnergyUsed"
+    govuk-radio
+    legend="Is at least 70% of the total energy used in carrying out eligible activities?"
+    legendSize="medium"
+  >
+    <govuk-radio-option [value]="false" [label]="'No'" />
+    <govuk-radio-option [value]="true" [label]="'Yes'" />
+  </div>
+
+  @if (usesReportingMechanism()) {
+    <div class="govuk-!-width-two-thirds">
+      <div
+        cca-text-input
+        formControlName="specialReportingMethodology"
+        [suffix]="measurementUnit()"
+        class="govuk-!-width-two-thirds"
+        label="Special reporting methodology (SRM)"
+        labelSize="medium"
+        hint="Electricity supplied from combined heat and power plant and dedicated generator electricity"
+      ></div>
+
+      <h2 class="govuk-heading-m">Throughput adjustment factor</h2>
+      <p class="govuk-body govuk-!-margin-bottom-9">{{ throughputAdjustmentFactor() | number: '1.0-7' }}</p>
+    </div>
+  }
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

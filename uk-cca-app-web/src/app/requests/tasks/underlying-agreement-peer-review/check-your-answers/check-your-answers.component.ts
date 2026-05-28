@@ -5,12 +5,12 @@ import { catchError, throwError } from 'rxjs';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
+import { peerReviewDecisionToSummaryData } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 
 import { TasksService, UnderlyingAgreementPeerReviewRequestTaskPayload } from 'cca-api';
 
 import { UnderlyingAgreementPeerReviewStore } from '../+state';
-import { peerReviewDecisionToSummaryData } from './peer-review-decision-to-summary-data';
 
 @Component({
   selector: 'cca-peer-review-decision-check-your-answers',

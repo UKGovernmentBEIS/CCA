@@ -16,7 +16,7 @@ import { BehaviorSubject, filter, map, Observable, of } from 'rxjs';
 
 import { ErrorMessageComponent, FieldsetDirective, FormService, GovukSelectOption } from '@netz/govuk-components';
 import { transformPhoneInput } from '@shared/pipes';
-import { COUNTRIES, CountryCallingCodeService, UK_COUNTRY_CODES } from '@shared/services';
+import { CountryCallingCodeService, CountryService, UK_COUNTRY_CODES } from '@shared/services';
 import { UKCountryCodes } from '@shared/types';
 
 import { PhoneNumberDTO } from 'cca-api';
@@ -36,6 +36,8 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
   private readonly container = inject(ControlContainer, { optional: true });
   private readonly countryCallingCodeService = inject(CountryCallingCodeService);
 
+  private readonly countries = inject(CountryService).countries();
+
   protected readonly label = input<string>(undefined);
   protected readonly hint = input<string>(undefined);
 
@@ -50,7 +52,7 @@ export class PhoneInputComponent implements OnInit, DoCheck, ControlValueAccesso
     number: new UntypedFormControl(),
   });
 
-  phoneCodes$: Observable<GovukSelectOption<string>[]> = of(COUNTRIES).pipe(
+  phoneCodes$: Observable<GovukSelectOption<string>[]> = of(this.countries).pipe(
     map((countries) => {
       const emptyOption: CountryOption[] = [{ text: '--', value: '' }];
       const ukCountries: CountryOption[] = [];

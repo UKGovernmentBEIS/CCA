@@ -6,8 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ActivatedRouteStub } from '@netz/common/testing';
 
 import { PatReportStore } from '../../pat-report-store';
-import { mockAccountPerformanceState } from '../performance-data/testing/mock-data';
 import { PatReportComponent } from './pat-report.component';
+import { mockPatReportState } from './testing/mock-data';
 
 describe('PatReportComponent', () => {
   let component: PatReportComponent;
@@ -26,7 +26,7 @@ describe('PatReportComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(PatReportStore);
-    store.setState(mockAccountPerformanceState);
+    store.setState(mockPatReportState);
 
     fixture = TestBed.createComponent(PatReportComponent);
     component = fixture.componentInstance;

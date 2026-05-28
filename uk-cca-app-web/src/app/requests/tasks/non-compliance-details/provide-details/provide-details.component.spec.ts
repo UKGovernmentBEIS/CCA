@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { RequestTaskStore } from '@netz/common/store';
+import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { TasksApiService } from '@requests/common';
 
 import { mockNonComplianceDetailsState } from '../testing/mock-data';
@@ -19,13 +19,13 @@ describe('ProvideDetailsComponent', () => {
   const route = {
     snapshot: {
       params: {},
-      paramMap: { get: jest.fn() },
+      paramMap: { get: vi.fn() },
       pathFromRoot: [],
     },
   };
 
   const mockTasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -33,9 +33,10 @@ describe('ProvideDetailsComponent', () => {
       imports: [ProvideDetailsComponent],
       providers: [
         provideHttpClient(),
-        RequestTaskStore,
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },
+        { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
+        { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Dashboard' },
       ],
     }).compileComponents();
 
@@ -68,7 +69,7 @@ describe('ProvideDetailsComponent', () => {
   });
 
   it('should navigate to check your answers after submit when wizard is already completed', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
     component.onSubmit();
 

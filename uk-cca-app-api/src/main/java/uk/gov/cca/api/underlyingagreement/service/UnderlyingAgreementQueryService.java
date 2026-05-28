@@ -97,6 +97,24 @@ public class UnderlyingAgreementQueryService implements UnderlyingAgreementAutho
 		return underlyingAgreementRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
 	}
+    
+    @Transactional(readOnly = true)
+    public Map<Long, List<String>> getAccountsWithFacilitiesFromActiveUnderlyingAgreements(SchemeVersion schemeVersion) {
+        return underlyingAgreementDocumentRepository
+            .findBySchemeVersionAndTerminatedDateIsNull(schemeVersion)
+            .stream()
+            .collect(Collectors.groupingBy(
+                doc -> doc.getUnderlyingAgreementEntity().getAccountId(),
+                Collectors.flatMapping(
+                    doc -> doc.getUnderlyingAgreementEntity()
+                    .getUnderlyingAgreementContainer()
+                    .getUnderlyingAgreement()
+                    .getFacilities()
+                    .stream()
+                    .filter(f -> f.getFacilityItem().getFacilityDetails().getParticipatingSchemeVersions().contains(schemeVersion))
+                    .map(f -> f.getFacilityItem().getFacilityId()), Collectors.toList())
+            ));
+    }
 
     private FileInfoDTO getFileInfoDTO(String uuid) {
     	return Optional.ofNullable(uuid).map(fileDocumentService::getFileInfoDTO).orElse(null);

@@ -54,6 +54,23 @@ export const ItemActionEnum: Partial<Record<RequestActionInfoDTO['type'], string
   REQUEST_TERMINATED: 'Workflow terminated by the system',
   CCA2_TERMINATION_ACCOUNT_PROCESSING_SUBMITTED_UNDERLYING_AGREEMENT_TERMINATED: 'CCA2 Underlying agreement terminated',
   NON_COMPLIANCE_DETAILS_SUBMITTED: 'Non-compliance details provided',
+  NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED: 'Notice of intent submitted',
+  NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMITTED: 'Enforcement response notice sent to operator',
+  NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW_REQUESTED: 'Peer review of notice of intent requested',
+  NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEWER_ACCEPTED: 'Peer review agreement for notice of intent submitted',
+  NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEWER_REJECTED: 'Peer review disagreement for notice of intent submitted',
+  NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEW_REQUESTED:
+    'Peer review of enforcement response notice requested',
+  NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEWER_ACCEPTED:
+    'Peer review agreement for enforcement response notice submitted',
+  NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEWER_REJECTED:
+    'Peer review disagreement for enforcement response notice submitted',
+  NON_COMPLIANCE_CONCLUSION_SUBMITTED: 'Conclusion of non-compliance provided',
+  NON_COMPLIANCE_APPEAL_PROVIDED: 'Appeal registration provided',
+  NON_COMPLIANCE_APPEAL_DETAILS_SUBMITTED: 'Appeal registration provided',
+  NON_COMPLIANCE_APPEAL_OUTCOME_SUBMITTED: 'Appeal outcome provided',
+  NON_COMPLIANCE_CLOSED: 'Non-compliance closed',
+  NON_COMPLIANCE_CANCELLED: 'Non-compliance details cancelled',
 };
 
 @Pipe({ name: 'itemActionType', pure: true })

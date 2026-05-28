@@ -2,6 +2,7 @@ package uk.gov.cca.api.targetperiodreporting.performancedatafacility.util;
 
 import lombok.experimental.UtilityClass;
 
+import uk.gov.cca.api.targetperiodreporting.performancedata.domain.PerformanceDataSubmissionType;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDetailsDTO;
@@ -32,5 +33,17 @@ public class PerformanceDataFacilityUtil {
                 .filter(tpy -> !submissionDate.isBefore(tpy.getReportingStartDate()) &&
                         (tpy.getReportingEndDate() == null || !submissionDate.isAfter(tpy.getReportingEndDate())))
                 .findFirst();
+    }
+
+    public Optional<PerformanceDataSubmissionType> getSubmissionTypeBySubmissionDate(final TargetPeriodDetailsDTO targetPeriod, final PerformanceDataReportType reportType,
+                                                                           final LocalDate submissionDate) {
+        // For INTERIM there is no submission type
+        if(reportType.equals(PerformanceDataReportType.INTERIM)) {
+            return Optional.empty();
+        }
+
+        return submissionDate.isBefore(targetPeriod.getSecondaryReportingStartDate())
+                ? Optional.of(PerformanceDataSubmissionType.PRIMARY)
+                : Optional.of(PerformanceDataSubmissionType.SECONDARY);
     }
 }

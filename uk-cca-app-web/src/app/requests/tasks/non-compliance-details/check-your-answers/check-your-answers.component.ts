@@ -5,15 +5,18 @@ import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/c
 import { PendingButtonDirective } from '@netz/common/directives';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
-import { TaskItemStatus, TasksApiService } from '@requests/common';
+import {
+  nonComplianceDetailsQuery,
+  TaskItemStatus,
+  TasksApiService,
+  toNonComplianceSummaryData,
+} from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 import { produce } from 'immer';
 
 import { RequestTaskActionPayload } from 'cca-api';
 
-import { nonComplianceDetailsQuery } from '../non-compliance-details.selectors';
 import { NON_COMPLIANCE_DETAILS_SUBTASK, NonComplianceDetailsPayload } from '../types';
-import { toNonComplianceSummaryData } from './check-your-answers-summary-data';
 
 @Component({
   selector: 'cca-non-compliance-check-your-answers',

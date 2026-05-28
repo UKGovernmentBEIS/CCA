@@ -19,7 +19,7 @@ describe('AuthGuard', () => {
   let configStore: ConfigStore;
 
   const authService: MockType<AuthService> = {
-    checkUser: jest.fn(() => of(null)),
+    checkUser: vi.fn(() => of(null)),
   };
 
   beforeEach(() => {

@@ -1,43 +1,12 @@
-import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlContainer, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { SelectComponent } from '@netz/govuk-components';
 
+import { CountryService } from '../services/country.service';
 import { CountriesDirective } from './countries.directive';
-
-// Mock the COUNTRIES constant that the directive uses
-jest.mock('@shared/services', () => ({
-  COUNTRIES: [
-    {
-      code: 'GB-ENG',
-      name: 'England',
-      officialName: 'England',
-    },
-    {
-      code: 'GB-SCT',
-      name: 'Scotland',
-      officialName: 'Scotland',
-    },
-    {
-      code: 'GB-WLS',
-      name: 'Wales',
-      officialName: 'Wales',
-    },
-    {
-      code: 'PT',
-      name: 'Portugal',
-      officialName: 'The Portuguese Republic',
-    },
-    {
-      code: 'AF',
-      name: 'Afghanistan',
-      officialName: 'Islamic Republic of Afghanistan',
-    },
-  ],
-  UK_COUNTRY_CODES: ['GB-ENG', 'GB-NIR', 'GB-SCT', 'GB-WLS'],
-}));
 
 describe('CountriesDirective', () => {
   let directive: CountriesDirective;
@@ -52,23 +21,30 @@ describe('CountriesDirective', () => {
   }
 
   beforeEach(() => {
+    const mockCountryService = {
+      countries: signal([
+        { code: 'GB-ENG', name: 'England', officialName: 'England' },
+        { code: 'GB-SCT', name: 'Scotland', officialName: 'Scotland' },
+        { code: 'GB-WLS', name: 'Wales', officialName: 'Wales' },
+        { code: 'PT', name: 'Portugal', officialName: 'The Portuguese Republic' },
+        { code: 'AF', name: 'Afghanistan', officialName: 'Islamic Republic of Afghanistan' },
+      ]),
+    };
+
     fixture = TestBed.configureTestingModule({
       imports: [TestComponent],
-      providers: [ControlContainer],
+      providers: [ControlContainer, { provide: CountryService, useValue: mockCountryService }],
     }).createComponent(TestComponent);
 
-    fixture.detectChanges();
     directive = fixture.debugElement.query(By.directive(CountriesDirective)).injector.get(CountriesDirective);
+    fixture.detectChanges();
   });
 
   it('should create an instance', () => {
     expect(directive).toBeTruthy();
   });
 
-  it('should assign countries to select with correct ordering', fakeAsync(() => {
-    fixture.detectChanges();
-    tick(); // Wait for async operations to complete
-
+  it('should assign countries to select with correct ordering', () => {
     const selectElement = fixture.debugElement.query(By.css('select'));
     const options = selectElement.nativeElement.options;
 
@@ -83,5 +59,5 @@ describe('CountriesDirective', () => {
     // Verify values are country codes
     expect(options[0].value).toBe('0: GB-ENG');
     expect(options[4].value).toBe('4: AF');
-  }));
+  });
 });

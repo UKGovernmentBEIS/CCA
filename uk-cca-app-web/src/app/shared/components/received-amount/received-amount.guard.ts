@@ -1,11 +1,11 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
-import { SectorMoasReceivedAmountStore } from './received-amount.store';
+import { ReceivedAmountStore } from './received-amount.store';
 
 export const ReceivedAmountGuard: CanActivateFn = (route) => {
   const router = inject(Router);
-  const receivedAmountStore = inject(SectorMoasReceivedAmountStore);
+  const receivedAmountStore = inject(ReceivedAmountStore);
 
   if (!receivedAmountStore.state.receivedAmount) {
     const pathString = route.parent.pathFromRoot

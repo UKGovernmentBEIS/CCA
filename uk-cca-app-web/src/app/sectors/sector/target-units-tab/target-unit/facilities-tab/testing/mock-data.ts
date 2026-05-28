@@ -1,10 +1,22 @@
 import {
   FacilityInfoDTO,
   ItemDTOResponse,
+  PerformanceDataReportTypeDTO,
   RequestActionInfoDTO,
   RequestDetailsDTO,
   RequestDetailsSearchResults,
 } from 'cca-api';
+
+export const mockAvailablePeriods: PerformanceDataReportTypeDTO[] = [
+  {
+    targetPeriodType: 'TP7',
+    reportType: 'FINAL',
+  },
+  {
+    targetPeriodType: 'TP8',
+    reportType: 'INTERIM',
+  },
+];
 
 export const mockFacilityDetails: FacilityInfoDTO = {
   facilityId: 1,
@@ -73,7 +85,6 @@ export const mockEmptyRequestItems: ItemDTOResponse = {
       },
       taskAssigneeType: 'REGULATOR',
       taskType: 'AUDIT_DETAILS_CORRECTIVE_ACTIONS_SUBMIT',
-      accountId: 1,
       accountName: 'tu1-oper1',
       businessId: 'ADS_1-T00001',
       competentAuthority: 'ENGLAND',
@@ -84,7 +95,7 @@ export const mockEmptyRequestItems: ItemDTOResponse = {
       facilityBusinessId: 'ADS_1-F00002',
       siteName: 'fac1-1-2',
       isNew: false,
-    },
+    } as any,
   ],
   totalItems: 1,
 };

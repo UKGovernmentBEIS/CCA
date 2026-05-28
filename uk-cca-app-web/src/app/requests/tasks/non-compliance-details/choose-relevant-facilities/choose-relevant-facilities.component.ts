@@ -4,15 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { GovukSelectOption, SelectComponent, TextInputComponent } from '@netz/govuk-components';
-import { TaskItemStatus, TasksApiService } from '@requests/common';
-import { WizardStepComponent } from '@shared/components';
+import { GovukSelectOption, TextInputComponent } from '@netz/govuk-components';
+import { nonComplianceDetailsQuery, TaskItemStatus, TasksApiService } from '@requests/common';
+import { ComboboxComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
-import { NonComplianceDetails, RequestTaskActionPayload, WorkflowFacilityDTO } from 'cca-api';
+import { NonComplianceDetails, NonComplianceFacilityDTO, RequestTaskActionPayload } from 'cca-api';
 
 import { isNonComplianceWizardCompleted } from '../non-compliance-details.guard';
-import { nonComplianceDetailsQuery } from '../non-compliance-details.selectors';
 import { NON_COMPLIANCE_DETAILS_SUBTASK, NonComplianceDetailsPayload } from '../types';
 import {
   CHOOSE_RELEVANT_FACILITIES_FORM,
@@ -27,7 +26,7 @@ import {
   imports: [
     ReactiveFormsModule,
     WizardStepComponent,
-    SelectComponent,
+    ComboboxComponent,
     TextInputComponent,
     ReturnToTaskOrActionPageComponent,
   ],
@@ -68,9 +67,7 @@ export class ChooseRelevantFacilitiesComponent {
       : currentControl.controls.facilityBusinessId.value;
     const selectedInOtherRows = this.facilities.controls
       .map((control, controlIndex) => {
-        if (controlIndex === index || control.controls.isHistorical.value) {
-          return null;
-        }
+        if (controlIndex === index || control.controls.isHistorical.value) return null;
 
         return control.controls.facilityBusinessId.value;
       })
@@ -126,7 +123,7 @@ export class ChooseRelevantFacilitiesComponent {
           ({
             facilityBusinessId: facility.facilityBusinessId!,
             isHistorical: facility.isHistorical,
-          }) satisfies WorkflowFacilityDTO,
+          }) satisfies NonComplianceFacilityDTO,
       );
 
     const nonComplianceDetails: NonComplianceDetails = {

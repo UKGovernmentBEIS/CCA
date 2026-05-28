@@ -10,13 +10,12 @@ import {
   RadioOptionComponent,
   TextareaComponent,
 } from '@netz/govuk-components';
-import { TaskItemStatus, TasksApiService } from '@requests/common';
+import { nonComplianceDetailsQuery, TaskItemStatus, TasksApiService } from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
 import { NonComplianceDetails, RequestTaskActionPayload } from 'cca-api';
 
-import { nonComplianceDetailsQuery } from '../non-compliance-details.selectors';
 import { NON_COMPLIANCE_DETAILS_SUBTASK, NonComplianceDetailsPayload } from '../types';
 import {
   ISSUE_ENFORCEMENT_FORM,

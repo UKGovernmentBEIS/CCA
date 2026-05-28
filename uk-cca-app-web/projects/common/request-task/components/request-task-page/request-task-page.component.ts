@@ -25,13 +25,14 @@ import { TaskSection } from '@netz/common/model';
 import { TimelineItemLinkPipe } from '@netz/common/pipes';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 
-import { ItemDTO, RequestActionInfoDTO, RequestTaskDTO, RequestTaskItemDTO } from 'cca-api';
+import { ItemDTO, RequestActionInfoDTO, RequestTaskDTO, RequestTaskItemDTO, RequestTaskPayload } from 'cca-api';
 
 import { REQUEST_TASK_PAGE_CONTENT } from '../../request-task.providers';
 import { RequestTaskPageContentFactoryMap } from '../../request-task.types';
 
 type ViewModel = {
   requestTask: RequestTaskDTO;
+  payload: RequestTaskPayload;
   header: string;
   sections: TaskSection[] | null;
   preContentComponent: Type<unknown> | null;
@@ -72,6 +73,7 @@ export class RequestTaskPageComponent {
     const requestTask = this.store.select(requestTaskQuery.selectRequestTask)();
     if (!requestTask) return null;
 
+    const payload = this.store.select(requestTaskQuery.selectRequestTaskPayload)();
     const relatedTasks = this.store.select(requestTaskQuery.selectRelatedTasks)();
     const timeline = this.store.select(requestTaskQuery.selectTimeline)();
     const showAssignAction = this.store.select(requestTaskQuery.selectIsAssignActionVisible)();
@@ -84,6 +86,7 @@ export class RequestTaskPageComponent {
 
     return {
       requestTask,
+      payload,
       header,
       sections,
       preContentComponent,

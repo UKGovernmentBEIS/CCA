@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText } from '@testing';
+import { Mocked } from 'vitest';
 
 import { SectorAssociationSchemeService } from 'cca-api';
 
@@ -13,11 +14,11 @@ import { SectorSchemeTabComponent } from './sector-scheme-tab.component';
 
 describe('SectorSchemeTabComponent', () => {
   let fixture: ComponentFixture<SectorSchemeTabComponent>;
-  let sectorAssociationAuthoritiesService: Partial<jest.Mocked<SectorAssociationSchemeService>>;
+  let sectorAssociationAuthoritiesService: Partial<Mocked<SectorAssociationSchemeService>>;
 
   beforeEach(async () => {
     sectorAssociationAuthoritiesService = {
-      getSectorAssociationSchemeBySectorAssociationId: jest.fn().mockReturnValue(of(mockSectorScheme)),
+      getSectorAssociationSchemeBySectorAssociationId: vi.fn().mockReturnValue(of(mockSectorScheme)),
     };
 
     await TestBed.configureTestingModule({

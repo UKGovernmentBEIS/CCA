@@ -20,6 +20,7 @@ import uk.gov.cca.api.account.domain.FinancialIndependenceStatus;
 import uk.gov.cca.api.account.domain.TargetUnitAccount;
 import uk.gov.cca.api.account.domain.TargetUnitAccountOperatorType;
 import uk.gov.cca.api.account.domain.TargetUnitAccountStatus;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountPerformanceDataReportItemDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountPerformanceDataReportListDTO;
 import uk.gov.cca.api.targetperiodreporting.performancedata.domain.dto.SectorAccountPerformanceDataReportSearchCriteria;
@@ -103,6 +104,7 @@ class PerformanceDataReportRepositoryIT extends AbstractContainerBaseTest {
                 .buyOutStartDate(LocalDate.now())
                 .buyOutPrimaryPaymentDeadline(LocalDate.now())
                 .secondaryReportingStartDate(LocalDate.now())
+                .schemeVersion(SchemeVersion.CCA_2)
                 .build();
         entityManager.persist(tp6);
 
@@ -122,6 +124,7 @@ class PerformanceDataReportRepositoryIT extends AbstractContainerBaseTest {
                 .buyOutStartDate(LocalDate.now())
                 .buyOutPrimaryPaymentDeadline(LocalDate.now())
                 .secondaryReportingStartDate(LocalDate.now())
+                .schemeVersion(SchemeVersion.CCA_3)
                 .build();
         entityManager.persist(tp7);
     }

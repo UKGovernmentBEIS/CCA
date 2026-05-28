@@ -2,6 +2,7 @@ package uk.gov.cca.api.workflow.request.flow.cca2termination.run.service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,8 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.core.domain.constants.CcaRequestStatuses;
 import uk.gov.cca.api.workflow.request.flow.cca2termination.common.domain.Cca2TerminationRunRequestMetadata;
+import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataDownloadSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationBaseRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
@@ -20,6 +23,7 @@ import uk.gov.netz.api.competentauthority.CompetentAuthorityEnum;
 import uk.gov.netz.api.workflow.request.WorkflowService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 import uk.gov.netz.api.workflow.request.core.domain.constants.RequestStatuses;
 import uk.gov.netz.api.workflow.request.core.service.RequestQueryService;
 import uk.gov.netz.api.workflow.request.core.service.RequestService;
@@ -55,6 +59,24 @@ public class Cca2TerminationRunRequestService {
 				.toList();
 		
 		requests.stream().forEach(this::terminateRequestAndAddRequestAction);
+    }
+	
+	@Transactional
+    public void terminatePerformanceDataRequests() {
+        // Terminate all in progress performance data upload/download requests, where the data processing has not started or has been completed
+		List<Request> requests = requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
+        		CcaRequestType.PERFORMANCE_DATA_UPLOAD, ResourceType.CA, CompetentAuthorityEnum.ENGLAND.name()).stream()
+				.filter(req -> RequestStatuses.IN_PROGRESS.equals(req.getStatus()) 
+						&& processingNotStartedOrCompleted(req.getRequestTasks(), CcaRequestTaskType.PERFORMANCE_DATA_UPLOAD_SUBMIT))
+				.collect(Collectors.toList());
+		
+		requests.addAll(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
+        		CcaRequestType.PERFORMANCE_DATA_DOWNLOAD, ResourceType.CA, CompetentAuthorityEnum.ENGLAND.name()).stream()
+				.filter(req -> RequestStatuses.IN_PROGRESS.equals(req.getStatus()) 
+						&& processingNotStartedOrCompleted(req.getRequestTasks(), CcaRequestTaskType.PERFORMANCE_DATA_DOWNLOAD_SUBMIT))
+				.toList());
+		
+		requests.stream().forEach(request -> terminateRequestWithStatus(request, CcaRequestStatuses.CLOSED));
     }
 
 	public long getNumberOfAccountsCompleted(String requestId) {
@@ -104,12 +126,33 @@ public class Cca2TerminationRunRequestService {
 				.anyMatch(facility -> facility.getFacilityItem().getFacilityDetails().getParticipatingSchemeVersions().equals(Set.of(SchemeVersion.CCA_2)));
 	}
 	
-	private void terminateRequestAndAddRequestAction(Request req) {
-		req.setStatus(CcaRequestStatuses.CANCELLED);
+	private boolean processingNotStartedOrCompleted(List<RequestTask> tasks, String taskType) {
+		return tasks.stream()
+				.filter(task -> taskType.equals(task.getType().getCode()))
+				.allMatch(task -> processingNotStartedOrCompleted(task.getPayload()));
+	}
+	
+	private boolean processingNotStartedOrCompleted(RequestTaskPayload payload) {
+	    return switch (payload) {
+	        case PerformanceDataUploadSubmitRequestTaskPayload p -> 
+	        p.getProcessCompleted() == null || p.getProcessCompleted();
+
+	        case PerformanceDataDownloadSubmitRequestTaskPayload p ->
+	        p.getProcessCompleted() == null || p.getProcessCompleted();
+
+	        default -> false;
+	    };
+	}
+	
+	private void terminateRequestAndAddRequestAction(Request request) {
+		requestService.addActionToRequest(request, null, CcaRequestActionType.REQUEST_TERMINATED, null);
 		
-		requestService.addActionToRequest(req, null, CcaRequestActionType.REQUEST_TERMINATED, null);
-		
-		workflowService.deleteProcessInstance(req.getProcessInstanceId(), TERMINATE_REASON);
+		terminateRequestWithStatus(request, CcaRequestStatuses.CANCELLED);
+	}
+
+	private void terminateRequestWithStatus(Request request, String status) {		
+		request.setStatus(status);
+		workflowService.deleteProcessInstance(request.getProcessInstanceId(), TERMINATE_REASON);
 	}
 
 }

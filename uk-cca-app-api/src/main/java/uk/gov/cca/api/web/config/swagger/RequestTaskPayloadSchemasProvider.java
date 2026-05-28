@@ -10,9 +10,12 @@ import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.proc
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.auditdetailscorrectiveactions.domain.AuditDetailsCorrectiveActionsSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.preauditreview.domain.PreAuditReviewSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.facilityaudit.audittrackcorrectiveactions.domain.AuditTrackCorrectiveActionsRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.conclusion.domain.NonComplianceConclusionSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.domain.NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.peerreview.domain.NonComplianceEnforcementResponseNoticePeerReviewRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.peerreview.domain.NonComplianceNoticeOfIntentPeerReviewRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performanceaccounttemplatedataupload.upload.domain.PerformanceAccountTemplateDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataDownloadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadSubmitRequestTaskPayload;
@@ -92,7 +95,10 @@ public class RequestTaskPayloadSchemasProvider extends SwaggerSchemasAbstractPro
 		// Non Compliance
 		addResolvedShemas(NonComplianceDetailsSubmitRequestTaskPayload.class.getSimpleName(), NonComplianceDetailsSubmitRequestTaskPayload.class);
 		addResolvedShemas(NonComplianceNoticeOfIntentSubmitRequestTaskPayload.class.getSimpleName(), NonComplianceNoticeOfIntentSubmitRequestTaskPayload.class);
+		addResolvedShemas(NonComplianceNoticeOfIntentPeerReviewRequestTaskPayload.class.getSimpleName(), NonComplianceNoticeOfIntentPeerReviewRequestTaskPayload.class);
 		addResolvedShemas(NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload.class.getSimpleName(), NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload.class);
+		addResolvedShemas(NonComplianceEnforcementResponseNoticePeerReviewRequestTaskPayload.class.getSimpleName(), NonComplianceEnforcementResponseNoticePeerReviewRequestTaskPayload.class);
+		addResolvedShemas(NonComplianceConclusionSubmitRequestTaskPayload.class.getSimpleName(), NonComplianceConclusionSubmitRequestTaskPayload.class);
 
 		// Performance Data Facility Digital Form
 		addResolvedShemas(PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.class.getSimpleName(), PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload.class);

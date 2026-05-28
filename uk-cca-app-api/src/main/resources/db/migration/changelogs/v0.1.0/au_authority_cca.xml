@@ -730,4 +730,21 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_PERM_SECTOR_ADVANCED_DETAILS_EDIT_cca_au_role_permission" author="P70311">
+        <sql>
+            INSERT INTO public.au_role_permission (id, role_id, permission)
+            SELECT nextval('au_role_permission_seq'), id, 'PERM_SECTOR_ADVANCED_DETAILS_EDIT'
+            FROM au_role
+            WHERE code = 'regulator_administrator';
+        </sql>
+        <rollback>
+            delete from au_role_permission
+            where permission = 'PERM_SECTOR_ADVANCED_DETAILS_EDIT'
+            and role_id in
+            ( select id
+            from au_role
+            where code = 'regulator_administrator' );
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

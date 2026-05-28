@@ -10,6 +10,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceOutcome;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetails;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmittedRequestActionPayload;
@@ -100,7 +101,7 @@ class NonComplianceDetailsSubmitCompleteActionHandlerTest {
                 .addActionToRequest(request, actionPayload, CcaRequestActionType.NON_COMPLIANCE_DETAILS_SUBMITTED, appUser.getUserId());
         verify(workflowService, times(1)).completeTask(processId,
                 Map.of(BpmnProcessConstants.REQUEST_ID, requestId,
-                        CcaBpmnProcessConstants.NON_COMPLIANCE_OUTCOME, "",
+                        CcaBpmnProcessConstants.NON_COMPLIANCE_OUTCOME, NonComplianceOutcome.SUBMITTED,
                         CcaBpmnProcessConstants.IS_NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_NEEDED, false));
     }
 

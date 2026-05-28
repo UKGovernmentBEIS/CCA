@@ -9,6 +9,7 @@ import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } f
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { mockUNAReviewRequestTaskState, TasksApiService } from '@requests/common';
 import { click, getAllByText, getByText } from '@testing';
+import { Mocked } from 'vitest';
 
 import AuthorisationAdditionalEvidenceCheckYourAnswersComponent from './authorisation-additional-evidence-check-your-answers.component';
 
@@ -19,11 +20,11 @@ describe('CheckYourAnswersComponent', () => {
 
   const route = new ActivatedRouteStub();
 
-  const tasksApiService: Partial<jest.Mocked<TasksApiService>> = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+  const tasksApiService: Partial<Mocked<TasksApiService>> = {
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
-  const saveRequestTaskActionSpy = jest.spyOn(tasksApiService, 'saveRequestTaskAction');
+  const saveRequestTaskActionSpy = vi.spyOn(tasksApiService, 'saveRequestTaskAction');
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

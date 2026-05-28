@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByTestId, getByText } from '@testing';
+import { Mock } from 'vitest';
 
 import { RequestItemsService, RequestsService, UserStateDTO } from 'cca-api';
 
@@ -19,16 +20,16 @@ describe('StartNewTaskComponent', () => {
   let component: StartNewTaskComponent;
   let fixture: ComponentFixture<StartNewTaskComponent>;
   let authStore: AuthStore;
-  let requestService: jest.Mocked<Partial<RequestsService>>;
-  let requestItemService: jest.Mocked<Partial<RequestItemsService>>;
+  let requestService: { getAvailableWorkflows: Mock };
+  let requestItemService: { getItemsByRequest: Mock };
 
   beforeEach(async () => {
     requestService = {
-      getAvailableWorkflows: jest.fn(),
+      getAvailableWorkflows: vi.fn(),
     };
 
     requestItemService = {
-      getItemsByRequest: jest.fn(),
+      getItemsByRequest: vi.fn(),
     };
 
     TestBed.configureTestingModule({

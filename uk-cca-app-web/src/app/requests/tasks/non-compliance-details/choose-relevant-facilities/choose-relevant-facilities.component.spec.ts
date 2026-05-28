@@ -1,10 +1,11 @@
 import { provideHttpClient } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { RequestTaskStore } from '@netz/common/store';
+import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { TasksApiService } from '@requests/common';
 
 import { mockNonComplianceDetailsState } from '../testing/mock-data';
@@ -13,19 +14,20 @@ import { ChooseRelevantFacilitiesComponent } from './choose-relevant-facilities.
 describe('ChooseRelevantFacilitiesComponent', () => {
   let component: ChooseRelevantFacilitiesComponent;
   let fixture: ComponentFixture<ChooseRelevantFacilitiesComponent>;
+  let cdr: ChangeDetectorRef;
   let store: RequestTaskStore;
   let router: Router;
 
   const route = {
     snapshot: {
       params: {},
-      paramMap: { get: jest.fn() },
+      paramMap: { get: vi.fn() },
       pathFromRoot: [],
     },
   };
 
   const mockTasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -33,9 +35,10 @@ describe('ChooseRelevantFacilitiesComponent', () => {
       imports: [ChooseRelevantFacilitiesComponent],
       providers: [
         provideHttpClient(),
-        RequestTaskStore,
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },
+        { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
+        { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Dashboard' },
       ],
     }).compileComponents();
 
@@ -46,6 +49,7 @@ describe('ChooseRelevantFacilitiesComponent', () => {
 
     fixture = TestBed.createComponent(ChooseRelevantFacilitiesComponent);
     component = fixture.componentInstance;
+    cdr = fixture.debugElement.injector.get(ChangeDetectorRef);
     fixture.detectChanges();
 
     mockTasksApiService.saveRequestTaskAction.mockClear();
@@ -62,14 +66,14 @@ describe('ChooseRelevantFacilitiesComponent', () => {
   });
 
   it('should navigate after submit to check your answers when wizard is already completed', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
     component.onSubmit();
 
     expect(navigateSpy).toHaveBeenCalledWith(['../check-your-answers'], { relativeTo: route as any });
   });
 
-  it('should submit with relevantFacilities as WorkflowFacilityDTO[]', () => {
+  it('should submit with relevantFacilities as NonComplianceFacilityDTO[]', () => {
     component.facilities.clear();
     component.onAddFacility();
     component.onAddHistoricalFacility();
@@ -111,14 +115,15 @@ describe('ChooseRelevantFacilitiesComponent', () => {
 
   it('should disable Add facility button when all facility options are selected', () => {
     component.onAddFacility();
-    component.facilities.at(2).controls.facilityBusinessId.setValue('FAC-002');
     fixture.detectChanges();
-
-    const [addFacilityButton, addHistoricalFacilityButton] = Array.from(
+    component.facilities.at(2).controls.facilityBusinessId.setValue('FAC-002');
+    cdr.markForCheck();
+    fixture.detectChanges();
+    const [, addHistoricalFacilityButton] = Array.from(
       fixture.nativeElement.querySelectorAll('button.govuk-button--secondary'),
     ) as HTMLButtonElement[];
 
-    expect(addFacilityButton.disabled).toBe(true);
+    expect(component.isAddFacilityDisabled()).toBe(true);
     expect(addHistoricalFacilityButton.disabled).toBe(false);
   });
 

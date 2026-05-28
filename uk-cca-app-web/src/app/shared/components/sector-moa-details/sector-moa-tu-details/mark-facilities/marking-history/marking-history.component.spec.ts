@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { GovukDatePipe } from '@netz/common/pipes';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { StatusPipe } from '@shared/pipes';
+import { Mocked } from 'vitest';
 
 import { SubsistenceFeesMoAFacilityViewService } from 'cca-api';
 
@@ -17,7 +18,7 @@ describe('MarkingHistoryComponent', () => {
   let component: MarkingHistoryComponent;
   let fixture: ComponentFixture<MarkingHistoryComponent>;
   let debugElement: HTMLElement;
-  let subsistenceFeesMoAFacilityViewService: Partial<jest.Mocked<SubsistenceFeesMoAFacilityViewService>>;
+  let subsistenceFeesMoAFacilityViewService: Partial<Mocked<SubsistenceFeesMoAFacilityViewService>>;
 
   const history = {
     facilityBusinessId: 'ADS_50-F00001',
@@ -43,7 +44,7 @@ describe('MarkingHistoryComponent', () => {
 
   beforeEach(async () => {
     subsistenceFeesMoAFacilityViewService = {
-      getSubsistenceFeesMoaFacilityMarkingStatusHistoryInfo: jest.fn().mockReturnValue(of(history)),
+      getSubsistenceFeesMoaFacilityMarkingStatusHistoryInfo: vi.fn().mockReturnValue(of(history)),
     };
 
     await TestBed.configureTestingModule({

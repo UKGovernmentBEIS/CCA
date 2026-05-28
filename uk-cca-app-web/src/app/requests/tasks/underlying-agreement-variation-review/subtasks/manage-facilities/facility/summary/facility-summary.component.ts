@@ -12,6 +12,7 @@ import {
   underlyingAgreementVariationQuery,
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 
@@ -24,6 +25,8 @@ import { generateDownloadUrl } from '@shared/utils';
 export default class FacilitySummaryComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly activatedRoute = inject(ActivatedRoute);
+
+  private readonly countries = inject(CountryService).countries;
 
   private readonly downloadUrl = generateDownloadUrl(
     this.requestTaskStore.select(requestTaskQuery.selectRequestTaskId)().toString(),
@@ -63,6 +66,7 @@ export default class FacilitySummaryComponent {
       this.sectorSchemeData(),
       this.participatingSchemeVersions(),
       this.decision,
+      this.countries(),
       {
         submit:
           this.facility().status === 'NEW'
@@ -83,6 +87,7 @@ export default class FacilitySummaryComponent {
       this.sectorSchemeData(),
       this.participatingSchemeVersions(),
       this.decision,
+      this.countries(),
       {
         submit: this.requestTaskStore.select(underlyingAgreementQuery.selectAttachments)(),
         review: this.requestTaskStore.select(underlyingAgreementReviewQuery.selectReviewAttachments)(),

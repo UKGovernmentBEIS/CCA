@@ -18,6 +18,7 @@ import {
   underlyingAgreementReviewQuery,
 } from '@requests/common';
 import { SummaryComponent, WizardStepComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 import { SchemeVersion } from '@shared/types';
 import { generateDownloadUrl } from '@shared/utils';
 import { produce } from 'immer';
@@ -60,6 +61,8 @@ export class FacilityDecisionComponent {
   private readonly tasksApiService = inject(TasksApiService);
   private readonly router = inject(Router);
 
+  private readonly countries = inject(CountryService).countries;
+
   protected readonly form = inject<DecisionWithDateFormModel>(DECISION_FORM_PROVIDER);
 
   private readonly facilityId = this.activatedRoute.snapshot.params.facilityId;
@@ -89,6 +92,7 @@ export class FacilityDecisionComponent {
       this.facility(),
       this.sectorSchemeData(),
       this.participatingSchemeVersions(),
+      this.countries(),
       this.store.select(underlyingAgreementQuery.selectAttachments)(),
       this.store.select(requestTaskQuery.selectIsEditable)(),
       this.downloadUrl,

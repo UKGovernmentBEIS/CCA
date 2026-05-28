@@ -28,7 +28,7 @@ describe('PreAuditReviewAuditReasonComponent', () => {
   const route = new ActivatedRouteStub();
 
   const mockTasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -63,8 +63,8 @@ describe('PreAuditReviewAuditReasonComponent', () => {
   });
 
   it('should submit form and navigate to check-your-answers', () => {
-    const onSubmitSpy = jest.spyOn(component, 'onSubmit');
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const onSubmitSpy = vi.spyOn(component, 'onSubmit');
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
     const continueButton = fixture.debugElement.query(By.css('button[type="submit"]'));
     continueButton.nativeElement.click();

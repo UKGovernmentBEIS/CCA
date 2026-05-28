@@ -6,9 +6,11 @@ import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.application.taskview.RequestInfoDTO;
+import uk.gov.netz.api.workflow.request.core.domain.RequestType;
+import uk.gov.netz.api.workflow.request.core.repository.RequestTypeRepository;
 import uk.gov.netz.api.workflow.request.core.service.RequestQueryService;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -18,9 +20,11 @@ public class NonComplianceInfoService {
 
     private final RequestQueryService requestQueryService;
     private final FacilityDataQueryService facilityDataQueryService;
+    private final RequestTypeRepository requestTypeRepository;
 
     public Map<String, String> getAllRelevantWorkflows(Long accountId, String requestId) {
-        return requestQueryService.findByResourceTypeAndResourceIdAndTypeNotIn(Collections.emptyList(), ResourceType.ACCOUNT, String.valueOf(accountId))
+
+        return requestQueryService.findByResourceTypeAndResourceIdAndTypeNotIn(getExcludedRequestTypes(), ResourceType.ACCOUNT, String.valueOf(accountId))
                 .stream()
                 .filter(r -> !r.getId().equals(requestId))
                 .collect(Collectors.toMap(RequestInfoDTO::getId, RequestInfoDTO::getType));
@@ -30,5 +34,13 @@ public class NonComplianceInfoService {
         return facilityDataQueryService.getFacilitiesByAccountId(accountId)
                 .stream()
                 .collect(Collectors.toMap(FacilityBaseInfoDTO::getFacilityBusinessId, FacilityBaseInfoDTO::getSiteName));
+    }
+
+    private List<String> getExcludedRequestTypes() {
+        return requestTypeRepository.findAll()
+                .stream()
+                .filter(requestType -> List.of("SYSTEM", "SYSTEM_MESSAGE_NOTIFICATION").contains(requestType.getHistoryCategory()))
+                .map(RequestType::getCode)
+                .toList();
     }
 }

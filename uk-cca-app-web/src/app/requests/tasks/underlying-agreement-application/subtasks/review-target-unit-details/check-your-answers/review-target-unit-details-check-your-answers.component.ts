@@ -14,6 +14,7 @@ import {
   underlyingAgreementQuery,
 } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 import { produce } from 'immer';
 
 import { UnderlyingAgreementSubmitRequestTaskPayload } from 'cca-api';
@@ -48,9 +49,12 @@ export class ReviewTargetUnitDetailsCheckYourAnswersComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
+  private readonly countries = inject(CountryService).countries;
+
   protected readonly summaryData = computed(() =>
     toReviewTargetUnitDetailsSummaryData(
       this.requestTaskStore.select(underlyingAgreementQuery.selectUnderlyingAgreementTargetUnitDetails)(),
+      this.countries(),
       this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
     ),
   );

@@ -11,7 +11,6 @@ import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
 
 import { FileUuidDTO } from 'cca-api';
 
-import { FileUploadListComponent } from '../file-upload-list/file-upload-list.component';
 import { FileInputComponent } from './file-input.component';
 import { FileUploadService } from './file-upload.service';
 import { FileValidators } from './file-validators';
@@ -31,12 +30,12 @@ describe('FileInputComponent', () => {
         <cca-file-input formControlName="file" [downloadUrl]="getDownloadUrl" />
       </form>
     `,
-    imports: [FileUploadListComponent, FileInputComponent, ReactiveFormsModule],
+    imports: [FileInputComponent, ReactiveFormsModule],
     providers: [{ provide: ActivatedRoute, useValue: activatedRoute }],
   })
   class TestComponent {
     form = new FormGroup({ file: new FormControl({ file: new File(['abc'], 'uploaded-file.txt'), uuid: '1234' }) });
-    getDownloadUrl = jest.fn((uuid: string) => `/download/${uuid}`);
+    getDownloadUrl = vi.fn((uuid: string) => `/download/${uuid}`);
   }
 
   class Page extends BasePage<TestComponent> {
@@ -98,7 +97,7 @@ describe('FileInputComponent', () => {
     control.setValidators(FileValidators.maxFileSize(1));
     control.setAsyncValidators(TestBed.inject(FileUploadService).upload(() => uploadSubject));
     const file = new File(['test content'], 'Big file');
-    jest.spyOn(file, 'size', 'get').mockReturnValue(1024 * 1024 * 1024);
+    vi.spyOn(file, 'size', 'get').mockReturnValue(1024 * 1024 * 1024);
     page.file = file;
     fixture.detectChanges();
 

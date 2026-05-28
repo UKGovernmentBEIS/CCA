@@ -12,7 +12,9 @@ import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,9 +25,11 @@ import java.util.UUID;
 @SuperBuilder
 public class NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload extends RequestTaskPayload implements NonComplianceRequestTaskClosable {
 
-    // TODO: enhance
+    private NonComplianceEnforcementResponseNotice enforcementResponseNotice;
 
     private NonComplianceCloseJustification closeJustification;
+
+    private boolean penaltyReissue;
 
     @Builder.Default
     private Map<String, String> sectionsCompleted = new HashMap<>();
@@ -43,7 +47,9 @@ public class NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload exte
         if (this.closeJustification != null) {
             return this.closeJustification.getFiles();
         } else {
-            return Collections.emptySet();
+            return Optional.ofNullable(this.enforcementResponseNotice)
+                    .map(n -> n.getFile() != null ? Set.of(n.getFile()) : new HashSet<UUID>())
+                    .orElseGet(Collections::emptySet);
         }
     }
 }

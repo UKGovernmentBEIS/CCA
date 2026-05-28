@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 
 import { toVariationReviewTargetUnitDetailsSummaryDataWithDecision } from '../../underlying-agreement/summaries';
 import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agreement-variation-peer-review.selectors';
@@ -22,6 +23,8 @@ import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agree
 export class ReviewTargetUnitDetailsComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
 
+  private readonly countries = inject(CountryService).countries;
+
   protected readonly summaryData = computed(() =>
     toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
       this.requestTaskStore.select(
@@ -30,6 +33,7 @@ export class ReviewTargetUnitDetailsComponent {
       this.requestTaskStore.select(
         underlyingAgreementVariationPeerReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'),
       )(),
+      this.countries(),
       this.requestTaskStore.select(underlyingAgreementVariationPeerReviewQuery.selectReviewAttachments)(),
       '../../file-download',
       false,

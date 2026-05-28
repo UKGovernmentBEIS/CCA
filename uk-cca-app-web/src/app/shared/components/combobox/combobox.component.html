@@ -1,0 +1,47 @@
+@if (showErrors()) {
+  <govuk-error-message [errors]="control?.errors" [identifier]="identifier" />
+}
+
+<div class="cca-combobox-container" [ngClass]="widthClass()">
+  <div class="cca-combobox-wrapper">
+    <input
+      #inputEl
+      [id]="identifier"
+      [attr.name]="identifier"
+      role="combobox"
+      [attr.aria-expanded]="isOpen()"
+      [attr.aria-controls]="identifier + '-listbox'"
+      [attr.aria-activedescendant]="activeDescendantId()"
+      aria-autocomplete="both"
+      aria-haspopup="listbox"
+      autocomplete="off"
+      [value]="inputValue()"
+      [placeholder]="placeholder()"
+      [disabled]="isDisabled()"
+      (input)="onInput($any($event.target).value)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+      (keydown)="onKeydown($event)"
+      class="govuk-input cca-combobox-input"
+      [class.govuk-input--error]="showErrors()"
+    />
+    <span class="cca-combobox-arrow" aria-hidden="true"></span>
+  </div>
+
+  @if (isOpen() && filteredOptions().length > 0) {
+    <ul role="listbox" [id]="identifier + '-listbox'" class="cca-combobox-listbox">
+      @for (option of filteredOptions(); track option.value; let j = $index) {
+        <li
+          role="option"
+          [id]="identifier + '-option-' + j"
+          [attr.aria-selected]="option.value === selectedValue()"
+          [class.cca-combobox-option--active]="j === activeIndex()"
+          (pointerdown)="onOptionPointerdown($event, option)"
+          class="cca-combobox-option"
+        >
+          {{ option.text }}
+        </li>
+      }
+    </ul>
+  }
+</div>

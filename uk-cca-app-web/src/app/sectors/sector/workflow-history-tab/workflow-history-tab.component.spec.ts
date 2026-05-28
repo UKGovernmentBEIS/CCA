@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { HistoryCategory } from '@shared/types';
+import { Mocked, MockInstance } from 'vitest';
 
 import { RequestsService } from 'cca-api';
 
@@ -16,27 +17,27 @@ import { WorkflowHistoryTabFormProvider } from './workflow-history-tab-form.prov
 describe('WorkflowHistoryTabComponent', () => {
   let component: WorkflowHistoryTabComponent;
   let fixture: ComponentFixture<WorkflowHistoryTabComponent>;
-  let requestsService: jest.Mocked<RequestsService>;
-  let routerNavigateSpy: jest.SpyInstance;
+  let requestsService: Mocked<RequestsService>;
+  let routerNavigateSpy: MockInstance;
 
   const createQueryParamMock = (page = '1', pageSize = '30') => ({
-    get: jest.fn().mockImplementation((param) => {
+    get: vi.fn().mockImplementation((param) => {
       if (param === 'page') return page;
       if (param === 'pageSize') return pageSize;
       return null;
     }),
-    getAll: jest.fn().mockReturnValue([]),
+    getAll: vi.fn().mockReturnValue([]),
   });
 
   beforeEach(async () => {
     const requestsServiceMock = {
-      getRequestDetailsByResource: jest.fn().mockReturnValue(of(mockRequestDetailsSearchResultsData)),
+      getRequestDetailsByResource: vi.fn().mockReturnValue(of(mockRequestDetailsSearchResultsData)),
     };
 
     const queryParamMock = createQueryParamMock();
     const activatedRouteMock = {
       snapshot: {
-        paramMap: { get: jest.fn().mockReturnValue('test-sector-id') },
+        paramMap: { get: vi.fn().mockReturnValue('test-sector-id') },
         queryParamMap: queryParamMock,
         fragment: null,
       },
@@ -55,8 +56,8 @@ describe('WorkflowHistoryTabComponent', () => {
     fixture = TestBed.createComponent(WorkflowHistoryTabComponent);
     component = fixture.componentInstance;
 
-    routerNavigateSpy = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
-    requestsService = TestBed.inject(RequestsService) as jest.Mocked<RequestsService>;
+    routerNavigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    requestsService = TestBed.inject(RequestsService) as Mocked<RequestsService>;
 
     fixture.detectChanges();
   });

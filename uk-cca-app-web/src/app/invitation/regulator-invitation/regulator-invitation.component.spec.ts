@@ -3,11 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { ActivatedRouteStub, BasePage, mockClass } from '@netz/common/testing';
 import { PasswordComponent } from '@shared/components';
+import { Mocked } from 'vitest';
 
 import { RegulatorUsersRegistrationService } from 'cca-api';
 
@@ -20,7 +21,7 @@ describe('RegulatorInvitationComponent', () => {
   let page: Page;
   let router: Router;
   let route: ActivatedRoute;
-  let regulatorUsersRegistrationService: jest.Mocked<RegulatorUsersRegistrationService>;
+  let regulatorUsersRegistrationService: Mocked<RegulatorUsersRegistrationService>;
   let store: InvitedRegulatorUserStore;
 
   class Page extends BasePage<RegulatorInvitationComponent> {
@@ -43,6 +44,8 @@ describe('RegulatorInvitationComponent', () => {
 
   beforeEach(async () => {
     regulatorUsersRegistrationService = mockClass(RegulatorUsersRegistrationService);
+    regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite.mockReturnValue(of({}));
+
     const activatedRoute = new ActivatedRouteStub(undefined, { token: 'token' });
 
     await TestBed.configureTestingModule({
@@ -73,16 +76,17 @@ describe('RegulatorInvitationComponent', () => {
     expect(page.emailValue).toEqual('user@cca.uk');
   });
 
-  it('should navigate for link related error', () => {
+  it('should navigate for link related error', async () => {
     regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite.mockReturnValue(
       throwError(() => new HttpErrorResponse({ error: { code: 'EMAIL1001' }, status: 400 })),
     );
 
-    const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
     component.form.controls.password.setValue('ThisIsAStrongP@ssw0rd');
     component.form.get('validatePassword').setValue('ThisIsAStrongP@ssw0rd');
     page.submitButton.click();
     fixture.detectChanges();
+    await fixture.whenStable();
 
     expect(navigateSpy).toHaveBeenCalledWith(['invalid-link'], {
       relativeTo: route,
@@ -103,26 +107,30 @@ describe('RegulatorInvitationComponent', () => {
     });
   });
 
-  it('should submit only if form valid', () => {
+  it('should submit only if form valid', async () => {
     page.passwordValue = '';
     page.repeatedPasswordValue = '';
     page.submitButton.click();
     fixture.detectChanges();
+    await fixture.whenStable();
 
     expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).not.toHaveBeenCalled();
 
     page.passwordValue = 'test';
     page.submitButton.click();
     fixture.detectChanges();
+    await fixture.whenStable();
 
     expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).not.toHaveBeenCalled();
 
     page.passwordValue = 'ThisIsAStrongP@ssw0rd';
     page.repeatedPasswordValue = 'ThisIsAStrongP@ssw0rd';
     fixture.detectChanges();
+    await fixture.whenStable();
 
     page.submitButton.click();
     fixture.detectChanges();
+    await fixture.whenStable();
 
     expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).toHaveBeenCalledTimes(
       1,

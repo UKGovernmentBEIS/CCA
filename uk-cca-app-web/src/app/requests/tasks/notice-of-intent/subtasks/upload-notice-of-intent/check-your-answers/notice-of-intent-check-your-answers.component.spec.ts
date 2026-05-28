@@ -24,12 +24,12 @@ describe('NoticeOfIntentCheckYourAnswersComponent', () => {
   const route = new ActivatedRouteStub({ taskId: '123' });
 
   const tasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   const initialPayload: NonComplianceNoticeOfIntentSubmitRequestTaskPayload = {
     payloadType: 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT_PAYLOAD',
-    noticeOfIntent: { noticeOfIntentFile: 'uuid-1', comments: 'Existing comments' },
+    noticeOfIntent: { file: 'uuid-1', comments: 'Existing comments' },
     nonComplianceAttachments: { 'uuid-1': 'existing-notice.pdf' },
     sectionsCompleted: { uploadNoticeOfIntent: 'IN_PROGRESS' },
   };
@@ -61,7 +61,7 @@ describe('NoticeOfIntentCheckYourAnswersComponent', () => {
         {
           provide: Router,
           useValue: {
-            navigate: jest.fn(),
+            navigate: vi.fn(),
             url: '/test/check-your-answers',
             events: of({}),
             createUrlTree: () => ({}),
@@ -104,7 +104,7 @@ describe('NoticeOfIntentCheckYourAnswersComponent', () => {
       requestTaskActionPayload: {
         payloadType: 'NON_COMPLIANCE_NOTICE_OF_INTENT_SAVE_PAYLOAD',
         noticeOfIntent: {
-          noticeOfIntentFile: 'uuid-1',
+          file: 'uuid-1',
           comments: 'Existing comments',
         },
         sectionsCompleted: {

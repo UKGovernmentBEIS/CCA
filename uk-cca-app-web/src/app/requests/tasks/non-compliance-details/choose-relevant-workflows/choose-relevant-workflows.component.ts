@@ -4,16 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { GovukSelectOption, SelectComponent } from '@netz/govuk-components';
-import { TaskItemStatus, TasksApiService } from '@requests/common';
-import { WizardStepComponent } from '@shared/components';
+import { GovukSelectOption } from '@netz/govuk-components';
+import { nonComplianceDetailsQuery, TaskItemStatus, TasksApiService, transformWorkflowLabel } from '@requests/common';
+import { ComboboxComponent, WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
 import { NonComplianceDetails, RequestTaskActionPayload } from 'cca-api';
 
 import { isNonComplianceWizardCompleted } from '../non-compliance-details.guard';
-import { nonComplianceDetailsQuery } from '../non-compliance-details.selectors';
-import { transformWorkflowLabel } from '../transform-workflow-label';
 import { NON_COMPLIANCE_DETAILS_SUBTASK, NonComplianceDetailsPayload } from '../types';
 import {
   CHOOSE_RELEVANT_WORKFLOWS_FORM,
@@ -25,7 +23,7 @@ import {
 
 @Component({
   selector: 'cca-choose-relevant-workflows',
-  imports: [ReactiveFormsModule, WizardStepComponent, SelectComponent, ReturnToTaskOrActionPageComponent],
+  imports: [ReactiveFormsModule, WizardStepComponent, ComboboxComponent, ReturnToTaskOrActionPageComponent],
   providers: [ChooseRelevantWorkflowsFormProvider],
   templateUrl: './choose-relevant-workflows.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

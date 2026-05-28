@@ -8,9 +8,9 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText } from '@testing';
+import { Mocked } from 'vitest';
 
-import { CaExternalContactsService, NoticeRecipientsService, RegulatorAuthoritiesService } from 'cca-api';
-import { TasksService } from 'cca-api';
+import { CaExternalContactsService, RegulatorAuthoritiesService, TasksService } from 'cca-api';
 
 import { mockRequestTaskItemDTO } from '../testing/mock-data';
 import UnderlyingAgreementActivationNotifyOperatorComponent from './underlying-agreement-activation-notify-operator.component';
@@ -20,8 +20,8 @@ describe('UnderlyingAgreementActivationNotifyOperatorComponent', () => {
   let fixture: ComponentFixture<UnderlyingAgreementActivationNotifyOperatorComponent>;
   let store: RequestTaskStore;
 
-  const tasksService: Partial<jest.Mocked<TasksService>> = {
-    getDefaultNoticeRecipients: jest.fn().mockReturnValue(
+  const tasksService: Partial<Mocked<TasksService>> = {
+    getDefaultNoticeRecipients: vi.fn().mockReturnValue(
       of([
         {
           email: 'test@example.com',
@@ -32,10 +32,7 @@ describe('UnderlyingAgreementActivationNotifyOperatorComponent', () => {
         },
       ]),
     ),
-  };
-
-  const noticeRecipientsService: Partial<jest.Mocked<NoticeRecipientsService>> = {
-    getAdditionalNoticeRecipients: jest.fn().mockReturnValue(
+    getAdditionalNoticeRecipients: vi.fn().mockReturnValue(
       of([
         {
           email: 'test-add@example.com',
@@ -48,8 +45,8 @@ describe('UnderlyingAgreementActivationNotifyOperatorComponent', () => {
     ),
   };
 
-  const caExternalContactsService: Partial<jest.Mocked<CaExternalContactsService>> = {
-    getCaExternalContacts: jest.fn().mockReturnValue(
+  const caExternalContactsService: Partial<Mocked<CaExternalContactsService>> = {
+    getCaExternalContacts: vi.fn().mockReturnValue(
       of({
         caExternalContacts: [
           {
@@ -63,8 +60,8 @@ describe('UnderlyingAgreementActivationNotifyOperatorComponent', () => {
     ),
   };
 
-  const regulatorAuthoritiesService: Partial<jest.Mocked<RegulatorAuthoritiesService>> = {
-    getCaRegulators: jest.fn().mockReturnValue(
+  const regulatorAuthoritiesService: Partial<Mocked<RegulatorAuthoritiesService>> = {
+    getCaRegulators: vi.fn().mockReturnValue(
       of({
         caUsers: [
           {
@@ -86,7 +83,6 @@ describe('UnderlyingAgreementActivationNotifyOperatorComponent', () => {
         RequestTaskStore,
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: TasksService, useValue: tasksService },
-        { provide: NoticeRecipientsService, useValue: noticeRecipientsService },
         { provide: CaExternalContactsService, useValue: caExternalContactsService },
         { provide: RegulatorAuthoritiesService, useValue: regulatorAuthoritiesService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },

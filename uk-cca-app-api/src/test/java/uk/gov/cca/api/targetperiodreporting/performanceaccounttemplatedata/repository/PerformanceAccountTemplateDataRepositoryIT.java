@@ -20,6 +20,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.persistence.EntityManager;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.performanceaccounttemplatedata.domain.PerformanceAccountTemplateDataContainer;
@@ -161,6 +162,7 @@ class PerformanceAccountTemplateDataRepositoryIT extends AbstractContainerBaseTe
 				.buyOutStartDate(LocalDate.now())
 				.buyOutPrimaryPaymentDeadline(LocalDate.now())
 				.secondaryReportingStartDate(LocalDate.now())
+				.schemeVersion(SchemeVersion.CCA_2)
 				.build();
 	}
 

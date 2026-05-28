@@ -14,6 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,4 +53,9 @@ public class FacilityBaselineData {
     @NotNull
     @Digits(integer = Integer.MAX_VALUE, fraction = 7)
     private BigDecimal energyCarbonFactor;
+    
+    // This field is needed to display the correct unit in the timeline events after the change to CO2
+    @Builder.Default
+    @JsonSetter(nulls = Nulls.SKIP)
+    private CarbonConversionFactorMeasurementType carbonConversionFactorMeasurement = CarbonConversionFactorMeasurementType.KGCO2E_PER_KWH;
 }

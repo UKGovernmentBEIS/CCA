@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 
 @Data
 @Builder
@@ -18,7 +19,6 @@ import lombok.NoArgsConstructor;
 @JsonInclude
 public class SectorAssociationSchemeDTO {
 
-    @NotNull
     private Long id;
 
     @NotNull(message = "{sectorAssociationScheme.umbrellaAgreement.notNull}")
@@ -30,4 +30,7 @@ public class SectorAssociationSchemeDTO {
     private LocalDate umaDate;
     
     private String sectorDefinition;
+    
+    @NotNull
+    private SchemeVersion schemeVersion;
 }

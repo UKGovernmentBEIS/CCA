@@ -57,6 +57,6 @@ describe('ManageFacilitiesComponent', () => {
   it('should show summary values', () => {
     expect(page.header.textContent.trim()).toEqual('Manage facilities list');
 
-    expect(fixture).toMatchSnapshot('manage-facilities');
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot('manage-facilities');
   });
 });

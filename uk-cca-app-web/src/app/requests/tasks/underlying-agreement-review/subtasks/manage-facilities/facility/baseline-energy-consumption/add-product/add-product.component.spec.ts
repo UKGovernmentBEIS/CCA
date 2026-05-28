@@ -25,23 +25,23 @@ describe('AddProductComponent', () => {
   let store: RequestTaskStore;
   let draftService: MockType<BaselineEnergyDraftService>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     draftService = {
-      initializeFromStore: jest.fn(),
-      draftSignal: jest.fn().mockReturnValue({
+      initializeFromStore: vi.fn(),
+      draftSignal: vi.fn().mockReturnValue({
         totalFixedEnergy: '100',
         hasVariableEnergy: true,
         variableEnergyType: 'BY_PRODUCT',
         products: [mockProductVariableEnergyData],
       }) as any,
-      saveFormSnapshot: jest.fn(),
-      setProducts: jest.fn(),
-      removeProduct: jest.fn(),
-      updateTotalFixedEnergy: jest.fn(),
-      clear: jest.fn(),
+      saveFormSnapshot: vi.fn(),
+      setProducts: vi.fn(),
+      removeProduct: vi.fn(),
+      updateTotalFixedEnergy: vi.fn(),
+      clear: vi.fn(),
     };
 
-    const destroyRef = { onDestroy: jest.fn() } as unknown as DestroyRef;
+    const destroyRef = { onDestroy: vi.fn() } as unknown as DestroyRef;
     const formBuilder = new FormBuilder();
 
     const productFormGroup = createProductFormGroup(formBuilder, destroyRef, mockProductVariableEnergyData);
@@ -50,7 +50,7 @@ describe('AddProductComponent', () => {
       products: formBuilder.array([productFormGroup]),
     });
 
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       imports: [AddProductComponent, ReactiveFormsModule, RouterModule],
       providers: [
         provideHttpClient(),
@@ -65,7 +65,7 @@ describe('AddProductComponent', () => {
 
     store = TestBed.inject(RequestTaskStore);
 
-    jest.spyOn(store, 'select').mockImplementation((selector) => {
+    vi.spyOn(store, 'select').mockImplementation((selector) => {
       if (selector === requestTaskQuery.selectRequestTaskPayload) {
         return signal(mockRequestTaskPayloadWithProducts);
       }
@@ -103,7 +103,7 @@ describe('AddProductComponent', () => {
   });
 
   it('should render the form with the correct initial values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 
   it('should have products array with one product', () => {
@@ -163,7 +163,7 @@ describe('AddProductComponent', () => {
   });
 
   it('should call onSubmit when form is submitted', () => {
-    const onSubmitSpy = jest.spyOn(component, 'onSubmit');
+    const onSubmitSpy = vi.spyOn(component, 'onSubmit');
     component.onSubmit();
     expect(onSubmitSpy).toHaveBeenCalled();
   });

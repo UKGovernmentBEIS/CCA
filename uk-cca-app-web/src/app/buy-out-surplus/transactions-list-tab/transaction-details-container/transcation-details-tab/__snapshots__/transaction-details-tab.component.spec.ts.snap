@@ -1,11 +1,3 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TransactionDetailsTabComponent should show summary values 1`] = `
-<cca-transaction-details-tab
-  activatedRoute={[Function Object]}
-  summaryData={[Function Array]}
->
-  <cca-summary>
-  </cca-summary>
-</cca-transaction-details-tab>
-`;
+exports[`TransactionDetailsTabComponent > should show summary values 1`] = `"<cca-summary><!--container--></cca-summary>"`;

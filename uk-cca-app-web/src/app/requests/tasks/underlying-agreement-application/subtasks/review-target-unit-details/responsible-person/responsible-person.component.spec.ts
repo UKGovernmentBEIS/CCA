@@ -45,10 +45,10 @@ describe('ResponsiblePersonComponent', () => {
   const route = new ActivatedRouteStub();
 
   const tasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
-  const saveRequestTaskActionSpy = jest.spyOn(tasksApiService, 'saveRequestTaskAction');
+  const saveRequestTaskActionSpy = vi.spyOn(tasksApiService, 'saveRequestTaskAction');
 
   let router: Router;
 
@@ -63,7 +63,7 @@ describe('ResponsiblePersonComponent', () => {
         {
           provide: Router,
           useValue: {
-            navigate: jest.fn(),
+            navigate: vi.fn(),
             url: '/test/responsible-person',
             events: of({}),
             createUrlTree: () => ({}),

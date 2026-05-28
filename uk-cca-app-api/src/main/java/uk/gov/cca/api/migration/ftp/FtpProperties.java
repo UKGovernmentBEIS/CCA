@@ -83,4 +83,20 @@ public class FtpProperties {
     @Valid
     @NotBlank
     private String serverCca3SectorAssociationMigrationSourceFile;
+    
+    @Valid
+    @NotBlank
+    private String serverCca3CreateSectorAssociationMigrationSourceFile;
+    
+    @Valid
+    @NotBlank
+    private String serverCca3CarbonConversionFactorMigrationDirectory;
+    
+    @Valid
+    @NotBlank
+    private String serverCca3CarbonConversionFactorMigrationSourceFile;
+    
+    @Valid
+    @NotBlank
+    private String serverCca3TargetCalculatorFileMigrationDirectory;
 }

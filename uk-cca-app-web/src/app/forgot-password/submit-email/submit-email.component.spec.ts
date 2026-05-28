@@ -19,7 +19,7 @@ describe('SubmitEmailComponent', () => {
         provideRouter([]),
         {
           provide: ForgotPasswordService,
-          useValue: { sendResetPasswordEmail: jest.fn((email) => of(email)) },
+          useValue: { sendResetPasswordEmail: vi.fn((email) => of(email)) },
         },
       ],
     }).compileComponents();

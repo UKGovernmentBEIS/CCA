@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -35,8 +35,8 @@ export class SubmitOtpComponent {
   private readonly store = inject(ResetPasswordStore);
 
   protected readonly isSummaryDisplayed = signal<boolean>(false);
-  protected readonly email = this.store.state.email;
-  protected isPasswordReset = false;
+  protected readonly email = computed(() => this.store.stateAsSignal().email);
+  protected readonly isPasswordReset = signal<boolean>(false);
 
   protected readonly form = this.fb.group({
     otp: [
@@ -72,7 +72,7 @@ export class SubmitOtpComponent {
         }),
       )
       .subscribe(() => {
-        this.isPasswordReset = true;
+        this.isPasswordReset.set(true);
       });
   }
 

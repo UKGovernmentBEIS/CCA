@@ -12,7 +12,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
 import uk.gov.cca.api.workflow.request.flow.common.validation.peerreview.CcaPeerReviewValidator;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceCloseJustification;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.common.validation.NonComplianceViolation;
-import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntent;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntent;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitRequestTaskPayload;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
@@ -48,8 +48,8 @@ class NoticeOfIntentSubmitRequestPeerReviewValidatorTest {
         final String processId = "process";
         final AppUser appUser = AppUser.builder().build();
         final UUID fileUuid = UUID.randomUUID();
-        final NoticeOfIntent noticeOfIntent = NoticeOfIntent.builder()
-                .noticeOfIntentFile(fileUuid)
+        final NonComplianceNoticeOfIntent noticeOfIntent = NonComplianceNoticeOfIntent.builder()
+                .file(fileUuid)
                 .comments("bla bla bla")
                 .build();
         final NonComplianceNoticeOfIntentSubmitRequestTaskPayload requestTaskPayload = NonComplianceNoticeOfIntentSubmitRequestTaskPayload.builder()
@@ -68,7 +68,7 @@ class NoticeOfIntentSubmitRequestPeerReviewValidatorTest {
                 .build();
 
         when(noticeOfIntentSubmitValidator.validate(requestTaskPayload)).thenReturn(BusinessValidationResult.valid());
-        when(peerReviewValidator.validate(requestTask, payload, appUser, CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW))
+        when(peerReviewValidator.validate(requestTask, payload, appUser, CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW))
                 .thenReturn(BusinessValidationResult.valid());
 
         // invoke
@@ -76,7 +76,7 @@ class NoticeOfIntentSubmitRequestPeerReviewValidatorTest {
 
         // verify
         verify(noticeOfIntentSubmitValidator, times(1)).validate(requestTaskPayload);
-        verify(peerReviewValidator, times(1)).validate(requestTask, payload, appUser, CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW);
+        verify(peerReviewValidator, times(1)).validate(requestTask, payload, appUser, CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW);
     }
 
     @Test
@@ -85,8 +85,8 @@ class NoticeOfIntentSubmitRequestPeerReviewValidatorTest {
         final String processId = "process";
         final AppUser appUser = AppUser.builder().build();
         final UUID fileUuid = UUID.randomUUID();
-        final NoticeOfIntent noticeOfIntent = NoticeOfIntent.builder()
-                .noticeOfIntentFile(null)
+        final NonComplianceNoticeOfIntent noticeOfIntent = NonComplianceNoticeOfIntent.builder()
+                .file(null)
                 .comments("bla bla bla")
                 .build();
         final NonComplianceNoticeOfIntentSubmitRequestTaskPayload requestTaskPayload = NonComplianceNoticeOfIntentSubmitRequestTaskPayload.builder()
@@ -106,7 +106,7 @@ class NoticeOfIntentSubmitRequestPeerReviewValidatorTest {
 
         when(noticeOfIntentSubmitValidator.validate(requestTaskPayload)).thenReturn(BusinessValidationResult.invalid(List.of(new NonComplianceViolation(NonComplianceCloseJustification.class.getName(),
                 NonComplianceViolation.NonComplianceViolationMessage.INVALID_NON_COMPLIANCE_NOTICE_OF_INTENT_DATA))));
-        when(peerReviewValidator.validate(requestTask, payload, appUser, CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW))
+        when(peerReviewValidator.validate(requestTask, payload, appUser, CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW))
                 .thenReturn(BusinessValidationResult.valid());
 
         // invoke
@@ -117,6 +117,6 @@ class NoticeOfIntentSubmitRequestPeerReviewValidatorTest {
         // verify
         assertThat(CcaErrorCode.INVALID_NON_COMPLIANCE).isEqualTo(businessException.getErrorCode());
         verify(noticeOfIntentSubmitValidator, times(1)).validate(requestTaskPayload);
-        verify(peerReviewValidator, times(1)).validate(requestTask, payload, appUser, CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW);
+        verify(peerReviewValidator, times(1)).validate(requestTask, payload, appUser, CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW);
     }
 }

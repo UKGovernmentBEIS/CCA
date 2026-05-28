@@ -11,8 +11,8 @@ const payload: PATUploadedActionPayload = {
   targetPeriodYear: null,
   data: {
     targetUnitIdentityAndPerformance: {
-      improvementAccountedPercentage: -0.0215,
-      improvementAchievedPercentage: -1.99,
+      improvementAccountedPercentage: '-0.0215',
+      improvementAchievedPercentage: '-1.99',
       targetType: 'NOVEM_CARBON',
       performanceImpactedByAnyImplementedMeasures: 'Yes',
       performanceImpactedByAnyImplementedMeasuresSupportingText: null,

@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 import { ReceivedAmountGuard } from './received-amount.guard';
 
-export const SECTOR_MOAS_RECEIVED_AMOUNT_ROUTES: Routes = [
+export const RECEIVED_AMOUNT_ROUTES: Routes = [
   {
     path: '',
     data: { backlink: '..', breadcrumb: false },

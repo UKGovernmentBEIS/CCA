@@ -18,6 +18,7 @@ import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PER
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_NON_COMPLIANCE_PEER_REVIEW;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_NON_COMPLIANCE_SUBMISSION;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_OPERATOR_USERS_EDIT;
+import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_SECTOR_ADVANCED_DETAILS_EDIT;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_SECTOR_ASSOCIATION_EDIT;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_SECTOR_USERS_EDIT;
 import static uk.gov.cca.api.authorization.ccaauth.core.domain.CcaPermission.PERM_UNDERLYING_AGREEMENT_APPLICATION_PEER_REVIEW;
@@ -31,6 +32,7 @@ import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulator
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.FACILITY_AUDIT_SUBMISSION;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.MANAGE_FACILITY_AUDIT;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.MANAGE_OPERATOR_USERS;
+import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.MANAGE_SECTOR_ADVANCED_DETAILS;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.MANAGE_SECTOR_ASSOCIATIONS;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.MANAGE_SECTOR_USERS;
 import static uk.gov.cca.api.authorization.ccaauth.regulator.domain.CcaRegulatorPermissionGroup.NON_COMPLIANCE_PEER_REVIEW;
@@ -188,6 +190,14 @@ public class CcaRegulatorPermissionsAdapter extends AbstarctRegulatorPermissions
         permissionGroupLevelsConfig
                 .put(new RegulatorPermissionGroupLevel(NON_COMPLIANCE_PEER_REVIEW, RegulatorPermissionLevel.EXECUTE),
                         List.of(PERM_NON_COMPLIANCE_PEER_REVIEW));
+
+        // MANAGE_SECTOR_ADVANCED_DETAILS
+        permissionGroupLevelsConfig
+                .put(new RegulatorPermissionGroupLevel(MANAGE_SECTOR_ADVANCED_DETAILS, RegulatorPermissionLevel.NONE),
+                        Collections.emptyList());
+        permissionGroupLevelsConfig
+                .put(new RegulatorPermissionGroupLevel(MANAGE_SECTOR_ADVANCED_DETAILS, RegulatorPermissionLevel.EXECUTE),
+                        List.of(PERM_SECTOR_ADVANCED_DETAILS_EDIT));
     }
 
     @Override

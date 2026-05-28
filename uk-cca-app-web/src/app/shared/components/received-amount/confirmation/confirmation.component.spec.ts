@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText } from '@testing';
+import { Mocked } from 'vitest';
 
 import { SubsistenceFeesMoAViewService } from 'cca-api';
 
@@ -15,11 +16,11 @@ import { ConfirmationComponent } from './confirmation.component';
 describe('ConfirmationComponent', () => {
   let component: ConfirmationComponent;
   let fixture: ComponentFixture<ConfirmationComponent>;
-  let subsistenceFeesMoAViewService: jest.Mocked<Partial<SubsistenceFeesMoAViewService>>;
+  let subsistenceFeesMoAViewService: Mocked<Partial<SubsistenceFeesMoAViewService>>;
 
   beforeEach(async () => {
     subsistenceFeesMoAViewService = {
-      getSubsistenceFeesMoaDetailsById: jest.fn().mockReturnValue(
+      getSubsistenceFeesMoaDetailsById: vi.fn().mockReturnValue(
         of({
           moaId: 1,
           transactionId: 'CCACM1200',

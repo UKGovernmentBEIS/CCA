@@ -27,8 +27,8 @@ export class WorkflowEditNoteComponent {
 
   protected readonly form = inject<EditNoteFormModel>(EDIT_NOTE_FORM);
 
-  protected readonly noteId = +this.activatedRoute.snapshot.paramMap.get('noteId');
   protected readonly workflowId = this.activatedRoute.snapshot.paramMap.get('workflowId');
+  noteId = +this.activatedRoute.snapshot.paramMap.get('noteId');
 
   onSubmit() {
     if (this.form.invalid || !this.noteId) return;

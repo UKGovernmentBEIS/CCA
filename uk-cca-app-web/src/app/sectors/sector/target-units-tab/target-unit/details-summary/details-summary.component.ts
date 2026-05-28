@@ -14,6 +14,7 @@ import {
 } from '@netz/govuk-components';
 import { UtilityPanelComponent } from '@shared/components';
 import { OperatorTypePipe, StatusPipe, transformAddress } from '@shared/pipes';
+import { CountryService } from '@shared/services';
 import { SchemeVersion } from '@shared/types';
 import { equalAddressFields, equalArrayFields, equalFields, transformPhoneNumber } from '@shared/utils';
 
@@ -51,6 +52,8 @@ export class DetailsSummaryComponent implements OnInit {
 
   protected readonly isEditableData = input.required<IsEditableData>();
 
+  private readonly countries = inject(CountryService).countries;
+
   private readonly accountDetails = this.activeTargetUnitStore.stateAsSignal;
 
   protected readonly toggleCompaniesHouseDetailsCtrl = new FormControl<boolean>(false);
@@ -66,9 +69,10 @@ export class DetailsSummaryComponent implements OnInit {
 
   protected readonly companiesHouseState = computed(() => {
     const response = this.companiesHouseDetailsResponse();
+
     return {
       details: typeof response === 'object' ? response : null,
-      address: typeof response === 'object' ? transformAddress(response?.address).join('\n') : null,
+      address: typeof response === 'object' ? transformAddress(response?.address, this.countries()).join('\n') : null,
     };
   });
 
@@ -84,9 +88,9 @@ export class DetailsSummaryComponent implements OnInit {
   protected readonly administrativePerson = computed(() => this.tuDetails().administrativeContactDetails);
 
   protected readonly addresses = computed(() => ({
-    operator: transformAddress(this.tuDetails().address).join('\n'),
-    responsiblePerson: transformAddress(this.responsiblePerson().address).join('\n'),
-    administrativePerson: transformAddress(this.administrativePerson().address).join('\n'),
+    operator: transformAddress(this.tuDetails().address, this.countries()).join('\n'),
+    responsiblePerson: transformAddress(this.responsiblePerson().address, this.countries()).join('\n'),
+    administrativePerson: transformAddress(this.administrativePerson().address, this.countries()).join('\n'),
   }));
 
   protected readonly phoneNumbers = computed(() => ({
@@ -113,7 +117,10 @@ export class DetailsSummaryComponent implements OnInit {
       operatorType: equalFields(tuDetails.operatorType, companiesHouse.operatorType),
       companyRegistrationNumber: equalFields(tuDetails.companyRegistrationNumber, companiesHouse.registrationNumber),
       sicCodes: equalArrayFields(tuDetails.sicCodes, companiesHouse.sicCodes),
-      address: equalAddressFields(transformAddress(tuDetails.address), transformAddress(companiesHouse.address)),
+      address: equalAddressFields(
+        transformAddress(tuDetails.address, this.countries()),
+        transformAddress(companiesHouse.address, this.countries()),
+      ),
     };
   });
 

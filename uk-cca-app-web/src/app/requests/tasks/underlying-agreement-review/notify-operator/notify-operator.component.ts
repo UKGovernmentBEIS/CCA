@@ -26,13 +26,7 @@ import {
 import { WizardStepComponent } from '@shared/components';
 import { NoticeRecipientsTypePipe } from '@shared/pipes';
 
-import {
-  CaExternalContactsService,
-  NoticeRecipientDTO,
-  NoticeRecipientsService,
-  RegulatorAuthoritiesService,
-  TasksService,
-} from 'cca-api';
+import { CaExternalContactsService, NoticeRecipientDTO, RegulatorAuthoritiesService, TasksService } from 'cca-api';
 
 import { createNotifyOperatorActionDTO } from '../transform';
 import { createProposedUnderlyingAgreementPayload } from '../utils';
@@ -56,7 +50,6 @@ import { createProposedUnderlyingAgreementPayload } from '../utils';
 export class NotifyOperatorComponent {
   private readonly store = inject(RequestTaskStore);
   private readonly caExternalContactsService = inject(CaExternalContactsService);
-  private readonly noticeRecipientsService = inject(NoticeRecipientsService);
   private readonly tasksService = inject(TasksService);
   private readonly tasksApiService = inject(TasksApiService);
   private readonly regulatorAuthoritiesService = inject(RegulatorAuthoritiesService);
@@ -66,10 +59,6 @@ export class NotifyOperatorComponent {
   protected readonly form = inject<NotifyOperatorOfDecisionFormModel>(NOTIFY_OPERATOR_OF_DECISION_FORM);
   protected readonly errorForm = inject<ApiErrorFormModel>(API_ERROR_FORM);
   protected readonly isErrorSummaryDisplayed = signal(false);
-
-  private readonly requestInfo = this.store.select(requestTaskQuery.selectRequestInfo);
-  private readonly resourceType = computed(() => this.requestInfo()?.resourceType);
-  private readonly resource = computed(() => this.requestInfo()?.resources?.[this.resourceType()]);
 
   private readonly taskId = this.store.select(requestTaskQuery.selectRequestTaskId)();
   private readonly defaultNoticeRecipients = toSignal(this.tasksService.getDefaultNoticeRecipients(this.taskId));
@@ -97,9 +86,7 @@ export class NotifyOperatorComponent {
     ),
   );
 
-  protected readonly additionalUsers = toSignal(
-    this.noticeRecipientsService.getAdditionalNoticeRecipients(+this.resource()),
-  );
+  protected readonly additionalUsers = toSignal(this.tasksService.getAdditionalNoticeRecipients(this.taskId));
 
   protected readonly defaultUsers = computed(() => {
     const recipients: NoticeRecipientDTO[] = [];

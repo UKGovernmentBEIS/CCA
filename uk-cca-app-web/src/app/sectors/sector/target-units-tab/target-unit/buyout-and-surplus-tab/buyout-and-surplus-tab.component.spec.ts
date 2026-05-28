@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { MockInstance } from 'vitest';
 
 import { BuyOutAndSurplusInfoService } from 'cca-api';
 
@@ -20,7 +21,7 @@ describe('BuyoutAndSurplusTabComponent', () => {
   let fixture: ComponentFixture<BuyoutAndSurplusTabComponent>;
   let buyoutAndSurplusTabStore: BuyoutAndSurplusTabStore;
   let authStore: AuthStore;
-  let serviceSpy: jest.SpyInstance;
+  let serviceSpy: MockInstance;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -37,7 +38,7 @@ describe('BuyoutAndSurplusTabComponent', () => {
         {
           provide: BuyOutAndSurplusInfoService,
           useValue: {
-            getBuyOutSurplusInfoByAccountId: jest.fn(() => of(mockBuyoutInfo)),
+            getBuyOutSurplusInfoByAccountId: vi.fn(() => of(mockBuyoutInfo)),
           },
         },
       ],
@@ -47,10 +48,10 @@ describe('BuyoutAndSurplusTabComponent', () => {
     component = fixture.componentInstance;
     buyoutAndSurplusTabStore = TestBed.inject(BuyoutAndSurplusTabStore);
     authStore = TestBed.inject(AuthStore);
-    serviceSpy = jest.spyOn(TestBed.inject(BuyOutAndSurplusInfoService), 'getBuyOutSurplusInfoByAccountId');
+    serviceSpy = vi.spyOn(TestBed.inject(BuyOutAndSurplusInfoService), 'getBuyOutSurplusInfoByAccountId');
 
     authStore.setState(mockAuthState);
-    buyoutAndSurplusTabStore.setState(mockBuyoutInfo);
+    buyoutAndSurplusTabStore.setState({ surplusInfo: mockBuyoutInfo } as any);
     fixture.detectChanges();
   });
 

@@ -70,6 +70,7 @@ const facilities: Facility[] = [
         greenfieldEvidences: [],
         usedReportingMechanism: true,
         energyCarbonFactor: '545',
+        carbonConversionFactorMeasurement: 'kgCO2e/kWh',
       },
       facilityBaselineEnergyConsumption: {
         totalFixedEnergy: '150',
@@ -164,6 +165,7 @@ const facilitiesOriginal: Facility[] = [
         greenfieldEvidences: [],
         usedReportingMechanism: true,
         energyCarbonFactor: '545',
+        carbonConversionFactorMeasurement: 'kgCO2e/kWh',
       },
       facilityBaselineEnergyConsumption: {
         totalFixedEnergy: '150',

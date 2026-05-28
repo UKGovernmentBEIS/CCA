@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { AuthService } from '@shared/services';
 import { getByRole, getByText } from '@testing';
+import { Mocked } from 'vitest';
 
 import { mockSectorDetails, mockSectorUserDetails, mockSubSectorDetails } from '../../../../specs/fixtures/mock';
 import { DeleteSectorUserComponent } from './delete-sector-user.component';
@@ -15,7 +16,7 @@ describe('DeleteSectorUserComponent', () => {
   let component: DeleteSectorUserComponent;
   let fixture: ComponentFixture<DeleteSectorUserComponent>;
 
-  let authService: Partial<jest.Mocked<AuthService>>;
+  let authService: Partial<Mocked<AuthService>>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -36,7 +37,7 @@ describe('DeleteSectorUserComponent', () => {
             }),
             fragment: of({}),
             snapshot: {
-              paramMap: { get: jest.fn().mockReturnValue({ id: 1, sectorUserId: 1 }) },
+              paramMap: { get: vi.fn().mockReturnValue({ id: 1, sectorUserId: 1 }) },
               data: { sectorUserDetails: mockSectorUserDetails },
             },
           },

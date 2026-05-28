@@ -7,7 +7,7 @@ import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.DataValidator;
 import uk.gov.cca.api.workflow.request.flow.common.validation.FileAttachmentsExistenceValidator;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.common.validation.NonComplianceViolation;
-import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntent;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntent;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitRequestTaskPayload;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class NoticeOfIntentSubmitValidator {
 
-    private final DataValidator<NoticeOfIntent> dataValidator;
+    private final DataValidator<NonComplianceNoticeOfIntent> dataValidator;
     private final FileAttachmentsExistenceValidator fileAttachmentsExistenceValidator;
 
     public BusinessValidationResult validate(final NonComplianceNoticeOfIntentSubmitRequestTaskPayload taskPayload) {
@@ -25,12 +25,12 @@ public class NoticeOfIntentSubmitValidator {
 
         // Validate data
         if (ObjectUtils.isEmpty(taskPayload.getNoticeOfIntent())) {
-            violations.add(new NonComplianceViolation(NoticeOfIntent.class.getName(),
+            violations.add(new NonComplianceViolation(NonComplianceNoticeOfIntent.class.getName(),
                     NonComplianceViolation.NonComplianceViolationMessage.INVALID_NON_COMPLIANCE_NOTICE_OF_INTENT_DATA));
         } else {
             dataValidator.validate(taskPayload.getNoticeOfIntent())
                     .map(businessViolation ->
-                            new NonComplianceViolation(NoticeOfIntent.class.getName(),
+                            new NonComplianceViolation(NonComplianceNoticeOfIntent.class.getName(),
                                     NonComplianceViolation.NonComplianceViolationMessage.INVALID_NON_COMPLIANCE_NOTICE_OF_INTENT_DATA,
                                     businessViolation.getData()))
                     .ifPresent(violations::add);

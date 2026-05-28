@@ -18,7 +18,7 @@ import java.util.Map;
 @SuperBuilder
 public class NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload extends RequestTaskActionPayload {
 
-    private NoticeOfIntent noticeOfIntent;
+    private NonComplianceNoticeOfIntent noticeOfIntent;
 
     @Builder.Default
     private Map<String, String> sectionsCompleted = new HashMap<>();

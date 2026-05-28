@@ -188,6 +188,6 @@ function handleSharedValidations(
     energyCarbonFactorControl,
     !energyCarbonFactor,
     'requiredEnergyCarbonFactor',
-    'Enter the baseline energy to carbon conversion factor in the baseline period.',
+    'Enter the baseline energy to carbon dioxide conversion factor in the baseline period.',
   );
 }

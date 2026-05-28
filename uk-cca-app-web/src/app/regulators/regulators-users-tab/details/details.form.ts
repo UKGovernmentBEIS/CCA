@@ -57,6 +57,7 @@ export function createForm(
 
   const permissionsGroup = fb.group<PermissionsForm>({
     MANAGE_SECTOR_ASSOCIATIONS: fb.control(userPermissions?.MANAGE_SECTOR_ASSOCIATIONS || 'NONE'),
+    MANAGE_SECTOR_ADVANCED_DETAILS: fb.control(userPermissions?.MANAGE_SECTOR_ADVANCED_DETAILS || 'NONE'),
     ASSIGN_REASSIGN_TASKS: fb.control(userPermissions?.ASSIGN_REASSIGN_TASKS || 'NONE'),
     MANAGE_USERS_AND_CONTACTS: fb.control(userPermissions?.MANAGE_USERS_AND_CONTACTS || 'NONE'),
     MANAGE_SECTOR_USERS: fb.control(userPermissions?.MANAGE_SECTOR_USERS || 'NONE'),
@@ -82,6 +83,7 @@ export function createForm(
     MANAGE_FACILITY_AUDIT: fb.control(userPermissions?.MANAGE_FACILITY_AUDIT || 'NONE'),
     FACILITY_AUDIT_SUBMISSION: fb.control(userPermissions?.FACILITY_AUDIT_SUBMISSION || 'NONE'),
     NON_COMPLIANCE_SUBMISSION: fb.control(userPermissions?.NON_COMPLIANCE_SUBMISSION || 'NONE'),
+    NON_COMPLIANCE_PEER_REVIEW: fb.control(userPermissions?.NON_COMPLIANCE_PEER_REVIEW || 'NONE'),
   });
 
   return fb.group<DetailsForm>({

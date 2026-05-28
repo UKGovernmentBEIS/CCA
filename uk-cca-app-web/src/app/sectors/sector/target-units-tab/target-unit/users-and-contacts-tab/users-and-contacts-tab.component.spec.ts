@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByTestId, queryByText } from '@testing';
+import { Mocked } from 'vitest';
 
 import { OperatorAuthoritiesInfoDTO, OperatorAuthoritiesService } from 'cca-api';
 
@@ -15,11 +16,11 @@ import { UsersAndContactsTabComponent } from './users-and-contacts-tab.component
 
 describe('Target unit Users component', () => {
   let fixture: ComponentFixture<UsersAndContactsTabComponent>;
-  let operatorAuthoritiesService: jest.Mocked<Partial<OperatorAuthoritiesService>>;
+  let operatorAuthoritiesService: Mocked<Partial<OperatorAuthoritiesService>>;
 
   async function setup(mockData: OperatorAuthoritiesInfoDTO) {
     operatorAuthoritiesService = {
-      getAccountOperatorAuthorities: jest.fn().mockReturnValue(of(mockData)),
+      getAccountOperatorAuthorities: vi.fn().mockReturnValue(of(mockData)),
     };
 
     await TestBed.configureTestingModule({

@@ -21,7 +21,7 @@ describe('SectorListComponenet', () => {
         {
           provide: SectorAssociationInfoViewService,
           useValue: {
-            getSectorAssociations: jest.fn().mockReturnValue(of(mockSectors)),
+            getSectorAssociations: vi.fn().mockReturnValue(of(mockSectors)),
           },
         },
       ],

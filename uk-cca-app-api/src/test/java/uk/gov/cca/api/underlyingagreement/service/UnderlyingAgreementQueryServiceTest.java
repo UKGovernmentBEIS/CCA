@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.common.domain.SchemeVersion;
+import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementDocument;
 import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementEntity;
@@ -13,6 +14,9 @@ import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDTO;
 import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDetailsDTO;
 import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDocumentDTO;
 import uk.gov.cca.api.underlyingagreement.domain.dto.UnderlyingAgreementDocumentDetailsDTO;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
+import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.repository.UnderlyingAgreementDocumentRepository;
 import uk.gov.cca.api.underlyingagreement.repository.UnderlyingAgreementRepository;
 import uk.gov.netz.api.common.exception.BusinessException;
@@ -23,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -281,5 +286,66 @@ class UnderlyingAgreementQueryServiceTest {
         // Verify
         assertThat(businessException.getErrorCode()).isEqualTo(RESOURCE_NOT_FOUND);
         verify(underlyingAgreementDocumentRepository, times(1)).findUnderlyingAgreementDocumentByUnderlyingAgreementIdAndFileDocumentUuid(unaId, fileDocumentUuid);
+    }
+    
+    @Test
+    void getAccountsWithFacilitiesFromActiveUnderlyingAgreements() {
+        final SchemeVersion schemeVersion = SchemeVersion.CCA_3;
+
+        UnderlyingAgreementContainer container1 = UnderlyingAgreementContainer.builder()
+				.underlyingAgreement(UnderlyingAgreement.builder()
+						.facilities(Set.of(
+								Facility.builder()
+										.facilityItem(FacilityItem.builder()
+												.facilityId("FAC1")
+												.facilityDetails(FacilityDetails.builder().participatingSchemeVersions(Set.of(SchemeVersion.CCA_2)).build())
+												.build())
+										.build(),
+								Facility.builder()
+										.facilityItem(FacilityItem.builder()
+												.facilityId("FAC2")
+												.facilityDetails(FacilityDetails.builder().participatingSchemeVersions(Set.of(SchemeVersion.CCA_3)).build())
+												.build())
+										.build()))
+						.build())
+				.build();
+        UnderlyingAgreementDocument doc1 = UnderlyingAgreementDocument.builder()
+                .consolidationNumber(1)
+                .build();
+        UnderlyingAgreementEntity entity1 = new UnderlyingAgreementEntity();
+        entity1.setAccountId(1L);
+        entity1.addUnderlyingAgreementDocument(doc1);
+        entity1.setUnderlyingAgreementContainer(container1);
+        
+        UnderlyingAgreementContainer container2 = UnderlyingAgreementContainer.builder()
+				.underlyingAgreement(UnderlyingAgreement.builder()
+						.facilities(Set.of(
+								Facility.builder()
+										.facilityItem(FacilityItem.builder()
+												.facilityId("FAC3")
+												.facilityDetails(FacilityDetails.builder().participatingSchemeVersions(Set.of(SchemeVersion.CCA_2, SchemeVersion.CCA_3)).build())
+												.build())
+										.build()))
+						.build())
+				.build();
+        UnderlyingAgreementDocument doc2 = UnderlyingAgreementDocument.builder()
+                .consolidationNumber(1)
+                .build();
+        UnderlyingAgreementEntity entity2 = new UnderlyingAgreementEntity();
+        entity2.setAccountId(2L);
+        entity2.addUnderlyingAgreementDocument(doc2);
+        entity2.setUnderlyingAgreementContainer(container2);
+        
+        Map<Long, List<String>> expected = Map.of(1L, List.of("FAC2"), 2L, List.of("FAC3"));
+
+        when(underlyingAgreementDocumentRepository.findBySchemeVersionAndTerminatedDateIsNull(schemeVersion))
+                .thenReturn(List.of(doc1, doc2));
+
+        // Invoke
+        Map<Long, List<String>> result = underlyingAgreementQueryService.getAccountsWithFacilitiesFromActiveUnderlyingAgreements(SchemeVersion.CCA_3);
+
+        // Verify
+        assertThat(result).isNotNull().isEqualTo(expected);
+        verify(underlyingAgreementDocumentRepository, times(1)).findBySchemeVersionAndTerminatedDateIsNull(schemeVersion);
     }
 }

@@ -2,9 +2,9 @@ package uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadown
 
 import org.springframework.stereotype.Service;
 
-import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.common.service.CcaRequestCreateValidatorService;
+import uk.gov.cca.api.workflow.request.flow.common.validation.performancedata.PerformanceDataCreateSchemeValidator;
 import uk.gov.cca.api.workflow.request.flow.performancedata.common.validation.PerformanceDataCreateValidator;
 
 import java.util.Set;
@@ -12,9 +12,9 @@ import java.util.Set;
 @Service
 public class PerformanceDataDownloadCreateValidator extends PerformanceDataCreateValidator {
 
-    public PerformanceDataDownloadCreateValidator(TargetPeriodService targetPeriodService,
+    public PerformanceDataDownloadCreateValidator(PerformanceDataCreateSchemeValidator performanceDataCreateSchemeValidator,
                                                   CcaRequestCreateValidatorService ccaRequestCreateValidatorService) {
-        super(targetPeriodService, ccaRequestCreateValidatorService);
+        super(performanceDataCreateSchemeValidator, ccaRequestCreateValidatorService);
     }
 
     @Override

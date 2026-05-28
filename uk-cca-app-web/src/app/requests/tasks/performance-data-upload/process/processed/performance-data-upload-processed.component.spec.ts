@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 
 import { RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { PerformanceDataUploadSubmitRequestTaskPayload, TasksService } from 'cca-api';
 
@@ -19,8 +20,8 @@ describe('PerformanceDataUploadProcessedComponent', () => {
   let fixture: ComponentFixture<PerformanceDataUploadProcessedComponent>;
   let store: RequestTaskStore;
 
-  const tasksService: Partial<jest.Mocked<TasksService>> = {
-    processRequestTaskAction: jest.fn().mockReturnValue(of(mockRequestTaskStatePerformanceDataUploadState)),
+  const tasksService: Partial<Mocked<TasksService>> = {
+    processRequestTaskAction: vi.fn().mockReturnValue(of(mockRequestTaskStatePerformanceDataUploadState)),
   };
 
   beforeEach(async () => {

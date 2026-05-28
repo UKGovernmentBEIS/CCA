@@ -38,7 +38,7 @@ describe('PasswordComponent', () => {
   let fixture: ComponentFixture<TestComponent>;
 
   beforeEach(async () => {
-    PasswordValidators.blacklisted = jest
+    PasswordValidators.blacklisted = vi
       .fn()
       .mockReturnValue(of({ blacklisted: 'Password has been blacklisted. Please select another password' }));
 

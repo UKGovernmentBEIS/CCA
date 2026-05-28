@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 
 @Getter
 @Setter
@@ -83,5 +84,10 @@ public class TargetPeriod {
   @Column(name = "secondary_reporting_start_date")
   @NotNull
   private LocalDate secondaryReportingStartDate;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "scheme_version", length = 8)
+  @NotNull
+  private SchemeVersion schemeVersion;
 }
 

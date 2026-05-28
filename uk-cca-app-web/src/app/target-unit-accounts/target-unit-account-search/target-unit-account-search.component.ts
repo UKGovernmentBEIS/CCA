@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { map, switchMap, tap } from 'rxjs';
+import { catchError, map, of, switchMap, tap } from 'rxjs';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -84,6 +84,7 @@ export class TargetUnitAccountSearchComponent {
         switchMap(({ term, page, pageSize }) =>
           this.targetUnitAccountInfoViewService.searchUserAccounts(page - 1, pageSize, term),
         ),
+        catchError(() => of({ accounts: [], total: 0 })),
         tap(({ accounts, total }) => {
           this.state.set({
             accounts: accounts || [],

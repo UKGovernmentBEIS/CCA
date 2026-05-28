@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -58,7 +58,7 @@ export class EditSectorUserDetailsComponent {
   private readonly sectorUserId = this.activatedRoute.snapshot.paramMap.get('sectorUserId');
 
   private readonly currentUserId = inject(AuthStore).select(selectUserId);
-  private readonly isCurrentUser = this.currentUserId() === this.sectorUserId;
+  private readonly isCurrentUser = computed(() => this.currentUserId() === this.sectorUserId);
 
   protected readonly sectorUserDetails = this.store.state.details;
 
@@ -75,7 +75,7 @@ export class EditSectorUserDetailsComponent {
 
     const data = { ...this.form.getRawValue(), email: this.sectorUserDetails.email } as SectorUserAuthorityDetailsDTO;
 
-    if (this.isCurrentUser) {
+    if (this.isCurrentUser()) {
       this.sectorUsersService
         .updateCurrentSectorUser(this.sectorId, data)
         .pipe(

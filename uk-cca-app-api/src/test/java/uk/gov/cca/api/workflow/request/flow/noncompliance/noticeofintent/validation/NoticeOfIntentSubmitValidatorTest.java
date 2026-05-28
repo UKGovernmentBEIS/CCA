@@ -10,7 +10,7 @@ import uk.gov.cca.api.common.validation.DataValidator;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
 import uk.gov.cca.api.workflow.request.flow.common.validation.FileAttachmentsExistenceValidator;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.common.validation.NonComplianceViolation;
-import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntent;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntent;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitRequestTaskPayload;
 
 import java.util.Map;
@@ -31,7 +31,7 @@ class NoticeOfIntentSubmitValidatorTest {
     private NoticeOfIntentSubmitValidator noticeOfIntentSubmitValidator;
 
     @Mock
-    private DataValidator<NoticeOfIntent> dataValidator;
+    private DataValidator<NonComplianceNoticeOfIntent> dataValidator;
 
     @Mock
     private FileAttachmentsExistenceValidator fileAttachmentsExistenceValidator;
@@ -39,8 +39,8 @@ class NoticeOfIntentSubmitValidatorTest {
     @Test
     void validate_valid() {
         final UUID fileUuid = UUID.randomUUID();
-        final NoticeOfIntent noticeOfIntent = NoticeOfIntent.builder()
-                .noticeOfIntentFile(fileUuid)
+        final NonComplianceNoticeOfIntent noticeOfIntent = NonComplianceNoticeOfIntent.builder()
+                .file(fileUuid)
                 .comments("bla bla bla")
                 .build();
         final NonComplianceNoticeOfIntentSubmitRequestTaskPayload requestTaskPayload = NonComplianceNoticeOfIntentSubmitRequestTaskPayload.builder()
@@ -62,8 +62,8 @@ class NoticeOfIntentSubmitValidatorTest {
     @Test
     void validate_not_valid() {
         final UUID fileUuid = UUID.randomUUID();
-        final NoticeOfIntent noticeOfIntent = NoticeOfIntent.builder()
-                .noticeOfIntentFile(null)
+        final NonComplianceNoticeOfIntent noticeOfIntent = NonComplianceNoticeOfIntent.builder()
+                .file(null)
                 .comments("bla bla bla")
                 .build();
         final NonComplianceNoticeOfIntentSubmitRequestTaskPayload requestTaskPayload = NonComplianceNoticeOfIntentSubmitRequestTaskPayload.builder()
@@ -72,7 +72,7 @@ class NoticeOfIntentSubmitValidatorTest {
                 .nonComplianceAttachments(Map.of(fileUuid, "attachment"))
                 .build();
 
-        when(dataValidator.validate(noticeOfIntent)).thenReturn(Optional.of(new NonComplianceViolation(NoticeOfIntent.class.getName(),
+        when(dataValidator.validate(noticeOfIntent)).thenReturn(Optional.of(new NonComplianceViolation(NonComplianceNoticeOfIntent.class.getName(),
                 NonComplianceViolation.NonComplianceViolationMessage.INVALID_NON_COMPLIANCE_NOTICE_OF_INTENT_DATA)));
 
         // invoke

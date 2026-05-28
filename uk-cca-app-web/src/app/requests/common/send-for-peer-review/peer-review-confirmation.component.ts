@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { PanelComponent } from '@netz/govuk-components';
@@ -10,7 +10,10 @@ import { AssigneeUserInfoDTO } from 'cca-api';
   template: `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <govuk-panel>Sent to {{ regulatorUser.firstName }} {{ regulatorUser.lastName }} for peer review</govuk-panel>
+        <govuk-panel
+          >{{ confirmationPrefix() }} {{ regulatorUser().firstName }} {{ regulatorUser().lastName }} for peer
+          review</govuk-panel
+        >
 
         <a class="govuk-link" routerLink="/dashboard" [replaceUrl]="true"> Return to: dashboard </a>
       </div>
@@ -21,11 +24,20 @@ import { AssigneeUserInfoDTO } from 'cca-api';
 })
 export class PeerReviewConfirmationComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly routeData = signal(this.activatedRoute.snapshot.data);
+  private readonly routeParamMap = signal(this.activatedRoute.snapshot.paramMap);
+  private readonly parentRouteData = signal(
+    this.activatedRoute.parent?.snapshot.data ?? this.activatedRoute.snapshot.data,
+  );
 
-  private readonly selectedAssigneeId = this.activatedRoute.snapshot.paramMap.get('assigneeId');
-  private readonly candidateAssignees = this.activatedRoute.parent?.snapshot.data[
-    'candidateAssignees'
-  ] as AssigneeUserInfoDTO[];
-  protected readonly regulatorUser =
-    this.candidateAssignees?.find((assignee) => assignee.id === this.selectedAssigneeId) || ({} as AssigneeUserInfoDTO);
+  protected readonly confirmationPrefix = computed(() => this.routeData()['confirmationPrefix'] ?? 'Sent to');
+  private readonly selectedAssigneeId = computed(() => this.routeParamMap().get('assigneeId'));
+  private readonly candidateAssignees = computed(
+    () => (this.parentRouteData()['candidateAssignees'] as AssigneeUserInfoDTO[]) ?? [],
+  );
+  protected readonly regulatorUser = computed(
+    () =>
+      this.candidateAssignees().find((assignee) => assignee.id === this.selectedAssigneeId()) ||
+      ({} as AssigneeUserInfoDTO),
+  );
 }

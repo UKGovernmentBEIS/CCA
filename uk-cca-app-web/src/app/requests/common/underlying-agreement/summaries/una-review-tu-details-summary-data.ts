@@ -1,5 +1,6 @@
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { OperatorTypePipe, transformAddress } from '@shared/pipes';
+import { Country } from '@shared/types';
 import { equalAddressFields, equalFields } from '@shared/utils';
 
 import { UnderlyingAgreementReviewDecision, UnderlyingAgreementTargetUnitDetails } from 'cca-api';
@@ -10,6 +11,7 @@ import { addDecisionSummaryData } from './decision-summary-data';
 
 function reviewTargetUnitDetailsSummaryFactory(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
+  countries: Country[],
   isEditable: boolean,
   companiesHouseState?: CompaniesHouseState,
   toggleCompaniesHouseDetails?: boolean,
@@ -52,13 +54,13 @@ function reviewTargetUnitDetailsSummaryFactory(
 
   factory
     .addSection('Operator address', prefix + ReviewTargetUnitDetailsWizardStep?.OPERATOR_ADDRESS)
-    .addRow('Address', transformAddress(targetUnitDetails?.operatorAddress), {
+    .addRow('Address', transformAddress(targetUnitDetails?.operatorAddress, countries), {
       change: isEditable,
       fieldDiff:
         toggleCompaniesHouseDetails &&
         equalAddressFields(
-          transformAddress(targetUnitDetails?.operatorAddress),
-          transformAddress(companiesHouseState?.details?.address),
+          transformAddress(targetUnitDetails?.operatorAddress, countries),
+          transformAddress(companiesHouseState?.details?.address, countries),
         ) === false,
     })
     .addSection('Responsible Person', prefix + ReviewTargetUnitDetailsWizardStep?.RESPONSIBLE_PERSON)
@@ -71,7 +73,7 @@ function reviewTargetUnitDetailsSummaryFactory(
     .addRow('Email address', targetUnitDetails?.responsiblePersonDetails?.email, {
       change: isEditable,
     })
-    .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address), {
+    .addRow('Address', transformAddress(targetUnitDetails?.responsiblePersonDetails?.address, countries), {
       change: isEditable,
     });
 
@@ -80,6 +82,7 @@ function reviewTargetUnitDetailsSummaryFactory(
 
 export function toReviewTargetUnitDetailsUNAReviewSummaryData(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
+  countries: Country[],
   isEditable: boolean,
   companiesHouseState?: CompaniesHouseState,
   toggleCompaniesHouseDetails?: boolean,
@@ -87,6 +90,7 @@ export function toReviewTargetUnitDetailsUNAReviewSummaryData(
 ): SummaryData {
   return reviewTargetUnitDetailsSummaryFactory(
     targetUnitDetails,
+    countries,
     isEditable,
     companiesHouseState,
     toggleCompaniesHouseDetails,
@@ -97,6 +101,7 @@ export function toReviewTargetUnitDetailsUNAReviewSummaryData(
 export function toReviewTargetUnitDetailsSummaryDataWithDecision(
   targetUnitDetails: UnderlyingAgreementTargetUnitDetails,
   decision: UnderlyingAgreementReviewDecision,
+  countries: Country[],
   attachments: Record<string, string>,
   downloadUrl: string,
   isEditable: boolean,
@@ -106,6 +111,7 @@ export function toReviewTargetUnitDetailsSummaryDataWithDecision(
 ): SummaryData {
   const factory = reviewTargetUnitDetailsSummaryFactory(
     targetUnitDetails,
+    countries,
     isEditable,
     companiesHouseState,
     toggleCompaniesHouseDetails,

@@ -1,0 +1,40 @@
+package uk.gov.cca.api.workflow.bpmn.flowable.handler.noncompliance;
+
+import org.flowable.engine.delegate.DelegateExecution;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.service.EnforcementResponseNoticeSubmitService;
+import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
+
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class NonCompliancePenaltyReissueHandlerFlowableTest {
+
+    @InjectMocks
+    private NonCompliancePenaltyReissueHandlerFlowable handler;
+
+    @Mock
+    private EnforcementResponseNoticeSubmitService enforcementResponseNoticeSubmitService;
+
+    @Mock
+    private DelegateExecution execution;
+
+    @Test
+    void execute() {
+        String requestId = "1";
+        when(execution.getVariable(BpmnProcessConstants.REQUEST_ID)).thenReturn(requestId);
+
+        // Invoke
+        handler.execute(execution);
+
+        // Verify
+        verify(execution, times(1)).getVariable(BpmnProcessConstants.REQUEST_ID);
+        verify(enforcementResponseNoticeSubmitService, times(1)).resetForPenaltyReissue(requestId);
+    }
+}

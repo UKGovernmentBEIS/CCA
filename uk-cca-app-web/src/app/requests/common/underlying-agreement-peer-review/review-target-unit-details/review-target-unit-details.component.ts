@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 
 import { toReviewTargetUnitDetailsSummaryDataWithDecision } from '../../underlying-agreement/summaries';
 import { underlyingAgreementPeerReviewQuery } from '../underlying-agreement-peer-review.selectors';
@@ -24,10 +25,13 @@ import { underlyingAgreementPeerReviewQuery } from '../underlying-agreement-peer
 export class ReviewTargetUnitDetailsComponent {
   private readonly store = inject(RequestTaskStore);
 
+  private readonly countries = inject(CountryService).countries;
+
   protected readonly summaryData = computed(() =>
     toReviewTargetUnitDetailsSummaryDataWithDecision(
       this.store.select(underlyingAgreementPeerReviewQuery.selectUnderlyingAgreementTargetUnitDetails)(),
       this.store.select(underlyingAgreementPeerReviewQuery.selectSubtaskDecision('TARGET_UNIT_DETAILS'))(),
+      this.countries(),
       this.store.select(underlyingAgreementPeerReviewQuery.selectReviewAttachments)(),
       '../../file-download',
       false,

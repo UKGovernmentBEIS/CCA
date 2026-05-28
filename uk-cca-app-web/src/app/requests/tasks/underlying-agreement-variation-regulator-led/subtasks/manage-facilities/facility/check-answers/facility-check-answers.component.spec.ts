@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { RequestTaskStore } from '@netz/common/store';
 import { BasePage } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
+import { Mocked } from 'vitest';
 
 import { mockRequestTaskItemDTO } from '../../../../testing/mock-data';
 import FacilityCheckAnswersComponent from './facility-check-answers.component';
@@ -24,14 +25,14 @@ describe('FacilityCheckAnswersComponent', () => {
         facilityId: 'ADS_2-F00003',
       },
       paramMap: {
-        get: jest.fn().mockReturnValue(mockRequestTaskItemDTO.requestTask.id),
+        get: vi.fn().mockReturnValue(mockRequestTaskItemDTO.requestTask.id),
       },
       pathFromRoot: [],
     },
   };
 
-  const mockTasksApiService: Partial<jest.Mocked<TasksApiService>> = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+  const mockTasksApiService: Partial<Mocked<TasksApiService>> = {
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   class Page extends BasePage<FacilityCheckAnswersComponent> {
@@ -84,11 +85,11 @@ describe('FacilityCheckAnswersComponent', () => {
 
   it('should show summary values', () => {
     expect(page.header.textContent.trim()).toEqual('Check your answers');
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 
   it('should edit facility extent and save', () => {
-    const apiServiceSpy = jest.spyOn(mockTasksApiService, 'saveRequestTaskAction');
+    const apiServiceSpy = vi.spyOn(mockTasksApiService, 'saveRequestTaskAction');
 
     page.submitButton.click();
     fixture.detectChanges();

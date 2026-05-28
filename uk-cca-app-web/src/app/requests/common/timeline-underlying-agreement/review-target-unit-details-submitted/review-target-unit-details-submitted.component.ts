@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { PageHeadingComponent } from '@netz/common/components';
 import { RequestActionStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 
 import { toReviewTargetUnitDetailsUNAReviewSummaryData } from '../../underlying-agreement/summaries';
 import { underlyingAgreementRequestActionQuery } from '../timeline-underlying-agreement.selectors';
@@ -21,11 +22,14 @@ import { underlyingAgreementRequestActionQuery } from '../timeline-underlying-ag
 export class ReviewTargetUnitDetailsSubmittedComponent {
   private readonly requestActionStore = inject(RequestActionStore);
 
+  private readonly countries = inject(CountryService).countries;
+
   protected readonly summaryData = computed(() =>
     toReviewTargetUnitDetailsUNAReviewSummaryData(
       this.requestActionStore.select(
         underlyingAgreementRequestActionQuery.selectUnderlyingAgreementTargetUnitDetails,
       )(),
+      this.countries(),
       false,
     ),
   );

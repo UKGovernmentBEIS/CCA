@@ -1,17 +1,16 @@
-import { inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { transformAddress, transformOperatorType } from '@shared/pipes';
+import { Country } from '@shared/types';
 
-import { SectorAssociationSchemesDTO, TargetUnitAccountPayload } from 'cca-api';
+import { SubsectorAssociationInfoDTO, TargetUnitAccountPayload } from 'cca-api';
 
 import { transformPhoneNumber } from '../../phone';
 
-export function toTargetUnitCreateSummaryData(payload: TargetUnitAccountPayload): SummaryData {
-  const subSectors = (inject(ActivatedRoute).snapshot.data?.subSectorScheme as SectorAssociationSchemesDTO)
-    ?.subsectorAssociations;
-
+export function toTargetUnitCreateSummaryData(
+  payload: TargetUnitAccountPayload,
+  subSectors: SubsectorAssociationInfoDTO[],
+  countries: Country[],
+): SummaryData {
   const selectedSubsector = subSectors?.find((ss) => ss.id === payload?.subsectorAssociationId)?.name;
 
   const factory = new SummaryFactory()
@@ -29,7 +28,7 @@ export function toTargetUnitCreateSummaryData(payload: TargetUnitAccountPayload)
     .addRow('Subsector', selectedSubsector, selectedSubsector ? { change: true } : null)
 
     .addSection('Operator address', '../operator-address', { testid: 'operator-address-list' })
-    .addTextAreaRow('Address', transformAddress(payload?.address), { change: true })
+    .addTextAreaRow('Address', transformAddress(payload?.address, countries), { change: true })
 
     .addSection('Responsible person', '../responsible-person', { testid: 'responsible-person-list' })
     .addChangeRow('First name', payload?.responsiblePerson?.firstName)
@@ -37,7 +36,7 @@ export function toTargetUnitCreateSummaryData(payload: TargetUnitAccountPayload)
     .addChangeRow('Job title', payload?.responsiblePerson?.jobTitle)
     .addChangeRow('Email address', payload?.responsiblePerson?.email)
     .addChangeRow('Phone number', transformPhoneNumber(payload?.responsiblePerson?.phoneNumber))
-    .addTextAreaRow('Address', transformAddress(payload?.responsiblePerson?.address), { change: true })
+    .addTextAreaRow('Address', transformAddress(payload?.responsiblePerson?.address, countries), { change: true })
 
     .addSection('Administrative contact details', '../administrative-contact', {
       testid: 'administrative-contact-list',
@@ -47,7 +46,7 @@ export function toTargetUnitCreateSummaryData(payload: TargetUnitAccountPayload)
     .addChangeRow('Job title', payload?.administrativeContactDetails?.jobTitle)
     .addChangeRow('Email address', payload?.administrativeContactDetails?.email)
     .addChangeRow('Phone number', transformPhoneNumber(payload?.administrativeContactDetails?.phoneNumber))
-    .addTextAreaRow('Address', transformAddress(payload?.administrativeContactDetails?.address), {
+    .addTextAreaRow('Address', transformAddress(payload?.administrativeContactDetails?.address, countries), {
       change: true,
     });
 

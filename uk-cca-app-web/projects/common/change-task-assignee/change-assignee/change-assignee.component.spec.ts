@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 
+import { MonoTypeOperatorFunction } from 'rxjs';
 import { of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
@@ -18,8 +19,11 @@ describe('ChangeAssigneeComponent', () => {
   let authStore: AuthStore;
   let fixture: ComponentFixture<ChangeAssigneeComponent>;
   let component: ChangeAssigneeComponent;
+  let router: Router;
 
   const tasksAssignmentService = mockClass(TasksAssignmentService);
+  const pendingRequestService = mockClass(PendingRequestService);
+
   tasksAssignmentService.assignTask.mockReturnValue(of({}));
   tasksAssignmentService.getCandidateAssigneesByTaskId.mockReturnValue(
     of([
@@ -27,6 +31,7 @@ describe('ChangeAssigneeComponent', () => {
       { id: '7b91199c-4770-4d4b-a0ed-d6d9667de157', firstName: 'Darth', lastName: 'Vader' },
     ]),
   );
+  pendingRequestService.trackRequest.mockReturnValue(((source$) => source$) as MonoTypeOperatorFunction<unknown>);
 
   class Page extends BasePage<ChangeAssigneeComponent> {
     get select(): HTMLSelectElement {
@@ -61,18 +66,21 @@ describe('ChangeAssigneeComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ChangeAssigneeComponent, RouterTestingModule],
+      imports: [ChangeAssigneeComponent],
       providers: [
+        provideRouter([]),
         { provide: TasksAssignmentService, useValue: tasksAssignmentService },
         { provide: TasksReleaseService, useValue: mockClass(TasksReleaseService) },
-        { provide: PendingRequestService, useValue: mockClass(PendingRequestService) },
+        { provide: PendingRequestService, useValue: pendingRequestService },
       ],
     }).compileComponents();
+
+    router = TestBed.inject(Router);
   });
 
   describe('for operator', () => {
@@ -99,7 +107,7 @@ describe('ChangeAssigneeComponent', () => {
 
     it('should display error if no assignee selected', async () => {
       await createComponent();
-      const submitSpy = jest.spyOn(component, 'submit');
+      const submitSpy = vi.spyOn(component, 'submit');
 
       page.button.click();
       fixture.detectChanges();
@@ -113,7 +121,8 @@ describe('ChangeAssigneeComponent', () => {
 
     it('should post assignment and emit submitted', async () => {
       await createComponent();
-      const submitSpy = jest.spyOn(component, 'submit');
+      const submitSpy = vi.spyOn(component, 'submit');
+      vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
       expect(tasksAssignmentService.assignTask).toHaveBeenCalledTimes(0);
       expect(submitSpy).toHaveBeenCalledTimes(0);
@@ -151,7 +160,8 @@ describe('ChangeAssigneeComponent', () => {
 
     it('should post assignment and emit submitted', async () => {
       await createComponent();
-      const submitSpy = jest.spyOn(component, 'submit');
+      const submitSpy = vi.spyOn(component, 'submit');
+      vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
       expect(tasksAssignmentService.assignTask).toHaveBeenCalledTimes(0);
       expect(submitSpy).toHaveBeenCalledTimes(0);

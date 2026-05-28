@@ -10,12 +10,12 @@
  * Do not edit the class manually.
  */
 import { NonComplianceCloseJustification } from './nonComplianceCloseJustification';
-import { NoticeOfIntent } from './noticeOfIntent';
+import { NonComplianceNoticeOfIntent } from './nonComplianceNoticeOfIntent';
 
 export interface NonComplianceNoticeOfIntentSubmitRequestTaskPayload {
   payloadType?: string;
   sendEmailNotification?: boolean;
-  noticeOfIntent?: NoticeOfIntent;
+  noticeOfIntent?: NonComplianceNoticeOfIntent;
   closeJustification?: NonComplianceCloseJustification;
   sectionsCompleted?: Record<string, string>;
   nonComplianceAttachments?: Record<string, string>;

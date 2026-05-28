@@ -18,4 +18,5 @@ export interface FacilityBaselineData {
   energy?: string;
   usedReportingMechanism: boolean;
   energyCarbonFactor: string;
+  carbonConversionFactorMeasurement?: 'kgCe/kWh' | 'kgCO2e/kWh';
 }

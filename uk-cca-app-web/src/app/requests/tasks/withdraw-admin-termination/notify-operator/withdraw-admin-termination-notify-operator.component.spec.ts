@@ -8,8 +8,9 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { getByText } from '@testing';
+import { Mocked } from 'vitest';
 
-import { CaExternalContactsService, NoticeRecipientsService, RegulatorAuthoritiesService, TasksService } from 'cca-api';
+import { CaExternalContactsService, RegulatorAuthoritiesService, TasksService } from 'cca-api';
 
 import {
   mockReasonForAdminTerminationWithdrawPayload,
@@ -25,22 +26,19 @@ describe('WithdrawAdminTerminationNotifyOperatorComponent', () => {
   let fixture: ComponentFixture<WithdrawAdminTerminationNotifyOperatorComponent>;
   let store: RequestTaskStore;
 
-  const tasksService: Partial<jest.Mocked<TasksService>> = {
-    getDefaultNoticeRecipients: jest.fn().mockReturnValue(of(mockWithdrawAdminTerminationNotifyOperatorDefaultUsers)),
-  };
-
-  const noticeRecipientsService: Partial<jest.Mocked<NoticeRecipientsService>> = {
-    getAdditionalNoticeRecipients: jest
+  const tasksService: Partial<Mocked<TasksService>> = {
+    getDefaultNoticeRecipients: vi.fn().mockReturnValue(of(mockWithdrawAdminTerminationNotifyOperatorDefaultUsers)),
+    getAdditionalNoticeRecipients: vi
       .fn()
       .mockReturnValue(of(mockWithdrawAdminTerminationNotifyOperatorAdditionalUsers)),
   };
 
-  const caExternalContactsService: Partial<jest.Mocked<CaExternalContactsService>> = {
-    getCaExternalContacts: jest.fn().mockReturnValue(of(mockWithdrawAdminTerminationNotifyOperatorExternalContacts)),
+  const caExternalContactsService: Partial<Mocked<CaExternalContactsService>> = {
+    getCaExternalContacts: vi.fn().mockReturnValue(of(mockWithdrawAdminTerminationNotifyOperatorExternalContacts)),
   };
 
-  const regulatorAuthoritiesService: Partial<jest.Mocked<RegulatorAuthoritiesService>> = {
-    getCaRegulators: jest.fn().mockReturnValue(of(mockWithdrawAdminTerminationNotifyOperatorRegulatorAuthorities)),
+  const regulatorAuthoritiesService: Partial<Mocked<RegulatorAuthoritiesService>> = {
+    getCaRegulators: vi.fn().mockReturnValue(of(mockWithdrawAdminTerminationNotifyOperatorRegulatorAuthorities)),
   };
 
   beforeEach(async () => {
@@ -51,7 +49,6 @@ describe('WithdrawAdminTerminationNotifyOperatorComponent', () => {
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         { provide: TasksService, useValue: tasksService },
-        { provide: NoticeRecipientsService, useValue: noticeRecipientsService },
         { provide: CaExternalContactsService, useValue: caExternalContactsService },
         { provide: RegulatorAuthoritiesService, useValue: regulatorAuthoritiesService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },

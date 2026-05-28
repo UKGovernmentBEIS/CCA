@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { By } from '@angular/platform-browser';
 
 import { TextInputComponent } from '@netz/govuk-components';
+import { Mock } from 'vitest';
 
 import { CsvWizardStepComponent } from './csv-wizard-step.component';
 
@@ -32,7 +33,7 @@ describe('CsvWizardStepComponent', () => {
       date: new FormControl('', [Validators.required]),
       text: new FormControl(''),
     });
-    onSubmit: (form: FormGroup) => any | jest.SpyInstance<void, [FormGroup]>;
+    onSubmit: ((form: FormGroup) => any) | Mock<(form: FormGroup) => void>;
   }
 
   beforeEach(async () => {
@@ -44,7 +45,7 @@ describe('CsvWizardStepComponent', () => {
     element = fixture.nativeElement;
     hostComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(CsvWizardStepComponent)).componentInstance;
-    hostComponent.onSubmit = jest.fn();
+    hostComponent.onSubmit = vi.fn();
     fixture.detectChanges();
   });
 

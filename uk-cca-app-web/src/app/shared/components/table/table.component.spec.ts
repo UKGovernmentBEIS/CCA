@@ -64,7 +64,7 @@ describe('TableComponent', () => {
         .queryAll(By.css('tbody tr'))[0]
         .query(By.css('input[type="checkbox"]')).nativeElement;
 
-      const selectChangeSpy = jest.spyOn(component.rowSelectionChange, 'emit');
+      const selectChangeSpy = vi.spyOn(component.rowSelectionChange, 'emit');
 
       firstRowCheckbox.click();
       fixture.detectChanges();
@@ -90,7 +90,7 @@ describe('TableComponent', () => {
       const headerCheckbox = fixture.debugElement.query(By.css('thead input[type="checkbox"]'));
       expect(headerCheckbox).toBeTruthy();
 
-      const selectAllChangeSpy = jest.spyOn(component.allRowsSelectionChange, 'emit');
+      const selectAllChangeSpy = vi.spyOn(component.allRowsSelectionChange, 'emit');
 
       headerCheckbox.nativeElement.click();
       fixture.detectChanges();
@@ -124,7 +124,7 @@ describe('TableComponent', () => {
       componentRef.setInput('columns', sortableColumns);
       fixture.detectChanges();
 
-      const sortSpy = jest.spyOn(component.sort, 'emit');
+      const sortSpy = vi.spyOn(component.sort, 'emit');
 
       const sortButton = fixture.debugElement.query(By.css('th button'));
       sortButton.nativeElement.click();

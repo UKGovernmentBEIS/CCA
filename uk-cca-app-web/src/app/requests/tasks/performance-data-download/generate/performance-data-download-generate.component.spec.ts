@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub, BasePage } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { TasksService } from 'cca-api';
 
@@ -20,8 +21,8 @@ describe('PerformanceDataDownloadGenerateComponent', () => {
   let store: RequestTaskStore;
   let page: Page;
 
-  const tasksService: Partial<jest.Mocked<TasksService>> = {
-    processRequestTaskAction: jest.fn().mockReturnValue(of(mockRequestTaskStatePerformanceDataDL)),
+  const tasksService: Partial<Mocked<TasksService>> = {
+    processRequestTaskAction: vi.fn().mockReturnValue(of(mockRequestTaskStatePerformanceDataDL)),
   };
 
   class Page extends BasePage<PerformanceDataDownloadGenerateComponent> {
@@ -91,7 +92,7 @@ describe('PerformanceDataDownloadGenerateComponent', () => {
   });
 
   it('should submit', () => {
-    const tasksServiceSpy = jest.spyOn(tasksService, 'processRequestTaskAction');
+    const tasksServiceSpy = vi.spyOn(tasksService, 'processRequestTaskAction');
 
     page.submitButton.click();
     fixture.detectChanges();

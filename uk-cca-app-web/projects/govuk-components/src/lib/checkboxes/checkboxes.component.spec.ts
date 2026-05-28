@@ -62,9 +62,7 @@ describe('CheckboxesComponent', () => {
         ErrorMessageComponent,
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     hostComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(CheckboxesComponent)).componentInstance;
@@ -122,19 +120,19 @@ describe('CheckboxesComponent', () => {
     getAllCheckboxes()[0].triggerEventHandler('blur', {});
     fixture.detectChanges();
 
-    expect(component.options().at(0).isTouched).toBeTruthy();
+    expect(component.options().at(0).isTouched()).toBeTruthy();
     expect(component.control.touched).toBeFalsy();
 
     getAllCheckboxes()[1].triggerEventHandler('blur', {});
     fixture.detectChanges();
 
-    expect(component.options().at(1).isTouched).toBeTruthy();
+    expect(component.options().at(1).isTouched()).toBeTruthy();
     expect(component.control.touched).toBeFalsy();
 
     getAllCheckboxes()[2].triggerEventHandler('blur', {});
     fixture.detectChanges();
 
-    expect(component.options().at(2).isTouched).toBeTruthy();
+    expect(component.options().at(2).isTouched()).toBeTruthy();
     expect(component.control.touched).toBeTruthy();
   });
 

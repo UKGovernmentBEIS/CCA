@@ -7,7 +7,7 @@ import { underlyingAgreementPeerReviewQuery } from '@requests/common';
 import { SplitByProductTableComponent } from '@requests/common';
 
 @Component({
-  selector: 'cca-products-table',
+  selector: 'cca-products-peer-review-table',
   templateUrl: './summary-products-peer-review.component.html',
   imports: [PageHeadingComponent, SplitByProductTableComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

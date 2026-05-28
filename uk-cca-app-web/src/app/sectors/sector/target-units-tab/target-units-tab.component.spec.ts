@@ -1,11 +1,12 @@
 import { signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject, of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
+import { Mocked, MockInstance } from 'vitest';
 
 import { SectorAssociationAuthoritiesService, SectorAssociationTargetUnitAccountsInfoService } from 'cca-api';
 
@@ -15,11 +16,11 @@ import { SectorTargetUnitsTabComponent } from './target-units-tab.component';
 describe('SectorTargetUnitsTabComponent', () => {
   let component: SectorTargetUnitsTabComponent;
   let fixture: ComponentFixture<SectorTargetUnitsTabComponent>;
-  let targetUnitService: jest.Mocked<SectorAssociationTargetUnitAccountsInfoService>;
-  let routerNavigateSpy: jest.SpyInstance;
+  let targetUnitService: Mocked<SectorAssociationTargetUnitAccountsInfoService>;
+  let routerNavigateSpy: MockInstance;
 
   const createQueryParamMock = (page = '1', pageSize = '50') => ({
-    get: jest.fn().mockImplementation((param) => {
+    get: vi.fn().mockImplementation((param) => {
       if (param === 'page') return page;
       if (param === 'pageSize') return pageSize;
       return null;
@@ -28,16 +29,16 @@ describe('SectorTargetUnitsTabComponent', () => {
 
   const setupComponent = async (targetUnitsData = mockTargetUnits) => {
     const authStoreMock = {
-      select: jest.fn().mockReturnValue(signal('test-user-id')),
+      select: vi.fn().mockReturnValue(signal('test-user-id')),
     };
 
     const authoritiesServiceMock = {
-      getSectorUserAuthoritiesBySectorAssociationId: jest.fn().mockReturnValue(of(mockSectorAuthorities)),
+      getSectorUserAuthoritiesBySectorAssociationId: vi.fn().mockReturnValue(of(mockSectorAuthorities)),
     };
 
     const targetUnitServiceMock = {
-      getTargetUnitAccountsWithSiteContacts: jest.fn().mockReturnValue(of(targetUnitsData)),
-      updateTargetUnitAccountSiteContacts: jest.fn().mockReturnValue(of(null)),
+      getTargetUnitAccountsWithSiteContacts: vi.fn().mockReturnValue(of(targetUnitsData)),
+      updateTargetUnitAccountSiteContacts: vi.fn().mockReturnValue(of(null)),
     };
 
     const queryParamMock = createQueryParamMock();
@@ -45,7 +46,7 @@ describe('SectorTargetUnitsTabComponent', () => {
 
     const activatedRouteMock = {
       snapshot: {
-        paramMap: { get: jest.fn().mockReturnValue('1') },
+        paramMap: { get: vi.fn().mockReturnValue('1') },
         queryParamMap: queryParamMock,
         fragment: null,
       },
@@ -65,10 +66,10 @@ describe('SectorTargetUnitsTabComponent', () => {
     fixture = TestBed.createComponent(SectorTargetUnitsTabComponent);
     component = fixture.componentInstance;
 
-    routerNavigateSpy = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    routerNavigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
     targetUnitService = TestBed.inject(
       SectorAssociationTargetUnitAccountsInfoService,
-    ) as jest.Mocked<SectorAssociationTargetUnitAccountsInfoService>;
+    ) as Mocked<SectorAssociationTargetUnitAccountsInfoService>;
   };
 
   afterEach(() => {
@@ -78,9 +79,8 @@ describe('SectorTargetUnitsTabComponent', () => {
   describe('when editable', () => {
     beforeEach(() => setupComponent(mockTargetUnits));
 
-    it('should load data and update state when effect triggers', fakeAsync(() => {
+    it('should load data and update state when effect triggers', () => {
       fixture.detectChanges();
-      tick();
 
       expect(targetUnitService.getTargetUnitAccountsWithSiteContacts).toHaveBeenCalledWith(1, 0, 50);
 
@@ -88,15 +88,14 @@ describe('SectorTargetUnitsTabComponent', () => {
       expect(component.state().editable).toBe(true);
       expect(component.state().totalItems).toBe(3);
       expect(component.state().targetUnits.length).toBe(3);
-    }));
+    });
 
-    it('should have reactive currentPage and pageSize computed properties', fakeAsync(() => {
+    it('should have reactive currentPage and pageSize computed properties', () => {
       fixture.detectChanges();
-      tick();
 
       expect(component.currentPage()).toBe(1);
       expect(component.pageSize()).toBe(50);
-    }));
+    });
 
     it('should handle navigation and pagination correctly', () => {
       component.onAddNewTargetUnit();
@@ -127,11 +126,10 @@ describe('SectorTargetUnitsTabComponent', () => {
   describe('when not editable', () => {
     beforeEach(() => setupComponent(mockTargetUnitsNotEditable));
 
-    it('should handle non-editable state correctly', fakeAsync(() => {
+    it('should handle non-editable state correctly', () => {
       fixture.detectChanges();
-      tick();
 
       expect(component.state().editable).toBe(false);
-    }));
+    });
   });
 });

@@ -4,8 +4,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
-
-import { nonComplianceDetailsQuery } from '../non-compliance-details.selectors';
+import { nonComplianceDetailsQuery } from '@requests/common';
 
 export type IssueEnforcementFormModel = FormGroup<{
   isEnforcementResponseNoticeRequired: FormControl<boolean | null>;

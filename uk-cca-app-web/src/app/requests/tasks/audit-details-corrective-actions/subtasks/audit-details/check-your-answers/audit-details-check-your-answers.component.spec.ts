@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { RequestTaskStore } from '@netz/common/store';
+import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 
 import { mockAuditDetailsAndCorrectiveActionsState } from '../../../testing/mock-data';
 import { AuditDetailsCheckYourAnswersComponent } from './audit-details-check-your-answers.component';
@@ -15,7 +15,7 @@ describe('AuditDetailsCheckYourAnswersComponent', () => {
   const route: any = {
     snapshot: {
       params: {},
-      paramMap: { get: jest.fn().mockReturnValue(123) },
+      paramMap: { get: vi.fn().mockReturnValue(123) },
       pathFromRoot: [],
     },
   };
@@ -23,7 +23,12 @@ describe('AuditDetailsCheckYourAnswersComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AuditDetailsCheckYourAnswersComponent],
-      providers: [provideHttpClient(), RequestTaskStore, { provide: ActivatedRoute, useValue: route }],
+      providers: [
+        provideHttpClient(),
+        { provide: ActivatedRoute, useValue: route },
+        { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
+        { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Dashboard' },
+      ],
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
@@ -39,6 +44,6 @@ describe('AuditDetailsCheckYourAnswersComponent', () => {
   });
 
   it('should display the correct content', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

@@ -8,11 +8,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import uk.gov.cca.api.account.domain.dto.TargetUnitAccountBusinessInfoDTO;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.common.utils.ZipUtils;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.common.validation.ValidatorHelper;
 import uk.gov.cca.api.files.attachments.service.CcaFileAttachmentService;
+import uk.gov.cca.api.workflow.request.flow.common.validation.performancedata.PerformanceDataCreateSchemeValidator;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.common.domain.TargetUnitAccountUploadReport;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.common.validation.PerformanceDataUploadViolation;
 import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUpload;
@@ -30,6 +32,7 @@ import uk.gov.netz.api.files.common.domain.dto.FileInfoDTO;
 import uk.gov.netz.api.files.common.utils.MimeTypeUtils;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +49,7 @@ public class PerformanceDataUploadService {
     private final FileAttachmentService fileAttachmentService;
     private final CcaFileAttachmentService ccaFileAttachmentService;
     private final PerformanceDataUploadExcelFileNameValidator performanceDataUploadExcelFileNameValidator;
+    private final PerformanceDataCreateSchemeValidator performanceDataCreateSchemeValidator;
 
     @Transactional
     public Map<Long, TargetUnitAccountUploadReport> submit(RequestTask requestTask, PerformanceDataUpload performanceDataUpload,
@@ -60,6 +64,12 @@ public class PerformanceDataUploadService {
         // Set request task payload with the final report package
         taskPayload.setPerformanceDataUpload(performanceDataUpload);
 
+        // Validate submission before cca2 end date
+        if (!performanceDataCreateSchemeValidator.isAvailableForScheme(SchemeVersion.CCA_2, LocalDate.now())) {
+        	taskPayload.getErrors().put("",PerformanceDataUploadViolation.PerformanceDataUploadViolationMessage.INVALID_SUBMISSION_CCA2_END_DATE.getMessage());
+        	return Map.of();
+        }
+        
         // Validate files in payload
         BusinessValidationResult validationResult = performanceDataUploadAttachmentsExistValidatorService.validate(taskPayload);
         if(!validationResult.isValid()) {

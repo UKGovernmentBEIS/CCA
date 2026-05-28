@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -28,6 +29,10 @@ import uk.gov.cca.api.workflow.request.core.domain.constants.CcaRequestStatuses;
 import uk.gov.cca.api.workflow.request.flow.cca2termination.common.domain.Cca2TerminationAccountState;
 import uk.gov.cca.api.workflow.request.flow.cca2termination.common.domain.Cca2TerminationRunRequestMetadata;
 import uk.gov.cca.api.workflow.request.flow.cca3existingfacilitiesmigration.processing.common.domain.Cca3ExistingFacilitiesMigrationAccountProcessingRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataDownloadRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedata.performancedatadownload.download.domain.PerformanceDataDownloadSubmitRequestTaskPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.performancedata.performancedataupload.upload.domain.PerformanceDataUploadSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestPayload;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementvariation.common.domain.UnderlyingAgreementVariationRequestTaskPayload;
@@ -178,6 +183,74 @@ class Cca2TerminationRunRequestServiceTest {
 		verify(requestService, never()).addActionToRequest(requestCompleted, null, CcaRequestActionType.REQUEST_TERMINATED, null);
 		verify(requestService, times(1)).addActionToRequest(requestInProgress, null, CcaRequestActionType.REQUEST_TERMINATED, null);
 		
+		verify(workflowService, times(1)).deleteProcessInstance("processInstanceId2", TERMINATE_REASON);
+    }
+    
+    @Test
+    void terminatePerformanceDataRequests() {
+    	String requestId1 = "1";
+    	String requestId2 = "2";
+    	String requestId3 = "3";
+		
+		final RequestTask task1 = RequestTask.builder()
+				.type(RequestTaskType.builder().code(CcaRequestTaskType.PERFORMANCE_DATA_UPLOAD_SUBMIT).build())
+				.payload(PerformanceDataUploadSubmitRequestTaskPayload.builder()
+						.processCompleted(Boolean.FALSE)
+						.build())	
+				.build();
+		final Request requestTaskUploadProcessNotCompleted = Request.builder()
+				.id(requestId1)
+				.processInstanceId("processInstanceId1")
+				.type(RequestType.builder().code(CcaRequestType.PERFORMANCE_DATA_UPLOAD).build())
+				.status(RequestStatuses.IN_PROGRESS)
+				.payload(PerformanceDataUploadRequestPayload.builder().build())
+				.requestTasks(List.of(task1))
+				.build();
+		addCaResourceToRequest(requestTaskUploadProcessNotCompleted);
+		
+		final RequestTask task2 = RequestTask.builder()
+				.type(RequestTaskType.builder().code(CcaRequestTaskType.PERFORMANCE_DATA_UPLOAD_SUBMIT).build())
+				.payload(PerformanceDataUploadSubmitRequestTaskPayload.builder()
+						.processCompleted(Boolean.TRUE)
+						.build())	
+				.build();
+		final Request requestTaskUploadProcessCompleted = Request.builder()
+				.id(requestId2)
+				.processInstanceId("processInstanceId2")
+				.type(RequestType.builder().code(CcaRequestType.PERFORMANCE_DATA_UPLOAD).build())
+				.status(RequestStatuses.IN_PROGRESS)
+				.payload(PerformanceDataUploadRequestPayload.builder().build())
+				.requestTasks(List.of(task2))
+				.build();
+		addCaResourceToRequest(requestTaskUploadProcessCompleted);
+		
+		final RequestTask task3 = RequestTask.builder()
+				.type(RequestTaskType.builder().code(CcaRequestTaskType.PERFORMANCE_DATA_DOWNLOAD_SUBMIT).build())
+				.payload(PerformanceDataDownloadSubmitRequestTaskPayload.builder().build())	
+				.build();
+		final Request requestTaskDownloadProcessNotStarted = Request.builder()
+				.id(requestId3)
+				.processInstanceId("processInstanceId3")
+				.type(RequestType.builder().code(CcaRequestType.PERFORMANCE_DATA_DOWNLOAD).build())
+				.status(RequestStatuses.IN_PROGRESS)
+				.payload(PerformanceDataDownloadRequestPayload.builder().build())
+				.requestTasks(List.of(task3))
+				.build();
+		addCaResourceToRequest(requestTaskDownloadProcessNotStarted);
+		
+		when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
+				CcaRequestType.PERFORMANCE_DATA_UPLOAD, ResourceType.CA, CompetentAuthorityEnum.ENGLAND.name()))
+				.thenReturn(List.of(requestTaskUploadProcessNotCompleted, requestTaskUploadProcessCompleted));
+		when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
+				CcaRequestType.PERFORMANCE_DATA_DOWNLOAD, ResourceType.CA, CompetentAuthorityEnum.ENGLAND.name()))
+				.thenReturn(List.of(requestTaskDownloadProcessNotStarted));
+		
+		cca2TerminationRunRequestService.terminatePerformanceDataRequests();
+		
+		verifyNoInteractions(requestService);
+		
+		verify(workflowService, never()).deleteProcessInstance("processInstanceId1", TERMINATE_REASON);
+		verify(workflowService, times(1)).deleteProcessInstance("processInstanceId3", TERMINATE_REASON);
 		verify(workflowService, times(1)).deleteProcessInstance("processInstanceId2", TERMINATE_REASON);
     }
     

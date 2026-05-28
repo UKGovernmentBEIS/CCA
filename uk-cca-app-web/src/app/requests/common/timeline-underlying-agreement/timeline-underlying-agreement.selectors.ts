@@ -35,7 +35,7 @@ const selectTimelineDecisionActionPayload: StateSelector<RequestActionState, UnA
 
 const selectAccountReferenceData: StateSelector<RequestActionState, AccountReferenceData> = createDescendingSelector(
   selectPayload,
-  (payload) => payload.accountReferenceData,
+  (payload) => payload?.accountReferenceData,
 );
 
 const selectAccountReferenceDataSectorAssociationDetails: StateSelector<RequestActionState, SectorAssociationDetails> =
@@ -52,7 +52,7 @@ const selectSectorAssociationDetailsSchemeData = (scheme: string) =>
 
 const selectAttachments: StateSelector<RequestActionState, Record<string, string>> = createDescendingSelector(
   selectPayload,
-  (payload) => payload.underlyingAgreementAttachments,
+  (payload) => payload?.underlyingAgreementAttachments,
 );
 
 const selectRegulatorAttachments: StateSelector<RequestActionState, Record<string, string>> = createDescendingSelector(
@@ -63,7 +63,7 @@ const selectRegulatorAttachments: StateSelector<RequestActionState, Record<strin
 
 const selectUnderlyingAgreement: StateSelector<RequestActionState, UnaPayload> = createDescendingSelector(
   selectPayload,
-  (payload) => payload.underlyingAgreement,
+  (payload) => payload?.underlyingAgreement,
 );
 
 const selectUnderlyingAgreementTargetUnitDetails: StateSelector<
@@ -71,7 +71,7 @@ const selectUnderlyingAgreementTargetUnitDetails: StateSelector<
   UnderlyingAgreementTargetUnitDetails
 > = createDescendingSelector(
   selectUnderlyingAgreement,
-  (underlyingAgreement) => underlyingAgreement.underlyingAgreementTargetUnitDetails,
+  (underlyingAgreement) => underlyingAgreement?.underlyingAgreementTargetUnitDetails,
 );
 
 const selectFacilityItems: StateSelector<RequestActionState, FacilityItemViewModel[]> = createDescendingSelector(
@@ -107,18 +107,18 @@ const selectFacility = (facilityId: string): StateSelector<RequestActionState, F
 
 const selectTargetPeriod5Details: StateSelector<RequestActionState, TargetPeriod5Details> = createDescendingSelector(
   selectUnderlyingAgreement,
-  (underlyingAgreement) => underlyingAgreement.targetPeriod5Details,
+  (underlyingAgreement) => underlyingAgreement?.targetPeriod5Details,
 );
 
 const selectTargetPeriod6Details: StateSelector<RequestActionState, TargetPeriod6Details> = createDescendingSelector(
   selectUnderlyingAgreement,
-  (underlyingAgreement) => underlyingAgreement.targetPeriod6Details,
+  (underlyingAgreement) => underlyingAgreement?.targetPeriod6Details,
 );
 
 const selectAuthorisationAndAdditionalEvidence: StateSelector<RequestActionState, AuthorisationAndAdditionalEvidence> =
   createDescendingSelector(
     selectUnderlyingAgreement,
-    (underlyingAgreement) => underlyingAgreement.authorisationAndAdditionalEvidence,
+    (underlyingAgreement) => underlyingAgreement?.authorisationAndAdditionalEvidence,
   );
 
 const selectVariationDetails: StateSelector<RequestActionState, UnderlyingAgreementVariationDetails> =

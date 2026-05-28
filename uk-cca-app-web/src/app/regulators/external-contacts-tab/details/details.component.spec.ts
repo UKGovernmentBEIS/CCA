@@ -6,6 +6,7 @@ import { of, throwError } from 'rxjs';
 
 import { BusinessTestingModule, expectBusinessErrorToBe } from '@error/testing/business-error';
 import { ActivatedRouteStub, changeInputValue } from '@netz/common/testing';
+import { Mock } from 'vitest';
 
 import { CaExternalContactDTO, CaExternalContactsService } from 'cca-api';
 
@@ -19,9 +20,12 @@ describe('DetailsComponent - add', () => {
   let router: Router;
   let route: ActivatedRouteStub;
 
-  const caExternalContactsService: Partial<jest.Mocked<CaExternalContactsService>> = {
-    createCaExternalContact: jest.fn(),
-    editCaExternalContact: jest.fn().mockReturnValue(of(null)),
+  const caExternalContactsService: {
+    createCaExternalContact: Mock;
+    editCaExternalContact: Mock;
+  } = {
+    createCaExternalContact: vi.fn(),
+    editCaExternalContact: vi.fn().mockReturnValue(of(null)),
   };
 
   const submitButton = () => fixture.nativeElement.querySelector('button[type="submit"]');
@@ -47,7 +51,7 @@ describe('DetailsComponent - add', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => jest.clearAllMocks());
+  afterEach(() => vi.clearAllMocks());
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -114,7 +118,7 @@ describe('DetailsComponent - add', () => {
 
   it('should navigate to external contacts on correct form submission', () => {
     caExternalContactsService.createCaExternalContact.mockReturnValue(of(null));
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
     changeInputValue(fixture, '#name', 'Test name');
     changeInputValue(fixture, '#email', 'test@test.com');
@@ -136,8 +140,8 @@ describe('DetailsComponent - add', () => {
 
   it('should not post form if invalid', () => {
     caExternalContactsService.createCaExternalContact.mockReturnValue(of(null));
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    const postExternalContactSpy = jest.spyOn(caExternalContactsService, 'createCaExternalContact');
+    const navigateSpy = vi.spyOn(router, 'navigate');
+    const postExternalContactSpy = vi.spyOn(caExternalContactsService, 'createCaExternalContact');
 
     changeInputValue(fixture, '#name', 'Test name');
     changeInputValue(fixture, '#email', 'test');
@@ -176,9 +180,12 @@ describe('DetailsComponent - edit', () => {
 
   const submitButton = () => fixture.nativeElement.querySelector('button[type="submit"]');
 
-  const caExternalContactsService: Partial<jest.Mocked<CaExternalContactsService>> = {
-    createCaExternalContact: jest.fn(),
-    editCaExternalContact: jest.fn().mockReturnValue(of(null)),
+  const caExternalContactsService: {
+    createCaExternalContact: Mock;
+    editCaExternalContact: Mock;
+  } = {
+    createCaExternalContact: vi.fn(),
+    editCaExternalContact: vi.fn().mockReturnValue(of(null)),
   };
 
   const mockExternalContact: CaExternalContactDTO = {

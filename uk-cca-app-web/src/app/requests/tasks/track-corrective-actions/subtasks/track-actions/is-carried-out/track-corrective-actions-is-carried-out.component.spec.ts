@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { TasksApiService } from '@requests/common';
+import { Mocked } from 'vitest';
 
 import { TasksService } from 'cca-api';
 
@@ -19,17 +20,17 @@ describe('TrackCorrectiveActionsIsCarriedOutComponent', () => {
   let store: RequestTaskStore;
   let router: Router;
   let tasksApiService: TasksApiService;
-  let tasksService: jest.Mocked<Partial<TasksService>>;
+  let tasksService: Mocked<Partial<TasksService>>;
 
   const route = { snapshot: { params: { actionId: '1' } } };
 
   const mockTasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
     tasksService = {
-      getRequestTaskHeaderInfo: jest.fn().mockReturnValue(of({})),
+      getRequestTaskHeaderInfo: vi.fn().mockReturnValue(of({})),
     };
 
     await TestBed.configureTestingModule({
@@ -63,8 +64,8 @@ describe('TrackCorrectiveActionsIsCarriedOutComponent', () => {
   });
 
   it('should submit form and navigate to actions', () => {
-    const onSubmitSpy = jest.spyOn(component, 'onSubmit');
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const onSubmitSpy = vi.spyOn(component, 'onSubmit');
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
     const continueButton = fixture.debugElement.query(By.css('button[type="submit"]'));
     continueButton.nativeElement.click();

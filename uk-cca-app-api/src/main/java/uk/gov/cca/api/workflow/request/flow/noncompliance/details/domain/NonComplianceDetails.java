@@ -38,7 +38,7 @@ public class NonComplianceDetails {
     private Set<String> relevantWorkflows = new HashSet<>();
 
     @Builder.Default
-    private Set<@Valid WorkflowFacilityDTO> relevantFacilities = new HashSet<>();
+    private Set<@Valid NonComplianceFacilityDTO> relevantFacilities = new HashSet<>();
 
     @NotNull
     private Boolean isEnforcementResponseNoticeRequired;

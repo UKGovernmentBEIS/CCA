@@ -38,6 +38,6 @@ describe('TargetPeriod5Component', () => {
   });
 
   it('should match snapshot', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

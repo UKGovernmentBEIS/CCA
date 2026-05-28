@@ -10,6 +10,16 @@ describe('ItemLinkPipe', () => {
   const taskId = 1;
 
   const dataSet: DatasetDTO[] = [
+    {
+      requestType: 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW',
+      taskType: 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW',
+      expectedPath: ['/tasks', taskId],
+    },
+    {
+      requestType: 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_WAIT_FOR_PEER_REVIEW',
+      taskType: 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_WAIT_FOR_PEER_REVIEW',
+      expectedPath: ['/tasks', taskId],
+    },
     // NULL
     {
       requestType: null,

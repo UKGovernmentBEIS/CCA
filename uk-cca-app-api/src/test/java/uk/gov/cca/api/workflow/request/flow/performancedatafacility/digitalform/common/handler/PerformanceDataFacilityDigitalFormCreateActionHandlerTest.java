@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
+import uk.gov.cca.api.facility.domain.dto.FacilityBaseInfoDTO;
 import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
@@ -76,7 +76,7 @@ class PerformanceDataFacilityDigitalFormCreateActionHandlerTest {
                         ))
                         .build())
                 .build();
-        final FacilityDTO facility = FacilityDTO.builder().facilityBusinessId("id").build();
+        final FacilityBaseInfoDTO facility = FacilityBaseInfoDTO.builder().facilityBusinessId("id").build();
         final Map<String, String> resources = Map.of("facility", "1");
         final CcaRequestParams requestParams = CcaRequestParams.builder()
                 .type(CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM)
@@ -98,7 +98,7 @@ class PerformanceDataFacilityDigitalFormCreateActionHandlerTest {
 
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType))
                 .thenReturn(targetPeriod);
-        when(facilityDataQueryService.getFacilityInfoData(facilityId))
+        when(facilityDataQueryService.getFacilityBaseInfo(facilityId))
                 .thenReturn(facility);
         when(requestCreateFacilityAndAccountAndSectorResourcesService.createRequestResources(facilityId))
                 .thenReturn(resources);
@@ -111,7 +111,7 @@ class PerformanceDataFacilityDigitalFormCreateActionHandlerTest {
         // Verify
         assertThat(result).isEqualTo("request-id");
         verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
-        verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
+        verify(facilityDataQueryService, times(1)).getFacilityBaseInfo(facilityId);
         verify(requestCreateFacilityAndAccountAndSectorResourcesService, times(1))
                 .createRequestResources(facilityId);
         verify(startProcessRequestService, times(1)).startProcess(requestParams);

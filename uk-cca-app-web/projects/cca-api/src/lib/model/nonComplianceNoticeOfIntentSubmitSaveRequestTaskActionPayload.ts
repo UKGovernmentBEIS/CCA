@@ -9,10 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { NoticeOfIntent } from './noticeOfIntent';
+import { NonComplianceNoticeOfIntent } from './nonComplianceNoticeOfIntent';
 
 export interface NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload {
   payloadType?: string;
-  noticeOfIntent?: NoticeOfIntent;
+  noticeOfIntent?: NonComplianceNoticeOfIntent;
   sectionsCompleted?: Record<string, string>;
 }

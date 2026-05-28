@@ -32,6 +32,6 @@ describe('ConfirmationComponent', () => {
   });
 
   it('should show proper content', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

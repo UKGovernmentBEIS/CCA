@@ -31,6 +31,7 @@ export class RelatedActionsComponent implements OnChanges {
 
   protected readonly allowedRequestTaskActions = input.required<RequestTaskItemDTO['allowedRequestTaskActions']>();
   protected readonly taskId = input.required<RequestTaskDTO['id']>();
+  protected readonly taskType = input<RequestTaskDTO['type']>();
   protected readonly showReassignAction = input(false);
   protected readonly reassignAction = input({ text: 'Reassign task', link: ['change-assignee'] });
 
@@ -45,7 +46,7 @@ export class RelatedActionsComponent implements OnChanges {
           const path = this.actionsMap[action].path;
           return {
             text: this.actionsMap[action].text,
-            link: typeof path === 'function' ? path(this.taskId()) : path,
+            link: typeof path === 'function' ? path(this.taskId(), this.taskType()) : path,
           };
         });
 

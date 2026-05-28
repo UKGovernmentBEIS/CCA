@@ -17,6 +17,7 @@ export const processActionsDetailsTypesMap: Partial<Record<RequestDetailsDTO['re
   PERFORMANCE_DATA_UPLOAD: 'upload performance data',
   PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD: 'upload PAT spreadsheets',
   CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING: 'CCA3 Migration',
+  PERFORMANCE_DATA_FACILITY_DIGITAL_FORM: 'TP reporting',
 };
 
 export const userRoleWorkflowAccessMap: Record<UserStateDTO['roleType'], string[]> = {
@@ -27,6 +28,7 @@ export const userRoleWorkflowAccessMap: Record<UserStateDTO['roleType'], string[
     'PERFORMANCE_DATA_DOWNLOAD',
     'PERFORMANCE_DATA_UPLOAD',
     'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
+    'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM',
   ],
   VERIFIER: [],
 };
@@ -76,6 +78,13 @@ export const taskWorkflowContentDisplayMap: Record<RequestDetailsDTO['requestTyp
     title: 'Upload PAT spreadsheets',
     button: 'Start PAT Spreadsheets upload',
     type: 'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
+    errors: [],
+  },
+  PERFORMANCE_DATA_FACILITY_DIGITAL_FORM: {
+    title: 'TP reporting',
+    hint: 'Start a target period (TP) reporting task using a form for TP7, TP8, TP9.',
+    button: 'Start TP reporting task',
+    type: 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM',
     errors: [],
   },
 };

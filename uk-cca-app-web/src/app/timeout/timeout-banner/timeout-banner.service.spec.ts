@@ -2,14 +2,16 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { mockClass } from '@netz/common/testing';
-import { AuthService, KeycloakEventType, KeycloakService } from '@shared/services';
+import { AuthService, KeycloakEvent, KeycloakEventType, KeycloakService } from '@shared/services';
+import { Mocked } from 'vitest';
 
 import { TimeoutBannerService } from './timeout-banner.service';
 
 describe('TimeoutBannerService', () => {
   let service: TimeoutBannerService;
-  let keycloakService: jest.Mocked<KeycloakService>;
-  let authService: jest.Mocked<AuthService>;
+  let keycloakService: Mocked<KeycloakService>;
+  let authService: Mocked<AuthService>;
+  let keycloakEvents: ReturnType<typeof signal<KeycloakEvent | null>>;
 
   const futureExp = Math.floor(Date.now() / 1000) + 210;
   const mockRefreshTokenParsed = { iat: Math.floor(Date.now() / 1000) - 100, exp: futureExp };
@@ -26,26 +28,24 @@ describe('TimeoutBannerService', () => {
       ],
     });
 
-    keycloakService = TestBed.inject(KeycloakService) as jest.Mocked<KeycloakService>;
-    authService = TestBed.inject(AuthService) as jest.Mocked<AuthService>;
-    service = TestBed.inject(TimeoutBannerService);
+    keycloakService = TestBed.inject(KeycloakService) as Mocked<KeycloakService>;
+    authService = TestBed.inject(AuthService) as Mocked<AuthService>;
 
-    (keycloakService.keycloakEvents as any) = signal(null);
-    (keycloakService.updateToken as any) = jest.fn().mockResolvedValue(true);
-    Object.defineProperty(keycloakService, 'keycloakInstance', {
-      value: {
-        refreshTokenParsed: mockRefreshTokenParsed,
-      },
-      configurable: true,
+    keycloakEvents = signal<KeycloakEvent | null>(null);
+    Object.assign(keycloakService, {
+      keycloakEvents,
+      keycloakInstance: { refreshTokenParsed: mockRefreshTokenParsed },
     });
-
+    keycloakService.updateToken.mockResolvedValue(true);
     authService.logout.mockResolvedValue(undefined);
+
+    service = TestBed.inject(TimeoutBannerService);
   });
 
   afterEach(() => {
-    jest.clearAllTimers();
-    jest.useRealTimers();
-    jest.clearAllMocks();
+    vi.clearAllTimers();
+    vi.useRealTimers();
+    vi.clearAllMocks();
   });
 
   it('should be created', () => {
@@ -76,19 +76,14 @@ describe('TimeoutBannerService', () => {
   });
 
   it('should handle auth events', () => {
-    (keycloakService.keycloakEvents as any).set({
-      type: KeycloakEventType.OnAuthRefreshSuccess,
-    });
+    keycloakEvents.set({ type: KeycloakEventType.OnAuthRefreshSuccess });
     expect(service.countDownTime()).toBeGreaterThanOrEqual(0);
   });
 
   it('should cleanup on destroy', () => {
-    jest.useFakeTimers();
-    (keycloakService.keycloakEvents as any).set({
-      type: KeycloakEventType.OnAuthRefreshSuccess,
-    });
+    vi.useFakeTimers();
+    keycloakEvents.set({ type: KeycloakEventType.OnAuthRefreshSuccess });
     service.ngOnDestroy();
-    expect(jest.getTimerCount()).toBe(0);
-    jest.useRealTimers();
+    expect(vi.getTimerCount()).toBe(0);
   });
 });

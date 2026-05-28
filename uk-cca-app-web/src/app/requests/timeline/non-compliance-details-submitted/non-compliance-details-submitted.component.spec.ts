@@ -46,7 +46,10 @@ describe('NonComplianceDetailsSubmittedComponent', () => {
       ],
       [
         ['Relevant tasks or workflows', 'Relevant facilities'],
-        ['ADS_1-T00037-VAR-1ADS_1-T00037-VAR-2ADS_1-T00037-VAR-3', 'ADS_1-F00035erwywyweyer'],
+        [
+          'ADS_1-T00037-VAR-1 - Underlying Agreement VariationADS_1-T00037-VAR-2 - Admin TerminationADS_1-T00037-VAR-3 - Non Compliance',
+          'ADS_1-F00035 - Facility 35ADS_1-F00036 - Facility 36',
+        ],
       ],
       [
         [

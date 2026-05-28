@@ -1,20 +1,21 @@
 import { GovukDatePipe } from '@netz/common/pipes';
+import { MockInstance } from 'vitest';
 
 import { DurationPipe } from './duration-pipe';
 
 describe('DurationPipe', () => {
   let pipe: DurationPipe;
-  let govukDatePipeSpy: jest.SpyInstance;
+  let govukDatePipeSpy: MockInstance;
 
   beforeEach(() => {
     // Spy on GovukDatePipe methods
-    govukDatePipeSpy = jest.spyOn(GovukDatePipe.prototype, 'transform');
+    govukDatePipeSpy = vi.spyOn(GovukDatePipe.prototype, 'transform');
 
     pipe = new DurationPipe();
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should format a valid start and end date', () => {

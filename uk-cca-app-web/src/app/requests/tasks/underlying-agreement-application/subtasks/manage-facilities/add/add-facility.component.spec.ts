@@ -31,11 +31,11 @@ describe('AddFacilityComponent', () => {
         provideHttpClientTesting(),
         {
           provide: FacilityService,
-          useValue: { generateFacilityBusinessId: jest.fn() },
+          useValue: { generateFacilityBusinessId: vi.fn() },
         },
         {
           provide: TasksApiService,
-          useValue: { saveRequestTaskAction: jest.fn() },
+          useValue: { saveRequestTaskAction: vi.fn() },
         },
         {
           provide: ActivatedRoute,
@@ -70,7 +70,7 @@ describe('AddFacilityComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
@@ -79,11 +79,11 @@ describe('AddFacilityComponent', () => {
 
   it('should handle form submission and navigate to contact details', () => {
     const facilityBusinessId = 'TEST_F00001';
-    jest
-      .spyOn(facilityService, 'generateFacilityBusinessId')
-      .mockReturnValue(of({ facilityBusinessId: facilityBusinessId }));
-    jest.spyOn(tasksApiService, 'saveRequestTaskAction').mockReturnValue(of({}));
-    jest.spyOn(router, 'navigate');
+    vi.spyOn(facilityService, 'generateFacilityBusinessId').mockReturnValue(
+      of({ facilityBusinessId: facilityBusinessId }),
+    );
+    vi.spyOn(tasksApiService, 'saveRequestTaskAction').mockReturnValue(of({}));
+    vi.spyOn(router, 'navigate');
 
     component.onSubmit(
       new FormGroup<FacilityDetailsFormModel>({

@@ -1,5 +1,5 @@
-import { Component, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { Component, signal, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -12,9 +12,9 @@ describe('ErrorSummaryComponent', () => {
   @Component({
     imports: [ErrorSummaryComponent, ReactiveFormsModule, TextInputComponent, FormsModule],
     template: `
-      @if (!isTemplate) {
+      @if (!isTemplate()) {
         <form [formGroup]="form">
-          <govuk-error-summary [form]="form"></govuk-error-summary>
+          <govuk-error-summary [form]="form" />
           <div govuk-text-input inputType="text" formControlName="topLevel"></div>
           <div formGroupName="secondLevelTop">
             <div govuk-text-input inputType="text" formControlName="secondLevelFirst"></div>
@@ -30,9 +30,9 @@ describe('ErrorSummaryComponent', () => {
         </form>
       }
 
-      @if (isTemplate) {
+      @if (isTemplate()) {
         <form #templateForm="ngForm">
-          <govuk-error-summary [form]="templateForm"></govuk-error-summary>
+          <govuk-error-summary [form]="templateForm" />
           <select [(ngModel)]="selectValue" name="someField" required></select>
         </form>
       }
@@ -42,7 +42,7 @@ describe('ErrorSummaryComponent', () => {
     public readonly testForm = viewChild<NgForm>('templateForm');
 
     form: FormGroup;
-    isTemplate = false;
+    isTemplate = signal(false);
     selectValue: any;
   }
 
@@ -82,12 +82,12 @@ describe('ErrorSummaryComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display reactive form errors', fakeAsync(async () => {
+  it('should display reactive form errors', async () => {
     hostComponent.form = reactiveForm;
     hostComponent.form.markAllAsTouched();
-    fixture.detectChanges();
+    // TODO: revisit this workaround and replace with a cleaner update path if NG0100 handling changes.
+    fixture.changeDetectorRef.markForCheck();
     await fixture.whenStable();
-    fixture.detectChanges();
 
     const hostElement: HTMLElement = fixture.nativeElement;
     const errors = hostElement.querySelectorAll('a');
@@ -100,35 +100,30 @@ describe('ErrorSummaryComponent', () => {
       'Enter nestedArrayControl',
       'Enter arrayControl',
     ]);
-  }));
+  });
 
-  it('should display template form errors', fakeAsync(async () => {
-    hostComponent.isTemplate = true;
-    fixture.detectChanges();
+  it('should display template form errors', async () => {
+    hostComponent.isTemplate.set(true);
     await fixture.whenStable();
     hostComponent.testForm().control.markAllAsTouched();
-    fixture.detectChanges();
 
     const hostElement: HTMLElement = fixture.nativeElement;
-
     expect(hostElement.querySelectorAll<HTMLAnchorElement>('a').length).toEqual(1);
-  }));
+  });
 
-  it('should prefix the title with Error', fakeAsync(async () => {
+  it('should prefix the title with Error', () => {
     hostComponent.form = reactiveForm;
     hostComponent.form.markAllAsTouched();
-    fixture.detectChanges();
 
     expect(document.title).toContain('Error');
-  }));
+  });
 
-  it('should focus on error container', fakeAsync(async () => {
+  it('should focus on error container', () => {
     hostComponent.form = reactiveForm;
     hostComponent.form.markAllAsTouched();
-    fixture.detectChanges();
 
     const hostElement: HTMLElement = fixture.nativeElement;
     const errorContainer = hostElement.querySelector<HTMLDivElement>('.govuk-error-summary');
     expect(document.activeElement).toBe(errorContainer);
-  }));
+  });
 });

@@ -225,6 +225,59 @@ export const TASKS_ROUTES: Routes = [
         loadChildren: () => import('./notice-of-intent/notice-of-intent.routes').then((r) => r.NOTICE_OF_INTENT_ROUTES),
       },
       {
+        path: 'enforcement-response-notice',
+        loadChildren: () =>
+          import('./enforcement-response-notice/enforcement-response-notice.routes').then(
+            (r) => r.ENFORCEMENT_RESPONSE_NOTICE_ROUTES,
+          ),
+      },
+      {
+        path: 'notice-of-intent-peer-review',
+        loadChildren: () =>
+          import('./notice-of-intent-peer-review/notice-of-intent-peer-review.routes').then(
+            (r) => r.NOTICE_OF_INTENT_PEER_REVIEW_ROUTES,
+          ),
+      },
+      {
+        path: 'notice-of-intent-await-peer-review',
+        loadChildren: () =>
+          import('./notice-of-intent-wait-for-peer-review/notice-of-intent-wait-for-peer-review.routes').then(
+            (r) => r.NOTICE_OF_INTENT_WAIT_FOR_PEER_REVIEW_ROUTES,
+          ),
+      },
+      {
+        path: 'enforcement-response-notice-peer-review',
+        loadChildren: () =>
+          import('./enforcement-response-notice-peer-review/enforcement-response-notice-peer-review.routes').then(
+            (r) => r.ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEW_ROUTES,
+          ),
+      },
+      {
+        path: 'enforcement-response-notice-await-peer-review',
+        loadChildren: () =>
+          import('./enforcement-response-notice-wait-for-peer-review/enforcement-response-notice-wait-for-peer-review.routes').then(
+            (r) => r.ENFORCEMENT_RESPONSE_NOTICE_WAIT_FOR_PEER_REVIEW_ROUTES,
+          ),
+      },
+      {
+        path: 'target-period-reporting-form',
+        loadChildren: () =>
+          import('./target-period-reporting-form/target-period-reporting-form.routes').then(
+            (r) => r.TARGET_PERIOD_REPORTING_FORM_ROUTES,
+          ),
+      },
+      {
+        path: 'non-compliance-conclusion',
+        loadChildren: () =>
+          import('./non-compliance-conclusion/non-compliance-conclusion.routes').then(
+            (r) => r.NON_COMPLIANCE_CONCLUSION_ROUTES,
+          ),
+      },
+      {
+        path: 'appeal-outcome',
+        loadChildren: () => import('./appeal-outcome/appeal-outcome.routes').then((r) => r.APPEAL_OUTCOME_ROUTES),
+      },
+      {
         path: 'file-download/:uuid',
         loadComponent: () => import('@shared/components').then((m) => m.FileDownloadComponent),
       },

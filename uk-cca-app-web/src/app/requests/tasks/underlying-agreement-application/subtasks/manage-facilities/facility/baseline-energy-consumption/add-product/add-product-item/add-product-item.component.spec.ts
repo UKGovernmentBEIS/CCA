@@ -28,7 +28,7 @@ import { createProductFormGroup } from '../add-product-form.provider';
 })
 class TestWrapperComponent {
   formBuilder = new FormBuilder();
-  destroyRef = { onDestroy: jest.fn() } as any;
+  destroyRef = { onDestroy: vi.fn() } as any;
 
   productFormGroup = createProductFormGroup(this.formBuilder, this.destroyRef, {
     productName: 'Product 1',
@@ -70,6 +70,10 @@ describe('AddProductItemComponent', () => {
     fixture = TestBed.createComponent(TestWrapperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {

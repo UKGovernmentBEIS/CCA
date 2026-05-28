@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { Configuration, SectorAssociationSchemeService } from 'cca-api';
 
@@ -13,8 +14,8 @@ import { SectorDocumentsDownloadComponent } from './sector-documents-download.co
 describe('SectorDocumentsDownloadComponent', () => {
   let component: SectorDocumentsDownloadComponent;
   let fixture: ComponentFixture<SectorDocumentsDownloadComponent>;
-  let sectorAssociationSchemeService: jest.Mocked<SectorAssociationSchemeService>;
-  let configuration: jest.Mocked<Configuration>;
+  let sectorAssociationSchemeService: Mocked<SectorAssociationSchemeService>;
+  let configuration: Mocked<Configuration>;
 
   beforeEach(async () => {
     configuration = mockClass(Configuration);

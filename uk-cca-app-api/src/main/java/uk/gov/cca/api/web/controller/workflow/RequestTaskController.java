@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.cca.api.account.domain.dto.AdditionalNoticeRecipientDTO;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
 import uk.gov.cca.api.common.domain.ResourceHeaderInfoDTO;
 import uk.gov.cca.api.web.constants.SwaggerApiInfo;
@@ -76,9 +77,25 @@ public class RequestTaskController {
             content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
     @Authorized(resourceId = "#taskId")
     public ResponseEntity<List<NoticeRecipientDTO>> getDefaultNoticeRecipients(
-            @Parameter(hidden = true) AppUser appUser,
             @PathVariable("id") @Parameter(description = "The task id") Long taskId) {
         return new ResponseEntity<>(requestTaskRecipientsService.getDefaultNoticeRecipients(taskId), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/{id}/additional-recipients")
+    @Operation(summary = "Retrieves the additional recipients for the notify operator workflow step")
+    @ApiResponse(responseCode = "200", description = SwaggerApiInfo.OK,
+            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = AdditionalNoticeRecipientDTO.class))))
+    @ApiResponse(responseCode = "403", description = SwaggerApiInfo.FORBIDDEN,
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @ApiResponse(responseCode = "404", description = SwaggerApiInfo.NOT_FOUND,
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @ApiResponse(responseCode = "500", description = SwaggerApiInfo.INTERNAL_SERVER_ERROR,
+            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ErrorResponse.class))})
+    @Authorized(resourceId = "#taskId")
+    public ResponseEntity<List<AdditionalNoticeRecipientDTO>> getAdditionalNoticeRecipients(
+            @Parameter(hidden = true) AppUser appUser,
+            @PathVariable("id") @Parameter(description = "The task id") Long taskId) {
+        return new ResponseEntity<>(requestTaskRecipientsService.getAdditionalNoticeRecipients(taskId, appUser), HttpStatus.OK);
     }
 
     @SuppressWarnings("unchecked")

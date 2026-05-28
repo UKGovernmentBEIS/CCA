@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { mockSentSubsistenceFeesDetails, mockTargetUnitMoas } from '@shared/components';
+import { Mocked } from 'vitest';
 
 import { SubsistenceFeesRunInfoViewService } from 'cca-api';
 
@@ -15,12 +16,12 @@ import { TuMoasComponent } from './tu-moas.component';
 describe('TuMoasComponent', () => {
   let component: TuMoasComponent;
   let fixture: ComponentFixture<TuMoasComponent>;
-  let subsistenceFeesRunInfoViewService: Partial<jest.Mocked<SubsistenceFeesRunInfoViewService>>;
+  let subsistenceFeesRunInfoViewService: Partial<Mocked<SubsistenceFeesRunInfoViewService>>;
 
   beforeEach(async () => {
     subsistenceFeesRunInfoViewService = {
-      getSubsistenceFeesRunDetailsById: jest.fn().mockReturnValue(of(mockSentSubsistenceFeesDetails)),
-      getSubsistenceFeesRunMoas: jest
+      getSubsistenceFeesRunDetailsById: vi.fn().mockReturnValue(of(mockSentSubsistenceFeesDetails)),
+      getSubsistenceFeesRunMoas: vi
         .fn()
         .mockReturnValue(of({ subsistenceFeesMoas: mockTargetUnitMoas, total: mockTargetUnitMoas.length })),
     };

@@ -32,6 +32,6 @@ describe('OperatorAssentDecisionSubmittedComponent', () => {
   });
 
   it('should show summary values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

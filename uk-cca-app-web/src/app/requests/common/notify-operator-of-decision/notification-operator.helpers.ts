@@ -48,10 +48,10 @@ export function extractSectorUsersFromUsersInfo(
 }
 
 export function extractOperatorUsersFromUsersInfo(
-  usersInfo: Record<string, RequestActionUserInfo>,
+  usersInfo: Record<string, RequestActionUserInfo> = {},
   operatorUsers: CcaDecisionNotification['operators'],
 ): string[] {
-  const users = operatorUsers?.map((su) => usersInfo[su]) ?? [];
+  const users = operatorUsers?.map((su) => usersInfo[su]).filter((user): user is RequestActionUserInfo => !!user) ?? [];
   return users.map((u) => `${u.name}, Operator user`);
 }
 

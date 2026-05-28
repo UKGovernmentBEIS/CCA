@@ -37,7 +37,7 @@ public class NoticeOfIntentSubmitRequestPeerReviewValidator {
 
         // Validate peer reviewer
         validationResults.add(peerReviewValidator
-                .validate(requestTask, payload, appUser, CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW));
+                .validate(requestTask, payload, appUser, CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW));
 
         boolean isValid = validationResults.stream().allMatch(BusinessValidationResult::isValid);
 

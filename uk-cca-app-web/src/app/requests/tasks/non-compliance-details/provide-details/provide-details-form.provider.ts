@@ -3,10 +3,9 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { GovukValidators } from '@netz/govuk-components';
+import { nonComplianceDetailsQuery } from '@requests/common';
 
 import { NonComplianceDetails } from 'cca-api';
-
-import { nonComplianceDetailsQuery } from '../non-compliance-details.selectors';
 
 export type ProvideDetailsFormModel = FormGroup<{
   nonComplianceType: FormControl<NonComplianceDetails['nonComplianceType']>;

@@ -42,7 +42,7 @@ describe('FacilityDetailsComponent', () => {
 
   beforeEach(() => {
     tasksApiService = {
-      saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+      saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
     };
 
     const facilityService = {} as FacilityService;
@@ -85,7 +85,7 @@ describe('FacilityDetailsComponent', () => {
     store = TestBed.inject(RequestTaskStore);
 
     // Mock store select methods
-    jest.spyOn(store, 'select').mockImplementation((selector) => {
+    vi.spyOn(store, 'select').mockImplementation((selector) => {
       if (selector === requestTaskQuery.selectRequestTaskPayload) {
         return signal({
           underlyingAgreement: {
@@ -150,6 +150,6 @@ describe('FacilityDetailsComponent', () => {
   });
 
   it('should render the form with the correct initial values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

@@ -8,6 +8,7 @@ import { BusinessTestingModule, expectBusinessErrorToBe } from '@error/testing/b
 import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteStub, BasePage, expectToHaveNavigatedTo, RouterStubComponent } from '@netz/common/testing';
 import { AuthService } from '@shared/services';
+import { Mocked } from 'vitest';
 
 import { RegulatorAuthoritiesService, RegulatorUserDTO } from 'cca-api';
 
@@ -52,20 +53,20 @@ describe('DeleteComponent', () => {
     phoneNumber: '',
   };
 
-  let regulatorAuthoritiesService: Partial<jest.Mocked<RegulatorAuthoritiesService>>;
+  let regulatorAuthoritiesService: Partial<Mocked<RegulatorAuthoritiesService>>;
 
-  let authService: Partial<jest.Mocked<AuthService>>;
+  let authService: Partial<Mocked<AuthService>>;
 
   beforeEach(async () => {
     const activatedRoute = new ActivatedRouteStub({ userId: '1reg' }, null, { user });
 
     authService = {
-      logout: jest.fn(),
+      logout: vi.fn(),
     };
 
     regulatorAuthoritiesService = {
-      deleteRegulatorUserByCompetentAuthority: jest.fn().mockReturnValue(of(null)),
-      deleteCurrentRegulatorUserByCompetentAuthority: jest.fn().mockReturnValue(of(null)),
+      deleteRegulatorUserByCompetentAuthority: vi.fn().mockReturnValue(of(null)),
+      deleteCurrentRegulatorUserByCompetentAuthority: vi.fn().mockReturnValue(of(null)),
     };
 
     await TestBed.configureTestingModule({
@@ -102,9 +103,9 @@ describe('DeleteComponent', () => {
     expect(page.submitButton.textContent.trim()).toEqual('Confirm deletion');
   });
 
-  it('should return without reload on cancel click', () => {
+  it('should return without reload on cancel click', async () => {
     page.cancelLink.click();
-
+    await fixture.whenStable();
     expectToHaveNavigatedTo('/user/regulators#regulator-users');
   });
 
@@ -127,7 +128,7 @@ describe('DeleteComponent', () => {
     expect(regulatorAuthoritiesService.deleteRegulatorUserByCompetentAuthority).toHaveBeenCalledWith('1reg');
   });
 
-  it('should show confirmation screen on delete', () => {
+  it('should show confirmation screen on delete', async () => {
     authStore.setUserState({ userId: '1' });
 
     page.submitButton.click();
@@ -137,7 +138,7 @@ describe('DeleteComponent', () => {
     expect(page.panelTitle.textContent).toContain(user.lastName);
 
     page.returnLink.click();
-
+    await fixture.whenStable();
     expectToHaveNavigatedTo('/user/regulators#regulator-users');
   });
 

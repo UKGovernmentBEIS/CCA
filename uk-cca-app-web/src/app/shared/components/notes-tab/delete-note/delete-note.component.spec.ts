@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { RequestNotesService } from 'cca-api';
 
@@ -15,12 +16,12 @@ import { WorkflowDeleteNoteComponent } from './delete-note.component';
 describe('WorkflowDeleteNoteComponent', () => {
   let component: WorkflowDeleteNoteComponent;
   let fixture: ComponentFixture<WorkflowDeleteNoteComponent>;
-  let requestNotesService: jest.Mocked<RequestNotesService>;
+  let requestNotesService: Mocked<RequestNotesService>;
   let router: Router;
 
   beforeEach(async () => {
     const mockRequestNotesService = mockClass(RequestNotesService);
-    mockRequestNotesService.deleteRequestNote = jest.fn().mockReturnValue(of({}));
+    mockRequestNotesService.deleteRequestNote = vi.fn().mockReturnValue(of({}));
 
     const mockActivatedRoute = new ActivatedRouteStub({ workflowId: '456', noteId: '42' });
 
@@ -35,9 +36,9 @@ describe('WorkflowDeleteNoteComponent', () => {
       ],
     }).compileComponents();
 
-    requestNotesService = TestBed.inject(RequestNotesService) as jest.Mocked<RequestNotesService>;
+    requestNotesService = TestBed.inject(RequestNotesService) as Mocked<RequestNotesService>;
     router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate');
 
     fixture = TestBed.createComponent(WorkflowDeleteNoteComponent);
     component = fixture.componentInstance;
@@ -81,7 +82,7 @@ describe('WorkflowDeleteNoteComponent', () => {
   });
 
   it('should call onDelete when delete button is clicked', () => {
-    jest.spyOn(component, 'onDelete');
+    vi.spyOn(component, 'onDelete');
     const compiled = fixture.nativeElement;
     const deleteButton = compiled.querySelector('button');
 
@@ -91,7 +92,7 @@ describe('WorkflowDeleteNoteComponent', () => {
   });
 
   it('should not delete if noteId is missing', () => {
-    component['noteId'] = null as any;
+    (component as any).noteId = null;
     component.onDelete();
 
     expect(requestNotesService.deleteRequestNote).not.toHaveBeenCalled();

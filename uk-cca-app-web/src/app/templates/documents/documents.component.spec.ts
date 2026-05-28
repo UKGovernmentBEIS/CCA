@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
 
+import { Mocked } from 'vitest';
+
 import { DocumentTemplatesService } from 'cca-api';
 
 import { TemplateSearchComponent } from '../template-search';
@@ -15,12 +17,12 @@ import { DocumentsComponent } from './documents.component';
 describe('DocumentsComponent', () => {
   let component: DocumentsComponent;
   let fixture: ComponentFixture<DocumentsComponent>;
-  let documentTemplatesService: jest.Mocked<Partial<DocumentTemplatesService>>;
+  let documentTemplatesService: Mocked<Partial<DocumentTemplatesService>>;
   let routerMock: any;
 
   beforeEach(async () => {
     documentTemplatesService = {
-      getCurrentUserDocumentTemplates: jest.fn().mockReturnValue(of(mockDocumentTemplateSearchResults)),
+      getCurrentUserDocumentTemplates: vi.fn().mockReturnValue(of(mockDocumentTemplateSearchResults)),
     };
 
     await TestBed.configureTestingModule({
@@ -34,7 +36,7 @@ describe('DocumentsComponent', () => {
     }).compileComponents();
 
     routerMock = TestBed.inject(Router);
-    jest.spyOn(routerMock, 'navigate').mockResolvedValue(true);
+    vi.spyOn(routerMock, 'navigate').mockResolvedValue(true);
 
     fixture = TestBed.createComponent(DocumentsComponent);
     component = fixture.componentInstance;

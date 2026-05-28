@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -12,10 +12,10 @@ describe('PaginationComponent', () => {
   @Component({
     template: `
       <cca-pagination
-        [count]="count"
-        [currentPage]="currentPage"
-        [pageSize]="pageSize"
-        [hideNumbers]="hideNumbers"
+        [count]="count()"
+        [currentPage]="currentPage()"
+        [pageSize]="pageSize()"
+        [hideNumbers]="hideNumbers()"
         (pageChange)="onPageChange($event)"
         (pageSizeChange)="onPageSizeChange($event)"
       />
@@ -23,19 +23,19 @@ describe('PaginationComponent', () => {
     imports: [PaginationComponent],
   })
   class TestHostComponent {
-    count = 0;
-    pageSize = 10;
-    currentPage = 1;
-    hideNumbers = false;
-    lastPageChanged: number | null = null;
-    lastPageSizeChanged: number | null = null;
+    count = signal(0);
+    pageSize = signal(10);
+    currentPage = signal(1);
+    hideNumbers = signal(false);
+    lastPageChanged = signal<number | null>(null);
+    lastPageSizeChanged = signal<number | null>(null);
 
     onPageChange(page: number) {
-      this.lastPageChanged = page;
+      this.lastPageChanged.set(page);
     }
 
     onPageSizeChange(size: number) {
-      this.lastPageSizeChanged = size;
+      this.lastPageSizeChanged.set(size);
     }
   }
 
@@ -51,10 +51,10 @@ describe('PaginationComponent', () => {
   });
 
   const setup = (count: number, currentPage = 1, pageSize = 10, hideNumbers = false) => {
-    hostComponent.count = count;
-    hostComponent.currentPage = currentPage;
-    hostComponent.pageSize = pageSize;
-    hostComponent.hideNumbers = hideNumbers;
+    hostComponent.count.set(count);
+    hostComponent.currentPage.set(currentPage);
+    hostComponent.pageSize.set(pageSize);
+    hostComponent.hideNumbers.set(hideNumbers);
     fixture.detectChanges();
   };
 
@@ -129,17 +129,17 @@ describe('PaginationComponent', () => {
   describe('Page Navigation', () => {
     it('should navigate via next button click', () => {
       setup(30, 1, 10);
-      const spy = jest.spyOn(hostComponent, 'onPageChange');
+      const spy = vi.spyOn(hostComponent, 'onPageChange');
 
       clickElement('.govuk-pagination__next a');
 
       expect(spy).toHaveBeenCalledWith(2);
-      expect(hostComponent.lastPageChanged).toBe(2);
+      expect(hostComponent.lastPageChanged()).toBe(2);
     });
 
     it('should emit when trying to navigate to same page', () => {
       setup(30, 2, 10);
-      const spy = jest.spyOn(component.pageChange, 'emit');
+      const spy = vi.spyOn(component.pageChange, 'emit');
 
       component.onPageChange(2); // Same page
 
@@ -150,7 +150,7 @@ describe('PaginationComponent', () => {
   describe('Page Size Changes', () => {
     it('should emit page size change when changing size', () => {
       setup(50, 1, 10);
-      const spy = jest.spyOn(hostComponent, 'onPageSizeChange');
+      const spy = vi.spyOn(hostComponent, 'onPageSizeChange');
 
       component.pageSizeForm.patchValue({ pageSize: 20 });
       component.onPageSizeChange();
@@ -161,7 +161,7 @@ describe('PaginationComponent', () => {
 
     it('should emit even if same page size selected', () => {
       setup(50, 1, 10);
-      const spy = jest.spyOn(hostComponent, 'onPageSizeChange');
+      const spy = vi.spyOn(hostComponent, 'onPageSizeChange');
 
       component.pageSizeForm.patchValue({ pageSize: 10 });
       component.onPageSizeChange();

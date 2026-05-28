@@ -3,9 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
-import { TaskItemStatus } from '@requests/common';
+import { nonComplianceDetailsQuery, TaskItemStatus } from '@requests/common';
 
-import { nonComplianceDetailsQuery } from '../non-compliance-details.selectors';
 import { NonComplianceCompleteTaskButtonComponent } from './complete-task-button.component';
 
 describe('NonComplianceCompleteTaskButtonComponent', () => {
@@ -16,7 +15,7 @@ describe('NonComplianceCompleteTaskButtonComponent', () => {
   const route = {
     snapshot: {
       params: {},
-      paramMap: { get: jest.fn() },
+      paramMap: { get: vi.fn() },
       pathFromRoot: [],
     },
   };
@@ -27,7 +26,7 @@ describe('NonComplianceCompleteTaskButtonComponent', () => {
   });
 
   const mockStore = {
-    select: jest.fn().mockImplementation((selector) => {
+    select: vi.fn().mockImplementation((selector) => {
       if (selector === requestTaskQuery.selectIsEditable) {
         return isEditableSignal;
       }
@@ -83,7 +82,7 @@ describe('NonComplianceCompleteTaskButtonComponent', () => {
   });
 
   it('should navigate to complete-task route on click', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
     component.onCompleteTask();
 

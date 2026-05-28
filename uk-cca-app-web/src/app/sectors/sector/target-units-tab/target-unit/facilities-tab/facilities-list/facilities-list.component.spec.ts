@@ -1,10 +1,12 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BehaviorSubject, of } from 'rxjs';
+
+import { Mocked, MockInstance } from 'vitest';
 
 import { FacilityInfoViewService, FacilitySearchResults } from 'cca-api';
 
@@ -13,8 +15,8 @@ import { FacilitiesListComponent } from './facilities-list.component';
 describe('FacilitiesListComponent', () => {
   let component: FacilitiesListComponent;
   let fixture: ComponentFixture<FacilitiesListComponent>;
-  let facilityInfoViewService: jest.Mocked<FacilityInfoViewService>;
-  let routerNavigateSpy: jest.SpyInstance;
+  let facilityInfoViewService: Mocked<FacilityInfoViewService>;
+  let routerNavigateSpy: MockInstance;
 
   const mockFacilities: FacilitySearchResults = {
     facilities: [
@@ -39,7 +41,7 @@ describe('FacilitiesListComponent', () => {
   };
 
   const createQueryParamMock = (page = '1', pageSize = '50', term: string | null = null) => ({
-    get: jest.fn().mockImplementation((param) => {
+    get: vi.fn().mockImplementation((param) => {
       if (param === 'page') return page;
       if (param === 'pageSize') return pageSize;
       if (param === 'term') return term;
@@ -49,7 +51,7 @@ describe('FacilitiesListComponent', () => {
 
   const setupComponent = (searchResults = mockFacilities) => {
     const facilityServiceMock = {
-      searchFacilities: jest.fn().mockReturnValue(of(searchResults)),
+      searchFacilities: vi.fn().mockReturnValue(of(searchResults)),
     };
 
     const queryParamMock = createQueryParamMock();
@@ -57,7 +59,7 @@ describe('FacilitiesListComponent', () => {
 
     const activatedRouteMock = {
       snapshot: {
-        paramMap: { get: jest.fn().mockReturnValue('123') },
+        paramMap: { get: vi.fn().mockReturnValue('123') },
         queryParamMap: queryParamMock,
         fragment: 'facilities',
       },
@@ -77,8 +79,8 @@ describe('FacilitiesListComponent', () => {
     fixture = TestBed.createComponent(FacilitiesListComponent);
     component = fixture.componentInstance;
 
-    routerNavigateSpy = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
-    facilityInfoViewService = TestBed.inject(FacilityInfoViewService) as jest.Mocked<FacilityInfoViewService>;
+    routerNavigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    facilityInfoViewService = TestBed.inject(FacilityInfoViewService) as Mocked<FacilityInfoViewService>;
 
     return { queryParamSubject, queryParamMock };
   };
@@ -94,27 +96,25 @@ describe('FacilitiesListComponent', () => {
       expect(component).toBeTruthy();
     });
 
-    it('should load data and update state when effect triggers', fakeAsync(() => {
+    it('should load data and update state when effect triggers', () => {
       setupComponent();
 
       fixture.detectChanges();
-      tick();
 
       expect(facilityInfoViewService.searchFacilities).toHaveBeenCalledWith(123, 0, 50, null);
       expect(component.state().facilities.length).toBe(2);
       expect(component.state().totalItems).toBe(2);
-    }));
+    });
 
-    it('should have reactive computed properties', fakeAsync(() => {
+    it('should have reactive computed properties', () => {
       setupComponent();
 
       fixture.detectChanges();
-      tick();
 
       expect(component.currentPage()).toBe(1);
       expect(component.pageSize()).toBe(50);
       expect(component.searchTerm()).toBe(null);
-    }));
+    });
   });
 
   describe('search functionality', () => {
@@ -122,9 +122,8 @@ describe('FacilitiesListComponent', () => {
       setupComponent();
     });
 
-    it('should perform search', fakeAsync(() => {
+    it('should perform search', () => {
       fixture.detectChanges();
-      tick();
 
       component.form.get('term')?.setValue('test-search');
       component.onSearch();
@@ -140,7 +139,7 @@ describe('FacilitiesListComponent', () => {
           fragment: 'facilities',
         }),
       );
-    }));
+    });
 
     it('should not search when form is invalid', () => {
       component.form.get('term')?.setValue('ab'); // Less than 3 characters
@@ -203,36 +202,32 @@ describe('FacilitiesListComponent', () => {
   });
 
   describe('query parameter reactivity', () => {
-    it('should update computed properties when query params change', fakeAsync(() => {
+    it('should update computed properties when query params change', () => {
       const { queryParamSubject } = setupComponent();
 
       fixture.detectChanges();
-      tick();
 
       // Update query params
       const newQueryParams = createQueryParamMock('3', '25', 'search-term');
       queryParamSubject.next(newQueryParams);
-      tick();
 
       expect(component.currentPage()).toBe(3);
       expect(component.pageSize()).toBe(25);
       expect(component.searchTerm()).toBe('search-term');
-    }));
+    });
 
-    it('should trigger data loading when query params change', fakeAsync(() => {
+    it('should trigger data loading when query params change', () => {
       const { queryParamSubject } = setupComponent();
 
       fixture.detectChanges();
-      tick();
 
       facilityInfoViewService.searchFacilities.mockClear();
 
       // Update query params
       const newQueryParams = createQueryParamMock('2', '25', 'test');
       queryParamSubject.next(newQueryParams);
-      tick();
 
       expect(facilityInfoViewService.searchFacilities).toHaveBeenCalledWith(123, 1, 25, 'test');
-    }));
+    });
   });
 });

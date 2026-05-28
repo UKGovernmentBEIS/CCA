@@ -9,6 +9,7 @@ import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { mockUNAReviewRequestTaskState } from '@requests/common';
+import { Mocked } from 'vitest';
 
 import ReviewTargetUnitDetailsCheckYourAnswersComponent from './review-target-unit-details-check-your-answers.component';
 
@@ -17,8 +18,8 @@ describe('Review Target Unit Details CheckYourAnswers', () => {
   let store: RequestTaskStore;
 
   const route = new ActivatedRouteStub();
-  const taskService: Partial<jest.Mocked<TaskService>> = {
-    submitSubtask: jest.fn().mockReturnValue(of({})),
+  const taskService: Partial<Mocked<TaskService>> = {
+    submitSubtask: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -42,6 +43,6 @@ describe('Review Target Unit Details CheckYourAnswers', () => {
   });
 
   it('should render the summary sections and rows', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

@@ -5,6 +5,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriod;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodYearDTO;
@@ -16,6 +17,8 @@ import uk.gov.netz.api.common.exception.BusinessException;
 import uk.gov.netz.api.common.exception.ErrorCode;
 
 import java.time.Year;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,16 @@ public class TargetPeriodService {
 
     private final TargetPeriodRepository repository;
     private static final TargetPeriodMapper MAPPER = Mappers.getMapper(TargetPeriodMapper.class);
+
+    @Transactional(readOnly = true)
+    public List<TargetPeriodDetailsDTO> getTargetPeriodDetailsBySchemeVersion(SchemeVersion schemeVersion) {
+        return repository.findAllBySchemeVersion(schemeVersion).stream().map(MAPPER::toTargetPeriodDetailsDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<TargetPeriodDetailsDTO> getTargetPeriodDetailsByTargetPeriodTypes(Set<TargetPeriodType> targetPeriodTypes) {
+        return repository.findByBusinessIdIn(targetPeriodTypes).stream().map(MAPPER::toTargetPeriodDetailsDTO).toList();
+    }
 
     @Transactional(readOnly = true)
     public TargetPeriodDetailsDTO getTargetPeriodDetailsByTargetPeriodType(TargetPeriodType targetPeriodType) {

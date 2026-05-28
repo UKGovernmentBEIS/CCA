@@ -31,12 +31,11 @@
                 @if (fac.value.isHistorical) {
                   <div formControlName="facilityBusinessId" govuk-text-input [widthClass]="'govuk-!-width-full'"></div>
                 } @else {
-                  <div
+                  <cca-combobox
                     formControlName="facilityBusinessId"
-                    govuk-select
                     [options]="getOptionsForRow(i)"
                     [widthClass]="'govuk-!-width-full'"
-                  ></div>
+                  />
                 }
               </td>
               <td class="govuk-table__cell non-compliance-items-table__action-cell">

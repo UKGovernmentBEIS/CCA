@@ -93,6 +93,11 @@ public enum CcaErrorCode implements NetzErrorCode {
     PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXIST("TPRDF1001", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form for Target Period already in progress"),
     PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_NOT_ELIGIBLE("TPRDF1002", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form is not eligible for facility"),
     PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REPORT_NOT_ELIGIBLE("TPRDF1003", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form is not eligible for target period"),
+    PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SECONDARY_REPORTING_LOCKED("TPRDF1004", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form Facility is locked for secondary reporting"),
+    PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCTS_NOT_ELIGIBLE("TPRDF1005", HttpStatus.BAD_REQUEST, "Performance Data Facility Digital Form is not eligible for facility products"),
+    INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT("TPRDF1006", HttpStatus.BAD_REQUEST, "Invalid Performance Data Facility Digital Form Submit data"),
+    INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_CALCULATED_RESULTS("TPRDF1007", HttpStatus.BAD_REQUEST, "Invalid Performance Data Facility Digital Form calculated results data"),
+    INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_ORIGINAL_BASELINE_AND_TARGETS_IS_OUTDATED("TPRDF1008", HttpStatus.BAD_REQUEST, "Original baseline and targets is outdated for Performance Data Facility Digital Form Submit"),
     ;
 
 

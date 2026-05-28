@@ -7,6 +7,7 @@ import { WORKFLOW_DETAILS_ROUTES } from '@shared/components';
 import { PendingRequestGuard } from '@shared/guards';
 
 import { FacilityAuditStore } from './facility-audit/facility-audit.store';
+import { FacilityAvailableReportingPeriodsResolver } from './facility-available-reporting-periods.resolver';
 import { FacilityDetailsResolver } from './facility-details.resolver';
 
 export const FACILITIES_LIST_ROUTES: Routes = [
@@ -62,6 +63,12 @@ export const FACILITIES_LIST_ROUTES: Routes = [
         data: { backlink: '../', breadcrumb: false },
         canDeactivate: [PendingRequestGuard],
         loadComponent: () => import('@shared/components').then((c) => c.StartNewTaskComponent),
+      },
+      {
+        path: 'tp-reporting',
+        data: { backlink: '../process-actions', breadcrumb: false },
+        resolve: { availablePeriods: FacilityAvailableReportingPeriodsResolver },
+        loadComponent: () => import('./tp-reporting/tp-reporting.component').then((c) => c.TpReportingComponent),
       },
     ],
   },

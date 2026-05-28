@@ -12,10 +12,19 @@ export const nonComplianceDetailsSubmitted: NonComplianceDetailsSubmittedRequest
     relevantWorkflows: ['ADS_1-T00037-VAR-1', 'ADS_1-T00037-VAR-2', 'ADS_1-T00037-VAR-3'],
     relevantFacilities: [
       { facilityBusinessId: 'ADS_1-F00035', isHistorical: false },
-      { facilityBusinessId: 'erwywyweyer', isHistorical: true },
+      { facilityBusinessId: 'ADS_1-F00036', isHistorical: true },
     ],
     isEnforcementResponseNoticeRequired: false,
     explanation: 'fsfgs',
+  },
+  allRelevantWorkflows: {
+    'ADS_1-T00037-VAR-1': 'UNDERLYING_AGREEMENT_VARIATION',
+    'ADS_1-T00037-VAR-2': 'ADMIN_TERMINATION',
+    'ADS_1-T00037-VAR-3': 'NON_COMPLIANCE',
+  },
+  allRelevantFacilities: {
+    'ADS_1-F00035': 'Facility 35',
+    'ADS_1-F00036': 'Facility 36',
   },
 };
 

@@ -24,7 +24,7 @@ describe('PeerReviewDecisionComponent', () => {
   let peerReviewStore: AdminTerminationPeerReviewStore;
 
   const mockRequestTaskFileService = {
-    buildFormControl: jest.fn().mockReturnValue(new FormControl([])),
+    buildFormControl: vi.fn().mockReturnValue(new FormControl([])),
   };
 
   beforeEach(async () => {
@@ -67,8 +67,8 @@ describe('PeerReviewDecisionComponent', () => {
   });
 
   it('should navigate to check-your-answers on valid form submission', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    const setStateSpy = jest.spyOn(peerReviewStore, 'setState');
+    const navigateSpy = vi.spyOn(router, 'navigate');
+    const setStateSpy = vi.spyOn(peerReviewStore, 'setState');
     const activatedRoute = TestBed.inject(ActivatedRoute);
 
     component['form'].patchValue({

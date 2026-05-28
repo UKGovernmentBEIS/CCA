@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -7,23 +7,19 @@ import { map, of } from 'rxjs';
 
 import { BasePage } from '@netz/common/testing';
 import { GovukValidators } from '@netz/govuk-components';
-import { COUNTRIES, CountryCallingCodeService, UK_COUNTRY_CODES } from '@shared/services';
+import { CountryService } from '@shared/services';
+import { CountryCallingCodeService, UK_COUNTRY_CODES } from '@shared/services';
 import { Country } from '@shared/types';
 
 import { PhoneInputComponent } from './phone-input.component';
 
-const mockCountries: Country[] = [
-  {
-    code: 'GB-ENG',
-    name: 'England',
-    officialName: 'England',
-  },
-  {
-    code: 'AF',
-    name: 'Afghanistan',
-    officialName: 'Afghanistan',
-  },
-];
+const mockCountryService = {
+  countries: signal([
+    { code: 'GB-ENG', name: 'England', officialName: 'England' },
+    { code: 'AF', name: 'Afghanistan', officialName: 'Islamic Republic of Afghanistan' },
+    { code: 'GR', name: 'Greece', officialName: 'Greece' },
+  ]),
+};
 
 const mockCountryCallingCodeService = {
   getCountryCallingCode: (code: string) => {
@@ -110,12 +106,12 @@ describe('PhoneInputComponent', () => {
   }
 
   beforeEach(async () => {
-    COUNTRIES.length = 0;
-    COUNTRIES.push(...mockCountries);
-
     await TestBed.configureTestingModule({
       imports: [TestComponent],
-      providers: [{ provide: CountryCallingCodeService, useValue: mockCountryCallingCodeService }],
+      providers: [
+        { provide: CountryCallingCodeService, useValue: mockCountryCallingCodeService },
+        { provide: CountryService, useValue: mockCountryService },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);
@@ -130,7 +126,10 @@ describe('PhoneInputComponent', () => {
   });
 
   it('should render the govuk countries', () => {
+    expect(page.options[0].textContent).toEqual('GB-ENG (44)');
+    expect(page.options[1].textContent).toEqual('--');
     expect(page.options[2].textContent).toEqual('AF (93)');
+    expect(page.options[3].textContent).toEqual('GR (30)');
   });
 
   it('should apply identifiers', () => {
@@ -183,19 +182,32 @@ describe('PhoneInputComponent', () => {
     expect(hostComponent.form.get('firstPhone').touched).toBeTruthy();
   });
 
-  it('should apply a supplied value', async () => {
-    COUNTRIES.push({
-      code: 'GR',
-      name: 'Greece',
-      officialName: 'Greece',
-    });
+  it('should apply a supplied value', () => {
+    const countries: Country[] = [];
+    countries.push(
+      {
+        code: 'GR',
+        name: 'Greece',
+        officialName: 'Greece',
+      },
+      {
+        code: 'UK',
+        name: 'United Kingdom',
+        officialName: 'United Kingdom',
+      },
+      {
+        code: 'SC',
+        name: 'Scotland',
+        officialName: 'Scotland',
+      },
+    );
 
     // Force a refresh of the options
-    component.phoneCodes$ = of(COUNTRIES).pipe(
+    component.phoneCodes$ = of(countries).pipe(
       map((countries) => {
-        const emptyOption = [{ text: '--', value: '' }];
-        const ukCountries = [];
-        const otherCountries = [];
+        const emptyOption: { text: string; value: string }[] = [{ text: '--', value: '' }];
+        const ukCountries: { text: string; value: string }[] = [];
+        const otherCountries: { text: string; value: string }[] = [];
 
         countries.forEach((country) => {
           const callingCode = mockCountryCallingCodeService.getCountryCallingCode(country.code);
@@ -219,14 +231,7 @@ describe('PhoneInputComponent', () => {
       }),
     );
 
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
-
     hostComponent.form.get('firstPhone').setValue({ countryCode: '30', number: '1234567890' });
-
-    fixture.detectChanges();
-    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(page.countryCodeValue).toEqual('30');

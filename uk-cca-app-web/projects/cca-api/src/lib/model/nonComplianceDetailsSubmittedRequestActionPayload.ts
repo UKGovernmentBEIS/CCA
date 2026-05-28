@@ -15,4 +15,6 @@ export interface NonComplianceDetailsSubmittedRequestActionPayload {
   payloadType?: string;
   businessId?: string;
   nonComplianceDetails: NonComplianceDetails;
+  allRelevantWorkflows?: Record<string, string>;
+  allRelevantFacilities?: Record<string, string>;
 }

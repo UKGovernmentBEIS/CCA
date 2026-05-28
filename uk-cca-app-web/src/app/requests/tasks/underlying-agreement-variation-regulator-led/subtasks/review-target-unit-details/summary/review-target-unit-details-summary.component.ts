@@ -17,6 +17,7 @@ import {
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
 import { transformAddress } from '@shared/pipes';
+import { CountryService } from '@shared/services';
 
 import { CompaniesInformationService, CompanyProfileDTO } from 'cca-api';
 
@@ -38,6 +39,8 @@ export default class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly companiesInformationService = inject(CompaniesInformationService);
 
+  protected readonly countries = inject(CountryService).countries;
+
   protected readonly toggleCompaniesHouseDetailsCtrl = new FormControl<boolean>(false);
   protected readonly toggleCompaniesHouseDetails = toSignal(this.toggleCompaniesHouseDetailsCtrl.valueChanges, {
     initialValue: false,
@@ -53,7 +56,7 @@ export default class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
     const response = this.companiesHouseDetailsResponse();
     return {
       details: typeof response === 'object' ? response : null,
-      address: typeof response === 'object' ? transformAddress(response?.address).join('\n') : null,
+      address: typeof response === 'object' ? transformAddress(response?.address, this.countries()).join('\n') : null,
     };
   });
 
@@ -73,6 +76,7 @@ export default class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
 
   protected readonly summaryDataOriginal = toReviewTargetUnitDetailsSummaryDataOriginal(
     this.accountReferenceData(),
+    this.countries(),
     this.isEditable(),
     this.companiesHouseState(),
     this.toggleCompaniesHouseDetails(),
@@ -80,6 +84,7 @@ export default class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
 
   protected readonly summaryDataCurrent = toReviewTargetUnitDetailsSummaryData(
     this.targetUnitDetails(),
+    this.countries(),
     this.isEditable(),
     this.companiesHouseState(),
     this.toggleCompaniesHouseDetails(),

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -11,19 +11,17 @@ describe('DetailsComponent', () => {
 
   @Component({
     imports: [DetailsComponent],
-    template: ` <govuk-details [summary]="summary"></govuk-details> `,
+    template: ` <govuk-details [summary]="summary()"></govuk-details> `,
   })
   class TestComponent {
-    summary: string;
+    summary = signal<string | null>(null);
   }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TestComponent],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(TestComponent);
     testComponent = fixture.componentInstance;
     component = fixture.debugElement.query(By.directive(DetailsComponent)).componentInstance;
@@ -35,11 +33,11 @@ describe('DetailsComponent', () => {
   });
 
   it('should render the summary', () => {
-    testComponent.summary = 'Something is up';
+    testComponent.summary.set('Something is up');
     fixture.detectChanges();
 
     const element: HTMLElement = fixture.nativeElement;
 
-    expect(element.querySelector('.govuk-details__summary-text').textContent).toEqual(testComponent.summary);
+    expect(element.querySelector('.govuk-details__summary-text').textContent).toEqual(testComponent.summary());
   });
 });

@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
+import { Mocked } from 'vitest';
 
 import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import { ReviewTargetUnitDetailsCheckYourAnswersComponent } from './review-target-unit-details-check-your-answers.component';
@@ -17,8 +18,8 @@ describe('ReviewTargetUnitDetailsCheckYourAnswersComponent', () => {
   let store: RequestTaskStore;
 
   const route = new ActivatedRouteStub();
-  const mockTasksApiService: Partial<jest.Mocked<TasksApiService>> = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+  const mockTasksApiService: Partial<Mocked<TasksApiService>> = {
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -42,6 +43,6 @@ describe('ReviewTargetUnitDetailsCheckYourAnswersComponent', () => {
   });
 
   it('should render the summary sections and rows', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

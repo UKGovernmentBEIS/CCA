@@ -9,6 +9,7 @@ import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { BASELINE_AND_TARGETS_SUBTASK, BaselineAndTargetPeriodsSubtasks } from '@requests/common';
+import { Mocked } from 'vitest';
 
 import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import { TP5SummaryComponent } from './tp5-summary.component';
@@ -17,8 +18,8 @@ describe('TP5SummaryComponent', () => {
   let store: RequestTaskStore;
   let fixture: ComponentFixture<TP5SummaryComponent>;
 
-  const unaTaskService: Partial<jest.Mocked<TaskService>> = {
-    saveSubtask: jest.fn().mockReturnValue(of({})),
+  const unaTaskService: Partial<Mocked<TaskService>> = {
+    saveSubtask: vi.fn().mockReturnValue(of({})),
   };
 
   const setupComponent = (period: BaselineAndTargetPeriodsSubtasks) => {
@@ -45,6 +46,6 @@ describe('TP5SummaryComponent', () => {
 
   it('should match snapshot for TP5, ABSOLUTE agreementMeasurementType and no Measuremenet', () => {
     setupComponent(BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_5_DETAILS);
-    expect(fixture.nativeElement).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

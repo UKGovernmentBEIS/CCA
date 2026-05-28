@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { getByText } from '@testing';
+import { Mocked } from 'vitest';
 
 import { TasksService } from 'cca-api';
 
@@ -24,8 +25,8 @@ describe('AdminTerminationSendForPeerReviewComponent', () => {
     { id: 'user3', firstName: 'Mike', lastName: 'Brown' },
   ];
 
-  const tasksService: Partial<jest.Mocked<TasksService>> = {
-    processRequestTaskAction: jest.fn().mockReturnValue(of({})),
+  const tasksService: Partial<Mocked<TasksService>> = {
+    processRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   const activatedRoute = {
@@ -58,11 +59,11 @@ describe('AdminTerminationSendForPeerReviewComponent', () => {
 
     store = TestBed.inject(RequestTaskStore);
     router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate');
 
     store.setRequestTaskItem({
       requestTask: { id: 456, type: 'ADMIN_TERMINATION_APPLICATION_SUBMIT' },
-      requestInfo: { accountId: 1 },
+      requestInfo: { accountId: 1 } as any,
     });
 
     fixture = TestBed.createComponent(AdminTerminationSendForPeerReviewComponent);

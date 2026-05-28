@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { RequestTaskStore } from '@netz/common/store';
+import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { TasksApiService } from '@requests/common';
 
 import { mockNonComplianceDetailsState } from '../testing/mock-data';
@@ -19,13 +19,13 @@ describe('CheckYourAnswersComponent', () => {
   const route = {
     snapshot: {
       params: {},
-      paramMap: { get: jest.fn() },
+      paramMap: { get: vi.fn() },
       pathFromRoot: [{ url: [{ path: 'request-task' }] }],
     },
   };
 
   const mockTasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -33,9 +33,10 @@ describe('CheckYourAnswersComponent', () => {
       imports: [CheckYourAnswersComponent],
       providers: [
         provideHttpClient(),
-        RequestTaskStore,
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: route },
+        { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
+        { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Dashboard' },
       ],
     }).compileComponents();
 
@@ -56,7 +57,7 @@ describe('CheckYourAnswersComponent', () => {
   });
 
   it('should display snapshot', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 
   it('should hide confirm and complete button when task is not editable', () => {
@@ -77,8 +78,8 @@ describe('CheckYourAnswersComponent', () => {
     expect(mockTasksApiService.saveRequestTaskAction).not.toHaveBeenCalled();
   });
 
-  it('should submit with COMPLETED status and navigate to summary', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+  it('should submit with COMPLETED status and navigate back to the task list', () => {
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
     component.onSubmit();
 

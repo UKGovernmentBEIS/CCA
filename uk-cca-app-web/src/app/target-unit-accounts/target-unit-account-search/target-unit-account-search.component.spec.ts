@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 
 import { of, throwError } from 'rxjs';
+
+import { Mocked } from 'vitest';
 
 import { TargetUnitAccountInfoViewService } from 'cca-api';
 
@@ -14,21 +15,21 @@ import { TargetUnitAccountSearchComponent } from './target-unit-account-search.c
 describe('TargetUnitAccountSearchComponent', () => {
   let component: TargetUnitAccountSearchComponent;
   let fixture: ComponentFixture<TargetUnitAccountSearchComponent>;
-  let targetUnitAccountInfoViewService: jest.Mocked<Partial<TargetUnitAccountInfoViewService>>;
+  let targetUnitAccountInfoViewService: Mocked<Partial<TargetUnitAccountInfoViewService>>;
   let routerMock: any;
 
   beforeEach(async () => {
     targetUnitAccountInfoViewService = {
-      searchUserAccounts: jest.fn().mockReturnValue(of(mockAccountSearchResults)),
+      searchUserAccounts: vi.fn().mockReturnValue(of(mockAccountSearchResults)),
     };
 
     const activatedRouteMock = {
       snapshot: {
         paramMap: {
-          get: jest.fn().mockReturnValue(null),
+          get: vi.fn().mockReturnValue(null),
         },
         queryParamMap: {
-          get: jest.fn().mockImplementation((param) => {
+          get: vi.fn().mockImplementation((param) => {
             if (param === 'page') return '1';
             if (param === 'pageSize') return '50';
             return null;
@@ -36,7 +37,7 @@ describe('TargetUnitAccountSearchComponent', () => {
         },
       },
       queryParamMap: of({
-        get: jest.fn().mockImplementation((param) => {
+        get: vi.fn().mockImplementation((param) => {
           if (param === 'page') return '1';
           if (param === 'pageSize') return '50';
           return null;
@@ -45,8 +46,9 @@ describe('TargetUnitAccountSearchComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, RouterTestingModule, TargetUnitAccountSearchComponent],
+      imports: [ReactiveFormsModule, TargetUnitAccountSearchComponent],
       providers: [
+        provideRouter([]),
         { provide: TargetUnitAccountInfoViewService, useValue: targetUnitAccountInfoViewService },
         { provide: ActivatedRoute, useValue: activatedRouteMock },
       ],
@@ -54,7 +56,7 @@ describe('TargetUnitAccountSearchComponent', () => {
 
     // Get router from TestBed after configuring module
     routerMock = TestBed.inject(Router);
-    jest.spyOn(routerMock, 'navigate').mockResolvedValue(true);
+    vi.spyOn(routerMock, 'navigate').mockResolvedValue(true);
 
     fixture = TestBed.createComponent(TargetUnitAccountSearchComponent);
     component = fixture.componentInstance;

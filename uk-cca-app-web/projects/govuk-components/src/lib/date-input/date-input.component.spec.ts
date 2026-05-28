@@ -185,7 +185,7 @@ describe('DateInputComponent', () => {
     expect(errorMessage).not.toBeNull();
   });
 
-  it('should show min errors', () => {
+  it('should show min errors', async () => {
     const inputs = fixture.debugElement.queryAll(By.css('input'));
     changeValue(inputs[0], '31');
     changeValue(inputs[1], '3');
@@ -198,7 +198,9 @@ describe('DateInputComponent', () => {
     expect(errorMessage).toBeNull();
 
     hostComponent.min = new Date('2020-05-31');
-    fixture.detectChanges();
+    // TODO: remove this workaround once signal-based inputs are updated without NG0100 in tests.
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
 
     expect(hostComponent.control.valid).not.toBeTruthy();
     expect(hostComponent.control.errors.minDate).toBeTruthy();
@@ -206,7 +208,7 @@ describe('DateInputComponent', () => {
     expect(errorMessage).not.toBeNull();
   });
 
-  it('should show max errors', () => {
+  it('should show max errors', async () => {
     const inputs = fixture.debugElement.queryAll(By.css('input'));
     changeValue(inputs[0], '31');
     changeValue(inputs[1], '3');
@@ -219,7 +221,9 @@ describe('DateInputComponent', () => {
     expect(errorMessage).toBeNull();
 
     hostComponent.max = new Date('2018-05-31');
-    fixture.detectChanges();
+    // TODO: remove this workaround once signal-based inputs are updated without NG0100 in tests.
+    fixture.changeDetectorRef.markForCheck();
+    await fixture.whenStable();
 
     expect(hostComponent.control.valid).not.toBeTruthy();
     expect(hostComponent.control.errors.maxDate).toBeTruthy();

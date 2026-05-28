@@ -77,6 +77,7 @@ export class StartNewTaskComponent {
       'PERFORMANCE_DATA_UPLOAD',
       'PERFORMANCE_ACCOUNT_TEMPLATE_DATA_UPLOAD',
       'ADMIN_TERMINATION',
+      'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM',
     ];
 
     return Object.entries(validationResults)
@@ -130,6 +131,11 @@ export class StartNewTaskComponent {
   }
 
   onRequestButtonClick(requestType: string) {
+    if (requestType === 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM') {
+      this.router.navigate(['..', 'tp-reporting'], { relativeTo: this.activatedRoute });
+      return;
+    }
+
     this.requestsService
       .processRequestCreateAction(
         {

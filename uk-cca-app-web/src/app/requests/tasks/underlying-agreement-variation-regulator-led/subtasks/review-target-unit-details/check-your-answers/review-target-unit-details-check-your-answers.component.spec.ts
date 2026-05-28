@@ -22,10 +22,10 @@ describe('CheckYourAnswersComponent', () => {
   const route = new ActivatedRouteStub();
 
   const tasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
-  const saveRequestTaskActionSpy = jest.spyOn(tasksApiService, 'saveRequestTaskAction');
+  const saveRequestTaskActionSpy = vi.spyOn(tasksApiService, 'saveRequestTaskAction');
 
   const enhancedMockState = {
     ...mockRequestTaskState,
@@ -68,7 +68,7 @@ describe('CheckYourAnswersComponent', () => {
         {
           provide: Router,
           useValue: {
-            navigate: jest.fn(),
+            navigate: vi.fn(),
             url: '/test/check-your-answers',
             events: of({}),
             createUrlTree: () => ({}),
@@ -99,7 +99,7 @@ describe('CheckYourAnswersComponent', () => {
   });
 
   it('should render the summary sections and rows', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 
   it('should submit form and call saveRequestTaskAction with completed section', async () => {

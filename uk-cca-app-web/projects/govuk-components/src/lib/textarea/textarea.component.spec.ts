@@ -1,24 +1,31 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlContainer, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 
 import { ErrorMessageComponent } from '../error-message';
 import { GovukValidators } from '../error-message';
 import { TextareaComponent } from './textarea.component';
+import { LabelSizeType } from './label-size.type';
 
 describe('TextareaComponent', () => {
   @Component({
     imports: [TextareaComponent, ReactiveFormsModule],
     template: `
-      <div govuk-textarea [formControl]="control" [maxLength]="maxLength" [label]="label" [labelSize]="labelSize"></div>
+      <div
+        govuk-textarea
+        [formControl]="control"
+        [maxLength]="maxLength()"
+        [label]="label()"
+        [labelSize]="labelSize()"
+      ></div>
     `,
   })
   class TestComponent {
     control = new FormControl();
-    maxLength: number;
-    label: string;
-    labelSize: string;
+    maxLength = signal<number | undefined>(undefined);
+    label = signal<string | undefined>(undefined);
+    labelSize = signal<LabelSizeType | undefined>(undefined);
   }
 
   let component: TextareaComponent;
@@ -71,22 +78,25 @@ describe('TextareaComponent', () => {
     expect(component.control.value).toEqual('This is a test \n Test');
   });
 
-  it('should show character count info and error', () => {
+  // TODO: try a more proper implementation, removing `changeDetectorRef.markForCheck`
+  it('should show character count info and error', async () => {
     const element: HTMLElement = hostComponentFixture.nativeElement;
     expect(element.querySelector('.govuk-character-count__message')).toBeNull();
 
-    hostComponent.maxLength = 10;
+    hostComponent.maxLength.set(10);
     component.control.clearValidators();
     component.control.setValidators(GovukValidators.maxLength(10, 'no more than 10'));
     component.control.updateValueAndValidity();
-    hostComponentFixture.detectChanges();
+    hostComponentFixture.changeDetectorRef.markForCheck();
+    await hostComponentFixture.whenStable();
 
     expect(element.querySelector('.govuk-character-count__message').textContent.trim()).toEqual('');
     expect(element.querySelector('.govuk-character-count__message.govuk-error-message')).toBeNull();
 
     const withinLimit = '1234567890';
     component.control.setValue(withinLimit);
-    hostComponentFixture.detectChanges();
+    hostComponentFixture.changeDetectorRef.markForCheck();
+    await hostComponentFixture.whenStable();
 
     expect(element.querySelector('.govuk-character-count__message').textContent.trim()).toEqual(
       'You have 0 characters remaining',
@@ -95,7 +105,8 @@ describe('TextareaComponent', () => {
 
     const stringValue = '12345678901';
     component.control.setValue(stringValue);
-    hostComponentFixture.detectChanges();
+    hostComponentFixture.changeDetectorRef.markForCheck();
+    await hostComponentFixture.whenStable();
 
     expect(element.querySelector('.govuk-character-count__message.govuk-error-message')).toBeTruthy();
     expect(element.querySelector('.govuk-character-count__message.govuk-error-message').textContent.trim()).toEqual(
@@ -107,29 +118,29 @@ describe('TextareaComponent', () => {
     );
   });
 
-  it('should display labelSize classes', () => {
+  it('should display labelSize classes', async () => {
     const hostElement: HTMLElement = hostComponentFixture.nativeElement;
     const label = hostElement.querySelector('label');
 
     expect(label.className).toEqual('govuk-label govuk-visually-hidden');
 
-    hostComponent.labelSize = 'normal';
-    hostComponentFixture.detectChanges();
+    hostComponent.labelSize.set('normal');
+    await hostComponentFixture.whenStable();
 
     expect(label.className).toEqual('govuk-label govuk-visually-hidden');
 
-    hostComponent.labelSize = 'small';
-    hostComponentFixture.detectChanges();
+    hostComponent.labelSize.set('small');
+    await hostComponentFixture.whenStable();
 
     expect(label.className).toEqual('govuk-label govuk-visually-hidden govuk-label--s');
 
-    hostComponent.labelSize = 'medium';
-    hostComponentFixture.detectChanges();
+    hostComponent.labelSize.set('medium');
+    await hostComponentFixture.whenStable();
 
     expect(label.className).toEqual('govuk-label govuk-visually-hidden govuk-label--m');
 
-    hostComponent.labelSize = 'large';
-    hostComponentFixture.detectChanges();
+    hostComponent.labelSize.set('large');
+    await hostComponentFixture.whenStable();
 
     expect(label.className).toEqual('govuk-label govuk-visually-hidden govuk-label--l');
   });

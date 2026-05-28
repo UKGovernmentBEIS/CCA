@@ -13,12 +13,7 @@
       dates may no longer be current.
     </p>
 
-    <cca-file-input
-      [downloadUrl]="getDownloadUrl"
-      formControlName="noticeOfIntentFile"
-      label="Upload file"
-      labelSize="small"
-    />
+    <cca-file-input [downloadUrl]="getDownloadUrl" formControlName="file" label="Upload file" labelSize="small" />
 
     <div
       formControlName="comments"

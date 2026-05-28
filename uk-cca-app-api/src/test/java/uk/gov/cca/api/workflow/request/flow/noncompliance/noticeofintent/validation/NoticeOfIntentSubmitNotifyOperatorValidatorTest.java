@@ -12,7 +12,7 @@ import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
 import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.CcaDecisionNotificationUsersValidator;
 import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.DecisionNotificationValidator;
 import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.DecisionNotificationViolation;
-import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntent;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntent;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitRequestTaskPayload;
 import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.common.exception.BusinessException;
@@ -50,8 +50,8 @@ class NoticeOfIntentSubmitNotifyOperatorValidatorTest {
         final String processId = "process";
         final AppUser appUser = AppUser.builder().build();
         final UUID fileUuid = UUID.randomUUID();
-        final NoticeOfIntent noticeOfIntent = NoticeOfIntent.builder()
-                .noticeOfIntentFile(fileUuid)
+        final NonComplianceNoticeOfIntent noticeOfIntent = NonComplianceNoticeOfIntent.builder()
+                .file(fileUuid)
                 .comments("bla bla bla")
                 .build();
 
@@ -92,8 +92,8 @@ class NoticeOfIntentSubmitNotifyOperatorValidatorTest {
         final String processId = "process";
         final AppUser appUser = AppUser.builder().build();
         final UUID fileUuid = UUID.randomUUID();
-        final NoticeOfIntent noticeOfIntent = NoticeOfIntent.builder()
-                .noticeOfIntentFile(fileUuid)
+        final NonComplianceNoticeOfIntent noticeOfIntent = NonComplianceNoticeOfIntent.builder()
+                .file(fileUuid)
                 .comments("bla bla bla")
                 .build();
 

@@ -1,12 +1,16 @@
 import { boolToString } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
 import { transformAddress, transformOperatorType } from '@shared/pipes';
+import { Country } from '@shared/types';
 
 import { TargetUnitAccountPayload } from 'cca-api';
 
 import { transformPhoneNumber } from '../../phone';
 
-export function toTargetUnitCreateSubmittedSummaryData(payload: TargetUnitAccountPayload): SummaryData {
+export function toTargetUnitCreateSubmittedSummaryData(
+  payload: TargetUnitAccountPayload,
+  countries: Country[],
+): SummaryData {
   const factory = new SummaryFactory()
     .addSection('Target unit details', '../', { testid: 'target-unit-details-list' })
     .addRow('Operator name', payload?.name)
@@ -23,13 +27,13 @@ export function toTargetUnitCreateSubmittedSummaryData(payload: TargetUnitAccoun
     .addRow('Subsector', payload?.subsectorAssociationName)
 
     .addSection('Operator address', '../operator-address', { testid: 'operator-address-list' })
-    .addTextAreaRow('Address', transformAddress(payload?.address))
+    .addTextAreaRow('Address', transformAddress(payload?.address, countries))
 
     .addSection('Responsible person', '../responsible-person', { testid: 'responsible-person-list' })
     .addRow('First name', payload?.responsiblePerson?.firstName)
     .addRow('Last name', payload?.responsiblePerson?.lastName)
     .addRow('Job title', payload?.responsiblePerson?.jobTitle)
-    .addTextAreaRow('Address', transformAddress(payload?.responsiblePerson?.address))
+    .addTextAreaRow('Address', transformAddress(payload?.responsiblePerson?.address, countries))
     .addRow('Phone number', transformPhoneNumber(payload?.responsiblePerson?.phoneNumber))
     .addRow('Email address', payload?.responsiblePerson?.email)
 
@@ -41,7 +45,7 @@ export function toTargetUnitCreateSubmittedSummaryData(payload: TargetUnitAccoun
     .addRow('Job title', payload?.administrativeContactDetails?.jobTitle)
     .addRow('Email address', payload?.administrativeContactDetails?.email)
     .addRow('Phone number', transformPhoneNumber(payload?.administrativeContactDetails?.phoneNumber))
-    .addTextAreaRow('Address', transformAddress(payload?.administrativeContactDetails?.address));
+    .addTextAreaRow('Address', transformAddress(payload?.administrativeContactDetails?.address, countries));
 
   return factory.create();
 }

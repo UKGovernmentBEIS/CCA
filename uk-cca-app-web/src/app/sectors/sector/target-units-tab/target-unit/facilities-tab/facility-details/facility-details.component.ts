@@ -6,6 +6,7 @@ import { PageHeadingComponent } from '@netz/common/components';
 import { ButtonDirective, TabLazyDirective, TabsComponent, TagComponent } from '@netz/govuk-components';
 import { SummaryComponent } from '@shared/components';
 import { StatusPipe } from '@shared/pipes';
+import { CountryService } from '@shared/services';
 
 import { FacilityInfoDTO } from 'cca-api';
 
@@ -33,9 +34,12 @@ import { toFacilityDetailsSummaryData } from './facility-details-summary-data';
 export class FacilityDetailsComponent {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly authStore = inject(AuthStore);
+  private readonly countryService = inject(CountryService);
 
   protected readonly roleType = this.authStore.select(selectUserRoleType);
   protected readonly facilityInfoDTO = this.activatedRoute.snapshot.data.facilityDetails as FacilityInfoDTO;
 
-  protected readonly summaryData = computed(() => toFacilityDetailsSummaryData(this.facilityInfoDTO, this.roleType()));
+  protected readonly summaryData = computed(() =>
+    toFacilityDetailsSummaryData(this.facilityInfoDTO, this.roleType(), this.countryService.countries()),
+  );
 }

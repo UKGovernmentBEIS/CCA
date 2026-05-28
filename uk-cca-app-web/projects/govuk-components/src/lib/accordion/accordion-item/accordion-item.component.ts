@@ -1,67 +1,63 @@
-import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
+  effect,
   input,
-  OnDestroy,
-  OnInit,
   output,
+  signal,
   contentChild,
   inject,
 } from '@angular/core';
-
-import { BehaviorSubject, Observable, Subject, takeUntil, tap } from 'rxjs';
 
 import { ACCORDION, Accordion, isSessionStorageAvailable } from '../accordion';
 import { AccordionItemSummaryDirective } from '../directives/accordion-item-summary.directive';
 
 @Component({
   selector: 'govuk-accordion-item',
-  imports: [AsyncPipe],
   templateUrl: './accordion-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccordionItemComponent implements OnInit, OnDestroy {
-  accordion = inject<Accordion>(ACCORDION);
+export class AccordionItemComponent {
+  protected readonly accordion = inject<Accordion>(ACCORDION);
 
-  readonly header = input<string>();
+  protected readonly header = input<string>();
+  protected readonly caption = input<string>();
+  protected readonly expand = output<boolean>();
 
-  readonly expand = output<boolean>();
-  readonly caption = input<string>();
+  protected readonly accordionItemSummaryDirective = contentChild(AccordionItemSummaryDirective);
 
-  readonly accordionItemSummaryDirective = contentChild(AccordionItemSummaryDirective);
+  protected readonly isFocused = signal(false);
+  readonly itemIndex = signal<number | null>(null);
+  readonly isExpanded = signal(false);
 
-  itemIndex: number;
-  isFocused = false;
-  isExpanded = new BehaviorSubject<boolean>(false);
-  isExpanded$: Observable<boolean> = this.isExpanded.asObservable().pipe(tap(() => this.storeState()));
+  protected readonly contentId = computed(() => {
+    const index = this.itemIndex();
+    const id = this.accordion.id ?? 'accordion';
+    return index === null ? '' : `${id}-content-${index}`;
+  });
 
-  readonly destroy$ = new Subject<void>();
+  constructor() {
+    effect(() => {
+      const index = this.itemIndex();
+      if (index === null) return;
 
-  get contentId(): string {
-    return `${this.accordion.id}-content-${this.itemIndex}`;
+      const isExpanded = this.isExpanded();
+      this.expand.emit(isExpanded);
+
+      const cacheDisabled = this.accordion.cacheDisabled ?? false;
+      if (!cacheDisabled && isSessionStorageAvailable()) {
+        sessionStorage.setItem(this.contentId(), String(isExpanded));
+      }
+    });
   }
 
-  ngOnInit(): void {
-    this.itemIndex = ++this.accordion.itemCount;
-
-    if (Array.isArray(this.accordion.openIndexes)) {
-      this.isExpanded.next(this.accordion.openIndexes.includes(this.itemIndex));
-    } else if (!this.accordion.cacheDisabled && isSessionStorageAvailable()) {
-      this.isExpanded.next(sessionStorage.getItem(this.contentId) === 'true');
-    }
-
-    this.isExpanded.pipe(takeUntil(this.destroy$)).subscribe((value) => this.expand.emit(value));
+  toggle() {
+    this.isExpanded.update((v) => !v);
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.unsubscribe();
-  }
-
-  private storeState(): void {
-    if (!this.accordion.cacheDisabled && isSessionStorageAvailable()) {
-      sessionStorage.setItem(this.contentId, String(this.isExpanded.value));
-    }
+  onSpace(event: Event) {
+    event.preventDefault();
+    this.toggle();
   }
 }

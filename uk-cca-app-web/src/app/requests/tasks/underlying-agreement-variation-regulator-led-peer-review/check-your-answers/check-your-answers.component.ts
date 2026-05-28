@@ -6,12 +6,12 @@ import { catchError, throwError } from 'rxjs';
 import { ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { requestTaskQuery, RequestTaskStore } from '@netz/common/store';
 import { ButtonDirective } from '@netz/govuk-components';
+import { peerReviewDecisionToSummaryData } from '@requests/common';
 import { SummaryComponent } from '@shared/components';
 
 import { CcaPeerReviewDecisionRequestTaskActionPayload, TasksService } from 'cca-api';
 
 import { UnARegulatorLedVariationPeerReviewStore } from '../+state/underlying-agreement-variation-regulator-led-peer-review.store';
-import { peerReviewDecisionToSummaryData } from './peer-review-decision-to-summary-data';
 
 @Component({
   selector: 'cca-peer-review-decision-check-your-answers',

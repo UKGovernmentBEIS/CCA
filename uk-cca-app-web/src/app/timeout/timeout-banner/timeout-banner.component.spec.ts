@@ -1,8 +1,7 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { mockClass } from '@netz/common/testing';
-import { AuthService, KeycloakService } from '@shared/services';
+import { type Mocked } from 'vitest';
 
 import { TimeoutBannerComponent } from './timeout-banner.component';
 import { TimeoutBannerService } from './timeout-banner.service';
@@ -10,37 +9,43 @@ import { TimeoutBannerService } from './timeout-banner.service';
 describe('TimeoutBannerComponent', () => {
   let component: TimeoutBannerComponent;
   let fixture: ComponentFixture<TimeoutBannerComponent>;
-  let timeoutBannerService: TimeoutBannerService;
+  let timeoutBannerServiceMock: Mocked<Pick<TimeoutBannerService, 'extendSession' | 'signOut'>> &
+    Pick<TimeoutBannerService, 'isVisible' | 'timeExtensionAllowed' | 'timeOffsetSeconds'>;
+  let dialogElement: HTMLDialogElement;
+
+  const setupDialogMethods = () => {
+    dialogElement = fixture.nativeElement.querySelector('dialog');
+    (dialogElement as any).showModal = vi.fn(() => {
+      dialogElement.setAttribute('open', '');
+    });
+    (dialogElement as any).close = vi.fn(() => {
+      dialogElement.removeAttribute('open');
+    });
+  };
 
   beforeEach(async () => {
-    const keycloakServiceMock = mockClass(KeycloakService);
-    const authServiceMock = mockClass(AuthService);
-
-    (keycloakServiceMock.keycloakEvents as any) = signal(null);
-    (keycloakServiceMock.updateToken as any) = jest.fn().mockResolvedValue(true);
-    Object.defineProperty(keycloakServiceMock, 'keycloakInstance', {
-      value: {},
-      configurable: true,
-    });
-
-    authServiceMock.logout.mockResolvedValue(undefined);
+    timeoutBannerServiceMock = {
+      isVisible: signal(false),
+      timeExtensionAllowed: signal(true),
+      timeOffsetSeconds: 120,
+      extendSession: vi.fn(),
+      signOut: vi.fn(),
+    };
 
     await TestBed.configureTestingModule({
       imports: [TimeoutBannerComponent],
-      providers: [
-        { provide: KeycloakService, useValue: keycloakServiceMock },
-        { provide: AuthService, useValue: authServiceMock },
-        TimeoutBannerService,
-      ],
+      providers: [{ provide: TimeoutBannerService, useValue: timeoutBannerServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TimeoutBannerComponent);
     component = fixture.componentInstance;
-    timeoutBannerService = TestBed.inject(TimeoutBannerService);
+    fixture.detectChanges();
+    setupDialogMethods();
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    document.body.classList.remove('govuk-timeout-warning-overlay');
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
@@ -48,89 +53,80 @@ describe('TimeoutBannerComponent', () => {
   });
 
   it('should open dialog when isVisible signal is set to true', () => {
-    fixture.detectChanges();
-    timeoutBannerService.isVisible.set(true);
+    timeoutBannerServiceMock.isVisible.set(true);
     fixture.detectChanges();
     expect(component.isDialogOpen()).toBeTruthy();
   });
 
   it('should close dialog when isVisible signal is set to false', () => {
-    timeoutBannerService.isVisible.set(true);
+    timeoutBannerServiceMock.isVisible.set(true);
     fixture.detectChanges();
     expect(component.isDialogOpen()).toBeTruthy();
 
-    timeoutBannerService.isVisible.set(false);
+    timeoutBannerServiceMock.isVisible.set(false);
     fixture.detectChanges();
     expect(component.isDialogOpen()).toBeFalsy();
   });
 
   it('should start with dialog closed', () => {
-    fixture.detectChanges();
     expect(component.isDialogOpen()).toBeFalsy();
   });
 
   it('should call extendSession when continue button clicked', () => {
-    const spy = jest.spyOn(timeoutBannerService, 'extendSession');
-    fixture.detectChanges();
-    timeoutBannerService.isVisible.set(true);
+    timeoutBannerServiceMock.isVisible.set(true);
     fixture.detectChanges();
 
     const continueBtn = fixture.nativeElement.querySelector('.govuk-button:not(.govuk-button--secondary)');
     continueBtn.click();
 
-    expect(spy).toHaveBeenCalled();
+    expect(timeoutBannerServiceMock.extendSession).toHaveBeenCalled();
   });
 
   it('should call signOut when sign out button clicked', () => {
-    const spy = jest.spyOn(timeoutBannerService, 'signOut');
-    fixture.detectChanges();
-    timeoutBannerService.isVisible.set(true);
+    timeoutBannerServiceMock.isVisible.set(true);
     fixture.detectChanges();
 
     const signOutBtn = fixture.nativeElement.querySelector('.govuk-button--secondary');
     signOutBtn.click();
 
-    expect(spy).toHaveBeenCalled();
+    expect(timeoutBannerServiceMock.signOut).toHaveBeenCalled();
   });
 
   it('should show extend session message when timeExtensionAllowed is true', () => {
-    fixture.detectChanges();
     const textDiv = fixture.nativeElement.querySelector('[aria-relevant="additions"][aria-hidden="true"]');
     expect(textDiv.innerHTML).toContain('if you do not respond');
   });
 
   it('should show no-extension message when timeExtensionAllowed is false', () => {
-    timeoutBannerService.timeExtensionAllowed.set(false);
+    timeoutBannerServiceMock.timeExtensionAllowed.set(false);
     fixture.detectChanges();
     const textDiv = fixture.nativeElement.querySelector('[aria-relevant="additions"][aria-hidden="true"]');
     expect(textDiv.innerHTML).toContain('automatically signed out');
   });
 
   it('should add overlay class when opening dialog', () => {
-    fixture.detectChanges();
-    timeoutBannerService.isVisible.set(true);
+    timeoutBannerServiceMock.isVisible.set(true);
     fixture.detectChanges();
     expect(document.body.classList.contains('govuk-timeout-warning-overlay')).toBeTruthy();
   });
 
   it('should remove overlay class when closing dialog', () => {
-    timeoutBannerService.isVisible.set(true);
+    timeoutBannerServiceMock.isVisible.set(true);
     fixture.detectChanges();
-    timeoutBannerService.isVisible.set(false);
+    timeoutBannerServiceMock.isVisible.set(false);
     fixture.detectChanges();
     expect(document.body.classList.contains('govuk-timeout-warning-overlay')).toBeFalsy();
   });
 
   it('should manage focus on dialog open/close', () => {
-    fixture.detectChanges();
     const button = fixture.nativeElement.querySelector('.govuk-button');
     button.focus();
 
-    timeoutBannerService.isVisible.set(true);
+    timeoutBannerServiceMock.isVisible.set(true);
     fixture.detectChanges();
     expect(document.activeElement?.getAttribute('role')).toBe('dialog');
 
-    timeoutBannerService.isVisible.set(false);
+    timeoutBannerServiceMock.isVisible.set(false);
     fixture.detectChanges();
     expect(document.activeElement).toBe(button);
   });

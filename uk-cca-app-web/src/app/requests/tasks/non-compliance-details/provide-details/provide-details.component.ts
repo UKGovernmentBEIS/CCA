@@ -11,15 +11,18 @@ import {
   SelectComponent,
   TextareaComponent,
 } from '@netz/govuk-components';
-import { TaskItemStatus, TasksApiService } from '@requests/common';
+import {
+  NON_COMPLIANCE_TYPE_LABELS,
+  nonComplianceDetailsQuery,
+  TaskItemStatus,
+  TasksApiService,
+} from '@requests/common';
 import { WizardStepComponent } from '@shared/components';
 import { produce } from 'immer';
 
 import { NonComplianceDetails, RequestTaskActionPayload } from 'cca-api';
 
 import { isNonComplianceWizardCompleted } from '../non-compliance-details.guard';
-import { nonComplianceDetailsQuery } from '../non-compliance-details.selectors';
-import { NON_COMPLIANCE_TYPE_LABELS } from '../non-compliance-type-labels';
 import { NON_COMPLIANCE_DETAILS_SUBTASK, NonComplianceDetailsPayload } from '../types';
 import {
   PROVIDE_DETAILS_FORM,

@@ -31,20 +31,20 @@ describe('UndoProductComponent', () => {
 
   beforeEach(() => {
     draftService = {
-      initializeFromStore: jest.fn(),
-      draftSignal: jest.fn().mockReturnValue({
+      initializeFromStore: vi.fn(),
+      draftSignal: vi.fn().mockReturnValue({
         totalFixedEnergy: '100',
         hasVariableEnergy: true,
         variableEnergyType: 'BY_PRODUCT',
         products: [],
       }) as any,
-      saveFormSnapshot: jest.fn(),
-      setProducts: jest.fn(),
-      removeProduct: jest.fn(),
-      excludeProduct: jest.fn(),
-      undoExcludeProduct: jest.fn(),
-      updateTotalFixedEnergy: jest.fn(),
-      clear: jest.fn(),
+      saveFormSnapshot: vi.fn(),
+      setProducts: vi.fn(),
+      removeProduct: vi.fn(),
+      excludeProduct: vi.fn(),
+      undoExcludeProduct: vi.fn(),
+      updateTotalFixedEnergy: vi.fn(),
+      clear: vi.fn(),
     };
 
     TestBed.configureTestingModule({
@@ -61,7 +61,7 @@ describe('UndoProductComponent', () => {
     store = TestBed.inject(RequestTaskStore);
     router = TestBed.inject(Router);
 
-    jest.spyOn(store, 'select').mockImplementation((selector) => {
+    vi.spyOn(store, 'select').mockImplementation((selector) => {
       if (selector === requestTaskQuery.selectRequestTaskPayload) {
         return signal(mockRequestTaskPayload);
       }
@@ -101,7 +101,7 @@ describe('UndoProductComponent', () => {
   });
 
   it('should render the component with the correct content', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 
   it('should display the product name in the heading', () => {
@@ -127,13 +127,13 @@ describe('UndoProductComponent', () => {
   });
 
   it('should call draftService.undoExcludeProduct when onUndo is called', () => {
-    jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     component.onUndo();
     expect(draftService.undoExcludeProduct).toHaveBeenCalledWith('Product 1');
   });
 
   it('should navigate after undo', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
     component.onUndo();
     expect(navigateSpy).toHaveBeenCalledWith(['../..'], expect.any(Object));
   });

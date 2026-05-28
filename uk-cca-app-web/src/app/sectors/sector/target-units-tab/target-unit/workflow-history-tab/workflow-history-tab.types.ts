@@ -12,6 +12,7 @@ export type WorkflowHistoryTabState = {
 export enum RequestWorkflowHistoryType {
   AdminTermination = 'Admin termination',
   BuyoutSurplusAccountProcessing = 'Buy-out and surplus',
+  NonCompliance = 'Non-compliance',
   TargetUnitMoA = 'Subsistence fees',
   TargetUnitAccountCreation = 'Target unit account creation',
   UnderlyingAgreementApplication = 'Underlying agreement application',
@@ -22,6 +23,7 @@ export enum RequestWorkflowHistoryType {
 export enum RequestWorkflowHistoryStatus {
   Approved = 'Approved',
   Cancelled = 'Cancelled',
+  Closed = 'Closed',
   Completed = 'Completed',
   InProgress = 'In progress',
   Rejected = 'Rejected',
@@ -32,6 +34,7 @@ export enum RequestWorkflowHistoryStatus {
 export const workflowTypesMap: Record<string, string> = {
   'Admin termination': 'ADMIN_TERMINATION',
   'Buy-out and surplus': 'BUY_OUT_SURPLUS_ACCOUNT_PROCESSING',
+  'Non-compliance': 'NON_COMPLIANCE',
   'Subsistence fees': 'TARGET_UNIT_MOA',
   'Target unit account creation': 'TARGET_UNIT_ACCOUNT_CREATION',
   'Underlying agreement application': 'UNDERLYING_AGREEMENT',
@@ -47,6 +50,7 @@ export const workflowTypesMap: Record<string, string> = {
 export const workflowStatusesMap: Record<string, string> = {
   Approved: 'APPROVED',
   Cancelled: 'CANCELLED',
+  Closed: 'CLOSED',
   Completed: 'COMPLETED',
   'In progress': 'IN_PROGRESS',
   Rejected: 'REJECTED',

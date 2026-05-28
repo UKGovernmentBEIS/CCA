@@ -44,6 +44,8 @@ public class PerformanceDataUploadViolation extends BusinessViolation {
         INVALID_NOT_EMPTY_DATA("Should be null or empty"),
         FILE_NAME_REPORT_VERSION_NOT_VALID("The file name uploaded for this target unit uses a superseded version of the reporting spreadsheet. Please download the latest version of the reporting spreadsheet for this target unit."),
         REPORT_VERSION_NOT_VALID_FOR_PRIMARY_REPORTING("Correction to performance data is not allowed before the buy-out payment deadline"),
+        
+        INVALID_SUBMISSION_CCA2_END_DATE("TP6 report uploads are not permitted after 30 June 2027. Please contact the regulator."),
         ;
 
         private final String message;

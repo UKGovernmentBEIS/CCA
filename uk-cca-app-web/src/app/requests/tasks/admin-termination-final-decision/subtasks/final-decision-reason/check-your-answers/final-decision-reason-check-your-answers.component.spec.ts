@@ -40,6 +40,6 @@ describe('FinalDecisionReasonCheckYourAnswersComponent', () => {
   });
 
   it('should show proper summary values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

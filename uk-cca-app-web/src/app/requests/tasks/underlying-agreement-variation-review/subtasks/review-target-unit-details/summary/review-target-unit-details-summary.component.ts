@@ -17,6 +17,7 @@ import {
 } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent } from '@shared/components';
 import { transformAddress } from '@shared/pipes';
+import { CountryService } from '@shared/services';
 import { generateDownloadUrl } from '@shared/utils';
 
 import { CompaniesInformationService, CompanyProfileDTO } from 'cca-api';
@@ -39,6 +40,8 @@ export class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly companiesInformationService = inject(CompaniesInformationService);
 
+  protected readonly countries = inject(CountryService).countries;
+
   protected readonly toggleCompaniesHouseDetailsCtrl = new FormControl<boolean>(false);
   protected readonly toggleCompaniesHouseDetails = toSignal(this.toggleCompaniesHouseDetailsCtrl.valueChanges, {
     initialValue: false,
@@ -54,7 +57,7 @@ export class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
     const response = this.companiesHouseDetailsResponse();
     return {
       details: typeof response === 'object' ? response : null,
-      address: typeof response === 'object' ? transformAddress(response?.address).join('\n') : null,
+      address: typeof response === 'object' ? transformAddress(response?.address, this.countries()).join('\n') : null,
     };
   });
 
@@ -83,6 +86,7 @@ export class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
   protected readonly summaryDataOriginal = toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
     this.originalTargetUnitDetails,
     this.decision,
+    this.countries(),
     this.attachments,
     this.downloadUrl,
     this.isEditable,
@@ -91,6 +95,7 @@ export class ReviewTargetUnitDetailsSummaryComponent implements OnInit {
   protected readonly summaryDataCurrent = toVariationReviewTargetUnitDetailsSummaryDataWithDecision(
     this.currentTargetUnitDetails(),
     this.decision,
+    this.countries(),
     this.attachments,
     this.downloadUrl,
     this.isEditable,

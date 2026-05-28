@@ -6,6 +6,7 @@ import { lastValueFrom, of, throwError } from 'rxjs';
 
 import { BusinessTestingModule, expectBusinessErrorToBe } from '@error/testing/business-error';
 import { ActivatedRouteSnapshotStub } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { CaExternalContactsService } from 'cca-api';
 
@@ -15,13 +16,13 @@ import { ExternalContactDetailsGuard } from './details.guard';
 
 describe('DetailsGuard', () => {
   let store: ActiveExternalContactStore;
-  let caExternalContactsService: Partial<jest.Mocked<CaExternalContactsService>>;
+  let caExternalContactsService: Partial<Mocked<CaExternalContactsService>>;
 
   const response = { contact: { id: '1', name: 'Dexter', email: 'dexter@lab.com', description: 'A scientist' } };
 
   beforeEach(() => {
     caExternalContactsService = {
-      getCaExternalContactById: jest.fn().mockReturnValue(of(response)),
+      getCaExternalContactById: vi.fn().mockReturnValue(of(response)),
     };
 
     TestBed.configureTestingModule({

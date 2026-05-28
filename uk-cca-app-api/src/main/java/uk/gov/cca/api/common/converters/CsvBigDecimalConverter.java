@@ -1,11 +1,11 @@
 package uk.gov.cca.api.common.converters;
 
-import com.opencsv.bean.AbstractBeanField;
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import java.math.BigDecimal;
+
 import org.apache.commons.lang3.StringUtils;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import com.opencsv.bean.AbstractBeanField;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
 
 public class CsvBigDecimalConverter extends AbstractBeanField<BigDecimal, String> {
 
@@ -14,7 +14,7 @@ public class CsvBigDecimalConverter extends AbstractBeanField<BigDecimal, String
         try {
             return StringUtils.isBlank(value)
                     ? null
-                    : new BigDecimal(value.replace("%", "").trim()).setScale(7, RoundingMode.HALF_DOWN);
+                    : new BigDecimal(value.replace("%", "").trim());
         } catch (Exception e) {
             throw new CsvDataTypeMismatchException(e.getMessage());
         }

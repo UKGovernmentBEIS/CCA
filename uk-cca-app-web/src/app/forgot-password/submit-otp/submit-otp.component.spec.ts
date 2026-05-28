@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 
@@ -12,6 +13,9 @@ import { ForgotPasswordService } from 'cca-api';
 
 import { ResetPasswordStore } from '../+store/reset-password.store';
 import { SubmitOtpComponent } from './submit-otp.component';
+
+@Component({ template: '' })
+class DummyComponent {}
 
 describe('SubmitOtpComponent', () => {
   let component: SubmitOtpComponent;
@@ -47,9 +51,9 @@ describe('SubmitOtpComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SubmitOtpComponent],
+      imports: [SubmitOtpComponent, DummyComponent],
       providers: [
-        provideRouter([]),
+        provideRouter([{ path: 'error/404', component: DummyComponent }]),
         KeycloakService,
         { provide: AuthService, useValue: authService },
         { provide: ForgotPasswordService, useValue: forgotPasswordService },
@@ -69,8 +73,10 @@ describe('SubmitOtpComponent', () => {
       password: 'password',
       token: 'token',
     });
+  });
 
-    jest.clearAllMocks();
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
@@ -118,7 +124,7 @@ describe('SubmitOtpComponent', () => {
   });
 
   it('should navigate to 404 if user status is invalid', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
     forgotPasswordService.resetPassword.mockReturnValue(
       throwError(() => new HttpErrorResponse({ status: 400, error: { code: 'USER1005' } })),
     );
@@ -138,7 +144,7 @@ describe('SubmitOtpComponent', () => {
   });
 
   it('should go to login after clicking link', () => {
-    jest.spyOn(fixture.componentInstance, 'onSignInAgain');
+    vi.spyOn(fixture.componentInstance, 'onSignInAgain');
     forgotPasswordService.resetPassword.mockReturnValueOnce(of({}));
 
     page.passwordValue = '123456';

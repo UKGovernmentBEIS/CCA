@@ -73,7 +73,8 @@ class NonComplianceRequestTaskDefaultNoticeRecipientsTest {
     @Test
     void getTypes() {
         assertThat(service.getTypes()).containsExactlyInAnyOrder(CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT,
-                CcaRequestTaskType.NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT);
+                CcaRequestTaskType.NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT,
+                CcaRequestTaskType.NON_COMPLIANCE_CONCLUSION_SUBMIT);
     }
 
 }

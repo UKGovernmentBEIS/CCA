@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { mockSentSubsistenceFeesDetails } from '@shared/components';
 import { getSummaryListData } from '@testing';
+import { Mocked } from 'vitest';
 
 import { SubsistenceFeesRunInfoViewService } from 'cca-api';
 
@@ -16,11 +17,11 @@ import { SentSubsistenceFeesComponent } from './sent-subsistence-fees.component'
 describe('SentSubsistenceFeesComponent', () => {
   let component: SentSubsistenceFeesComponent;
   let fixture: ComponentFixture<SentSubsistenceFeesComponent>;
-  let subsistenceFeesRunInfoViewService: Partial<jest.Mocked<SubsistenceFeesRunInfoViewService>>;
+  let subsistenceFeesRunInfoViewService: Partial<Mocked<SubsistenceFeesRunInfoViewService>>;
 
   beforeEach(async () => {
     subsistenceFeesRunInfoViewService = {
-      getSubsistenceFeesRunDetailsById: jest.fn().mockReturnValue(of(mockSentSubsistenceFeesDetails)),
+      getSubsistenceFeesRunDetailsById: vi.fn().mockReturnValue(of(mockSentSubsistenceFeesDetails)),
     };
 
     await TestBed.configureTestingModule({

@@ -3,8 +3,7 @@ import { RouterLink } from '@angular/router';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { PanelComponent } from '@netz/govuk-components';
-
-import { nonComplianceDetailsQuery } from '../../non-compliance-details.selectors';
+import { nonComplianceDetailsQuery } from '@requests/common';
 
 @Component({
   selector: 'cca-non-compliance-confirmation',

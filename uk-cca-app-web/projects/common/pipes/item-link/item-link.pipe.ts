@@ -25,6 +25,9 @@ export class ItemLinkPipe implements PipeTransform {
       case 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING':
       case 'FACILITY_AUDIT':
       case 'NON_COMPLIANCE':
+      case 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW':
+      case 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_WAIT_FOR_PEER_REVIEW':
+      case 'PERFORMANCE_DATA_FACILITY_DIGITAL_FORM':
         return [routerLooks + 'tasks', value.taskId];
 
       default:

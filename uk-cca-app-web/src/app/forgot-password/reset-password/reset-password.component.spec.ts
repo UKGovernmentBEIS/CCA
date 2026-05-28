@@ -43,7 +43,7 @@ describe('ResetPasswordComponent', () => {
   }
 
   const forgotPasswordService: MockType<ForgotPasswordService> = {
-    verifyToken: jest.fn().mockReturnValue(of({ email: 'test@mail.com' })),
+    verifyToken: vi.fn().mockReturnValue(of({ email: 'test@mail.com' })),
   };
 
   beforeEach(async () => {
@@ -88,8 +88,8 @@ describe('ResetPasswordComponent', () => {
   });
 
   it('should submit only if form valid', async () => {
-    PasswordValidators.blacklisted = jest.fn().mockReturnValue(of(null));
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    PasswordValidators.blacklisted = vi.fn().mockReturnValue(of(null));
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
     component.form.controls.password.setValue('');
     component.form.controls.validatePassword.setValue('');
     fixture.detectChanges();
@@ -108,7 +108,7 @@ describe('ResetPasswordComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
 
-    jest.spyOn(component.form, 'valid', 'get').mockReturnValue(true);
+    vi.spyOn(component.form, 'valid', 'get').mockReturnValue(true);
 
     component.submitPassword();
     fixture.detectChanges();
@@ -117,7 +117,7 @@ describe('ResetPasswordComponent', () => {
   });
 
   it('should navigate to appropriate page if there is an error', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
     forgotPasswordService.verifyToken.mockReturnValue(
       throwError(() => new HttpErrorResponse({ status: 400, error: { code: 'EMAIL1001' } })),
     );

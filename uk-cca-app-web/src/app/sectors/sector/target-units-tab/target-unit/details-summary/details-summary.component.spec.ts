@@ -1,10 +1,11 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentRef } from '@angular/core';
+import { ComponentRef, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { CountryService } from '@shared/services';
 
 import {
   mockTargetUnitAccountDetails,
@@ -20,6 +21,13 @@ describe('DetailsSummaryComponent', () => {
   let store: ActiveTargetUnitStore;
 
   beforeEach(async () => {
+    const mockCountryService = {
+      countries: signal([
+        { code: 'GB', name: 'United Kingdom', officialName: 'United Kingdom' },
+        { code: 'GR', name: 'Greece', officialName: 'Greece' },
+      ]),
+    };
+
     await TestBed.configureTestingModule({
       imports: [DetailsSummaryComponent],
       providers: [
@@ -27,6 +35,7 @@ describe('DetailsSummaryComponent', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
+        { provide: CountryService, useValue: mockCountryService },
       ],
     }).compileComponents();
 
@@ -48,6 +57,6 @@ describe('DetailsSummaryComponent', () => {
   });
 
   it('should display correct view', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

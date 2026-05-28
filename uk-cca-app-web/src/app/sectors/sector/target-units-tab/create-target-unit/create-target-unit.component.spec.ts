@@ -28,7 +28,7 @@ describe('CreateTargetUnitComponent', () => {
           useValue: {
             data: of({ sectorUserDetails: mockSectorUserDetails, canEditSectorUser: true }),
             snapshot: {
-              paramMap: { get: jest.fn().mockReturnValue({ id: 1 }) },
+              paramMap: { get: vi.fn().mockReturnValue({ id: 1 }) },
               data: { subSectorScheme: mockSectorScheme },
             },
           },

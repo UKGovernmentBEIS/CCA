@@ -25,6 +25,7 @@ import {
 } from '@requests/common';
 import { SummaryComponent, WizardStepComponent } from '@shared/components';
 import { transformAddress } from '@shared/pipes';
+import { CountryService } from '@shared/services';
 import { produce } from 'immer';
 
 import { CompaniesInformationService, CompanyProfileDTO, UnderlyingAgreementReviewDecision } from 'cca-api';
@@ -55,6 +56,8 @@ export default class ReviewTargetUnitDetailsDecisionComponent implements OnInit 
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly companiesInformationService = inject(CompaniesInformationService);
 
+  protected readonly countries = inject(CountryService).countries;
+
   protected readonly form = inject<DecisionFormModel>(DECISION_FORM_PROVIDER);
 
   protected readonly toggleCompaniesHouseDetailsCtrl = new FormControl<boolean>(false);
@@ -72,7 +75,7 @@ export default class ReviewTargetUnitDetailsDecisionComponent implements OnInit 
     const response = this.companiesHouseDetailsResponse();
     return {
       details: typeof response === 'object' ? response : null,
-      address: typeof response === 'object' ? transformAddress(response?.address).join('\n') : null,
+      address: typeof response === 'object' ? transformAddress(response?.address, this.countries()).join('\n') : null,
     };
   });
 
@@ -91,6 +94,7 @@ export default class ReviewTargetUnitDetailsDecisionComponent implements OnInit 
   protected readonly summaryData = computed(() =>
     toReviewTargetUnitDetailsUNAReviewSummaryData(
       this.targetUnitDetails(),
+      this.countries(),
       this.requestTaskStore.select(requestTaskQuery.selectIsEditable)(),
       this.companiesHouseState(),
       this.toggleCompaniesHouseDetails(),

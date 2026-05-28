@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
 import { click, getAllByRole, getByText } from '@testing';
+import { Mocked, MockInstance } from 'vitest';
 
 import { RegulatorAuthoritiesService } from 'cca-api';
 
@@ -14,15 +15,15 @@ import { RegulatorsUsersComponent } from './regulators-users.component';
 
 describe('RegulatorUsersComponent', () => {
   let fixture: ComponentFixture<RegulatorsUsersComponent>;
-  let updateSpy: jest.SpyInstance;
+  let updateSpy: MockInstance;
 
-  const regulatorAuthoritiesService: Partial<jest.Mocked<RegulatorAuthoritiesService>> = {
-    getCaRegulators: jest.fn().mockReturnValue(of(mockRegulatorsRouteData.regulators)),
-    updateCompetentAuthorityRegulatorUsersStatus: jest.fn().mockReturnValue(of(null)),
+  const regulatorAuthoritiesService: Partial<Mocked<RegulatorAuthoritiesService>> = {
+    getCaRegulators: vi.fn().mockReturnValue(of(mockRegulatorsRouteData.regulators)),
+    updateCompetentAuthorityRegulatorUsersStatus: vi.fn().mockReturnValue(of(null)),
   };
 
   beforeEach(async () => {
-    updateSpy = jest.spyOn(regulatorAuthoritiesService, 'updateCompetentAuthorityRegulatorUsersStatus');
+    updateSpy = vi.spyOn(regulatorAuthoritiesService, 'updateCompetentAuthorityRegulatorUsersStatus');
 
     await TestBed.configureTestingModule({
       imports: [RegulatorsUsersComponent],

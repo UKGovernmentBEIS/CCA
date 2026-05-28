@@ -29,7 +29,7 @@ describe('Summary Component', () => {
     summaryData.forEach((section) => {
       section.data.forEach((item) => {
         expect(getByText(item.key)).toBeTruthy();
-        expect(getByText(item.value[0])).toBeTruthy();
+        expect(getByText(item.value[0] as string)).toBeTruthy();
       });
     });
   });
@@ -38,7 +38,7 @@ describe('Summary Component', () => {
     summaryData.forEach((section) => {
       section.data.forEach((item) => {
         if (item.change) {
-          const itemRow = getByText(item.value[0]).closest('.govuk-summary-list__row');
+          const itemRow = getByText(item.value[0] as string).closest('.govuk-summary-list__row');
           const link = getByRole('link', {}, itemRow as HTMLElement);
           expect((link as HTMLElement | null)?.textContent ?? '').toContain('Change');
           expect((link as Element | null)?.getAttribute('href')).toBe(`${section.changeLink}?change=true`);
@@ -52,7 +52,9 @@ describe('Summary Component', () => {
       section.data.forEach((item) => {
         if (item.preline) {
           expect(
-            getByText(item.value[0]).closest('[govuksummarylistrowvalue]').classList.contains('pre-line'),
+            getByText(item.value[0] as string)
+              .closest('[govuksummarylistrowvalue]')
+              .classList.contains('pre-line'),
           ).toBeTruthy();
         }
       });
@@ -63,7 +65,7 @@ describe('Summary Component', () => {
     summaryData.forEach((section) => {
       section.data.forEach((item) => {
         if (item.fieldDiff) {
-          expect(getByText(item.value[0]).classList.contains('field-diff')).toBeTruthy();
+          expect(getByText(item.value[0] as string).classList.contains('field-diff')).toBeTruthy();
         }
       });
     });

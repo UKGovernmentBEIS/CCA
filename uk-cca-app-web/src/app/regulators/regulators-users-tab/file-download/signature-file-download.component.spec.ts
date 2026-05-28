@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 
 import { defer, firstValueFrom, of, take } from 'rxjs';
 
-import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
-import { testSchedulerFactory } from '@netz/common/testing/marble-helpers';
+import { ActivatedRouteStub, mockClass, testSchedulerFactory } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { RegulatorUsersService, TasksService, UsersService } from 'cca-api';
 
@@ -14,10 +13,10 @@ import { SignatureFileDownloadComponent } from './signature-file-download.compon
 describe('SignatureFileDownloadComponent', () => {
   let component: SignatureFileDownloadComponent;
   let fixture: ComponentFixture<SignatureFileDownloadComponent>;
-  let regulatorUsersService: jest.Mocked<RegulatorUsersService>;
+  let regulatorUsersService: Mocked<RegulatorUsersService>;
 
   beforeEach(async () => {
-    Object.defineProperty(window, 'onfocus', { set: jest.fn() });
+    Object.defineProperty(window, 'onfocus', { set: vi.fn() });
     regulatorUsersService = mockClass(RegulatorUsersService);
     regulatorUsersService.generateGetRegulatorSignatureToken.mockReturnValue(
       of({ token: 'abce', tokenExpirationMinutes: 1 }),
@@ -25,8 +24,8 @@ describe('SignatureFileDownloadComponent', () => {
     const activatedRoute = new ActivatedRouteStub({ userId: 11 });
 
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
       providers: [
+        provideRouter([]),
         { provide: ActivatedRoute, useValue: activatedRoute },
         { provide: RegulatorUsersService, useValue: regulatorUsersService },
         { provide: TasksService, useValue: mockClass(TasksService) },

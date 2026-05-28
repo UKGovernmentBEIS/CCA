@@ -1,8 +1,10 @@
 import { provideHttpClient } from '@angular/common/http';
+import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
+import { CountryService } from '@shared/services';
 import { getByTestId, getByText } from '@testing';
 
 import { CreateTargetUnitStore } from '../create-target-unit.store';
@@ -16,10 +18,22 @@ describe('CreateTargetUnitSummaryComponent', () => {
 
   const route = new ActivatedRouteStub();
 
+  const mockCountryService = {
+    countries: signal([
+      { code: 'GB', name: 'United Kingdom', officialName: 'United Kingdom' },
+      { code: 'GR', name: 'Greece', officialName: 'Greece' },
+    ]),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CreateTargetUnitSummaryComponent],
-      providers: [{ provide: ActivatedRoute, useValue: route }, provideHttpClient(), CreateTargetUnitStore],
+      providers: [
+        { provide: ActivatedRoute, useValue: route },
+        { provide: CountryService, useValue: mockCountryService },
+        provideHttpClient(),
+        CreateTargetUnitStore,
+      ],
     }).compileComponents();
 
     createTargetUnitStore = TestBed.inject(CreateTargetUnitStore);

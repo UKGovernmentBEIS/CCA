@@ -3,6 +3,7 @@ package uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,8 +27,12 @@ import java.util.UUID;
 @SuperBuilder
 public class NonComplianceNoticeOfIntentSubmittedRequestActionPayload extends CcaRequestActionPayload {
 
-    private NoticeOfIntent noticeOfIntent;
+    @Valid
+    @NotNull
+    private NonComplianceNoticeOfIntent noticeOfIntent;
 
+    @Valid
+    @NotNull
     private DecisionNotification decisionNotification;
 
     @Builder.Default

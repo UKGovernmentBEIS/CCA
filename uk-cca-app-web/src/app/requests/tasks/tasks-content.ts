@@ -4,14 +4,22 @@ import { adminTerminationTaskContent } from './admin-termination/admin-terminati
 import { adminTerminationFinalDecisionTaskContent } from './admin-termination-final-decision/admin-termination-final-decision-task-content';
 import { adminTerminationPeerReviewTaskContent } from './admin-termination-peer-review/admin-termination-peer-review-task-content';
 import { adminTerminationWaitForPeerReviewTaskContent } from './admin-termination-wait-for-peer-review/admin-termination-wait-for-peer-review-task-content';
+import { appealOutcomeTaskContent } from './appeal-outcome/appeal-outcome-task-content';
 import { auditDetailsCorrectiveActionsTaskContent } from './audit-details-corrective-actions/audit-details-corrective-actions-task-content';
 import { cca3MigrationAccountActivationTaskContent } from './cca3-migration-account-activation/cca3-migration-account-activation-task-content';
+import { enforcementResponseNoticeTaskContent } from './enforcement-response-notice/enforcement-response-notice-task-content';
+import { enforcementResponseNoticePeerReviewTaskContent } from './enforcement-response-notice-peer-review/enforcement-response-notice-peer-review-task-content';
+import { enforcementResponseNoticeWaitForPeerReviewTaskContent } from './enforcement-response-notice-wait-for-peer-review/enforcement-response-notice-wait-for-peer-review-task-content';
+import { nonComplianceConclusionTaskContent } from './non-compliance-conclusion/non-compliance-conclusion-task-content';
 import { nonComplianceDetailsTaskContent } from './non-compliance-details/non-compliance-details-task-content';
 import { noticeOfIntentTaskContent } from './notice-of-intent/notice-of-intent-task-content';
+import { noticeOfIntentPeerReviewTaskContent } from './notice-of-intent-peer-review/notice-of-intent-peer-review-task-content';
+import { noticeOfIntentWaitForPeerReviewTaskContent } from './notice-of-intent-wait-for-peer-review/notice-of-intent-wait-for-peer-review-task-content';
 import { patUploadTaskContent } from './performance-account-template-upload/pat-upload-task-content';
 import { performanceDataDownloadTaskContent } from './performance-data-download/performance-data-download-task-content';
 import { performanceDataUploadTaskContent } from './performance-data-upload/performance-data-upload-task-content';
 import { preAuditReviewTaskContent } from './pre-audit-review/pre-audit-review-task-content';
+import { targetPeriodReportingFormTaskContent } from './target-period-reporting-form/target-period-reporting-form-task-content';
 import { trackCorrectiveActionsTaskContent } from './track-corrective-actions/track-corrective-actions-task-content';
 import { underlyingAgreementActivationTaskContent } from './underlying-agreement-activation/underlying-agreement-activation-task-content';
 import { underlyingAgreementApplicationTaskContent } from './underlying-agreement-application/underlying-agreement-application-task-content';
@@ -71,5 +79,15 @@ export const tasksContent: RequestTaskPageContentFactoryMap = {
 
   UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_ACTIVATION: underlyingAgreementVariationActivationTaskContent,
   NON_COMPLIANCE_DETAILS_SUBMIT: nonComplianceDetailsTaskContent,
+  NON_COMPLIANCE_CONCLUSION_SUBMIT: nonComplianceConclusionTaskContent,
+  NON_COMPLIANCE_APPEAL_OUTCOME_SUBMIT: appealOutcomeTaskContent,
   NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT: noticeOfIntentTaskContent,
+  NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT: enforcementResponseNoticeTaskContent,
+  NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW: noticeOfIntentPeerReviewTaskContent,
+  NON_COMPLIANCE_NOTICE_OF_INTENT_WAIT_FOR_PEER_REVIEW: noticeOfIntentWaitForPeerReviewTaskContent,
+  NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW: enforcementResponseNoticePeerReviewTaskContent,
+  NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_WAIT_FOR_PEER_REVIEW:
+    enforcementResponseNoticeWaitForPeerReviewTaskContent,
+
+  PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT: targetPeriodReportingFormTaskContent,
 };

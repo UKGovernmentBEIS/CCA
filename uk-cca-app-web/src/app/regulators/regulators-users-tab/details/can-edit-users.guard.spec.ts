@@ -6,6 +6,7 @@ import { firstValueFrom, Observable, of } from 'rxjs';
 
 import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteSnapshotStub } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { AuthoritiesService, RegulatorAuthoritiesService, RegulatorUsersService, UsersService } from 'cca-api';
 
@@ -22,11 +23,11 @@ import { DetailsStore } from './details.store';
 describe('CanEditUsersGuard', () => {
   let detailsStore: DetailsStore;
   let authStore: AuthStore;
-  let authoritiesService: Partial<jest.Mocked<AuthoritiesService>> = {};
-  let regulatorAuthoritiesService: Partial<jest.Mocked<RegulatorAuthoritiesService>> = {};
-  let regulatorUserService: Partial<jest.Mocked<RegulatorUsersService>> = {};
+  let authoritiesService: Partial<Mocked<AuthoritiesService>> = {};
+  let regulatorAuthoritiesService: Partial<Mocked<RegulatorAuthoritiesService>> = {};
+  let regulatorUserService: Partial<Mocked<RegulatorUsersService>> = {};
 
-  const usersService: Partial<jest.Mocked<UsersService>> = {};
+  const usersService: Partial<Mocked<UsersService>> = {};
 
   const regulatorUserId = '12309123';
   const routeStub1 = new ActivatedRouteSnapshotStub({ userId: regulatorUserId });
@@ -34,16 +35,16 @@ describe('CanEditUsersGuard', () => {
 
   beforeEach(() => {
     authoritiesService = {
-      getRegulatorRoles: jest.fn().mockReturnValue(of(regulatorRoles)),
+      getRegulatorRoles: vi.fn().mockReturnValue(of(regulatorRoles)),
     };
 
     regulatorAuthoritiesService = {
-      getCurrentRegulatorUserPermissionsByCa: jest.fn().mockReturnValue(of(executeRegulatorPermissions)),
-      getRegulatorPermissionGroupLevels: jest.fn().mockReturnValue(of(permissionGroupLevels)),
+      getCurrentRegulatorUserPermissionsByCa: vi.fn().mockReturnValue(of(executeRegulatorPermissions)),
+      getRegulatorPermissionGroupLevels: vi.fn().mockReturnValue(of(permissionGroupLevels)),
     };
 
     regulatorUserService = {
-      getRegulatorUserByCaAndId: jest.fn().mockReturnValue(of(readonlyCurrentUser)),
+      getRegulatorUserByCaAndId: vi.fn().mockReturnValue(of(readonlyCurrentUser)),
     };
 
     TestBed.configureTestingModule({
@@ -84,7 +85,7 @@ describe('CanEditUsersGuard', () => {
   }
 
   it("should NOT let a user with no execute perms that tries to navigate to other user' details", async () => {
-    regulatorAuthoritiesService.getCurrentRegulatorUserPermissionsByCa = jest
+    regulatorAuthoritiesService.getCurrentRegulatorUserPermissionsByCa = vi
       .fn()
       .mockReturnValue(of(readonlyRegulatorPermissions));
     const res = await firstValueFrom((await getGuard(routeStub2)) as Observable<unknown>);
@@ -92,8 +93,8 @@ describe('CanEditUsersGuard', () => {
   });
 
   it('should let a user with no execute perms to navigate to their own user details', async () => {
-    usersService.getCurrentUser = jest.fn().mockReturnValue(of(readonlyCurrentUser));
-    regulatorAuthoritiesService.getCurrentRegulatorUserPermissionsByCa = jest
+    usersService.getCurrentUser = vi.fn().mockReturnValue(of(readonlyCurrentUser));
+    regulatorAuthoritiesService.getCurrentRegulatorUserPermissionsByCa = vi
       .fn()
       .mockReturnValue(of(readonlyRegulatorPermissions));
     const res = await firstValueFrom((await getGuard(routeStub1)) as Observable<unknown>);
@@ -101,7 +102,7 @@ describe('CanEditUsersGuard', () => {
   });
 
   it('should correctly populate state if a user has EXECUTE perms', async () => {
-    regulatorAuthoritiesService.getRegulatorUserPermissionsByCaAndId = jest
+    regulatorAuthoritiesService.getRegulatorUserPermissionsByCaAndId = vi
       .fn()
       .mockReturnValue(of(executeRegulatorPermissions));
     const res = await firstValueFrom((await getGuard(routeStub2)) as Observable<unknown>);

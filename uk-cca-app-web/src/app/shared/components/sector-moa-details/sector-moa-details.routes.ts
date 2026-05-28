@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 
-import { SectorMoasReceivedAmountStore } from '@shared/components';
+import { ReceivedAmountStore } from '@shared/components';
 
 import { canActivateMarkFacilitiesGuard } from './mark-facilities/mark-facilities.guard';
 import { SectorMoaTUDetailsStore } from './sector-moa-tu-details/sector-moa-tu-details.store';
@@ -36,14 +36,14 @@ export const SECTOR_MOA_DETAILS_ROUTES: Routes = [
   },
   {
     path: 'received-amount',
-    providers: [SectorMoasReceivedAmountStore],
+    providers: [ReceivedAmountStore],
     canDeactivate: [
       () => {
-        inject(SectorMoasReceivedAmountStore).reset();
+        inject(ReceivedAmountStore).reset();
         return true;
       },
     ],
-    loadChildren: () => import('@shared/components').then((r) => r.SECTOR_MOAS_RECEIVED_AMOUNT_ROUTES),
+    loadChildren: () => import('@shared/components').then((r) => r.RECEIVED_AMOUNT_ROUTES),
   },
   {
     path: 'mark-facilities',

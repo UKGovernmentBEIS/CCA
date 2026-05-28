@@ -56,6 +56,12 @@ export const NON_COMPLIANCE_DETAILS_ROUTES: Routes = [
           import('./check-your-answers/check-your-answers.component').then((c) => c.CheckYourAnswersComponent),
       },
       {
+        path: 'summary',
+        title: 'Summary',
+        data: { backlink: '../../', breadcrumb: false },
+        loadComponent: () => import('@requests/common').then((c) => c.NonComplianceSummaryComponent),
+      },
+      {
         path: 'complete-task',
         loadChildren: () =>
           import('./complete-task/complete-task.routes').then((r) => r.NON_COMPLIANCE_COMPLETE_TASK_ROUTES),

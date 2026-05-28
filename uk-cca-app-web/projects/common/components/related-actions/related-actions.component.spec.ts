@@ -74,7 +74,9 @@ describe('RelatedActionsComponent', () => {
     createComponent();
     fixture.detectChanges();
 
-    expect(page.links.map((el) => [el.href, el.textContent])).toEqual([['http://localhost/', 'Reassign task']]);
+    expect(page.links.map((el) => [new URL(el.href).pathname, el.textContent?.trim()])).toEqual([
+      ['/', 'Reassign task'],
+    ]);
   });
 });
 

@@ -30,7 +30,7 @@ describe('ManageFacilitiesComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
@@ -38,7 +38,7 @@ describe('ManageFacilitiesComponent', () => {
   });
 
   it('should handle form submission with filters', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
     const route = TestBed.inject(ActivatedRoute);
     const formValues = { term: 'Facility', workflowStatus: 'IN_PROGRESS' as TaskItemStatus };
 
@@ -53,7 +53,7 @@ describe('ManageFacilitiesComponent', () => {
   });
 
   it('should handle filter clearing', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
     const route = TestBed.inject(ActivatedRoute);
 
     component.onClearFilters();
@@ -75,7 +75,7 @@ describe('ManageFacilitiesComponent', () => {
   });
 
   it('should not call navigate when invalid form is submitted', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
     component.searchForm.controls.term.setValue('a'); // Less than min length of 3
 
     component.onApplyFilters();
@@ -84,7 +84,7 @@ describe('ManageFacilitiesComponent', () => {
   });
 
   it('should not trigger page change if same page is requested', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
     component.currentPage.set(2);
 
     component.onPageChange(2);
@@ -93,7 +93,7 @@ describe('ManageFacilitiesComponent', () => {
   });
 
   it('should not trigger page size change if same size is requested', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
     component.pageSize.set(25);
 
     component.onPageSizeChange(25);

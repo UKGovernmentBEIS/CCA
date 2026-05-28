@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { EMPTY, map, Observable, switchMap, take, timer } from 'rxjs';
@@ -31,7 +31,6 @@ import { PerformanceDataUploadProcessedComponent } from './processed/performance
   templateUrl: './performance-data-upload-process.component.html',
   imports: [
     WizardStepComponent,
-    FormsModule,
     ReactiveFormsModule,
     SelectComponent,
     DetailsComponent,

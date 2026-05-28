@@ -8,7 +8,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
-import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntent;
+import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceOutcome;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntent;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.service.NoticeOfIntentSubmitService;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.validation.NoticeOfIntentSubmitNotifyOperatorValidator;
@@ -64,8 +66,8 @@ class NonComplianceNoticeOfIntentSubmitNotifyOperatorActionHandlerTest {
                 .payloadType(CcaRequestTaskActionPayloadType.NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD)
                 .build();
 
-        final NoticeOfIntent noticeOfIntent = NoticeOfIntent.builder()
-                .noticeOfIntentFile(fileUuid)
+        final NonComplianceNoticeOfIntent noticeOfIntent = NonComplianceNoticeOfIntent.builder()
+                .file(fileUuid)
                 .comments("bla bla bla")
                 .build();
         final NonComplianceNoticeOfIntentSubmitRequestTaskPayload requestTaskPayload = NonComplianceNoticeOfIntentSubmitRequestTaskPayload.builder()
@@ -94,7 +96,7 @@ class NonComplianceNoticeOfIntentSubmitNotifyOperatorActionHandlerTest {
         verify(validator, times(1)).validate(requestTask, requestTaskActionPayload, appUser);
         verify(noticeOfIntentSubmitService, times(1)).notifyOperator(requestTask, decisionNotification);
         verify(workflowService, times(1)).completeTask(processId,
-                Map.of(BpmnProcessConstants.REQUEST_ID, requestId));
+                Map.of(BpmnProcessConstants.REQUEST_ID, requestId, CcaBpmnProcessConstants.NON_COMPLIANCE_OUTCOME, NonComplianceOutcome.SUBMITTED));
     }
 
     @Test

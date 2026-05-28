@@ -6,6 +6,7 @@ import { lastValueFrom, Observable } from 'rxjs';
 
 import { SignalStore } from '@netz/common/store';
 import { asyncData, mockClass } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { RequestTaskAttachmentsHandlingService, TasksService } from 'cca-api';
 
@@ -28,7 +29,7 @@ const initialMockedState: MockedState = {
 describe('RequestTaskFileService', () => {
   let service: RequestTaskFileService;
   let mockedStore: MockedStore;
-  let attachmentsService: jest.Mocked<RequestTaskAttachmentsHandlingService>;
+  let attachmentsService: Mocked<RequestTaskAttachmentsHandlingService>;
 
   beforeEach(() => {
     attachmentsService = mockClass(RequestTaskAttachmentsHandlingService);
@@ -55,16 +56,18 @@ describe('RequestTaskFileService', () => {
 
   it('should upload a single file', async () => {
     const control = new FormControl({ file: new File(['content'], 'file.txt') });
-    expect(
+
+    await expect(
       lastValueFrom(
         service.upload(mockedStore.state.requestTaskId, 'RDE_SUBMIT')(control) as Observable<ValidationErrors>,
       ),
     ).resolves.toBeNull();
   });
 
-  it('should upload multiple files', () => {
+  it('should upload multiple files', async () => {
     const control = new FormControl([{ file: new File(['content'], 'file.txt') }]);
-    expect(
+
+    await expect(
       lastValueFrom(
         service.uploadMany(mockedStore.state.requestTaskId, 'RDE_SUBMIT')(control) as Observable<ValidationErrors>,
       ),

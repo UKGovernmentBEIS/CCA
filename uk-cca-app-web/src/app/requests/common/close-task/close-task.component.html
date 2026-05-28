@@ -1,0 +1,36 @@
+<cca-wizard-step
+  (formSubmit)="onSubmit()"
+  [formGroup]="form"
+  caption="Non-compliance"
+  heading="Close task"
+  submitText="Close task"
+>
+  <div class="govuk-!-width-two-thirds">
+    <p class="govuk-inset-text">
+      You can close this task if you believe there is nothing left for you or others to complete.
+    </p>
+
+    <div
+      formControlName="reason"
+      govuk-textarea
+      label="Explain why you have decided to close this task"
+      hint="The operator cannot view this"
+      labelSize="small"
+      [maxLength]="10000"
+    ></div>
+
+    <cca-multiple-file-input
+      formControlName="files"
+      [baseDownloadUrl]="downloadUrl"
+      [listTitle]="'Uploaded files'"
+      label="Upload supporting documents (optional)"
+      hint="Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DIB, BMP or CSV file, no more than 20MB."
+    />
+
+    <p class="govuk-body govuk-!-margin-top-7">Are you sure you want to close this task?</p>
+    <govuk-warning-text assistiveText="">You cannot make changes after you click "Close task"</govuk-warning-text>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

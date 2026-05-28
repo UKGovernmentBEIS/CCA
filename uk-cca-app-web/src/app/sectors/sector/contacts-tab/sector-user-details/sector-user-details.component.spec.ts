@@ -23,7 +23,7 @@ describe('SectorUserDetailsComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { paramMap: { get: jest.fn().mockReturnValue(1) } },
+            snapshot: { paramMap: { get: vi.fn().mockReturnValue(1) } },
           },
         },
       ],

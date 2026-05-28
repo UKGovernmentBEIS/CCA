@@ -22,6 +22,8 @@ describe('Delete2faComponent', () => {
   const authService = mockClass(AuthService);
 
   beforeEach(async () => {
+    usersSecuritySetupService.deleteOtpCredentials.mockReturnValue(of({}));
+
     await TestBed.configureTestingModule({
       imports: [Delete2faComponent],
       providers: [
@@ -37,7 +39,7 @@ describe('Delete2faComponent', () => {
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
     fixture.detectChanges();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
@@ -46,7 +48,7 @@ describe('Delete2faComponent', () => {
 
   it('should logout user after successful 2fa deletion', () => {
     usersSecuritySetupService.deleteOtpCredentials.mockReturnValue(of({}));
-    const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
     component.ngOnInit();
 
     expect(navigateSpy).not.toHaveBeenCalled();
@@ -57,7 +59,7 @@ describe('Delete2faComponent', () => {
     usersSecuritySetupService.deleteOtpCredentials.mockReturnValue(
       throwError(() => new HttpErrorResponse({ error: { code: 'EMAIL1001' }, status: 400 })),
     );
-    const navigateSpy = jest.spyOn(router, 'navigate').mockImplementation();
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
     component.ngOnInit();
 
     expect(navigateSpy).toHaveBeenCalledTimes(1);

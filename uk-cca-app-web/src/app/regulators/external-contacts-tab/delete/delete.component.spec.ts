@@ -1,11 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
 import { throwError } from 'rxjs';
 
 import { BusinessTestingModule, expectBusinessErrorToBe } from '@error/testing/business-error';
 import { asyncData, BasePage, expectToHaveNavigatedTo, RouterStubComponent } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { CaExternalContactDTO, CaExternalContactsService } from 'cca-api';
 
@@ -17,7 +18,7 @@ describe('DeleteComponent', () => {
   let component: DeleteComponent;
   let fixture: ComponentFixture<DeleteComponent>;
   let page: Page;
-  let externalContactsService: Partial<jest.Mocked<CaExternalContactsService>>;
+  let externalContactsService: Partial<Mocked<CaExternalContactsService>>;
   let store: ActiveExternalContactStore;
 
   const contact: CaExternalContactDTO = {
@@ -47,7 +48,7 @@ describe('DeleteComponent', () => {
   }
 
   beforeEach(async () => {
-    externalContactsService = { deleteCaExternalContactById: jest.fn().mockReturnValue(asyncData(null)) };
+    externalContactsService = { deleteCaExternalContactById: vi.fn().mockReturnValue(asyncData(null)) };
 
     await TestBed.configureTestingModule({
       imports: [DeleteComponent, RouterStubComponent, BusinessTestingModule],
@@ -77,25 +78,24 @@ describe('DeleteComponent', () => {
     expect(page.confirmButton.disabled).toBeFalsy();
   });
 
-  it('should cancel the deletion', () => {
+  it('should cancel the deletion', async () => {
     page.cancelLink.click();
-
+    await fixture.whenStable();
     expectToHaveNavigatedTo('/user/regulators#external-contacts');
   });
 
-  it('should delete the contact', fakeAsync(() => {
+  it('should delete the contact', async () => {
     page.confirmButton.click();
-    fixture.detectChanges();
 
     expect(externalContactsService.deleteCaExternalContactById).toHaveBeenCalledWith(contact.id);
+    await fixture.whenStable();
 
-    tick();
-    fixture.detectChanges();
-
-    expect(page.panelTitle.textContent).toEqual('The external contact Bob Squarepants has been deleted');
+    const panelTitle = page.panelTitle;
+    expect(panelTitle).not.toBeNull();
+    expect(panelTitle.textContent).toEqual('The external contact Bob Squarepants has been deleted');
     expect(page.panelLink.textContent.trim()).toEqual('Return to the Regulator users and contacts page');
     expect(page.panelLink.href).toContain('/user/regulators#external-contacts');
-  }));
+  });
 
   it('should dismiss with a message if error', async () => {
     externalContactsService.deleteCaExternalContactById.mockReturnValue(

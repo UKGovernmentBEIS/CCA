@@ -13,7 +13,7 @@ import { ChangeStatusComponent } from './change-status.component';
 import { CHANGE_STATUS_FORM } from './change-status-form.provider';
 
 const mockUpdateService = {
-  updateBuyOutSurplusTransactionPaymentStatus: jest.fn().mockReturnValue(of({})),
+  updateBuyOutSurplusTransactionPaymentStatus: vi.fn().mockReturnValue(of({})),
 };
 
 const activatedRouteStub = {

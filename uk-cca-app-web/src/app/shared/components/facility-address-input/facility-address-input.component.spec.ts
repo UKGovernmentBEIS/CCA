@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+
+import { CountryService } from '@shared/services';
 
 import { createAccountAddressForm } from '../account-address-input/account-address-input-controls';
 import { FacilityAddressInputComponent } from './facility-address-input.component';
@@ -30,8 +33,25 @@ describe('FacilityAddressInputComponent', () => {
   }
 
   beforeEach(async () => {
+    const mockCountryService = {
+      countries: signal([
+        {
+          code: 'PT',
+          name: 'Portugal',
+          officialName: 'The Portuguese Republic',
+        },
+        {
+          code: 'PW',
+          name: 'Palau',
+          officialName: 'The Republic of Palau',
+        },
+      ]),
+      ukCountries: signal([{ code: 'GB', name: 'United Kingdom', officialName: 'United Kingdom' }]),
+    };
+
     await TestBed.configureTestingModule({
       imports: [FacilityAddressInputComponent],
+      providers: [provideHttpClient(), { provide: CountryService, useValue: mockCountryService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestComponent);

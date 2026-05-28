@@ -4,13 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import uk.gov.cca.api.authorization.ccaauth.rules.domain.CcaResourceType;
+import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
-import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodType;
+import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
+import uk.gov.cca.api.facility.service.FacilityDataQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDetailsDTO;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.service.TargetPeriodService;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestType;
 import uk.gov.cca.api.workflow.request.flow.common.service.RequestCreateByFacilityValidator;
+import uk.gov.cca.api.workflow.request.flow.common.validation.performancedata.PerformanceDataCreateSchemeValidator;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestCreateActionPayload;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.digitalform.common.domain.PerformanceDataFacilityDigitalFormRequestMetadata;
 import uk.gov.netz.api.common.exception.BusinessException;
@@ -27,16 +30,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PerformanceDataFacilityDigitalFormCreateValidator implements RequestCreateByFacilityValidator, RequestCreateByRequestValidator<PerformanceDataFacilityDigitalFormRequestCreateActionPayload> {
 
+    private final PerformanceDataCreateSchemeValidator performanceDataCreateSchemeValidator;
     private final TargetPeriodService targetPeriodService;
+    private final FacilityDataQueryService facilityDataQueryService;
     private final RequestQueryService requestQueryService;
     private final PerformanceDataFacilityDigitalFormValidator performanceDataFacilityDigitalFormValidator;
 
     @Override
     public RequestCreateValidationResult validateAction(Long facilityId) {
-        final TargetPeriodDetailsDTO tp7TargetPeriod = targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(TargetPeriodType.TP7);
+        // Digital forms only available for CCA3 Scheme
+        if(!performanceDataCreateSchemeValidator.isAvailableForScheme(SchemeVersion.CCA_3, LocalDate.now())) {
+            return RequestCreateValidationResult.builder().valid(true).isAvailable(false).build();
+        }
 
-        // Digital forms only valid for TP7 and after
-        if(LocalDate.now().isBefore(tp7TargetPeriod.getTargetPeriodYearsContainer().getTargetPeriodReportingStartDate())) {
+        // Facility only available for CCA3 participating Scheme
+        final FacilityDTO facility = facilityDataQueryService.getFacilityInfoData(facilityId);
+        if(!facility.getParticipatingSchemeVersions().contains(SchemeVersion.CCA_3)) {
             return RequestCreateValidationResult.builder().valid(true).isAvailable(false).build();
         }
 
@@ -46,6 +55,7 @@ public class PerformanceDataFacilityDigitalFormCreateValidator implements Reques
     @Override
     public RequestCreateValidationResult validateAction(Long facilityId, PerformanceDataFacilityDigitalFormRequestCreateActionPayload payload) {
         final LocalDate submissionDate = LocalDate.now();
+        final TargetPeriodDetailsDTO targetPeriod = targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(payload.getTargetPeriodType());
 
         // Check in progress
         List<Request> result = requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
@@ -60,16 +70,32 @@ public class PerformanceDataFacilityDigitalFormCreateValidator implements Reques
 
         // Check target period and report type
         BusinessValidationResult validationReportTypeResult = performanceDataFacilityDigitalFormValidator
-                .validateReportSubmission(payload.getTargetPeriodType(), payload.getReportType(), submissionDate);
+                .validateReportSubmission(targetPeriod, payload.getReportType(), submissionDate);
         if(!validationReportTypeResult.isValid()) {
             throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REPORT_NOT_ELIGIBLE, validationReportTypeResult.getViolations());
         }
 
-        // Check facility
+        // Check secondary reporting
+        BusinessValidationResult validationSecondaryLockResult = performanceDataFacilityDigitalFormValidator
+                .validateSecondaryReportingLock(targetPeriod, submissionDate);
+        if(!validationSecondaryLockResult.isValid()) {
+            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SECONDARY_REPORTING_LOCKED, validationSecondaryLockResult.getViolations());
+        }
+
+        // Check facility eligibility
+        final FacilityDTO facility = facilityDataQueryService.getFacilityInfoData(facilityId);
+
         BusinessValidationResult validationFacilityResult = performanceDataFacilityDigitalFormValidator
-                .validateFacilityEligibility(facilityId, payload.getTargetPeriodType(), submissionDate);
+                .validateFacilityEligibility(facility, targetPeriod, submissionDate);
         if(!validationFacilityResult.isValid()) {
             throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_NOT_ELIGIBLE, validationFacilityResult.getViolations());
+        }
+
+        // Check facility products
+        BusinessValidationResult validationFacilityProductsResult = performanceDataFacilityDigitalFormValidator
+                .validateFacilityProductsEligibility(facility, targetPeriod, submissionDate);
+        if(!validationFacilityProductsResult.isValid()) {
+            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCTS_NOT_ELIGIBLE, validationFacilityProductsResult.getViolations());
         }
 
         return RequestCreateValidationResult.builder().valid(true).isAvailable(true).build();

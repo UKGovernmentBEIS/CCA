@@ -21,6 +21,6 @@ describe('SectorTemplatesComponent', () => {
   });
 
   it('should show table values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

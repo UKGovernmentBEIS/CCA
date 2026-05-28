@@ -26,6 +26,7 @@ import {
 import { underlyingAgreementVariationReviewQuery } from '@requests/common';
 import { HighlightDiffComponent, SummaryComponent, WizardStepComponent } from '@shared/components';
 import { transformAddress } from '@shared/pipes';
+import { CountryService } from '@shared/services';
 import { produce } from 'immer';
 
 import { CompaniesInformationService, CompanyProfileDTO } from 'cca-api';
@@ -57,6 +58,8 @@ export class ReviewTargetUnitDetailsDecisionComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly companiesInformationService = inject(CompaniesInformationService);
 
+  protected readonly countries = inject(CountryService).countries;
+
   protected readonly toggleCompaniesHouseDetailsCtrl = new FormControl<boolean>(false);
   protected readonly toggleCompaniesHouseDetails = toSignal(this.toggleCompaniesHouseDetailsCtrl.valueChanges, {
     initialValue: false,
@@ -72,7 +75,7 @@ export class ReviewTargetUnitDetailsDecisionComponent implements OnInit {
     const response = this.companiesHouseDetailsResponse();
     return {
       details: typeof response === 'object' ? response : null,
-      address: typeof response === 'object' ? transformAddress(response?.address).join('\n') : null,
+      address: typeof response === 'object' ? transformAddress(response?.address, this.countries()).join('\n') : null,
     };
   });
 
@@ -93,11 +96,13 @@ export class ReviewTargetUnitDetailsDecisionComponent implements OnInit {
 
   protected readonly summaryDataOriginal = toReviewTargetUnitDetailsUNAReviewSummaryData(
     this.originalTargetUnitDetails(),
+    this.countries(),
     this.store.select(requestTaskQuery.selectIsEditable)(),
   );
 
   protected readonly summaryDataCurrent = toReviewTargetUnitDetailsUNAReviewSummaryData(
     this.targetUnitDetails(),
+    this.countries(),
     this.store.select(requestTaskQuery.selectIsEditable)(),
   );
 

@@ -7,27 +7,27 @@ import { ActivatedRouteStub } from '@netz/common/testing';
 import { click, getAllByTestId, getByTestId, getByText, getSummaryListData } from '@testing';
 
 import { ReceivedAmountComponent } from './received-amount.component';
-import { SectorMoasReceivedAmountStore } from './received-amount.store';
+import { ReceivedAmountStore } from './received-amount.store';
 import { mockReceivedAmountStoreState } from './testing/mock-data';
 
 describe('ReceivedAmountComponent', () => {
   let component: ReceivedAmountComponent;
   let fixture: ComponentFixture<ReceivedAmountComponent>;
   let router: Router;
-  let receivedAmountStore: SectorMoasReceivedAmountStore;
+  let receivedAmountStore: ReceivedAmountStore;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ReceivedAmountComponent],
       providers: [
-        SectorMoasReceivedAmountStore,
+        ReceivedAmountStore,
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub({ moaId: 1 }) },
       ],
     }).compileComponents();
 
-    receivedAmountStore = TestBed.inject(SectorMoasReceivedAmountStore);
+    receivedAmountStore = TestBed.inject(ReceivedAmountStore);
     receivedAmountStore.setState(mockReceivedAmountStoreState);
 
     router = TestBed.inject(Router);
@@ -61,7 +61,7 @@ describe('ReceivedAmountComponent', () => {
   });
 
   it('should not navigate to next step if the form is invalid', async () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate');
 
     // Make form invalid by clearing the required transactionAmount field
     component.form.controls.transactionAmount.setValue('');

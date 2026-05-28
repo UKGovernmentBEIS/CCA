@@ -24,6 +24,6 @@ describe('TrackCorrectiveActionsConfirmationComponent', () => {
   });
 
   it('should display the correct content', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

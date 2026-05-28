@@ -8,6 +8,9 @@ import { of } from 'rxjs';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
+import { Mocked } from 'vitest';
+
+import { ReferenceDataService } from 'cca-api';
 
 import { mockVariationReviewRequestTaskState } from '../../../../../common/underlying-agreement/testing/variation-review-mock-data';
 import { ReviewTargetUnitDetailsDecisionComponent } from './review-target-unit-details-decision.component';
@@ -16,8 +19,12 @@ describe('Review Target Unit Details Decision', () => {
   let fixture: ComponentFixture<ReviewTargetUnitDetailsDecisionComponent>;
   let store: RequestTaskStore;
 
-  const mockTasksApiService: Partial<jest.Mocked<TasksApiService>> = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+  const mockTasksApiService: Partial<Mocked<TasksApiService>> = {
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
+  };
+
+  const referenceDataService: Partial<Mocked<ReferenceDataService>> = {
+    getReferenceData: vi.fn().mockReturnValue(of({ COUNTRIES: [] })),
   };
 
   beforeEach(async () => {
@@ -29,6 +36,7 @@ describe('Review Target Unit Details Decision', () => {
         { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
         RequestTaskStore,
         { provide: TasksApiService, useValue: mockTasksApiService },
+        { provide: ReferenceDataService, useValue: referenceDataService },
         { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
         { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Review underlying agreement variation' },
       ],
@@ -43,6 +51,6 @@ describe('Review Target Unit Details Decision', () => {
   });
 
   it('should match snapshot', () => {
-    expect(fixture.nativeElement).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

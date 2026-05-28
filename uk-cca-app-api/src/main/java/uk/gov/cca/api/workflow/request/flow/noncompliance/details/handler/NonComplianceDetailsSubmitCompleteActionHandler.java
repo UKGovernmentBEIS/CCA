@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceOutcome;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.domain.NonComplianceDetailsSubmittedRequestActionPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.details.service.NonComplianceDetailsSubmitService;
@@ -57,7 +58,7 @@ public class NonComplianceDetailsSubmitCompleteActionHandler implements RequestT
 
         workflowService.completeTask(requestTask.getProcessTaskId(),
                 Map.of(BpmnProcessConstants.REQUEST_ID, requestTask.getRequest().getId(),
-                        CcaBpmnProcessConstants.NON_COMPLIANCE_OUTCOME, "",
+                        CcaBpmnProcessConstants.NON_COMPLIANCE_OUTCOME, NonComplianceOutcome.SUBMITTED,
                         CcaBpmnProcessConstants.IS_NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_NEEDED, isEnforcementResponseNoticeRequired));
 
         return requestTask.getPayload();

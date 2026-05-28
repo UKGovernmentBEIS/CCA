@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Directive, inject, OnInit } from '@angular/core';
 import { map, of } from 'rxjs';
 
 import { SelectComponent } from '@netz/govuk-components';
-import { COUNTRIES, UK_COUNTRY_CODES } from '@shared/services';
+import { CountryService, UK_COUNTRY_CODES } from '@shared/services';
 import { Country } from '@shared/types';
 
 @Directive({
@@ -12,9 +12,10 @@ import { Country } from '@shared/types';
 export class CountriesDirective implements OnInit {
   private readonly selectComponent = inject(SelectComponent);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly countryService = inject(CountryService);
 
   ngOnInit() {
-    of(COUNTRIES)
+    of(this.countryService.countries())
       .pipe(
         map((countries: Country[]) =>
           countries

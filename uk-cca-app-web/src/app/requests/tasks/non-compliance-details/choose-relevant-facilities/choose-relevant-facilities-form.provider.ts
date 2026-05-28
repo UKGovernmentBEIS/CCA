@@ -2,8 +2,7 @@ import { InjectionToken, Provider } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { RequestTaskStore } from '@netz/common/store';
-
-import { nonComplianceDetailsQuery } from '../non-compliance-details.selectors';
+import { nonComplianceDetailsQuery } from '@requests/common';
 
 export type FacilityFormGroup = FormGroup<{
   facilityBusinessId: FormControl<string | null>;

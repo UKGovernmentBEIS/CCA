@@ -7,7 +7,7 @@ import { underlyingAgreementRequestActionQuery } from '@requests/common';
 import { SplitByProductTableComponent } from '@requests/common';
 
 @Component({
-  selector: 'cca-products-table',
+  selector: 'cca-products-timeline-table',
   templateUrl: './summary-products-timeline.component.html',
   imports: [PageHeadingComponent, SplitByProductTableComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,

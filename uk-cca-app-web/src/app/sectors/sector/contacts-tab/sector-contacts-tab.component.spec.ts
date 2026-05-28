@@ -40,7 +40,7 @@ describe('SectorContactsTabComponent', () => {
   const route = new ActivatedRouteStub();
 
   const sectorAssociationAuthoritiesService = {
-    getSectorUserAuthoritiesBySectorAssociationId: jest.fn().mockReturnValue(of(mockUserAuthorities)),
+    getSectorUserAuthoritiesBySectorAssociationId: vi.fn().mockReturnValue(of(mockUserAuthorities)),
   };
 
   beforeEach(async () => {
@@ -80,7 +80,7 @@ describe('SectorContactsTabComponent non editable', () => {
   const route = new ActivatedRouteStub();
 
   const sectorAssociationAuthoritiesService = {
-    getSectorUserAuthoritiesBySectorAssociationId: jest
+    getSectorUserAuthoritiesBySectorAssociationId: vi
       .fn()
       .mockReturnValue(of({ ...mockUserAuthorities, editable: false })),
   };

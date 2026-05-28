@@ -4,6 +4,7 @@ export * from './facility-address-input/facility-address-input.component';
 export * from './back-to-top/back-to-top.component';
 export * from './boolean-radio-group/boolean-radio-group.component';
 export * from './confirmation/confirmation.component';
+export * from './combobox/combobox.component';
 export * from './county-address-input/county-address-input.component';
 export * from './county-address-input/create-county-address-controls';
 export * from './csv-error-summary/csv-error-summary.component';

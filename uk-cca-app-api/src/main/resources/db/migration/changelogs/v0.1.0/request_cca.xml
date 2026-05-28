@@ -2858,4 +2858,303 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="0_1_0_UPDATE_NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            UPDATE request_task_type
+            SET code = 'NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW'
+            WHERE code = 'NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW'
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE request_task_type
+                SET code = 'NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW'
+                WHERE code = 'NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW'
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_NON_COMPLIANCE_NOTICE_OF_INTENT_WAIT_FOR_PEER_REVIEW_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'NON_COMPLIANCE_NOTICE_OF_INTENT_WAIT_FOR_PEER_REVIEW', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'NON_COMPLIANCE'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'NON_COMPLIANCE_NOTICE_OF_INTENT_WAIT_FOR_PEER_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT_PEER_REVIEW_DECISION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt
+                     CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW'
+              AND rtat.code IN
+                  ('PEER_REVIEW_UPLOAD_ATTACHMENT', 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT_PEER_REVIEW_DECISION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code IN ('PEER_REVIEW_UPLOAD_ATTACHMENT', 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT_PEER_REVIEW_DECISION') )
+                AND request_task_type_id IN (SELECT id FROM request_task_type WHERE code = 'NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW');
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT_PEER_REVIEW_DECISION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SAVE_APPLICATION', false),
+                   (nextval('request_task_action_type_seq'), 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_REQUEST_PEER_REVIEW', false),
+                   (nextval('request_task_action_type_seq'), 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_NOTIFY_OPERATOR', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt
+                     CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT'
+              AND rtat.code IN
+                  ('NON_COMPLIANCE_CLOSE_APPLICATION', 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SAVE_APPLICATION',
+                   'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_REQUEST_PEER_REVIEW',
+                   'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_NOTIFY_OPERATOR', 'NON_COMPLIANCE_UPLOAD_ATTACHMENT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code IN ('NON_COMPLIANCE_CLOSE_APPLICATION', 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SAVE_APPLICATION',
+                'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_REQUEST_PEER_REVIEW', 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_NOTIFY_OPERATOR', 'NON_COMPLIANCE_UPLOAD_ATTACHMENT')
+                AND request_task_type_id IN (SELECT id FROM request_task_type WHERE code = 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT'));
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SAVE_APPLICATION', 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_REQUEST_PEER_REVIEW',
+                'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_NOTIFY_OPERATOR');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW', true, '', 'PEER_REVIEW',
+                   (SELECT id FROM request_type WHERE code = 'NON_COMPLIANCE'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_WAIT_FOR_PEER_REVIEW_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_WAIT_FOR_PEER_REVIEW', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'NON_COMPLIANCE'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_WAIT_FOR_PEER_REVIEW';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT_PEER_REVIEW_DECISION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt
+                     CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW'
+              AND rtat.code IN
+                  ('PEER_REVIEW_UPLOAD_ATTACHMENT', 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT_PEER_REVIEW_DECISION');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code IN ('PEER_REVIEW_UPLOAD_ATTACHMENT', 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT_PEER_REVIEW_DECISION') )
+                AND request_task_type_id IN (SELECT id FROM request_task_type WHERE code = 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW');
+
+                DELETE FROM request_task_action_type
+                WHERE code = 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT_PEER_REVIEW_DECISION';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_NON_COMPLIANCE_CONCLUSION_SUBMIT_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'NON_COMPLIANCE_CONCLUSION_SUBMIT', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'NON_COMPLIANCE'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'NON_COMPLIANCE_CONCLUSION_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_NON_COMPLIANCE_CONCLUSION_SUBMIT_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'NON_COMPLIANCE_CONCLUSION_SAVE_APPLICATION', false),
+                   (nextval('request_task_action_type_seq'), 'NON_COMPLIANCE_CONCLUSION_SUBMIT_APPLICATION', false),
+                   (nextval('request_task_action_type_seq'), 'NON_COMPLIANCE_CONCLUSION_NOTIFY_OPERATOR', false),
+                   (nextval('request_task_action_type_seq'), 'NON_COMPLIANCE_CONCLUSION_SUBMIT_APPEAL_DETAILS', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt
+                     CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'NON_COMPLIANCE_CONCLUSION_SUBMIT'
+              AND rtat.code IN
+                  ('NON_COMPLIANCE_CLOSE_APPLICATION', 'NON_COMPLIANCE_CONCLUSION_SAVE_APPLICATION',
+                   'NON_COMPLIANCE_CONCLUSION_SUBMIT_APPLICATION','NON_COMPLIANCE_CONCLUSION_NOTIFY_OPERATOR',
+                   'NON_COMPLIANCE_CONCLUSION_SUBMIT_APPEAL_DETAILS', 'NON_COMPLIANCE_UPLOAD_ATTACHMENT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code IN ('NON_COMPLIANCE_CLOSE_APPLICATION', 'NON_COMPLIANCE_CONCLUSION_SAVE_APPLICATION',
+                'NON_COMPLIANCE_CONCLUSION_SUBMIT_APPLICATION', 'NON_COMPLIANCE_CONCLUSION_NOTIFY_OPERATOR', 'NON_COMPLIANCE_UPLOAD_ATTACHMENT', 'NON_COMPLIANCE_CONCLUSION_SUBMIT_APPEAL_DETAILS')
+                AND request_task_type_id IN (SELECT id FROM request_task_type WHERE code = 'NON_COMPLIANCE_CONCLUSION_SUBMIT'));
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('NON_COMPLIANCE_CONCLUSION_SAVE_APPLICATION', 'NON_COMPLIANCE_CONCLUSION_SUBMIT_APPLICATION',
+                'NON_COMPLIANCE_CONCLUSION_NOTIFY_OPERATOR', 'NON_COMPLIANCE_CONCLUSION_SUBMIT_APPEAL_DETAILS');
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_NON_COMPLIANCE_CONCLUSION_SUBMIT_APPLICATION_REQUEST_TASK_ACTION_TYPE" author="P70311">
+        <sql>
+            UPDATE request_task_action_type
+            SET code = 'NON_COMPLIANCE_CONCLUSION_COMPLETE_APPLICATION'
+            WHERE code = 'NON_COMPLIANCE_CONCLUSION_SUBMIT_APPLICATION'
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE request_task_type
+                SET code = 'NON_COMPLIANCE_CONCLUSION_SUBMIT_APPLICATION'
+                WHERE code = 'NON_COMPLIANCE_CONCLUSION_COMPLETE_APPLICATION'
+            </sql>
+        </rollback>
+    </changeSet>
+    
+    <changeSet id="0_1_0_UPDATE_REQUEST_ACTIONS_ADD_carbonConversionFactorMeasurement_kgCe/kWh" author="apostolouk@unisystems.gr">
+        <comment>Add carbonConversionFactorMeasurement and set it to kgCe/kWh for existing request actions that contain the underlying agreement</comment>
+        <sql>
+            UPDATE request_action
+			SET payload = jsonb_set(payload, '{underlyingAgreement,facilities}',
+			    (
+			        SELECT jsonb_agg(
+			            CASE
+			                WHEN facility->'cca3BaselineAndTargets' IS NOT NULL THEN
+			                    jsonb_set(
+			                        facility,
+			                        '{cca3BaselineAndTargets,baselineData,carbonConversionFactorMeasurement}',
+			                        '"kgCe/kWh"'::jsonb,
+			                        true
+			                    )
+			                ELSE facility
+			            END
+			        )
+			        FROM jsonb_array_elements(
+			            payload->'underlyingAgreement'->'facilities'
+			        ) AS facility
+			    )
+			)
+			WHERE type IN (
+			'UNDERLYING_AGREEMENT_APPLICATION_SUBMITTED', 
+			'UNDERLYING_AGREEMENT_APPLICATION_ACCEPTED', 
+			'UNDERLYING_AGREEMENT_APPLICATION_REJECTED', 
+			'UNDERLYING_AGREEMENT_APPLICATION_MIGRATED', 
+			'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_SUBMITTED', 
+			'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_ACCEPTED', 
+			'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_REJECTED',
+			'UNDERLYING_AGREEMENT_VARIATION_APPLICATION_COMPLETED',
+			'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_SUBMITTED',
+			'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_COMPLETED')
+			AND jsonb_typeof(payload->'underlyingAgreement'->'facilities') = 'array';
+        </sql>
+    </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_NON_COMPLIANCE_CONCLUSION_SUBMIT_APPEAL_DETAILS_REQUEST_TASK_ACTION_TYPE" author="P70311">
+        <sql>
+            UPDATE request_task_action_type
+            SET code = 'NON_COMPLIANCE_PROVIDE_APPEAL_DETAILS'
+            WHERE code = 'NON_COMPLIANCE_CONCLUSION_SUBMIT_APPEAL_DETAILS'
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE request_task_type
+                SET code = 'NON_COMPLIANCE_CONCLUSION_SUBMIT_APPEAL_DETAILS'
+                WHERE code = 'NON_COMPLIANCE_PROVIDE_APPEAL_DETAILS'
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_NON_COMPLIANCE_APPEAL_OUTCOME_SUBMIT_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_type (id, code, assignable, expiration_key, supporting, request_type_id)
+            VALUES(nextval('request_task_type_seq'), 'NON_COMPLIANCE_APPEAL_OUTCOME_SUBMIT', true, '', null,
+                   (SELECT id FROM request_type WHERE code = 'NON_COMPLIANCE'));
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type
+                WHERE code = 'NON_COMPLIANCE_APPEAL_OUTCOME_SUBMIT';
+            </sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="0_1_0_ADD_REQUEST_TASK_ACTION_TYPES_FOR_NON_COMPLIANCE_APPEAL_OUTCOME_SUBMIT_REQUEST_TASK_TYPE" author="P70311">
+        <sql>
+            INSERT INTO request_task_action_type (id, code, blocked_by_payment)
+            VALUES (nextval('request_task_action_type_seq'), 'NON_COMPLIANCE_APPEAL_OUTCOME_SAVE_APPLICATION', false),
+                   (nextval('request_task_action_type_seq'), 'NON_COMPLIANCE_APPEAL_OUTCOME_COMPLETE_APPLICATION', false);
+
+            INSERT INTO request_task_type_action_type (request_task_type_id, request_task_action_type_id)
+            SELECT rtt.id, rtat.id
+            FROM request_task_type rtt
+                     CROSS JOIN request_task_action_type rtat
+            WHERE rtt.code = 'NON_COMPLIANCE_APPEAL_OUTCOME_SUBMIT'
+              AND rtat.code IN
+                  ('NON_COMPLIANCE_APPEAL_OUTCOME_SAVE_APPLICATION', 'NON_COMPLIANCE_APPEAL_OUTCOME_COMPLETE_APPLICATION',
+                   'NON_COMPLIANCE_UPLOAD_ATTACHMENT');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM request_task_type_action_type
+                WHERE request_task_action_type_id IN (
+                SELECT id from request_task_action_type where code IN ('NON_COMPLIANCE_APPEAL_OUTCOME_SAVE_APPLICATION', 'NON_COMPLIANCE_APPEAL_OUTCOME_COMPLETE_APPLICATION',
+                'NON_COMPLIANCE_UPLOAD_ATTACHMENT')
+                AND request_task_type_id IN (SELECT id FROM request_task_type WHERE code = 'NON_COMPLIANCE_APPEAL_OUTCOME_SUBMIT'));
+
+                DELETE FROM request_task_action_type
+                WHERE code IN ('NON_COMPLIANCE_APPEAL_OUTCOME_SAVE_APPLICATION', 'NON_COMPLIANCE_APPEAL_OUTCOME_COMPLETE_APPLICATION');
+            </sql>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

@@ -130,6 +130,37 @@ describe('ItemActionTypePipe', () => {
       'CCA2 Underlying agreement terminated',
     );
 
+    expect(pipe.transform('NON_COMPLIANCE_DETAILS_SUBMITTED')).toEqual('Non-compliance details provided');
+
+    expect(pipe.transform('NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED')).toEqual('Notice of intent submitted');
+    expect(pipe.transform('NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMITTED')).toEqual(
+      'Enforcement response notice sent to operator',
+    );
+    expect(pipe.transform('NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW_REQUESTED')).toEqual(
+      'Peer review of notice of intent requested',
+    );
+    expect(pipe.transform('NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEW_REQUESTED')).toEqual(
+      'Peer review of enforcement response notice requested',
+    );
+    expect(pipe.transform('NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEWER_ACCEPTED')).toEqual(
+      'Peer review agreement for notice of intent submitted',
+    );
+    expect(pipe.transform('NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEWER_REJECTED')).toEqual(
+      'Peer review disagreement for notice of intent submitted',
+    );
+    expect(pipe.transform('NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEWER_ACCEPTED')).toEqual(
+      'Peer review agreement for enforcement response notice submitted',
+    );
+    expect(pipe.transform('NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEWER_REJECTED')).toEqual(
+      'Peer review disagreement for enforcement response notice submitted',
+    );
+    expect(pipe.transform('NON_COMPLIANCE_CONCLUSION_SUBMITTED')).toEqual('Conclusion of non-compliance provided');
+    expect(pipe.transform('NON_COMPLIANCE_APPEAL_PROVIDED')).toEqual('Appeal registration provided');
+    expect(pipe.transform('NON_COMPLIANCE_APPEAL_DETAILS_SUBMITTED')).toEqual('Appeal registration provided');
+    expect(pipe.transform('NON_COMPLIANCE_APPEAL_OUTCOME_SUBMITTED')).toEqual('Appeal outcome provided');
+    expect(pipe.transform('NON_COMPLIANCE_CLOSED')).toEqual('Non-compliance closed');
+    expect(pipe.transform('NON_COMPLIANCE_CANCELLED')).toEqual('Non-compliance details cancelled');
+
     expect(pipe.transform(undefined)).toEqual('Approved Application');
   });
 });

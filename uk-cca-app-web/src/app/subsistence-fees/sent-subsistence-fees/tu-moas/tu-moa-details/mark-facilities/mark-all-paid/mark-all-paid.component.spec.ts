@@ -50,7 +50,7 @@ describe('MarkAllPaidComponent', () => {
       totalFacilityItems: 100,
       moaTUDetails: mockTuMoaDetails,
       facilities: mockFacilitiesList,
-      selectedFacilities: new Map(mockFacilitiesList.map((unit) => [unit.facilityId, unit])),
+      selectedFacilities: new Map(mockFacilitiesList.map((unit) => [String(unit.moaFacilityId), unit])),
     });
 
     fixture.detectChanges();

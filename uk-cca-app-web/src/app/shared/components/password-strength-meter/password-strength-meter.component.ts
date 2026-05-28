@@ -18,19 +18,19 @@ export class PasswordStrengthMeterComponent {
   protected readonly minPasswordLength = input(8);
   protected readonly enableFeedback = input(false);
   protected readonly colors = input(['#d4351c', '#d4351c', '#f47738', '#00703c', '#00703c']);
-  protected readonly numberOfProgressBarItems = input(5);
+  readonly numberOfProgressBarItems = input(5);
 
   private readonly prevPasswordStrength = signal<number | null>(null);
 
   protected readonly strengthChange = output<number | null>();
 
-  protected readonly passwordStrength = computed<number | null>(() => {
+  readonly passwordStrength = computed<number | null>(() => {
     if (!this.password()) return null;
     if (this.password().length < this.minPasswordLength()) return 0;
     return this.calculateScore(this.password()).score;
   });
 
-  protected readonly feedback = computed<Feedback | null>(() => {
+  readonly feedback = computed<Feedback | null>(() => {
     if (!this.password()) return null;
     if (this.password().length < this.minPasswordLength()) return null;
     return this.calculateScore(this.password()).feedback;

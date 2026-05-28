@@ -2,25 +2,25 @@
   (formSubmit)="onSubmit()"
   [formGroup]="form"
   [caption]="facility()?.facilityDetails?.name"
-  heading="Baseline energy or carbon consumption"
+  heading="Baseline energy or carbon"
   data-testid="baseline-energy-consumption-form"
 >
   <div class="govuk-grid-row">
     <p class="govuk-grid-column-two-thirds">
-      The baseline energy or carbon consumption refers to the energy or carbon consumed in the 12 month period from the
-      Start date of the baseline. The targets set for the facility will be the percentage improvement in energy
-      efficiency or carbon efficiency from this base year.
+      The baseline energy or carbon refers to the energy consumed or carbon dioxide emitted in the 12 month period from
+      the Start date of the baseline. The targets set for the facility will be the percentage improvement in energy
+      efficiency or carbon dioxide efficiency from this base year.
     </p>
   </div>
 
   <div class="govuk-grid-row govuk-!-margin-top-7">
     <div class="govuk-grid-column-two-thirds">
       <p class="govuk-!-margin-bottom-0">
-        Enter the fixed amount of energy consumed (or carbon emitted) during the baseline
+        Enter the fixed amount of energy consumed (or carbon dioxide emitted) during the baseline
       </p>
       <p class="govuk-hint govuk-!-margin-top-1">
-        Fixed energy consumption is the portion of a facility's total energy consumed (or carbon emitted) that does not
-        vary with throughput. This value may be entered as zero
+        Fixed energy consumption is the portion of a facility's total energy consumed (or carbon dioxide emitted) that
+        does not vary with throughput. This value may be entered as zero
       </p>
       <div
         class="govuk-!-width-one-half"
@@ -38,8 +38,8 @@
       <div
         formControlName="hasVariableEnergy"
         govuk-radio
-        legend="Should any of the energy consumed (or carbon emitted) during the baseline be categorised as variable"
-        hint="Variable energy consumption is the portion of a facility’s energy use that varies in direct proportion to production output, such as energy per unit of product (e.g. kWh/tonne)"
+        legend="Should any of the energy consumed (or carbon dioxide emitted) during the baseline be categorised as variable"
+        hint="Variable energy consumption is the portion of a facility’s total energy consumed (or carbon dioxide emitted) that is related to throughput"
       >
         <govuk-radio-option [value]="true" [label]="'Yes'" />
         <govuk-radio-option [value]="false" [label]="'No'" />
@@ -54,7 +54,7 @@
           formControlName="variableEnergyType"
           [isInline]="true"
           govuk-radio
-          legend="Indicate how you want to account for the portion of variable energy used (or carbon emitted) for your facility"
+          legend="Indicate how you want to account for the portion of variable energy used (or carbon dioxide emitted) for your facility"
         >
           <govuk-radio-option [value]="'TOTALS'" [label]="'Totals only'" />
           <govuk-radio-option [value]="'BY_PRODUCT'" [label]="'Split by product'" />

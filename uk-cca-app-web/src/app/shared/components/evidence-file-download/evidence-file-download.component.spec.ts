@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { defer, firstValueFrom, of, take } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass, testSchedulerFactory } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { SubsistenceFeesMoAReceivedAmountControllerService } from 'cca-api';
 
@@ -14,10 +15,10 @@ import { EvidenceFileDownloadComponent } from './evidence-file-download.componen
 describe('EvidenceFileDownloadComponent', () => {
   let component: EvidenceFileDownloadComponent;
   let fixture: ComponentFixture<EvidenceFileDownloadComponent>;
-  let subsistenceFeesMoAReceivedAmountControllerService: jest.Mocked<SubsistenceFeesMoAReceivedAmountControllerService>;
+  let subsistenceFeesMoAReceivedAmountControllerService: Mocked<SubsistenceFeesMoAReceivedAmountControllerService>;
 
   beforeEach(async () => {
-    Object.defineProperty(window, 'onfocus', { set: jest.fn() });
+    Object.defineProperty(window, 'onfocus', { set: vi.fn() });
 
     subsistenceFeesMoAReceivedAmountControllerService = mockClass(SubsistenceFeesMoAReceivedAmountControllerService);
     subsistenceFeesMoAReceivedAmountControllerService.generateGetMoaReceivedAmountEvidenceFileToken.mockReturnValue(

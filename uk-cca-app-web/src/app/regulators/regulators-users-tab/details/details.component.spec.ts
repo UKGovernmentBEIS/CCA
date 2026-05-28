@@ -1,6 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { AuthStore } from '@netz/common/auth';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { clear, click, type } from '@testing';
+import { Mocked } from 'vitest';
 
 import { AuthoritiesService, RegulatorUsersService } from 'cca-api';
 
@@ -23,8 +24,8 @@ describe('RegulatorDetailsComponent', () => {
   const routeAdd = new ActivatedRouteStub(null, null, mockDetailsRouteDataAdd);
 
   let fixture: ComponentFixture<DetailsComponent>;
-  let authoritiesService: Partial<jest.Mocked<AuthoritiesService>>;
-  let regulatorUsersService: Partial<jest.Mocked<RegulatorUsersService>>;
+  let authoritiesService: Partial<Mocked<AuthoritiesService>>;
+  let regulatorUsersService: Partial<Mocked<RegulatorUsersService>>;
   let authStore: AuthStore;
   let detailsStore: DetailsStore;
 
@@ -33,13 +34,13 @@ describe('RegulatorDetailsComponent', () => {
     opts: { add: boolean; edit: boolean } = { add: false, edit: true },
   ) {
     authoritiesService = {
-      getRegulatorRoles: jest.fn().mockReturnValue(of(mockRegulatorBasePermissions)),
+      getRegulatorRoles: vi.fn().mockReturnValue(of(mockRegulatorBasePermissions)),
     };
 
     regulatorUsersService = {
-      inviteRegulatorUserToCA: jest.fn().mockReturnValue(of(null)),
-      updateCurrentRegulatorUser: jest.fn().mockReturnValue(of(null)),
-      updateRegulatorUserByCaAndId: jest.fn().mockReturnValue(of(null)),
+      inviteRegulatorUserToCA: vi.fn().mockReturnValue(of(null)),
+      updateCurrentRegulatorUser: vi.fn().mockReturnValue(of(null)),
+      updateRegulatorUserByCaAndId: vi.fn().mockReturnValue(of(null)),
     };
 
     await TestBed.configureTestingModule({
@@ -366,7 +367,7 @@ describe('RegulatorDetailsComponent', () => {
 
   it('should submit new regulator', async () => {
     await bootstrap(routeAdd, { add: true, edit: true });
-    const spy = jest.spyOn(regulatorUsersService, 'inviteRegulatorUserToCA');
+    const spy = vi.spyOn(regulatorUsersService, 'inviteRegulatorUserToCA');
     type(fixture.nativeElement.querySelector('#user\\.firstName'), 'George');
     type(fixture.nativeElement.querySelector('#user\\.lastName'), 'Mitau');
     type(fixture.nativeElement.querySelector('#user\\.jobTitle'), 'Job Title for George');
@@ -445,7 +446,7 @@ describe('RegulatorDetailsComponent', () => {
 
   it('should submit a valid form for current user', async () => {
     await bootstrap(routeEdit, { add: false, edit: false });
-    const spy = jest.spyOn(regulatorUsersService, 'updateCurrentRegulatorUser');
+    const spy = vi.spyOn(regulatorUsersService, 'updateCurrentRegulatorUser');
     type(fixture.nativeElement.querySelector('#user\\.firstName'), 'Johnathan');
     const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
       el.textContent.includes('Save'),
@@ -454,14 +455,14 @@ describe('RegulatorDetailsComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should submit a valid form not for current user', fakeAsync(async () => {
+  it('should submit a valid form not for current user', async () => {
     await bootstrap(routeEdit2);
-    const spy = jest.spyOn(regulatorUsersService, 'updateRegulatorUserByCaAndId');
+    const spy = vi.spyOn(regulatorUsersService, 'updateRegulatorUserByCaAndId');
     type(fixture.nativeElement.querySelector('#user\\.firstName'), 'Johnathan');
     const saveBtn = Array.from(fixture.nativeElement.querySelectorAll('button')).find((el: any) =>
       el.textContent.includes('Save'),
     ) as HTMLButtonElement;
     click(saveBtn);
     expect(spy).toHaveBeenCalled();
-  }));
+  });
 });

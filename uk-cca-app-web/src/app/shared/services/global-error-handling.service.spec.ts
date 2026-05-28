@@ -33,7 +33,7 @@ describe('GlobalErrorHandlingService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
@@ -41,28 +41,36 @@ describe('GlobalErrorHandlingService', () => {
   });
 
   it('should handle uncaught application errors', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValueOnce(true);
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValueOnce(true);
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
-    service.handleError(Error('Uncaught'));
+    const error = Error('Uncaught');
+    service.handleError(error);
 
     expect(navigateSpy).toHaveBeenCalledWith(['/error', '500'], {
       state: { forceNavigation: true },
       skipLocationChange: true,
     });
+    expect(consoleErrorSpy).toHaveBeenCalledWith('ERROR', error);
+    consoleErrorSpy.mockRestore();
   });
 
   it('should handle uncaught http 404 error', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValueOnce(true);
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValueOnce(true);
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
-    service.handleError(new HttpErrorResponse({ status: 404, statusText: 'test' }));
+    const error = new HttpErrorResponse({ status: 404, statusText: 'test' });
+    service.handleError(error);
 
     expect(navigateSpy).toHaveBeenCalledWith(['/error', '404'], {
       state: { forceNavigation: true },
     });
+    expect(consoleErrorSpy).toHaveBeenCalledWith('ERROR', error);
+    consoleErrorSpy.mockRestore();
   });
 
   it('should handle the 500 error', async () => {
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValueOnce(true);
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValueOnce(true);
 
     await expect(
       firstValueFrom(service.handleHttpError(new HttpErrorResponse({ status: 500, statusText: 'test' }))),
@@ -94,7 +102,7 @@ describe('GlobalErrorHandlingService', () => {
 
   it('should handle the 403 error', async () => {
     authService.loadUserState.mockReturnValueOnce(of({ status: 'ENABLED' }));
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValueOnce(true);
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValueOnce(true);
 
     await expect(
       firstValueFrom(
@@ -113,19 +121,19 @@ describe('GlobalErrorHandlingService', () => {
     expect(authService.logout).not.toHaveBeenCalled();
   });
 
-  it('should forward not handled errors', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValueOnce(true);
+  it('should forward not handled errors', async () => {
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValueOnce(true);
     const error = new HttpErrorResponse({ status: 400, statusText: 'test' });
 
-    expect(firstValueFrom(service.handleHttpError(error))).rejects.toEqual(error);
+    await expect(firstValueFrom(service.handleHttpError(error))).rejects.toEqual(error);
     expect(navigateSpy).not.toHaveBeenCalled();
   });
 
-  it('should forward error if it is a skip url', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValueOnce(true);
+  it('should forward error if it is a skip url', async () => {
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValueOnce(true);
     const error = new HttpErrorResponse({ status: 403, statusText: 'test', url: 'localhost/account/200/header-info' });
 
-    expect(firstValueFrom(service.handleHttpError(error))).rejects.toEqual(error);
+    await expect(firstValueFrom(service.handleHttpError(error))).rejects.toEqual(error);
     expect(navigateSpy).not.toHaveBeenCalled();
   });
 });

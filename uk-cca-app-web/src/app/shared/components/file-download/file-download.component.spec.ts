@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { defer, firstValueFrom, of, take } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass, testSchedulerFactory } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import {
   FileAttachmentsService,
@@ -19,10 +20,10 @@ import { FileDownloadComponent } from './file-download.component';
 describe('FileDownloadComponent', () => {
   let component: FileDownloadComponent;
   let fixture: ComponentFixture<FileDownloadComponent>;
-  let requestTaskAttachmentsHandlingService: jest.Mocked<RequestTaskAttachmentsHandlingService>;
+  let requestTaskAttachmentsHandlingService: Mocked<RequestTaskAttachmentsHandlingService>;
 
   beforeEach(async () => {
-    Object.defineProperty(window, 'onfocus', { set: jest.fn() });
+    Object.defineProperty(window, 'onfocus', { set: vi.fn() });
     requestTaskAttachmentsHandlingService = mockClass(RequestTaskAttachmentsHandlingService);
     requestTaskAttachmentsHandlingService.generateRequestTaskGetFileAttachmentToken.mockReturnValue(
       of({ token: 'abce', tokenExpirationMinutes: 1 }),

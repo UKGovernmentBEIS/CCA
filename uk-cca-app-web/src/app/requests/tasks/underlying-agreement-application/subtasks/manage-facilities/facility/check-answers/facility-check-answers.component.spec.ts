@@ -22,7 +22,7 @@ describe('FacilityCheckAnswersComponent', () => {
 
   beforeEach(async () => {
     tasksApiService = {
-      saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+      saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
     };
 
     await TestBed.configureTestingModule({
@@ -126,6 +126,7 @@ describe('FacilityCheckAnswersComponent', () => {
                       energy: '70',
                       usedReportingMechanism: true,
                       energyCarbonFactor: '90',
+                      carbonConversionFactorMeasurement: 'kgCO2e/kWh',
                     },
                     facilityBaselineEnergyConsumption: {
                       totalFixedEnergy: '100',
@@ -191,7 +192,7 @@ describe('FacilityCheckAnswersComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should create', () => {
@@ -199,6 +200,6 @@ describe('FacilityCheckAnswersComponent', () => {
   });
 
   it('should display facility details when data is available', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

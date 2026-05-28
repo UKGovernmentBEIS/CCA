@@ -132,4 +132,17 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="0_1_0_UPDATE_TPR_TARGET_PERIOD_with_scheme_version" author="P70383">
+        <addColumn tableName="tpr_target_period">
+            <column name="scheme_version" type="varchar(8)" defaultValue="CCA_2" remarks="The scheme version where the target period belongs">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="tpr_target_period">
+                <column name="scheme_version"/>
+            </dropColumn>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

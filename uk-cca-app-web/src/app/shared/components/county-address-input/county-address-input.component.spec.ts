@@ -1,34 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
-import { of } from 'rxjs';
-
-import { changeInputValue, getInputValue, MockType } from '@netz/common/testing';
+import { changeInputValue, getInputValue } from '@netz/common/testing';
 import { TextInputComponent } from '@netz/govuk-components';
 import { CountyService } from '@shared/services';
 
 import { CountyAddressInputComponent } from './county-address-input.component';
 import { createCountyAddressControl } from './create-county-address-controls';
 
-const mockCountyService: MockType<CountyService> = {
-  getUkCounties: jest.fn().mockReturnValue(
-    of([
-      {
-        id: 1,
-        name: 'Cyprus',
-      },
-      {
-        id: 2,
-        name: 'Greece',
-      },
-      {
-        id: 3,
-        name: 'Afghanistan',
-      },
-    ]),
-  ),
+const mockCountyService: Partial<CountyService> = {
+  counties: signal([
+    { id: 1, name: 'County 1' },
+    { id: 2, name: 'County 2' },
+    { id: 3, name: 'County 3' },
+  ]),
 };
 
 describe('CountyAddressInputComponent', () => {

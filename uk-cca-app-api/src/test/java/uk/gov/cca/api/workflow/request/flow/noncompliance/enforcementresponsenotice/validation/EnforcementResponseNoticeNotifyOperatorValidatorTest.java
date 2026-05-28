@@ -1,0 +1,151 @@
+package uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.validation;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.cca.api.common.exception.CcaErrorCode;
+import uk.gov.cca.api.common.validation.BusinessValidationResult;
+import uk.gov.cca.api.workflow.request.core.domain.CcaRequestPayloadType;
+import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType;
+import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
+import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.CcaDecisionNotificationUsersValidator;
+import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.DecisionNotificationValidator;
+import uk.gov.cca.api.workflow.request.flow.common.validation.decisionnotification.DecisionNotificationViolation;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceRequestPayload;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.domain.NonComplianceEnforcementResponseNotice;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.domain.NonComplianceEnforcementResponseNoticeType;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.domain.NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
+import uk.gov.netz.api.common.exception.BusinessException;
+import uk.gov.netz.api.workflow.request.core.domain.Request;
+import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
+import uk.gov.netz.api.workflow.request.flow.common.domain.DecisionNotification;
+import uk.gov.netz.api.workflow.request.flow.common.domain.NotifyOperatorForDecisionRequestTaskActionPayload;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class EnforcementResponseNoticeNotifyOperatorValidatorTest {
+
+    @InjectMocks
+    private EnforcementResponseNoticeNotifyOperatorValidator enforcementResponseNoticeNotifyOperatorValidator;
+
+    @Mock
+    private EnforcementResponseNoticeSubmitValidator enforcementResponseNoticeSubmitValidator;
+
+    @Mock
+    private DecisionNotificationValidator decisionNotificationValidator;
+
+    @Test
+    void validate_valid() {
+        final String requestId = "requestId";
+        final String processId = "process";
+        final AppUser appUser = AppUser.builder().build();
+        final UUID fileUuid = UUID.randomUUID();
+        final NonComplianceRequestPayload requestPayload = NonComplianceRequestPayload.builder()
+                .payloadType(CcaRequestPayloadType.NON_COMPLIANCE_REQUEST_PAYLOAD)
+                .penaltyReissueNeeded(false)
+                .build();
+        final NonComplianceEnforcementResponseNotice enforcementResponseNotice = NonComplianceEnforcementResponseNotice.builder()
+                .type(NonComplianceEnforcementResponseNoticeType.PENALTY)
+                .file(fileUuid)
+                .comments("bla bla bla")
+                .build();
+
+        final DecisionNotification decisionNotification = DecisionNotification.builder().operators(Set.of("operator")).build();
+        final NotifyOperatorForDecisionRequestTaskActionPayload requestTaskActionPayload = NotifyOperatorForDecisionRequestTaskActionPayload.builder()
+                .decisionNotification(decisionNotification)
+                .payloadType(CcaRequestTaskActionPayloadType.NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD)
+                .build();
+
+        final NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload requestTaskPayload = NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload.builder()
+                .payloadType(CcaRequestTaskPayloadType.NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT_PAYLOAD)
+                .enforcementResponseNotice(enforcementResponseNotice)
+                .nonComplianceAttachments(Map.of(fileUuid, "attachment"))
+                .build();
+
+        final Request request = Request.builder()
+                .id(requestId)
+                .payload(requestPayload)
+                .build();
+
+        final RequestTask requestTask = RequestTask.builder()
+                .request(request)
+                .processTaskId(processId)
+                .payload(requestTaskPayload)
+                .build();
+
+        when(enforcementResponseNoticeSubmitValidator.validate(requestTaskPayload)).thenReturn(BusinessValidationResult.valid());
+        when(decisionNotificationValidator.validate(requestTask, decisionNotification, appUser)).thenReturn(BusinessValidationResult.valid());
+
+        // invoke
+        enforcementResponseNoticeNotifyOperatorValidator.validate(requestTask, requestTaskActionPayload, appUser);
+
+        // verify
+        verify(enforcementResponseNoticeSubmitValidator, times(1)).validate(requestTaskPayload);
+        verify(decisionNotificationValidator, times(1)).validate(requestTask, decisionNotification, appUser);
+    }
+
+    @Test
+    void validate_not_valid() {
+        final String requestId = "requestId";
+        final String processId = "process";
+        final AppUser appUser = AppUser.builder().build();
+        final UUID fileUuid = UUID.randomUUID();
+        final NonComplianceRequestPayload requestPayload = NonComplianceRequestPayload.builder()
+                .payloadType(CcaRequestPayloadType.NON_COMPLIANCE_REQUEST_PAYLOAD)
+                .penaltyReissueNeeded(false)
+                .build();
+        final NonComplianceEnforcementResponseNotice enforcementResponseNotice = NonComplianceEnforcementResponseNotice.builder()
+                .type(NonComplianceEnforcementResponseNoticeType.PENALTY)
+                .file(fileUuid)
+                .comments("bla bla bla")
+                .build();
+        final DecisionNotification decisionNotification = DecisionNotification.builder().operators(Set.of("operator")).build();
+        final NotifyOperatorForDecisionRequestTaskActionPayload requestTaskActionPayload = NotifyOperatorForDecisionRequestTaskActionPayload.builder()
+                .decisionNotification(decisionNotification)
+                .payloadType(CcaRequestTaskActionPayloadType.NOTIFY_OPERATOR_FOR_DECISION_PAYLOAD)
+                .build();
+
+        final NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload requestTaskPayload = NonComplianceEnforcementResponseNoticeSubmitRequestTaskPayload.builder()
+                .payloadType(CcaRequestTaskPayloadType.NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT_PAYLOAD)
+                .enforcementResponseNotice(enforcementResponseNotice)
+                .nonComplianceAttachments(Map.of(fileUuid, "attachment"))
+                .build();
+        final Request request = Request.builder()
+                .id(requestId)
+                .payload(requestPayload)
+                .build();
+        final RequestTask requestTask = RequestTask.builder()
+                .request(request)
+                .processTaskId(processId)
+                .payload(requestTaskPayload)
+                .build();
+
+        when(enforcementResponseNoticeSubmitValidator.validate(requestTaskPayload)).thenReturn(BusinessValidationResult.valid());
+        when(decisionNotificationValidator.validate(requestTask, decisionNotification, appUser))
+                .thenReturn(BusinessValidationResult.invalid(List.of(new DecisionNotificationViolation(CcaDecisionNotificationUsersValidator.class.getName(),
+                        DecisionNotificationViolation.DecisionNotificationViolationMessage.INVALID_NOTIFICATION_USERS))));
+
+        // invoke
+        BusinessException businessException =
+                assertThrows(BusinessException.class,
+                        () -> enforcementResponseNoticeNotifyOperatorValidator.validate(requestTask, requestTaskActionPayload, appUser));
+
+        // verify
+        assertThat(CcaErrorCode.INVALID_NON_COMPLIANCE).isEqualTo(businessException.getErrorCode());
+        verify(enforcementResponseNoticeSubmitValidator, times(1)).validate(requestTaskPayload);
+        verify(decisionNotificationValidator, times(1)).validate(requestTask, decisionNotification, appUser);
+    }
+}

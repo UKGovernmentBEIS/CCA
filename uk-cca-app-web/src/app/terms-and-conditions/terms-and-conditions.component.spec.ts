@@ -5,6 +5,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { AuthService, LatestTermsStore } from '@shared/services';
+import { Mocked } from 'vitest';
 
 import { UsersService } from 'cca-api';
 
@@ -15,8 +16,8 @@ describe('TermsAndConditionsComponent', () => {
   let httpTestingController: HttpTestingController;
   let latestTermsStore: LatestTermsStore;
 
-  const authService: Partial<jest.Mocked<AuthService>> = {
-    loadUserTerms: jest.fn(() => of({})),
+  const authService: Partial<Mocked<AuthService>> = {
+    loadUserTerms: vi.fn(() => of({})),
   };
 
   beforeEach(async () => {
@@ -42,6 +43,6 @@ describe('TermsAndConditionsComponent', () => {
   afterEach(() => httpTestingController.verify());
 
   it('should create', () => {
-    expect(fixture.nativeElement).toMatchSnapshot('terms-and-conditions ');
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot('terms-and-conditions ');
   });
 });

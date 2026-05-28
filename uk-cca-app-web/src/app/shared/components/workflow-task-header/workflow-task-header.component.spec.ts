@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 
 import { RequestTaskStore } from '@netz/common/store';
 import { getByTestId, queryByTestId } from '@testing';
+import { Mocked } from 'vitest';
 
 import { TasksService } from 'cca-api';
 
@@ -16,11 +17,11 @@ describe('WorkflowTaskHeaderComponent', () => {
   describe('with requestTaskStore requestInfo data inside a workflow', () => {
     let fixture: ComponentFixture<WorkflowTaskHeaderComponent>;
     let requestTaskStore: RequestTaskStore;
-    let tasksService: jest.Mocked<Partial<TasksService>>;
+    let tasksService: Mocked<Partial<TasksService>>;
 
     beforeEach(async () => {
       tasksService = {
-        getRequestTaskHeaderInfo: jest.fn().mockReturnValue(of(mockWorkflowTaskHeaderInfo)),
+        getRequestTaskHeaderInfo: vi.fn().mockReturnValue(of(mockWorkflowTaskHeaderInfo)),
       };
 
       await TestBed.configureTestingModule({
@@ -61,11 +62,11 @@ describe('WorkflowTaskHeaderComponent', () => {
   describe('without requestTaskStore requestInfo data ', () => {
     let fixture: ComponentFixture<WorkflowTaskHeaderComponent>;
     let requestTaskStore: RequestTaskStore;
-    let tasksService: jest.Mocked<Partial<TasksService>>;
+    let tasksService: Mocked<Partial<TasksService>>;
 
     beforeEach(async () => {
       tasksService = {
-        getRequestTaskHeaderInfo: jest.fn().mockReturnValue(of(null)),
+        getRequestTaskHeaderInfo: vi.fn().mockReturnValue(of(null)),
       };
 
       await TestBed.configureTestingModule({

@@ -1,9 +1,8 @@
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal, viewChild } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { BehaviorSubject, filter, startWith, take } from 'rxjs';
+import { filter, startWith, take } from 'rxjs';
 
 import { PageHeadingComponent } from '@netz/common/components';
 import { PendingButtonDirective } from '@netz/common/directives';
@@ -14,7 +13,6 @@ import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
   templateUrl: './wizard-step.component.html',
   imports: [
     ReactiveFormsModule,
-    AsyncPipe,
     PageHeadingComponent,
     PendingButtonDirective,
     RouterLink,
@@ -37,7 +35,7 @@ export class WizardStepComponent {
 
   protected readonly errorSummaryEl = viewChild(ErrorSummaryComponent);
 
-  protected readonly isSummaryDisplayedSubject = new BehaviorSubject(false);
+  protected readonly isSummaryDisplayedSubject = signal(false);
 
   onSubmit(): void {
     this.formGroup()
@@ -54,7 +52,7 @@ export class WizardStepComponent {
 
           case 'INVALID':
             this.formGroup().markAllAsTouched();
-            this.isSummaryDisplayedSubject.next(true);
+            this.isSummaryDisplayedSubject.set(true);
             this.errorSummaryEl()?.container()?.nativeElement.focus();
             break;
         }

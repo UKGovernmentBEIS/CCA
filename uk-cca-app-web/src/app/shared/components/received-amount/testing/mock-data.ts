@@ -1,6 +1,6 @@
-import { SectorMoasReceivedAmountState } from '../received-amount.store';
+import { ReceivedAmountState } from '../received-amount.store';
 
-export const mockReceivedAmountStoreState: SectorMoasReceivedAmountState = {
+export const mockReceivedAmountStoreState: ReceivedAmountState = {
   transactionId: 'CCACM01201',
   businessId: 'ADS_52',
   name: 'Aerospace_52',

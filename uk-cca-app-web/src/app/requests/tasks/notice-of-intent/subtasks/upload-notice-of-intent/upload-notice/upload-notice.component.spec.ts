@@ -26,16 +26,16 @@ describe('UploadNoticeComponent', () => {
   const route = new ActivatedRouteStub({ taskId: '123' });
 
   const tasksApiService = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   const requestTaskFileService = {
-    buildFormControl: jest.fn().mockReturnValue(new FormControl(null)),
+    buildFormControl: vi.fn().mockReturnValue(new FormControl(null)),
   };
 
   const initialPayload: NonComplianceNoticeOfIntentSubmitRequestTaskPayload = {
     payloadType: 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT_PAYLOAD',
-    noticeOfIntent: { noticeOfIntentFile: 'uuid-1', comments: 'Existing comments' },
+    noticeOfIntent: { file: 'uuid-1', comments: 'Existing comments' },
     nonComplianceAttachments: { 'uuid-1': 'existing-notice.pdf', 'uuid-2': 'updated-notice.pdf' },
     sectionsCompleted: {},
   };
@@ -51,7 +51,7 @@ describe('UploadNoticeComponent', () => {
         {
           provide: Router,
           useValue: {
-            navigate: jest.fn(),
+            navigate: vi.fn(),
             url: '/test/upload-notice',
             events: of({}),
             createUrlTree: () => ({}),
@@ -103,7 +103,7 @@ describe('UploadNoticeComponent', () => {
 
   it('should save the updated notice and navigate to check your answers', () => {
     component['form'].setValue({
-      noticeOfIntentFile: { uuid: 'uuid-2', file: { name: 'updated-notice.pdf' } as File },
+      file: { uuid: 'uuid-2', file: { name: 'updated-notice.pdf' } as File },
       comments: 'Updated comments',
     });
 
@@ -115,7 +115,7 @@ describe('UploadNoticeComponent', () => {
       requestTaskActionPayload: {
         payloadType: 'NON_COMPLIANCE_NOTICE_OF_INTENT_SAVE_PAYLOAD',
         noticeOfIntent: {
-          noticeOfIntentFile: 'uuid-2',
+          file: 'uuid-2',
           comments: 'Updated comments',
         },
         sectionsCompleted: {

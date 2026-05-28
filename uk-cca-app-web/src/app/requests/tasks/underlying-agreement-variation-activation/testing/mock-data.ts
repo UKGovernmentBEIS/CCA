@@ -39,8 +39,6 @@ export const mockRequestTaskItemDTO: RequestTaskItemDTO = {
   requestInfo: {
     id: 'ADS_53-T00002-UNA',
     type: 'UNDERLYING_AGREEMENT',
-    competentAuthority: 'ENGLAND',
-    accountId: 15,
     requestMetadata: {
       type: 'UNDERLYING_AGREEMENT',
     },

@@ -76,7 +76,7 @@ function update(
 ): NonComplianceNoticeOfIntentSubmitSaveRequestTaskActionPayload {
   return produce(payload, (draft) => {
     draft.noticeOfIntent = {
-      noticeOfIntentFile: form.controls.noticeOfIntentFile.value?.uuid ?? null,
+      file: form.controls.file.value?.uuid ?? null,
       comments: form.controls.comments.value ?? null,
     };
   });

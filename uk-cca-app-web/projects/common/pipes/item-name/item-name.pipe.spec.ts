@@ -94,6 +94,26 @@ describe('ItemNamePipe', () => {
 
     expect(pipe.transform('NON_COMPLIANCE_DETAILS_SUBMIT')).toEqual('Provide non-compliance details');
     expect(pipe.transform('NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT')).toEqual('Upload notice of intent');
+    expect(pipe.transform('NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT')).toEqual(
+      'Upload enforcement response notice',
+    );
+    expect(pipe.transform('NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW')).toEqual(
+      'Peer review notice of intent',
+    );
+    expect(pipe.transform('NON_COMPLIANCE_NOTICE_OF_INTENT_WAIT_FOR_PEER_REVIEW')).toEqual(
+      'Notice of intent sent for peer review',
+    );
+    expect(pipe.transform('NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_APPLICATION_PEER_REVIEW')).toEqual(
+      'Peer review enforcement response notice',
+    );
+    expect(pipe.transform('NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_WAIT_FOR_PEER_REVIEW')).toEqual(
+      'Enforcement response notice sent for peer review',
+    );
+    expect(pipe.transform('NON_COMPLIANCE_APPEAL_OUTCOME_SUBMIT')).toEqual('Provide appeal outcome');
+
+    expect(pipe.transform('PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT')).toEqual(
+      'Target period reporting (TPR) form',
+    );
 
     expect(pipe.transform(null)).toBeNull();
   });

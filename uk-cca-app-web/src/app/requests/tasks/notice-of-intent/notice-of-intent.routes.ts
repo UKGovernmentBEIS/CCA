@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { isEditableGuard, isEditableSummaryRedirectGuard } from '@requests/common';
+import { CLOSE_TASK_ROUTES, isEditableGuard } from '@requests/common';
 
 export const NOTICE_OF_INTENT_ROUTES: Routes = [
   {
@@ -9,7 +9,6 @@ export const NOTICE_OF_INTENT_ROUTES: Routes = [
       {
         path: 'upload-notice-of-intent',
         title: 'Upload notice of intent',
-        canActivate: [isEditableSummaryRedirectGuard],
         loadChildren: () =>
           import('./subtasks/upload-notice-of-intent/upload-notice-of-intent.routes').then(
             (r) => r.UPLOAD_NOTICE_OF_INTENT_ROUTES,
@@ -33,6 +32,7 @@ export const NOTICE_OF_INTENT_ROUTES: Routes = [
             (r) => r.NOTICE_OF_INTENT_SEND_FOR_PEER_REVIEW_ROUTES,
           ),
       },
+      ...CLOSE_TASK_ROUTES,
     ],
   },
 ];

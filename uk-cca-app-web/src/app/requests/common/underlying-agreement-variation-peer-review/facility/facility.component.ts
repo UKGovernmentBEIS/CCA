@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PageHeadingComponent, ReturnToTaskOrActionPageComponent } from '@netz/common/components';
 import { RequestTaskStore } from '@netz/common/store';
 import { SummaryComponent } from '@shared/components';
+import { CountryService } from '@shared/services';
 import { SchemeVersion } from '@shared/types';
 
 import { toFacilityWizardSummaryDataWithDecisionAndStatus } from '../../underlying-agreement';
@@ -27,6 +28,8 @@ import { underlyingAgreementVariationPeerReviewQuery } from '../underlying-agree
 export class FacilityComponent {
   private readonly requestTaskStore = inject(RequestTaskStore);
   private readonly route = inject(ActivatedRoute);
+
+  private readonly countries = inject(CountryService).countries;
 
   private readonly facilityId = this.route.snapshot.params.facilityId;
 
@@ -54,6 +57,7 @@ export class FacilityComponent {
       this.requestTaskStore.select(
         underlyingAgreementVariationPeerReviewQuery.selectFacilityDecision(this.facilityId),
       )(),
+      this.countries(),
       {
         submit: this.requestTaskStore.select(
           underlyingAgreementVariationPeerReviewQuery.selectUnderlyingAgreementVariationAttachments,

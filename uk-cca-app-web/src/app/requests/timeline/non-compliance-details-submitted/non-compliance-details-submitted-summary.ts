@@ -1,14 +1,23 @@
 import { DatePipe } from '@angular/common';
 
+import { formatRelevantFacility, formatRelevantWorkflow, NON_COMPLIANCE_TYPE_LABELS } from '@requests/common';
 import { SummaryData, SummaryFactory } from '@shared/components';
 
 import { NonComplianceDetails } from 'cca-api';
 
-import { NON_COMPLIANCE_TYPE_LABELS } from '../../tasks/non-compliance-details/non-compliance-type-labels';
-
-export function toNonComplianceDetailsSubmittedSummaryData(details: NonComplianceDetails): SummaryData {
+export function toNonComplianceDetailsSubmittedSummaryData(
+  details: NonComplianceDetails,
+  allRelevantWorkflows: Record<string, string> = {},
+  allRelevantFacilities: Record<string, string> = {},
+): SummaryData {
   const datePipe = new DatePipe('en-GB');
   const summary = new SummaryFactory();
+  const relevantWorkflows = details.relevantWorkflows?.map((workflowId) =>
+    formatRelevantWorkflow(workflowId, allRelevantWorkflows),
+  );
+  const relevantFacilities = details.relevantFacilities?.map((facility) =>
+    formatRelevantFacility(facility, allRelevantFacilities),
+  );
 
   summary
     .addSection('Details')
@@ -19,15 +28,12 @@ export function toNonComplianceDetailsSubmittedSummaryData(details: NonComplianc
 
   summary.addSection('Relevant items of non-compliance');
 
-  if (details.relevantWorkflows?.length) {
-    summary.addRow('Relevant tasks or workflows', details.relevantWorkflows);
+  if (relevantWorkflows?.length) {
+    summary.addRow('Relevant tasks or workflows', relevantWorkflows);
   }
 
-  if (details.relevantFacilities?.length) {
-    summary.addRow(
-      'Relevant facilities',
-      details.relevantFacilities.map((facility) => facility.facilityBusinessId),
-    );
+  if (relevantFacilities?.length) {
+    summary.addRow('Relevant facilities', relevantFacilities);
   }
 
   summary

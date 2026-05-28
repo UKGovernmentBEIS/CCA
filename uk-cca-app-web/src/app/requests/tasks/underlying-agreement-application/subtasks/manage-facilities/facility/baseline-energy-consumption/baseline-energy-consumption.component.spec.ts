@@ -30,21 +30,22 @@ describe('BaselineEnergyConsumptionComponent', () => {
 
   beforeEach(() => {
     tasksApiService = {
-      saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+      saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
     };
 
     draftService = {
-      initializeFromStore: jest.fn(),
-      draftSignal: jest.fn().mockReturnValue({
+      initializeFromStore: vi.fn(),
+      draftSignal: vi.fn().mockReturnValue({
         totalFixedEnergy: '100.1234567',
         hasVariableEnergy: true,
         variableEnergyType: 'TOTALS',
         products: [],
       }) as any,
-      saveFormSnapshot: jest.fn(),
-      setProducts: jest.fn(),
-      removeProduct: jest.fn(),
-      clear: jest.fn(),
+      updateTotalFixedEnergy: vi.fn(),
+      saveFormSnapshot: vi.fn(),
+      setProducts: vi.fn(),
+      removeProduct: vi.fn(),
+      clear: vi.fn(),
     };
 
     const formBuilder = new FormBuilder();
@@ -79,7 +80,7 @@ describe('BaselineEnergyConsumptionComponent', () => {
 
     store = TestBed.inject(RequestTaskStore);
 
-    jest.spyOn(store, 'select').mockImplementation((selector) => {
+    vi.spyOn(store, 'select').mockImplementation((selector) => {
       if (selector === requestTaskQuery.selectRequestTaskPayload) {
         return signal(mockRequestTaskPayload);
       }
@@ -111,7 +112,7 @@ describe('BaselineEnergyConsumptionComponent', () => {
   });
 
   it('should render the form with the correct initial values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 
   it('should have the correct form controls', () => {
@@ -142,7 +143,7 @@ describe('BaselineEnergyConsumptionComponent', () => {
   });
 
   it('should call saveRequestTaskAction on form submit', () => {
-    const onSubmitSpy = jest.spyOn(component, 'onSubmit');
+    const onSubmitSpy = vi.spyOn(component, 'onSubmit');
     component.onSubmit();
     expect(onSubmitSpy).toHaveBeenCalled();
   });

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.enforcementresponsenotice.service.EnforcementResponseNoticeNotifyOperatorService;
 import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 
 import static org.mockito.Mockito.times;
@@ -21,7 +22,9 @@ class NonComplianceEnforcementResponseNoticeHandlerFlowableTest {
     @Mock
     private DelegateExecution execution;
 
-    // TODO: add services
+    @Mock
+    private EnforcementResponseNoticeNotifyOperatorService enforcementResponseNoticeNotifyOperatorService;
+
     @Test
     void execute() {
         String requestId = "1";
@@ -32,5 +35,6 @@ class NonComplianceEnforcementResponseNoticeHandlerFlowableTest {
 
         // Verify
         verify(execution, times(1)).getVariable(BpmnProcessConstants.REQUEST_ID);
+        verify(enforcementResponseNoticeNotifyOperatorService, times(1)).sendEnforcementResponseNotice(requestId);
     }
 }

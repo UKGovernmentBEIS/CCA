@@ -1,0 +1,35 @@
+<cca-wizard-step (formSubmit)="onSubmit()" [formGroup]="form" heading="Provide appeal details">
+  <div class="govuk-!-width-two-thirds">
+    <p class="govuk-body">
+      You need to provide the details of the initial registration of the appeal in order to put the non-compliance
+      conclusion on hold.
+    </p>
+    <p class="govuk-body">When you finish, a new task will be generated to fill in the outcome of the appeal.</p>
+
+    <div
+      govuk-date-input
+      formControlName="registrationDate"
+      label="When was the appeal registered?"
+      hint="The date must be today or in the past"
+      [max]="today"
+    ></div>
+
+    <cca-multiple-file-input
+      formControlName="files"
+      [baseDownloadUrl]="downloadUrl()"
+      label="Upload appeal file (optional)"
+      hint="Your document must be a DOC, DOCX, XLS, XLSX, PPT, PPTX, VSD, VSDX, JPG, JPEG, PDF, PNG, TIF, TXT, DXF, BMP or CSV file, no more than 20MB."
+    />
+
+    <div
+      govuk-textarea
+      formControlName="comments"
+      label="Comments (optional)"
+      labelSize="medium"
+      [maxLength]="10000"
+    ></div>
+  </div>
+</cca-wizard-step>
+
+<hr class="govuk-footer__section-break govuk-!-margin-bottom-3" />
+<netz-return-to-task-or-action-page />

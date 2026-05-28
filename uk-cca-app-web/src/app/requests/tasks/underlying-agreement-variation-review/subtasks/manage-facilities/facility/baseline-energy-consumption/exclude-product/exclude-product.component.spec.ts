@@ -26,20 +26,20 @@ describe('ExcludeProductComponent', () => {
 
   beforeEach(() => {
     draftService = {
-      initializeFromStore: jest.fn(),
-      draftSignal: jest.fn().mockReturnValue({
+      initializeFromStore: vi.fn(),
+      draftSignal: vi.fn().mockReturnValue({
         totalFixedEnergy: '100',
         hasVariableEnergy: true,
         variableEnergyType: 'BY_PRODUCT',
         products: [],
       }) as any,
-      saveFormSnapshot: jest.fn(),
-      setProducts: jest.fn(),
-      removeProduct: jest.fn(),
-      excludeProduct: jest.fn(),
-      undoExcludeProduct: jest.fn(),
-      updateTotalFixedEnergy: jest.fn(),
-      clear: jest.fn(),
+      saveFormSnapshot: vi.fn(),
+      setProducts: vi.fn(),
+      removeProduct: vi.fn(),
+      excludeProduct: vi.fn(),
+      undoExcludeProduct: vi.fn(),
+      updateTotalFixedEnergy: vi.fn(),
+      clear: vi.fn(),
     };
 
     TestBed.configureTestingModule({
@@ -56,7 +56,7 @@ describe('ExcludeProductComponent', () => {
     store = TestBed.inject(RequestTaskStore);
     router = TestBed.inject(Router);
 
-    jest.spyOn(store, 'select').mockImplementation((selector) => {
+    vi.spyOn(store, 'select').mockImplementation((selector) => {
       if (selector === requestTaskQuery.selectRequestTaskPayload) {
         return signal(mockRequestTaskPayload);
       }
@@ -92,7 +92,7 @@ describe('ExcludeProductComponent', () => {
   });
 
   it('should render the component with the correct content', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 
   it('should display the product name in the heading', () => {
@@ -118,7 +118,7 @@ describe('ExcludeProductComponent', () => {
   });
 
   it('should call draftService.excludeProduct when exclude button is clicked', () => {
-    jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     const button = fixture.nativeElement.querySelector('.govuk-button--warning');
     button.click();
     expect(draftService.excludeProduct).toHaveBeenCalledWith('Product 1');

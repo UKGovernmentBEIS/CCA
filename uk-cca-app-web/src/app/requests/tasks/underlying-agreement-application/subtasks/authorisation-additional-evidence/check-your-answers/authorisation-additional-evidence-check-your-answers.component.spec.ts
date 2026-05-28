@@ -28,7 +28,7 @@ describe('CheckYourAnswersComponent', () => {
 
   beforeEach(async () => {
     tasksApiService = {
-      saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+      saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
     };
 
     await TestBed.configureTestingModule({
@@ -46,7 +46,7 @@ describe('CheckYourAnswersComponent', () => {
     store = TestBed.inject(RequestTaskStore);
 
     // Initialize state for the component to work with
-    jest.spyOn(store, 'select').mockImplementation((selector) => {
+    vi.spyOn(store, 'select').mockImplementation((selector) => {
       if (selector === underlyingAgreementQuery.selectAuthorisationAndAdditionalEvidence) {
         return signal({
           authorisationAttachmentIds: ['auth1'],

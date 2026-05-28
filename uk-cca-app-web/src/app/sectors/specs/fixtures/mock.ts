@@ -143,12 +143,12 @@ export const mockSectorUserDetails: SectorUserAuthorityDetailsDTO = {
   lastName: 'user',
   status: 'REGISTERED',
   phoneNumber: {
-    countryCode: '0044',
-    number: '1234567890',
+    countryCode: '44',
+    number: '7123456789',
   },
   mobileNumber: {
-    countryCode: '0044',
-    number: '1234567890',
+    countryCode: '44',
+    number: '7123456789',
   },
   contactType: 'SECTOR_ASSOCIATION',
   organisationName: 'org',
@@ -200,14 +200,14 @@ export const duplicateEmailResponse = {
   code: 'AUTHORITY1005',
   message: 'User status cannot be updated',
   security: true,
-  data: [[]],
+  data: [],
 };
 
 export const userAlreadyExists = {
   code: 'USER1001',
   message: 'User is already registered',
   security: true,
-  data: [[]],
+  data: [],
 };
 
 export const mockPhoneCodeCoutries = {

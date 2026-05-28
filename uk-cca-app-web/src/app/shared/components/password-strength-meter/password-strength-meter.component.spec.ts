@@ -2,6 +2,8 @@ import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
+import { Mocked } from 'vitest';
+
 import { PasswordStrengthMeterComponent } from './password-strength-meter.component';
 import { PasswordStrengthMeterService } from './password-strength-meter.service';
 
@@ -9,12 +11,12 @@ describe('PasswordStrengthMeterComponent', () => {
   let component: PasswordStrengthMeterComponent;
   let componentRef: ComponentRef<PasswordStrengthMeterComponent>;
   let fixture: ComponentFixture<PasswordStrengthMeterComponent>;
-  let passwordStrengthMeterService: Partial<jest.Mocked<PasswordStrengthMeterService>>;
+  let passwordStrengthMeterService: Partial<Mocked<PasswordStrengthMeterService>>;
 
   beforeEach(async () => {
     passwordStrengthMeterService = {
-      score: jest.fn(),
-      scoreWithFeedback: jest.fn(),
+      score: vi.fn(),
+      scoreWithFeedback: vi.fn(),
     };
 
     await TestBed.configureTestingModule({

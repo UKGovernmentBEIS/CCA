@@ -6,7 +6,7 @@ export const NOTICE_OF_INTENT_SEND_FOR_PEER_REVIEW_ROUTES: Routes = [
   {
     path: '',
     resolve: {
-      candidateAssignees: createCandidateAssigneesResolver('NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW'),
+      candidateAssignees: createCandidateAssigneesResolver('NON_COMPLIANCE_NOTICE_OF_INTENT_APPLICATION_PEER_REVIEW'),
     },
     children: [
       {
@@ -19,7 +19,7 @@ export const NOTICE_OF_INTENT_SEND_FOR_PEER_REVIEW_ROUTES: Routes = [
       {
         path: 'confirmation/:assigneeId',
         title: 'Peer review request sent',
-        data: { backlink: false, breadcrumb: false },
+        data: { backlink: false, breadcrumb: false, confirmationPrefix: 'Application sent to' },
         loadComponent: () => import('@requests/common').then((c) => c.PeerReviewConfirmationComponent),
       },
     ],

@@ -6,6 +6,7 @@ import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub, mockClass } from '@netz/common/testing';
+import { Mocked } from 'vitest';
 
 import { MiReportsUserDefinedService, MiReportUserDefinedDTO } from 'cca-api';
 
@@ -14,7 +15,7 @@ import { DeleteMiReportComponent } from './delete-mi-report.component';
 describe('DeleteMiReportComponent', () => {
   let component: DeleteMiReportComponent;
   let fixture: ComponentFixture<DeleteMiReportComponent>;
-  let miReportsUserDefinedService: jest.Mocked<MiReportsUserDefinedService>;
+  let miReportsUserDefinedService: Mocked<MiReportsUserDefinedService>;
   let router: Router;
 
   const mockQuery: MiReportUserDefinedDTO = {
@@ -25,7 +26,7 @@ describe('DeleteMiReportComponent', () => {
 
   beforeEach(async () => {
     const mockMiReportsUserDefinedService = mockClass(MiReportsUserDefinedService);
-    mockMiReportsUserDefinedService.deleteMiReportUserDefined = jest.fn().mockReturnValue(of({}));
+    mockMiReportsUserDefinedService.deleteMiReportUserDefined = vi.fn().mockReturnValue(of({}));
 
     const mockActivatedRoute = new ActivatedRouteStub({ queryId: '42' }, null, { query: mockQuery });
 
@@ -40,11 +41,9 @@ describe('DeleteMiReportComponent', () => {
       ],
     }).compileComponents();
 
-    miReportsUserDefinedService = TestBed.inject(
-      MiReportsUserDefinedService,
-    ) as jest.Mocked<MiReportsUserDefinedService>;
+    miReportsUserDefinedService = TestBed.inject(MiReportsUserDefinedService) as Mocked<MiReportsUserDefinedService>;
     router = TestBed.inject(Router);
-    jest.spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate');
 
     fixture = TestBed.createComponent(DeleteMiReportComponent);
     component = fixture.componentInstance;
@@ -97,7 +96,7 @@ describe('DeleteMiReportComponent', () => {
   });
 
   it('should call onDelete when delete button is clicked', () => {
-    jest.spyOn(component, 'onDelete');
+    vi.spyOn(component, 'onDelete');
     const compiled = fixture.nativeElement;
     const deleteButton = compiled.querySelector('button');
 

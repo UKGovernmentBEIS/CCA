@@ -43,9 +43,15 @@ describe('TimelineItemLinkPipe', () => {
 
       'UNDERLYING_AGREEMENT_VARIATION_REGULATOR_LED_APPLICATION_PEER_REVIEW_REQUESTED',
 
+      'NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW_REQUESTED',
+
+      'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEW_REQUESTED',
+
       'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING_ACTIVATION_CANCELLED',
 
       'FACILITY_AUDIT_CANCELLED',
+
+      'NON_COMPLIANCE_CANCELLED',
     ];
 
     noLinkActionTypes.forEach((type) => {
@@ -183,6 +189,41 @@ describe('TimelineItemLinkPipe', () => {
 
   it('should return link for non-compliance details', () => {
     requestAction.type = 'NON_COMPLIANCE_DETAILS_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+  });
+
+  it('should return link for non-compliance notice of intent', () => {
+    requestAction.type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEWER_ACCEPTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEWER_REJECTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEWER_ACCEPTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_PEER_REVIEWER_REJECTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NON_COMPLIANCE_CONCLUSION_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NON_COMPLIANCE_APPEAL_PROVIDED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NON_COMPLIANCE_APPEAL_DETAILS_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NON_COMPLIANCE_APPEAL_OUTCOME_SUBMITTED';
+    expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
+
+    requestAction.type = 'NON_COMPLIANCE_CLOSED';
     expect(pipe.transform(requestAction, true)).toEqual(['./timeline', requestAction.id]);
   });
 

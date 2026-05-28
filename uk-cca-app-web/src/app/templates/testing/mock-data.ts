@@ -11,10 +11,10 @@ import {
 export const activatedRouteMock = {
   snapshot: {
     paramMap: {
-      get: jest.fn().mockReturnValue(null),
+      get: vi.fn().mockReturnValue(null),
     },
     queryParamMap: {
-      get: jest.fn().mockImplementation((param) => {
+      get: vi.fn().mockImplementation((param) => {
         if (param === 'page') return '1';
         if (param === 'pageSize') return '30';
         return null;
@@ -22,7 +22,7 @@ export const activatedRouteMock = {
     },
   },
   queryParamMap: of({
-    get: jest.fn().mockImplementation((param) => {
+    get: vi.fn().mockImplementation((param) => {
       if (param === 'page') return '1';
       if (param === 'pageSize') return '30';
       return null;

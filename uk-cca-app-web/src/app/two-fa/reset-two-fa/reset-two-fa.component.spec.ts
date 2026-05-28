@@ -14,6 +14,10 @@ describe('ResetTwoFaComponent', () => {
   let fixture: ComponentFixture<ResetTwoFaComponent>;
   let page: Page;
 
+  const setHistoryState = (state: Record<string, unknown>) => {
+    window.history.replaceState(state, 'test');
+  };
+
   const regulatorUsersService = mockClass(RegulatorUsersService);
   const operatorUsersService = mockClass(OperatorUsersService);
   const sectorUsersService = mockClass(SectorUsersService);
@@ -28,6 +32,8 @@ describe('ResetTwoFaComponent', () => {
   }
 
   beforeEach(async () => {
+    setHistoryState({ userId: '1234', accountId: '1234', userName: 'Test User', role: 'REGULATOR' });
+
     await TestBed.configureTestingModule({
       imports: [ResetTwoFaComponent],
       providers: [
@@ -49,10 +55,9 @@ describe('ResetTwoFaComponent', () => {
   });
 
   it('should reset 2fa after clicking button', () => {
-    jest.spyOn(fixture.componentInstance, 'reset');
+    vi.spyOn(fixture.componentInstance, 'reset');
     regulatorUsersService.resetRegulator2Fa.mockReturnValueOnce(of());
     operatorUsersService.resetOperator2Fa.mockReturnValueOnce(of());
-    window.history.pushState({ userId: '1234', accountId: '1234', role: 'REGULATOR' }, 'yes');
 
     expect(page.heading).toBeTruthy();
     expect(page.heading.textContent.trim()).toContain('Are you sure you want to reset two-factor authentication');
@@ -63,7 +68,7 @@ describe('ResetTwoFaComponent', () => {
     expect(component.reset).toHaveBeenCalledTimes(1);
     expect(regulatorUsersService.resetRegulator2Fa).toHaveBeenCalledTimes(1);
 
-    window.history.pushState({ role: 'OPERATOR' }, 'yes');
+    setHistoryState({ userId: '1234', accountId: '1234', userName: 'Test User', role: 'OPERATOR' });
     page.submitButton.click();
     fixture.detectChanges();
 

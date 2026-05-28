@@ -25,18 +25,18 @@ describe('DeleteProductComponent', () => {
 
   beforeEach(() => {
     draftService = {
-      initializeFromStore: jest.fn(),
-      draftSignal: jest.fn().mockReturnValue({
+      initializeFromStore: vi.fn(),
+      draftSignal: vi.fn().mockReturnValue({
         totalFixedEnergy: '100',
         hasVariableEnergy: true,
         variableEnergyType: 'BY_PRODUCT',
         products: [],
       }) as any,
-      saveFormSnapshot: jest.fn(),
-      setProducts: jest.fn(),
-      removeProduct: jest.fn(),
-      updateTotalFixedEnergy: jest.fn(),
-      clear: jest.fn(),
+      saveFormSnapshot: vi.fn(),
+      setProducts: vi.fn(),
+      removeProduct: vi.fn(),
+      updateTotalFixedEnergy: vi.fn(),
+      clear: vi.fn(),
     };
 
     TestBed.configureTestingModule({
@@ -53,7 +53,7 @@ describe('DeleteProductComponent', () => {
     store = TestBed.inject(RequestTaskStore);
     router = TestBed.inject(Router);
 
-    jest.spyOn(store, 'select').mockImplementation((selector) => {
+    vi.spyOn(store, 'select').mockImplementation((selector) => {
       if (selector === requestTaskQuery.selectRequestTaskPayload) {
         return signal(mockRequestTaskPayloadWithProducts);
       }
@@ -86,7 +86,7 @@ describe('DeleteProductComponent', () => {
   });
 
   it('should render the delete confirmation', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 
   it('should display product name in heading', () => {
@@ -125,13 +125,13 @@ describe('DeleteProductComponent', () => {
   });
 
   it('should call draftService.removeProduct when onDelete is called', () => {
-    jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
     component.onDelete();
     expect(draftService.removeProduct).toHaveBeenCalledWith('Product 1');
   });
 
   it('should navigate after deletion', () => {
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
     component.onDelete();
     expect(navigateSpy).toHaveBeenCalledWith(['../..'], expect.any(Object));
   });

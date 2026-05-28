@@ -29,7 +29,7 @@ describe('CountryService', () => {
   let service: CountryService;
 
   const mockReferenceDataService = {
-    getReferenceData: jest.fn().mockReturnValue(of({ COUNTRIES: mockCountries })),
+    getReferenceData: vi.fn().mockReturnValue(of({ COUNTRIES: mockCountries })),
   };
 
   beforeEach(() => {

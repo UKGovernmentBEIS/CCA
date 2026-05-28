@@ -41,6 +41,6 @@ describe('TargetUnitComponent', () => {
   });
 
   it('should display correct view', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

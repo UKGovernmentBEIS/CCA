@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uk.gov.cca.api.common.domain.AgreementType;
 import uk.gov.netz.api.common.validation.SpELExpression;
 
 import java.util.UUID;

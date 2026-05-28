@@ -3,17 +3,17 @@ package uk.gov.cca.api.workflow.request.application.task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import uk.gov.cca.api.account.domain.dto.AdditionalNoticeRecipientDTO;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientDTO;
 import uk.gov.cca.api.account.domain.dto.NoticeRecipientType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskType;
-import uk.gov.cca.api.workflow.request.flow.common.service.notification.RequestTaskDefaultNoticeRecipients;
+import uk.gov.cca.api.workflow.request.flow.common.service.notification.AdditionalNoticeRecipientsService;
 import uk.gov.cca.api.workflow.request.flow.common.service.notification.TargetUnitAccountNoticeRecipients;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.common.service.NonComplianceRequestTaskAdditionalNoticeRecipients;
 import uk.gov.cca.api.workflow.request.flow.underlyingagreement.underlyingagreementissuance.review.service.UnderlyingAgreementReviewDefaultNoticeRecipients;
+import uk.gov.netz.api.authorization.core.domain.AppUser;
 import uk.gov.netz.api.authorization.rules.domain.ResourceType;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestResource;
@@ -22,6 +22,7 @@ import uk.gov.netz.api.workflow.request.core.domain.RequestTaskType;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -32,18 +33,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static uk.gov.netz.api.common.constants.RoleTypeConstants.REGULATOR;
 
 @ExtendWith(MockitoExtension.class)
 class RequestTaskRecipientsServiceTest {
 
-    @InjectMocks
     private RequestTaskRecipientsService service;
 
     @Mock
     private RequestTaskService requestTaskService;
-
-    @Spy
-    private ArrayList<RequestTaskDefaultNoticeRecipients> requestTaskDefaultNoticeRecipients;
 
     @Mock
     private UnderlyingAgreementReviewDefaultNoticeRecipients underlyingAgreementReviewDefaultNoticeRecipients;
@@ -51,9 +49,21 @@ class RequestTaskRecipientsServiceTest {
     @Mock
     private TargetUnitAccountNoticeRecipients targetUnitAccountNoticeRecipients;
 
+    @Mock
+    private NonComplianceRequestTaskAdditionalNoticeRecipients nonComplianceRequestTaskAdditionalNoticeRecipients;
+
+    @Mock
+    private AdditionalNoticeRecipientsService additionalNoticeRecipientsService;
+
     @BeforeEach
     void setUp() {
-        requestTaskDefaultNoticeRecipients.add(underlyingAgreementReviewDefaultNoticeRecipients);
+        this.service = new RequestTaskRecipientsService(
+                this.requestTaskService,
+                List.of(this.underlyingAgreementReviewDefaultNoticeRecipients),
+                this.targetUnitAccountNoticeRecipients,
+                List.of(this.nonComplianceRequestTaskAdditionalNoticeRecipients),
+                this.additionalNoticeRecipientsService
+        );
     }
 
     @Test
@@ -168,13 +178,95 @@ class RequestTaskRecipientsServiceTest {
                 .getNoticeRecipients(accountId);
     }
 
-	private void addResourcesToRequest(Long accountId, Request request) {
-		RequestResource accountResource = RequestResource.builder()
-				.resourceType(ResourceType.ACCOUNT)
-				.resourceId(accountId.toString())
-				.request(request)
-				.build();
+    @Test
+    void getAdditionalNoticeRecipients() {
+        final AppUser user = AppUser.builder().userId("userId").roleType(REGULATOR).build();
+        final long taskId = 1L;
+        final Long accountId = 11L;
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
+        final RequestTask requestTask = RequestTask.builder()
+                .id(taskId)
+                .type(RequestTaskType.builder()
+                        .code(CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT)
+                        .build())
+                .request(request)
+                .build();
+
+        final List<AdditionalNoticeRecipientDTO> expected = Collections.singletonList(AdditionalNoticeRecipientDTO.builder()
+                .userId("id1")
+                .firstName("fn")
+                .lastName("ln")
+                .email("email")
+                .type(NoticeRecipientType.OPERATOR)
+                .build());
+
+
+        when(requestTaskService.findTaskById(taskId)).thenReturn(requestTask);
+        when(nonComplianceRequestTaskAdditionalNoticeRecipients.getTypes())
+                .thenReturn(Set.of(CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT, CcaRequestTaskType.NON_COMPLIANCE_ENFORCEMENT_RESPONSE_NOTICE_SUBMIT));
+        when(nonComplianceRequestTaskAdditionalNoticeRecipients.getRecipients(requestTask, user)).thenReturn(expected);
+
+        List<AdditionalNoticeRecipientDTO> actual = service.getAdditionalNoticeRecipients(taskId, user);
+
+        assertThat(actual).isEqualTo(expected);
+        verify(requestTaskService, times(1))
+                .findTaskById(taskId);
+        verify(nonComplianceRequestTaskAdditionalNoticeRecipients, times(1))
+                .getTypes();
+        verify(nonComplianceRequestTaskAdditionalNoticeRecipients, times(1))
+                .getRecipients(requestTask, user);
+        verifyNoInteractions(additionalNoticeRecipientsService);
+    }
+
+    @Test
+    void getAdditionalNoticeRecipients_contacts_from_additional_notice_service() {
+        final AppUser user = AppUser.builder().userId("userId").roleType(REGULATOR).build();
+        final long taskId = 1L;
+        final Long accountId = 11L;
+        final Request request = Request.builder().build();
+        addResourcesToRequest(accountId, request);
+        final RequestTask requestTask = RequestTask.builder()
+                .id(taskId)
+                .type(RequestTaskType.builder()
+                        .code(CcaRequestTaskType.NON_COMPLIANCE_NOTICE_OF_INTENT_SUBMIT)
+                        .build())
+                .request(request)
+                .build();
+
+        final List<AdditionalNoticeRecipientDTO> expected = Collections.singletonList(AdditionalNoticeRecipientDTO.builder()
+                .userId("id1")
+                .firstName("fn")
+                .lastName("ln")
+                .email("email")
+                .type(NoticeRecipientType.OPERATOR)
+                .build());
+
+
+        when(requestTaskService.findTaskById(taskId)).thenReturn(requestTask);
+        when(nonComplianceRequestTaskAdditionalNoticeRecipients.getTypes()).thenReturn(Set.of());
+        when(additionalNoticeRecipientsService.getAdditionalNoticeRecipients(user, accountId)).thenReturn(expected);
+
+        List<AdditionalNoticeRecipientDTO> actual = service.getAdditionalNoticeRecipients(taskId, user);
+
+        assertThat(actual).isEqualTo(expected);
+        verify(requestTaskService, times(1))
+                .findTaskById(taskId);
+        verify(nonComplianceRequestTaskAdditionalNoticeRecipients, times(1))
+                .getTypes();
+        verify(nonComplianceRequestTaskAdditionalNoticeRecipients, never())
+                .getRecipients(requestTask, user);
+        verify(additionalNoticeRecipientsService, times(1))
+                .getAdditionalNoticeRecipients(user, accountId);
+    }
+
+    private void addResourcesToRequest(Long accountId, Request request) {
+        RequestResource accountResource = RequestResource.builder()
+                .resourceType(ResourceType.ACCOUNT)
+                .resourceId(accountId.toString())
+                .request(request)
+                .build();
 
         request.getRequestResources().add(accountResource);
-	}
+    }
 }

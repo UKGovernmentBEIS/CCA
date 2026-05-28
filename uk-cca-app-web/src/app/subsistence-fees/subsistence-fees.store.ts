@@ -1,6 +1,7 @@
-import { computed, effect, inject, Injectable } from '@angular/core';
+import { computed, DestroyRef, effect, inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { EMPTY, map, Observable, pipe, Subject, switchMap, take, takeUntil, tap, timer } from 'rxjs';
+import { EMPTY, map, Observable, pipe, switchMap, take, tap, timer } from 'rxjs';
 
 import { SignalStore } from '@netz/common/store';
 import { ConfigService } from '@shared/config';
@@ -57,7 +58,7 @@ const INITIAL_STATE: SubsistenceFeesState = {
 
 @Injectable()
 export class SubsistenceFeesStore extends SignalStore<SubsistenceFeesState> {
-  private readonly destroyRef = new Subject<void>();
+  private readonly destroyRef = inject(DestroyRef);
   private readonly requestsService = inject(RequestsService);
   private readonly configService = inject(ConfigService);
   private readonly subsistenceFeesRunInfoViewService = inject(SubsistenceFeesRunInfoViewService);
@@ -94,7 +95,7 @@ export class SubsistenceFeesStore extends SignalStore<SubsistenceFeesState> {
   initProgressUpdatePolling(): Observable<unknown> {
     return timer(this.interval).pipe(
       take(1),
-      takeUntil(this.destroyRef),
+      takeUntilDestroyed(this.destroyRef),
       switchMap(() => this.checkForPendingSubsistenceRun()),
       switchMap((requestInProgress) => {
         if (requestInProgress) return this.initProgressUpdatePolling();
@@ -177,7 +178,6 @@ export class SubsistenceFeesStore extends SignalStore<SubsistenceFeesState> {
   }
 
   override reset() {
-    this.destroyRef.next();
     this.updateState(
       produce(INITIAL_STATE, (s) => {
         delete s.isValidChargeDate;

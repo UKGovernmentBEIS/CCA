@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { RequestTaskStore } from '@netz/common/store';
+import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub, MockType } from '@netz/common/testing';
 import { TasksApiService } from '@requests/common';
 import { getByText } from '@testing';
@@ -20,7 +20,7 @@ describe('VariationSubmitActionComponent', () => {
   const activatedRoute = new ActivatedRouteStub();
 
   const mockTasksApiService: MockType<TasksApiService> = {
-    saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+    saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
   };
 
   beforeEach(async () => {
@@ -28,9 +28,10 @@ describe('VariationSubmitActionComponent', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        RequestTaskStore,
         { provide: TasksApiService, useValue: mockTasksApiService },
         { provide: ActivatedRoute, useValue: activatedRoute },
+        { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
+        { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Dashboard' },
       ],
     }).compileComponents();
 
@@ -50,8 +51,8 @@ describe('VariationSubmitActionComponent', () => {
   });
 
   it('should submit and navigate to confirmation page', async () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    const apiServiceSpy = jest.spyOn(mockTasksApiService, 'saveRequestTaskAction');
+    const navigateSpy = vi.spyOn(router, 'navigate');
+    const apiServiceSpy = vi.spyOn(mockTasksApiService, 'saveRequestTaskAction');
     const submitButton: HTMLButtonElement = fixture.nativeElement.querySelector('button.govuk-button');
     submitButton.click();
     fixture.detectChanges();

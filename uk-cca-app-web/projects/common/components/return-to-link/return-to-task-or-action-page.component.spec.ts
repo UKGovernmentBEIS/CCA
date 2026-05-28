@@ -47,7 +47,7 @@ describe('ReturnToTaskOrActionPageComponent', () => {
 
   it('should have correct link and text', () => {
     const link = getByRole('link') as HTMLAnchorElement;
-    expect(link.href).toEqual('http://localhost/tasks/1');
+    expect(new URL(link.href).pathname).toEqual('/tasks/1');
     expect(link.innerHTML.trim()).toEqual('Return to: TEST RETURN');
   });
 });

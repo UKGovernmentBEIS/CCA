@@ -9,6 +9,7 @@ import { TaskService } from '@netz/common/forms';
 import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { BASELINE_AND_TARGETS_SUBTASK, BaselineAndTargetPeriodsSubtasks } from '@requests/common';
+import { Mocked } from 'vitest';
 
 import { RequestTaskItemDTO } from 'cca-api';
 
@@ -19,8 +20,8 @@ describe('BaselineAndTargetsSummaryComponent', () => {
   let store: RequestTaskStore;
   let fixture: ComponentFixture<BaselineAndTargetsSummaryComponent>;
 
-  const unaTaskService: Partial<jest.Mocked<TaskService>> = {
-    saveSubtask: jest.fn().mockReturnValue(of({})),
+  const unaTaskService: Partial<Mocked<TaskService>> = {
+    saveSubtask: vi.fn().mockReturnValue(of({})),
   };
 
   const setupComponent = (period: BaselineAndTargetPeriodsSubtasks, taskItem: RequestTaskItemDTO) => {
@@ -47,11 +48,11 @@ describe('BaselineAndTargetsSummaryComponent', () => {
 
   it('should match snapshot for TP5', () => {
     setupComponent(BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_5_DETAILS, mockRequestTaskItemDTO);
-    expect(fixture.nativeElement).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 
   it('should match snapshot for TP6 - RELATIVE agreementMeasurementType', () => {
     setupComponent(BaselineAndTargetPeriodsSubtasks.TARGET_PERIOD_6_DETAILS, mockRequestTaskItemDTO);
-    expect(fixture.nativeElement).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

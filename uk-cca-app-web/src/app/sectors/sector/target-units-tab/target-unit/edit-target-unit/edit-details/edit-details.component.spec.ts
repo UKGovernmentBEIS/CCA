@@ -67,7 +67,7 @@ describe('EditDetailsComponent', () => {
   });
 
   it('should edit details and submit form', () => {
-    const spy = jest.spyOn(updateTargetUnitAccountService, 'updateTargetUnitAccountSicCode');
+    const spy = vi.spyOn(updateTargetUnitAccountService, 'updateTargetUnitAccountSicCode');
     page.sicCodeValue = 'Changed';
 
     page.submitButton.click();

@@ -18,7 +18,8 @@ public class CsvMeasurementTypeConverter extends AbstractBeanField<MeasurementTy
 
         String tValue = value.trim();
         return Arrays.stream(MeasurementType.values())
-                .filter(type -> type.getDescription().equalsIgnoreCase(tValue))
+                .filter(type -> type.getDescription().equalsIgnoreCase(tValue) 
+                		|| type.getUnit().equalsIgnoreCase(tValue))
                 .findFirst().orElseThrow(() -> new CsvDataTypeMismatchException("Failed to convert to measurement type '" + tValue + "'"));
     }
 }

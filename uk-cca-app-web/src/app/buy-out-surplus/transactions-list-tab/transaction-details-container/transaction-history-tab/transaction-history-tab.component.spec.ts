@@ -11,7 +11,7 @@ import { mockTransactionHistory } from './testing/mock-data';
 import { TransactionHistoryTabComponent } from './transaction-history-tab.component';
 
 const mockGetBuyOutSurplusTransactionHistoryService = {
-  getBuyOutSurplusTransactionHistory: jest.fn().mockReturnValue(of(mockTransactionHistory)),
+  getBuyOutSurplusTransactionHistory: vi.fn().mockReturnValue(of(mockTransactionHistory)),
 };
 
 describe('TransactionHistoryTabComponent', () => {
@@ -53,6 +53,6 @@ describe('TransactionHistoryTabComponent', () => {
   });
 
   it('should show summary values', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

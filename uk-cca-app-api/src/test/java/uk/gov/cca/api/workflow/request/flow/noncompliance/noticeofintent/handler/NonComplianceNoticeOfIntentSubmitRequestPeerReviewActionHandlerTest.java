@@ -5,12 +5,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionPayloadType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskActionType;
 import uk.gov.cca.api.workflow.request.core.domain.CcaRequestTaskPayloadType;
+import uk.gov.cca.api.workflow.request.core.domain.constants.CcaRequestCustomContext;
 import uk.gov.cca.api.workflow.request.flow.common.constants.CcaBpmnProcessConstants;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.common.domain.NonComplianceOutcome;
-import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NoticeOfIntent;
+import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntent;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.domain.NonComplianceNoticeOfIntentSubmitRequestTaskPayload;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.service.NoticeOfIntentSubmitService;
 import uk.gov.cca.api.workflow.request.flow.noncompliance.noticeofintent.validation.NoticeOfIntentSubmitRequestPeerReviewValidator;
@@ -19,7 +21,9 @@ import uk.gov.netz.api.workflow.request.WorkflowService;
 import uk.gov.netz.api.workflow.request.core.domain.Request;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTask;
 import uk.gov.netz.api.workflow.request.core.domain.RequestTaskPayload;
+import uk.gov.netz.api.workflow.request.core.service.RequestService;
 import uk.gov.netz.api.workflow.request.core.service.RequestTaskService;
+import uk.gov.netz.api.workflow.request.flow.common.constants.BpmnProcessConstants;
 import uk.gov.netz.api.workflow.request.flow.common.domain.PeerReviewRequestTaskActionPayload;
 
 import java.util.Map;
@@ -48,6 +52,9 @@ class NonComplianceNoticeOfIntentSubmitRequestPeerReviewActionHandlerTest {
     @Mock
     private NoticeOfIntentSubmitRequestPeerReviewValidator validator;
 
+    @Mock
+    private RequestService requestService;
+
     @Test
     void process() {
         final long requestTaskId = 1L;
@@ -56,6 +63,7 @@ class NonComplianceNoticeOfIntentSubmitRequestPeerReviewActionHandlerTest {
         final String processId = "process";
         final String requestTaskActionType = CcaRequestTaskActionType.NON_COMPLIANCE_NOTICE_OF_INTENT_REQUEST_PEER_REVIEW;
         final AppUser appUser = AppUser.builder().build();
+        final String regulatorReviewer = appUser.getUserId();
         final String peerReviewer = UUID.randomUUID().toString();
         final UUID fileUuid = UUID.randomUUID();
 
@@ -64,8 +72,8 @@ class NonComplianceNoticeOfIntentSubmitRequestPeerReviewActionHandlerTest {
                 .peerReviewer(peerReviewer)
                 .build();
 
-        final NoticeOfIntent noticeOfIntent = NoticeOfIntent.builder()
-                .noticeOfIntentFile(fileUuid)
+        final NonComplianceNoticeOfIntent noticeOfIntent = NonComplianceNoticeOfIntent.builder()
+                .file(fileUuid)
                 .comments("bla bla bla")
                 .build();
         final NonComplianceNoticeOfIntentSubmitRequestTaskPayload requestTaskPayload = NonComplianceNoticeOfIntentSubmitRequestTaskPayload.builder()
@@ -91,7 +99,10 @@ class NonComplianceNoticeOfIntentSubmitRequestPeerReviewActionHandlerTest {
         verify(noticeOfIntentSubmitService, times(1))
                 .requestPeerReview(requestTask, peerReviewer, appUser.getUserId());
         verify(workflowService, times(1)).completeTask(processId,
-                Map.of(CcaBpmnProcessConstants.NON_COMPLIANCE_OUTCOME, NonComplianceOutcome.PEER_REVIEW_REQUIRED));
+                Map.of(CcaBpmnProcessConstants.NON_COMPLIANCE_OUTCOME, NonComplianceOutcome.PEER_REVIEW_REQUIRED,
+                        BpmnProcessConstants.REQUEST_TYPE_DYNAMIC_TASK_PREFIX, CcaRequestCustomContext.NON_COMPLIANCE_NOTICE_OF_INTENT));
+        verify(requestService, times(1)).addActionToRequest(request, null,
+                CcaRequestActionType.NON_COMPLIANCE_NOTICE_OF_INTENT_PEER_REVIEW_REQUESTED, regulatorReviewer);
     }
 
     @Test

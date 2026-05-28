@@ -3,6 +3,8 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
 import { of } from 'rxjs';
 
+import { Mock } from 'vitest';
+
 import { BuyOutAndSurplusTransactionsInfoViewService } from 'cca-api';
 
 import { mockTransactionsResponse } from '../testing/mock-data';
@@ -11,11 +13,11 @@ import { TransactionsTableComponent } from './transactions-table.component';
 describe('TransactionsTableComponent', () => {
   let component: TransactionsTableComponent;
   let fixture: ComponentFixture<TransactionsTableComponent>;
-  let mockService: { getBuyOutSurplusTransactions: jest.Mock };
+  let mockService: { getBuyOutSurplusTransactions: Mock };
 
   beforeEach(async () => {
     mockService = {
-      getBuyOutSurplusTransactions: jest.fn().mockReturnValue(of(mockTransactionsResponse)),
+      getBuyOutSurplusTransactions: vi.fn().mockReturnValue(of(mockTransactionsResponse)),
     };
 
     const mockActivatedRoute = {

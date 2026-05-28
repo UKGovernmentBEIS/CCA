@@ -1,21 +1,12 @@
-import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Component, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlContainer, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 import { SelectComponent } from '@netz/govuk-components';
 
+import { CountyService } from '../services/county.service';
 import { CountiesDirective } from './counties.directive';
-
-// Mock the COUNTIES constant that the directive uses
-jest.mock('@shared/services', () => ({
-  COUNTIES: [
-    { id: 0, name: '' },
-    { id: 1, name: 'Cyprus' },
-    { id: 2, name: 'Greece' },
-    { id: 3, name: 'Afghanistan' },
-  ],
-}));
 
 describe('CountiesDirective', () => {
   let directive: CountiesDirective;
@@ -30,23 +21,29 @@ describe('CountiesDirective', () => {
   }
 
   beforeEach(() => {
+    const mockCountyService = {
+      counties: signal([
+        { id: 0, name: '' },
+        { id: 1, name: 'Cyprus' },
+        { id: 2, name: 'Greece' },
+        { id: 3, name: 'Afghanistan' },
+      ]),
+    };
+
     fixture = TestBed.configureTestingModule({
       imports: [TestComponent],
-      providers: [ControlContainer],
+      providers: [ControlContainer, { provide: CountyService, useValue: mockCountyService }],
     }).createComponent(TestComponent);
 
-    fixture.detectChanges();
     directive = fixture.debugElement.query(By.directive(CountiesDirective)).injector.get(CountiesDirective);
+    fixture.detectChanges();
   });
 
   it('should create an instance', () => {
     expect(directive).toBeTruthy();
   });
 
-  it('should assign counties to select', fakeAsync(() => {
-    fixture.detectChanges();
-    tick();
-
+  it('should assign counties to select', () => {
     const selectElement = fixture.debugElement.query(By.css('select'));
     const options = selectElement.nativeElement.options;
 
@@ -55,5 +52,5 @@ describe('CountiesDirective', () => {
     expect(options[1].text).toBe('Afghanistan');
     expect(options[2].text).toBe('Cyprus');
     expect(options[3].text).toBe('Greece');
-  }));
+  });
 });

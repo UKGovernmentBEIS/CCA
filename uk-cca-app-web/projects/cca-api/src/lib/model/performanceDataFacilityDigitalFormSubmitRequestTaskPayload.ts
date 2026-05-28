@@ -9,8 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { FacilityDTO } from './facilityDTO';
-import { Cca3FacilityBaselineAndTargets } from './cca3FacilityBaselineAndTargets';
+import { FacilityBaseInfoDTO } from './facilityBaseInfoDTO';
+import { PerformanceDataFacilityReferenceData } from './performanceDataFacilityReferenceData';
+import { PerformanceDataFacilityInputData } from './performanceDataFacilityInputData';
 
 export interface PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload {
   payloadType?: string;
@@ -18,7 +19,9 @@ export interface PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload {
   targetPeriodType?: 'TP5' | 'TP6' | 'TP7' | 'TP8' | 'TP9';
   reportType?: 'INTERIM' | 'FINAL';
   targetPeriodYear?: number;
-  facility?: FacilityDTO;
-  originalBaselineData?: Cca3FacilityBaselineAndTargets;
+  facility?: FacilityBaseInfoDTO;
+  referenceData?: PerformanceDataFacilityReferenceData;
+  performanceData?: PerformanceDataFacilityInputData;
   sectionsCompleted?: Record<string, string>;
+  expired?: boolean;
 }

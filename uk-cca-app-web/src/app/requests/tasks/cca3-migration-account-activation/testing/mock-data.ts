@@ -38,13 +38,8 @@ export const mockRequestTaskItemDTO: RequestTaskItemDTO = {
   requestInfo: {
     id: 'ADS_1-T00001-CCA3-EFM-1',
     type: 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING',
-    competentAuthority: 'ENGLAND',
-    accountId: 1,
     requestMetadata: {
       type: 'CCA3_EXISTING_FACILITIES_MIGRATION_ACCOUNT_PROCESSING',
-      parentRequestId: 'CCA3-EFM-1',
-      accountBusinessId: 'ADS_1-T00001',
-      cca3Participating: true,
     },
     creationDate: '2025-10-01T16:35:13.709016Z',
   },

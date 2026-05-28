@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
-import { RequestTaskStore } from '@netz/common/store';
+import { ITEM_TYPE_TO_RETURN_TEXT_MAPPER, RequestTaskStore, TYPE_AWARE_STORE } from '@netz/common/store';
 import { ActivatedRouteStub } from '@netz/common/testing';
 
 import { mockPreAuditReviewState } from '../../../testing/mock-data';
@@ -15,7 +15,11 @@ describe('PreAuditReviewRequestedDocumentsSummaryComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PreAuditReviewRequestedDocumentsSummaryComponent],
-      providers: [RequestTaskStore, { provide: ActivatedRoute, useValue: new ActivatedRouteStub() }],
+      providers: [
+        { provide: ActivatedRoute, useValue: new ActivatedRouteStub() },
+        { provide: TYPE_AWARE_STORE, useExisting: RequestTaskStore },
+        { provide: ITEM_TYPE_TO_RETURN_TEXT_MAPPER, useValue: () => 'Dashboard' },
+      ],
     }).compileComponents();
 
     store = TestBed.inject(RequestTaskStore);
@@ -31,6 +35,6 @@ describe('PreAuditReviewRequestedDocumentsSummaryComponent', () => {
   });
 
   it('should display the correct content', () => {
-    expect(fixture).toMatchSnapshot();
+    expect(fixture.nativeElement.innerHTML).toMatchSnapshot();
   });
 });

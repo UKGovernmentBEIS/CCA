@@ -19,7 +19,7 @@ describe('UnderlyingAgreementSubmitActionComponent', () => {
 
   beforeEach(async () => {
     const requestTaskStore = {
-      select: jest.fn().mockImplementation((selector) => {
+      select: vi.fn().mockImplementation((selector) => {
         if (selector === requestTaskQuery.selectRequestTaskId) {
           return () => 123;
         }
@@ -28,7 +28,7 @@ describe('UnderlyingAgreementSubmitActionComponent', () => {
     };
 
     tasksApiService = {
-      saveRequestTaskAction: jest.fn().mockReturnValue(of({})),
+      saveRequestTaskAction: vi.fn().mockReturnValue(of({})),
     };
 
     await TestBed.configureTestingModule({
@@ -57,8 +57,8 @@ describe('UnderlyingAgreementSubmitActionComponent', () => {
   });
 
   it('should submit and navigate to confirmation page', async () => {
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    const tasksApiServiceSpy = jest.spyOn(tasksApiService, 'saveRequestTaskAction');
+    const navigateSpy = vi.spyOn(router, 'navigate');
+    const tasksApiServiceSpy = vi.spyOn(tasksApiService, 'saveRequestTaskAction');
     const submitButton = Array.from(fixture.nativeElement.querySelectorAll('button')).find(
       (button: HTMLButtonElement) => button.textContent?.trim() === 'Confirm and send',
     ) as HTMLButtonElement;

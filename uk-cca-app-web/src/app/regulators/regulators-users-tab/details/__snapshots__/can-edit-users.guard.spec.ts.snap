@@ -1,8 +1,8 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CanEditUsersGuard should correctly populate state if a user has EXECUTE perms 1`] = `true`;
+exports[`CanEditUsersGuard > should correctly populate state if a user has EXECUTE perms 1`] = `true`;
 
-exports[`CanEditUsersGuard should correctly populate state if a user has EXECUTE perms 2`] = `
+exports[`CanEditUsersGuard > should correctly populate state if a user has EXECUTE perms 2`] = `
 {
   "isAdd": false,
   "isEditable": true,

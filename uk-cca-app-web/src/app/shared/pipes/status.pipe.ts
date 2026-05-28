@@ -95,6 +95,9 @@ export class StatusPipe implements PipeTransform {
       case 'unchanged':
         return 'Unchanged';
 
+      case 'closed':
+        return 'Closed';
+
       default:
         throw new Error(`invalid status. Received: ${status}`);
     }

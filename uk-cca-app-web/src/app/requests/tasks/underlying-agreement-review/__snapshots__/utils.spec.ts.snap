@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`createProposedUnderlyingAgreementPayload should create the correct payload when all decisions are accepted: una-with-initial-facilities 1`] = `
+exports[`createProposedUnderlyingAgreementPayload > should create the correct payload when all decisions are accepted > una-with-initial-facilities 1`] = `
 {
   "authorisationAndAdditionalEvidence": {
     "additionalEvidenceAttachmentIds": [],
@@ -218,7 +218,7 @@ exports[`createProposedUnderlyingAgreementPayload should create the correct payl
 }
 `;
 
-exports[`createProposedUnderlyingAgreementPayload should create the correct payload when all decisions are rejected: una-without-facilities 1`] = `
+exports[`createProposedUnderlyingAgreementPayload > should create the correct payload when all decisions are rejected > una-without-facilities 1`] = `
 {
   "authorisationAndAdditionalEvidence": {
     "additionalEvidenceAttachmentIds": [],
@@ -319,7 +319,7 @@ exports[`createProposedUnderlyingAgreementPayload should create the correct payl
 }
 `;
 
-exports[`createProposedUnderlyingAgreementPayload should handle mixed decisions correctly: mixed-decisions 1`] = `
+exports[`createProposedUnderlyingAgreementPayload > should handle mixed decisions correctly > mixed-decisions 1`] = `
 {
   "authorisationAndAdditionalEvidence": {
     "additionalEvidenceAttachmentIds": [],
@@ -479,7 +479,7 @@ exports[`createProposedUnderlyingAgreementPayload should handle mixed decisions 
 }
 `;
 
-exports[`createProposedUnderlyingAgreementPayload should transform target unit details when TARGET_UNIT_DETAILS is REJECTED: target-unit-details-rejected 1`] = `
+exports[`createProposedUnderlyingAgreementPayload > should transform target unit details when TARGET_UNIT_DETAILS is REJECTED > target-unit-details-rejected 1`] = `
 {
   "authorisationAndAdditionalEvidence": {
     "additionalEvidenceAttachmentIds": [],

@@ -1,5 +1,5 @@
 import { ComponentRef } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { PasswordStrengthMeterComponent } from './password-strength-meter.component';
@@ -27,8 +27,8 @@ describe('Directive: PasswordStrengthMeter - ProgressBar', () => {
   let fixture: ComponentFixture<PasswordStrengthMeterComponent>;
   let componentRef: ComponentRef<PasswordStrengthMeterComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [PasswordStrengthMeterComponent],
       providers: [
         {
@@ -42,7 +42,7 @@ describe('Directive: PasswordStrengthMeter - ProgressBar', () => {
     component = fixture.componentInstance;
     componentRef = fixture.componentRef;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create progress bar items with default value', () => {
     fixture.detectChanges();

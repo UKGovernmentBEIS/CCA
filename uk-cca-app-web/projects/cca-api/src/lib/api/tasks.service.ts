@@ -14,6 +14,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpParam
 import { CustomHttpParameterCodec } from '../encoder';
 import { Observable } from 'rxjs';
 
+import { AdditionalNoticeRecipientDTO } from '../model/additionalNoticeRecipientDTO';
 import { NoticeRecipientDTO } from '../model/noticeRecipientDTO';
 import { RequestTaskActionProcessDTO } from '../model/requestTaskActionProcessDTO';
 import { RequestTaskItemDTO } from '../model/requestTaskItemDTO';
@@ -83,6 +84,76 @@ export class TasksService {
       throw Error('key may not be null if value is not object or array');
     }
     return httpParams;
+  }
+
+  /**
+   * Retrieves the additional recipients for the notify operator workflow step
+   * @param id The task id
+   * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+   * @param reportProgress flag to report request and response progress.
+   */
+  public getAdditionalNoticeRecipients(id: number): Observable<AdditionalNoticeRecipientDTO[]>;
+  public getAdditionalNoticeRecipients(
+    id: number,
+    observe: 'response',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpResponse<AdditionalNoticeRecipientDTO[]>>;
+  public getAdditionalNoticeRecipients(
+    id: number,
+    observe: 'events',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<HttpEvent<AdditionalNoticeRecipientDTO[]>>;
+  public getAdditionalNoticeRecipients(
+    id: number,
+    observe: 'body',
+    reportProgress?: boolean,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<AdditionalNoticeRecipientDTO[]>;
+  public getAdditionalNoticeRecipients(
+    id: number,
+    observe: any = 'body',
+    reportProgress = false,
+    options?: { httpHeaderAccept?: 'application/json' },
+  ): Observable<any> {
+    if (id === null || id === undefined) {
+      throw new Error('Required parameter id was null or undefined when calling getAdditionalNoticeRecipients.');
+    }
+
+    let headers = this.defaultHeaders;
+
+    // authentication (bearerAuth) required
+    const credential = this.configuration.lookupCredential('bearerAuth');
+    if (credential) {
+      headers = headers.set('Authorization', 'Bearer ' + credential);
+    }
+
+    let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+    if (httpHeaderAcceptSelected === undefined) {
+      // to determine the Accept header
+      const httpHeaderAccepts: string[] = ['application/json'];
+      httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+    }
+    if (httpHeaderAcceptSelected !== undefined) {
+      headers = headers.set('Accept', httpHeaderAcceptSelected);
+    }
+
+    let responseType_: 'text' | 'json' = 'json';
+    if (httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+      responseType_ = 'text';
+    }
+
+    return this.httpClient.get<AdditionalNoticeRecipientDTO[]>(
+      `${this.configuration.basePath}/v1.0/tasks/${encodeURIComponent(String(id))}/additional-recipients`,
+      {
+        responseType: responseType_ as any,
+        withCredentials: this.configuration.withCredentials,
+        headers: headers,
+        observe: observe,
+        reportProgress: reportProgress,
+      },
+    );
   }
 
   /**

@@ -9,6 +9,7 @@ import uk.gov.netz.api.common.config.MapperConfig;
 @Mapper(componentModel = "spring", config = MapperConfig.class)
 public interface NonComplianceDetailsSubmitMapper {
 
+    @Mapping(target = "attachments", ignore = true)
     @Mapping(target = "payloadType", expression = "java(uk.gov.cca.api.workflow.request.core.domain.CcaRequestActionPayloadType.NON_COMPLIANCE_DETAILS_SUBMITTED_PAYLOAD)")
     NonComplianceDetailsSubmittedRequestActionPayload toNonComplianceDetailsSubmittedRequestActionPayload(NonComplianceDetailsSubmitRequestTaskPayload taskPayload);
 }

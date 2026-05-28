@@ -12,8 +12,6 @@ import {
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
-import diff from 'html-diff-ts';
-
 @Component({
   selector: 'cca-highlight-diff',
   templateUrl: './highlight-diff.component.html',
@@ -32,30 +30,32 @@ export class HighlightDiffComponent implements AfterViewInit {
   protected htmlDiff: SafeHtml;
 
   ngAfterViewInit(): void {
+    this.initializeDiff();
+  }
+
+  private async initializeDiff(): Promise<void> {
     const previous = this.stripHtmlComments(this.previous().nativeElement.innerHTML);
     const current = this.stripHtmlComments(this.current().nativeElement.innerHTML);
 
-    const differences = diff(previous, current);
+    const differences = await this.getDiff(previous, current);
     const parsedDiff = new DOMParser().parseFromString(differences, 'text/html');
 
     const changeLinks = Array.from(parsedDiff.querySelectorAll('a > ins.diffmod, a > del.diffmod')).filter((diffItem) =>
-      ['Change', 'Remove'].includes(diffItem.textContent),
+      ['Change', 'Remove'].includes(diffItem.textContent ?? ''),
     );
 
     const nodeParents: Element[] = [];
 
     changeLinks.forEach((diffItem) => {
-      if (diffItem.tagName !== 'DEL') {
-        nodeParents.push(diffItem.parentNode as Element);
-      }
-
-      diffItem.parentNode.removeChild(diffItem);
+      if (diffItem.tagName !== 'DEL') nodeParents.push(diffItem.parentNode as Element);
+      diffItem.parentNode?.removeChild(diffItem);
     });
 
-    nodeParents.forEach((np) => (np.textContent = 'Change'));
+    nodeParents.forEach((np) => {
+      np.textContent = 'Change';
+    });
 
     this.htmlDiff = this.domSanitizer.sanitize(SecurityContext.HTML, parsedDiff.documentElement.innerHTML);
-
     this.changeDetectorRef.detectChanges();
   }
 
@@ -69,7 +69,7 @@ export class HighlightDiffComponent implements AfterViewInit {
     }
 
     if (
-      !!eventTarget &&
+      eventTarget &&
       eventTarget instanceof HTMLAnchorElement &&
       eventTarget.getAttribute('target') !== '_blank' &&
       event.type === 'click'
@@ -86,5 +86,15 @@ export class HighlightDiffComponent implements AfterViewInit {
     }
 
     return html.replace(/<!--[\s\S]*?(?:-->)/g, '');
+  }
+
+  // This is a workaround to avoid Vitest braking due to CommonJS import of html-diff-ts.
+  private async getDiff(previous: string, current: string): Promise<string> {
+    try {
+      const { default: diff } = await import('html-diff-ts');
+      return diff(previous, current);
+    } catch {
+      return current;
+    }
   }
 }

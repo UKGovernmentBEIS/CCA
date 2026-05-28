@@ -3,9 +3,13 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
+import { of } from 'rxjs';
+
 import { transformUsername } from '@netz/common/pipes';
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { getByText } from '@testing';
+import { click, getByText } from '@testing';
+
+import { OperatorAuthoritiesService } from 'cca-api';
 
 import { mockTargetUnitOperatorDetails } from '../../../../../../specs/fixtures/mock';
 import { ActiveOperatorStore } from '../active-operator.store';
@@ -14,8 +18,13 @@ import { DeleteOperatorComponent } from './delete-operator.component';
 describe('Delete Operator Component', () => {
   let fixture: ComponentFixture<DeleteOperatorComponent>;
   let store: ActiveOperatorStore;
+  let operatorAuthoritiesServiceMock: { deleteAccountOperatorAuthority: ReturnType<typeof vi.fn> };
 
   beforeEach(async () => {
+    operatorAuthoritiesServiceMock = {
+      deleteAccountOperatorAuthority: vi.fn().mockReturnValue(of(null)),
+    };
+
     await TestBed.configureTestingModule({
       imports: [DeleteOperatorComponent],
       providers: [
@@ -26,6 +35,7 @@ describe('Delete Operator Component', () => {
           provide: ActivatedRoute,
           useValue: new ActivatedRouteStub({ targetUnitId: 1, userId: '1123asd12b4' }),
         },
+        { provide: OperatorAuthoritiesService, useValue: operatorAuthoritiesServiceMock },
       ],
     }).compileComponents();
 
@@ -56,5 +66,19 @@ describe('Delete Operator Component', () => {
 
     expect(getByText('Confirm removal')).toBeTruthy();
     expect(getByText('Cancel')).toBeTruthy();
+  });
+
+  it('should call service and show confirmation after deletion', () => {
+    const confirmBtn = getByText('Confirm removal');
+    click(confirmBtn);
+    fixture.detectChanges();
+
+    expect(operatorAuthoritiesServiceMock.deleteAccountOperatorAuthority).toHaveBeenCalledWith(1, '1123asd12b4');
+
+    expect(
+      getByText('The user account for ' + transformUsername(mockTargetUnitOperatorDetails) + ' has been removed'),
+    ).toBeTruthy();
+
+    expect(getByText('Return to: Users and contacts page')).toBeTruthy();
   });
 });
