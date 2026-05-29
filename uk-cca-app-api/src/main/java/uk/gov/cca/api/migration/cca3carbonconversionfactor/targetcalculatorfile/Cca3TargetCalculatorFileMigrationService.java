@@ -43,7 +43,7 @@ public class Cca3TargetCalculatorFileMigrationService extends MigrationBaseServi
         Set<String> duplicateFacilityBusinessIds = new HashSet<>();
         Map<String, FileInfoDTO> facilityCalculatorFileMap = cca3TargetCalculatorFileService.getCalculatorFilesByFacilityBusinessId(duplicateFacilityBusinessIds);
         
-        if (CollectionUtils.isEmpty(duplicateFacilityBusinessIds)) {
+        if (facilityCalculatorFileMap == null || facilityCalculatorFileMap.isEmpty()) {
             errors.add("No carbon conversion factors provided.");
             return errors;
         }
