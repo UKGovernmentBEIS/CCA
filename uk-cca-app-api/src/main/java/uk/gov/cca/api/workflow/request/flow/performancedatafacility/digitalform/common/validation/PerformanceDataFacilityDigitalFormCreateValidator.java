@@ -56,6 +56,7 @@ public class PerformanceDataFacilityDigitalFormCreateValidator implements Reques
     public RequestCreateValidationResult validateAction(Long facilityId, PerformanceDataFacilityDigitalFormRequestCreateActionPayload payload) {
         final LocalDate submissionDate = LocalDate.now();
         final TargetPeriodDetailsDTO targetPeriod = targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(payload.getTargetPeriodType());
+        final FacilityDTO facility = facilityDataQueryService.getFacilityInfoData(facilityId);
 
         // Check in progress
         List<Request> result = requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
@@ -75,20 +76,25 @@ public class PerformanceDataFacilityDigitalFormCreateValidator implements Reques
             throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REPORT_NOT_ELIGIBLE, validationReportTypeResult.getViolations());
         }
 
-        // Check secondary reporting
+        // Check facility reporting lock status
         BusinessValidationResult validationSecondaryLockResult = performanceDataFacilityDigitalFormValidator
-                .validateSecondaryReportingLock(targetPeriod, submissionDate);
+                .validateFacilityReportingLock(facility, targetPeriod, submissionDate);
         if(!validationSecondaryLockResult.isValid()) {
             throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SECONDARY_REPORTING_LOCKED, validationSecondaryLockResult.getViolations());
         }
 
         // Check facility eligibility
-        final FacilityDTO facility = facilityDataQueryService.getFacilityInfoData(facilityId);
-
         BusinessValidationResult validationFacilityResult = performanceDataFacilityDigitalFormValidator
                 .validateFacilityEligibility(facility, targetPeriod, submissionDate);
         if(!validationFacilityResult.isValid()) {
             throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_NOT_ELIGIBLE, validationFacilityResult.getViolations());
+        }
+
+        // Check facility baseline date eligibility
+        BusinessValidationResult validationFacilityBaselineDateResult = performanceDataFacilityDigitalFormValidator
+                .validateFacilityBaselineDateEligibility(facility, targetPeriod, submissionDate);
+        if(!validationFacilityBaselineDateResult.isValid()) {
+            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_BASELINE_DATE_NOT_ELIGIBLE, validationFacilityBaselineDateResult.getViolations());
         }
 
         // Check facility products

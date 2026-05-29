@@ -26,4 +26,9 @@ public class PerformanceDataFacilityStatusQueryService {
                 .map(PerformanceDataFacilityStatus::getLastPerformanceData)
                 .map(PerformanceDataFacilityEntity::getData);
     }
+
+    public boolean getLockedStatus(Long facilityId, Year targetPeriodYear) {
+        return getPerformanceDataFacilityStatus(facilityId, targetPeriodYear)
+                .map(PerformanceDataFacilityStatus::isLocked).orElse(false);
+    }
 }

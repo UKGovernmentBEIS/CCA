@@ -6,15 +6,14 @@ import org.springframework.stereotype.Service;
 import uk.gov.cca.api.common.exception.CcaErrorCode;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityBaselineAndTargets;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataFacilityStatusQueryService;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.util.PerformanceDataFacilityUtil;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDetailsDTO;
-import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.Cca3FacilityBaselineAndTargets;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductVariableEnergyConsumptionData;
-import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementQueryService;
-import uk.gov.cca.api.underlyingagreement.utils.UnderlyingAgreementContainerUtil;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.service.PerformanceDataFacilityReferenceDataService;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.validation.PerformanceDataFacilityViolation;
 import uk.gov.netz.api.common.exception.BusinessException;
 
@@ -23,13 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static uk.gov.netz.api.common.exception.ErrorCode.RESOURCE_NOT_FOUND;
-
 @Service
 @RequiredArgsConstructor
 public class PerformanceDataFacilityDigitalFormValidator {
 
-    private final UnderlyingAgreementQueryService underlyingAgreementQueryService;
+    private final PerformanceDataFacilityReferenceDataService performanceDataFacilityReferenceDataService;
+    private final PerformanceDataFacilityStatusQueryService performanceDataFacilityStatusQueryService;
 
     public BusinessValidationResult validateReportSubmission(TargetPeriodDetailsDTO targetPeriod, PerformanceDataReportType reportType, LocalDate submissionDate) {
         List<PerformanceDataFacilityViolation> violations = new ArrayList<>();
@@ -82,12 +80,37 @@ public class PerformanceDataFacilityDigitalFormValidator {
                 .build();
     }
 
-    public BusinessValidationResult validateSecondaryReportingLock(TargetPeriodDetailsDTO targetPeriod, LocalDate submissionDate) {
+    public BusinessValidationResult validateFacilityBaselineDateEligibility(FacilityDTO facility, TargetPeriodDetailsDTO targetPeriod, LocalDate submissionDate) {
+        final TargetPeriodYear targetPeriodYear = PerformanceDataFacilityUtil.getTargetPeriodYearBySubmissionDate(targetPeriod, submissionDate)
+                .orElseThrow(() -> new BusinessException(CcaErrorCode.TARGET_PERIOD_YEAR_NOT_FOUND));
+        return validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
+    }
+
+    public BusinessValidationResult validateFacilityBaselineDateEligibility(FacilityDTO facility, TargetPeriodYear targetPeriodYear) {
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = performanceDataFacilityReferenceDataService
+                .getFacilityOriginalBaselineAndTargets(facility.getAccountId(), facility.getFacilityBusinessId(), targetPeriodYear.getTargetYear());
+
         List<PerformanceDataFacilityViolation> violations = new ArrayList<>();
 
-        // Check for locking if secondary report
-        if(!submissionDate.isBefore(targetPeriod.getSecondaryReportingStartDate())) {
-            // TODO LOCK Validation for secondary
+        if(baselineAndTargets.getBaselineDate().isAfter(targetPeriodYear.getReportingStartDate())) {
+            violations.add(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_BASELINE_DATE_NOT_ELIGIBLE));
+        }
+
+        return BusinessValidationResult.builder()
+                .valid(violations.isEmpty())
+                .violations(violations)
+                .build();
+    }
+
+    public BusinessValidationResult validateFacilityReportingLock(FacilityDTO facility, TargetPeriodDetailsDTO targetPeriod, LocalDate submissionDate) {
+        final TargetPeriodYear targetPeriodYear = PerformanceDataFacilityUtil.getTargetPeriodYearBySubmissionDate(targetPeriod, submissionDate)
+                .orElseThrow(() -> new BusinessException(CcaErrorCode.TARGET_PERIOD_YEAR_NOT_FOUND));
+
+        List<PerformanceDataFacilityViolation> violations = new ArrayList<>();
+
+        // Check for locking
+        if(performanceDataFacilityStatusQueryService.getLockedStatus(facility.getId(), targetPeriodYear.getTargetYear())) {
+            violations.add(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_IS_LOCKED));
         }
 
         return BusinessValidationResult.builder()
@@ -99,13 +122,9 @@ public class PerformanceDataFacilityDigitalFormValidator {
     public BusinessValidationResult validateFacilityProductsEligibility(FacilityDTO facility, TargetPeriodDetailsDTO targetPeriod, LocalDate submissionDate) {
         final TargetPeriodYear targetPeriodYear = PerformanceDataFacilityUtil.getTargetPeriodYearBySubmissionDate(targetPeriod, submissionDate)
                 .orElseThrow(() -> new BusinessException(CcaErrorCode.TARGET_PERIOD_YEAR_NOT_FOUND));
-        final UnderlyingAgreementContainer una = underlyingAgreementQueryService
-                .getUnderlyingAgreementContainerByAccountId(facility.getAccountId());
-        final Cca3FacilityBaselineAndTargets baselineAndTargets = UnderlyingAgreementContainerUtil
-                .getFacilityBaselineAndTargets(facility.getFacilityBusinessId(), una)
-                .orElseThrow(() -> new BusinessException(RESOURCE_NOT_FOUND));
-        final List<ProductVariableEnergyConsumptionData> products = baselineAndTargets.getFacilityBaselineEnergyConsumption()
-                .getVariableEnergyConsumptionDataByProduct();
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = performanceDataFacilityReferenceDataService
+                .getFacilityOriginalBaselineAndTargets(facility.getAccountId(), facility.getFacilityBusinessId(), targetPeriodYear.getTargetYear());
+        final List<ProductVariableEnergyConsumptionData> products = baselineAndTargets.getVariableEnergyConsumptionDataByProduct();
 
         List<PerformanceDataFacilityViolation> violations = new ArrayList<>();
 

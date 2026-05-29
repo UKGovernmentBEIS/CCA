@@ -41,6 +41,8 @@ public class PerformanceDataFacilityViolation extends BusinessViolation {
         REPORT_TYPE_NOT_VALID("Report type is not valid"),
         FACILITY_NOT_ELIGIBLE("Facility is not eligible"),
         FACILITY_NOT_ELIGIBLE_PRODUCTS("Facility has no eligible products"),
+        FACILITY_IS_LOCKED("Facility is locked for secondary reporting period"),
+        FACILITY_BASELINE_DATE_NOT_ELIGIBLE("Facility baseline date is not eligible for target period year"),
         ;
 
         private final String message;

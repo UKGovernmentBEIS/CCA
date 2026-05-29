@@ -6,28 +6,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import uk.gov.cca.api.common.domain.SchemeVersion;
 import uk.gov.cca.api.common.validation.BusinessValidationResult;
 import uk.gov.cca.api.facility.domain.dto.FacilityDTO;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataFacilityBaselineAndTargets;
 import uk.gov.cca.api.targetperiodreporting.performancedatafacility.domain.PerformanceDataReportType;
+import uk.gov.cca.api.targetperiodreporting.performancedatafacility.service.PerformanceDataFacilityStatusQueryService;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYear;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.TargetPeriodYearsContainer;
 import uk.gov.cca.api.targetperiodreporting.targetperiod.domain.dto.TargetPeriodDetailsDTO;
-import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreement;
-import uk.gov.cca.api.underlyingagreement.domain.UnderlyingAgreementContainer;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.Cca3FacilityBaselineAndTargets;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.Facility;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityBaselineEnergyConsumption;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityDetails;
-import uk.gov.cca.api.underlyingagreement.domain.facilities.FacilityItem;
 import uk.gov.cca.api.underlyingagreement.domain.facilities.ProductVariableEnergyConsumptionData;
-import uk.gov.cca.api.underlyingagreement.service.UnderlyingAgreementQueryService;
+import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.service.PerformanceDataFacilityReferenceDataService;
 import uk.gov.cca.api.workflow.request.flow.performancedatafacility.common.validation.PerformanceDataFacilityViolation;
 
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
@@ -42,7 +35,10 @@ class PerformanceDataFacilityDigitalFormValidatorTest {
     private PerformanceDataFacilityDigitalFormValidator validator;
 
     @Mock
-    private UnderlyingAgreementQueryService underlyingAgreementQueryService;
+    private PerformanceDataFacilityReferenceDataService performanceDataFacilityReferenceDataService;
+
+    @Mock
+    private PerformanceDataFacilityStatusQueryService performanceDataFacilityStatusQueryService;
 
     @Test
     void validateReportSubmission_INTERIM_start_of_reporting_valid() {
@@ -433,6 +429,191 @@ class PerformanceDataFacilityDigitalFormValidatorTest {
     }
 
     @Test
+    void validateFacilityBaselineDateEligibility_valid() {
+        final Long accountId = 11L;
+        final String facilityBusinessId = "facilityBusinessId";
+        final LocalDate submissionDate = LocalDate.of(2025, 12, 1);
+        final TargetPeriodDetailsDTO targetPeriodDetails = TargetPeriodDetailsDTO.builder()
+                .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                        .targetPeriodYears(List.of(
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2024))
+                                        .reportingStartDate(LocalDate.of(2025, 1, 1))
+                                        .reportingEndDate(LocalDate.of(2025, 12, 31))
+                                        .build(),
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2025))
+                                        .reportingStartDate(LocalDate.of(2026, 1, 1))
+                                        .build()
+                        ))
+                        .build())
+                .secondaryReportingStartDate(LocalDate.of(2026, 7, 2))
+                .build();
+        final FacilityDTO facility = FacilityDTO.builder().facilityBusinessId(facilityBusinessId).accountId(accountId).build();
+
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+                .baselineDate(LocalDate.of(2024, 1, 1))
+                .build();
+
+        when(performanceDataFacilityReferenceDataService.getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024)))
+                .thenReturn(baselineAndTargets);
+
+        // Invoke
+        BusinessValidationResult result = validator.validateFacilityBaselineDateEligibility(facility, targetPeriodDetails, submissionDate);
+
+        // Verify
+        assertThat(result.isValid()).isTrue();
+        verify(performanceDataFacilityReferenceDataService, times(1))
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024));
+    }
+
+    @Test
+    void validateFacilityBaselineDateEligibility_same_date_valid() {
+        final Long accountId = 11L;
+        final String facilityBusinessId = "facilityBusinessId";
+        final LocalDate submissionDate = LocalDate.of(2025, 12, 1);
+        final TargetPeriodDetailsDTO targetPeriodDetails = TargetPeriodDetailsDTO.builder()
+                .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                        .targetPeriodYears(List.of(
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2024))
+                                        .reportingStartDate(LocalDate.of(2025, 1, 1))
+                                        .reportingEndDate(LocalDate.of(2025, 12, 31))
+                                        .build(),
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2025))
+                                        .reportingStartDate(LocalDate.of(2026, 1, 1))
+                                        .build()
+                        ))
+                        .build())
+                .secondaryReportingStartDate(LocalDate.of(2026, 7, 2))
+                .build();
+        final FacilityDTO facility = FacilityDTO.builder().facilityBusinessId(facilityBusinessId).accountId(accountId).build();
+
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+                .baselineDate(LocalDate.of(2025, 1, 1))
+                .build();
+
+        when(performanceDataFacilityReferenceDataService.getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024)))
+                .thenReturn(baselineAndTargets);
+
+        // Invoke
+        BusinessValidationResult result = validator.validateFacilityBaselineDateEligibility(facility, targetPeriodDetails, submissionDate);
+
+        // Verify
+        assertThat(result.isValid()).isTrue();
+        verify(performanceDataFacilityReferenceDataService, times(1))
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024));
+    }
+
+    @Test
+    void validateFacilityBaselineDateEligibility_not_valid() {
+        final Long accountId = 11L;
+        final String facilityBusinessId = "facilityBusinessId";
+        final LocalDate submissionDate = LocalDate.of(2025, 12, 1);
+        final TargetPeriodDetailsDTO targetPeriodDetails = TargetPeriodDetailsDTO.builder()
+                .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                        .targetPeriodYears(List.of(
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2024))
+                                        .reportingStartDate(LocalDate.of(2025, 1, 1))
+                                        .reportingEndDate(LocalDate.of(2025, 12, 31))
+                                        .build(),
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2025))
+                                        .reportingStartDate(LocalDate.of(2026, 1, 1))
+                                        .build()
+                        ))
+                        .build())
+                .secondaryReportingStartDate(LocalDate.of(2026, 7, 2))
+                .build();
+        final FacilityDTO facility = FacilityDTO.builder().facilityBusinessId(facilityBusinessId).accountId(accountId).build();
+
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+                .baselineDate(LocalDate.of(2026, 1, 1))
+                .build();
+
+        when(performanceDataFacilityReferenceDataService.getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024)))
+                .thenReturn(baselineAndTargets);
+
+        // Invoke
+        BusinessValidationResult result = validator.validateFacilityBaselineDateEligibility(facility, targetPeriodDetails, submissionDate);
+
+        // Verify
+        assertThat(result.isValid()).isFalse();
+        assertThat((List<PerformanceDataFacilityViolation>) result.getViolations()).extracting(PerformanceDataFacilityViolation::getMessage)
+                .containsOnly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_BASELINE_DATE_NOT_ELIGIBLE.getMessage());
+        verify(performanceDataFacilityReferenceDataService, times(1))
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024));
+    }
+
+    @Test
+    void validateFacilityReportingLock() {
+        final LocalDate submissionDate = LocalDate.of(2025, 12, 1);
+        final TargetPeriodDetailsDTO targetPeriodDetails = TargetPeriodDetailsDTO.builder()
+                .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                        .targetPeriodYears(List.of(
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2024))
+                                        .reportingStartDate(LocalDate.of(2025, 1, 1))
+                                        .reportingEndDate(LocalDate.of(2025, 12, 31))
+                                        .build(),
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2025))
+                                        .reportingStartDate(LocalDate.of(2026, 1, 1))
+                                        .build()
+                        ))
+                        .build())
+                .secondaryReportingStartDate(LocalDate.of(2026, 7, 2))
+                .build();
+        final FacilityDTO facility = FacilityDTO.builder().id(1L).build();
+
+        when(performanceDataFacilityStatusQueryService.getLockedStatus(1L, Year.of(2024)))
+                .thenReturn(false);
+
+        // Invoke
+        BusinessValidationResult result = validator.validateFacilityReportingLock(facility, targetPeriodDetails, submissionDate);
+
+        // Verify
+        assertThat(result.isValid()).isTrue();
+        verify(performanceDataFacilityStatusQueryService, times(1)).getLockedStatus(1L, Year.of(2024));
+    }
+
+    @Test
+    void validateFacilityReportingLock_not_valid() {
+        final LocalDate submissionDate = LocalDate.of(2026, 12, 31);
+        final TargetPeriodDetailsDTO targetPeriodDetails = TargetPeriodDetailsDTO.builder()
+                .targetPeriodYearsContainer(TargetPeriodYearsContainer.builder()
+                        .targetPeriodYears(List.of(
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2024))
+                                        .reportingStartDate(LocalDate.of(2025, 1, 1))
+                                        .reportingEndDate(LocalDate.of(2025, 12, 31))
+                                        .build(),
+                                TargetPeriodYear.builder()
+                                        .targetYear(Year.of(2025))
+                                        .reportingStartDate(LocalDate.of(2026, 1, 1))
+                                        .build()
+                        ))
+                        .build())
+                .secondaryReportingStartDate(LocalDate.of(2026, 7, 2))
+                .build();
+        final FacilityDTO facility = FacilityDTO.builder().id(1L).build();
+
+        when(performanceDataFacilityStatusQueryService.getLockedStatus(1L, Year.of(2025)))
+                .thenReturn(true);
+
+        // Invoke
+        BusinessValidationResult result = validator.validateFacilityReportingLock(facility, targetPeriodDetails, submissionDate);
+
+        // Verify
+        assertThat(result.isValid()).isFalse();
+        assertThat((List<PerformanceDataFacilityViolation>) result.getViolations()).extracting(PerformanceDataFacilityViolation::getMessage)
+                .containsOnly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_IS_LOCKED.getMessage());
+        verify(performanceDataFacilityStatusQueryService, times(1)).getLockedStatus(1L, Year.of(2025));
+    }
+
+    @Test
     void validateFacilityProductsEligibility() {
         final Long accountId = 11L;
         final String facilityBusinessId = "facilityBusinessId";
@@ -458,36 +639,24 @@ class PerformanceDataFacilityDigitalFormValidatorTest {
                 .accountId(accountId)
                 .build();
 
-        final UnderlyingAgreementContainer una = UnderlyingAgreementContainer.builder()
-                .underlyingAgreement(UnderlyingAgreement.builder()
-                        .facilities(Set.of(Facility.builder()
-                                .facilityItem(FacilityItem.builder()
-                                        .facilityId(facilityBusinessId)
-                                        .facilityDetails(FacilityDetails.builder()
-                                                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_3))
-                                                .build())
-                                        .cca3BaselineAndTargets(Cca3FacilityBaselineAndTargets.builder()
-                                                .facilityBaselineEnergyConsumption(FacilityBaselineEnergyConsumption.builder()
-                                                        .variableEnergyConsumptionDataByProduct(List.of(ProductVariableEnergyConsumptionData.builder()
-                                                                .baselineYear(Year.of(2024))
-                                                                .build()))
-                                                        .build())
-                                                .build())
-                                        .build())
-                                .build()))
-                        .build())
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+                .variableEnergyConsumptionDataByProduct(List.of(
+                        ProductVariableEnergyConsumptionData.builder()
+                                .baselineYear(Year.of(2024))
+                                .build()
+                ))
                 .build();
 
-        when(underlyingAgreementQueryService.getUnderlyingAgreementContainerByAccountId(accountId))
-                .thenReturn(una);
+        when(performanceDataFacilityReferenceDataService.getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024)))
+                .thenReturn(baselineAndTargets);
 
         // Invoke
         BusinessValidationResult result = validator.validateFacilityProductsEligibility(facility, targetPeriodDetails, submissionDate);
 
         // Verify
         assertThat(result.isValid()).isTrue();
-        verify(underlyingAgreementQueryService, times(1))
-                .getUnderlyingAgreementContainerByAccountId(accountId);
+        verify(performanceDataFacilityReferenceDataService, times(1))
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024));
     }
 
     @Test
@@ -516,28 +685,16 @@ class PerformanceDataFacilityDigitalFormValidatorTest {
                 .accountId(accountId)
                 .build();
 
-        final UnderlyingAgreementContainer una = UnderlyingAgreementContainer.builder()
-                .underlyingAgreement(UnderlyingAgreement.builder()
-                        .facilities(Set.of(Facility.builder()
-                                .facilityItem(FacilityItem.builder()
-                                        .facilityId(facilityBusinessId)
-                                        .facilityDetails(FacilityDetails.builder()
-                                                .participatingSchemeVersions(Set.of(SchemeVersion.CCA_3))
-                                                .build())
-                                        .cca3BaselineAndTargets(Cca3FacilityBaselineAndTargets.builder()
-                                                .facilityBaselineEnergyConsumption(FacilityBaselineEnergyConsumption.builder()
-                                                        .variableEnergyConsumptionDataByProduct(List.of(ProductVariableEnergyConsumptionData.builder()
-                                                                .baselineYear(Year.of(2025))
-                                                                .build()))
-                                                        .build())
-                                                .build())
-                                        .build())
-                                .build()))
-                        .build())
+        final PerformanceDataFacilityBaselineAndTargets baselineAndTargets = PerformanceDataFacilityBaselineAndTargets.builder()
+                .variableEnergyConsumptionDataByProduct(List.of(
+                        ProductVariableEnergyConsumptionData.builder()
+                                .baselineYear(Year.of(2025))
+                                .build()
+                ))
                 .build();
 
-        when(underlyingAgreementQueryService.getUnderlyingAgreementContainerByAccountId(accountId))
-                .thenReturn(una);
+        when(performanceDataFacilityReferenceDataService.getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024)))
+                .thenReturn(baselineAndTargets);
 
         // Invoke
         BusinessValidationResult result = validator.validateFacilityProductsEligibility(facility, targetPeriodDetails, submissionDate);
@@ -546,7 +703,7 @@ class PerformanceDataFacilityDigitalFormValidatorTest {
         assertThat(result.isValid()).isFalse();
         assertThat((List<PerformanceDataFacilityViolation>) result.getViolations()).extracting(PerformanceDataFacilityViolation::getMessage)
                 .containsOnly(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_NOT_ELIGIBLE_PRODUCTS.getMessage());
-        verify(underlyingAgreementQueryService, times(1))
-                .getUnderlyingAgreementContainerByAccountId(accountId);
+        verify(performanceDataFacilityReferenceDataService, times(1))
+                .getFacilityOriginalBaselineAndTargets(accountId, facilityBusinessId, Year.of(2024));
     }
 }

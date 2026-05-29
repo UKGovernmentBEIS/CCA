@@ -143,15 +143,16 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         final FacilityDTO facility = FacilityDTO.builder().id(facilityId).build();
 
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
+        when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
         when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
-        when(facilityDataQueryService.getFacilityInfoData(facilityId))
-                .thenReturn(facility);
         when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateSecondaryReportingLock(eq(targetPeriod), any()))
+        when(performanceDataFacilityDigitalFormValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityDigitalFormValidator.validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormValidator.validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
@@ -162,16 +163,17 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         // Verify
         assertThat(result).isEqualTo(RequestCreateValidationResult.builder().valid(true).build());
         verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
+        verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
-        verify(facilityDataQueryService, times(1))
-                .getFacilityInfoData(facilityId);
         verify(performanceDataFacilityDigitalFormValidator, times(1))
                 .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
         verify(performanceDataFacilityDigitalFormValidator, times(1))
-                .validateSecondaryReportingLock(eq(targetPeriod), any());
+                .validateFacilityReportingLock(eq(facility), eq(targetPeriod), any());
         verify(performanceDataFacilityDigitalFormValidator, times(1))
                 .validateFacilityEligibility(eq(facility), eq(targetPeriod), any());
+        verify(performanceDataFacilityDigitalFormValidator, times(1))
+                .validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any());
         verify(performanceDataFacilityDigitalFormValidator, times(1))
                 .validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any());
     }
@@ -191,15 +193,16 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         final FacilityDTO facility = FacilityDTO.builder().id(facilityId).build();
 
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
+        when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
         when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
-        when(facilityDataQueryService.getFacilityInfoData(facilityId))
-                .thenReturn(facility);
         when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateSecondaryReportingLock(eq(targetPeriod), any()))
+        when(performanceDataFacilityDigitalFormValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityDigitalFormValidator.validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormValidator.validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.invalid(List.of(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_NOT_ELIGIBLE_PRODUCTS))));
@@ -211,18 +214,66 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         // Verify
         assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_PRODUCTS_NOT_ELIGIBLE);
         verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
+        verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
-        verify(facilityDataQueryService, times(1))
-                .getFacilityInfoData(facilityId);
         verify(performanceDataFacilityDigitalFormValidator, times(1))
                 .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
         verify(performanceDataFacilityDigitalFormValidator, times(1))
-                .validateSecondaryReportingLock(eq(targetPeriod), any());
+                .validateFacilityReportingLock(eq(facility), eq(targetPeriod), any());
         verify(performanceDataFacilityDigitalFormValidator, times(1))
                 .validateFacilityEligibility(eq(facility), eq(targetPeriod), any());
         verify(performanceDataFacilityDigitalFormValidator, times(1))
+                .validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any());
+        verify(performanceDataFacilityDigitalFormValidator, times(1))
                 .validateFacilityProductsEligibility(eq(facility), eq(targetPeriod), any());
+    }
+
+    @Test
+    void validateAction_with_payload_facility_baseline_date_not_valid() {
+        final Long facilityId = 1L;
+        final TargetPeriodType targetPeriodType = TargetPeriodType.TP7;
+        final PerformanceDataReportType reportType = PerformanceDataReportType.FINAL;
+        final PerformanceDataFacilityDigitalFormRequestCreateActionPayload payload =
+                PerformanceDataFacilityDigitalFormRequestCreateActionPayload.builder()
+                        .targetPeriodType(targetPeriodType)
+                        .reportType(reportType)
+                        .build();
+
+        final TargetPeriodDetailsDTO targetPeriod = TargetPeriodDetailsDTO.builder().businessId(targetPeriodType).build();
+        final FacilityDTO facility = FacilityDTO.builder().id(facilityId).build();
+
+        when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
+        when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
+        when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
+                CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
+        when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityDigitalFormValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
+                .thenReturn(BusinessValidationResult.valid());
+        when(performanceDataFacilityDigitalFormValidator.validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any()))
+                .thenReturn(BusinessValidationResult.invalid(List.of(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_BASELINE_DATE_NOT_ELIGIBLE))));
+
+        // Invoke
+        BusinessException ex = assertThrows(BusinessException.class,
+                () -> validator.validateAction(facilityId, payload));
+
+        // Verify
+        assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_BASELINE_DATE_NOT_ELIGIBLE);
+        verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
+        verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
+        verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
+                CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
+        verify(performanceDataFacilityDigitalFormValidator, times(1))
+                .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
+        verify(performanceDataFacilityDigitalFormValidator, times(1))
+                .validateFacilityReportingLock(eq(facility), eq(targetPeriod), any());
+        verify(performanceDataFacilityDigitalFormValidator, times(1))
+                .validateFacilityEligibility(eq(facility), eq(targetPeriod), any());
+        verify(performanceDataFacilityDigitalFormValidator, times(1))
+                .validateFacilityBaselineDateEligibility(eq(facility), eq(targetPeriod), any());
     }
 
     @Test
@@ -240,13 +291,12 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         final FacilityDTO facility = FacilityDTO.builder().id(facilityId).build();
 
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
+        when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
         when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
-        when(facilityDataQueryService.getFacilityInfoData(facilityId))
-                .thenReturn(facility);
         when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateSecondaryReportingLock(eq(targetPeriod), any()))
+        when(performanceDataFacilityDigitalFormValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.valid());
         when(performanceDataFacilityDigitalFormValidator.validateFacilityEligibility(eq(facility), eq(targetPeriod), any()))
                 .thenReturn(BusinessValidationResult.invalid(List.of(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_NOT_ELIGIBLE))));
@@ -258,14 +308,13 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         // Verify
         assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_NOT_ELIGIBLE);
         verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
+        verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
-        verify(facilityDataQueryService, times(1))
-                .getFacilityInfoData(facilityId);
         verify(performanceDataFacilityDigitalFormValidator, times(1))
                 .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
         verify(performanceDataFacilityDigitalFormValidator, times(1))
-                .validateSecondaryReportingLock(eq(targetPeriod), any());
+                .validateFacilityReportingLock(eq(facility), eq(targetPeriod), any());
         verify(performanceDataFacilityDigitalFormValidator, times(1))
                 .validateFacilityEligibility(eq(facility), eq(targetPeriod), any());
         verifyNoMoreInteractions(performanceDataFacilityDigitalFormValidator);
@@ -283,14 +332,16 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
                         .build();
 
         final TargetPeriodDetailsDTO targetPeriod = TargetPeriodDetailsDTO.builder().businessId(targetPeriodType).build();
+        final FacilityDTO facility = FacilityDTO.builder().id(facilityId).build();
 
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
+        when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
         when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
         when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
                 .thenReturn(BusinessValidationResult.valid());
-        when(performanceDataFacilityDigitalFormValidator.validateSecondaryReportingLock(eq(targetPeriod), any()))
-                .thenReturn(BusinessValidationResult.invalid(List.of()));
+        when(performanceDataFacilityDigitalFormValidator.validateFacilityReportingLock(eq(facility), eq(targetPeriod), any()))
+                .thenReturn(BusinessValidationResult.invalid(List.of(new PerformanceDataFacilityViolation(PerformanceDataFacilityViolation.PerformanceDataFacilityViolationMessage.FACILITY_IS_LOCKED))));
 
         // Invoke
         BusinessException ex = assertThrows(BusinessException.class,
@@ -299,14 +350,14 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         // Verify
         assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SECONDARY_REPORTING_LOCKED);
         verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
+        verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
         verify(performanceDataFacilityDigitalFormValidator, times(1))
                 .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
         verify(performanceDataFacilityDigitalFormValidator, times(1))
-                .validateSecondaryReportingLock(eq(targetPeriod), any());
+                .validateFacilityReportingLock(eq(facility), eq(targetPeriod), any());
         verifyNoMoreInteractions(performanceDataFacilityDigitalFormValidator);
-        verifyNoInteractions(facilityDataQueryService);
     }
 
     @Test
@@ -321,8 +372,10 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
                         .build();
 
         final TargetPeriodDetailsDTO targetPeriod = TargetPeriodDetailsDTO.builder().businessId(targetPeriodType).build();
+        final FacilityDTO facility = FacilityDTO.builder().id(facilityId).build();
 
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
+        when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
         when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString())).thenReturn(List.of());
         when(performanceDataFacilityDigitalFormValidator.validateReportSubmission(eq(targetPeriod), eq(reportType), any()))
@@ -335,12 +388,12 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         // Verify
         assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_REPORT_NOT_ELIGIBLE);
         verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
+        verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
         verify(performanceDataFacilityDigitalFormValidator, times(1))
                 .validateReportSubmission(eq(targetPeriod), eq(reportType), any());
         verifyNoMoreInteractions(performanceDataFacilityDigitalFormValidator);
-        verifyNoInteractions(facilityDataQueryService);
     }
 
     @Test
@@ -362,8 +415,10 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
                 .build();
 
         final TargetPeriodDetailsDTO targetPeriod = TargetPeriodDetailsDTO.builder().businessId(targetPeriodType).build();
+        final FacilityDTO facility = FacilityDTO.builder().id(facilityId).build();
 
         when(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(targetPeriodType)).thenReturn(targetPeriod);
+        when(facilityDataQueryService.getFacilityInfoData(facilityId)).thenReturn(facility);
         when(requestQueryService.findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString()))
                 .thenReturn(List.of(request));
@@ -375,9 +430,10 @@ class PerformanceDataFacilityDigitalFormCreateValidatorTest {
         // Verify
         assertThat(ex.getErrorCode()).isEqualTo(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_EXIST);
         verify(targetPeriodService, times(1)).getTargetPeriodDetailsByTargetPeriodType(targetPeriodType);
+        verify(facilityDataQueryService, times(1)).getFacilityInfoData(facilityId);
         verify(requestQueryService, times(1)).findRequestsByRequestTypeAndResourceTypeAndResourceId(
                 CcaRequestType.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM, CcaResourceType.FACILITY, facilityId.toString());
-        verifyNoInteractions(performanceDataFacilityDigitalFormValidator, facilityDataQueryService);
+        verifyNoInteractions(performanceDataFacilityDigitalFormValidator);
     }
 
     @Test

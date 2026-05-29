@@ -41,9 +41,9 @@ public class Cca3TargetCalculatorFileMigrationService extends MigrationBaseServi
 
         // Get all calculator files that are pending migration
         Set<String> duplicateFacilityBusinessIds = new HashSet<>();
-        Map<String, FileInfoDTO> facilityCalculatorFileMap = cca3TargetCalculatorFileService.getCalculatorFileMap(duplicateFacilityBusinessIds);
+        Map<String, FileInfoDTO> facilityCalculatorFileMap = cca3TargetCalculatorFileService.getCalculatorFilesByFacilityBusinessId(duplicateFacilityBusinessIds);
         
-        if (facilityCalculatorFileMap == null || facilityCalculatorFileMap.isEmpty()) {
+        if (CollectionUtils.isEmpty(duplicateFacilityBusinessIds)) {
             errors.add("No carbon conversion factors provided.");
             return errors;
         }
@@ -55,14 +55,14 @@ public class Cca3TargetCalculatorFileMigrationService extends MigrationBaseServi
         }
         
         // Find eligible accounts with their facilities
-        Map<Long, List<String>> facilitiesAccountsMap = cca3CarbonConversionFactorService.findEligibleAccounts();       
+        Map<Long, List<String>> facilitiesByAccountId = cca3CarbonConversionFactorService.findEligibleAccounts();       
 
         // For each eligible account, update calculator files in BO and change file status to SUBMITTED
-        facilitiesAccountsMap.forEach((accountId, facilityBusinessIds) -> 
+        facilitiesByAccountId.forEach((accountId, facilityBusinessIds) -> 
         		cca3TargetCalculatorFileService.processAccount(errors, facilityCalculatorFileMap, accountId, facilityBusinessIds));
         
         // Determine which facilities are eligible but not provided, and which are provided but not eligible
-        cca3CarbonConversionFactorService.findEligibleAndProvidedFacilitiesDiff(errors, facilitiesAccountsMap, facilityCalculatorFileMap);
+        cca3CarbonConversionFactorService.findEligibleAndProvidedFacilitiesDiff(errors, facilitiesByAccountId, facilityCalculatorFileMap);
 
         return errors;
     }

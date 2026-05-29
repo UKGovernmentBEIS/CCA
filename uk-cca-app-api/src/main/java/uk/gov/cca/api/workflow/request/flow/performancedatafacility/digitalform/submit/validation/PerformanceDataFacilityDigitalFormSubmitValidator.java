@@ -47,17 +47,11 @@ public class PerformanceDataFacilityDigitalFormSubmitValidator {
         final PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload taskPayload =
                 (PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload) requestTask.getPayload();
         final TargetPeriodDetailsDTO targetPeriod = targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(taskPayload.getTargetPeriodType());
-        final FacilityDTO facility = facilityDataQueryService.getFacilityInfoData(taskPayload.getFacility().getId());
-        final TargetPeriodYear targetPeriodYear = targetPeriod.getTargetPeriodYearsContainer()
-                .getTargetPeriodYear(taskPayload.getTargetPeriodYear())
-                .orElseThrow(() -> new BusinessException(CcaErrorCode.TARGET_PERIOD_YEAR_NOT_FOUND));
 
         BusinessValidationResult validationReportTypeResult = performanceDataFacilityDigitalFormValidator
                 .validateReportSubmission(targetPeriod, taskPayload.getReportType(), submissionDate);
-        BusinessValidationResult validationFacilityResult = performanceDataFacilityDigitalFormValidator
-                .validateFacilityEligibility(facility, targetPeriodYear);
 
-        return !(validationReportTypeResult.isValid() && validationFacilityResult.isValid());
+        return !validationReportTypeResult.isValid();
     }
 
     public void validate(final RequestTask requestTask) {
@@ -69,16 +63,20 @@ public class PerformanceDataFacilityDigitalFormSubmitValidator {
 
         final List<TargetPeriodDetailsDTO> targetPeriods = targetPeriodService.getTargetPeriodDetailsByTargetPeriodTypes(
                 Set.of(TargetPeriodType.TP7, TargetPeriodType.TP8, TargetPeriodType.TP9));
+
+        // Validate Facility eligibility
+        validateFacilityEligibility(taskPayload, targetPeriods);
+
         final PerformanceDataFacilityCalculationParameters calculationParameters = MAPPER
                 .toPerformanceDataFacilityCalculationParameters(taskPayload, targetPeriods);
 
         // Validate data
-        List<BusinessValidationResult> validationResults = performanceDataFacilityDigitalFormDataValidator
+        List<BusinessValidationResult> validationDataResults = performanceDataFacilityDigitalFormDataValidator
                 .validateData(taskPayload.getPerformanceData(), calculationParameters);
 
-        boolean isValid = validationResults.stream().allMatch(BusinessValidationResult::isValid);
+        boolean isValid = validationDataResults.stream().allMatch(BusinessValidationResult::isValid);
         if(!isValid) {
-            throw new BusinessException(CcaErrorCode.INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT, ValidatorHelper.extractViolations(validationResults));
+            throw new BusinessException(CcaErrorCode.INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_SUBMIT, ValidatorHelper.extractViolations(validationDataResults));
         }
 
         // Validate Input Calculated data
@@ -111,6 +109,30 @@ public class PerformanceDataFacilityDigitalFormSubmitValidator {
         // If baseline data differ throw refresh exception
         if(!originalBaselineTargets.equals(persistedBaselineTargets)) {
             throw new BusinessException(CcaErrorCode.INVALID_PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_ORIGINAL_BASELINE_AND_TARGETS_IS_OUTDATED);
+        }
+    }
+
+    private void validateFacilityEligibility(final PerformanceDataFacilityDigitalFormSubmitRequestTaskPayload taskPayload, final List<TargetPeriodDetailsDTO> targetPeriods) {
+        final TargetPeriodDetailsDTO targetPeriod = targetPeriods.stream()
+                .filter(tp -> tp.getBusinessId().equals((taskPayload.getTargetPeriodType())))
+                .findFirst().orElse(targetPeriodService.getTargetPeriodDetailsByTargetPeriodType(taskPayload.getTargetPeriodType()));
+        final FacilityDTO facility = facilityDataQueryService.getFacilityInfoData(taskPayload.getFacility().getId());
+        final TargetPeriodYear targetPeriodYear = targetPeriod.getTargetPeriodYearsContainer()
+                .getTargetPeriodYear(taskPayload.getTargetPeriodYear())
+                .orElseThrow(() -> new BusinessException(CcaErrorCode.TARGET_PERIOD_YEAR_NOT_FOUND));
+
+        BusinessValidationResult validationFacilityResults = performanceDataFacilityDigitalFormValidator
+                .validateFacilityEligibility(facility, targetPeriodYear);
+
+        if(!validationFacilityResults.isValid()) {
+            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_NOT_ELIGIBLE);
+        }
+
+        BusinessValidationResult validationFacilityBaselineDateResults = performanceDataFacilityDigitalFormValidator
+                .validateFacilityBaselineDateEligibility(facility, targetPeriodYear);
+
+        if(!validationFacilityBaselineDateResults.isValid()) {
+            throw new BusinessException(CcaErrorCode.PERFORMANCE_DATA_FACILITY_DIGITAL_FORM_FACILITY_BASELINE_DATE_NOT_ELIGIBLE);
         }
     }
 }

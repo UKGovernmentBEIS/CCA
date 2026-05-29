@@ -35,7 +35,7 @@ public class PerformanceDataFacilityDigitalFormSubmitActionHandler implements Re
         final LocalDateTime submissionDate = LocalDateTime.now();
         final RequestTask requestTask = requestTaskService.findTaskById(requestTaskId);
 
-        // Validate if report or facility is expired
+        // Validate if report is expired
         boolean isExpired = performanceDataFacilityDigitalFormSubmitValidator.isReportSubmissionExpired(requestTask, submissionDate.toLocalDate());
         if(isExpired) {
             // Complete task as EXPIRED
