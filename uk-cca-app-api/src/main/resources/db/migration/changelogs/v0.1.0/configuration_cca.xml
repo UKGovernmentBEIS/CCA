@@ -117,5 +117,15 @@
             delete from configuration where key IN ('ui.features.nonComplianceHideStartTask');
         </rollback>
     </changeSet>
+
+    <changeSet id="0_1_0_remove_non_compliance_start_task_flag" author="P70311">
+        <sql>
+            delete from configuration where key = 'ui.features.nonComplianceHideStartTask';
+        </sql>
+        <rollback>
+            insert into configuration(key, value, type) values
+            ('ui.features.nonComplianceHideStartTask', true, 'BOOLEAN')
+        </rollback>
+    </changeSet>
         
 </databaseChangeLog>

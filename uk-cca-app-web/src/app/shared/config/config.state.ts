@@ -3,7 +3,6 @@ export const FEATURES = [
   'unaHideNotifyOperator',
   'subsistenceFeesHideMenu',
   'unaVariationHideStartTask',
-  'nonComplianceHideStartTask',
 ] as const;
 
 export type FeatureName = (typeof FEATURES)[number];
@@ -24,7 +23,6 @@ export const initialState: ConfigState = {
     unaHideNotifyOperator: false,
     subsistenceFeesHideMenu: false,
     unaVariationHideStartTask: false,
-    nonComplianceHideStartTask: false,
   },
   analytics: {
     gtmContainerId: '',

@@ -29,7 +29,6 @@ import {
 
 const HIDDEN_FEATURE_MAP = new Map<string, FeatureName>([
   ['UNDERLYING_AGREEMENT_VARIATION', 'unaVariationHideStartTask'],
-  ['NON_COMPLIANCE', 'nonComplianceHideStartTask'],
 ] as const);
 
 @Component({
