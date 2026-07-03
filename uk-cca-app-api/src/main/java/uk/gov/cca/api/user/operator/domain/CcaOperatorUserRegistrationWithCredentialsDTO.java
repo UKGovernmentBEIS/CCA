@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import uk.gov.netz.api.user.core.domain.dto.validation.Password;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +14,6 @@ import uk.gov.netz.api.user.core.domain.dto.validation.Password;
 @EqualsAndHashCode(callSuper = true)
 public class CcaOperatorUserRegistrationWithCredentialsDTO extends CcaOperatorUserRegistrationDTO {
 	@NotBlank(message = "{userAccount.password.notEmpty}")
-	@Password(message = "{userAccount.password.typeMismatch}")
 	private String password;
 
 }
