@@ -10,7 +10,7 @@ import { ActivatedRouteStub, BasePage, mockClass } from '@netz/common/testing';
 import { PasswordComponent } from '@shared/components';
 import { Mocked } from 'vitest';
 
-import { RegulatorUsersRegistrationService } from 'cca-api';
+import { RegulatorUsersRegistrationService, ValidatePasswordService } from 'cca-api';
 
 import { InvitedRegulatorUserStore } from './invited-regulator-user.store';
 import { RegulatorInvitationComponent } from './regulator-invitation.component';
@@ -42,7 +42,10 @@ describe('RegulatorInvitationComponent', () => {
     }
   }
 
+  const mockValidatePasswordService = { validatePassword: vi.fn().mockReturnValue(of(null)) };
+
   beforeEach(async () => {
+    mockValidatePasswordService.validatePassword.mockReturnValue(of(null));
     regulatorUsersRegistrationService = mockClass(RegulatorUsersRegistrationService);
     regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite.mockReturnValue(of({}));
 
@@ -53,6 +56,7 @@ describe('RegulatorInvitationComponent', () => {
       providers: [
         { provide: RegulatorUsersRegistrationService, useValue: regulatorUsersRegistrationService },
         { provide: ActivatedRoute, useValue: activatedRoute },
+        { provide: ValidatePasswordService, useValue: mockValidatePasswordService },
         InvitedRegulatorUserStore,
       ],
     }).compileComponents();
@@ -86,7 +90,8 @@ describe('RegulatorInvitationComponent', () => {
     component.form.get('validatePassword').setValue('ThisIsAStrongP@ssw0rd');
     page.submitButton.click();
     fixture.detectChanges();
-    await fixture.whenStable();
+    await new Promise((r) => setTimeout(r, 400));
+    fixture.detectChanges();
 
     expect(navigateSpy).toHaveBeenCalledWith(['invalid-link'], {
       relativeTo: route,
@@ -98,6 +103,8 @@ describe('RegulatorInvitationComponent', () => {
     );
     component.form.controls.password.setValue('ThisIsAStrongP@ssw0rd');
     page.submitButton.click();
+    fixture.detectChanges();
+    await new Promise((r) => setTimeout(r, 400));
     fixture.detectChanges();
 
     expect(navigateSpy).toHaveBeenCalledTimes(2);
@@ -112,25 +119,29 @@ describe('RegulatorInvitationComponent', () => {
     page.repeatedPasswordValue = '';
     page.submitButton.click();
     fixture.detectChanges();
-    await fixture.whenStable();
+    await new Promise((r) => setTimeout(r, 400));
+    fixture.detectChanges();
 
     expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).not.toHaveBeenCalled();
 
     page.passwordValue = 'test';
     page.submitButton.click();
     fixture.detectChanges();
-    await fixture.whenStable();
+    await new Promise((r) => setTimeout(r, 400));
+    fixture.detectChanges();
 
     expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).not.toHaveBeenCalled();
 
     page.passwordValue = 'ThisIsAStrongP@ssw0rd';
     page.repeatedPasswordValue = 'ThisIsAStrongP@ssw0rd';
     fixture.detectChanges();
-    await fixture.whenStable();
+    await new Promise((r) => setTimeout(r, 400));
+    fixture.detectChanges();
 
     page.submitButton.click();
     fixture.detectChanges();
-    await fixture.whenStable();
+    await new Promise((r) => setTimeout(r, 400));
+    fixture.detectChanges();
 
     expect(regulatorUsersRegistrationService.acceptAuthorityAndActivateRegulatorUserFromInvite).toHaveBeenCalledTimes(
       1,

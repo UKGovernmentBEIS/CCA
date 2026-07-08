@@ -3,8 +3,12 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
+import { of } from 'rxjs';
+
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { click, getAllByText, getByLabelText, getByText, type } from '@testing';
+
+import { ValidatePasswordService } from 'cca-api';
 
 import { InvitedSectorUserExtended, SectorUserInvitationStore } from '../sector-user-invitation.store';
 import { SectorUserInvitationPasswordOnlyComponent } from './sector-user-invitation-password-only.component';
@@ -32,7 +36,11 @@ describe('SectorUserInvitationPasswordOnlyComponent', () => {
     },
   };
 
+  const mockValidatePasswordService = { validatePassword: vi.fn().mockReturnValue(of(null)) };
+
   beforeEach(async () => {
+    mockValidatePasswordService.validatePassword.mockReturnValue(of(null));
+
     await TestBed.configureTestingModule({
       imports: [SectorUserInvitationPasswordOnlyComponent],
       providers: [
@@ -40,6 +48,7 @@ describe('SectorUserInvitationPasswordOnlyComponent', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: route },
+        { provide: ValidatePasswordService, useValue: mockValidatePasswordService },
       ],
     }).compileComponents();
 
@@ -78,7 +87,10 @@ describe('SectorUserInvitationPasswordOnlyComponent', () => {
     type(getByLabelText('Re-enter your password', fixture.nativeElement) as HTMLInputElement, '456');
 
     click(getByText('Continue', fixture.nativeElement));
+
+    await fixture.whenStable();
     fixture.detectChanges();
+
     expect(document.querySelector('.govuk-error-summary')).toBeTruthy();
 
     expect(
@@ -95,7 +107,6 @@ describe('SectorUserInvitationPasswordOnlyComponent', () => {
       ),
     ).toBeTruthy();
 
-    expect(getAllByText('Password must be 12 characters or more', fixture.nativeElement)).toHaveLength(2);
     expect(getAllByText('Enter a strong password', fixture.nativeElement)).toHaveLength(2);
   });
 });

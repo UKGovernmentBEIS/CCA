@@ -6,13 +6,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { PasswordValidators } from '@shared/components';
 import { click, getByLabelText, getByText, type } from '@testing';
+
+import { ValidatePasswordService } from 'cca-api';
 
 import { InvitedOperatorUserExtended, OperatorUserInvitationStore } from '../store';
 import { OperatorUserCreatePasswordComponent } from './operator-user-create-password.component';
 
-describe('SectorUserInvitationCreatePasswordComponent', () => {
+describe('OperatorUserCreatePasswordComponent', () => {
   let component: OperatorUserCreatePasswordComponent;
   let fixture: ComponentFixture<OperatorUserCreatePasswordComponent>;
   let operatorUserInvitationStore: OperatorUserInvitationStore;
@@ -35,11 +36,9 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
     },
   };
 
-  beforeAll(() => {
-    vi.spyOn(PasswordValidators, 'blacklisted').mockImplementation(() => of(null));
-  });
+  const mockValidatePasswordService = { validatePassword: vi.fn().mockReturnValue(of(null)) };
 
-  afterAll(() => {
+  afterEach(() => {
     vi.restoreAllMocks();
   });
 
@@ -51,6 +50,7 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: route },
+        { provide: ValidatePasswordService, useValue: mockValidatePasswordService },
       ],
     }).compileComponents();
 
@@ -113,7 +113,8 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
     click(getByText('Continue', fixture.nativeElement));
 
     fixture.detectChanges();
-    await fixture.whenStable();
+    await new Promise((r) => setTimeout(r, 400));
+    fixture.detectChanges();
 
     expect(navigateSpy).toHaveBeenCalledTimes(1);
     expect(stateSpy).toHaveBeenCalledTimes(1);

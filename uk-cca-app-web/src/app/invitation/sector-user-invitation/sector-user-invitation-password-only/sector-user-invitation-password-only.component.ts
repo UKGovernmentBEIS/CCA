@@ -1,14 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
-import { PageHeadingComponent } from '@netz/common/components';
-import { PendingButtonDirective } from '@netz/common/directives';
-import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
-import { PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/components';
+import { PASSWORD_FORM, PasswordComponent, passwordFormFactory, WizardStepComponent } from '@shared/components';
 
 import { SectorUsersRegistrationService } from 'cca-api';
 
@@ -17,27 +14,19 @@ import { SectorUserInvitationStore } from '../sector-user-invitation.store';
 @Component({
   selector: 'cca-sector-user-invitation-password-only',
   template: `
-    @if (isErrorSummaryDisplayed()) {
-      <govuk-error-summary [form]="form" />
-    }
-
-    <div class="govuk-!-width-three-quarters">
-      <netz-page-heading [caption]="'Create user account'">Create a password</netz-page-heading>
-
-      <form (ngSubmit)="onSubmitPassword()" [formGroup]="form" data-testid="invited-sector-user-password-form">
+    <cca-wizard-step
+      [formGroup]="form"
+      submitText="Continue"
+      heading="Create a password"
+      caption="Create user account"
+      (formSubmit)="onSubmit()"
+    >
+      <div class="govuk-!-width-three-quarters">
         <cca-password />
-        <button netzPendingButton govukButton type="submit">Continue</button>
-      </form>
-    </div>
+      </div>
+    </cca-wizard-step>
   `,
-  imports: [
-    PageHeadingComponent,
-    PasswordComponent,
-    ErrorSummaryComponent,
-    ReactiveFormsModule,
-    ButtonDirective,
-    PendingButtonDirective,
-  ],
+  imports: [PasswordComponent, ReactiveFormsModule, WizardStepComponent],
   providers: [passwordFormFactory],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -51,25 +40,27 @@ export class SectorUserInvitationPasswordOnlyComponent {
 
   protected readonly storeUser = this.store.state;
 
-  protected readonly isErrorSummaryDisplayed = signal(false);
-
-  onSubmitPassword() {
-    if (this.form.invalid) {
-      this.isErrorSummaryDisplayed.set(true);
-    } else {
-      this.sectorUsersRegistrationService
-        .acceptAuthorityAndSetCredentialsToSectorUser({
-          invitationToken: this.storeUser.emailToken,
-          password: this.form.value.password,
-        })
-        .pipe(
-          catchBadRequest([ErrorCodes.EMAIL1001, ErrorCodes.TOKEN1001, ErrorCodes.USER1004], (res) =>
-            of({ url: '../invalid-link', queryParams: { code: res.error.code } }),
-          ),
-        )
-        .subscribe(() => {
+  onSubmit() {
+    this.sectorUsersRegistrationService
+      .acceptAuthorityAndSetCredentialsToSectorUser({
+        invitationToken: this.storeUser.emailToken,
+        password: this.form.value.password,
+      })
+      .pipe(
+        catchBadRequest([ErrorCodes.EMAIL1001, ErrorCodes.TOKEN1001, ErrorCodes.USER1004], (res) =>
+          of({ url: '../invalid-link', queryParams: { code: res.error.code } }),
+        ),
+      )
+      .subscribe((result: any) => {
+        if (result?.url) {
+          this.router.navigate([result.url], {
+            relativeTo: this.activatedRoute,
+            queryParams: result.queryParams,
+            replaceUrl: true,
+          });
+        } else {
           this.router.navigate(['..', 'confirmed'], { relativeTo: this.activatedRoute, replaceUrl: true });
-        });
-    }
+        }
+      });
   }
 }

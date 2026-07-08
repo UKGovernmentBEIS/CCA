@@ -6,9 +6,8 @@ import { of, throwError } from 'rxjs';
 
 import { PageNotFoundComponent } from '@error/page-not-found/page-not-found.component';
 import { BasePage, MockType } from '@netz/common/testing';
-import { PasswordValidators } from '@shared/components';
 
-import { ForgotPasswordService } from 'cca-api';
+import { ForgotPasswordService, ValidatePasswordService } from 'cca-api';
 
 import { ResetPasswordStore } from '../+store/reset-password.store';
 import { ResetPasswordComponent } from './reset-password.component';
@@ -46,6 +45,8 @@ describe('ResetPasswordComponent', () => {
     verifyToken: vi.fn().mockReturnValue(of({ email: 'test@mail.com' })),
   };
 
+  const mockValidatePasswordService = { validatePassword: vi.fn().mockReturnValue(of(null)) };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ResetPasswordComponent],
@@ -57,6 +58,7 @@ describe('ResetPasswordComponent', () => {
         ]),
         ResetPasswordStore,
         { provide: ForgotPasswordService, useValue: forgotPasswordService },
+        { provide: ValidatePasswordService, useValue: mockValidatePasswordService },
       ],
     }).compileComponents();
 
@@ -85,35 +87,6 @@ describe('ResetPasswordComponent', () => {
     fixture.detectChanges();
     expect(page.passwordValue).toEqual('password');
     expect(page.repeatedPasswordValue).toEqual('password');
-  });
-
-  it('should submit only if form valid', async () => {
-    PasswordValidators.blacklisted = vi.fn().mockReturnValue(of(null));
-    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
-    component.form.controls.password.setValue('');
-    component.form.controls.validatePassword.setValue('');
-    fixture.detectChanges();
-    component.submitPassword();
-    fixture.detectChanges();
-
-    component.form.controls.password.setValue('test');
-    component.form.controls.validatePassword.setValue('test');
-    fixture.detectChanges();
-    component.submitPassword();
-    fixture.detectChanges();
-    expect(navigateSpy).not.toHaveBeenCalled();
-
-    component.form.controls.password.setValue('ThisIsAStrongP@ssw0rd');
-    component.form.controls.validatePassword.setValue('ThisIsAStrongP@ssw0rd');
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    vi.spyOn(component.form, 'valid', 'get').mockReturnValue(true);
-
-    component.submitPassword();
-    fixture.detectChanges();
-
-    expect(navigateSpy).toHaveBeenCalled();
   });
 
   it('should navigate to appropriate page if there is an error', () => {

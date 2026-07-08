@@ -81,3 +81,4 @@ export * from './updateTargetUnitAccount.service';
 export * from './userSignatures.service';
 export * from './users.service';
 export * from './usersSecuritySetup.service';
+export * from './validatePassword.service';

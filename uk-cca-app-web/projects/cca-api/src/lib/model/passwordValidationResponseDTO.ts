@@ -9,12 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HttpHeadersHostAddress } from './httpHeadersHostAddress';
+import { PasswordValidationErrorDTO } from './passwordValidationErrorDTO';
 
-export interface HttpHeadersHost {
-  address?: HttpHeadersHostAddress;
-  port?: number;
-  unresolved?: boolean;
-  hostName?: string;
-  hostString?: string;
+export interface PasswordValidationResponseDTO {
+  valid?: boolean;
+  errors?: PasswordValidationErrorDTO[];
 }

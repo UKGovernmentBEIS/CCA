@@ -1,38 +1,27 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { PageHeadingComponent } from '@netz/common/components';
-import { PendingButtonDirective } from '@netz/common/directives';
-import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
-import { PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/components';
+import { PASSWORD_FORM, PasswordComponent, passwordFormFactory, WizardStepComponent } from '@shared/components';
 
 import { OperatorUserInvitationStore } from '../store';
 
 @Component({
   selector: 'cca-operator-user-create-password',
   template: `
-    @if (isErrorSummaryDisplayed()) {
-      <govuk-error-summary [form]="form" />
-    }
-
-    <div class="govuk-!-width-three-quarters">
-      <netz-page-heading [caption]="'Create user account'">Create a password</netz-page-heading>
-
-      <form (ngSubmit)="onSubmit()" [formGroup]="form" data-testid="invited-operator-user-password-form">
+    <cca-wizard-step
+      [formGroup]="form"
+      submitText="Continue"
+      heading="Create a password"
+      caption="Create user account"
+      (formSubmit)="onSubmit()"
+    >
+      <div class="govuk-!-width-three-quarters">
         <cca-password />
-        <button netzPendingButton govukButton type="submit">Continue</button>
-      </form>
-    </div>
+      </div>
+    </cca-wizard-step>
   `,
-  imports: [
-    PageHeadingComponent,
-    PasswordComponent,
-    ReactiveFormsModule,
-    PendingButtonDirective,
-    ErrorSummaryComponent,
-    ButtonDirective,
-  ],
+  imports: [PasswordComponent, ReactiveFormsModule, WizardStepComponent],
   providers: [passwordFormFactory],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -43,14 +32,8 @@ export class OperatorUserCreatePasswordComponent {
 
   protected readonly form = inject<FormGroup>(PASSWORD_FORM);
 
-  protected readonly isErrorSummaryDisplayed = signal(false);
-
   onSubmit() {
-    if (this.form.invalid) {
-      this.isErrorSummaryDisplayed.set(true);
-    } else {
-      this.store.updateState({ password: this.form.value.password });
-      this.router.navigate(['..', 'summary'], { relativeTo: this.route });
-    }
+    this.store.updateState({ password: this.form.value.password });
+    this.router.navigate(['..', 'summary'], { relativeTo: this.route });
   }
 }

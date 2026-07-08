@@ -79,6 +79,7 @@ api/updateTargetUnitAccount.service.ts
 api/userSignatures.service.ts
 api/users.service.ts
 api/usersSecuritySetup.service.ts
+api/validatePassword.service.ts
 configuration.ts
 encoder.ts
 model/accountAddressDTO.ts
@@ -294,6 +295,9 @@ model/operatorAuthorityInfoDTO.ts
 model/operatorUserDTO.ts
 model/otherFuel.ts
 model/pagingRequest.ts
+model/passwordValidationErrorDTO.ts
+model/passwordValidationRequestDTO.ts
+model/passwordValidationResponseDTO.ts
 model/paymentCancelRequestTaskActionPayload.ts
 model/paymentCancelledRequestActionPayload.ts
 model/paymentConfirmRequestTaskPayload.ts

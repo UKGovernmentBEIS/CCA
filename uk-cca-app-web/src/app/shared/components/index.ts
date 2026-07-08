@@ -24,7 +24,6 @@ export * from './multiple-file-input/multiple-file-input.component';
 export * from './pagination/pagination.component';
 export * from './password/password-form.factory';
 export * from './password/password.component';
-export * from './password/password.service';
 export * from './phase-bar/phase-bar.component';
 export * from './phone-input/phone-input.component';
 export * from './phone-input/phone-input.validators';

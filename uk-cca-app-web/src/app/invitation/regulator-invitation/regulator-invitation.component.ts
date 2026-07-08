@@ -1,14 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { first, map, of, switchMap } from 'rxjs';
 
 import { catchBadRequest, ErrorCodes } from '@error/business-errors';
-import { PageHeadingComponent } from '@netz/common/components';
-import { PendingButtonDirective } from '@netz/common/directives';
-import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
-import { PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/components';
+import { PASSWORD_FORM, PasswordComponent, passwordFormFactory, WizardStepComponent } from '@shared/components';
 
 import { RegulatorUsersRegistrationService } from 'cca-api';
 
@@ -17,28 +14,13 @@ import { InvitedRegulatorUserStore } from './invited-regulator-user.store';
 @Component({
   selector: 'cca-regulator-invitation',
   template: `
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        @if (form.invalid && form.touched) {
-          <govuk-error-summary [form]="form" />
-        }
-
-        <netz-page-heading>Activate your account</netz-page-heading>
-        <form (ngSubmit)="submitPassword()" [formGroup]="form">
-          <cca-password />
-          <button netzPendingButton govukButton type="submit">Submit</button>
-        </form>
+    <cca-wizard-step [formGroup]="form" submitText="Submit" heading="Activate your account" (formSubmit)="onSubmit()">
+      <div class="govuk-!-width-three-quarters">
+        <cca-password />
       </div>
-    </div>
+    </cca-wizard-step>
   `,
-  imports: [
-    PageHeadingComponent,
-    PasswordComponent,
-    ErrorSummaryComponent,
-    ReactiveFormsModule,
-    ButtonDirective,
-    PendingButtonDirective,
-  ],
+  imports: [PasswordComponent, ReactiveFormsModule, WizardStepComponent],
   providers: [passwordFormFactory],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -48,17 +30,14 @@ export class RegulatorInvitationComponent implements OnInit {
   private readonly regulatorUsersRegistrationService = inject(RegulatorUsersRegistrationService);
   private readonly store = inject(InvitedRegulatorUserStore);
 
-  readonly form = inject(PASSWORD_FORM);
+  readonly form = inject<FormGroup>(PASSWORD_FORM);
 
   ngOnInit() {
     const email = this.store.state.email;
     this.form.patchValue({ email });
   }
 
-  submitPassword() {
-    this.form.markAsTouched();
-    if (this.form.invalid) return;
-
+  onSubmit() {
     this.route.queryParamMap
       .pipe(
         map((paramMap) => paramMap.get('token')),

@@ -1,5 +1,5 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="formGroup()">
-  @if (isSummaryDisplayedSubject()) {
+  @if (isErrorSummaryDisplayed()) {
     <govuk-error-summary [form]="formGroup()" />
   }
 

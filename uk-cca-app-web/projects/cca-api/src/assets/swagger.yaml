@@ -754,6 +754,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /v1.0/users/validate-password:
+    post:
+      tags:
+        - Validate Password
+      summary: Check if password matches the password policy rules
+      operationId: validatePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordValidationRequestDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordValidationResponseDTO'
+        '400':
+          description: "Bad Request\t\n Error Code | Description \t\nFORM1001 | Form validation failed"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /v1.0/users/security-setup/2fa/request-change:
     post:
       tags:
@@ -5984,33 +6015,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '404':
           description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  $ref: '#/components/schemas/RequestCreateValidationResult'
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  $ref: '#/components/schemas/RequestCreateValidationResult'
   /v1.0/request-notes/{requestId}/files:
     get:
       tags:
@@ -6358,34 +6374,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-                    enum:
-                      - NONE
-                      - VIEW_ONLY
-                      - EXECUTE
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: array
-                  items:
-                    type: string
-                    enum:
-                      - NONE
-                      - VIEW_ONLY
-                      - EXECUTE
   /v1.0/notification-templates:
     get:
       tags:
@@ -7178,13 +7172,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/ReferenceDataDTO'
       security: []
   /v1.0/company-information/{registrationNumber}:
     get:
@@ -8023,8 +8010,6 @@ components:
         host:
           type: object
           properties:
-            hostString:
-              type: string
             address:
               type: object
               properties:
@@ -8064,6 +8049,8 @@ components:
               type: boolean
             hostName:
               type: string
+            hostString:
+              type: string
         all:
           type: object
           additionalProperties:
@@ -8078,6 +8065,15 @@ components:
         contentLength:
           type: integer
           format: int64
+        connection:
+          type: array
+          items:
+            type: string
+        ifModifiedSince:
+          type: integer
+          format: int64
+        contentType:
+          $ref: '#/components/schemas/MediaType'
         origin:
           type: string
         contentLanguage:
@@ -8128,15 +8124,6 @@ components:
           writeOnly: true
         cacheControl:
           type: string
-        connection:
-          type: array
-          items:
-            type: string
-        ifModifiedSince:
-          type: integer
-          format: int64
-        contentType:
-          $ref: '#/components/schemas/MediaType'
       additionalProperties:
         type: array
         items:
@@ -11379,6 +11366,20 @@ components:
           items:
             type: string
             format: uuid
+    PasswordValidationErrorDTO:
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+            - INVALID_MIN_LENGTH
+            - INVALID_MAX_LENGTH
+            - BLACKLISTED_PATTERN
+            - PWNED
+            - PWNED_SERVICE_UNAVAILABLE
+            - OTHER
+        message:
+          type: string
     UnderlyingAgreementDocumentDetailsDTO:
       type: object
       properties:
@@ -15908,6 +15909,14 @@ components:
           type: object
           additionalProperties:
             type: string
+    PasswordValidationRequestDTO:
+      required:
+        - password
+      type: object
+      properties:
+        password:
+          type: string
+      description: The password validation request
     FacilitySearchResults:
       type: object
       properties:

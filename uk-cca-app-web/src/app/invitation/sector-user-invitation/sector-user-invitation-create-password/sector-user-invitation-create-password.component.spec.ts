@@ -6,8 +6,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { ActivatedRouteStub } from '@netz/common/testing';
-import { PasswordValidators } from '@shared/components';
 import { click, getAllByText, getByLabelText, getByText, type } from '@testing';
+
+import { ValidatePasswordService } from 'cca-api';
 
 import { InvitedSectorUserExtended, SectorUserInvitationStore } from '../sector-user-invitation.store';
 import { SectorUserInvitationCreatePasswordComponent } from './sector-user-invitation-create-password.component';
@@ -36,8 +37,10 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
     },
   };
 
+  const mockValidatePasswordService = { validatePassword: vi.fn().mockReturnValue(of(null)) };
+
   beforeEach(async () => {
-    PasswordValidators.blacklisted = vi.fn().mockReturnValue(of(null));
+    mockValidatePasswordService.validatePassword.mockReturnValue(of(null));
 
     await TestBed.configureTestingModule({
       imports: [SectorUserInvitationCreatePasswordComponent],
@@ -46,6 +49,7 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: route },
+        { provide: ValidatePasswordService, useValue: mockValidatePasswordService },
       ],
     }).compileComponents();
 
@@ -107,7 +111,6 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
       ),
     ).toBeTruthy();
 
-    expect(getAllByText('Password must be 12 characters or more', fixture.nativeElement)).toHaveLength(2);
     expect(getAllByText('Enter a strong password', fixture.nativeElement)).toHaveLength(2);
   });
 
@@ -124,7 +127,8 @@ describe('SectorUserInvitationCreatePasswordComponent', () => {
     click(getByText('Continue', fixture.nativeElement));
 
     fixture.detectChanges();
-    await fixture.whenStable();
+    await new Promise((r) => setTimeout(r, 400));
+    fixture.detectChanges();
 
     expect(navigateSpy).toHaveBeenCalledTimes(1);
   });

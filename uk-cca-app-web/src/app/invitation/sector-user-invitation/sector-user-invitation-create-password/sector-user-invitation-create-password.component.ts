@@ -1,38 +1,27 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { PageHeadingComponent } from '@netz/common/components';
-import { PendingButtonDirective } from '@netz/common/directives';
-import { ButtonDirective, ErrorSummaryComponent } from '@netz/govuk-components';
-import { PASSWORD_FORM, PasswordComponent, passwordFormFactory } from '@shared/components';
+import { PASSWORD_FORM, PasswordComponent, passwordFormFactory, WizardStepComponent } from '@shared/components';
 
 import { SectorUserInvitationStore } from '../sector-user-invitation.store';
 
 @Component({
   selector: 'cca-sector-user-invitation-create-password',
   template: `
-    @if (isErrorSummaryDisplayed()) {
-      <govuk-error-summary [form]="form" />
-    }
-
-    <div class="govuk-!-width-three-quarters">
-      <netz-page-heading [caption]="'Create user account'">Create a password</netz-page-heading>
-
-      <form (ngSubmit)="onSubmitPassword()" [formGroup]="form" data-testid="invited-sector-user-password-form">
+    <cca-wizard-step
+      [formGroup]="form"
+      submitText="Continue"
+      heading="Create a password"
+      caption="Create user account"
+      (formSubmit)="onSubmit()"
+    >
+      <div class="govuk-!-width-three-quarters">
         <cca-password />
-        <button netzPendingButton govukButton type="submit">Continue</button>
-      </form>
-    </div>
+      </div>
+    </cca-wizard-step>
   `,
-  imports: [
-    PageHeadingComponent,
-    PasswordComponent,
-    ReactiveFormsModule,
-    ButtonDirective,
-    ErrorSummaryComponent,
-    PendingButtonDirective,
-  ],
+  imports: [PasswordComponent, ReactiveFormsModule, WizardStepComponent],
   providers: [passwordFormFactory],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -43,14 +32,8 @@ export class SectorUserInvitationCreatePasswordComponent {
 
   protected readonly form = inject<FormGroup>(PASSWORD_FORM);
 
-  protected readonly isErrorSummaryDisplayed = signal(false);
-
-  onSubmitPassword() {
-    if (this.form.invalid) {
-      this.isErrorSummaryDisplayed.set(true);
-    } else {
-      this.store.updateState({ ...this.store.state, password: this.form.value.password });
-      this.router.navigate(['..', 'summary'], { relativeTo: this.activatedRoute });
-    }
+  onSubmit() {
+    this.store.updateState({ ...this.store.state, password: this.form.value.password });
+    this.router.navigate(['..', 'summary'], { relativeTo: this.activatedRoute });
   }
 }

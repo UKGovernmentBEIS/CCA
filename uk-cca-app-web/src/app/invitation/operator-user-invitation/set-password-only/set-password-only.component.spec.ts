@@ -3,8 +3,12 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 
+import { of } from 'rxjs';
+
 import { ActivatedRouteStub } from '@netz/common/testing';
 import { click, getByLabelText, getByText, type } from '@testing';
+
+import { ValidatePasswordService } from 'cca-api';
 
 import { InvitedOperatorUserExtended, OperatorUserInvitationStore } from '../store';
 import { SetPasswordOnlyComponent } from './set-password-only.component';
@@ -31,7 +35,11 @@ describe('SetPasswordOnlyComponent', () => {
     },
   };
 
+  const mockValidatePasswordService = { validatePassword: vi.fn().mockReturnValue(of(null)) };
+
   beforeEach(async () => {
+    mockValidatePasswordService.validatePassword.mockReturnValue(of(null));
+
     await TestBed.configureTestingModule({
       imports: [SetPasswordOnlyComponent],
       providers: [
@@ -39,6 +47,7 @@ describe('SetPasswordOnlyComponent', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: route },
+        { provide: ValidatePasswordService, useValue: mockValidatePasswordService },
       ],
     }).compileComponents();
 
@@ -77,6 +86,7 @@ describe('SetPasswordOnlyComponent', () => {
     type(getByLabelText('Re-enter your password', fixture.nativeElement) as HTMLInputElement, '456');
 
     click(getByText('Continue', fixture.nativeElement));
+    await fixture.whenStable();
     fixture.detectChanges();
     expect(document.querySelector('.govuk-error-summary')).toBeTruthy();
   });

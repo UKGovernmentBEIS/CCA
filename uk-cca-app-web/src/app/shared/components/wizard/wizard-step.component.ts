@@ -35,7 +35,7 @@ export class WizardStepComponent {
 
   protected readonly errorSummaryEl = viewChild(ErrorSummaryComponent);
 
-  protected readonly isSummaryDisplayedSubject = signal(false);
+  protected readonly isErrorSummaryDisplayed = signal(false);
 
   onSubmit(): void {
     this.formGroup()
@@ -52,7 +52,7 @@ export class WizardStepComponent {
 
           case 'INVALID':
             this.formGroup().markAllAsTouched();
-            this.isSummaryDisplayedSubject.set(true);
+            this.isErrorSummaryDisplayed.set(true);
             this.errorSummaryEl()?.container()?.nativeElement.focus();
             break;
         }
